@@ -106,7 +106,7 @@
                     </archive>
                 </configuration>
                 <executions>
-                    <!-- Bug?: �berschreibt WARs und EARs. -->
+                    <!-- Bug?: Überschreibt WARs und EARs. -->
                     <!--execution> <id>bundle-classes</id> <phase>package</phase> <goals>
                     <goal>jar</goal> </goals> </execution -->
                     <execution>
