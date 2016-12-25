@@ -1,0 +1,212 @@
+/*
+https://docs.oracle.com/javase/8/javafx/api/javafx/scene/doc-files/cssref.html
+*/
+
+/* Default Klassen */
+.root
+{
+    -fx-font-size: 16.0px; /* relative Größe zum Device */
+    /*-fx-font-size: 14pt;*/ /* absolute Größe */
+    /*-fx-background-color: linear-gradient(#61a2b1, #2A5058);*/
+    
+    contact-icon: url("../images/contact.png");
+    delete-icon: url("../images/delete.png");
+    edit-icon: url("../images/edit.png");
+    pim-icon: url("../images/pim.png");
+    mail-icon: url("../images/mail.png");
+    new-icon: url("../images/new.png");   
+}
+
+/*a*/
+/*b*/
+.button
+{
+    -fx-font-weight: bold;
+}
+
+.buttontitlepane  {
+    -fx-min-height: 100.0;
+    -fx-min-width: 100.0;
+    -fx-pref-height: 5000.0;
+    -fx-pref-width: 5000.0;
+}
+
+.buttontitlepane .title {
+	-fx-padding: 2.0 2.0 0.0 2.0;	
+	-fx-font-size: 120.0%;
+    -fx-font-weight: bold;
+    -fx-background-color: linear-gradient(aliceblue, lightslategray);
+}
+
+/*c*/
+/*d*/
+/*e*/
+/*f*/
+/*g*/
+.gridpane {
+    -fx-hgap: 5.0;
+    -fx-vgap: 5.0;
+    -fx-grid-lines-visible: false;
+}
+
+/*h*/
+.hbox {
+    /*-fx-border-color: #2e8b57;
+    -fx-border-width: 2px;*/
+    -fx-spacing: 5.0;
+}
+
+/*i*/
+.imageview-application
+{
+	-fx-image: pim-icon;
+}
+
+.imageview-contact
+{
+	-fx-image: contact-icon;
+}
+
+.imageview-delete
+{
+	-fx-image: delete-icon;
+}
+
+.imageview-edit
+{
+	-fx-image: edit-icon;
+}
+
+.imageview-mail
+{
+	-fx-image: mail-icon;
+}
+
+.imageview-new
+{
+	-fx-image: new-icon;
+}
+
+/*j*/
+/*k*/
+/*l*/
+.list-cell
+{
+    -fx-border-color: black;
+    -fx-border-width: 0.3;
+    -fx-font-size: 100.0%;
+    /*-fx-font-weight: normal;*/
+}
+
+.list-cell:odd
+{
+    -fx-background-color: lightgrey;
+}
+
+.list-cell:selected
+{
+    -fx-background-color: #0093ff;
+}
+
+/*m*/
+/*n*/
+/*o*/
+/*p*/
+.padding {
+    -fx-padding: 5.0;
+}
+
+/*q*/
+/*r*/
+/*s*/
+.separator *.line { 
+	-fx-border-style: solid;
+	-fx-border-width: 3.0px;
+  	/*-fx-border-width: 0 0 1 0; /* its make really one-pixel-border */
+    -fx-border-color: lightgrey;
+}
+
+/*t*/
+.table-cell
+{
+    -fx-border-color: black;
+    -fx-border-width: 0.3;
+    /*-fx-table-cell-border-color transparent transparent;*/
+}
+
+.table-column
+{
+    -fx-alignment: center-left;
+}
+
+/*.table-view .table-row-cell {
+    -fx-control-inner-background: linear-gradient(#007F0E 0%, #FFFFFF 90%, #eaeaea 90%);
+    -fx-control-inner-background-alt: linear-gradient(#007F0E 0%, #FFFFFF 90%, #eaeaea 90%);
+}*/
+
+.table-row-cell:empty .table-cell {
+    -fx-border-width: 0.0px;
+}
+
+.table-row-cell:empty {
+    -fx-background-color: white;
+}
+
+.table-row-cell:odd
+{
+    -fx-background-color: rgb(215.0,215.0,215.0);
+}
+
+.table-row-cell:odd:empty
+{
+    -fx-background-color: white;
+}
+
+.table-row-cell:selected
+{
+    -fx-background-color: #0093ff;
+}
+
+.table-view .column-header
+{
+    -fx-alignment: center;
+    -fx-font-size: 100.0%;
+    -fx-font-weight: bold;
+}
+
+.text
+{
+    -fx-font-weight: normal;
+    -fx-font-smoothing-type: gray; /* antialising Effekt */
+    /*-fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 0, 0, 0, 1);*/
+    /*-fx-text-fill: #333333;*/
+}
+
+.titled-pane  {
+    -fx-animated: true;
+    -fx-collapsible: false;
+    -fx-pref-height: 5000.0;
+    -fx-pref-width: 5000.0;
+}
+
+.titled-pane .title {
+    -fx-alignment: CENTER_LEFT;
+    -fx-background-color: linear-gradient(aliceblue, lightslategray);
+    -fx-font-size: 120.0%;
+    -fx-font-weight: bold;
+    /*-fx-padding: 30px;*/
+    /*-fx-pref-height: 100.0;*/
+}
+
+/*u*/
+/*v*/
+.vbox {
+    /*-fx-border-color: #2e8b57;
+    -fx-border-width: 2px;*/
+    -fx-spacing: 5.0;
+}
+
+/*w*/
+/*x*/
+/*y*/
+/*z*/
