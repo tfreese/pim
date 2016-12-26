@@ -6,9 +6,7 @@ package de.freese.pim.core.addressbook.dao;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.Arrays;
 import java.util.List;
-
 import javax.sql.DataSource;
-
 import org.junit.AfterClass;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
@@ -80,13 +78,13 @@ public class TestAddressbookDAO extends AbstractDAOTextCase
      *
      */
     @Parameter(value = 1)
-    public IAddressBookDAO addressBookDAO;
+    public IAddressBookDAO addressBookDAO = null;
 
     /**
      * Wird nur für die Parameter-Injection benötigt.
      */
     @Parameter(value = 0)
-    public String daoName;
+    public String daoName = null;
 
     /**
      * Erstellt ein neues {@link TestAddressbookDAO} Object.

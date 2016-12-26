@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <prerequisites>
         <maven>3.3.3</maven>
@@ -82,7 +82,7 @@
                     <artifactId>versions-maven-plugin</artifactId>
                     <version>${version:org.codehaus.mojo:versions-maven-plugin}</version>
                     <configuration>
-                        <rulesUri>file:D:\efreest\git\volkswagen\rule-set.xml</rulesUri>
+                        <rulesUri>file:${user.home}/.m2/rule-set.xml</rulesUri>
                     </configuration>
                 </plugin>
             </plugins>
@@ -101,14 +101,14 @@
                         </manifestEntries>
                         <manifest>
                             <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-                            <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
+                            <addDefaultSpecificationEntries>false</addDefaultSpecificationEntries>
                         </manifest>
                     </archive>
                 </configuration>
                 <executions>
                     <!-- Bug?: Überschreibt WARs und EARs. -->
                     <!--execution> <id>bundle-classes</id> <phase>package</phase> <goals>
-                    <goal>jar</goal> </goals> </execution -->
+                        <goal>jar</goal> </goals> </execution -->
                     <execution>
                         <id>bundle-classes-test</id>
                         <phase>package</phase>
@@ -130,7 +130,7 @@
                         </manifestEntries>
                         <manifest>
                             <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-                            <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
+                            <addDefaultSpecificationEntries>false</addDefaultSpecificationEntries>
                         </manifest>
                     </archive>
                 </configuration>
@@ -160,6 +160,11 @@
                 <groupId>ch.qos.logback</groupId>
                 <artifactId>logback-classic</artifactId>
                 <version>${version:ch.qos.logback:logback}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.dataformat</groupId>
+                <artifactId>jackson-dataformat-xml</artifactId>
+                <version>${version:com.fasterxml.jackson:jackson}</version>
             </dependency>
             <dependency>
                 <groupId>com.sun.mail</groupId>

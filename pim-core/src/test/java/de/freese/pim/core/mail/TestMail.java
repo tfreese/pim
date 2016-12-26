@@ -1,29 +1,42 @@
 // Created: 12.12.2016
-package de.freese.pim.core.addressbook.mail;
+package de.freese.pim.core.mail;
 
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Arrays;
+import java.util.Properties;
+import org.junit.AfterClass;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
+import org.junit.runners.Parameterized;
+import org.junit.runners.Parameterized.Parameter;
+import org.junit.runners.Parameterized.Parameters;
 import org.springframework.core.io.ClassPathResource;
-
-import de.freese.pim.core.mail.JavaMailBuilder;
-import de.freese.pim.core.mail.JavaMailSender;
+import de.freese.pim.core.AbstractPimTest;
 
 /**
- * @author Thomas Freese (EFREEST / AuVi)
+ * @author Thomas Freese
  */
 // @Ignore
-// @RunWith(Parameterized.class)
+@RunWith(Parameterized.class)
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class TestMail
+public class TestMail extends AbstractPimTest
 {
     /**
-     *
-     */
-    private static final String FROM = "thomas.freese@autovision-gmbh.com";
+    *
+    */
+    private static final String HOST = "smtp.1und1.de";
+
+    /**
+    *
+    */
+    private static final int PORT = 587;
 
     /**
      *
@@ -31,9 +44,13 @@ public class TestMail
     private static JavaMailSender sender = null;
 
     /**
-     *
-     */
-    private static final String TO = "thomas.freese@autovision-gmbh.com";
+    *
+    */
+    @AfterClass
+    public static void afterClass()
+    {
+        // Empty
+    }
 
     /**
      *
@@ -43,10 +60,68 @@ public class TestMail
     {
         sender = new JavaMailSender();
         sender.setEncoding(StandardCharsets.UTF_8.name());
-        sender.setHost("mailgate.vw.vwg");
-        sender.setPort(25);
+        sender.setHost(HOST);
+        sender.setPort(PORT);
         sender.setProtocol("smtp");
+
+        // Legitimation für Versand.
+        Properties properties = new Properties();
+        properties.put("mail.smtp.auth", "true");
+        properties.put("mail.smtp.starttls.enable", "true");
+        sender.setJavaMailProperties(properties);
     }
+
+    /**
+     * @return {@link Iterable}
+     * @throws Exception Falls was schief geht.
+     */
+    @Parameters(name = "Mail: {1}") // {index}
+    public static Iterable<Object[]> mails() throws Exception
+    {
+        Path path = TMP_TEST_PATH.resolve("testMail.properties");
+
+        Files.createDirectories(path.getParent());
+
+        if (Files.notExists(path))
+        {
+            System.err.println("need property file with from, to and password: " + path);
+
+            return Arrays.asList(new Object[][] {});
+        }
+
+        Properties properties = new Properties();
+
+        // Files.newInputStream(path) = Files.newInputStream(path, StandardOpenOption.READ)
+        try (InputStream is = Files.newInputStream(path))
+        {
+            properties.load(is);
+        }
+
+        return Arrays.asList(new Object[][]
+        {
+                {
+                        properties.getProperty("from"), properties.getProperty("to"), properties.getProperty("password")
+                }
+        });
+    }
+
+    /**
+    *
+    */
+    @Parameter(value = 0)
+    public String from = null;
+
+    /**
+    *
+    */
+    @Parameter(value = 2)
+    public String password;
+
+    /**
+    *
+    */
+    @Parameter(value = 1)
+    public String to;
 
     /**
      * Erzeugt eine neue Instanz von {@link TestMail}
@@ -54,6 +129,16 @@ public class TestMail
     public TestMail()
     {
         super();
+    }
+
+    /**
+     *
+     */
+    @Before
+    public void beforeMethod()
+    {
+        sender.setUsername(this.from);
+        sender.setPassword(this.password);
     }
 
     /**
@@ -73,8 +158,8 @@ public class TestMail
     {
         // @formatter:off
         JavaMailBuilder.create(sender, true)
-                .from(FROM)
-                .to(TO)
+                .from(this.from)
+                .to(this.to)
                 .subject("test100PlainText")
                 .text("test100PlainText", false)
                 .buildAndSend();
@@ -89,11 +174,11 @@ public class TestMail
     {
         // @formatter:off
         JavaMailBuilder.create(sender, true)
-                .from(FROM)
-                .to(TO)
+                .from(this.from)
+                .to(this.to)
                 .subject("test100PlainTextWithAttachment")
                 .text("test100PlainTextWithAttachment", false)
-                .attachment("text.txt", new ClassPathResource("text.txt").getFile())
+                .attachment("text.txt", new ClassPathResource("mail/text.txt").getFile())
                 .buildAndSend();
         // @formatter:on
     }
@@ -112,8 +197,8 @@ public class TestMail
 
         // @formatter:off
         JavaMailBuilder.create(sender, true)
-                .from(FROM)
-                .to(TO)
+                .from(this.from)
+                .to(this.to)
                 .subject("test200Html")
                 .text(html.toString(), true)
                 .buildAndSend();
@@ -134,11 +219,11 @@ public class TestMail
 
         // @formatter:off
         JavaMailBuilder.create(sender, true)
-                .from(FROM)
-                .to(TO)
+                .from(this.from)
+                .to(this.to)
                 .subject("test210HtmlWithAttachment")
                 .text(html.toString(), true)
-                .attachment("text.txt", new ClassPathResource("text.txt").getFile())
+                .attachment("text.txt", new ClassPathResource("mail/text.txt").getFile())
                 .buildAndSend();
         // @formatter:on
     }
@@ -159,11 +244,11 @@ public class TestMail
 
         // @formatter:off
         JavaMailBuilder.create(sender, true)
-                .from(FROM)
-                .to(TO)
+                .from(this.from)
+                .to(this.to)
                 .subject("test220HtmlWithInline")
                 .text(html.toString(), true)
-                .inline("image1", new ClassPathResource("pim.png").getFile())
+                .inline("image1", new ClassPathResource("mail/pim.png").getFile())
                 .buildAndSend();
         // @formatter:on
     }
