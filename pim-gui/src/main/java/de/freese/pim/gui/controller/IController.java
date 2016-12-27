@@ -7,7 +7,7 @@ import javafx.scene.Node;
 /**
  * Interface eines Controllers.
  *
- * @author Thomas Freese (EFREEST / AuVi)
+ * @author Thomas Freese
  */
 @SuppressWarnings("restriction")
 public interface IController extends Initializable

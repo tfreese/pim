@@ -14,9 +14,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-
 import javax.sql.DataSource;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,7 +22,7 @@ import org.slf4j.LoggerFactory;
  * Erstellt die DB-Struktur anhand der definierten SQL-Skripte.<br>
  * Ein SQL muss immer mit einem ';' abgeschlossen sein.
  *
- * @author Thomas Freese (EFREEST / AuVi)
+ * @author Thomas Freese
  */
 public class DatabasePopulator
 {
@@ -54,47 +52,6 @@ public class DatabasePopulator
     public void addScript(final String script)
     {
         this.scripts.add(script);
-    }
-
-    /**
-     * Erstellt die DB-Struktur anhand der definierten SQL-Skripte.
-     *
-     * @param connection {@link Connection}
-     * @throws Exception Falls was schief geht.
-     */
-    public void populate(final Connection connection) throws Exception
-    {
-        for (String script : this.scripts)
-        {
-            List<String> sqls = getScriptSQLs(script);
-
-            // sqls.forEach(System.out::println);
-            try (Statement statement = connection.createStatement();)
-            {
-                for (String sql : sqls)
-                {
-                    statement.execute(sql);
-
-                    // int rowsAffected = statement.getUpdateCount();
-                    //
-                    // LOGGER.info("{}: Rows affected = {}", sql, rowsAffected);
-                }
-            }
-        }
-    }
-
-    /**
-     * Erstellt die DB-Struktur anhand der definierten SQL-Skripte.
-     *
-     * @param dataSource {@link DataSource}
-     * @throws Exception Falls was schief geht.
-     */
-    public void populate(final DataSource dataSource) throws Exception
-    {
-        try (Connection connection = dataSource.getConnection())
-        {
-            populate(connection);
-        }
     }
 
     /**
@@ -177,5 +134,46 @@ public class DatabasePopulator
         }
 
         return sqls;
+    }
+
+    /**
+     * Erstellt die DB-Struktur anhand der definierten SQL-Skripte.
+     *
+     * @param connection {@link Connection}
+     * @throws Exception Falls was schief geht.
+     */
+    public void populate(final Connection connection) throws Exception
+    {
+        for (String script : this.scripts)
+        {
+            List<String> sqls = getScriptSQLs(script);
+
+            // sqls.forEach(System.out::println);
+            try (Statement statement = connection.createStatement();)
+            {
+                for (String sql : sqls)
+                {
+                    statement.execute(sql);
+
+                    // int rowsAffected = statement.getUpdateCount();
+                    //
+                    // LOGGER.info("{}: Rows affected = {}", sql, rowsAffected);
+                }
+            }
+        }
+    }
+
+    /**
+     * Erstellt die DB-Struktur anhand der definierten SQL-Skripte.
+     *
+     * @param dataSource {@link DataSource}
+     * @throws Exception Falls was schief geht.
+     */
+    public void populate(final DataSource dataSource) throws Exception
+    {
+        try (Connection connection = dataSource.getConnection())
+        {
+            populate(connection);
+        }
     }
 }

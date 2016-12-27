@@ -4,7 +4,7 @@ package de.freese.pim.gui.view;
 /**
  * Interface einer View.
  * 
- * @author Thomas Freese (EFREEST / AuVi)
+ * @author Thomas Freese
  */
 public interface IView
 {

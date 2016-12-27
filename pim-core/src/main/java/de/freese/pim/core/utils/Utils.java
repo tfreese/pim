@@ -29,7 +29,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Utils.
  *
- * @author Thomas Freese (EFREEST / AuVi)
+ * @author Thomas Freese
  */
 public final class Utils
 {

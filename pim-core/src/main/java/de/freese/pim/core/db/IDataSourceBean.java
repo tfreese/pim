@@ -2,13 +2,12 @@
 package de.freese.pim.core.db;
 
 import javax.sql.DataSource;
-
 import de.freese.pim.core.service.ISettingsService;
 
 /**
  * Intreface für eine {@link DataSource}-Bean.
  *
- * @author Thomas Freese (EFREEST / AuVi)
+ * @author Thomas Freese
  */
 public interface IDataSourceBean extends AutoCloseable
 {

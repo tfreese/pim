@@ -7,7 +7,7 @@ import javafx.application.Platform;
 /**
  * ThreadGroup für Handling von Runtime-Exceptions.
  *
- * @author Thomas Freese (AuVi)
+ * @author Thomas Freese
  */
 @SuppressWarnings("restriction")
 public class PIMFXThreadGroup extends ThreadGroup

@@ -7,7 +7,7 @@ import java.sql.Statement;
 /**
  * {@link IDataSourceBean} für HSQLDB-Datenbanken.
  *
- * @author Thomas Freese (EFREEST / AuVi)
+ * @author Thomas Freese
  */
 public abstract class AbstractHsqldbBean extends AbstractDataSourceBean
 {
@@ -35,6 +35,24 @@ public abstract class AbstractHsqldbBean extends AbstractDataSourceBean
     }
 
     /**
+     * @see de.freese.pim.core.db.AbstractDataSourceBean#getDriver()
+     */
+    @Override
+    protected String getDriver()
+    {
+        return HSQLDB_DRIVER;
+    }
+
+    /**
+     * @see de.freese.pim.core.db.AbstractDataSourceBean#getValidationQuery()
+     */
+    @Override
+    protected String getValidationQuery()
+    {
+        return HSQLDB_VALIDATION_QUERY;
+    }
+
+    /**
      * @see de.freese.pim.core.db.IDataSourceBean#populateIfEmpty(java.lang.Runnable)
      */
     @Override
@@ -51,23 +69,5 @@ public abstract class AbstractHsqldbBean extends AbstractDataSourceBean
         // @formatter:on
 
         populateIfEmpty(getDataSource(), populateCallback, scripts);
-    }
-
-    /**
-     * @see de.freese.pim.core.db.AbstractDataSourceBean#getDriver()
-     */
-    @Override
-    protected String getDriver()
-    {
-        return HSQLDB_DRIVER;
-    }
-
-    /**
-     * @see de.freese.pim.core.db.AbstractDataSourceBean#getValidationQuery()
-     */
-    @Override
-    protected String getValidationQuery()
-    {
-        return HSQLDB_VALIDATION_QUERY;
     }
 }

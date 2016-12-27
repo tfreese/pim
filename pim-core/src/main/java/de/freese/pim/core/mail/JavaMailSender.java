@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Properties;
 import javax.activation.FileTypeMap;
 import javax.activation.MimetypesFileTypeMap;
@@ -16,11 +17,12 @@ import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.MimeMessage;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Siehe org.springframework.mail.javamail.JavaMailSenderImpl
  *
- * @author Thomas Freese (EFREEST / AuVi)
+ * @author Thomas Freese
  */
 public class JavaMailSender
 {
@@ -150,18 +152,8 @@ public class JavaMailSender
      */
     protected Transport connectTransport() throws MessagingException
     {
-        String username = getUsername();
-        String password = getPassword();
-
-        if ("".equals(username))
-        {
-            username = null;
-        }
-
-        if ("".equals(password))
-        {
-            password = null;
-        }
+        String username = Optional.ofNullable(getUsername()).filter(StringUtils::isNotBlank).orElse(null);
+        String password = Optional.ofNullable(getPassword()).filter(StringUtils::isNotBlank).orElse(null);
 
         Transport transport = getTransport(getSession());
         transport.connect(getHost(), getPort(), username, password);
@@ -202,6 +194,7 @@ public class JavaMailSender
 
                         transport = null;
                     }
+
                     try
                     {
                         transport = connectTransport();

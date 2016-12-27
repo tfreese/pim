@@ -2,7 +2,6 @@
 package de.freese.pim.core.service;
 
 import java.nio.file.Path;
-
 import javax.sql.DataSource;
 
 /**
@@ -10,7 +9,7 @@ import javax.sql.DataSource;
  * Sämtliche DB-Parameter werden in einer lokalen Property-Datei abgelegt (~/.pim/pim.properties).<br>
  * Alle anderen Parameter werden aus der Datenbank gelesen.
  *
- * @author Thomas Freese (EFREEST / AuVi)
+ * @author Thomas Freese
  */
 public interface ISettingsService
 {

@@ -9,7 +9,7 @@ import javafx.scene.Node;
 /**
  * Controller des Mail-Clients.
  *
- * @author Thomas Freese (EFREEST / AuVi)
+ * @author Thomas Freese
  */
 @SuppressWarnings("restriction")
 public class MailController extends AbstractController

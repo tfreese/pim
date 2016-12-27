@@ -45,7 +45,7 @@ import uk.org.lidalia.sysoutslf4j.context.SysOutOverSLF4J;
  * Startklasse der Personal Information Management Anwendung.<br>
  * https://www.iconfinder.com/
  *
- * @author Thomas Freese (EFREEST / AuVi)
+ * @author Thomas Freese
  */
 @SuppressWarnings("restriction")
 public class PIMApplication extends Application

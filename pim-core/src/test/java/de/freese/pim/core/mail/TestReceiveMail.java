@@ -108,7 +108,7 @@ public class TestReceiveMail extends AbstractPimTest
         // Legitimation für Empfang.
         Properties properties = new Properties();
         properties.put("mail.imap.auth", "true");
-        properties.put("mail.imap.starttls.required", "true");
+        properties.put("mail.imap.starttls.enable", "true");
 
         session = Session.getInstance(properties, authenticator);
     }

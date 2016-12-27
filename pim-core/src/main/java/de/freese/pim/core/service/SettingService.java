@@ -3,13 +3,12 @@ package de.freese.pim.core.service;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
-
 import javax.sql.DataSource;
 
 /**
  * Service für die Einstellungen.
  *
- * @author Thomas Freese (EFREEST / AuVi)
+ * @author Thomas Freese
  */
 public class SettingService implements ISettingsService
 {

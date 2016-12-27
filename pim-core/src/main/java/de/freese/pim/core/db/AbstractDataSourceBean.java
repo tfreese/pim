@@ -5,18 +5,15 @@ import java.nio.file.Path;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
-
 import javax.sql.DataSource;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.tomcat.jdbc.pool.PoolProperties;
-
 import de.freese.pim.core.utils.SimpleDataSource;
 
 /**
  * Basis-implementierung einer {@link IDataSourceBean}.
  *
- * @author Thomas Freese (EFREEST / AuVi)
+ * @author Thomas Freese
  */
 public abstract class AbstractDataSourceBean implements IDataSourceBean
 {
@@ -49,45 +46,6 @@ public abstract class AbstractDataSourceBean implements IDataSourceBean
     }
 
     /**
-     * @see de.freese.pim.core.db.IDataSourceBean#disconnect()
-     */
-    @Override
-    public void disconnect() throws Exception
-    {
-        DataSource dataSource = getDataSource();
-
-        if (dataSource instanceof org.apache.tomcat.jdbc.pool.DataSource)
-        {
-            ((org.apache.tomcat.jdbc.pool.DataSource) dataSource).close(true);
-        }
-        else if (dataSource instanceof SimpleDataSource)
-        {
-            ((SimpleDataSource) dataSource).close();
-        }
-
-        dataSource = null;
-        setDataSource(null);
-    }
-
-    /**
-     * @see de.freese.pim.core.db.IDataSourceBean#getDataSource()
-     */
-    @Override
-    public DataSource getDataSource()
-    {
-        return this.dataSource;
-    }
-
-    /**
-     * @see de.freese.pim.core.db.IDataSourceBean#testConnection()
-     */
-    @Override
-    public void testConnection() throws Exception
-    {
-        testConnection(getDataSource(), getValidationQuery());
-    }
-
-    /**
      * Erzeugt die {@link DataSource}.
      *
      * @param driver String
@@ -97,8 +55,7 @@ public abstract class AbstractDataSourceBean implements IDataSourceBean
      * @param validationQuery String
      * @return {@link DataSource}
      */
-    protected DataSource createDataSource(final String driver, final String url, final String userName, final String password,
-            final String validationQuery)
+    protected DataSource createDataSource(final String driver, final String url, final String userName, final String password, final String validationQuery)
     {
         PoolProperties poolProperties = new PoolProperties();
         poolProperties.setDriverClassName(driver);
@@ -153,6 +110,36 @@ public abstract class AbstractDataSourceBean implements IDataSourceBean
     }
 
     /**
+     * @see de.freese.pim.core.db.IDataSourceBean#disconnect()
+     */
+    @Override
+    public void disconnect() throws Exception
+    {
+        DataSource dataSource = getDataSource();
+
+        if (dataSource instanceof org.apache.tomcat.jdbc.pool.DataSource)
+        {
+            ((org.apache.tomcat.jdbc.pool.DataSource) dataSource).close(true);
+        }
+        else if (dataSource instanceof SimpleDataSource)
+        {
+            ((SimpleDataSource) dataSource).close();
+        }
+
+        dataSource = null;
+        setDataSource(null);
+    }
+
+    /**
+     * @see de.freese.pim.core.db.IDataSourceBean#getDataSource()
+     */
+    @Override
+    public DataSource getDataSource()
+    {
+        return this.dataSource;
+    }
+
+    /**
      * Liefert den DB-Namen.
      *
      * @return String
@@ -195,7 +182,7 @@ public abstract class AbstractDataSourceBean implements IDataSourceBean
      * @param scripts String[]
      * @throws Exception Falls was schief geht.
      */
-    protected void populateIfEmpty(final DataSource dataSource, final Runnable populateCallback, final String... scripts) throws Exception
+    protected void populateIfEmpty(final DataSource dataSource, final Runnable populateCallback, final String...scripts) throws Exception
     {
         String[] types = new String[]
         {
@@ -235,6 +222,15 @@ public abstract class AbstractDataSourceBean implements IDataSourceBean
     protected void setDataSource(final DataSource dataSource)
     {
         this.dataSource = dataSource;
+    }
+
+    /**
+     * @see de.freese.pim.core.db.IDataSourceBean#testConnection()
+     */
+    @Override
+    public void testConnection() throws Exception
+    {
+        testConnection(getDataSource(), getValidationQuery());
     }
 
     /**

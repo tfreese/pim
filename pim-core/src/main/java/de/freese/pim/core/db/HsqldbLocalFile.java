@@ -2,16 +2,14 @@
 package de.freese.pim.core.db;
 
 import java.nio.file.Path;
-
 import javax.sql.DataSource;
-
 import de.freese.pim.core.service.ISettingsService;
 import de.freese.pim.core.utils.SimpleDataSource;
 
 /**
  * {@link IDataSourceBean} für eine HSQLDB im File-Mode.
  *
- * @author Thomas Freese (EFREEST / AuVi)
+ * @author Thomas Freese
  */
 public class HsqldbLocalFile extends AbstractHsqldbBean
 {
@@ -41,12 +39,11 @@ public class HsqldbLocalFile extends AbstractHsqldbBean
     }
 
     /**
-     * @see de.freese.pim.core.db.AbstractDataSourceBean#createDataSource(java.lang.String, java.lang.String, java.lang.String,
-     *      java.lang.String, java.lang.String)
+     * @see de.freese.pim.core.db.AbstractDataSourceBean#createDataSource(java.lang.String, java.lang.String, java.lang.String, java.lang.String,
+     *      java.lang.String)
      */
     @Override
-    protected DataSource createDataSource(final String driver, final String url, final String userName, final String password,
-            final String validationQuery)
+    protected DataSource createDataSource(final String driver, final String url, final String userName, final String password, final String validationQuery)
     {
         SimpleDataSource dataSource = new SimpleDataSource();
         dataSource.setDriverClassName(driver);

@@ -15,7 +15,7 @@ import javafx.scene.control.ToolBar;
 /**
  * Main-Controller.
  *
- * @author Thomas Freese (EFREEST / AuVi)
+ * @author Thomas Freese
  */
 @SuppressWarnings("restriction")
 public class MainController extends AbstractController

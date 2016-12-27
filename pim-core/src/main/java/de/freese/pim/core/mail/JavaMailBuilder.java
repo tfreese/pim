@@ -27,11 +27,10 @@ import javax.mail.internet.MimeUtility;
 /**
  * Builder für eine {@link MimeMessage}.
  *
- * @author Thomas Freese (EFREEST / AuVi)
+ * @author Thomas Freese
  */
 public class JavaMailBuilder
 {
-
     /**
      *
      */

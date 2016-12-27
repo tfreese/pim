@@ -55,7 +55,7 @@ import javafx.util.Duration;
 /**
  * JavaFX-Utils.
  *
- * @author Thomas Freese (EFREEST / AuVi)
+ * @author Thomas Freese
  */
 @SuppressWarnings("restriction")
 public final class FXUtils

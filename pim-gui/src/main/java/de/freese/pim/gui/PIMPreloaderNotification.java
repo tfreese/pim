@@ -4,7 +4,7 @@ package de.freese.pim.gui;
 import javafx.application.Preloader.PreloaderNotification;
 
 /**
- * @author Thomas Freese (EFREEST / AuVi)
+ * @author Thomas Freese
  */
 @SuppressWarnings("restriction")
 public class PIMPreloaderNotification implements PreloaderNotification

@@ -19,7 +19,7 @@ import javafx.scene.layout.VBox;
 /**
  * Main View.
  *
- * @author Thomas Freese (EFREEST / AuVi)
+ * @author Thomas Freese
  */
 @SuppressWarnings("restriction")
 public class MainView extends BorderPane implements IView

@@ -22,7 +22,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 /**
- * @author Thomas Freese (EFREEST, Autovision)
+ * @author Thomas Freese
  */
 @SuppressWarnings("restriction")
 public class PIMPreloader extends Preloader

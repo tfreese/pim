@@ -13,7 +13,7 @@ import javafx.stage.Window;
 /**
  * Abstract Implementierung von {@link IController}.
  *
- * @author Thomas Freese (EFREEST / AuVi)
+ * @author Thomas Freese
  */
 @SuppressWarnings("restriction")
 public abstract class AbstractController implements IController

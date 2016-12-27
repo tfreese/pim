@@ -10,7 +10,7 @@ import javafx.scene.layout.BorderPane;
 /**
  * View des Mail-Clients.
  *
- * @author Thomas Freese (EFREEST / AuVi)
+ * @author Thomas Freese
  */
 @SuppressWarnings("restriction")
 public class MailView implements IView

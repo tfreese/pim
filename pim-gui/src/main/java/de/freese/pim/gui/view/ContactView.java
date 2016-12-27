@@ -26,7 +26,7 @@ import javafx.scene.layout.Priority;
 /**
  * View des Addressbuchs.
  *
- * @author Thomas Freese (EFREEST / AuVi)
+ * @author Thomas Freese
  */
 @SuppressWarnings("restriction")
 public class ContactView implements IView
