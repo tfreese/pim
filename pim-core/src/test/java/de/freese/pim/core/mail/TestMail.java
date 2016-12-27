@@ -23,60 +23,21 @@ import de.freese.pim.core.AbstractPimTest;
 /**
  * @author Thomas Freese
  */
-// @Ignore
 @RunWith(Parameterized.class)
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class TestMail extends AbstractPimTest
 {
-    /**
-    *
-    */
-    private static final String HOST = "smtp.1und1.de";
-
-    /**
-    *
-    */
-    private static final int PORT = 587;
-
     /**
      *
      */
     private static JavaMailSender sender = null;
 
     /**
-    *
-    */
-    @AfterClass
-    public static void afterClass()
-    {
-        // Empty
-    }
-
-    /**
-     *
-     */
-    @BeforeClass
-    public static void beforeClass()
-    {
-        sender = new JavaMailSender();
-        sender.setEncoding(StandardCharsets.UTF_8.name());
-        sender.setHost(HOST);
-        sender.setPort(PORT);
-        sender.setProtocol("smtp");
-
-        // Legitimation für Versand.
-        Properties properties = new Properties();
-        properties.put("mail.smtp.auth", "true");
-        properties.put("mail.smtp.starttls.enable", "true");
-        sender.setJavaMailProperties(properties);
-    }
-
-    /**
      * @return {@link Iterable}
      * @throws Exception Falls was schief geht.
      */
-    @Parameters(name = "Mail: {1}") // {index}
-    public static Iterable<Object[]> mails() throws Exception
+    @Parameters(name = "Account: {1}") // {index}
+    public static Iterable<Object[]> accounts() throws Exception
     {
         Path path = TMP_TEST_PATH.resolve("testMail.properties");
 
@@ -103,6 +64,34 @@ public class TestMail extends AbstractPimTest
                         properties.getProperty("from"), properties.getProperty("to"), properties.getProperty("password")
                 }
         });
+    }
+
+    /**
+    *
+    */
+    @AfterClass
+    public static void afterClass()
+    {
+        // Empty
+    }
+
+    /**
+     *
+     */
+    @BeforeClass
+    public static void beforeClass()
+    {
+        sender = new JavaMailSender();
+        sender.setEncoding(StandardCharsets.UTF_8.name());
+        sender.setHost(MAIL_SMPT_HOST);
+        sender.setPort(MAIL_SMPT_PORT);
+        sender.setProtocol("smtp");
+
+        // Legitimation für Versand.
+        Properties properties = new Properties();
+        properties.put("mail.smtp.auth", "true");
+        properties.put("mail.smtp.starttls.enable", "true");
+        sender.setJavaMailProperties(properties);
     }
 
     /**
