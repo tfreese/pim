@@ -14,7 +14,7 @@ import org.junit.runners.Suite.SuiteClasses;
 @RunWith(Suite.class)
 @SuiteClasses(
 {
-        TestMail.class, TestMailAccount.class
+        TestSendMail.class, TestMailAccount.class
 })
 public class AllMailTests
 {

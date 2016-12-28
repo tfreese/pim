@@ -25,7 +25,7 @@ import de.freese.pim.core.AbstractPimTest;
  */
 @RunWith(Parameterized.class)
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class TestMail extends AbstractPimTest
+public class TestSendMail extends AbstractPimTest
 {
     /**
      *
@@ -113,9 +113,9 @@ public class TestMail extends AbstractPimTest
     public String to;
 
     /**
-     * Erzeugt eine neue Instanz von {@link TestMail}
+     * Erzeugt eine neue Instanz von {@link TestSendMail}
      */
-    public TestMail()
+    public TestSendMail()
     {
         super();
     }
