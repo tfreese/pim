@@ -206,6 +206,7 @@ public class TestReceiveMail extends AbstractPimTest
     @Test
     public void test020SaveNewMails() throws Exception
     {
+        System.out.println();
         Folder inboxFolder = null;
 
         try
@@ -237,6 +238,7 @@ public class TestReceiveMail extends AbstractPimTest
                 String subject = message.getSubject();
                 String from = Optional.ofNullable(message.getFrom()).map(f -> ((InternetAddress) f[0]).getAddress()).orElse(null);
 
+                System.out.printf("From: %s%n", Arrays.toString(message.getFrom()));
                 System.out.printf("%02d | %s | %tc | %s | %s%n", messageNumber, messageID, receivedDate, subject, from);
 
                 try (OutputStream os = Files.newOutputStream(TMP_TEST_PATH.resolve(messageID + ".msg")))
@@ -264,6 +266,7 @@ public class TestReceiveMail extends AbstractPimTest
     @Test
     public void test021ReadSavedMails() throws Exception
     {
+        System.out.println();
         // Files.newDirectoryStream(Paths.get("."), path -> path.toString().endsWith(".msg")).forEach(System.out::println);
 
         try (Stream<Path> mailFiles = Files.find(TMP_TEST_PATH, Integer.MAX_VALUE, (path, attrs) -> attrs.isRegularFile() && path.toString().endsWith(".msg")))
@@ -292,6 +295,8 @@ public class TestReceiveMail extends AbstractPimTest
     @Test
     public void test022ReadTextFromSavedMails() throws Exception
     {
+        System.out.println();
+
         try (Stream<Path> mailFiles = Files.find(TMP_TEST_PATH, Integer.MAX_VALUE, (path, attrs) -> attrs.isRegularFile() && path.toString().endsWith(".msg")))
         {
             for (Path mail : mailFiles.collect(Collectors.toList()))

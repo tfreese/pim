@@ -10,13 +10,16 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
 import javax.activation.FileDataSource;
 import javax.activation.FileTypeMap;
+import javax.activation.MimetypesFileTypeMap;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Part;
+import javax.mail.Session;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
@@ -73,13 +76,35 @@ public class JavaMailBuilder
      */
     public static JavaMailBuilder create(final JavaMailSender sender, final boolean validateAddresses)
     {
-        return new JavaMailBuilder(sender, validateAddresses);
+        return new JavaMailBuilder(sender, sender.getSession(), sender.getEncoding(), sender.getFileTypeMap(), validateAddresses);
+    }
+
+    /**
+     * @param session {@link Session}
+     * @param encoding String
+     * @param fileTypeMap {@link FileTypeMap}; optional, wird für Attachements benötigt
+     * @param validateAddresses boolean
+     * @return {@link JavaMailBuilder}
+     */
+    public static JavaMailBuilder create(final Session session, final String encoding, final FileTypeMap fileTypeMap, final boolean validateAddresses)
+    {
+        return new JavaMailBuilder(null, session, encoding, fileTypeMap, validateAddresses);
     }
 
     /**
      *
      */
     private final List<MimeBodyPart> attachments = new ArrayList<>();
+
+    /**
+     *
+     */
+    private final String encoding;
+
+    /**
+     *
+     */
+    private final FileTypeMap fileTypeMap;
 
     /**
      *
@@ -124,6 +149,11 @@ public class JavaMailBuilder
     /**
      *
      */
+    private final Session session;
+
+    /**
+     *
+     */
     private String subject = null;
 
     /**
@@ -140,13 +170,20 @@ public class JavaMailBuilder
      * Erzeugt eine neue Instanz von {@link JavaMailBuilder}
      *
      * @param sender {@link JavaMailSender}
+     * @param session {@link Session}
+     * @param encoding String
+     * @param fileTypeMap {@link FileTypeMap}; optional, wird für Attachements benötigt
      * @param validateAddresses boolean
      */
-    private JavaMailBuilder(final JavaMailSender sender, final boolean validateAddresses)
+    private JavaMailBuilder(final JavaMailSender sender, final Session session, final String encoding, final FileTypeMap fileTypeMap,
+            final boolean validateAddresses)
     {
         super();
 
         this.sender = sender;
+        this.session = session;
+        this.encoding = encoding;
+        this.fileTypeMap = Optional.ofNullable(fileTypeMap).orElse(new MimetypesFileTypeMap());
         this.validateAddresses = validateAddresses;
     }
 
@@ -289,7 +326,7 @@ public class JavaMailBuilder
     }
 
     /**
-     * @param contentStream {@link InputStream}
+     * @param contentStream {@link InputStream}; Message Input Stream
      * @return {@link MimeMessage}
      * @throws MessagingException Falls was schief geht.
      */
@@ -299,11 +336,11 @@ public class JavaMailBuilder
 
         if (contentStream == null)
         {
-            mail = new MimeMessage(this.sender.getSession());
+            mail = new MimeMessage(getSession());
         }
         else
         {
-            mail = new MimeMessage(this.sender.getSession(), contentStream);
+            mail = new MimeMessage(getSession(), contentStream);
         }
 
         mail.setFrom(this.from);
@@ -399,6 +436,8 @@ public class JavaMailBuilder
     }
 
     /**
+     * {@link JavaMailSender} wird benötigt.
+     * 
      * @throws Exception Falls was schief geht.
      */
     public void buildAndSend() throws Exception
@@ -407,11 +446,15 @@ public class JavaMailBuilder
     }
 
     /**
-     * @param contentStream {@link InputStream}
+     * {@link JavaMailSender} wird benötigt.
+     *
+     * @param contentStream {@link InputStream}; Message Input Stream
      * @throws Exception Falls was schief geht.
      */
     public void buildAndSend(final InputStream contentStream) throws Exception
     {
+        Objects.requireNonNull(this.sender, "sender required");
+
         MimeMessage mail = build(contentStream);
 
         this.sender.send(mail);
@@ -580,7 +623,7 @@ public class JavaMailBuilder
      */
     private String getEncoding()
     {
-        return this.sender.getEncoding();
+        return this.encoding;
     }
 
     /**
@@ -588,7 +631,15 @@ public class JavaMailBuilder
      */
     private FileTypeMap getFileTypeMap()
     {
-        return this.sender.getFileTypeMap();
+        return this.fileTypeMap;
+    }
+
+    /**
+     * @return {@link Session}
+     */
+    private Session getSession()
+    {
+        return this.session;
     }
 
     /**
