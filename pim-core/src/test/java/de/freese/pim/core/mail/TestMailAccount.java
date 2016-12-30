@@ -8,6 +8,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
@@ -16,11 +18,11 @@ import org.junit.runners.MethodSorters;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import de.freese.pim.core.AbstractPimTest;
 import de.freese.pim.core.mail.model.MailAccount;
-import de.freese.pim.core.mail.model.MailAccountList;
 
 /**
  * http://www.baeldung.com/jackson-annotations
@@ -75,7 +77,7 @@ public class TestMailAccount extends AbstractPimTest
         Path path = TMP_TEST_PATH.resolve("testMailAccount_010SingleSerialize.json");
 
         MailAccount account = new MailAccount();
-        account.setAccount("commercial@freese-home.de");
+        account.setMail("commercial@freese-home.de");
         account.setPassword("gehaim");
 
         // Files.newOutputStream(path) = Files.newInputStream(path, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.WRITE))
@@ -99,7 +101,7 @@ public class TestMailAccount extends AbstractPimTest
             MailAccount account = jsonMapper.readValue(is, MailAccount.class);
 
             Assert.assertNotNull(account);
-            Assert.assertEquals("commercial@freese-home.de", account.getAccount());
+            Assert.assertEquals("commercial@freese-home.de", account.getMail());
             Assert.assertEquals("gehaim", account.getPassword());
         }
     }
@@ -113,14 +115,15 @@ public class TestMailAccount extends AbstractPimTest
         Path path = TMP_TEST_PATH.resolve("testMailAccount_020ListSerialize.json");
 
         MailAccount account1 = new MailAccount();
-        account1.setAccount("1commercial@freese-home.de");
+        account1.setMail("1commercial@freese-home.de");
         account1.setPassword("1gehaim");
 
         MailAccount account2 = new MailAccount();
-        account2.setAccount("2commercial@freese-home.de");
+        account2.setMail("2commercial@freese-home.de");
         account2.setPassword("2gehaim");
 
-        MailAccountList list = new MailAccountList();
+        // MailAccountList list = new MailAccountList();
+        List<MailAccount> list = new ArrayList<>();
         list.add(account1);
         list.add(account2);
 
@@ -142,14 +145,17 @@ public class TestMailAccount extends AbstractPimTest
         // Files.newInputStream(path) = Files.newInputStream(path, StandardOpenOption.READ)
         try (InputStream is = Files.newInputStream(path))
         {
-            MailAccountList list = jsonMapper.readValue(is, MailAccountList.class);
+            // MailAccountList list = jsonMapper.readValue(is, MailAccountList.class);
+
+            JavaType type = jsonMapper.getTypeFactory().constructCollectionType(ArrayList.class, MailAccount.class);
+            List<MailAccount> list = jsonMapper.readValue(is, type);
 
             Assert.assertNotNull(list);
             Assert.assertEquals(Boolean.FALSE, list.isEmpty());
             Assert.assertEquals(2, list.size());
-            Assert.assertEquals("1commercial@freese-home.de", list.get(0).getAccount());
+            Assert.assertEquals("1commercial@freese-home.de", list.get(0).getMail());
             Assert.assertEquals("1gehaim", list.get(0).getPassword());
-            Assert.assertEquals("2commercial@freese-home.de", list.get(1).getAccount());
+            Assert.assertEquals("2commercial@freese-home.de", list.get(1).getMail());
             Assert.assertEquals("2gehaim", list.get(1).getPassword());
         }
     }

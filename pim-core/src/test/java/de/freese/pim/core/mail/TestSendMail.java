@@ -1,11 +1,7 @@
 // Created: 12.12.2016
 package de.freese.pim.core.mail;
 
-import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.Arrays;
 import java.util.Properties;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -16,55 +12,19 @@ import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameter;
-import org.junit.runners.Parameterized.Parameters;
 import org.springframework.core.io.ClassPathResource;
-import de.freese.pim.core.AbstractPimTest;
 
 /**
  * @author Thomas Freese
  */
 @RunWith(Parameterized.class)
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class TestSendMail extends AbstractPimTest
+public class TestSendMail extends AbstractMailTest
 {
     /**
      *
      */
     private static JavaMailSender sender = null;
-
-    /**
-     * @return {@link Iterable}
-     * @throws Exception Falls was schief geht.
-     */
-    @Parameters(name = "Account: {1}") // {index}
-    public static Iterable<Object[]> accounts() throws Exception
-    {
-        Path path = TMP_TEST_PATH.resolve("testMail.properties");
-
-        Files.createDirectories(path.getParent());
-
-        if (Files.notExists(path))
-        {
-            System.err.println("need property file with from, to and password: " + path);
-
-            return Arrays.asList(new Object[][] {});
-        }
-
-        Properties properties = new Properties();
-
-        // Files.newInputStream(path) = Files.newInputStream(path, StandardOpenOption.READ)
-        try (InputStream is = Files.newInputStream(path))
-        {
-            properties.load(is);
-        }
-
-        return Arrays.asList(new Object[][]
-        {
-                {
-                        properties.getProperty("from"), properties.getProperty("to"), properties.getProperty("password")
-                }
-        });
-    }
 
     /**
     *

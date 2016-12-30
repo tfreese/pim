@@ -40,23 +40,19 @@ import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameter;
-import org.junit.runners.Parameterized.Parameters;
 import com.sun.mail.imap.IMAPFolder;
 import com.sun.mail.util.ASCIIUtility;
-import de.freese.pim.core.AbstractPimTest;
 import de.freese.pim.core.mail.function.FunctionStripNotLetter;
 import de.freese.pim.core.mail.utils.MailUtils;
 import de.freese.pim.core.mail.utils.MailUtils.AbstractTextPart;
 
 /**
- * https://javamail.java.net/nonav/docs/api/com/sun/mail/imap/package-summary.html
- *
  * @author Thomas Freese
  */
 // @Ignore
 @RunWith(Parameterized.class)
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class TestReceiveMail extends AbstractPimTest
+public class TestReceiveMail extends AbstractMailTest
 {
     /**
      *
@@ -67,39 +63,6 @@ public class TestReceiveMail extends AbstractPimTest
      *
      */
     private static Store store = null;
-
-    /**
-     * @return {@link Iterable}
-     * @throws Exception Falls was schief geht.
-     */
-    @Parameters(name = "Account: {0}") // {index}
-    public static Iterable<Object[]> accounts() throws Exception
-    {
-        Path path = TMP_TEST_PATH.resolve("testMail.properties");
-
-        Files.createDirectories(path.getParent());
-
-        if (Files.notExists(path))
-        {
-            System.err.println("need property file with from, to and password: " + path);
-
-            return Arrays.asList(new Object[][] {});
-        }
-
-        Properties properties = new Properties();
-
-        try (InputStream is = Files.newInputStream(path))
-        {
-            properties.load(is);
-        }
-
-        return Arrays.asList(new Object[][]
-        {
-                {
-                        properties.getProperty("from"), properties.getProperty("password")
-                }
-        });
-    }
 
     /**
      * @throws Exception Falls was schief geht.
