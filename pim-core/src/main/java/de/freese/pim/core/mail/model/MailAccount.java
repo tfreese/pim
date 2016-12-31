@@ -10,6 +10,7 @@ import javax.mail.MessagingException;
 import javax.mail.Session;
 import javax.mail.Store;
 import javax.mail.Transport;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -54,6 +55,7 @@ public class MailAccount
     /**
      *
      */
+    @JsonIgnore
     private Session session = null;
 
     /**
@@ -74,6 +76,7 @@ public class MailAccount
     /**
      *
      */
+    @JsonIgnore
     private Store store = null;
 
     /**

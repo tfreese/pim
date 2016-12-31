@@ -195,7 +195,7 @@ public class ContactView implements IView
 
         TitledPane titledPane = new TitledPane("%kontakte", gridPane);
         titledPane.setPrefHeight(Double.MAX_VALUE);
-        titledPane.setContent(gridPane);
+        // titledPane.setContent(gridPane);
 
         return titledPane;
     }

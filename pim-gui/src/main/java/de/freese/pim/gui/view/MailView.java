@@ -4,7 +4,9 @@ package de.freese.pim.gui.view;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
+import javafx.scene.control.SelectionMode;
+import javafx.scene.control.TitledPane;
+import javafx.scene.control.TreeView;
 import javafx.scene.layout.BorderPane;
 
 /**
@@ -26,6 +28,12 @@ public class MailView implements IView
      */
     @FXML
     private final Node naviNode;
+
+    /**
+    *
+    */
+    @FXML
+    private TreeView<Object> treeViewMail = null;
 
     /**
      * Erzeugt eine neue Instanz von {@link MailView}
@@ -54,6 +62,14 @@ public class MailView implements IView
      */
     private Node createNaviNode()
     {
-        return new ListView<>();
+        this.treeViewMail = new TreeView<>();
+        this.treeViewMail.setEditable(false);
+        this.treeViewMail.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+
+        TitledPane titledPane = new TitledPane("%mails", this.treeViewMail);
+        titledPane.setPrefHeight(Double.MAX_VALUE);
+        // titledPane.setContent(treeViewMail);
+
+        return titledPane;
     }
 }
