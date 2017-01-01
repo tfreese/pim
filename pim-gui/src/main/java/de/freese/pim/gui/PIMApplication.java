@@ -6,9 +6,9 @@ import java.util.ResourceBundle;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
-import java.util.concurrent.SynchronousQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import javax.sql.DataSource;
@@ -243,8 +243,8 @@ public class PIMApplication extends Application
         Utils.sleep(1, TimeUnit.SECONDS);
 
         // Threads leben max. 60 Sekunden, wenn es nix zu tun gibt, min. 2 Threads, max. 10.
-        BlockingQueue<Runnable> workQueue = new SynchronousQueue<>(false);
-        // BlockingQueue<Runnable> workQueue = new LinkedBlockingQueue<>(50);
+        // BlockingQueue<Runnable> workQueue = new SynchronousQueue<>(false);
+        BlockingQueue<Runnable> workQueue = new LinkedBlockingQueue<>(100);
 
         ExecutorService executor =
                 new ThreadPoolExecutor(2, 10, 60, TimeUnit.SECONDS, workQueue, new PIMThreadFactory("thread"), new ThreadPoolExecutor.AbortPolicy());

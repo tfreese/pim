@@ -1,5 +1,5 @@
 // Created: 13.12.2016
-package de.freese.pim.gui.controller;
+package de.freese.pim.gui.contact;
 
 import java.net.URL;
 import java.util.List;
@@ -12,6 +12,8 @@ import de.freese.pim.core.addressbook.dao.IAddressBookDAO;
 import de.freese.pim.core.addressbook.dao.TxLambdaAddressBookDAO;
 import de.freese.pim.core.addressbook.model.Kontakt;
 import de.freese.pim.gui.PIMApplication;
+import de.freese.pim.gui.controller.AbstractController;
+import de.freese.pim.gui.controller.IController;
 import de.freese.pim.gui.utils.FXUtils;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;

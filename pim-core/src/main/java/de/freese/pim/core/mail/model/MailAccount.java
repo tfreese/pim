@@ -204,6 +204,14 @@ public class MailAccount
     }
 
     /**
+     * @return {@link Store}
+     */
+    public Store getStore()
+    {
+        return this.store;
+    }
+
+    /**
      * @return {@link StringProperty}
      */
     public StringProperty imapHostProperty()

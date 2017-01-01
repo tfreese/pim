@@ -3,9 +3,11 @@ package de.freese.pim.gui.controller;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import de.freese.pim.gui.contact.ContactController;
+import de.freese.pim.gui.contact.ContactView;
+import de.freese.pim.gui.mail.MailController;
+import de.freese.pim.gui.mail.MailView;
 import de.freese.pim.gui.utils.FXUtils;
-import de.freese.pim.gui.view.ContactView;
-import de.freese.pim.gui.view.MailView;
 import de.freese.pim.gui.view.MainView;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -115,6 +117,7 @@ public class MainController extends AbstractController
      */
     public void selectDefaultView()
     {
-        this.buttonContactView.fire();
+        this.buttonMailView.fire();
+        // this.buttonContactView.fire();
     }
 }

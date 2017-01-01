@@ -1,8 +1,9 @@
 // Created: 13.12.2016
-package de.freese.pim.gui.view;
+package de.freese.pim.gui.contact;
 
 import org.apache.commons.lang3.StringUtils;
 import de.freese.pim.core.addressbook.model.Kontakt;
+import de.freese.pim.gui.view.IView;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.transformation.FilteredList;

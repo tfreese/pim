@@ -1,5 +1,5 @@
 // Created: 13.12.2016
-package de.freese.pim.gui.controller;
+package de.freese.pim.gui.mail;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -11,11 +11,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
+import javax.mail.Folder;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import de.freese.pim.core.mail.model.MailAccount;
+import de.freese.pim.gui.controller.AbstractController;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -100,14 +102,20 @@ public class MailController extends AbstractController
             {
                 super.updateItem(item, empty);
 
-                if (item == null)
+                if ((item == null) || empty)
                 {
+                    setText(null);
+
                     return;
                 }
 
                 if (item instanceof MailAccount)
                 {
                     setText(((MailAccount) item).getMail());
+                }
+                else if (item instanceof Folder)
+                {
+                    setText(((Folder) item).getName());
                 }
             }
         });
@@ -123,6 +131,7 @@ public class MailController extends AbstractController
         jsonMapper.enable(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT);
 
         Path accounts = getSettingService().getHome().resolve(".mailaccounts");
+        List<MailAccount> accountList = new ArrayList<>();
 
         if (Files.exists(accounts))
         {
@@ -132,15 +141,12 @@ public class MailController extends AbstractController
                 // root.getChildren().add(new TreeItem<>(mailAccount));
 
                 JavaType type = jsonMapper.getTypeFactory().constructCollectionType(ArrayList.class, MailAccount.class);
-                List<MailAccount> list = jsonMapper.readValue(is, type);
-
-                for (MailAccount mailAccount : list)
-                {
-                    root.getChildren().add(new TreeItem<>(mailAccount));
-                }
+                accountList.addAll(jsonMapper.readValue(is, type));
             }
             catch (IOException ex)
             {
+                getLogger().error(null, ex);
+
                 Alert alert = new Alert(AlertType.ERROR, ex.getMessage());
                 alert.showAndWait();
             }
@@ -151,6 +157,7 @@ public class MailController extends AbstractController
             account.setMail("commercial@freese-home.de");
             account.setImapHost("imap.1und1.de");
             account.setSmtpHost("smtp.1und1.de");
+            accountList.add(account);
 
             try (OutputStream os = Files.newOutputStream(accounts))
             {
@@ -163,6 +170,26 @@ public class MailController extends AbstractController
 
                 // Files.delete(accounts);
             }
+        }
+
+        try
+        {
+            for (MailAccount mailAccount : accountList)
+            {
+                TreeItem<Object> treeItem = new TreeItem<>(mailAccount);
+                root.getChildren().add(treeItem);
+
+                getLogger().info("Init MailAccount {}", mailAccount.getMail());
+                InitMailAccountService service = new InitMailAccountService(treeItem, mailAccount);
+                service.start();
+            }
+        }
+        catch (Exception ex)
+        {
+            getLogger().error(null, ex);
+
+            Alert alert = new Alert(AlertType.ERROR, ex.getMessage());
+            alert.showAndWait();
         }
     }
 }

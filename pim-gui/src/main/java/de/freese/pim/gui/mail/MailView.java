@@ -1,6 +1,7 @@
 // Created: 13.12.2016
-package de.freese.pim.gui.view;
+package de.freese.pim.gui.mail;
 
+import de.freese.pim.gui.view.IView;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
