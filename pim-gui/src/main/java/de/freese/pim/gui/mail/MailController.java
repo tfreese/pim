@@ -11,12 +11,17 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
-import javax.mail.Folder;
+
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import de.freese.pim.core.mail.model.MailAccount;
+
+import de.freese.pim.core.mail.MailProvider;
+import de.freese.pim.core.mail.model.IMailAccount;
+import de.freese.pim.core.mail.model.IMailFolder;
+import de.freese.pim.core.mail.model.ImapMailAccount;
+import de.freese.pim.core.mail.model.MailConfig;
 import de.freese.pim.gui.controller.AbstractController;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
@@ -109,13 +114,13 @@ public class MailController extends AbstractController
                     return;
                 }
 
-                if (item instanceof MailAccount)
+                if (item instanceof IMailAccount)
                 {
-                    setText(((MailAccount) item).getMail());
+                    setText(((IMailAccount) item).getName());
                 }
-                else if (item instanceof Folder)
+                else if (item instanceof IMailFolder)
                 {
-                    setText(((Folder) item).getName());
+                    setText(((IMailFolder) item).getName());
                 }
             }
         });
@@ -130,18 +135,18 @@ public class MailController extends AbstractController
         jsonMapper.enable(SerializationFeature.INDENT_OUTPUT);
         jsonMapper.enable(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT);
 
-        Path accounts = getSettingService().getHome().resolve(".mailaccounts");
-        List<MailAccount> accountList = new ArrayList<>();
+        Path configs = getSettingService().getHome().resolve(".mailconfigs");
+        List<MailConfig> configList = new ArrayList<>();
 
-        if (Files.exists(accounts))
+        if (Files.exists(configs))
         {
-            try (InputStream is = Files.newInputStream(accounts))
+            try (InputStream is = Files.newInputStream(configs))
             {
                 // MailAccount mailAccount = jsonMapper.readValue(is, MailAccount.class);
                 // root.getChildren().add(new TreeItem<>(mailAccount));
 
-                JavaType type = jsonMapper.getTypeFactory().constructCollectionType(ArrayList.class, MailAccount.class);
-                accountList.addAll(jsonMapper.readValue(is, type));
+                JavaType type = jsonMapper.getTypeFactory().constructCollectionType(ArrayList.class, MailConfig.class);
+                configList.addAll(jsonMapper.readValue(is, type));
             }
             catch (IOException ex)
             {
@@ -153,15 +158,15 @@ public class MailController extends AbstractController
         }
         else
         {
-            MailAccount account = new MailAccount();
-            account.setMail("commercial@freese-home.de");
-            account.setImapHost("imap.1und1.de");
-            account.setSmtpHost("smtp.1und1.de");
-            accountList.add(account);
+            MailConfig config = new MailConfig();
+            config.setMail("commercial@freese-home.de");
+            config.setImapHost(MailProvider.EinsUndEins.getImapHost());
+            config.setSmtpHost(MailProvider.EinsUndEins.getSmtpHost());
+            configList.add(config);
 
-            try (OutputStream os = Files.newOutputStream(accounts))
+            try (OutputStream os = Files.newOutputStream(configs))
             {
-                jsonMapper.writer().writeValue(os, Arrays.asList(account));
+                jsonMapper.writer().writeValue(os, Arrays.asList(config));
             }
             catch (IOException ex)
             {
@@ -174,13 +179,14 @@ public class MailController extends AbstractController
 
         try
         {
-            for (MailAccount mailAccount : accountList)
+            for (MailConfig mailConfig : configList)
             {
+                IMailAccount mailAccount = new ImapMailAccount();
                 TreeItem<Object> treeItem = new TreeItem<>(mailAccount);
                 root.getChildren().add(treeItem);
 
-                getLogger().info("Init MailAccount {}", mailAccount.getMail());
-                InitMailAccountService service = new InitMailAccountService(treeItem, mailAccount);
+                getLogger().info("Init MailAccount {}", mailAccount.getName());
+                InitMailAccountService service = new InitMailAccountService(treeItem, mailConfig);
                 service.start();
             }
         }

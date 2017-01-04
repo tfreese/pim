@@ -22,7 +22,7 @@ import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import de.freese.pim.core.AbstractPimTest;
-import de.freese.pim.core.mail.model.MailAccount;
+import de.freese.pim.core.mail.model.MailConfig;
 
 /**
  * http://www.baeldung.com/jackson-annotations
@@ -31,7 +31,7 @@ import de.freese.pim.core.mail.model.MailAccount;
  */
 // @RunWith(Parameterized.class)
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class TestMailAccount extends AbstractPimTest
+public class TestMailConfig extends AbstractPimTest
 {
     /**
     *
@@ -61,9 +61,9 @@ public class TestMailAccount extends AbstractPimTest
     }
 
     /**
-     * Erstellt ein neues {@link TestMailAccount} Object.
+     * Erstellt ein neues {@link TestMailConfig} Object.
      */
-    public TestMailAccount()
+    public TestMailConfig()
     {
         super();
     }
@@ -76,7 +76,7 @@ public class TestMailAccount extends AbstractPimTest
     {
         Path path = TMP_TEST_PATH.resolve("testMailAccount_010SingleSerialize.json");
 
-        MailAccount account = new MailAccount();
+        MailConfig account = new MailConfig();
         account.setMail("commercial@freese-home.de");
         account.setPassword("gehaim");
 
@@ -98,7 +98,7 @@ public class TestMailAccount extends AbstractPimTest
         // Files.newInputStream(path) = Files.newInputStream(path, StandardOpenOption.READ)
         try (InputStream is = Files.newInputStream(path))
         {
-            MailAccount account = jsonMapper.readValue(is, MailAccount.class);
+            MailConfig account = jsonMapper.readValue(is, MailConfig.class);
 
             Assert.assertNotNull(account);
             Assert.assertEquals("commercial@freese-home.de", account.getMail());
@@ -114,16 +114,16 @@ public class TestMailAccount extends AbstractPimTest
     {
         Path path = TMP_TEST_PATH.resolve("testMailAccount_020ListSerialize.json");
 
-        MailAccount account1 = new MailAccount();
+        MailConfig account1 = new MailConfig();
         account1.setMail("1commercial@freese-home.de");
         account1.setPassword("1gehaim");
 
-        MailAccount account2 = new MailAccount();
+        MailConfig account2 = new MailConfig();
         account2.setMail("2commercial@freese-home.de");
         account2.setPassword("2gehaim");
 
         // MailAccountList list = new MailAccountList();
-        List<MailAccount> list = new ArrayList<>();
+        List<MailConfig> list = new ArrayList<>();
         list.add(account1);
         list.add(account2);
 
@@ -147,8 +147,8 @@ public class TestMailAccount extends AbstractPimTest
         {
             // MailAccountList list = jsonMapper.readValue(is, MailAccountList.class);
 
-            JavaType type = jsonMapper.getTypeFactory().constructCollectionType(ArrayList.class, MailAccount.class);
-            List<MailAccount> list = jsonMapper.readValue(is, type);
+            JavaType type = jsonMapper.getTypeFactory().constructCollectionType(ArrayList.class, MailConfig.class);
+            List<MailConfig> list = jsonMapper.readValue(is, type);
 
             Assert.assertNotNull(list);
             Assert.assertEquals(Boolean.FALSE, list.isEmpty());

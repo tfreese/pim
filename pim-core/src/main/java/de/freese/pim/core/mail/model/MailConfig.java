@@ -5,12 +5,15 @@
 package de.freese.pim.core.mail.model;
 
 import java.util.Properties;
+
 import javax.mail.Authenticator;
 import javax.mail.MessagingException;
 import javax.mail.Session;
 import javax.mail.Store;
 import javax.mail.Transport;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -23,9 +26,9 @@ import javafx.beans.property.StringProperty;
  *
  * @author Thomas Freese
  */
-@SuppressWarnings("restriction")
+// @SuppressWarnings("restriction")
 // @JsonRootName("mailAccount")
-public class MailAccount
+public class MailConfig
 {
     /**
     *
@@ -80,9 +83,9 @@ public class MailAccount
     private Store store = null;
 
     /**
-     * Erstellt ein neues {@link MailAccount} Object.
+     * Erstellt ein neues {@link MailConfig} Object.
      */
-    public MailAccount()
+    public MailConfig()
     {
         super();
     }
@@ -96,47 +99,6 @@ public class MailAccount
         {
             this.store.close();
         }
-    }
-
-    /**
-     * Erzeugt die Mail-Session.
-     *
-     * @return {@link Session}
-     * @throws MessagingException Falls was schief geht.
-     */
-    private Session createSession() throws MessagingException
-    {
-        Authenticator authenticator = null;
-
-        Properties properties = new Properties();
-
-        // Legitimation für Empfang.
-        if (isImapLegitimation())
-        {
-            properties.put("mail.imap.auth", "true");
-            properties.put("mail.imap.starttls.enable", "true");
-        }
-
-        // Legitimation für Versand.
-        if (isSmtpLegitimation())
-        {
-            properties.put("mail.smtp.auth", "true");
-            properties.put("mail.smtp.starttls.enable", "true");
-        }
-
-        Session session = Session.getInstance(properties, authenticator);
-
-        // Test Connection Empfang.
-        this.store = session.getStore("imaps");
-        this.store.connect(getImapHost(), getImapPort(), getMail(), getPassword());
-
-        // Test Connection Versand.
-        // this.mailSender.testConnection();
-        Transport transport = session.getTransport("smtp");
-        transport.connect(getSmtpHost(), getSmtpPort(), getMail(), getPassword());
-        transport.close();
-
-        return session;
     }
 
     /**
@@ -353,5 +315,47 @@ public class MailAccount
     public IntegerProperty smtpPortProperty()
     {
         return this.smtpPortProperty;
+    }
+
+    /**
+     * Erzeugt die Mail-Session.
+     *
+     * @return {@link Session}
+     * @throws MessagingException Falls was schief geht.
+     */
+    private Session createSession() throws MessagingException
+    {
+        Authenticator authenticator = null;
+
+        Properties properties = new Properties();
+        properties.put("mail.debug", Boolean.TRUE.toString());
+
+        // Legitimation für Empfang.
+        if (isImapLegitimation())
+        {
+            properties.put("mail.imap.auth", "true");
+            properties.put("mail.imap.starttls.enable", "true");
+        }
+
+        // Legitimation für Versand.
+        if (isSmtpLegitimation())
+        {
+            properties.put("mail.smtp.auth", "true");
+            properties.put("mail.smtp.starttls.enable", "true");
+        }
+
+        Session session = Session.getInstance(properties, authenticator);
+
+        // Test Connection Empfang.
+        this.store = session.getStore("imaps");
+        this.store.connect(getImapHost(), getImapPort(), getMail(), getPassword());
+
+        // Test Connection Versand.
+        // this.mailSender.testConnection();
+        Transport transport = session.getTransport("smtp");
+        transport.connect(getSmtpHost(), getSmtpPort(), getMail(), getPassword());
+        transport.close();
+
+        return session;
     }
 }

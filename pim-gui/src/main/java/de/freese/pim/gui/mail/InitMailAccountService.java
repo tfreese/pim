@@ -8,11 +8,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
-import javax.mail.Folder;
-import javax.mail.MessagingException;
-import javax.mail.Store;
-import org.apache.commons.lang3.ArrayUtils;
-import de.freese.pim.core.mail.model.MailAccount;
+
+import org.apache.commons.collections4.CollectionUtils;
+
+import de.freese.pim.core.mail.model.IMailAccount;
+import de.freese.pim.core.mail.model.IMailFolder;
+import de.freese.pim.core.mail.model.MailConfig;
 import de.freese.pim.gui.PIMApplication;
 import javafx.application.Platform;
 import javafx.concurrent.Service;
@@ -31,7 +32,7 @@ public class InitMailAccountService extends Service<Void>
     /**
     *
     */
-    private final MailAccount mailAccount;
+    private final MailConfig mailConfig;
 
     /**
     *
@@ -42,19 +43,58 @@ public class InitMailAccountService extends Service<Void>
      * Erstellt ein neues {@link InitMailAccountService} Object.
      *
      * @param root {@link TreeItem}
-     * @param mailAccount {@link Store}
+     * @param mailConfig {@link MailConfig}
      */
-    public InitMailAccountService(final TreeItem<Object> root, final MailAccount mailAccount)
+    public InitMailAccountService(final TreeItem<Object> root, final MailConfig mailConfig)
     {
         super();
 
         Objects.requireNonNull(root, "root item required");
-        Objects.requireNonNull(mailAccount, "mailAccount required");
+        Objects.requireNonNull(mailConfig, "mailConfig required");
 
         this.root = root;
-        this.mailAccount = mailAccount;
+        this.mailConfig = mailConfig;
 
         setExecutor(PIMApplication.getExecutorService());
+    }
+
+    /**
+     * Liefert den {@link IMailAccount}.
+     *
+     * @return {@link IMailAccount}
+     */
+    private IMailAccount getMailAccount()
+    {
+        return (IMailAccount) this.root.getValue();
+    }
+
+    /**
+     * Laden der direkten Children, nicht die ganze Hierarchie.
+     *
+     * @param parent {@link IMailFolder}
+     * @return {@link List}
+     * @throws Exception Falls was schief geht.
+     */
+    private List<TreeItem<Object>> loadChildFolders(final IMailFolder parent) throws Exception
+    {
+        List<IMailFolder> children = parent.getChildren();
+
+        if (CollectionUtils.isEmpty(children))
+        {
+            return Collections.emptyList();
+        }
+
+        List<TreeItem<Object>> childItems = new ArrayList<>();
+
+        for (IMailFolder child : children)
+        {
+            TreeItem<Object> treeItem = new TreeItem<>(child);
+            childItems.add(treeItem);
+
+            treeItem.getChildren().addAll(loadChildFolders(child));
+        }
+
+        return childItems;
     }
 
     /**
@@ -71,11 +111,21 @@ public class InitMailAccountService extends Service<Void>
             @Override
             protected Void call() throws Exception
             {
-                InitMailAccountService.this.mailAccount.getSession(); // Trigger Connect
+                IMailAccount mailAccount = getMailAccount();
+                List<IMailFolder> topLevelFolder = mailAccount.getTopLevelFolder();
 
-                List<TreeItem<Object>> childItems = loadChildFolder(InitMailAccountService.this.mailAccount.getStore().getDefaultFolder());
+                List<TreeItem<Object>> childItems = new ArrayList<>();
 
-                Platform.runLater(() -> {
+                for (IMailFolder folder : topLevelFolder)
+                {
+                    TreeItem<Object> treeItem = new TreeItem<>(folder);
+                    childItems.add(treeItem);
+
+                    treeItem.getChildren().addAll(loadChildFolders(folder));
+                }
+
+                Platform.runLater(() ->
+                {
                     InitMailAccountService.this.root.getChildren().addAll(childItems);
                     InitMailAccountService.this.root.setExpanded(true);
                 });
@@ -84,13 +134,15 @@ public class InitMailAccountService extends Service<Void>
             }
         };
 
-        setOnSucceeded(event -> {
+        setOnSucceeded(event ->
+        {
             // List<TreeItem<Object>> childItems = task.get();
             // TreeModificationEvent<Object> treeEvent = new TreeModificationEvent<>(TreeItem.childrenModificationEvent(), accountItem);
             // Event.fireEvent(accountItem, treeEvent);
         });
 
-        setOnFailed(event -> {
+        setOnFailed(event ->
+        {
             Throwable th = getException();
 
             PIMApplication.LOGGER.error(null, th);
@@ -100,39 +152,5 @@ public class InitMailAccountService extends Service<Void>
         });
 
         return task;
-    }
-
-    /**
-     * Laden der direkten Children, nicht die ganze Hierarchie.
-     *
-     * @param parent {@link Folder}
-     * @return {@link Folder}[]
-     * @throws MessagingException Falls was schief geht.
-     */
-    private List<TreeItem<Object>> loadChildFolder(final Folder parent) throws MessagingException
-    {
-        Folder[] childFolders = parent.list("%");
-
-        if (ArrayUtils.isEmpty(childFolders))
-        {
-            return Collections.emptyList();
-        }
-
-        List<TreeItem<Object>> childList = new ArrayList<>();
-
-        for (Folder child : childFolders)
-        {
-            TreeItem<Object> treeItem = new TreeItem<>(child);
-            childList.add(treeItem);
-
-            List<TreeItem<Object>> childsOfChild = loadChildFolder(child);
-
-            for (TreeItem<Object> childOfChild : childsOfChild)
-            {
-                treeItem.getChildren().add(childOfChild);
-            }
-        }
-
-        return childList;
     }
 }

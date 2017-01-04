@@ -13,7 +13,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
 import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameter;
 import org.springframework.core.io.ClassPathResource;
 
 /**
@@ -56,24 +55,6 @@ public class TestSendMail extends AbstractMailTest
         properties.put("mail.smtp.starttls.enable", "true");
         sender.setJavaMailProperties(properties);
     }
-
-    /**
-    *
-    */
-    @Parameter(value = 0)
-    public String from = null;
-
-    /**
-    *
-    */
-    @Parameter(value = 2)
-    public String password;
-
-    /**
-    *
-    */
-    @Parameter(value = 1)
-    public String to;
 
     /**
      * Erzeugt eine neue Instanz von {@link TestSendMail}
