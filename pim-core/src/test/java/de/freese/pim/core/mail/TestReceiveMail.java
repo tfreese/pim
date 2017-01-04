@@ -43,7 +43,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
 import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameter;
 
 import com.sun.mail.imap.IMAPFolder;
 import com.sun.mail.util.ASCIIUtility;
@@ -100,18 +99,6 @@ public class TestReceiveMail extends AbstractMailTest
     }
 
     /**
-    *
-    */
-    @Parameter(value = 1)
-    public String password;
-
-    /**
-    *
-    */
-    @Parameter(value = 0)
-    public String username = null;
-
-    /**
      * Erstellt ein neues {@link TestReceiveMail} Object.
      */
     public TestReceiveMail()
@@ -145,7 +132,7 @@ public class TestReceiveMail extends AbstractMailTest
     public void test000Connect() throws Exception
     {
         store = session.getStore("imaps");
-        store.connect(MAIL_IMAP_HOST, MAIL_IMAP_PORT, this.username, this.password);
+        store.connect(MAIL_IMAP_HOST, MAIL_IMAP_PORT, this.from, this.password);
     }
 
     /**

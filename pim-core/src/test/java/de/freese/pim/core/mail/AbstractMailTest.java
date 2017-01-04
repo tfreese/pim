@@ -10,6 +10,7 @@ import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Properties;
 
+import org.junit.runners.Parameterized.Parameter;
 import org.junit.runners.Parameterized.Parameters;
 
 import de.freese.pim.core.AbstractPimTest;
@@ -21,6 +22,26 @@ import de.freese.pim.core.AbstractPimTest;
  */
 public abstract class AbstractMailTest extends AbstractPimTest
 {
+    /**
+    *
+    */
+    public static final String MAIL_IMAP_HOST = getMailProvider().getImapHost();
+
+    /**
+    *
+    */
+    public static final int MAIL_IMAP_PORT = getMailProvider().getImapPort();
+
+    /**
+    *
+    */
+    public static final String MAIL_SMPT_HOST = getMailProvider().getSmtpHost();
+
+    /**
+    *
+    */
+    public static final int MAIL_SMPT_PORT = getMailProvider().getSmtpPort();
+
     /**
      * @return {@link Iterable}
      * @throws Exception Falls was schief geht.
@@ -49,10 +70,36 @@ public abstract class AbstractMailTest extends AbstractPimTest
         return Arrays.asList(new Object[][]
         {
                 {
-                        properties.getProperty("from"), properties.getProperty("password")
+                        properties.getProperty("from"), properties.getProperty("to"), properties.getProperty("password")
                 }
         });
     }
+
+    /**
+     * @return {@link MailProvider}
+     */
+    private static MailProvider getMailProvider()
+    {
+        return MailProvider.GoogleMail;
+    }
+
+    /**
+    *
+    */
+    @Parameter(value = 0)
+    public String from = null;
+
+    /**
+    *
+    */
+    @Parameter(value = 2)
+    public String password;
+
+    /**
+    *
+    */
+    @Parameter(value = 1)
+    public String to;
 
     /**
      * Erstellt ein neues {@link AbstractMailTest} Object.

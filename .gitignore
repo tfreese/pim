@@ -1,2 +1,4 @@
 /pim-core/test/
 /pim-gui/test/
+/pim-core/target/
+/pim-gui/target/
