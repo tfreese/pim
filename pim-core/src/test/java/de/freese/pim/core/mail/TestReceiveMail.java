@@ -17,6 +17,7 @@ import java.util.Optional;
 import java.util.Properties;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
 import javax.mail.Authenticator;
 import javax.mail.FetchProfile;
 import javax.mail.Flags;
@@ -29,10 +30,13 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import javax.mail.search.FlagTerm;
 import javax.mail.search.SearchTerm;
+
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
 import org.junit.AfterClass;
 import org.junit.Assert;
+import org.junit.Assume;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
@@ -40,8 +44,10 @@ import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameter;
+
 import com.sun.mail.imap.IMAPFolder;
 import com.sun.mail.util.ASCIIUtility;
+
 import de.freese.pim.core.mail.function.FunctionStripNotLetter;
 import de.freese.pim.core.mail.utils.MailUtils;
 import de.freese.pim.core.mail.utils.MailUtils.AbstractTextPart;
@@ -86,6 +92,7 @@ public class TestReceiveMail extends AbstractMailTest
 
         // Legitimation für Empfang.
         Properties properties = new Properties();
+        properties.put("mail.debug", Boolean.TRUE.toString());
         properties.put("mail.imap.auth", "true");
         properties.put("mail.imap.starttls.enable", "true");
 
@@ -97,6 +104,7 @@ public class TestReceiveMail extends AbstractMailTest
     */
     @Parameter(value = 1)
     public String password;
+
     /**
     *
     */
@@ -120,15 +128,15 @@ public class TestReceiveMail extends AbstractMailTest
     // store.close();
     // }
 
-    // /**
-    // * @throws Exception Falls was schief geht.
-    // */
-    // @Before
-    // public void beforeMethod() throws Exception
-    // {
-    // store = session.getStore("imaps");
-    // store.connect(MAIL_IMAP_HOST, MAIL_IMAP_PORT, this.username, this.password);
-    // }
+    /**
+     * @throws Exception Falls was schief geht.
+     */
+    @Before
+    public void beforeMethod() throws Exception
+    {
+        System.out.println();
+        Assume.assumeFalse("On Work", isWork());
+    }
 
     /**
      * @throws Exception Falls was schief geht.
@@ -169,7 +177,6 @@ public class TestReceiveMail extends AbstractMailTest
     @Test
     public void test020SaveNewMails() throws Exception
     {
-        System.out.println();
         Folder inboxFolder = null;
 
         try
@@ -229,10 +236,10 @@ public class TestReceiveMail extends AbstractMailTest
     @Test
     public void test021ReadSavedMails() throws Exception
     {
-        System.out.println();
         // Files.newDirectoryStream(Paths.get("."), path -> path.toString().endsWith(".msg")).forEach(System.out::println);
 
-        try (Stream<Path> mailFiles = Files.find(TMP_TEST_PATH, Integer.MAX_VALUE, (path, attrs) -> attrs.isRegularFile() && path.toString().endsWith(".msg")))
+        try (Stream<Path> mailFiles = Files.find(TMP_TEST_PATH, Integer.MAX_VALUE,
+                (path, attrs) -> attrs.isRegularFile() && path.toString().endsWith(".msg")))
         {
             for (Path mail : mailFiles.collect(Collectors.toList()))
             {
@@ -242,7 +249,8 @@ public class TestReceiveMail extends AbstractMailTest
 
                     int messageNumber = message.getMessageNumber();
                     String messageID = message.getHeader("Message-ID")[0];
-                    Date receivedDate = Optional.ofNullable(message.getReceivedDate()).orElse(Date.from(Instant.parse(message.getHeader("RECEIVED-DATE")[0])));
+                    Date receivedDate = Optional.ofNullable(message.getReceivedDate())
+                            .orElse(Date.from(Instant.parse(message.getHeader("RECEIVED-DATE")[0])));
                     String subject = message.getSubject();
                     String from = Optional.ofNullable(message.getFrom()).map(f -> ((InternetAddress) f[0]).getAddress()).orElse(null);
 
@@ -258,9 +266,8 @@ public class TestReceiveMail extends AbstractMailTest
     @Test
     public void test022ReadTextFromSavedMails() throws Exception
     {
-        System.out.println();
-
-        try (Stream<Path> mailFiles = Files.find(TMP_TEST_PATH, Integer.MAX_VALUE, (path, attrs) -> attrs.isRegularFile() && path.toString().endsWith(".msg")))
+        try (Stream<Path> mailFiles = Files.find(TMP_TEST_PATH, Integer.MAX_VALUE,
+                (path, attrs) -> attrs.isRegularFile() && path.toString().endsWith(".msg")))
         {
             for (Path mail : mailFiles.collect(Collectors.toList()))
             {

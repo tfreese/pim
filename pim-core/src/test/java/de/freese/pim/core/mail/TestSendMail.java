@@ -3,7 +3,9 @@ package de.freese.pim.core.mail;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Properties;
+
 import org.junit.AfterClass;
+import org.junit.Assume;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
@@ -49,6 +51,7 @@ public class TestSendMail extends AbstractMailTest
 
         // Legitimation für Versand.
         Properties properties = new Properties();
+        properties.put("mail.debug", Boolean.TRUE.toString());
         properties.put("mail.smtp.auth", "true");
         properties.put("mail.smtp.starttls.enable", "true");
         sender.setJavaMailProperties(properties);
@@ -86,6 +89,8 @@ public class TestSendMail extends AbstractMailTest
     @Before
     public void beforeMethod()
     {
+        Assume.assumeFalse("On Work", isWork());
+
         sender.setUsername(this.from);
         sender.setPassword(this.password);
     }
