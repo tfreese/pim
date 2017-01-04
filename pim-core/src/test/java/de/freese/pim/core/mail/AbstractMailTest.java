@@ -9,10 +9,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Properties;
-
 import org.junit.runners.Parameterized.Parameter;
 import org.junit.runners.Parameterized.Parameters;
-
 import de.freese.pim.core.AbstractPimTest;
 
 /**
@@ -80,7 +78,7 @@ public abstract class AbstractMailTest extends AbstractPimTest
      */
     private static MailProvider getMailProvider()
     {
-        return MailProvider.GoogleMail;
+        return MailProvider.EinsUndEins;
     }
 
     /**

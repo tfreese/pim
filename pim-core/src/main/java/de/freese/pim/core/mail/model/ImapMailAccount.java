@@ -4,7 +4,6 @@ package de.freese.pim.core.mail.model;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
 import javax.mail.Folder;
 import javax.mail.MessagingException;
 import javax.mail.Session;
@@ -27,6 +26,30 @@ public class ImapMailAccount extends AbstractJavaMailAccount
     }
 
     /**
+     * @see de.freese.pim.core.mail.model.AbstractJavaMailAccount#connectStore(javax.mail.Session)
+     */
+    @Override
+    protected Store connectStore(final Session session) throws MessagingException
+    {
+        Store store = session.getStore("imaps");
+        store.connect(getMailConfig().getImapHost(), getMailConfig().getImapPort(), getMailConfig().getMail(), getMailConfig().getPassword());
+
+        return store;
+    }
+
+    /**
+     * @see de.freese.pim.core.mail.model.AbstractJavaMailAccount#connectTransport(javax.mail.Session)
+     */
+    @Override
+    protected Transport connectTransport(final Session session) throws MessagingException
+    {
+        Transport transport = session.getTransport("smtp");
+        transport.connect(getMailConfig().getSmtpHost(), getMailConfig().getSmtpPort(), getMailConfig().getMail(), getMailConfig().getPassword());
+
+        return transport;
+    }
+
+    /**
      * @see de.freese.pim.core.mail.model.IMailAccount#getTopLevelFolder()
      */
     @Override
@@ -41,31 +64,5 @@ public class ImapMailAccount extends AbstractJavaMailAccount
         // @formatter:on
 
         return folder;
-    }
-
-    /**
-     * @see de.freese.pim.core.mail.model.AbstractJavaMailAccount#connectStore(javax.mail.Session)
-     */
-    @Override
-    protected Store connectStore(final Session session) throws MessagingException
-    {
-        Store store = getSession().getStore("imaps");
-        store.connect(getMailConfig().getImapHost(), getMailConfig().getImapPort(), getMailConfig().getMail(),
-                getMailConfig().getPassword());
-
-        return store;
-    }
-
-    /**
-     * @see de.freese.pim.core.mail.model.AbstractJavaMailAccount#connectTransport(javax.mail.Session)
-     */
-    @Override
-    protected Transport connectTransport(final Session session) throws MessagingException
-    {
-        Transport transport = session.getTransport("smtp");
-        transport.connect(getMailConfig().getSmtpHost(), getMailConfig().getSmtpPort(), getMailConfig().getMail(),
-                getMailConfig().getPassword());
-
-        return transport;
     }
 }

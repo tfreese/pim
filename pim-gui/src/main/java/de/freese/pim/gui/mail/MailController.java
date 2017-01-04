@@ -11,12 +11,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
-
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-
 import de.freese.pim.core.mail.MailProvider;
 import de.freese.pim.core.mail.model.IMailAccount;
 import de.freese.pim.core.mail.model.IMailFolder;
@@ -185,7 +183,7 @@ public class MailController extends AbstractController
                 TreeItem<Object> treeItem = new TreeItem<>(mailAccount);
                 root.getChildren().add(treeItem);
 
-                getLogger().info("Init MailAccount {}", mailAccount.getName());
+                getLogger().info("Init MailAccount {}", mailConfig.getMail());
                 InitMailAccountService service = new InitMailAccountService(treeItem, mailConfig);
                 service.start();
             }
