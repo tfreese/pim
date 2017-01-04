@@ -1,4 +1,10 @@
-/pim-core/test/
-/pim-gui/test/
+/.settings/
+
 /pim-core/target/
+/pim-core/test/
+/pim-core/.settings/
+
 /pim-gui/target/
+/pim-gui/test/
+/pim-gui/.settings/
+/pim-gui/log/
