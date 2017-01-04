@@ -4,6 +4,7 @@
 
 package de.freese.pim.core;
 
+import java.net.InetAddress;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -43,5 +44,37 @@ public abstract class AbstractPimTest
     public AbstractPimTest()
     {
         super();
+    }
+
+    /**
+     * Liefert true, wenn ich auf der Arbeit bin.
+     *
+     * @return boolean
+     */
+    protected boolean isWork()
+    {
+        String domain = System.getenv("userdomain");
+
+        if ((domain != null) && domain.equals("DEVWAG00"))
+        {
+            return true;
+        }
+
+        try
+        {
+            InetAddress address = InetAddress.getLocalHost();
+            String canonicalHostName = address.getCanonicalHostName();
+
+            if ((canonicalHostName != null) && canonicalHostName.endsWith("wob.vw.vwg"))
+            {
+                return true;
+            }
+        }
+        catch (Exception ex)
+        {
+            // Ignore
+        }
+
+        return false;
     }
 }
