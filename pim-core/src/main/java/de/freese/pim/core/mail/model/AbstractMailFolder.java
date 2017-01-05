@@ -1,6 +1,7 @@
 // Created: 04.01.2017
 package de.freese.pim.core.mail.model;
 
+import java.nio.file.Path;
 import java.util.Objects;
 
 /**
@@ -28,6 +29,15 @@ public abstract class AbstractMailFolder<A extends IMailAccount> implements IMai
         Objects.requireNonNull(mailAccount, "mailAccount required");
 
         this.mailAccount = mailAccount;
+    }
+
+    /**
+     * @see de.freese.pim.core.mail.model.IMailFolder#getPath()
+     */
+    @Override
+    public Path getPath()
+    {
+        return getMailAccount().getPath().resolve(getFullName());
     }
 
     /**

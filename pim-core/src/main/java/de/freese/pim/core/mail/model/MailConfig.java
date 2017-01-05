@@ -4,13 +4,7 @@
 
 package de.freese.pim.core.mail.model;
 
-import java.util.Properties;
-
-import javax.mail.Authenticator;
-import javax.mail.MessagingException;
-import javax.mail.Session;
-import javax.mail.Store;
-import javax.mail.Transport;
+import java.util.concurrent.Executor;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -30,6 +24,12 @@ import javafx.beans.property.StringProperty;
 // @JsonRootName("mailAccount")
 public class MailConfig
 {
+    /**
+     *
+     */
+    @JsonIgnore
+    private Executor executor = null;
+
     /**
     *
     */
@@ -56,12 +56,6 @@ public class MailConfig
     private final StringProperty passwordProperty = new SimpleStringProperty(this, "password", null);
 
     /**
-     *
-     */
-    @JsonIgnore
-    private Session session = null;
-
-    /**
     *
     */
     private final StringProperty smtpHostProperty = new SimpleStringProperty(this, "smtpHost", null);
@@ -77,12 +71,6 @@ public class MailConfig
     private final IntegerProperty smtpPortProperty = new SimpleIntegerProperty(this, "smtpPort", 587);
 
     /**
-     *
-     */
-    @JsonIgnore
-    private Store store = null;
-
-    /**
      * Erstellt ein neues {@link MailConfig} Object.
      */
     public MailConfig()
@@ -91,14 +79,13 @@ public class MailConfig
     }
 
     /**
-     * @throws MessagingException Falls was schief geht.
+     * {@link Executor} für die MAIL-API, ist optional.
+     *
+     * @return {@link Executor}
      */
-    public void close() throws MessagingException
+    public Executor getExecutor()
     {
-        if (this.store != null)
-        {
-            this.store.close();
-        }
+        return this.executor;
     }
 
     /**
@@ -134,22 +121,6 @@ public class MailConfig
     }
 
     /**
-     * Liefert die Mail-Session.
-     *
-     * @return {@link Session}
-     * @throws MessagingException Falls was schief geht.
-     */
-    public Session getSession() throws MessagingException
-    {
-        if (this.session == null)
-        {
-            this.session = createSession();
-        }
-
-        return this.session;
-    }
-
-    /**
      * @return String
      */
     public String getSmtpHost()
@@ -163,14 +134,6 @@ public class MailConfig
     public int getSmtpPort()
     {
         return smtpPortProperty().get();
-    }
-
-    /**
-     * @return {@link Store}
-     */
-    public Store getStore()
-    {
-        return this.store;
     }
 
     /**
@@ -227,6 +190,16 @@ public class MailConfig
     public StringProperty passwordProperty()
     {
         return this.passwordProperty;
+    }
+
+    /**
+     * {@link Executor} für die MAIL-API, ist optional.
+     *
+     * @param executor {@link Executor}
+     */
+    public void setExecutor(final Executor executor)
+    {
+        this.executor = executor;
     }
 
     /**
@@ -315,47 +288,5 @@ public class MailConfig
     public IntegerProperty smtpPortProperty()
     {
         return this.smtpPortProperty;
-    }
-
-    /**
-     * Erzeugt die Mail-Session.
-     *
-     * @return {@link Session}
-     * @throws MessagingException Falls was schief geht.
-     */
-    private Session createSession() throws MessagingException
-    {
-        Authenticator authenticator = null;
-
-        Properties properties = new Properties();
-        properties.put("mail.debug", Boolean.TRUE.toString());
-
-        // Legitimation für Empfang.
-        if (isImapLegitimation())
-        {
-            properties.put("mail.imap.auth", "true");
-            properties.put("mail.imap.starttls.enable", "true");
-        }
-
-        // Legitimation für Versand.
-        if (isSmtpLegitimation())
-        {
-            properties.put("mail.smtp.auth", "true");
-            properties.put("mail.smtp.starttls.enable", "true");
-        }
-
-        Session session = Session.getInstance(properties, authenticator);
-
-        // Test Connection Empfang.
-        this.store = session.getStore("imaps");
-        this.store.connect(getImapHost(), getImapPort(), getMail(), getPassword());
-
-        // Test Connection Versand.
-        // this.mailSender.testConnection();
-        Transport transport = session.getTransport("smtp");
-        transport.connect(getSmtpHost(), getSmtpPort(), getMail(), getPassword());
-        transport.close();
-
-        return session;
     }
 }

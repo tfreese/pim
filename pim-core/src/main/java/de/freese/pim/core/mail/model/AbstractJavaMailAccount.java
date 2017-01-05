@@ -2,12 +2,20 @@
 package de.freese.pim.core.mail.model;
 
 import java.util.Properties;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.mail.Authenticator;
+import javax.mail.Folder;
 import javax.mail.MessagingException;
 import javax.mail.Session;
 import javax.mail.Store;
 import javax.mail.Transport;
+import javax.mail.event.FolderEvent;
+import javax.mail.event.FolderListener;
+
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 /**
  * Basis-Implementierung eines JavaMail {@link IMailAccount}.
@@ -27,6 +35,11 @@ public abstract class AbstractJavaMailAccount extends AbstractMailAccount
     private Store store = null;
 
     /**
+     *
+     */
+    private ObservableList<IMailFolder> topLevelFolder = null;
+
+    /**
      * Erzeugt eine neue Instanz von {@link AbstractJavaMailAccount}
      */
     public AbstractJavaMailAccount()
@@ -35,14 +48,79 @@ public abstract class AbstractJavaMailAccount extends AbstractMailAccount
     }
 
     /**
-     * @see de.freese.pim.core.mail.model.AbstractMailAccount#init(de.freese.pim.core.mail.model.MailConfig)
+     * @see de.freese.pim.core.mail.model.AbstractMailAccount#connect(de.freese.pim.core.mail.model.MailConfig)
      */
     @Override
-    public void init(final MailConfig mailConfig) throws Exception
+    public void connect(final MailConfig mailConfig) throws Exception
     {
-        super.init(mailConfig);
+        super.connect(mailConfig);
 
         this.session = createSession();
+    }
+
+    /**
+     * @see de.freese.pim.core.mail.model.IMailAccount#disconnect()
+     */
+    @Override
+    public void disconnect() throws Exception
+    {
+        // Folder schliessen.
+        for (IMailFolder folder : getTopLevelFolder())
+        {
+            folder.close();
+        }
+
+        disconnectStore(this.store);
+        // disconnectTransport(transport);
+
+        this.store = null;
+        // transport = null;
+
+        this.topLevelFolder.clear();
+        this.topLevelFolder = null;
+    }
+
+    /**
+     * @see de.freese.pim.core.mail.model.IMailAccount#getTopLevelFolder()
+     */
+    @Override
+    public ObservableList<IMailFolder> getTopLevelFolder() throws Exception
+    {
+        if (this.topLevelFolder == null)
+        {
+            Folder root = getStore().getDefaultFolder();
+
+            // @formatter:off
+            this.topLevelFolder = Stream.of(root.list("%"))
+                .map(f -> new MailFolder(this, f))
+                .collect(Collectors.toCollection(FXCollections::observableArrayList));
+            // @formatter:on
+        }
+
+        return this.topLevelFolder;
+    }
+
+    /**
+     * @see de.freese.pim.core.mail.model.IMailAccount#getUnreadMessageCount()
+     */
+    @Override
+    public int getUnreadMessageCount() throws Exception
+    {
+        int count = getTopLevelFolder().stream().mapToInt(f ->
+        {
+            try
+            {
+                return f.getUnreadMessageCount();
+            }
+            catch (Exception ex)
+            {
+                // Ignore
+            }
+
+            return 0;
+        }).sum();
+
+        return count;
     }
 
     /**
@@ -76,6 +154,11 @@ public abstract class AbstractJavaMailAccount extends AbstractMailAccount
             properties.put("mail.smtp.starttls.enable", "true");
         }
 
+        if (getMailConfig().getExecutor() != null)
+        {
+            properties.put("mail.event.executor", getMailConfig().getExecutor());
+        }
+
         Session session = Session.getInstance(properties, authenticator);
 
         // Test Connection Empfang.
@@ -107,7 +190,14 @@ public abstract class AbstractJavaMailAccount extends AbstractMailAccount
      * @return {@link Transport}
      * @throws MessagingException Falls was schief geht.
      */
-    protected abstract Transport connectTransport(final Session session) throws MessagingException;
+    protected Transport connectTransport(final Session session) throws MessagingException
+    {
+        Transport transport = session.getTransport("smtp");
+        transport.connect(getMailConfig().getSmtpHost(), getMailConfig().getSmtpPort(), getMailConfig().getMail(),
+                getMailConfig().getPassword());
+
+        return transport;
+    }
 
     /**
      * Schliessen des {@link Store}.
@@ -160,6 +250,77 @@ public abstract class AbstractJavaMailAccount extends AbstractMailAccount
         if (this.store == null)
         {
             this.store = connectStore(getSession());
+
+            this.store.addFolderListener(new FolderListener()
+            {
+                /**
+                 * @see javax.mail.event.FolderListener#folderCreated(javax.mail.event.FolderEvent)
+                 */
+                @Override
+                public void folderCreated(final FolderEvent e)
+                {
+                    ObservableList<IMailFolder> list = AbstractJavaMailAccount.this.topLevelFolder;
+
+                    if (list == null)
+                    {
+                        return;
+                    }
+
+                    list.add(new MailFolder(AbstractJavaMailAccount.this, e.getFolder()));
+                }
+
+                /**
+                 * @see javax.mail.event.FolderListener#folderDeleted(javax.mail.event.FolderEvent)
+                 */
+                @Override
+                public void folderDeleted(final FolderEvent e)
+                {
+                    ObservableList<IMailFolder> list = AbstractJavaMailAccount.this.topLevelFolder;
+
+                    if (list == null)
+                    {
+                        return;
+                    }
+
+                    Folder folder = e.getFolder();
+                    IMailFolder mf = list.stream().filter(f -> f.getFullName().equals(folder.getFullName())).findFirst().get();
+
+                    if (mf != null)
+                    {
+                        AbstractJavaMailAccount.this.topLevelFolder.remove(mf);
+                    }
+                }
+
+                /**
+                 * @see javax.mail.event.FolderListener#folderRenamed(javax.mail.event.FolderEvent)
+                 */
+                @Override
+                public void folderRenamed(final FolderEvent e)
+                {
+                    ObservableList<IMailFolder> list = AbstractJavaMailAccount.this.topLevelFolder;
+
+                    if (list == null)
+                    {
+                        return;
+                    }
+
+                    Folder folderOld = e.getFolder();
+
+                    IMailFolder mf = list.stream().filter(f -> f.getFullName().equals(folderOld.getFullName())).findFirst().get();
+
+                    if (mf != null)
+                    {
+                        list.remove(mf);
+                    }
+
+                    Folder folderNew = e.getNewFolder();
+
+                    if (folderNew != null)
+                    {
+                        list.add(new MailFolder(AbstractJavaMailAccount.this, folderNew));
+                    }
+                }
+            });
         }
 
         return this.store;

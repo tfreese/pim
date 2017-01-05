@@ -3,6 +3,7 @@ package de.freese.pim.core.service;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
+
 import javax.sql.DataSource;
 
 /**
@@ -20,12 +21,25 @@ public class SettingService implements ISettingsService
     /**
      *
      */
+    private static final ISettingsService INSTANCE = new SettingService();
+
+    /**
+     * @return {@link ISettingsService}
+     */
+    public static ISettingsService getInstance()
+    {
+        return INSTANCE;
+    }
+
+    /**
+     *
+     */
     private DataSource dataSource = null;
 
     /**
      * Erzeugt eine neue Instanz von {@link SettingService}
      */
-    public SettingService()
+    private SettingService()
     {
         super();
     }

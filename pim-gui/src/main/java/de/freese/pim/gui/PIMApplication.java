@@ -87,11 +87,6 @@ public class PIMApplication extends Application
     private static ScheduledExecutorService scheduledExecutorService = null;
 
     /**
-     *
-     */
-    private static final ISettingsService settingService = new SettingService();
-
-    /**
      * @return {@link DataSource}
      */
     public static DataSource getDataSource()
@@ -128,7 +123,7 @@ public class PIMApplication extends Application
      */
     public static ISettingsService getSettingService()
     {
-        return settingService;
+        return SettingService.getInstance();
     }
 
     /**

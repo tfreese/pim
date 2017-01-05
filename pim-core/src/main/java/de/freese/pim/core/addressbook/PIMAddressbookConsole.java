@@ -77,7 +77,7 @@ public class PIMAddressbookConsole
 
         // SysOutOverSLF4J.sendSystemOutAndErrToSLF4J();
 
-        ISettingsService settingsService = new SettingService();
+        ISettingsService settingsService = SettingService.getInstance();
 
         Path home = settingsService.getHome();
 

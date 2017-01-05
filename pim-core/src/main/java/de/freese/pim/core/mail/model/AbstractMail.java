@@ -1,6 +1,7 @@
 // Created: 04.01.2017
 package de.freese.pim.core.mail.model;
 
+import java.nio.file.Path;
 import java.util.Objects;
 
 /**
@@ -28,6 +29,22 @@ public abstract class AbstractMail<F extends IMailFolder> implements IMail
         Objects.requireNonNull(mailFolder, "mailFolder required");
 
         this.mailFolder = mailFolder;
+    }
+
+    /**
+     * @see de.freese.pim.core.mail.model.IMail#getPath()
+     */
+    @Override
+    public Path getPath()
+    {
+        try
+        {
+            return getMailFolder().getPath().resolve(getMessageID());
+        }
+        catch (Exception ex)
+        {
+            throw new RuntimeException(ex);
+        }
     }
 
     /**

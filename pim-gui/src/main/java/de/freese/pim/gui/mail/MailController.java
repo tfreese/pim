@@ -11,15 +11,18 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
+
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+
 import de.freese.pim.core.mail.MailProvider;
 import de.freese.pim.core.mail.model.IMailAccount;
 import de.freese.pim.core.mail.model.IMailFolder;
 import de.freese.pim.core.mail.model.ImapMailAccount;
 import de.freese.pim.core.mail.model.MailConfig;
+import de.freese.pim.gui.PIMApplication;
 import de.freese.pim.gui.controller.AbstractController;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
@@ -105,6 +108,8 @@ public class MailController extends AbstractController
             {
                 super.updateItem(item, empty);
 
+                setStyle(null);
+
                 if ((item == null) || empty)
                 {
                     setText(null);
@@ -112,13 +117,38 @@ public class MailController extends AbstractController
                     return;
                 }
 
+                int newMails = 0;
+
                 if (item instanceof IMailAccount)
                 {
                     setText(((IMailAccount) item).getName());
+
+                    try
+                    {
+                        newMails = ((IMailAccount) item).getUnreadMessageCount();
+                    }
+                    catch (Exception ex)
+                    {
+                        getLogger().warn(ex.getMessage());
+                    }
                 }
                 else if (item instanceof IMailFolder)
                 {
                     setText(((IMailFolder) item).getName());
+
+                    try
+                    {
+                        newMails = ((IMailFolder) item).getUnreadMessageCount();
+                    }
+                    catch (Exception ex)
+                    {
+                        getLogger().warn(ex.getMessage());
+                    }
+                }
+
+                if (newMails > 0)
+                {
+                    setStyle("-fx-font-weight: bold;");
                 }
             }
         });
@@ -179,9 +209,13 @@ public class MailController extends AbstractController
         {
             for (MailConfig mailConfig : configList)
             {
+                mailConfig.setExecutor(getExecutorService());
+
                 IMailAccount mailAccount = new ImapMailAccount();
                 TreeItem<Object> treeItem = new TreeItem<>(mailAccount);
                 root.getChildren().add(treeItem);
+
+                PIMApplication.registerCloseable(() -> mailAccount.disconnect());
 
                 getLogger().info("Init MailAccount {}", mailConfig.getMail());
                 InitMailAccountService service = new InitMailAccountService(treeItem, mailConfig);

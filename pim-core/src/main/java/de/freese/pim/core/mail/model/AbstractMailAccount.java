@@ -1,7 +1,10 @@
 // Created: 04.01.2017
 package de.freese.pim.core.mail.model;
 
+import java.nio.file.Path;
 import java.util.Objects;
+
+import de.freese.pim.core.service.SettingService;
 
 /**
  * Basis-Implementierung eines {@link IMailAccount}.
@@ -29,6 +32,26 @@ public abstract class AbstractMailAccount implements IMailAccount
     }
 
     /**
+     * @see de.freese.pim.core.mail.model.IMailAccount#connect(de.freese.pim.core.mail.model.MailConfig)
+     */
+    @Override
+    public void connect(final MailConfig mailConfig) throws Exception
+    {
+        Objects.requireNonNull(mailConfig, "mailConfig required");
+
+        this.mailConfig = mailConfig;
+    }
+
+    /**
+     * @see de.freese.pim.core.mail.model.IMailAccount#getMailConfig()
+     */
+    @Override
+    public MailConfig getMailConfig()
+    {
+        return this.mailConfig;
+    }
+
+    /**
      * @see de.freese.pim.core.mail.model.IMailAccount#getName()
      */
     @Override
@@ -38,21 +61,11 @@ public abstract class AbstractMailAccount implements IMailAccount
     }
 
     /**
-     * @see de.freese.pim.core.mail.model.IMailAccount#init(de.freese.pim.core.mail.model.MailConfig)
+     * @see de.freese.pim.core.mail.model.IMailAccount#getPath()
      */
     @Override
-    public void init(final MailConfig mailConfig) throws Exception
+    public Path getPath()
     {
-        Objects.requireNonNull(mailConfig, "mailConfig required");
-
-        this.mailConfig = mailConfig;
-    }
-
-    /**
-     * @return {@link MailConfig}
-     */
-    protected MailConfig getMailConfig()
-    {
-        return this.mailConfig;
+        return SettingService.getInstance().getHome().resolve(getName());
     }
 }

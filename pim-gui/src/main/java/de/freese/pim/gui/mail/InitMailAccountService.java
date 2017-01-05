@@ -8,7 +8,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+
 import org.apache.commons.collections4.CollectionUtils;
+
 import de.freese.pim.core.mail.model.IMailAccount;
 import de.freese.pim.core.mail.model.IMailFolder;
 import de.freese.pim.core.mail.model.MailConfig;
@@ -58,62 +60,6 @@ public class InitMailAccountService extends Service<Void>
     }
 
     /**
-     * @see javafx.concurrent.Service#createTask()
-     */
-    @Override
-    protected Task<Void> createTask()
-    {
-        Task<Void> task = new Task<Void>()
-        {
-            /**
-             * @see javafx.concurrent.Task#call()
-             */
-            @Override
-            protected Void call() throws Exception
-            {
-                IMailAccount mailAccount = getMailAccount();
-                mailAccount.init(InitMailAccountService.this.mailConfig);
-
-                List<IMailFolder> topLevelFolder = mailAccount.getTopLevelFolder();
-
-                List<TreeItem<Object>> childItems = new ArrayList<>();
-
-                for (IMailFolder folder : topLevelFolder)
-                {
-                    TreeItem<Object> treeItem = new TreeItem<>(folder);
-                    childItems.add(treeItem);
-
-                    treeItem.getChildren().addAll(loadChildFolders(folder));
-                }
-
-                Platform.runLater(() -> {
-                    InitMailAccountService.this.root.getChildren().addAll(childItems);
-                    InitMailAccountService.this.root.setExpanded(true);
-                });
-
-                return null;
-            }
-        };
-
-        setOnSucceeded(event -> {
-            // List<TreeItem<Object>> childItems = task.get();
-            // TreeModificationEvent<Object> treeEvent = new TreeModificationEvent<>(TreeItem.childrenModificationEvent(), accountItem);
-            // Event.fireEvent(accountItem, treeEvent);
-        });
-
-        setOnFailed(event -> {
-            Throwable th = getException();
-
-            PIMApplication.LOGGER.error(null, th);
-
-            Alert alert = new Alert(AlertType.ERROR, th.getMessage());
-            alert.showAndWait();
-        });
-
-        return task;
-    }
-
-    /**
      * Liefert den {@link IMailAccount}.
      *
      * @return {@link IMailAccount}
@@ -150,5 +96,64 @@ public class InitMailAccountService extends Service<Void>
         }
 
         return childItems;
+    }
+
+    /**
+     * @see javafx.concurrent.Service#createTask()
+     */
+    @Override
+    protected Task<Void> createTask()
+    {
+        Task<Void> task = new Task<Void>()
+        {
+            /**
+             * @see javafx.concurrent.Task#call()
+             */
+            @Override
+            protected Void call() throws Exception
+            {
+                IMailAccount mailAccount = getMailAccount();
+                mailAccount.connect(InitMailAccountService.this.mailConfig);
+
+                List<IMailFolder> topLevelFolder = mailAccount.getTopLevelFolder();
+
+                List<TreeItem<Object>> childItems = new ArrayList<>();
+
+                for (IMailFolder folder : topLevelFolder)
+                {
+                    TreeItem<Object> treeItem = new TreeItem<>(folder);
+                    childItems.add(treeItem);
+
+                    treeItem.getChildren().addAll(loadChildFolders(folder));
+                }
+
+                Platform.runLater(() ->
+                {
+                    InitMailAccountService.this.root.getChildren().addAll(childItems);
+                    InitMailAccountService.this.root.setExpanded(true);
+                });
+
+                return null;
+            }
+        };
+
+        setOnSucceeded(event ->
+        {
+            // List<TreeItem<Object>> childItems = task.get();
+            // TreeModificationEvent<Object> treeEvent = new TreeModificationEvent<>(TreeItem.childrenModificationEvent(), accountItem);
+            // Event.fireEvent(accountItem, treeEvent);
+        });
+
+        setOnFailed(event ->
+        {
+            Throwable th = getException();
+
+            PIMApplication.LOGGER.error(null, th);
+
+            Alert alert = new Alert(AlertType.ERROR, th.getMessage());
+            alert.showAndWait();
+        });
+
+        return task;
     }
 }
