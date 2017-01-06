@@ -10,6 +10,8 @@ import javax.mail.Flags;
 import javax.mail.Message;
 import javax.mail.internet.InternetAddress;
 
+import com.sun.mail.imap.IMAPFolder;
+
 /**
  * Basis-Implementierung einer JavaMail {@link IMail}.
  *
@@ -42,56 +44,119 @@ public abstract class AbstractJavaMail<F extends IMailFolder> extends AbstractMa
      * @see de.freese.pim.core.mail.model.IMail#getFrom()
      */
     @Override
-    public InternetAddress getFrom() throws Exception
+    public InternetAddress getFrom()
     {
-        InternetAddress address = Optional.ofNullable(getMessage().getFrom()).map(f -> (InternetAddress) f[0]).orElse(null);
+        try
+        {
+            InternetAddress address = Optional.ofNullable(getMessage().getFrom()).map(f -> (InternetAddress) f[0]).orElse(null);
 
-        return address;
+            return address;
+        }
+        catch (Exception ex)
+        {
+            throw new RuntimeException(ex);
+        }
     }
 
     /**
-     * @see de.freese.pim.core.mail.model.IMail#getMessageID()
+     * @see de.freese.pim.core.mail.model.IMail#getID()
      */
     @Override
-    public String getMessageID() throws Exception
+    public String getID()
     {
-        String messageID = Optional.ofNullable(getMessage().getHeader("Message-ID")).map(h -> h[0]).orElse(null);
-        // String messageID = getMessage().getHeader("Message-ID")[0];
+        try
+        {
+            String id = null;
 
-        return messageID;
+            if (getMailFolder() instanceof IMAPFolder)
+            {
+                id = Long.toString(((IMAPFolder) getMailFolder()).getUID(getMessage()));
+            }
+
+            if (id == null)
+            {
+                id = Optional.ofNullable(getMessage().getHeader("Message-ID")).map(h -> h[0]).orElse(null);
+                id = getMessage().getHeader("Message-ID")[0];
+            }
+
+            return id;
+        }
+        catch (Exception ex)
+        {
+            throw new RuntimeException(ex);
+        }
     }
 
     /**
      * @see de.freese.pim.core.mail.model.IMail#getReceivedDate()
      */
     @Override
-    public Date getReceivedDate() throws Exception
+    public Date getReceivedDate()
     {
-        Date receivedDate = getMessage().getReceivedDate();
+        try
+        {
+            Date receivedDate = getMessage().getReceivedDate();
 
-        receivedDate = Optional.ofNullable(receivedDate).orElse(Date.from(Instant.parse(getMessage().getHeader("RECEIVED-DATE")[0])));
+            receivedDate = Optional.ofNullable(receivedDate).orElse(Date.from(Instant.parse(getMessage().getHeader("RECEIVED-DATE")[0])));
 
-        return receivedDate;
+            return receivedDate;
+        }
+        catch (Exception ex)
+        {
+            throw new RuntimeException(ex);
+        }
+    }
+
+    /**
+     * @see de.freese.pim.core.mail.model.IMail#getSendDate()
+     */
+    @Override
+    public Date getSendDate()
+    {
+        try
+        {
+            Date sendDate = getMessage().getSentDate();
+
+            return sendDate;
+        }
+        catch (Exception ex)
+        {
+            throw new RuntimeException(ex);
+        }
     }
 
     /**
      * @see de.freese.pim.core.mail.model.IMail#getSubject()
      */
     @Override
-    public String getSubject() throws Exception
+    public String getSubject()
     {
-        String subject = getMessage().getSubject();
+        try
+        {
+            String subject = getMessage().getSubject();
 
-        return subject;
+            return subject;
+        }
+        catch (Exception ex)
+        {
+            throw new RuntimeException(ex);
+        }
     }
 
     /**
      * @see de.freese.pim.core.mail.model.IMail#isSeen()
      */
     @Override
-    public boolean isSeen() throws Exception
+    public boolean isSeen()
     {
-        return getMessage().isSet(Flags.Flag.SEEN);
+        try
+        {
+            return getMessage().isSet(Flags.Flag.SEEN);
+        }
+        catch (Exception ex)
+        {
+            throw new RuntimeException(ex);
+        }
     }
 
     /**

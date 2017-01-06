@@ -1,8 +1,7 @@
 // Created: 04.01.2017
 package de.freese.pim.core.mail.model;
 
-import java.util.Arrays;
-import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -80,25 +79,14 @@ public abstract class AbstractJavaMailFolder<A extends AbstractJavaMailAccount> 
                     return;
                 }
 
-                List<Message> l = Arrays.asList(e.getMessages());
-                Collections.sort(l, (m1, m2) ->
-                {
-                    try
-                    {
-                        return m1.getReceivedDate().compareTo(m2.getReceivedDate());
-                    }
-                    catch (Exception ex)
-                    {
-                        // Ignore
-                    }
+                // @formatter:off
+                List<IMail> newMails = Stream.of(e.getMessages())
+                        .map(m -> new JavaMail(AbstractJavaMailFolder.this, m))
+                        .sorted(Comparator.comparing(IMail::getReceivedDate).reversed())
+                        .collect(Collectors.toList());
+                // @formatter:on
 
-                    return 0;
-                });
-
-                for (Message message : l)
-                {
-                    list.add(0, new JavaMail(AbstractJavaMailFolder.this, message));
-                }
+                list.addAll(0, newMails);
             }
 
             /**
@@ -116,22 +104,9 @@ public abstract class AbstractJavaMailFolder<A extends AbstractJavaMailAccount> 
 
                 for (Message message : e.getMessages())
                 {
-                    IMail m = list.stream().filter(mail ->
-                    {
-                        try
-                        {
-                            if (mail.getMessageID().equals(message.getHeader("Message-ID")[0]))
-                            {
-                                return true;
-                            }
-                        }
-                        catch (Exception ex)
-                        {
-                            // Ignore
-                        }
+                    IMail rm = new JavaMail(AbstractJavaMailFolder.this, message);
 
-                        return false;
-                    }).findFirst().get();
+                    IMail m = list.stream().filter(mail -> mail.getID().equals(rm.getID())).findFirst().get();
 
                     if (m != null)
                     {
@@ -146,22 +121,29 @@ public abstract class AbstractJavaMailFolder<A extends AbstractJavaMailAccount> 
      * @see de.freese.pim.core.mail.model.IMailFolder#close()
      */
     @Override
-    public void close() throws Exception
+    public void close()
     {
-        getFolder().close(true);
-
-        for (IMailFolder child : getChildren())
+        try
         {
-            child.close();
+            getFolder().close(true);
+
+            for (IMailFolder child : getChildren())
+            {
+                child.close();
+            }
+
+            this.children.clear();
+            this.children = null;
+
+            if (this.messages != null)
+            {
+                this.messages.clear();
+                this.messages = null;
+            }
         }
-
-        this.children.clear();
-        this.children = null;
-
-        if (this.messages != null)
+        catch (Exception ex)
         {
-            this.messages.clear();
-            this.messages = null;
+            throw new RuntimeException(ex);
         }
     }
 
@@ -169,26 +151,32 @@ public abstract class AbstractJavaMailFolder<A extends AbstractJavaMailAccount> 
      * @see de.freese.pim.core.mail.model.IMailFolder#getChildren()
      */
     @Override
-    public ObservableList<IMailFolder> getChildren() throws Exception
+    public ObservableList<IMailFolder> getChildren()
     {
-        if (this.children == null)
+        try
         {
+            if (this.children == null)
+            {
             // @formatter:off
             this.children = Stream.of(getFolder().list("%"))
-                //.peek(f -> f.open(Folder.READ_ONLY))
+
                 .map(f -> new MailFolder(getMailAccount(), f))
                 .collect(Collectors.toCollection(FXCollections::observableArrayList));
             // @formatter:on
 
-            // Verzeichnisse anlegen
-            // for (IMailFolder mailFolder : children)
-            // {
-            // Files.createDirectories(mailFolder.getPath());
-            // }
+                // Verzeichnisse anlegen
+                // for (IMailFolder mailFolder : children)
+                // {
+                // Files.createDirectories(mailFolder.getPath());
+                // }
+            }
 
+            return this.children;
         }
-
-        return this.children;
+        catch (Exception ex)
+        {
+            throw new RuntimeException(ex);
+        }
     }
 
     /**
@@ -204,27 +192,34 @@ public abstract class AbstractJavaMailFolder<A extends AbstractJavaMailAccount> 
      * @see de.freese.pim.core.mail.model.IMailFolder#getMessages()
      */
     @Override
-    public ObservableList<IMail> getMessages() throws Exception
+    public ObservableList<IMail> getMessages()
     {
-        if (this.messages == null)
+        try
         {
-            checkRead();
+            if (this.messages == null)
+            {
+                checkRead();
 
-            Message[] msgs = getFolder().getMessages();
+                Message[] msgs = getFolder().getMessages();
 
-            // Nur bestimmte Mail-Attribute vorladen.
-            FetchProfile fp = new FetchProfile();
-            fp.add(FetchProfile.Item.ENVELOPE);
-            fp.add(UIDFolder.FetchProfileItem.UID);
-            fp.add(IMAPFolder.FetchProfileItem.HEADERS);
+                // Nur bestimmte Mail-Attribute vorladen.
+                FetchProfile fp = new FetchProfile();
+                fp.add(FetchProfile.Item.ENVELOPE);
+                fp.add(UIDFolder.FetchProfileItem.UID);
+                fp.add(IMAPFolder.FetchProfileItem.HEADERS);
 
-            getFolder().fetch(msgs, fp);
+                getFolder().fetch(msgs, fp);
 
-            this.messages = Stream.of(msgs).map(m -> new JavaMail(this, m))
-                    .collect(Collectors.toCollection(FXCollections::observableArrayList));
+                this.messages = Stream.of(msgs).map(m -> new JavaMail(this, m))
+                        .collect(Collectors.toCollection(FXCollections::observableArrayList));
+            }
+
+            return this.messages;
         }
-
-        return this.messages;
+        catch (Exception ex)
+        {
+            throw new RuntimeException(ex);
+        }
     }
 
     /**
@@ -240,58 +235,74 @@ public abstract class AbstractJavaMailFolder<A extends AbstractJavaMailAccount> 
      * @see de.freese.pim.core.mail.model.IMailFolder#getUnreadMessageCount()
      */
     @Override
-    public int getUnreadMessageCount() throws Exception
+    public int getUnreadMessageCount()
     {
-        if (this.unreadMessageCount < 0)
+        try
         {
-            this.unreadMessageCount = getChildren().stream().mapToInt(c ->
+            if (this.unreadMessageCount < 0)
             {
-                try
+                this.unreadMessageCount = getChildren().stream().mapToInt(c ->
                 {
-                    return c.getUnreadMessageCount();
-                }
-                catch (Exception ex)
-                {
-                    // Ignore
-                }
+                    try
+                    {
+                        return c.getUnreadMessageCount();
+                    }
+                    catch (Exception ex)
+                    {
+                        // Ignore
+                    }
 
-                return 0;
-            }).sum();
+                    return 0;
+                }).sum();
 
-            this.unreadMessageCount += getFolder().getUnreadMessageCount();
+                this.unreadMessageCount += getFolder().getUnreadMessageCount();
+            }
+
+            return this.unreadMessageCount;
         }
-
-        return this.unreadMessageCount;
+        catch (Exception ex)
+        {
+            throw new RuntimeException(ex);
+        }
     }
 
     /**
      * @see de.freese.pim.core.mail.model.IMailFolder#getUnreadMessages()
      */
     @Override
-    public List<IMail> getUnreadMessages() throws Exception
+    public List<IMail> getUnreadMessages()
     {
-        checkRead();
+        try
+        {
+            checkRead();
 
-        // Nur ungelesene Mails holen.
-        SearchTerm searchTerm = new FlagTerm(new Flags(Flags.Flag.SEEN), false);
-        Message[] messages = getFolder().search(searchTerm);
+            // Nur ungelesene Mails holen.
+            SearchTerm searchTerm = new FlagTerm(new Flags(Flags.Flag.SEEN), false);
+            Message[] messages = getFolder().search(searchTerm);
 
-        // Nur bestimmte Mail-Attribute vorladen.
-        FetchProfile fp = new FetchProfile();
-        fp.add(FetchProfile.Item.ENVELOPE);
-        fp.add(UIDFolder.FetchProfileItem.UID);
-        fp.add(IMAPFolder.FetchProfileItem.HEADERS);
+            // Nur bestimmte Mail-Attribute vorladen.
+            FetchProfile fp = new FetchProfile();
+            fp.add(FetchProfile.Item.ENVELOPE);
+            fp.add(UIDFolder.FetchProfileItem.UID);
+            fp.add(IMAPFolder.FetchProfileItem.HEADERS);
 
-        getFolder().fetch(messages, fp);
+            getFolder().fetch(messages, fp);
 
-        return Stream.of(messages).map(m -> new JavaMail(this, m)).collect(Collectors.toList());
+            return Stream.of(messages).map(m -> new JavaMail(this, m)).collect(Collectors.toList());
+        }
+        catch (Exception ex)
+        {
+            throw new RuntimeException(ex);
+        }
     }
 
     // /**
     // * @see de.freese.pim.core.mail.model.IMailFolder#syncLocal()
     // */
     // @Override
-    // public void syncLocal() throws Exception
+    // public void syncLocal()
+    // {
+    // try
     // {
     // checkRead();
     // // SearchTerm searchTerm = new MessageIDTerm(messageId);
@@ -349,6 +360,11 @@ public abstract class AbstractJavaMailFolder<A extends AbstractJavaMailAccount> 
     // // Ignore
     // }
     // });
+    // }
+    // catch (Exception ex)
+    // {
+    // throw new RuntimeException(ex);
+    // }
     // }
 
     /**

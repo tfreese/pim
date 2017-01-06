@@ -17,16 +17,13 @@ public interface IMailAccount
      * Initialisierunge-Methode des {@link IMailAccount}.
      *
      * @param mailConfig {@link MailConfig}
-     * @throws Exception Falls was schief geht.
      */
-    public void connect(MailConfig mailConfig) throws Exception;
+    public void connect(MailConfig mailConfig);
 
     /**
      * Schliessen der Verbindung.
-     *
-     * @throws Exception Falls was schief geht.
      */
-    public void disconnect() throws Exception;
+    public void disconnect();
 
     /**
      * Liefert die {@link MailConfig}.
@@ -53,15 +50,13 @@ public interface IMailAccount
      * Liefert die direkten Folder.
      *
      * @return {@link List}
-     * @throws Exception Falls was schief geht.
      */
-    public ObservableList<IMailFolder> getTopLevelFolder() throws Exception;
+    public ObservableList<IMailFolder> getTopLevelFolder();
 
     /**
      * Liefert die Anzahl nicht gelesener Mails.
      *
      * @return int
-     * @throws Exception Falls was schief geht.
      */
-    public int getUnreadMessageCount() throws Exception;
+    public int getUnreadMessageCount();
 }

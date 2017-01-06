@@ -35,7 +35,7 @@ public abstract class AbstractMailAccount implements IMailAccount
      * @see de.freese.pim.core.mail.model.IMailAccount#connect(de.freese.pim.core.mail.model.MailConfig)
      */
     @Override
-    public void connect(final MailConfig mailConfig) throws Exception
+    public void connect(final MailConfig mailConfig)
     {
         Objects.requireNonNull(mailConfig, "mailConfig required");
 

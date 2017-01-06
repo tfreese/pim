@@ -4,6 +4,7 @@ package de.freese.pim.core.mail.model;
 import javax.mail.MessagingException;
 import javax.mail.Session;
 import javax.mail.Store;
+import javax.mail.Transport;
 
 /**
  * IMAP-Implementierung eines {@link IMailAccount}.
@@ -21,15 +22,20 @@ public class ImapMailAccount extends AbstractJavaMailAccount
     }
 
     /**
-     * @see de.freese.pim.core.mail.model.AbstractJavaMailAccount#connectStore(javax.mail.Session)
+     * @see de.freese.pim.core.mail.model.AbstractJavaMailAccount#createStore(javax.mail.Session)
      */
     @Override
-    protected Store connectStore(final Session session) throws MessagingException
+    protected Store createStore(final Session session) throws MessagingException
     {
-        Store store = session.getStore("imaps");
-        store.connect(getMailConfig().getImapHost(), getMailConfig().getImapPort(), getMailConfig().getMail(),
-                getMailConfig().getPassword());
+        return session.getStore("imaps");
+    }
 
-        return store;
+    /**
+     * @see de.freese.pim.core.mail.model.AbstractJavaMailAccount#createTransport(javax.mail.Session)
+     */
+    @Override
+    protected Transport createTransport(final Session session) throws MessagingException
+    {
+        return session.getTransport("smtp");
     }
 }

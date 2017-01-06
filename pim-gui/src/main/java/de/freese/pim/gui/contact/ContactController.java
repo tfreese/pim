@@ -5,16 +5,18 @@ import java.net.URL;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.MutablePair;
 import org.apache.commons.lang3.tuple.Pair;
+
 import de.freese.pim.core.addressbook.dao.IAddressBookDAO;
 import de.freese.pim.core.addressbook.dao.TxLambdaAddressBookDAO;
 import de.freese.pim.core.addressbook.model.Kontakt;
 import de.freese.pim.gui.PIMApplication;
 import de.freese.pim.gui.controller.AbstractController;
-import de.freese.pim.gui.controller.IController;
 import de.freese.pim.gui.utils.FXUtils;
+import de.freese.pim.gui.view.ErrorDialog;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleObjectProperty;
@@ -112,6 +114,147 @@ public class ContactController extends AbstractController
     }
 
     /**
+     * @see de.freese.pim.gui.controller.IController#getMainNode()
+     */
+    @Override
+    public Node getMainNode()
+    {
+        return this.mainNode;
+    }
+
+    /**
+     * @see de.freese.pim.gui.controller.IController#getNaviNode()
+     */
+    @Override
+    public Node getNaviNode()
+    {
+        return this.naviNode;
+    }
+
+    /**
+     * @see javafx.fxml.Initializable#initialize(java.net.URL, java.util.ResourceBundle)
+     */
+    @Override
+    public void initialize(final URL location, final ResourceBundle resources)
+    {
+        this.dao = new TxLambdaAddressBookDAO(getDataSource());
+
+        this.selectedKontakt.bind(this.tableViewKontakt.getSelectionModel().selectedItemProperty());
+
+        // Workaround um Bind-Warnings "Exception while evaluating select-binding" zu verhindern.
+        getKontakteList().add(new Kontakt(-1, "", ""));
+        this.tableViewKontakt.getSelectionModel().select(0);
+
+        this.textFieldNachname.textProperty().bind(
+                Bindings.when(this.selectedKontakt.isNull()).then("").otherwise(Bindings.selectString(this.selectedKontakt, "nachname")));
+        this.textFieldVorname.textProperty().bind(
+                Bindings.when(this.selectedKontakt.isNull()).then("").otherwise(Bindings.selectString(this.selectedKontakt, "vorname")));
+
+        this.buttonNew.setOnAction(event ->
+        {
+            Dialog<Pair<String, String>> dialog = createAddEditKontaktDialog("kontakt.neu", "kontakt.neu", "imageview-new", null,
+                    resources);
+
+            Optional<Pair<String, String>> result = dialog.showAndWait();
+            result.ifPresent(pair ->
+            {
+                try
+                {
+                    long id = this.dao.insertKontakt(pair.getLeft(), StringUtils.defaultIfBlank(pair.getRight(), null));
+
+                    Kontakt kontakt = new Kontakt(id, pair.getLeft(), StringUtils.defaultIfBlank(pair.getRight(), null));
+                    getKontakteList().add(kontakt);
+
+                    this.tableViewKontakt.getSelectionModel().select(kontakt);
+                }
+                catch (Exception ex)
+                {
+                    getLogger().error(null, ex);
+
+                    new ErrorDialog().forThrowable(ex).showAndWait();
+                }
+            });
+        });
+
+        this.buttonEdit.setOnAction(event ->
+        {
+            Dialog<Pair<String, String>> dialog = createAddEditKontaktDialog("kontakt.aendern", "kontakt.aendern", "imageview-edit",
+                    this.selectedKontakt.getValue(), resources);
+
+            Optional<Pair<String, String>> result = dialog.showAndWait();
+            result.ifPresent(pair ->
+            {
+                try
+                {
+                    this.dao.updateKontakt(this.selectedKontakt.getValue().getID(), pair.getLeft(), pair.getRight());
+
+                    this.selectedKontakt.getValue().setNachname(pair.getLeft());
+                    this.selectedKontakt.getValue().setVorname(StringUtils.defaultIfBlank(pair.getRight(), null));
+                }
+                catch (Exception ex)
+                {
+                    getLogger().error(null, ex);
+
+                    new ErrorDialog().forThrowable(ex).showAndWait();
+                }
+            });
+        });
+
+        this.buttonDelete.setOnAction(event ->
+        {
+            Alert alert = new Alert(AlertType.WARNING);
+            alert.getDialogPane().getStylesheets().add("styles/styles.css");
+            alert.setTitle(resources.getString("kontakt.loeschen"));
+            alert.setHeaderText(resources.getString("kontakt.loeschen"));
+            alert.setContentText(resources.getString("kontakt.loeschen.wirklich"));
+            alert.getButtonTypes().setAll(ButtonType.YES, ButtonType.NO);
+
+            ImageView imageView = new ImageView();
+            imageView.setFitHeight(32);
+            imageView.setFitWidth(32);
+            imageView.getStyleClass().add("imageview-delete");
+
+            FXUtils.preloadImage(imageView);
+
+            Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
+            stage.getIcons().add(imageView.getImage());
+
+            TextField nachname = new TextField(this.selectedKontakt.getValue().getNachname());
+            nachname.setEditable(false);
+            TextField vorname = new TextField(this.selectedKontakt.getValue().getVorname());
+            vorname.setEditable(false);
+
+            GridPane gridPane = new GridPane();
+            gridPane.getStyleClass().addAll("gridpane", "padding");
+            gridPane.add(new Label(resources.getString("nachname")), 0, 0);
+            gridPane.add(nachname, 1, 0);
+            gridPane.add(new Label(resources.getString("vorname")), 0, 1);
+            gridPane.add(vorname, 1, 1);
+
+            alert.getDialogPane().setContent(gridPane);
+
+            Optional<ButtonType> result = alert.showAndWait();
+
+            if (result.get() == ButtonType.YES)
+            {
+                try
+                {
+                    this.dao.deleteKontakt(this.selectedKontakt.getValue().getID());
+                    getKontakteList().remove(this.selectedKontakt.getValue());
+                }
+                catch (Exception ex)
+                {
+                    getLogger().error(null, ex);
+
+                    new ErrorDialog().forThrowable(ex).showAndWait();
+                }
+            }
+        });
+
+        loadKontakte();
+    }
+
+    /**
      * <a href="http://code.makery.ch/blog/javafx-dialogs-official/">Dialog Tutorial</a>
      *
      * @param titleKey String
@@ -121,8 +264,8 @@ public class ContactController extends AbstractController
      * @param resources {@link ResourceBundle}
      * @return {@link java.awt.Dialog}
      */
-    private Dialog<Pair<String, String>> createAddEditKontaktDialog(final String titleKey, final String textKey, final String imageStyleClass,
-                                                                    final Kontakt kontakt, final ResourceBundle resources)
+    private Dialog<Pair<String, String>> createAddEditKontaktDialog(final String titleKey, final String textKey,
+            final String imageStyleClass, final Kontakt kontakt, final ResourceBundle resources)
     {
         Dialog<Pair<String, String>> dialog = new Dialog<>();
         dialog.initOwner(getMainWindow());
@@ -171,7 +314,8 @@ public class ContactController extends AbstractController
         gridPane.add(new Label(resources.getString("vorname")), 0, 1);
         gridPane.add(vorname, 1, 1);
 
-        nachname.textProperty().addListener((observable, oldValue, newValue) -> {
+        nachname.textProperty().addListener((observable, oldValue, newValue) ->
+        {
             okButton.setDisable(newValue.trim().isEmpty());
         });
 
@@ -179,7 +323,8 @@ public class ContactController extends AbstractController
 
         Platform.runLater(() -> nachname.requestFocus());
 
-        dialog.setResultConverter(buttonType -> {
+        dialog.setResultConverter(buttonType ->
+        {
             if (buttonType == ButtonType.OK)
             {
                 return new MutablePair<>(nachname.getText(), vorname.getText());
@@ -207,138 +352,6 @@ public class ContactController extends AbstractController
     }
 
     /**
-     * @see de.freese.pim.gui.controller.IController#getMainNode()
-     */
-    @Override
-    public Node getMainNode()
-    {
-        return this.mainNode;
-    }
-
-    /**
-     * @see de.freese.pim.gui.controller.IController#getNaviNode()
-     */
-    @Override
-    public Node getNaviNode()
-    {
-        return this.naviNode;
-    }
-
-    /**
-     * @see javafx.fxml.Initializable#initialize(java.net.URL, java.util.ResourceBundle)
-     */
-    @Override
-    public void initialize(final URL location, final ResourceBundle resources)
-    {
-        this.dao = new TxLambdaAddressBookDAO(getDataSource());
-
-        this.selectedKontakt.bind(this.tableViewKontakt.getSelectionModel().selectedItemProperty());
-
-        // Workaround um Bind-Warnings "Exception while evaluating select-binding" zu verhindern.
-        getKontakteList().add(new Kontakt(-1, "", ""));
-        this.tableViewKontakt.getSelectionModel().select(0);
-
-        this.textFieldNachname.textProperty()
-                .bind(Bindings.when(this.selectedKontakt.isNull()).then("").otherwise(Bindings.selectString(this.selectedKontakt, "nachname")));
-        this.textFieldVorname.textProperty()
-                .bind(Bindings.when(this.selectedKontakt.isNull()).then("").otherwise(Bindings.selectString(this.selectedKontakt, "vorname")));
-
-        this.buttonNew.setOnAction(event -> {
-            Dialog<Pair<String, String>> dialog = createAddEditKontaktDialog("kontakt.neu", "kontakt.neu", "imageview-new", null, resources);
-
-            Optional<Pair<String, String>> result = dialog.showAndWait();
-            result.ifPresent(pair -> {
-                try
-                {
-                    long id = this.dao.insertKontakt(pair.getLeft(), StringUtils.defaultIfBlank(pair.getRight(), null));
-
-                    Kontakt kontakt = new Kontakt(id, pair.getLeft(), StringUtils.defaultIfBlank(pair.getRight(), null));
-                    getKontakteList().add(kontakt);
-
-                    this.tableViewKontakt.getSelectionModel().select(kontakt);
-                }
-                catch (Exception ex)
-                {
-                    Alert alert = new Alert(AlertType.ERROR, ex.getMessage());
-                    alert.showAndWait();
-                }
-            });
-        });
-
-        this.buttonEdit.setOnAction(event -> {
-            Dialog<Pair<String, String>> dialog =
-                    createAddEditKontaktDialog("kontakt.aendern", "kontakt.aendern", "imageview-edit", this.selectedKontakt.getValue(), resources);
-
-            Optional<Pair<String, String>> result = dialog.showAndWait();
-            result.ifPresent(pair -> {
-                try
-                {
-                    this.dao.updateKontakt(this.selectedKontakt.getValue().getID(), pair.getLeft(), pair.getRight());
-
-                    this.selectedKontakt.getValue().setNachname(pair.getLeft());
-                    this.selectedKontakt.getValue().setVorname(StringUtils.defaultIfBlank(pair.getRight(), null));
-                }
-                catch (Exception ex)
-                {
-                    Alert alert = new Alert(AlertType.ERROR, ex.getMessage());
-                    alert.showAndWait();
-                }
-            });
-        });
-
-        this.buttonDelete.setOnAction(event -> {
-            Alert alert = new Alert(AlertType.WARNING);
-            alert.getDialogPane().getStylesheets().add("styles/styles.css");
-            alert.setTitle(resources.getString("kontakt.loeschen"));
-            alert.setHeaderText(resources.getString("kontakt.loeschen"));
-            alert.setContentText(resources.getString("kontakt.loeschen.wirklich"));
-            alert.getButtonTypes().setAll(ButtonType.YES, ButtonType.NO);
-
-            ImageView imageView = new ImageView();
-            imageView.setFitHeight(32);
-            imageView.setFitWidth(32);
-            imageView.getStyleClass().add("imageview-delete");
-
-            FXUtils.preloadImage(imageView);
-
-            Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
-            stage.getIcons().add(imageView.getImage());
-
-            TextField nachname = new TextField(this.selectedKontakt.getValue().getNachname());
-            nachname.setEditable(false);
-            TextField vorname = new TextField(this.selectedKontakt.getValue().getVorname());
-            vorname.setEditable(false);
-
-            GridPane gridPane = new GridPane();
-            gridPane.getStyleClass().addAll("gridpane", "padding");
-            gridPane.add(new Label(resources.getString("nachname")), 0, 0);
-            gridPane.add(nachname, 1, 0);
-            gridPane.add(new Label(resources.getString("vorname")), 0, 1);
-            gridPane.add(vorname, 1, 1);
-
-            alert.getDialogPane().setContent(gridPane);
-
-            Optional<ButtonType> result = alert.showAndWait();
-
-            if (result.get() == ButtonType.YES)
-            {
-                try
-                {
-                    this.dao.deleteKontakt(this.selectedKontakt.getValue().getID());
-                    getKontakteList().remove(this.selectedKontakt.getValue());
-                }
-                catch (Exception ex)
-                {
-                    alert = new Alert(AlertType.ERROR, ex.getMessage());
-                    alert.showAndWait();
-                }
-            }
-        });
-
-        loadKontakte();
-    }
-
-    /**
      * Kontakte laden
      */
     private void loadKontakte()
@@ -362,13 +375,16 @@ public class ContactController extends AbstractController
             }
         };
 
-        task.setOnSucceeded(event -> {
+        task.setOnSucceeded(event ->
+        {
             getKontakteList().addAll(task.getValue());
         });
 
-        task.setOnFailed(event -> {
-            Alert alert = new Alert(AlertType.ERROR, task.getException().getMessage());
-            alert.showAndWait();
+        task.setOnFailed(event ->
+        {
+            getLogger().error(null, task.getException());
+
+            new ErrorDialog().forThrowable(task.getException()).showAndWait();
         });
 
         PIMApplication.getExecutorService().execute(task);

@@ -4,21 +4,16 @@
  */
 package de.freese.pim.gui;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
+import de.freese.pim.gui.view.ErrorDialog;
 import javafx.application.Preloader;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.ProgressIndicator;
-import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 /**
@@ -53,34 +48,6 @@ public class PIMPreloader extends Preloader
     public PIMPreloader()
     {
         super();
-    }
-
-    /**
-     * @return {@link Scene}
-     */
-    private Scene createPreloaderScene()
-    {
-        this.labelStatus = new Label();
-        this.progress = new ProgressBar();
-        // this.progress = new ProgressIndicator();
-        // this.progress.setProgress(-1.0D);
-
-        this.progress.setPrefWidth(200);
-
-        GridPane pane = new GridPane();
-        pane.setPadding(new Insets(50));
-        pane.getStyleClass().add("gridpane");
-
-        pane.add(this.labelStatus, 0, 0);
-
-        GridPane.setHgrow(this.progress, Priority.ALWAYS);
-        pane.add(this.progress, 0, 1);
-
-        // Scene scene = new Scene(pane, 300, 100);
-        Scene scene = new Scene(pane);
-        scene.getStylesheets().add("/styles/styles.css");
-
-        return scene;
     }
 
     /**
@@ -126,39 +93,7 @@ public class PIMPreloader extends Preloader
     {
         PIMApplication.LOGGER.error(null, info.getCause());
 
-        Alert alert = new Alert(AlertType.ERROR);
-        alert.initModality(Modality.APPLICATION_MODAL);
-        // alert.initOwner(ApplicationFX.getWindow());
-        alert.setTitle("Error");
-        alert.setHeaderText(info.getDetails());
-        // alert.setContentText(th.getMessage());
-
-        StringWriter stringWriter = new StringWriter();
-        PrintWriter printWriter = new PrintWriter(stringWriter);
-        info.getCause().printStackTrace(printWriter);
-
-        String stackTrace = stringWriter.toString();
-
-        Label label = new Label("The exception stacktrace was:");
-
-        TextArea textArea = new TextArea(stackTrace);
-        textArea.setEditable(false);
-        textArea.setWrapText(false);
-
-        textArea.setMaxWidth(Double.MAX_VALUE);
-        textArea.setMaxHeight(Double.MAX_VALUE);
-        GridPane.setVgrow(textArea, Priority.ALWAYS);
-        GridPane.setHgrow(textArea, Priority.ALWAYS);
-
-        GridPane gridPane = new GridPane();
-        gridPane.setMaxWidth(Double.MAX_VALUE);
-        gridPane.add(label, 0, 0);
-        gridPane.add(textArea, 0, 1);
-
-        // Set expandable Exception into the dialog pane.
-        alert.getDialogPane().setExpandableContent(gridPane);
-
-        alert.showAndWait();
+        new ErrorDialog().forThrowable(info.getCause()).showAndWait();
 
         // Platform.exit();
         System.exit(0);
@@ -233,5 +168,33 @@ public class PIMPreloader extends Preloader
     public void stop() throws Exception
     {
         // Empty
+    }
+
+    /**
+     * @return {@link Scene}
+     */
+    private Scene createPreloaderScene()
+    {
+        this.labelStatus = new Label();
+        this.progress = new ProgressBar();
+        // this.progress = new ProgressIndicator();
+        // this.progress.setProgress(-1.0D);
+
+        this.progress.setPrefWidth(200);
+
+        GridPane pane = new GridPane();
+        pane.setPadding(new Insets(50));
+        pane.getStyleClass().add("gridpane");
+
+        pane.add(this.labelStatus, 0, 0);
+
+        GridPane.setHgrow(this.progress, Priority.ALWAYS);
+        pane.add(this.progress, 0, 1);
+
+        // Scene scene = new Scene(pane, 300, 100);
+        Scene scene = new Scene(pane);
+        scene.getStylesheets().add("/styles/styles.css");
+
+        return scene;
     }
 }

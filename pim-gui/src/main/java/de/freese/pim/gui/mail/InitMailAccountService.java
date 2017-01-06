@@ -15,11 +15,10 @@ import de.freese.pim.core.mail.model.IMailAccount;
 import de.freese.pim.core.mail.model.IMailFolder;
 import de.freese.pim.core.mail.model.MailConfig;
 import de.freese.pim.gui.PIMApplication;
+import de.freese.pim.gui.view.ErrorDialog;
 import javafx.application.Platform;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.TreeItem;
 
 /**
@@ -150,8 +149,7 @@ public class InitMailAccountService extends Service<Void>
 
             PIMApplication.LOGGER.error(null, th);
 
-            Alert alert = new Alert(AlertType.ERROR, th.getMessage());
-            alert.showAndWait();
+            new ErrorDialog().forThrowable(th).showAndWait();
         });
 
         return task;

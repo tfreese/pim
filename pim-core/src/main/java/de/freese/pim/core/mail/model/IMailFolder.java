@@ -15,18 +15,15 @@ public interface IMailFolder
 {
     /**
      * Schliesst den Folder und seine Children.
-     *
-     * @throws Exception Falls was schief geht.
      */
-    public void close() throws Exception;
+    public void close();
 
     /**
      * Liefert die Child-Folder.
      *
      * @return {@link ObservableList}
-     * @throws Exception Falls was schief geht.
      */
-    public ObservableList<IMailFolder> getChildren() throws Exception;
+    public ObservableList<IMailFolder> getChildren();
 
     /**
      * Liefert den vollen Hierarchie-Namen.
@@ -39,9 +36,8 @@ public interface IMailFolder
      * Liefert alle Mails.
      *
      * @return {@link ObservableList}
-     * @throws Exception Falls was schief geht.
      */
-    public ObservableList<IMail> getMessages() throws Exception;
+    public ObservableList<IMail> getMessages();
 
     /**
      * Liefert den Namen.
@@ -61,17 +57,15 @@ public interface IMailFolder
      * Liefert die Anzahl nicht gelesener Mails, inklusive der Child-Folder.
      *
      * @return int
-     * @throws Exception Falls was schief geht.
      */
-    public int getUnreadMessageCount() throws Exception;
+    public int getUnreadMessageCount();
 
     /**
      * Liefert die nicht gelesenen Mails.
      *
      * @return {@link List}
-     * @throws Exception Falls was schief geht.
      */
-    public List<IMail> getUnreadMessages() throws Exception;
+    public List<IMail> getUnreadMessages();
 
     // /**
     // * Synchronisiert das Lokale Verzeichnis mit dem Remote-Folder.

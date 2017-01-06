@@ -1,14 +1,14 @@
 // Created: 13.12.2016
 package de.freese.pim.gui.mail;
 
+import de.freese.pim.core.mail.model.IMail;
 import de.freese.pim.gui.view.IView;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.control.Label;
 import javafx.scene.control.SelectionMode;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TitledPane;
 import javafx.scene.control.TreeView;
-import javafx.scene.layout.BorderPane;
 
 /**
  * View des Mail-Clients.
@@ -34,6 +34,12 @@ public class MailView implements IView
     *
     */
     @FXML
+    private TableView<IMail> tableViewMail = null;
+
+    /**
+    *
+    */
+    @FXML
     private TreeView<Object> treeViewMail = null;
 
     /**
@@ -52,10 +58,15 @@ public class MailView implements IView
      */
     private Node createMainNode()
     {
-        BorderPane borderPane = new BorderPane();
-        borderPane.setCenter(new Label("Mails"));
+        // BorderPane borderPane = new BorderPane();
+        // borderPane.setCenter(new Label("Mails"));
+        //
+        // return borderPane;
+        this.tableViewMail = new TableView<>();
+        this.tableViewMail.setEditable(false);
+        this.tableViewMail.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
 
-        return borderPane;
+        return this.tableViewMail;
     }
 
     /**

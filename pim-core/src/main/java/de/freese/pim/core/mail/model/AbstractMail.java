@@ -39,7 +39,7 @@ public abstract class AbstractMail<F extends IMailFolder> implements IMail
     {
         try
         {
-            return getMailFolder().getPath().resolve(getMessageID());
+            return getMailFolder().getPath().resolve(getID());
         }
         catch (Exception ex)
         {

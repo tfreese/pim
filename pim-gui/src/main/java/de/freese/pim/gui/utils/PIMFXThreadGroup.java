@@ -2,7 +2,6 @@ package de.freese.pim.gui.utils;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import javafx.application.Platform;
 
 /**
  * ThreadGroup für Handling von Runtime-Exceptions.
@@ -33,12 +32,6 @@ public class PIMFXThreadGroup extends ThreadGroup
     {
         // super.uncaughtException(t, e);
 
-        LOGGER.error(null, e);
-
-        Platform.exit();
-        // System.exit(-1);
-
-        // ErrorNotification errorNotification = new ErrorNotification("Uncaught Exception", e.getMessage(), e);
-        // pimpre
+        Thread.getDefaultUncaughtExceptionHandler().uncaughtException(t, e);
     }
 }

@@ -35,6 +35,7 @@ import de.freese.pim.core.utils.Utils;
 import de.freese.pim.gui.controller.MainController;
 import de.freese.pim.gui.utils.FXUtils;
 import de.freese.pim.gui.utils.PIMFXThreadGroup;
+import de.freese.pim.gui.view.ErrorDialog;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.application.Preloader.StateChangeNotification;
@@ -154,15 +155,14 @@ public class PIMApplication extends Application
         }
 
         SysOutOverSLF4J.sendSystemOutAndErrToSLF4J();
-        // System.out.println("test");
-        // System.err.println("test");
 
-        // Thread.setDefaultUncaughtExceptionHandler((t, ex) ->
-        // {
-        // System.err.println("***Default exception handler***");
-        //
-        // LOGGER.error(null, ex);
-        // });
+        Thread.setDefaultUncaughtExceptionHandler((t, ex) ->
+        {
+            LOGGER.error("***Default exception handler***");
+            LOGGER.error(null, ex);
+
+            new ErrorDialog().forThrowable(ex).showAndWait();
+        });
 
         // Eigene ThreadGroup für Handling von Runtime-Exceptions.
         PIMFXThreadGroup threadGroup = new PIMFXThreadGroup();

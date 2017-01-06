@@ -17,17 +17,15 @@ public interface IMail
      * Liefert den Absender.
      *
      * @return {@link InternetAddress}
-     * @throws Exception Falls was schief geht.
      */
-    public InternetAddress getFrom() throws Exception;
+    public InternetAddress getFrom();
 
     /**
-     * Liefert die Message-ID.
+     * Liefert die Message-ID oder bei IMAP die UID.
      *
      * @return String
-     * @throws Exception Falls was schief geht.
      */
-    public String getMessageID() throws Exception;
+    public String getID();
 
     /**
      * Liefert den lokalen Temp-{@link Path} der Mail.
@@ -40,23 +38,27 @@ public interface IMail
      * Liefert das Empfangs-Datum.
      *
      * @return {@link Date}
-     * @throws Exception Falls was schief geht.
      */
-    public Date getReceivedDate() throws Exception;
+    public Date getReceivedDate();
+
+    /**
+     * Liefert das Sende-Datum.
+     *
+     * @return {@link Date}
+     */
+    public Date getSendDate();
 
     /**
      * Liefert die Subject.
      *
      * @return String
-     * @throws Exception Falls was schief geht.
      */
-    public String getSubject() throws Exception;
+    public String getSubject();
 
     /**
      * Liefert true, wenn die Mail bereits gelesen wurde.
      *
      * @return boolean
-     * @throws Exception Falls was schief geht.
      */
-    public boolean isSeen() throws Exception;
+    public boolean isSeen();
 }
