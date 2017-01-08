@@ -3,7 +3,6 @@ package de.freese.pim.core.mail;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Properties;
-
 import org.junit.AfterClass;
 import org.junit.Assume;
 import org.junit.Before;
@@ -50,7 +49,7 @@ public class TestSendMail extends AbstractMailTest
 
         // Legitimation für Versand.
         Properties properties = new Properties();
-        properties.put("mail.debug", Boolean.TRUE.toString());
+        properties.put("mail.debug", DEBUG.toString());
         properties.put("mail.smtp.auth", "true");
         properties.put("mail.smtp.starttls.enable", "true");
         sender.setJavaMailProperties(properties);
@@ -107,6 +106,12 @@ public class TestSendMail extends AbstractMailTest
     @Test
     public void test100PlainTextWithAttachment() throws Exception
     {
+        // Resource resource = new ClassPathResource("mail/text.txt");
+        // InputStream inputStream = resource.getInputStream();
+
+        // byte[] bytes = Files.readAllBytes(resource.getFile().toPath());
+        // InputStream inputStream = new ByteArrayInputStream(bytes);
+
         // @formatter:off
         JavaMailBuilder.create(sender, true)
                 .from(this.from)

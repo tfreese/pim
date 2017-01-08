@@ -23,6 +23,11 @@ public abstract class AbstractMailTest extends AbstractPimTest
     /**
     *
     */
+    protected static final Boolean DEBUG = Boolean.FALSE;
+
+    /**
+    *
+    */
     public static final String MAIL_IMAP_HOST = getMailProvider().getImapHost();
 
     /**

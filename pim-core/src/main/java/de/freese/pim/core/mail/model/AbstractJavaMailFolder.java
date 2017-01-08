@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
 import javax.mail.FetchProfile;
 import javax.mail.Flags;
 import javax.mail.Folder;
@@ -16,9 +15,7 @@ import javax.mail.event.MessageCountEvent;
 import javax.mail.event.MessageCountListener;
 import javax.mail.search.FlagTerm;
 import javax.mail.search.SearchTerm;
-
 import com.sun.mail.imap.IMAPFolder;
-
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -28,6 +25,7 @@ import javafx.collections.ObservableList;
  * @author Thomas Freese
  * @param <A> Konkreter MailAccount
  */
+@SuppressWarnings("restriction")
 public abstract class AbstractJavaMailFolder<A extends AbstractJavaMailAccount> extends AbstractMailFolder<A>
 {
     /**
@@ -36,8 +34,8 @@ public abstract class AbstractJavaMailFolder<A extends AbstractJavaMailAccount> 
     private ObservableList<IMailFolder> children = null;
 
     /**
-    *
-    */
+     *
+     */
     private final Folder folder;
 
     /**
@@ -118,6 +116,32 @@ public abstract class AbstractJavaMailFolder<A extends AbstractJavaMailAccount> 
     }
 
     /**
+     * Stellt sicher, das der {@link Folder} zum Lesen geöffnet ist.
+     *
+     * @throws Exception Falls was schief geht.
+     */
+    protected void checkRead() throws Exception
+    {
+        if (!getFolder().isOpen())
+        {
+            getFolder().open(Folder.READ_ONLY);
+        }
+    }
+
+    /**
+     * Stellt sicher, das der {@link Folder} zum Schreiben geöffnet ist.
+     *
+     * @throws Exception Falls was schief geht.
+     */
+    protected void checkWrite() throws Exception
+    {
+        if (!getFolder().isOpen() || (getFolder().getMode() == Folder.READ_ONLY))
+        {
+            getFolder().open(Folder.READ_WRITE);
+        }
+    }
+
+    /**
      * @see de.freese.pim.core.mail.model.IMailFolder#close()
      */
     @Override
@@ -125,11 +149,17 @@ public abstract class AbstractJavaMailFolder<A extends AbstractJavaMailAccount> 
     {
         try
         {
-            getFolder().close(true);
-
-            for (IMailFolder child : getChildren())
+            if (getFolder().isOpen())
             {
-                child.close();
+                getFolder().close(true);
+            }
+
+            if (this.children != null)
+            {
+                for (IMailFolder child : this.children)
+                {
+                    child.close();
+                }
             }
 
             this.children.clear();
@@ -157,12 +187,11 @@ public abstract class AbstractJavaMailFolder<A extends AbstractJavaMailAccount> 
         {
             if (this.children == null)
             {
-            // @formatter:off
-            this.children = Stream.of(getFolder().list("%"))
-
-                .map(f -> new MailFolder(getMailAccount(), f))
-                .collect(Collectors.toCollection(FXCollections::observableArrayList));
-            // @formatter:on
+                // @formatter:off
+                this.children = Stream.of(getFolder().list("%"))
+                        .map(f -> new MailFolder(getMailAccount(), f))
+                        .collect(Collectors.toCollection(FXCollections::observableArrayList));
+                // @formatter:on
 
                 // Verzeichnisse anlegen
                 // for (IMailFolder mailFolder : children)
@@ -177,6 +206,14 @@ public abstract class AbstractJavaMailFolder<A extends AbstractJavaMailAccount> 
         {
             throw new RuntimeException(ex);
         }
+    }
+
+    /**
+     * @return {@link Folder}
+     */
+    protected Folder getFolder()
+    {
+        return this.folder;
     }
 
     /**
@@ -207,88 +244,19 @@ public abstract class AbstractJavaMailFolder<A extends AbstractJavaMailAccount> 
                 fp.add(FetchProfile.Item.ENVELOPE);
                 fp.add(UIDFolder.FetchProfileItem.UID);
                 fp.add(IMAPFolder.FetchProfileItem.HEADERS);
+                // fp.add(FetchProfile.Item.CONTENT_INFO);
 
                 getFolder().fetch(msgs, fp);
 
-                this.messages = Stream.of(msgs).map(m -> new JavaMail(this, m))
+                // @formatter:off
+                this.messages = Stream.of(msgs)
+                        .map(m -> new JavaMail(this, m))
+                        .sorted(Comparator.comparing(IMail::getReceivedDate).reversed())
                         .collect(Collectors.toCollection(FXCollections::observableArrayList));
+                // @formatter:off
             }
 
             return this.messages;
-        }
-        catch (Exception ex)
-        {
-            throw new RuntimeException(ex);
-        }
-    }
-
-    /**
-     * @see de.freese.pim.core.mail.model.IMailFolder#getName()
-     */
-    @Override
-    public String getName()
-    {
-        return getFolder().getName();
-    }
-
-    /**
-     * @see de.freese.pim.core.mail.model.IMailFolder#getUnreadMessageCount()
-     */
-    @Override
-    public int getUnreadMessageCount()
-    {
-        try
-        {
-            if (this.unreadMessageCount < 0)
-            {
-                this.unreadMessageCount = getChildren().stream().mapToInt(c ->
-                {
-                    try
-                    {
-                        return c.getUnreadMessageCount();
-                    }
-                    catch (Exception ex)
-                    {
-                        // Ignore
-                    }
-
-                    return 0;
-                }).sum();
-
-                this.unreadMessageCount += getFolder().getUnreadMessageCount();
-            }
-
-            return this.unreadMessageCount;
-        }
-        catch (Exception ex)
-        {
-            throw new RuntimeException(ex);
-        }
-    }
-
-    /**
-     * @see de.freese.pim.core.mail.model.IMailFolder#getUnreadMessages()
-     */
-    @Override
-    public List<IMail> getUnreadMessages()
-    {
-        try
-        {
-            checkRead();
-
-            // Nur ungelesene Mails holen.
-            SearchTerm searchTerm = new FlagTerm(new Flags(Flags.Flag.SEEN), false);
-            Message[] messages = getFolder().search(searchTerm);
-
-            // Nur bestimmte Mail-Attribute vorladen.
-            FetchProfile fp = new FetchProfile();
-            fp.add(FetchProfile.Item.ENVELOPE);
-            fp.add(UIDFolder.FetchProfileItem.UID);
-            fp.add(IMAPFolder.FetchProfileItem.HEADERS);
-
-            getFolder().fetch(messages, fp);
-
-            return Stream.of(messages).map(m -> new JavaMail(this, m)).collect(Collectors.toList());
         }
         catch (Exception ex)
         {
@@ -366,38 +334,66 @@ public abstract class AbstractJavaMailFolder<A extends AbstractJavaMailAccount> 
     // throw new RuntimeException(ex);
     // }
     // }
+    /**
+     * @see de.freese.pim.core.mail.model.IMailFolder#getName()
+     */
+    @Override
+    public String getName()
+    {
+        return getFolder().getName();
+    }
 
     /**
-     * Stellt sicher, das der {@link Folder} zum Lesen geöffnet ist.
-     *
-     * @throws Exception Falls was schief geht.
+     * @see de.freese.pim.core.mail.model.IMailFolder#getUnreadMessageCount()
      */
-    protected void checkRead() throws Exception
+    @Override
+    public int getUnreadMessageCount()
     {
-        if (!getFolder().isOpen())
+        try
         {
-            getFolder().open(Folder.READ_ONLY);
+            if (this.unreadMessageCount < 0)
+            {
+                this.unreadMessageCount = getChildren().stream().mapToInt(IMailFolder::getUnreadMessageCount).sum();
+
+                this.unreadMessageCount += getFolder().getUnreadMessageCount();
+            }
+
+            return this.unreadMessageCount;
+        }
+        catch (Exception ex)
+        {
+            throw new RuntimeException(ex);
         }
     }
 
     /**
-     * Stellt sicher, das der {@link Folder} zum Schreiben geöffnet ist.
-     *
-     * @throws Exception Falls was schief geht.
+     * @see de.freese.pim.core.mail.model.IMailFolder#getUnreadMessages()
      */
-    protected void checkWrite() throws Exception
+    @Override
+    public List<IMail> getUnreadMessages()
     {
-        if (!getFolder().isOpen() || (getFolder().getMode() == Folder.READ_ONLY))
+        try
         {
-            getFolder().open(Folder.READ_WRITE);
-        }
-    }
+            checkRead();
 
-    /**
-     * @return {@link Folder}
-     */
-    protected Folder getFolder()
-    {
-        return this.folder;
+            // Nur ungelesene Mails holen.
+            SearchTerm searchTerm = new FlagTerm(new Flags(Flags.Flag.SEEN), false);
+            Message[] messages = getFolder().search(searchTerm);
+
+            // Nur bestimmte Mail-Attribute vorladen.
+            FetchProfile fp = new FetchProfile();
+            fp.add(FetchProfile.Item.ENVELOPE);
+            fp.add(UIDFolder.FetchProfileItem.UID);
+            fp.add(IMAPFolder.FetchProfileItem.HEADERS);
+//            fp.add(FetchProfile.Item.CONTENT_INFO);
+
+            getFolder().fetch(messages, fp);
+
+            return Stream.of(messages).map(m -> new JavaMail(this, m)).collect(Collectors.toList());
+        }
+        catch (Exception ex)
+        {
+            throw new RuntimeException(ex);
+        }
     }
 }

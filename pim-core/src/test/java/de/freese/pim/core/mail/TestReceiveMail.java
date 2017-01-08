@@ -9,6 +9,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.time.Instant;
 import java.util.Arrays;
 import java.util.Date;
@@ -17,20 +18,21 @@ import java.util.Optional;
 import java.util.Properties;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
 import javax.mail.Authenticator;
 import javax.mail.FetchProfile;
 import javax.mail.Flags;
 import javax.mail.Folder;
 import javax.mail.Message;
+import javax.mail.Multipart;
+import javax.mail.Part;
 import javax.mail.Session;
 import javax.mail.Store;
 import javax.mail.UIDFolder;
 import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.search.FlagTerm;
 import javax.mail.search.SearchTerm;
-
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
 import org.junit.AfterClass;
@@ -43,10 +45,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
 import org.junit.runners.Parameterized;
-
 import com.sun.mail.imap.IMAPFolder;
 import com.sun.mail.util.ASCIIUtility;
-
 import de.freese.pim.core.mail.function.FunctionStripNotLetter;
 import de.freese.pim.core.mail.utils.MailUtils;
 import de.freese.pim.core.mail.utils.MailUtils.AbstractTextPart;
@@ -91,7 +91,7 @@ public class TestReceiveMail extends AbstractMailTest
 
         // Legitimation für Empfang.
         Properties properties = new Properties();
-        properties.put("mail.debug", Boolean.TRUE.toString());
+        properties.put("mail.debug", DEBUG.toString());
         properties.put("mail.imap.auth", "true");
         properties.put("mail.imap.starttls.enable", "true");
 
@@ -182,6 +182,7 @@ public class TestReceiveMail extends AbstractMailTest
             fp.add(FetchProfile.Item.ENVELOPE);
             fp.add(UIDFolder.FetchProfileItem.UID);
             fp.add(IMAPFolder.FetchProfileItem.HEADERS);
+            // fp.add(FetchProfile.Item.CONTENT_INFO);
             inboxFolder.fetch(messages, fp);
 
             Assert.assertNotNull(messages);
@@ -190,15 +191,25 @@ public class TestReceiveMail extends AbstractMailTest
             for (Message message : messages)
             {
                 int messageNumber = message.getMessageNumber();
-                String messageID = message.getHeader("Message-ID")[0];
+                String id = null;
+
+                if (inboxFolder instanceof IMAPFolder)
+                {
+                    id = Long.toString(((IMAPFolder) inboxFolder).getUID(message));
+                }
+                else
+                {
+                    id = message.getHeader("Message-ID")[0];
+                }
+
                 Date receivedDate = message.getReceivedDate();
                 String subject = message.getSubject();
                 String from = Optional.ofNullable(message.getFrom()).map(f -> ((InternetAddress) f[0]).getAddress()).orElse(null);
 
-                System.out.printf("From: %s%n", Arrays.toString(message.getFrom()));
-                System.out.printf("%02d | %s | %tc | %s | %s%n", messageNumber, messageID, receivedDate, subject, from);
+                System.out.printf("From: %s; Size: %d%n", Arrays.toString(message.getFrom()), message.getSize());
+                System.out.printf("%02d | %s | %tc | %s | %s%n", messageNumber, id, receivedDate, subject, from);
 
-                try (OutputStream os = Files.newOutputStream(TMP_TEST_PATH.resolve(messageID + ".msg")))
+                try (OutputStream os = Files.newOutputStream(TMP_TEST_PATH.resolve(id + ".eml")))
                 {
                     // ReceivedDate merken, da nicht im HEADER vorkommt und IMAPMessage read-only ist.
                     byte[] bytes = ASCIIUtility.getBytes("RECEIVED-DATE: " + receivedDate.toInstant().toString() + "\r\n");
@@ -206,6 +217,9 @@ public class TestReceiveMail extends AbstractMailTest
 
                     message.writeTo(os);
                 }
+
+                // Nur den Content speichern.
+                Files.copy(message.getInputStream(), TMP_TEST_PATH.resolve(id + ".content"), StandardCopyOption.REPLACE_EXISTING);
             }
         }
         finally
@@ -225,8 +239,7 @@ public class TestReceiveMail extends AbstractMailTest
     {
         // Files.newDirectoryStream(Paths.get("."), path -> path.toString().endsWith(".msg")).forEach(System.out::println);
 
-        try (Stream<Path> mailFiles = Files.find(TMP_TEST_PATH, Integer.MAX_VALUE,
-                (path, attrs) -> attrs.isRegularFile() && path.toString().endsWith(".msg")))
+        try (Stream<Path> mailFiles = Files.find(TMP_TEST_PATH, Integer.MAX_VALUE, (path, attrs) -> attrs.isRegularFile() && path.toString().endsWith(".eml")))
         {
             for (Path mail : mailFiles.collect(Collectors.toList()))
             {
@@ -236,8 +249,7 @@ public class TestReceiveMail extends AbstractMailTest
 
                     int messageNumber = message.getMessageNumber();
                     String messageID = message.getHeader("Message-ID")[0];
-                    Date receivedDate = Optional.ofNullable(message.getReceivedDate())
-                            .orElse(Date.from(Instant.parse(message.getHeader("RECEIVED-DATE")[0])));
+                    Date receivedDate = Optional.ofNullable(message.getReceivedDate()).orElse(Date.from(Instant.parse(message.getHeader("RECEIVED-DATE")[0])));
                     String subject = message.getSubject();
                     String from = Optional.ofNullable(message.getFrom()).map(f -> ((InternetAddress) f[0]).getAddress()).orElse(null);
 
@@ -251,10 +263,47 @@ public class TestReceiveMail extends AbstractMailTest
      * @throws Exception Falls was schief geht.
      */
     @Test
-    public void test022ReadTextFromSavedMails() throws Exception
+    public void test022ReadAttachementsFromSavedMails() throws Exception
     {
-        try (Stream<Path> mailFiles = Files.find(TMP_TEST_PATH, Integer.MAX_VALUE,
-                (path, attrs) -> attrs.isRegularFile() && path.toString().endsWith(".msg")))
+        try (Stream<Path> mailFiles = Files.find(TMP_TEST_PATH, 1, (path, attrs) -> attrs.isRegularFile() && path.toString().endsWith(".eml")))
+        {
+            for (Path mailPath : mailFiles.collect(Collectors.toList()))
+            {
+                try (InputStream is = new BufferedInputStream(Files.newInputStream(mailPath)))
+                {
+                    MimeMessage message = new MimeMessage(null, is);
+
+                    if (message.getContent() instanceof Multipart)
+                    {
+                        Multipart multiPart = (Multipart) message.getContent();
+
+                        for (int i = 0; i < multiPart.getCount(); i++)
+                        {
+                            MimeBodyPart part = (MimeBodyPart) multiPart.getBodyPart(i);
+
+                            if (Part.ATTACHMENT.equalsIgnoreCase(part.getDisposition()))
+                            {
+                                Path attachment = mailPath.getParent().resolve(mailPath.getFileName().toString() + "_attachment");
+
+                                try (InputStream attIS = part.getInputStream())
+                                {
+                                    Files.copy(attIS, attachment, StandardCopyOption.REPLACE_EXISTING);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * @throws Exception Falls was schief geht.
+     */
+    @Test
+    public void test023ReadTextFromSavedMails() throws Exception
+    {
+        try (Stream<Path> mailFiles = Files.find(TMP_TEST_PATH, 1, (path, attrs) -> attrs.isRegularFile() && path.toString().endsWith(".msg")))
         {
             for (Path mail : mailFiles.collect(Collectors.toList()))
             {

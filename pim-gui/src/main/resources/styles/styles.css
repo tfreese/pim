@@ -129,6 +129,7 @@ https://docs.oracle.com/javase/8/javafx/api/javafx/scene/doc-files/cssref.html
 /*t*/
 .table-cell
 {
+	-fx-font-size: 80.0%;
     -fx-border-color: black;
     -fx-border-width: 0.3;
     /*-fx-table-cell-border-color transparent transparent;*/

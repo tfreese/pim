@@ -3,7 +3,6 @@ package de.freese.pim.core.mail.model;
 
 import java.nio.file.Path;
 import java.util.List;
-
 import javafx.collections.ObservableList;
 
 /**
@@ -11,6 +10,7 @@ import javafx.collections.ObservableList;
  *
  * @author Thomas Freese
  */
+@SuppressWarnings("restriction")
 public interface IMailFolder
 {
     /**

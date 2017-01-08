@@ -3,7 +3,6 @@ package de.freese.pim.core.mail.model;
 
 import java.nio.file.Path;
 import java.util.Objects;
-
 import de.freese.pim.core.service.SettingService;
 
 /**
@@ -11,12 +10,13 @@ import de.freese.pim.core.service.SettingService;
  *
  * @author Thomas Freese
  */
+@SuppressWarnings("restriction")
 public abstract class AbstractMailAccount implements IMailAccount
 {
     /**
      *
      */
-    protected static final boolean DEBUG = true;
+    protected static final Boolean DEBUG = Boolean.FALSE;
 
     /**
      *

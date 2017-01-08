@@ -1,15 +1,12 @@
 // Created: 04.01.2017
 package de.freese.pim.core.mail.model;
 
-import java.time.Instant;
 import java.util.Date;
 import java.util.Objects;
 import java.util.Optional;
-
 import javax.mail.Flags;
 import javax.mail.Message;
 import javax.mail.internet.InternetAddress;
-
 import com.sun.mail.imap.IMAPFolder;
 
 /**
@@ -88,6 +85,14 @@ public abstract class AbstractJavaMail<F extends IMailFolder> extends AbstractMa
     }
 
     /**
+     * @return {@link Message}
+     */
+    protected Message getMessage()
+    {
+        return this.message;
+    }
+
+    /**
      * @see de.freese.pim.core.mail.model.IMail#getReceivedDate()
      */
     @Override
@@ -97,7 +102,7 @@ public abstract class AbstractJavaMail<F extends IMailFolder> extends AbstractMa
         {
             Date receivedDate = getMessage().getReceivedDate();
 
-            receivedDate = Optional.ofNullable(receivedDate).orElse(Date.from(Instant.parse(getMessage().getHeader("RECEIVED-DATE")[0])));
+            // receivedDate = Optional.ofNullable(receivedDate).orElse(Date.from(Instant.parse(getMessage().getHeader("RECEIVED-DATE")[0])));
 
             return receivedDate;
         }
@@ -157,13 +162,5 @@ public abstract class AbstractJavaMail<F extends IMailFolder> extends AbstractMa
         {
             throw new RuntimeException(ex);
         }
-    }
-
-    /**
-     * @return {@link Message}
-     */
-    protected Message getMessage()
-    {
-        return this.message;
     }
 }

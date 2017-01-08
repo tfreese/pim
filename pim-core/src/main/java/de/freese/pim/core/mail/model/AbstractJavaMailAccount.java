@@ -4,7 +4,6 @@ package de.freese.pim.core.mail.model;
 import java.util.Properties;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
 import javax.mail.Authenticator;
 import javax.mail.Folder;
 import javax.mail.MessagingException;
@@ -13,7 +12,6 @@ import javax.mail.Store;
 import javax.mail.Transport;
 import javax.mail.event.FolderEvent;
 import javax.mail.event.FolderListener;
-
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -22,11 +20,12 @@ import javafx.collections.ObservableList;
  *
  * @author Thomas Freese
  */
+@SuppressWarnings("restriction")
 public abstract class AbstractJavaMailAccount extends AbstractMailAccount
 {
     /**
-    *
-    */
+     *
+     */
     private Session session = null;
 
     /**
@@ -66,77 +65,25 @@ public abstract class AbstractJavaMailAccount extends AbstractMailAccount
     }
 
     /**
-     * @see de.freese.pim.core.mail.model.IMailAccount#disconnect()
+     * Connecten des {@link Store}.
+     *
+     * @param store {@link Store}
+     * @throws MessagingException Falls was schief geht.
      */
-    @Override
-    public void disconnect()
+    protected void connectStore(final Store store) throws MessagingException
     {
-        try
-        {
-            // Folder schliessen.
-            for (IMailFolder folder : getTopLevelFolder())
-            {
-                folder.close();
-            }
-
-            disconnectStore(this.store);
-            // disconnectTransport(transport);
-
-            this.store = null;
-            // transport = null;
-
-            this.topLevelFolder.clear();
-            this.topLevelFolder = null;
-        }
-        catch (Exception ex)
-        {
-            throw new RuntimeException(ex);
-        }
+        store.connect(getMailConfig().getImapHost(), getMailConfig().getImapPort(), getMailConfig().getMail(), getMailConfig().getPassword());
     }
 
     /**
-     * @see de.freese.pim.core.mail.model.IMailAccount#getTopLevelFolder()
+     * Connecten des {@link Transport}.
+     *
+     * @param transport {@link Transport}
+     * @throws MessagingException Falls was schief geht.
      */
-    @Override
-    public ObservableList<IMailFolder> getTopLevelFolder()
+    protected void connectTransport(final Transport transport) throws MessagingException
     {
-        try
-        {
-            if (this.topLevelFolder == null)
-            {
-                Folder root = getStore().getDefaultFolder();
-
-            // @formatter:off
-            this.topLevelFolder = Stream.of(root.list("%"))
-                .map(f -> new MailFolder(this, f))
-                .collect(Collectors.toCollection(FXCollections::observableArrayList));
-            // @formatter:on
-            }
-
-            return this.topLevelFolder;
-        }
-        catch (Exception ex)
-        {
-            throw new RuntimeException(ex);
-        }
-    }
-
-    /**
-     * @see de.freese.pim.core.mail.model.IMailAccount#getUnreadMessageCount()
-     */
-    @Override
-    public int getUnreadMessageCount()
-    {
-        try
-        {
-            int count = getTopLevelFolder().stream().mapToInt(IMailFolder::getUnreadMessageCount).sum();
-
-            return count;
-        }
-        catch (Exception ex)
-        {
-            throw new RuntimeException(ex);
-        }
+        transport.connect(getMailConfig().getSmtpHost(), getMailConfig().getSmtpPort(), getMailConfig().getMail(), getMailConfig().getPassword());
     }
 
     /**
@@ -150,11 +97,7 @@ public abstract class AbstractJavaMailAccount extends AbstractMailAccount
         Authenticator authenticator = null;
 
         Properties properties = new Properties();
-
-        if (DEBUG)
-        {
-            properties.put("mail.debug", Boolean.TRUE.toString());
-        }
+        properties.put("mail.debug", DEBUG.toString());
 
         // Legitimation für Empfang.
         if (getMailConfig().isImapLegitimation())
@@ -193,30 +136,6 @@ public abstract class AbstractJavaMailAccount extends AbstractMailAccount
     }
 
     /**
-     * Connecten des {@link Store}.
-     *
-     * @param store {@link Store}
-     * @throws MessagingException Falls was schief geht.
-     */
-    protected void connectStore(final Store store) throws MessagingException
-    {
-        store.connect(getMailConfig().getImapHost(), getMailConfig().getImapPort(), getMailConfig().getMail(),
-                getMailConfig().getPassword());
-    }
-
-    /**
-     * Connecten des {@link Transport}.
-     *
-     * @param transport {@link Transport}
-     * @throws MessagingException Falls was schief geht.
-     */
-    protected void connectTransport(final Transport transport) throws MessagingException
-    {
-        transport.connect(getMailConfig().getSmtpHost(), getMailConfig().getSmtpPort(), getMailConfig().getMail(),
-                getMailConfig().getPassword());
-    }
-
-    /**
      * Erzeugt den {@link Store}.
      *
      * @param session {@link Session}
@@ -233,6 +152,38 @@ public abstract class AbstractJavaMailAccount extends AbstractMailAccount
      * @throws MessagingException Falls was schief geht.
      */
     protected abstract Transport createTransport(Session session) throws MessagingException;
+
+    /**
+     * @see de.freese.pim.core.mail.model.IMailAccount#disconnect()
+     */
+    @Override
+    public void disconnect()
+    {
+        try
+        {
+            // Folder schliessen.
+            if (this.topLevelFolder != null)
+            {
+                for (IMailFolder folder : this.topLevelFolder)
+                {
+                    folder.close();
+                }
+            }
+
+            disconnectStore(this.store);
+            // disconnectTransport(transport);
+
+            this.store = null;
+            // transport = null;
+
+            this.topLevelFolder.clear();
+            this.topLevelFolder = null;
+        }
+        catch (Exception ex)
+        {
+            throw new RuntimeException(ex);
+        }
+    }
 
     /**
      * Schliessen des {@link Store}.
@@ -359,5 +310,55 @@ public abstract class AbstractJavaMailAccount extends AbstractMailAccount
         }
 
         return this.store;
+    }
+
+    /**
+     * @see de.freese.pim.core.mail.model.IMailAccount#getTopLevelFolder()
+     */
+    @Override
+    public ObservableList<IMailFolder> getTopLevelFolder()
+    {
+        try
+        {
+            if (this.topLevelFolder == null)
+            {
+                Folder root = getStore().getDefaultFolder();
+
+                // @formatter:off
+                this.topLevelFolder = Stream.of(root.list("%"))
+                        .map(f -> new MailFolder(this, f))
+                        .collect(Collectors.toCollection(FXCollections::observableArrayList));
+                // @formatter:on
+            }
+
+            return this.topLevelFolder;
+        }
+        catch (Exception ex)
+        {
+            throw new RuntimeException(ex);
+        }
+    }
+
+    /**
+     * @see de.freese.pim.core.mail.model.IMailAccount#getUnreadMessageCount()
+     */
+    @Override
+    public int getUnreadMessageCount()
+    {
+        if (this.store == null)
+        {
+            return 0;
+        }
+
+        try
+        {
+            int count = getTopLevelFolder().stream().mapToInt(IMailFolder::getUnreadMessageCount).sum();
+
+            return count;
+        }
+        catch (Exception ex)
+        {
+            throw new RuntimeException(ex);
+        }
     }
 }

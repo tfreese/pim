@@ -4,11 +4,14 @@ package de.freese.pim.gui.mail;
 import de.freese.pim.core.mail.model.IMail;
 import de.freese.pim.gui.view.IView;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
 import javafx.scene.Node;
+import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TitledPane;
 import javafx.scene.control.TreeView;
+import javafx.scene.layout.StackPane;
 
 /**
  * View des Mail-Clients.
@@ -29,6 +32,12 @@ public class MailView implements IView
      */
     @FXML
     private final Node naviNode;
+
+    /**
+    *
+    */
+    @FXML
+    private ProgressIndicator progressIndicator = null;
 
     /**
     *
@@ -66,7 +75,18 @@ public class MailView implements IView
         this.tableViewMail.setEditable(false);
         this.tableViewMail.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
 
-        return this.tableViewMail;
+        this.progressIndicator = new ProgressIndicator();
+        this.progressIndicator.setId("progressIndicator"); // Für lookupAll("#progressIndicator")
+        this.progressIndicator.setVisible(false);
+        this.progressIndicator.setMaxSize(250D, 250D);
+
+        StackPane stackPane = new StackPane();
+        stackPane.setPadding(new Insets(0));
+        // StackPane.setMargin(this.tableView, new Insets(0));
+        stackPane.getChildren().add(this.tableViewMail);
+        stackPane.getChildren().add(this.progressIndicator);
+
+        return stackPane;
     }
 
     /**
