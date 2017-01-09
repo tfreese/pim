@@ -1,7 +1,6 @@
 /**
  * Created: 27.12.2016
  */
-
 package de.freese.pim.core.mail;
 
 import org.junit.runner.RunWith;
@@ -13,9 +12,9 @@ import org.junit.runners.Suite.SuiteClasses;
  */
 @RunWith(Suite.class)
 @SuiteClasses(
-{
-        TestSendMail.class, TestReceiveMail.class, TestMailConfig.class
-})
+        {
+            TestSendMail.class, TestReceiveMail.class, TestMailModel.class
+        })
 public class AllMailTests
 {
     /**

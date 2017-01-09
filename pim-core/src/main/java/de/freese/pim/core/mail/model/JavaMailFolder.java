@@ -8,15 +8,15 @@ import javax.mail.Folder;
  *
  * @author Thomas Freese
  */
-public class MailFolder extends AbstractJavaMailFolder<AbstractJavaMailAccount>
+public class JavaMailFolder extends AbstractJavaMailFolder<AbstractJavaMailAccount>
 {
     /**
      * Erzeugt eine neue Instanz von {@link MailFolder}
      *
      * @param mailAccount {@link AbstractJavaMailAccount}
-     * @param folder {@link Folder}
+     * @param folder      {@link Folder}
      */
-    public MailFolder(final AbstractJavaMailAccount mailAccount, final Folder folder)
+    public JavaMailFolder(final AbstractJavaMailAccount mailAccount, final Folder folder)
     {
         super(mailAccount, folder);
     }

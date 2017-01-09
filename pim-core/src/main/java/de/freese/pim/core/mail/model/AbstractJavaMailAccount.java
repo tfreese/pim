@@ -4,6 +4,8 @@ package de.freese.pim.core.mail.model;
 import java.util.Properties;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javax.mail.Authenticator;
 import javax.mail.Folder;
 import javax.mail.MessagingException;
@@ -12,8 +14,6 @@ import javax.mail.Store;
 import javax.mail.Transport;
 import javax.mail.event.FolderEvent;
 import javax.mail.event.FolderListener;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 
 /**
  * Basis-Implementierung eines JavaMail {@link IMailAccount}.
@@ -68,6 +68,7 @@ public abstract class AbstractJavaMailAccount extends AbstractMailAccount
      * Connecten des {@link Store}.
      *
      * @param store {@link Store}
+     *
      * @throws MessagingException Falls was schief geht.
      */
     protected void connectStore(final Store store) throws MessagingException
@@ -79,6 +80,7 @@ public abstract class AbstractJavaMailAccount extends AbstractMailAccount
      * Connecten des {@link Transport}.
      *
      * @param transport {@link Transport}
+     *
      * @throws MessagingException Falls was schief geht.
      */
     protected void connectTransport(final Transport transport) throws MessagingException
@@ -90,6 +92,7 @@ public abstract class AbstractJavaMailAccount extends AbstractMailAccount
      * Erzeugt die Mail-Session.
      *
      * @return {@link Session}
+     *
      * @throws MessagingException Falls was schief geht.
      */
     private Session createSession() throws MessagingException
@@ -139,7 +142,9 @@ public abstract class AbstractJavaMailAccount extends AbstractMailAccount
      * Erzeugt den {@link Store}.
      *
      * @param session {@link Session}
+     *
      * @return {@link Store}
+     *
      * @throws MessagingException Falls was schief geht.
      */
     protected abstract Store createStore(Session session) throws MessagingException;
@@ -148,7 +153,9 @@ public abstract class AbstractJavaMailAccount extends AbstractMailAccount
      * Erzeugt den {@link Transport}.
      *
      * @param session {@link Session}
+     *
      * @return {@link Transport}
+     *
      * @throws MessagingException Falls was schief geht.
      */
     protected abstract Transport createTransport(Session session) throws MessagingException;
@@ -189,6 +196,7 @@ public abstract class AbstractJavaMailAccount extends AbstractMailAccount
      * Schliessen des {@link Store}.
      *
      * @param store {@link Store}
+     *
      * @throws MessagingException Falls was schief geht.
      */
     protected void disconnectStore(final Store store) throws MessagingException
@@ -203,6 +211,7 @@ public abstract class AbstractJavaMailAccount extends AbstractMailAccount
      * Schliessen des {@link Store}.
      *
      * @param transport {@link Transport}
+     *
      * @throws MessagingException Falls was schief geht.
      */
     protected void disconnectTransport(final Transport transport) throws MessagingException
@@ -223,6 +232,7 @@ public abstract class AbstractJavaMailAccount extends AbstractMailAccount
 
     /**
      * @return {@link Store}
+     *
      * @throws MessagingException Falls was schief geht.
      */
     protected Store getStore() throws MessagingException
@@ -252,7 +262,7 @@ public abstract class AbstractJavaMailAccount extends AbstractMailAccount
                         return;
                     }
 
-                    list.add(new MailFolder(AbstractJavaMailAccount.this, e.getFolder()));
+                    list.add(new JavaMailFolder(AbstractJavaMailAccount.this, e.getFolder()));
                 }
 
                 /**
@@ -303,7 +313,7 @@ public abstract class AbstractJavaMailAccount extends AbstractMailAccount
 
                     if (folderNew != null)
                     {
-                        list.add(new MailFolder(AbstractJavaMailAccount.this, folderNew));
+                        list.add(new JavaMailFolder(AbstractJavaMailAccount.this, folderNew));
                     }
                 }
             });
@@ -326,7 +336,7 @@ public abstract class AbstractJavaMailAccount extends AbstractMailAccount
 
                 // @formatter:off
                 this.topLevelFolder = Stream.of(root.list("%"))
-                        .map(f -> new MailFolder(this, f))
+                        .map(f -> new JavaMailFolder(this, f))
                         .collect(Collectors.toCollection(FXCollections::observableArrayList));
                 // @formatter:on
             }

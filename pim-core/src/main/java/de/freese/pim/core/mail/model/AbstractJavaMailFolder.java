@@ -1,11 +1,14 @@
 // Created: 04.01.2017
 package de.freese.pim.core.mail.model;
 
+import com.sun.mail.imap.IMAPFolder;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javax.mail.FetchProfile;
 import javax.mail.Flags;
 import javax.mail.Folder;
@@ -15,9 +18,6 @@ import javax.mail.event.MessageCountEvent;
 import javax.mail.event.MessageCountListener;
 import javax.mail.search.FlagTerm;
 import javax.mail.search.SearchTerm;
-import com.sun.mail.imap.IMAPFolder;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 
 /**
  * Basis-Implementierung eines JavaMail {@link IMailFolder}.
@@ -52,7 +52,7 @@ public abstract class AbstractJavaMailFolder<A extends AbstractJavaMailAccount> 
      * Erzeugt eine neue Instanz von {@link AbstractJavaMailFolder}
      *
      * @param mailAccount {@link IMailAccount}
-     * @param folder {@link Folder}
+     * @param folder      {@link Folder}
      */
     public AbstractJavaMailFolder(final A mailAccount, final Folder folder)
     {
@@ -189,7 +189,7 @@ public abstract class AbstractJavaMailFolder<A extends AbstractJavaMailAccount> 
             {
                 // @formatter:off
                 this.children = Stream.of(getFolder().list("%"))
-                        .map(f -> new MailFolder(getMailAccount(), f))
+                        .map(f -> new JavaMailFolder(getMailAccount(), f))
                         .collect(Collectors.toCollection(FXCollections::observableArrayList));
                 // @formatter:on
 

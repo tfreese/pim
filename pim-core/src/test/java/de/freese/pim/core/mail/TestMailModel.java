@@ -1,9 +1,16 @@
 /**
  * Created: 26.12.2016
  */
-
 package de.freese.pim.core.mail;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
+import com.fasterxml.jackson.annotation.PropertyAccessor;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.JavaType;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import de.freese.pim.core.AbstractPimTest;
+import de.freese.pim.core.mail.model.MailConfig;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
@@ -15,14 +22,6 @@ import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
-import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
-import com.fasterxml.jackson.annotation.PropertyAccessor;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.JavaType;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import de.freese.pim.core.AbstractPimTest;
-import de.freese.pim.core.mail.model.MailConfig;
 
 /**
  * http://www.baeldung.com/jackson-annotations
@@ -31,16 +30,16 @@ import de.freese.pim.core.mail.model.MailConfig;
  */
 // @RunWith(Parameterized.class)
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class TestMailConfig extends AbstractPimTest
+public class TestMailModel extends AbstractPimTest
 {
     /**
-    *
-    */
+     *
+     */
     private static ObjectMapper jsonMapper = null;
 
     /**
-    *
-    */
+     *
+     */
     @BeforeClass
     public static void beforeClass()
     {
@@ -49,7 +48,6 @@ public class TestMailConfig extends AbstractPimTest
         // Name des Root-Objektes mit anzeigen.
         // jsonMapper.configure(SerializationFeature.WRAP_ROOT_VALUE, true);
         // jsonMapper.configure(DeserializationFeature.UNWRAP_ROOT_VALUE, true);
-
         // Globales PrettyPrinting; oder einzeln über jsonMapper.writerWithDefaultPrettyPrinter().writeValue(...) nutzbar.
         jsonMapper.enable(SerializationFeature.INDENT_OUTPUT);
 
@@ -61,9 +59,9 @@ public class TestMailConfig extends AbstractPimTest
     }
 
     /**
-     * Erstellt ein neues {@link TestMailConfig} Object.
+     * Erstellt ein neues {@link TestMailModel} Object.
      */
-    public TestMailConfig()
+    public TestMailModel()
     {
         super();
     }
