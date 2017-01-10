@@ -57,8 +57,8 @@ public class TestConfig
         try
         {
             ResourceDatabasePopulator populator = new ResourceDatabasePopulator();
-            populator.addScript(new ClassPathResource("db/pim_hsqldb_addressbook_schema.sql"));
-            // populator.addScript(new ClassPathResource("db/pim_hsqldb_addressbook_data.sql"));
+            populator.addScript(new ClassPathResource("db/hsqldb/pim_addressbook_schema.sql"));
+            // populator.addScript(new ClassPathResource("db/hsqldb/pim_addressbook_data.sql"));
             populator.execute(dataSource);
         }
         catch (RuntimeException rex)

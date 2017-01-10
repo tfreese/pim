@@ -13,7 +13,9 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+
 import javax.sql.DataSource;
+
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
@@ -21,7 +23,9 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Options;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import com.sun.javafx.application.LauncherImpl;
+
 import de.freese.pim.core.db.HsqldbEmbeddedServer;
 import de.freese.pim.core.db.IDataSourceBean;
 import de.freese.pim.core.service.ISettingsService;
@@ -61,6 +65,11 @@ public class PIMApplication extends Application
     /**
     *
     */
+    public static final Logger LOGGER = LoggerFactory.getLogger(PIMApplication.class);
+
+    /**
+    *
+    */
     private static IDataSourceBean dataSourceBean = null;
 
     /**
@@ -71,33 +80,12 @@ public class PIMApplication extends Application
     /**
     *
     */
-    public static final Logger LOGGER = LoggerFactory.getLogger(PIMApplication.class);
-
-    /**
-    *
-    */
     private static Window mainWindow = null;
 
     /**
     *
     */
     private static ScheduledExecutorService scheduledExecutorService = null;
-
-    /**
-     * Liefert die möglichen Optionen der Kommandozeile.<br>
-     * Dies sind die JRE Programm Argumente.
-     *
-     * @return {@link Options}
-     */
-    private static Options getCommandOptions()
-    {
-        // OptionGroup group = new OptionGroup();
-
-        Options options = new Options();
-        // options.addOptionGroup(group);
-
-        return options;
-    }
 
     /**
      * @return {@link DataSource}
@@ -140,8 +128,8 @@ public class PIMApplication extends Application
     }
 
     /**
-     * The main() method is ignored in correctly deployed JavaFX application. main() serves only as fallback in case the application can not be launched through
-     * deployment artifacts, e.g., in IDEs with limited FX support. NetBeans ignores main().
+     * The main() method is ignored in correctly deployed JavaFX application. main() serves only as fallback in case the application can not
+     * be launched through deployment artifacts, e.g., in IDEs with limited FX support. NetBeans ignores main().
      *
      * @param args the command line arguments
      */
@@ -168,7 +156,8 @@ public class PIMApplication extends Application
 
         SysOutOverSLF4J.sendSystemOutAndErrToSLF4J();
 
-        Thread.setDefaultUncaughtExceptionHandler((t, ex) -> {
+        Thread.setDefaultUncaughtExceptionHandler((t, ex) ->
+        {
             LOGGER.error("***Default exception handler***");
             LOGGER.error(null, ex);
 
@@ -181,7 +170,8 @@ public class PIMApplication extends Application
         // Kein Thread des gesamten Clients kann eine höhere Prio haben.
         threadGroup.setMaxPriority(Thread.NORM_PRIORITY + 1);
 
-        Thread thread = new Thread(threadGroup, () -> {
+        Thread thread = new Thread(threadGroup, () ->
+        {
             LOGGER.info("Startup P.I.M.");
             // System.setProperty("org.slf4j.simpleLogger.log.de.freese.pim", "DEBUG");
 
@@ -198,6 +188,22 @@ public class PIMApplication extends Application
     public static void registerCloseable(final AutoCloseable closeable)
     {
         CLOSEABLES.add(closeable);
+    }
+
+    /**
+     * Liefert die möglichen Optionen der Kommandozeile.<br>
+     * Dies sind die JRE Programm Argumente.
+     *
+     * @return {@link Options}
+     */
+    private static Options getCommandOptions()
+    {
+        // OptionGroup group = new OptionGroup();
+
+        Options options = new Options();
+        // options.addOptionGroup(group);
+
+        return options;
     }
 
     /**
@@ -255,19 +261,21 @@ public class PIMApplication extends Application
         // BlockingQueue<Runnable> workQueue = new SynchronousQueue<>(false);
         BlockingQueue<Runnable> workQueue = new LinkedBlockingQueue<>(100);
 
-        ExecutorService executor =
-                new ThreadPoolExecutor(2, 10, 60, TimeUnit.SECONDS, workQueue, new PIMThreadFactory("thread"), new ThreadPoolExecutor.AbortPolicy());
+        ExecutorService executor = new ThreadPoolExecutor(2, 10, 60, TimeUnit.SECONDS, workQueue, new PIMThreadFactory("thread"),
+                new ThreadPoolExecutor.AbortPolicy());
         PIMApplication.executorService = Executors.unconfigurableExecutorService(executor);
-        registerCloseable(() -> {
+        registerCloseable(() ->
+        {
             LOGGER.info("Close ExecutorService");
             Utils.shutdown(PIMApplication.executorService);
             PIMApplication.executorService = null;
         });
 
-        ScheduledExecutorService scheduledExecutor =
-                new ScheduledThreadPoolExecutor(3, new PIMThreadFactory("scheduler"), new ThreadPoolExecutor.AbortPolicy());
+        ScheduledExecutorService scheduledExecutor = new ScheduledThreadPoolExecutor(3, new PIMThreadFactory("scheduler"),
+                new ThreadPoolExecutor.AbortPolicy());
         PIMApplication.scheduledExecutorService = Executors.unconfigurableScheduledExecutorService(scheduledExecutor);
-        registerCloseable(() -> {
+        registerCloseable(() ->
+        {
             LOGGER.info("Close ScheduledExecutorService");
             Utils.shutdown(PIMApplication.scheduledExecutorService);
             PIMApplication.scheduledExecutorService = null;
@@ -279,12 +287,14 @@ public class PIMApplication extends Application
         PIMApplication.dataSourceBean = new HsqldbEmbeddedServer();
         PIMApplication.dataSourceBean.configure(getSettingService());
         PIMApplication.dataSourceBean.testConnection();
-        PIMApplication.dataSourceBean.populateIfEmpty(() -> {
+        PIMApplication.dataSourceBean.populateIfEmpty(() ->
+        {
             LOGGER.info("Populate Database");
             notifyPreloader(new PIMPreloaderNotification("Populate Database"));
             Utils.sleep(1, TimeUnit.SECONDS);
         });
-        registerCloseable(() -> {
+        registerCloseable(() ->
+        {
             LOGGER.info("Stop Database");
             PIMApplication.dataSourceBean.disconnect();
             PIMApplication.dataSourceBean = null;
@@ -315,7 +325,7 @@ public class PIMApplication extends Application
         MainController mainController = new MainController(resources);
 
         // Scene scene = new Scene((Parent) mainController.getMainNode());
-        Scene scene = new Scene((Parent) mainController.getMainNode(), 1280, 960);
+        Scene scene = new Scene((Parent) mainController.getMainNode(), 1400, 900);
         scene.getStylesheets().add("/styles/styles.css");
 
         primaryStage.getIcons().add(new Image("images/pim.png"));
@@ -325,10 +335,12 @@ public class PIMApplication extends Application
         // primaryStage.setMaximized(true);
 
         // After the app is ready, show the stage
-        this.ready.addListener((observable, oldValue, newValue) -> {
+        this.ready.addListener((observable, oldValue, newValue) ->
+        {
             if (Boolean.TRUE.equals(newValue))
             {
-                Platform.runLater(() -> {
+                Platform.runLater(() ->
+                {
                     primaryStage.show();
                     mainController.selectDefaultView();
                 });

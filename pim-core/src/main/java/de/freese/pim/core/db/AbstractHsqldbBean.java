@@ -4,6 +4,8 @@ package de.freese.pim.core.db;
 import java.sql.Connection;
 import java.sql.Statement;
 
+import org.flywaydb.core.Flyway;
+
 /**
  * {@link IDataSourceBean} für HSQLDB-Datenbanken.
  *
@@ -35,6 +37,47 @@ public abstract class AbstractHsqldbBean extends AbstractDataSourceBean
     }
 
     /**
+     * @see de.freese.pim.core.db.IDataSourceBean#populateIfEmpty(java.lang.Runnable)
+     */
+    @Override
+    public void populateIfEmpty(final Runnable populateCallback) throws Exception
+    {
+//        // @formatter:off
+//        String[] scripts = new String[]
+//        {
+//                "db/hsqldb/pim_schema.sql",
+//                "db/hsqldb/pim_data.sql",
+//                "db/hsqldb/pim_addressbook_schema.sql",
+//                "db/hsqldb/pim_addressbook_data.sql",
+//                "db/hsqldb/pim_mail_schema.sql"
+//        };
+//        // @formatter:on
+
+        Flyway flyway = new Flyway();
+        flyway.setEncoding("UTF-8");
+        flyway.setLocations("classpath:db/hsqldb");
+        flyway.setDataSource(getDataSource());
+
+        // Workaround für HSQLDB 2.3.4 Bug, geht aber nicht.
+        // try (Connection con = getDataSource().getConnection();
+        // Statement stmt = con.createStatement())
+        // {
+        // stmt.execute("SET DATABASE TRANSACTION CONTROL LOCKS");
+        // }
+
+        flyway.migrate();
+
+        // Workaround für HSQLDB 2.3.4 Bug, geht aber nicht.
+        // try (Connection con = getDataSource().getConnection();
+        // Statement stmt = con.createStatement())
+        // {
+        // stmt.execute("SET DATABASE TRANSACTION CONTROL MVCC");
+        // }
+
+        // populateIfEmpty(getDataSource(), populateCallback, scripts);
+    }
+
+    /**
      * @see de.freese.pim.core.db.AbstractDataSourceBean#getDriver()
      */
     @Override
@@ -50,24 +93,5 @@ public abstract class AbstractHsqldbBean extends AbstractDataSourceBean
     protected String getValidationQuery()
     {
         return HSQLDB_VALIDATION_QUERY;
-    }
-
-    /**
-     * @see de.freese.pim.core.db.IDataSourceBean#populateIfEmpty(java.lang.Runnable)
-     */
-    @Override
-    public void populateIfEmpty(final Runnable populateCallback) throws Exception
-    {
-        // @formatter:off
-        String[] scripts = new String[]
-        {
-                "db/pim_hsqldb_schema.sql",
-                "db/pim_hsqldb_data.sql",
-                "db/pim_hsqldb_addressbook_schema.sql",
-                "db/pim_hsqldb_addressbook_data.sql"
-        };
-        // @formatter:on
-
-        populateIfEmpty(getDataSource(), populateCallback, scripts);
     }
 }

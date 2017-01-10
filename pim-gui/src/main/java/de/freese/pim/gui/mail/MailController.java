@@ -3,22 +3,21 @@ package de.freese.pim.gui.mail;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
+
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import de.freese.pim.core.mail.MailProvider;
+
 import de.freese.pim.core.mail.model.IMail;
 import de.freese.pim.core.mail.model.IMailAccount;
 import de.freese.pim.core.mail.model.IMailFolder;
@@ -136,7 +135,8 @@ public class MailController extends AbstractController
     public void initialize(final URL location, final ResourceBundle resources)
     {
         // Tabelle
-        this.tableViewMail.setRowFactory(tableView -> {
+        this.tableViewMail.setRowFactory(tableView ->
+        {
             return new TableRow<IMail>()
             {
                 /**
@@ -166,7 +166,8 @@ public class MailController extends AbstractController
             };
         });
 
-        this.selectedTreeItem.addListener((observable, oldValue, newValue) -> {
+        this.selectedTreeItem.addListener((observable, oldValue, newValue) ->
+        {
 
             this.tableViewMail.setItems(null);
 
@@ -194,10 +195,12 @@ public class MailController extends AbstractController
                         return mails;
                     }
                 };
-                loadMailsTask.setOnSucceeded(event -> {
+                loadMailsTask.setOnSucceeded(event ->
+                {
                     this.tableViewMail.setItems(loadMailsTask.getValue());
                 });
-                loadMailsTask.setOnFailed(event -> {
+                loadMailsTask.setOnFailed(event ->
+                {
                     Throwable th = loadMailsTask.getException();
 
                     getLogger().error(null, th);
@@ -209,7 +212,8 @@ public class MailController extends AbstractController
                 ReadOnlyBooleanProperty runningProperty = loadMailsTask.runningProperty();
 
                 this.progressIndicator.visibleProperty().bind(runningProperty);
-                PIMApplication.getMainWindow().getScene().cursorProperty().bind(Bindings.when(runningProperty).then(Cursor.WAIT).otherwise(Cursor.DEFAULT));
+                PIMApplication.getMainWindow().getScene().cursorProperty()
+                        .bind(Bindings.when(runningProperty).then(Cursor.WAIT).otherwise(Cursor.DEFAULT));
 
                 getExecutorService().execute(loadMailsTask);
             }
@@ -291,25 +295,25 @@ public class MailController extends AbstractController
                 new ErrorDialog().forThrowable(ex).showAndWait();
             }
         }
-        else
-        {
-            MailConfig config = new MailConfig();
-            config.setMail("commercial@freese-home.de");
-            config.setImapHost(MailProvider.EinsUndEins.getImapHost());
-            config.setSmtpHost(MailProvider.EinsUndEins.getSmtpHost());
-            configList.add(config);
-
-            try (OutputStream os = Files.newOutputStream(configs))
-            {
-                jsonMapper.writer().writeValue(os, Arrays.asList(config));
-            }
-            catch (IOException ex)
-            {
-                getLogger().error(null, ex);
-
-                new ErrorDialog().forThrowable(ex).showAndWait();
-            }
-        }
+        // else
+        // {
+        // MailConfig config = new MailConfig();
+        // config.setMail("commercial@freese-home.de");
+        // config.setImapHost(MailProvider.EinsUndEins.getImapHost());
+        // config.setSmtpHost(MailProvider.EinsUndEins.getSmtpHost());
+        // configList.add(config);
+        //
+        // try (OutputStream os = Files.newOutputStream(configs))
+        // {
+        // jsonMapper.writer().writeValue(os, Arrays.asList(config));
+        // }
+        // catch (IOException ex)
+        // {
+        // getLogger().error(null, ex);
+        //
+        // new ErrorDialog().forThrowable(ex).showAndWait();
+        // }
+        // }
 
         try
         {
@@ -321,7 +325,8 @@ public class MailController extends AbstractController
                 TreeItem<Object> treeItem = new TreeItem<>(mailAccount);
                 root.getChildren().add(treeItem);
 
-                PIMApplication.registerCloseable(() -> {
+                PIMApplication.registerCloseable(() ->
+                {
                     getLogger().info("Close " + mailConfig.getMail());
                     mailAccount.disconnect();
                 });
@@ -367,7 +372,8 @@ public class MailController extends AbstractController
             columnReceived.setStyle("-fx-alignment: center-right;");
             columnReceived.prefWidthProperty().bind(this.tableViewMail.widthProperty().multiply(0.15D)); // 10% Breite
             columnReceived.setCellValueFactory(new PropertyValueFactory<>("receivedDate"));
-            columnReceived.setCellFactory(column -> {
+            columnReceived.setCellFactory(column ->
+            {
                 return new TableCell<IMail, Date>()
                 {
                     /**
@@ -424,7 +430,8 @@ public class MailController extends AbstractController
             columnSend.setStyle("-fx-alignment: center-right;");
             columnSend.prefWidthProperty().bind(this.tableViewMail.widthProperty().multiply(0.15D)); // 10% Breite
             columnSend.setCellValueFactory(new PropertyValueFactory<>("sendDate"));
-            columnSend.setCellFactory(column -> {
+            columnSend.setCellFactory(column ->
+            {
                 return new TableCell<IMail, Date>()
                 {
                     /**

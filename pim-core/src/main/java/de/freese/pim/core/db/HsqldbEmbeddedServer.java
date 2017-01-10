@@ -2,9 +2,12 @@
 package de.freese.pim.core.db;
 
 import java.nio.file.Path;
+
 import javax.sql.DataSource;
+
 import org.hsqldb.Database;
 import org.hsqldb.server.Server;
+
 import de.freese.pim.core.service.ISettingsService;
 import de.freese.pim.core.utils.Utils;
 
@@ -50,6 +53,7 @@ public class HsqldbEmbeddedServer extends AbstractHsqldbBean
             port = Utils.getNextFreePort(49001);
         }
 
+        // ;hsqldb.tx=mvcc
         String url = String.format("jdbc:hsqldb:hsql://%s:%d/%s", dbHost, port, dbName);
 
         this.server = new Server();
@@ -70,7 +74,8 @@ public class HsqldbEmbeddedServer extends AbstractHsqldbBean
 
         this.server.start();
 
-        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+        Runtime.getRuntime().addShutdownHook(new Thread(() ->
+        {
             try
             {
                 disconnect();

@@ -11,10 +11,10 @@ import javax.mail.Folder;
 public class JavaMailFolder extends AbstractJavaMailFolder<AbstractJavaMailAccount>
 {
     /**
-     * Erzeugt eine neue Instanz von {@link MailFolder}
+     * Erzeugt eine neue Instanz von {@link JavaMailFolder}
      *
      * @param mailAccount {@link AbstractJavaMailAccount}
-     * @param folder      {@link Folder}
+     * @param folder {@link Folder}
      */
     public JavaMailFolder(final AbstractJavaMailAccount mailAccount, final Folder folder)
     {
