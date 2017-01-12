@@ -7,7 +7,7 @@ import java.util.Objects;
 
 import de.freese.pim.core.addressbook.dao.IAddressBookDAO;
 import de.freese.pim.core.addressbook.model.Kontakt;
-import de.freese.pim.core.persistence.Connectional;
+import de.freese.pim.core.persistence.Transactional;
 
 /**
  * Service für das AddressBook.
@@ -39,7 +39,6 @@ public class DefaultAddressBookService implements IAddressBookService
      * @see de.freese.pim.core.addressbook.dao.IAddressBookDAO#backup(java.nio.file.Path)
      */
     @Override
-    @Connectional
     public boolean backup(final Path directory) throws Exception
     {
         return this.addressBookDAO.backup(directory);
@@ -49,7 +48,7 @@ public class DefaultAddressBookService implements IAddressBookService
      * @see de.freese.pim.core.addressbook.dao.IAddressBookDAO#deleteAttribut(long, java.lang.String)
      */
     @Override
-    @Connectional(transactional = true)
+    @Transactional
     public boolean deleteAttribut(final long kontaktID, final String attribut) throws Exception
     {
         return this.addressBookDAO.deleteAttribut(kontaktID, attribut);
@@ -59,7 +58,7 @@ public class DefaultAddressBookService implements IAddressBookService
      * @see de.freese.pim.core.addressbook.dao.IAddressBookDAO#deleteKontakt(long)
      */
     @Override
-    @Connectional(transactional = true)
+    @Transactional
     public boolean deleteKontakt(final long id) throws Exception
     {
         return this.addressBookDAO.deleteKontakt(id);
@@ -69,7 +68,6 @@ public class DefaultAddressBookService implements IAddressBookService
      * @see de.freese.pim.core.addressbook.dao.IAddressBookDAO#getKontaktDetails(long[])
      */
     @Override
-    @Connectional
     public List<Kontakt> getKontaktDetails(final long... ids) throws Exception
     {
         return this.addressBookDAO.getKontaktDetails(ids);
@@ -79,7 +77,6 @@ public class DefaultAddressBookService implements IAddressBookService
      * @see de.freese.pim.core.addressbook.dao.IAddressBookDAO#getKontakte()
      */
     @Override
-    @Connectional
     public List<Kontakt> getKontakte() throws Exception
     {
         return this.addressBookDAO.getKontakte();
@@ -89,7 +86,7 @@ public class DefaultAddressBookService implements IAddressBookService
      * @see de.freese.pim.core.addressbook.dao.IAddressBookDAO#insertAttribut(long, java.lang.String, java.lang.String)
      */
     @Override
-    @Connectional(transactional = true)
+    @Transactional
     public boolean insertAttribut(final long kontaktID, final String attribut, final String wert) throws Exception
     {
         return this.addressBookDAO.insertAttribut(kontaktID, attribut, wert);
@@ -99,7 +96,7 @@ public class DefaultAddressBookService implements IAddressBookService
      * @see de.freese.pim.core.addressbook.dao.IAddressBookDAO#insertKontakt(java.lang.String, java.lang.String)
      */
     @Override
-    @Connectional(transactional = true)
+    @Transactional
     public long insertKontakt(final String nachname, final String vorname) throws Exception
     {
         return this.addressBookDAO.insertKontakt(nachname, vorname);
@@ -109,7 +106,6 @@ public class DefaultAddressBookService implements IAddressBookService
      * @see de.freese.pim.core.addressbook.dao.IAddressBookDAO#searchKontakte(java.lang.String)
      */
     @Override
-    @Connectional
     public List<Kontakt> searchKontakte(final String name) throws Exception
     {
         return this.addressBookDAO.searchKontakte(name);
@@ -119,7 +115,7 @@ public class DefaultAddressBookService implements IAddressBookService
      * @see de.freese.pim.core.addressbook.dao.IAddressBookDAO#updateAttribut(long, java.lang.String, java.lang.String)
      */
     @Override
-    @Connectional(transactional = true)
+    @Transactional
     public boolean updateAttribut(final long kontaktID, final String attribut, final String wert) throws Exception
     {
         return this.addressBookDAO.updateAttribut(kontaktID, attribut, wert);
@@ -129,7 +125,7 @@ public class DefaultAddressBookService implements IAddressBookService
      * @see de.freese.pim.core.addressbook.dao.IAddressBookDAO#updateKontakt(long, java.lang.String, java.lang.String)
      */
     @Override
-    @Connectional(transactional = true)
+    @Transactional
     public boolean updateKontakt(final long id, final String nachname, final String vorname) throws Exception
     {
         return this.addressBookDAO.updateKontakt(id, nachname, vorname);

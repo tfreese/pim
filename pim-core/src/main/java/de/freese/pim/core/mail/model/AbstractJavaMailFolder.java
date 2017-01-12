@@ -1,14 +1,12 @@
 // Created: 04.01.2017
 package de.freese.pim.core.mail.model;
 
-import com.sun.mail.imap.IMAPFolder;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+
 import javax.mail.FetchProfile;
 import javax.mail.Flags;
 import javax.mail.Folder;
@@ -18,6 +16,11 @@ import javax.mail.event.MessageCountEvent;
 import javax.mail.event.MessageCountListener;
 import javax.mail.search.FlagTerm;
 import javax.mail.search.SearchTerm;
+
+import com.sun.mail.imap.IMAPFolder;
+
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 /**
  * Basis-Implementierung eines JavaMail {@link IMailFolder}.
@@ -52,13 +55,13 @@ public abstract class AbstractJavaMailFolder<A extends AbstractJavaMailAccount> 
      * Erzeugt eine neue Instanz von {@link AbstractJavaMailFolder}
      *
      * @param mailAccount {@link IMailAccount}
-     * @param folder      {@link Folder}
+     * @param folder {@link Folder}
      */
     public AbstractJavaMailFolder(final A mailAccount, final Folder folder)
     {
         super(mailAccount);
 
-        Objects.requireNonNull(folder, "folder required");
+        Objects.requireNonNull(folder, () -> "folder required");
 
         this.folder = folder;
         this.folder.addMessageChangedListener((mce) -> this.unreadMessageCount = -1);
@@ -113,32 +116,6 @@ public abstract class AbstractJavaMailFolder<A extends AbstractJavaMailAccount> 
                 }
             }
         });
-    }
-
-    /**
-     * Stellt sicher, das der {@link Folder} zum Lesen geöffnet ist.
-     *
-     * @throws Exception Falls was schief geht.
-     */
-    protected void checkRead() throws Exception
-    {
-        if (!getFolder().isOpen())
-        {
-            getFolder().open(Folder.READ_ONLY);
-        }
-    }
-
-    /**
-     * Stellt sicher, das der {@link Folder} zum Schreiben geöffnet ist.
-     *
-     * @throws Exception Falls was schief geht.
-     */
-    protected void checkWrite() throws Exception
-    {
-        if (!getFolder().isOpen() || (getFolder().getMode() == Folder.READ_ONLY))
-        {
-            getFolder().open(Folder.READ_WRITE);
-        }
     }
 
     /**
@@ -206,14 +183,6 @@ public abstract class AbstractJavaMailFolder<A extends AbstractJavaMailAccount> 
         {
             throw new RuntimeException(ex);
         }
-    }
-
-    /**
-     * @return {@link Folder}
-     */
-    protected Folder getFolder()
-    {
-        return this.folder;
     }
 
     /**
@@ -395,5 +364,39 @@ public abstract class AbstractJavaMailFolder<A extends AbstractJavaMailAccount> 
         {
             throw new RuntimeException(ex);
         }
+    }
+
+    /**
+     * Stellt sicher, das der {@link Folder} zum Lesen geöffnet ist.
+     *
+     * @throws Exception Falls was schief geht.
+     */
+    protected void checkRead() throws Exception
+    {
+        if (!getFolder().isOpen())
+        {
+            getFolder().open(Folder.READ_ONLY);
+        }
+    }
+
+    /**
+     * Stellt sicher, das der {@link Folder} zum Schreiben geöffnet ist.
+     *
+     * @throws Exception Falls was schief geht.
+     */
+    protected void checkWrite() throws Exception
+    {
+        if (!getFolder().isOpen() || (getFolder().getMode() == Folder.READ_ONLY))
+        {
+            getFolder().open(Folder.READ_WRITE);
+        }
+    }
+
+    /**
+     * @return {@link Folder}
+     */
+    protected Folder getFolder()
+    {
+        return this.folder;
     }
 }

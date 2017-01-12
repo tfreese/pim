@@ -186,10 +186,11 @@ public class JdbcTemplate
         public List<T> extract(final ResultSet rs) throws SQLException
         {
             List<T> results = new ArrayList<>();
+            int rowNum = 0;
 
             while (rs.next())
             {
-                results.add(this.rowMapper.map(rs));
+                results.add(this.rowMapper.map(rs, rowNum++));
             }
 
             return results;

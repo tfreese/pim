@@ -3,6 +3,7 @@ package de.freese.pim.core.mail.model;
 
 import java.nio.file.Path;
 import java.util.Objects;
+
 import de.freese.pim.core.service.SettingService;
 
 /**
@@ -37,7 +38,7 @@ public abstract class AbstractMailAccount implements IMailAccount
     @Override
     public void connect(final MailConfig mailConfig)
     {
-        Objects.requireNonNull(mailConfig, "mailConfig required");
+        Objects.requireNonNull(mailConfig, () -> "mailConfig required");
 
         this.mailConfig = mailConfig;
     }

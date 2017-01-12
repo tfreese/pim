@@ -63,7 +63,7 @@ public class MailFolder
     {
         super();
 
-        Objects.requireNonNull(account, "account required");
+        Objects.requireNonNull(account, () -> "account required");
 
         this.account = account;
         this.parent = parent;
@@ -127,7 +127,7 @@ public class MailFolder
      */
     public void setName(final String name)
     {
-        Objects.requireNonNull(name, "name required");
+        Objects.requireNonNull(name, () -> "name required");
 
         nameProperty().set(name);
 

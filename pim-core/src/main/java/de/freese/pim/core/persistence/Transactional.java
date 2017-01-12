@@ -9,7 +9,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Annotation für das Steuern einer {@link java.sql.Connection} auf Methoden-Ebene.
+ * Annotation für das Steuern einer Transaction auf Methoden-Ebene.
  *
  * @author Thomas Freese
  */
@@ -17,12 +17,12 @@ import java.lang.annotation.Target;
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
-public @interface Connectional
+public @interface Transactional
 {
-    /**
-     * Steuert die Transaction.
-     * 
-     * @return boolean
-     */
-    boolean transactional() default false;
+    // /**
+    // * Steuert die Transaction.
+    // *
+    // * @return boolean
+    // */
+    // boolean transactional() default false;
 }

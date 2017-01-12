@@ -84,7 +84,7 @@ public class TestAddressbookDAO extends AbstractDAOTextCase
                         (IAddressBookDAO) Proxy.newProxyInstance(TestAddressbookDAO.class.getClassLoader(), new Class<?>[]
                         {
                                 IAddressBookDAO.class
-                        }, new TransactionalInvocationHandler(dataSources.get(2), new DefaultAddressBookService(new DefaultAddressBookDAO())))
+                        }, new TransactionalInvocationHandler(dataSources.get(2), new DefaultAddressBookService(new DefaultAddressBookDAO(dataSources.get(2)))))
                 }
         });
     }

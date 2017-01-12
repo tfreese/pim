@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Properties;
+
 import javax.activation.FileTypeMap;
 import javax.activation.MimetypesFileTypeMap;
 import javax.mail.AuthenticationFailedException;
@@ -17,6 +18,7 @@ import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.MimeMessage;
+
 import org.apache.commons.lang3.StringUtils;
 
 /**
@@ -139,6 +141,224 @@ public class JavaMailSender
     }
 
     /**
+     * @return {@link Authenticator}
+     */
+    public Authenticator getAuthenticator()
+    {
+        return this.authenticator;
+    }
+
+    /**
+     * @return String
+     */
+    public String getEncoding()
+    {
+        return this.encoding;
+    }
+
+    /**
+     * @return {@link FileTypeMap}
+     */
+    public FileTypeMap getFileTypeMap()
+    {
+        if (this.fileTypeMap == null)
+        {
+            // org.springframework.mail.javamail.ConfigurableMimeFileTypeMap
+            this.fileTypeMap = new MimetypesFileTypeMap();
+        }
+
+        return this.fileTypeMap;
+    }
+
+    /**
+     * @return String
+     */
+    public String getHost()
+    {
+        return this.host;
+    }
+
+    /**
+     * @return {@link Properties}
+     */
+    public Properties getJavaMailProperties()
+    {
+        return this.javaMailProperties;
+    }
+
+    /**
+     * @return String
+     */
+    public String getPassword()
+    {
+        return this.password;
+    }
+
+    /**
+     * @return int
+     */
+    public int getPort()
+    {
+        return this.port;
+    }
+
+    /**
+     * @return String
+     */
+    public String getProtocol()
+    {
+        return this.protocol;
+    }
+
+    /**
+     * @return {@link Session}
+     */
+    public synchronized Session getSession()
+    {
+        if (this.session == null)
+        {
+            this.session = Session.getInstance(getJavaMailProperties(), getAuthenticator());
+        }
+
+        return this.session;
+    }
+
+    /**
+     * @return String
+     */
+    public String getUsername()
+    {
+        return this.username;
+    }
+
+    /**
+     * @param mimeMessage {@link MimeMessage}
+     * @throws Exception Falls was schief geht.
+     */
+    public void send(final MimeMessage mimeMessage) throws Exception
+    {
+        send(new MimeMessage[]
+        {
+                mimeMessage
+        });
+    }
+
+    /**
+     * @param mimeMessages {@link MimeMessage}[]
+     * @throws Exception Falls was schief geht.
+     */
+    public void send(final MimeMessage... mimeMessages) throws Exception
+    {
+        doSend(mimeMessages, null);
+    }
+
+    /**
+     * @param userName String
+     * @param password String
+     */
+    public void setAuthenticator(final String userName, final String password)
+    {
+        this.authenticator = new MailAuthenticator(userName, password);
+    }
+
+    /**
+     * @param encoding String
+     */
+    public void setEncoding(final String encoding)
+    {
+        this.encoding = encoding;
+    }
+
+    /**
+     * @param fileTypeMap {@link FileTypeMap}
+     */
+    public void setFileTypeMap(final FileTypeMap fileTypeMap)
+    {
+        this.fileTypeMap = fileTypeMap;
+    }
+
+    /**
+     * @param host String
+     */
+    public void setHost(final String host)
+    {
+        this.host = host;
+    }
+
+    /**
+     * @param javaMailProperties {@link Properties}
+     */
+    public void setJavaMailProperties(final Properties javaMailProperties)
+    {
+        this.javaMailProperties = javaMailProperties;
+    }
+
+    /**
+     * @param password String
+     */
+    public void setPassword(final String password)
+    {
+        this.password = password;
+    }
+
+    /**
+     * @param port int
+     */
+    public void setPort(final int port)
+    {
+        this.port = port;
+    }
+
+    /**
+     * @param protocol String
+     */
+    public void setProtocol(final String protocol)
+    {
+        this.protocol = protocol;
+    }
+
+    /**
+     * @param session {@link Session}
+     */
+    public synchronized void setSession(final Session session)
+    {
+        Objects.requireNonNull(session, () -> "Session must not be null");
+
+        this.session = session;
+    }
+
+    /**
+     * @param username String
+     */
+    public void setUsername(final String username)
+    {
+        this.username = username;
+    }
+
+    /**
+     * Validate that this instance can connect to the server that it is configured for. Throws a {@link MessagingException} if the
+     * connection attempt failed.
+     *
+     * @throws MessagingException Falls was schief geht.
+     */
+    public void testConnection() throws MessagingException
+    {
+        Transport transport = null;
+
+        try
+        {
+            transport = connectTransport();
+        }
+        finally
+        {
+            if (transport != null)
+            {
+                transport.close();
+            }
+        }
+    }
+
+    /**
      * Obtain and connect a Transport from the underlying JavaMail Session, passing in the specified host, port, username, and password.
      *
      * @return the connected Transport object
@@ -165,8 +385,8 @@ public class JavaMailSender
      * Actually send the given array of MimeMessages via JavaMail.
      *
      * @param mimeMessages MimeMessage objects to send
-     * @param originalMessages corresponding original message objects that the MimeMessages have been created from (with same array length and indices as the
-     *            "mimeMessages" array), if any
+     * @param originalMessages corresponding original message objects that the MimeMessages have been created from (with same array length
+     *        and indices as the "mimeMessages" array), if any
      * @throws Exception Falls was schief geht.
      */
     protected void doSend(final MimeMessage[] mimeMessages, final Object[] originalMessages) throws Exception
@@ -274,89 +494,6 @@ public class JavaMailSender
     }
 
     /**
-     * @return {@link Authenticator}
-     */
-    public Authenticator getAuthenticator()
-    {
-        return this.authenticator;
-    }
-
-    /**
-     * @return String
-     */
-    public String getEncoding()
-    {
-        return this.encoding;
-    }
-
-    /**
-     * @return {@link FileTypeMap}
-     */
-    public FileTypeMap getFileTypeMap()
-    {
-        if (this.fileTypeMap == null)
-        {
-            // org.springframework.mail.javamail.ConfigurableMimeFileTypeMap
-            this.fileTypeMap = new MimetypesFileTypeMap();
-        }
-
-        return this.fileTypeMap;
-    }
-
-    /**
-     * @return String
-     */
-    public String getHost()
-    {
-        return this.host;
-    }
-
-    /**
-     * @return {@link Properties}
-     */
-    public Properties getJavaMailProperties()
-    {
-        return this.javaMailProperties;
-    }
-
-    /**
-     * @return String
-     */
-    public String getPassword()
-    {
-        return this.password;
-    }
-
-    /**
-     * @return int
-     */
-    public int getPort()
-    {
-        return this.port;
-    }
-
-    /**
-     * @return String
-     */
-    public String getProtocol()
-    {
-        return this.protocol;
-    }
-
-    /**
-     * @return {@link Session}
-     */
-    public synchronized Session getSession()
-    {
-        if (this.session == null)
-        {
-            this.session = Session.getInstance(getJavaMailProperties(), getAuthenticator());
-        }
-
-        return this.session;
-    }
-
-    /**
      * Obtain a Transport object from the given JavaMail Session, using the configured protocol.
      *
      * @param session {@link Session}
@@ -381,139 +518,5 @@ public class JavaMailSender
         }
 
         return session.getTransport(protocol);
-    }
-
-    /**
-     * @return String
-     */
-    public String getUsername()
-    {
-        return this.username;
-    }
-
-    /**
-     * @param mimeMessage {@link MimeMessage}
-     * @throws Exception Falls was schief geht.
-     */
-    public void send(final MimeMessage mimeMessage) throws Exception
-    {
-        send(new MimeMessage[]
-        {
-                mimeMessage
-        });
-    }
-
-    /**
-     * @param mimeMessages {@link MimeMessage}[]
-     * @throws Exception Falls was schief geht.
-     */
-    public void send(final MimeMessage...mimeMessages) throws Exception
-    {
-        doSend(mimeMessages, null);
-    }
-
-    /**
-     * @param userName String
-     * @param password String
-     */
-    public void setAuthenticator(final String userName, final String password)
-    {
-        this.authenticator = new MailAuthenticator(userName, password);
-    }
-
-    /**
-     * @param encoding String
-     */
-    public void setEncoding(final String encoding)
-    {
-        this.encoding = encoding;
-    }
-
-    /**
-     * @param fileTypeMap {@link FileTypeMap}
-     */
-    public void setFileTypeMap(final FileTypeMap fileTypeMap)
-    {
-        this.fileTypeMap = fileTypeMap;
-    }
-
-    /**
-     * @param host String
-     */
-    public void setHost(final String host)
-    {
-        this.host = host;
-    }
-
-    /**
-     * @param javaMailProperties {@link Properties}
-     */
-    public void setJavaMailProperties(final Properties javaMailProperties)
-    {
-        this.javaMailProperties = javaMailProperties;
-    }
-
-    /**
-     * @param password String
-     */
-    public void setPassword(final String password)
-    {
-        this.password = password;
-    }
-
-    /**
-     * @param port int
-     */
-    public void setPort(final int port)
-    {
-        this.port = port;
-    }
-
-    /**
-     * @param protocol String
-     */
-    public void setProtocol(final String protocol)
-    {
-        this.protocol = protocol;
-    }
-
-    /**
-     * @param session {@link Session}
-     */
-    public synchronized void setSession(final Session session)
-    {
-        Objects.requireNonNull(session, "Session must not be null");
-
-        this.session = session;
-    }
-
-    /**
-     * @param username String
-     */
-    public void setUsername(final String username)
-    {
-        this.username = username;
-    }
-
-    /**
-     * Validate that this instance can connect to the server that it is configured for. Throws a {@link MessagingException} if the connection attempt failed.
-     *
-     * @throws MessagingException Falls was schief geht.
-     */
-    public void testConnection() throws MessagingException
-    {
-        Transport transport = null;
-
-        try
-        {
-            transport = connectTransport();
-        }
-        finally
-        {
-            if (transport != null)
-            {
-                transport.close();
-            }
-        }
     }
 }

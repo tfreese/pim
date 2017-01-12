@@ -49,8 +49,8 @@ public class InitMailAccountService extends Service<Void>
     {
         super();
 
-        Objects.requireNonNull(root, "root item required");
-        Objects.requireNonNull(mailConfig, "mailConfig required");
+        Objects.requireNonNull(root, () -> "root item required");
+        Objects.requireNonNull(mailConfig, () -> "mailConfig required");
 
         this.root = root;
         this.mailConfig = mailConfig;

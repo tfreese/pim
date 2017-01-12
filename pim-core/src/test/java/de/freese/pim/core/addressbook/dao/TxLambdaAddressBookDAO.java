@@ -11,6 +11,7 @@ import javax.sql.DataSource;
 
 import de.freese.pim.core.addressbook.model.Kontakt;
 import de.freese.pim.core.persistence.ConnectionHolder;
+import de.freese.pim.core.persistence.JdbcTemplate;
 import de.freese.pim.core.utils.Utils;
 
 /**
@@ -51,6 +52,8 @@ public class TxLambdaAddressBookDAO extends AbstractAddressBookDAO
         super();
 
         this.dataSource = dataSource;
+
+        setJdbcTemplate(new JdbcTemplate().setDataSource(dataSource));
     }
 
     /**
@@ -194,14 +197,5 @@ public class TxLambdaAddressBookDAO extends AbstractAddressBookDAO
         }
 
         return result;
-    }
-
-    /**
-     * @see de.freese.pim.core.addressbook.dao.AbstractAddressBookDAO#getConnection()
-     */
-    @Override
-    protected Connection getConnection() throws SQLException
-    {
-        return ConnectionHolder.get();
     }
 }

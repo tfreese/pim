@@ -26,7 +26,7 @@ public abstract class AbstractMailFolder<A extends IMailAccount> implements IMai
     {
         super();
 
-        Objects.requireNonNull(mailAccount, "mailAccount required");
+        Objects.requireNonNull(mailAccount, () -> "mailAccount required");
 
         this.mailAccount = mailAccount;
     }

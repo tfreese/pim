@@ -11,6 +11,8 @@ import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.sql.DataSource;
+
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
@@ -29,6 +31,7 @@ import de.freese.pim.core.addressbook.model.KontaktAttribut;
 import de.freese.pim.core.addressbook.service.DefaultAddressBookService;
 import de.freese.pim.core.db.HsqldbLocalFile;
 import de.freese.pim.core.db.IDataSourceBean;
+import de.freese.pim.core.persistence.JdbcTemplate;
 import de.freese.pim.core.persistence.TransactionalInvocationHandler;
 import de.freese.pim.core.service.ISettingsService;
 import de.freese.pim.core.service.SettingService;
@@ -95,11 +98,15 @@ public class PIMAddressbookConsole
             dataSourceBean.testConnection();
             dataSourceBean.populateIfEmpty(null);
 
+            DataSource dataSource = dataSourceBean.getDataSource();
+            DefaultAddressBookDAO defaultDAO = new DefaultAddressBookDAO();
+            defaultDAO.setJdbcTemplate(new JdbcTemplate().setDataSource(dataSource));
+
             IAddressBookDAO addressBookDAO = (IAddressBookDAO) Proxy.newProxyInstance(PIMAddressbookConsole.class.getClassLoader(),
                     new Class<?>[]
                     {
                             IAddressBookDAO.class
-                    }, new TransactionalInvocationHandler(dataSourceBean.getDataSource(), new DefaultAddressBookService(new DefaultAddressBookDAO())));
+                    }, new TransactionalInvocationHandler(dataSource, new DefaultAddressBookService(defaultDAO)));
 
             PIMAddressbookConsole addressbook = new PIMAddressbookConsole();
             addressbook.setAddressBookDAO(addressBookDAO);

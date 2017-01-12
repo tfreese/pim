@@ -70,7 +70,7 @@ public class Mail
     {
         super();
 
-        Objects.requireNonNull(folder, "folder required");
+        Objects.requireNonNull(folder, () -> "folder required");
 
         this.folder = folder;
     }

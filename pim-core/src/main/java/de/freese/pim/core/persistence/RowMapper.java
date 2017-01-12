@@ -17,8 +17,9 @@ public interface RowMapper<R>
      * Mapped die aktuelle Zeile des {@link ResultSet} in ein Objekt.
      *
      * @param rs {@link ResultSet}
+     * @param rowNum int
      * @return Object
      * @throws SQLException Falls was schief geht.
      */
-    public R map(ResultSet rs) throws SQLException;
+    public R map(ResultSet rs, int rowNum) throws SQLException;
 }

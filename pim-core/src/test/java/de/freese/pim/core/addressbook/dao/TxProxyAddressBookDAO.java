@@ -9,7 +9,6 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.nio.file.Path;
 import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.List;
 
 import javax.sql.DataSource;
@@ -128,17 +127,7 @@ public class TxProxyAddressBookDAO implements IAddressBookDAO
     {
         super();
 
-        IAddressBookDAO dao = new AbstractAddressBookDAO()
-        {
-            /**
-             * @see de.freese.pim.core.addressbook.dao.AbstractAddressBookDAO#getConnection()
-             */
-            @Override
-            protected Connection getConnection() throws SQLException
-            {
-                return ConnectionHolder.get();
-            }
-        };
+        DefaultAddressBookDAO dao = new DefaultAddressBookDAO(dataSource);
 
         this.dao = (IAddressBookDAO) Proxy.newProxyInstance(getClass().getClassLoader(), new Class<?>[]
         {

@@ -11,7 +11,7 @@ import java.util.Objects;
 import javax.sql.DataSource;
 
 /**
- * Steuert eine Connection auf Methoden-Ebene wenn diese mit {@link Connectional} annotiert ist.<br>
+ * Steuert eine Transaktion auf Methoden-Ebene wenn diese mit {@link Transactional} annotiert ist.<br>
  * Die {@link Connection} wird dabei im {@link ThreadLocal} {@link ConnectionHolder} abgelegt, wenn diese noch nicht vorhanden ist.
  *
  * @author Thomas Freese
@@ -38,8 +38,8 @@ public class TransactionalInvocationHandler implements InvocationHandler
     {
         super();
 
-        Objects.requireNonNull(dataSource, "dataSource required");
-        Objects.requireNonNull(bean, "bean required");
+        Objects.requireNonNull(dataSource, () -> "dataSource required");
+        Objects.requireNonNull(bean, () -> "bean required");
 
         this.dataSource = dataSource;
         this.bean = bean;
@@ -69,19 +69,17 @@ public class TransactionalInvocationHandler implements InvocationHandler
                     "no bean method found: " + method.getName() + " with " + Arrays.toString(method.getParameterTypes()));
         }
 
-        Connectional connectional = beanMethod.getAnnotation(Connectional.class);
+        // Transactional transactional = beanMethod.getAnnotation(Transactional.class);
+        boolean isTransactional = beanMethod.isAnnotationPresent(Transactional.class);
 
-        if (connectional != null)
+        if (isTransactional)
         {
             if (ConnectionHolder.isEmpty())
             {
                 ConnectionHolder.set(this.dataSource.getConnection());
             }
 
-            if (connectional.transactional())
-            {
-                ConnectionHolder.beginTX();
-            }
+            ConnectionHolder.beginTX();
         }
 
         Object result = null;
@@ -90,14 +88,14 @@ public class TransactionalInvocationHandler implements InvocationHandler
         {
             result = method.invoke(this.bean, args);
 
-            if ((connectional != null) && connectional.transactional())
+            if (isTransactional)
             {
                 ConnectionHolder.commitTX();
             }
         }
         catch (InvocationTargetException ex)
         {
-            if ((connectional != null) && connectional.transactional())
+            if (isTransactional)
             {
                 ConnectionHolder.rollbackTX();
             }
@@ -107,7 +105,7 @@ public class TransactionalInvocationHandler implements InvocationHandler
         finally
         {
             // Nested-Aufrufe werden nicht unterstützt (Hierachische Transactionen) !
-            if (connectional != null)
+            if (isTransactional)
             {
                 ConnectionHolder.close();
             }

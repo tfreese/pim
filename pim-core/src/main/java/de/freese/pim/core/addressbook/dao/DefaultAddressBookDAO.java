@@ -2,9 +2,11 @@
 package de.freese.pim.core.addressbook.dao;
 
 import java.sql.Connection;
-import java.sql.SQLException;
+
+import javax.sql.DataSource;
 
 import de.freese.pim.core.persistence.ConnectionHolder;
+import de.freese.pim.core.persistence.JdbcTemplate;
 
 /**
  * DAO-Implementierung für das Addressbuch, welches sich die {@link Connection} aus dem {@link ConnectionHolder} holt.<br>
@@ -22,11 +24,14 @@ public class DefaultAddressBookDAO extends AbstractAddressBookDAO
     }
 
     /**
-     * @see de.freese.pim.core.addressbook.dao.AbstractAddressBookDAO#getConnection()
+     * Erzeugt eine neue Instanz von {@link DefaultAddressBookDAO}
+     *
+     * @param dataSource {@link DataSource}
      */
-    @Override
-    protected Connection getConnection() throws SQLException
+    public DefaultAddressBookDAO(final DataSource dataSource)
     {
-        return ConnectionHolder.get();
+        super();
+
+        setJdbcTemplate(new JdbcTemplate().setDataSource(dataSource));
     }
 }

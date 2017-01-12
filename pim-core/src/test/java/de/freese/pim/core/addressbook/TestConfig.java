@@ -5,7 +5,6 @@
 package de.freese.pim.core.addressbook;
 
 import java.sql.Connection;
-import java.sql.SQLException;
 
 import javax.sql.DataSource;
 
@@ -19,8 +18,9 @@ import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-import de.freese.pim.core.addressbook.dao.AbstractAddressBookDAO;
+import de.freese.pim.core.addressbook.dao.DefaultAddressBookDAO;
 import de.freese.pim.core.addressbook.dao.IAddressBookDAO;
+import de.freese.pim.core.persistence.JdbcTemplate;
 
 /**
  * @author Thomas Freese
@@ -44,17 +44,32 @@ public class TestConfig
     @Bean
     public IAddressBookDAO addressBookDAO(final DataSource dataSource)
     {
-        return new AbstractAddressBookDAO()
+        DefaultAddressBookDAO dao = new DefaultAddressBookDAO();
+
+        JdbcTemplate jdbcTemplate = new JdbcTemplate()
         {
             /**
-             * @see de.freese.pim.core.addressbook.dao.AbstractAddressBookDAO#getConnection()
+             * @see de.freese.pim.core.persistence.JdbcTemplate#closeConnection(java.sql.Connection)
              */
             @Override
-            protected Connection getConnection() throws SQLException
+            protected void closeConnection(final Connection connection) throws Exception
             {
-                return DataSourceUtils.getConnection(dataSource);
+                DataSourceUtils.releaseConnection(connection, getDataSource());
+            }
+
+            /**
+             * @see de.freese.pim.core.persistence.JdbcTemplate#getConnection()
+             */
+            @Override
+            protected Connection getConnection() throws Exception
+            {
+                return DataSourceUtils.getConnection(getDataSource());
             }
         };
+
+        dao.setJdbcTemplate(jdbcTemplate.setDataSource(dataSource));
+
+        return dao;
     }
 
     /**

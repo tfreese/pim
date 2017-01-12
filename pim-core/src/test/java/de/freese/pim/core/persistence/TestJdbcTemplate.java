@@ -107,8 +107,7 @@ public class TestJdbcTemplate
     @BeforeClass
     public static void beforeClass()
     {
-        jdbcTemplate = new JdbcTemplate();
-        jdbcTemplate.setDataSource(new TestConfig().dataSource());
+        jdbcTemplate = new JdbcTemplate().setDataSource(new TestConfig().dataSource());
     }
 
     /**
@@ -258,9 +257,8 @@ public class TestJdbcTemplate
         StringBuilder sql = new StringBuilder();
         sql.append("select user_id, id, nachname, vorname from KONTAKT");
 
-        RowMapper<Entity> rowMapper = rs -> new Entity(rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4));
-
-        List<Entity> results = jdbcTemplate.query(sql.toString(), rowMapper);
+        List<Entity> results = jdbcTemplate.query(sql.toString(),
+                (rs, rowNum) -> new Entity(rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4)));
 
         Assert.assertNotNull(results);
         Assert.assertEquals(1, results.size());
@@ -288,14 +286,12 @@ public class TestJdbcTemplate
 
         try
         {
-            ResultSetExtractor<Long> resultSetExtractor = rs ->
+            long newID = jdbcTemplate.query("call next value for kontakt_seq", rs ->
             {
                 rs.next();
 
                 return rs.getLong(1);
-            };
-
-            long newID = jdbcTemplate.query("call next value for kontakt_seq", resultSetExtractor);
+            });
 
             Assert.assertEquals(2L, newID);
 
@@ -334,13 +330,11 @@ public class TestJdbcTemplate
         sql.append(" where lower(nachname) like ? or lower(vorname) like ?");
         sql.append(" order by id asc");
 
-        RowMapper<Entity> rowMapper = rs -> new Entity(rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4));
-
         List<Entity> results = jdbcTemplate.query(sql.toString(), ps ->
         {
             ps.setString(1, "%ree%");
             ps.setString(2, "%hom%");
-        }, rowMapper);
+        }, (rs, rowNum) -> new Entity(rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4)));
 
         Assert.assertNotNull(results);
         Assert.assertEquals(2, results.size());
