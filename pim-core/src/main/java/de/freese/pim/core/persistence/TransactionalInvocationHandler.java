@@ -16,7 +16,7 @@ import javax.sql.DataSource;
  *
  * @author Thomas Freese
  */
-public class ConnectionalInvocationHandler implements InvocationHandler
+public class TransactionalInvocationHandler implements InvocationHandler
 {
     /**
      *
@@ -29,12 +29,12 @@ public class ConnectionalInvocationHandler implements InvocationHandler
     private final DataSource dataSource;
 
     /**
-     * Erzeugt eine neue Instanz von {@link ConnectionalInvocationHandler}
+     * Erzeugt eine neue Instanz von {@link TransactionalInvocationHandler}
      *
      * @param dataSource {@link DataSource}
      * @param bean Object
      */
-    public ConnectionalInvocationHandler(final DataSource dataSource, final Object bean)
+    public TransactionalInvocationHandler(final DataSource dataSource, final Object bean)
     {
         super();
 

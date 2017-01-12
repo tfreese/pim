@@ -43,7 +43,11 @@ public final class ConnectionHolder
      */
     public static void close() throws SQLException
     {
-        get().close();
+        try (Connection connection = get())
+        {
+            connection.setAutoCommit(true);
+            connection.setReadOnly(false);
+        }
     }
 
     /**
@@ -79,14 +83,20 @@ public final class ConnectionHolder
      * Wirft eine {@link NullPointerException}, wenn der aktuelle Thread keine {@link Connection} hat.
      *
      * @return {@link Connection}
+     * @throws SQLException Falls was schief geht.
      * @see #isEmpty()
      * @see #set(Connection)
      */
-    public static final Connection get()
+    public static final Connection get() throws SQLException
     {
         Connection connection = THREAD_LOCAL.get();
 
         Objects.requireNonNull(connection, "connection required, call #set(Connection) first");
+
+        // if (connection.isReadOnly())
+        // {
+        // connection.setReadOnly(false);
+        // }
 
         return connection;
     }

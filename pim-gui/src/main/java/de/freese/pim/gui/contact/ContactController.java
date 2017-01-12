@@ -15,7 +15,7 @@ import de.freese.pim.core.addressbook.dao.DefaultAddressBookDAO;
 import de.freese.pim.core.addressbook.dao.IAddressBookDAO;
 import de.freese.pim.core.addressbook.model.Kontakt;
 import de.freese.pim.core.addressbook.service.DefaultAddressBookService;
-import de.freese.pim.core.persistence.ConnectionalInvocationHandler;
+import de.freese.pim.core.persistence.TransactionalInvocationHandler;
 import de.freese.pim.gui.PIMApplication;
 import de.freese.pim.gui.controller.AbstractController;
 import de.freese.pim.gui.utils.FXUtils;
@@ -118,7 +118,7 @@ public class ContactController extends AbstractController
         this.dao = (IAddressBookDAO) Proxy.newProxyInstance(getClass().getClassLoader(), new Class<?>[]
         {
                 IAddressBookDAO.class
-        }, new ConnectionalInvocationHandler(getDataSource(), new DefaultAddressBookService(new DefaultAddressBookDAO())));
+        }, new TransactionalInvocationHandler(getDataSource(), new DefaultAddressBookService(new DefaultAddressBookDAO())));
     }
 
     /**

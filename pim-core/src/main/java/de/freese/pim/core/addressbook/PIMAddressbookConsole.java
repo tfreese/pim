@@ -29,7 +29,7 @@ import de.freese.pim.core.addressbook.model.KontaktAttribut;
 import de.freese.pim.core.addressbook.service.DefaultAddressBookService;
 import de.freese.pim.core.db.HsqldbLocalFile;
 import de.freese.pim.core.db.IDataSourceBean;
-import de.freese.pim.core.persistence.ConnectionalInvocationHandler;
+import de.freese.pim.core.persistence.TransactionalInvocationHandler;
 import de.freese.pim.core.service.ISettingsService;
 import de.freese.pim.core.service.SettingService;
 import de.freese.pim.core.utils.PreserveOrderOptionGroup;
@@ -99,7 +99,7 @@ public class PIMAddressbookConsole
                     new Class<?>[]
                     {
                             IAddressBookDAO.class
-                    }, new ConnectionalInvocationHandler(dataSourceBean.getDataSource(), new DefaultAddressBookService(new DefaultAddressBookDAO())));
+                    }, new TransactionalInvocationHandler(dataSourceBean.getDataSource(), new DefaultAddressBookService(new DefaultAddressBookDAO())));
 
             PIMAddressbookConsole addressbook = new PIMAddressbookConsole();
             addressbook.setAddressBookDAO(addressBookDAO);

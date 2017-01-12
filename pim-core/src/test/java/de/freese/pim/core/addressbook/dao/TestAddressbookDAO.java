@@ -21,7 +21,7 @@ import org.junit.runners.Parameterized.Parameters;
 
 import de.freese.pim.core.addressbook.TestConfig;
 import de.freese.pim.core.addressbook.service.DefaultAddressBookService;
-import de.freese.pim.core.persistence.ConnectionalInvocationHandler;
+import de.freese.pim.core.persistence.TransactionalInvocationHandler;
 
 /**
  * TestCase für die TX-Steuerung mit Proxy und Lambdas.
@@ -84,7 +84,7 @@ public class TestAddressbookDAO extends AbstractDAOTextCase
                         (IAddressBookDAO) Proxy.newProxyInstance(TestAddressbookDAO.class.getClassLoader(), new Class<?>[]
                         {
                                 IAddressBookDAO.class
-                        }, new ConnectionalInvocationHandler(dataSources.get(2), new DefaultAddressBookService(new DefaultAddressBookDAO())))
+                        }, new TransactionalInvocationHandler(dataSources.get(2), new DefaultAddressBookService(new DefaultAddressBookDAO())))
                 }
         });
     }
