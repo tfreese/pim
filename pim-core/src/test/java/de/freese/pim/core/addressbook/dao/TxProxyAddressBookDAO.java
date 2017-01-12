@@ -11,8 +11,11 @@ import java.nio.file.Path;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
+
 import javax.sql.DataSource;
+
 import de.freese.pim.core.addressbook.model.Kontakt;
+import de.freese.pim.core.persistence.ConnectionHolder;
 
 /**
  * DAO-Implementierung für das Addressbuch mit Connection- und Transaction-Steuerung über einen Proxy.<br>
@@ -77,7 +80,12 @@ public class TxProxyAddressBookDAO implements IAddressBookDAO
             {
                 @SuppressWarnings("resource")
                 final Connection connection = this.dataSource.getConnection();
-                CONNECTIONS.set(connection);
+                ConnectionHolder.set(connection);
+
+                if (transactional)
+                {
+                    ConnectionHolder.beginTX();
+                }
 
                 // System.out.println(methodName + "; Transactional = " + transactional);
 
@@ -85,32 +93,26 @@ public class TxProxyAddressBookDAO implements IAddressBookDAO
 
                 if (transactional)
                 {
-                    CONNECTIONS.get().commit();
+                    ConnectionHolder.commitTX();
                 }
             }
             catch (InvocationTargetException ex)
             {
                 if (transactional)
                 {
-                    CONNECTIONS.get().rollback();
+                    ConnectionHolder.rollbackTX();
                 }
 
                 throw ex.getTargetException();
             }
             finally
             {
-                CONNECTIONS.get().close();
-                CONNECTIONS.remove();
+                ConnectionHolder.closeAndRemove();
             }
 
             return result;
         }
     }
-
-    /**
-     *
-     */
-    private static final ThreadLocal<Connection> CONNECTIONS = new ThreadLocal<>();
 
     /**
      *
@@ -134,7 +136,7 @@ public class TxProxyAddressBookDAO implements IAddressBookDAO
             @Override
             protected Connection getConnection() throws SQLException
             {
-                return CONNECTIONS.get();
+                return ConnectionHolder.get();
             }
         };
 
@@ -175,7 +177,7 @@ public class TxProxyAddressBookDAO implements IAddressBookDAO
      * @see de.freese.pim.core.addressbook.dao.IAddressBookDAO#getKontaktDetails(long[])
      */
     @Override
-    public List<Kontakt> getKontaktDetails(final long...ids) throws Exception
+    public List<Kontakt> getKontaktDetails(final long... ids) throws Exception
     {
         return this.dao.getKontaktDetails(ids);
     }

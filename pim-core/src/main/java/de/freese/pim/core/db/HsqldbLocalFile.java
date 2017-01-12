@@ -5,8 +5,8 @@ import java.nio.file.Path;
 
 import javax.sql.DataSource;
 
+import de.freese.pim.core.persistence.SimpleDataSource;
 import de.freese.pim.core.service.ISettingsService;
-import de.freese.pim.core.utils.SimpleDataSource;
 
 /**
  * {@link IDataSourceBean} für eine HSQLDB im File-Mode.

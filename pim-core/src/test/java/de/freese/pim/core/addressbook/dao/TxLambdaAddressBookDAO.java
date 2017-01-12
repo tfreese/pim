@@ -10,6 +10,7 @@ import java.util.function.Supplier;
 import javax.sql.DataSource;
 
 import de.freese.pim.core.addressbook.model.Kontakt;
+import de.freese.pim.core.persistence.ConnectionHolder;
 import de.freese.pim.core.utils.Utils;
 
 /**
@@ -34,11 +35,6 @@ public class TxLambdaAddressBookDAO extends AbstractAddressBookDAO
          */
         public R get() throws E;
     }
-
-    /**
-    *
-    */
-    private static final ThreadLocal<Connection> CONNECTIONS = new ThreadLocal<>();
 
     /**
     *
@@ -166,7 +162,12 @@ public class TxLambdaAddressBookDAO extends AbstractAddressBookDAO
 
         try (Connection connection = connectionSupplier.get())
         {
-            CONNECTIONS.set(connection);
+            ConnectionHolder.set(connection);
+
+            if (transactional)
+            {
+                ConnectionHolder.beginTX();
+            }
 
             try
             {
@@ -174,21 +175,21 @@ public class TxLambdaAddressBookDAO extends AbstractAddressBookDAO
 
                 if (transactional)
                 {
-                    CONNECTIONS.get().commit();
+                    ConnectionHolder.commitTX();
                 }
             }
             catch (Exception ex) // catch (Error | RuntimeException rex)
             {
                 if (transactional)
                 {
-                    CONNECTIONS.get().rollback();
+                    ConnectionHolder.rollbackTX();
                 }
 
                 throw Utils.getCause(ex);
             }
             finally
             {
-                CONNECTIONS.remove();
+                ConnectionHolder.closeAndRemove();
             }
         }
 
@@ -201,6 +202,6 @@ public class TxLambdaAddressBookDAO extends AbstractAddressBookDAO
     @Override
     protected Connection getConnection() throws SQLException
     {
-        return CONNECTIONS.get();
+        return ConnectionHolder.get();
     }
 }

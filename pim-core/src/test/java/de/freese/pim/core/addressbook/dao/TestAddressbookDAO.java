@@ -3,10 +3,13 @@
  */
 package de.freese.pim.core.addressbook.dao;
 
+import java.lang.reflect.Proxy;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.Arrays;
 import java.util.List;
+
 import javax.sql.DataSource;
+
 import org.junit.AfterClass;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
@@ -15,6 +18,10 @@ import org.junit.runners.MethodSorters;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameter;
 import org.junit.runners.Parameterized.Parameters;
+
+import de.freese.pim.core.addressbook.TestConfig;
+import de.freese.pim.core.addressbook.service.DefaultAddressBookService;
+import de.freese.pim.core.persistence.ConnectionalInvocationHandler;
 
 /**
  * TestCase für die TX-Steuerung mit Proxy und Lambdas.
@@ -28,7 +35,8 @@ public class TestAddressbookDAO extends AbstractDAOTextCase
     /**
      *
      */
-    public static List<DataSource> dataSources = Arrays.asList(new TestConfig().dataSource(), new TestConfig().dataSource());
+    public static List<DataSource> dataSources = Arrays.asList(new TestConfig().dataSource(), new TestConfig().dataSource(),
+            new TestConfig().dataSource());
 
     // /**
     // *
@@ -70,6 +78,13 @@ public class TestAddressbookDAO extends AbstractDAOTextCase
                 },
                 {
                         TxLambdaAddressBookDAO.class.getSimpleName(), new TxLambdaAddressBookDAO(dataSources.get(1))
+                },
+                {
+                        DefaultAddressBookService.class.getSimpleName(),
+                        (IAddressBookDAO) Proxy.newProxyInstance(TestAddressbookDAO.class.getClassLoader(), new Class<?>[]
+                        {
+                                IAddressBookDAO.class
+                        }, new ConnectionalInvocationHandler(dataSources.get(2), new DefaultAddressBookService(new DefaultAddressBookDAO())))
                 }
         });
     }
@@ -93,21 +108,6 @@ public class TestAddressbookDAO extends AbstractDAOTextCase
     {
         super();
     }
-    // /**
-    // * Erstellt ein neues {@link TestAddressbookDAO} Object.
-    // *
-    // * @param name String
-    // * @param dao {@link IAddressBookDAO}
-    // * @param ds {@link DataSource}
-    // * @throws Exception Falls was schief geht.
-    // */
-    // public TestAddressbookDAO(final String name, final IAddressBookDAO dao) throws Exception
-    // {
-    // super();
-    //
-    // addressBookDAO = dao;
-    // // addressBookDAO = daoClass.getConstructor(DataSource.class).newInstance(dataSource);
-    // }
 
     /**
      * @see de.freese.pim.core.addressbook.dao.AbstractDAOTextCase#test0100InsertKontakts()

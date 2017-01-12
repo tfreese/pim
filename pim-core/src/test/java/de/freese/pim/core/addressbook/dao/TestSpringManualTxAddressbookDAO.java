@@ -17,13 +17,15 @@ import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
 
+import de.freese.pim.core.addressbook.TestConfig;
+
 /**
  * TestCase für die manuelle TX-Steuerung mit Spring.
  *
  * @author Thomas Freese
  */
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class TestManualTxSpringAddressbookDAO extends AbstractDAOTextCase
+public class TestSpringManualTxAddressbookDAO extends AbstractDAOTextCase
 {
     /**
      *
@@ -57,16 +59,16 @@ public class TestManualTxSpringAddressbookDAO extends AbstractDAOTextCase
     {
         TestConfig config = new TestConfig();
 
-        dataSource = config.dataSource();
         // dataSource = new JndiDataSourceLookup().getDataSource("jdbc/spring/manualTX"); // Wird in AllTests definiert.
+        dataSource = config.dataSource();
         transactionManager = config.transactionManager(dataSource);
         addressBookDAO = config.addressBookDAO(dataSource);
     }
 
     /**
-     * Erstellt ein neues {@link TestManualTxSpringAddressbookDAO} Object.
+     * Erstellt ein neues {@link TestSpringManualTxAddressbookDAO} Object.
      */
-    public TestManualTxSpringAddressbookDAO()
+    public TestSpringManualTxAddressbookDAO()
     {
         super();
     }

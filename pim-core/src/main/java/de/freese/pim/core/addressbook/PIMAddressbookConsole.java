@@ -4,6 +4,7 @@
 package de.freese.pim.core.addressbook;
 
 import java.io.PrintStream;
+import java.lang.reflect.Proxy;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.sql.SQLIntegrityConstraintViolationException;
@@ -21,12 +22,14 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import de.freese.pim.core.addressbook.dao.DefaultAddressBookDAO;
 import de.freese.pim.core.addressbook.dao.IAddressBookDAO;
-import de.freese.pim.core.addressbook.dao.TxProxyAddressBookDAO;
 import de.freese.pim.core.addressbook.model.Kontakt;
 import de.freese.pim.core.addressbook.model.KontaktAttribut;
+import de.freese.pim.core.addressbook.service.DefaultAddressBookService;
 import de.freese.pim.core.db.HsqldbLocalFile;
 import de.freese.pim.core.db.IDataSourceBean;
+import de.freese.pim.core.persistence.ConnectionalInvocationHandler;
 import de.freese.pim.core.service.ISettingsService;
 import de.freese.pim.core.service.SettingService;
 import de.freese.pim.core.utils.PreserveOrderOptionGroup;
@@ -92,8 +95,14 @@ public class PIMAddressbookConsole
             dataSourceBean.testConnection();
             dataSourceBean.populateIfEmpty(null);
 
+            IAddressBookDAO addressBookDAO = (IAddressBookDAO) Proxy.newProxyInstance(PIMAddressbookConsole.class.getClassLoader(),
+                    new Class<?>[]
+                    {
+                            IAddressBookDAO.class
+                    }, new ConnectionalInvocationHandler(dataSourceBean.getDataSource(), new DefaultAddressBookService(new DefaultAddressBookDAO())));
+
             PIMAddressbookConsole addressbook = new PIMAddressbookConsole();
-            addressbook.setAddressBookDAO(new TxProxyAddressBookDAO(dataSourceBean.getDataSource()));
+            addressbook.setAddressBookDAO(addressBookDAO);
             addressbook.setPrintStream(PRINTSTREAM);
 
             if (line.hasOption("ik"))

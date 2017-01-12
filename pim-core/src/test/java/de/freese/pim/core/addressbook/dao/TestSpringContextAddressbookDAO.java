@@ -11,8 +11,13 @@ import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
+import org.springframework.test.annotation.Commit;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.transaction.annotation.Transactional;
+
+import de.freese.pim.core.addressbook.TestConfig;
 
 /**
  * TestCase für die TX-Steuerung mit Spring.
@@ -24,8 +29,9 @@ import org.springframework.test.context.junit4.SpringRunner;
 {
         TestConfig.class
 })
+@Transactional(transactionManager = "transactionManager")
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class TestContextSpringAddressbookDAO extends AbstractDAOTextCase
+public class TestSpringContextAddressbookDAO extends AbstractDAOTextCase
 {
     /**
      *
@@ -34,9 +40,9 @@ public class TestContextSpringAddressbookDAO extends AbstractDAOTextCase
     private IAddressBookDAO addressBookDAO = null;
 
     /**
-     * Erstellt ein neues {@link TestContextSpringAddressbookDAO} Object.
+     * Erstellt ein neues {@link TestSpringContextAddressbookDAO} Object.
      */
-    public TestContextSpringAddressbookDAO()
+    public TestSpringContextAddressbookDAO()
     {
         super();
     }
@@ -46,6 +52,7 @@ public class TestContextSpringAddressbookDAO extends AbstractDAOTextCase
      */
     @Override
     @Test
+    @Commit
     public void test0100InsertKontakts() throws Exception
     {
         doTest0100InsertKontakts(this.addressBookDAO);
@@ -56,6 +63,7 @@ public class TestContextSpringAddressbookDAO extends AbstractDAOTextCase
      */
     @Override
     @Test
+    @Commit
     public void test0110InsertKontaktWithNullVorname() throws Exception
     {
         doTest0110InsertKontaktWithNullVorname(this.addressBookDAO);
@@ -66,6 +74,7 @@ public class TestContextSpringAddressbookDAO extends AbstractDAOTextCase
      */
     @Override
     @Test(expected = SQLIntegrityConstraintViolationException.class)
+    @Rollback
     public void test0120InsertKontaktWithBlankVorname() throws Exception
     {
         doTest0120InsertKontaktWithBlankVorname(this.addressBookDAO);
@@ -76,6 +85,7 @@ public class TestContextSpringAddressbookDAO extends AbstractDAOTextCase
      */
     @Override
     @Test(expected = SQLIntegrityConstraintViolationException.class)
+    @Rollback
     public void test0130InsertKontaktExisting() throws Exception
     {
         doTest0130InsertKontaktExisting(this.addressBookDAO);
@@ -86,6 +96,7 @@ public class TestContextSpringAddressbookDAO extends AbstractDAOTextCase
      */
     @Override
     @Test
+    @Commit
     public void test0200UpdateKontakt() throws Exception
     {
         doTest0200UpdateKontakt(this.addressBookDAO);
@@ -96,6 +107,7 @@ public class TestContextSpringAddressbookDAO extends AbstractDAOTextCase
      */
     @Override
     @Test
+    @Commit
     public void test0300InsertAttribut() throws Exception
     {
         doTest0300InsertAttribut(this.addressBookDAO);
@@ -106,6 +118,7 @@ public class TestContextSpringAddressbookDAO extends AbstractDAOTextCase
      */
     @Override
     @Test(expected = SQLIntegrityConstraintViolationException.class)
+    @Rollback
     public void test0310InsertInsertAttributWithNullValue() throws Exception
     {
         doTest0310InsertInsertAttributWithNullValue(this.addressBookDAO);
@@ -116,6 +129,7 @@ public class TestContextSpringAddressbookDAO extends AbstractDAOTextCase
      */
     @Override
     @Test(expected = SQLIntegrityConstraintViolationException.class)
+    @Rollback
     public void test0320InsertInsertAttributWithBlankValue() throws Exception
     {
         doTest0320InsertInsertAttributWithBlankValue(this.addressBookDAO);
@@ -126,6 +140,7 @@ public class TestContextSpringAddressbookDAO extends AbstractDAOTextCase
      */
     @Override
     @Test(expected = SQLIntegrityConstraintViolationException.class)
+    @Rollback
     public void test0330InsertInsertAttributWithNull() throws Exception
     {
         doTest0330InsertInsertAttributWithNull(this.addressBookDAO);
@@ -136,6 +151,7 @@ public class TestContextSpringAddressbookDAO extends AbstractDAOTextCase
      */
     @Override
     @Test(expected = SQLIntegrityConstraintViolationException.class)
+    @Rollback
     public void test0340InsertInsertAttributWithBlank() throws Exception
     {
         doTest0340InsertInsertAttributWithBlank(this.addressBookDAO);
@@ -146,6 +162,7 @@ public class TestContextSpringAddressbookDAO extends AbstractDAOTextCase
      */
     @Override
     @Test(expected = SQLIntegrityConstraintViolationException.class)
+    @Rollback
     public void test0350InsertAttributExisting() throws Exception
     {
         doTest0350InsertAttributExisting(this.addressBookDAO);
@@ -156,6 +173,7 @@ public class TestContextSpringAddressbookDAO extends AbstractDAOTextCase
      */
     @Override
     @Test
+    @Commit
     public void test0400UpdateAttribut() throws Exception
     {
         doTest0400UpdateAttribut(this.addressBookDAO);
@@ -166,6 +184,7 @@ public class TestContextSpringAddressbookDAO extends AbstractDAOTextCase
      */
     @Override
     @Test
+    @Transactional(readOnly = true)
     public void test0500GetKontaktDetailsAll() throws Exception
     {
         doTest0500GetKontaktDetailsAll(this.addressBookDAO);
@@ -176,6 +195,7 @@ public class TestContextSpringAddressbookDAO extends AbstractDAOTextCase
      */
     @Override
     @Test
+    @Transactional(readOnly = true)
     public void test0510GetKontaktDetailsWithID() throws Exception
     {
         doTest0510GetKontaktDetailsWithID(this.addressBookDAO);
@@ -186,6 +206,7 @@ public class TestContextSpringAddressbookDAO extends AbstractDAOTextCase
      */
     @Override
     @Test
+    @Transactional(readOnly = true)
     public void test0520GetKontaktDetailsWithIDs() throws Exception
     {
         doTest0520GetKontaktDetailsWithIDs(this.addressBookDAO);
@@ -196,6 +217,7 @@ public class TestContextSpringAddressbookDAO extends AbstractDAOTextCase
      */
     @Override
     @Test
+    @Transactional(readOnly = true)
     public void test0600GetKontakte() throws Exception
     {
         doTest0600GetKontakte(this.addressBookDAO);
@@ -206,6 +228,7 @@ public class TestContextSpringAddressbookDAO extends AbstractDAOTextCase
      */
     @Override
     @Test
+    @Transactional(readOnly = true)
     public void test0700SearchKontakts() throws Exception
     {
         doTest0700SearchKontakts(this.addressBookDAO);
@@ -216,6 +239,7 @@ public class TestContextSpringAddressbookDAO extends AbstractDAOTextCase
      */
     @Override
     @Test
+    @Commit
     public void test0900DeleteAttribut() throws Exception
     {
         doTest0900DeleteAttribut(this.addressBookDAO);
@@ -226,6 +250,7 @@ public class TestContextSpringAddressbookDAO extends AbstractDAOTextCase
      */
     @Override
     @Test
+    @Commit
     public void test1000DeleteKontakt() throws Exception
     {
         doTest1000DeleteKontakt(this.addressBookDAO);

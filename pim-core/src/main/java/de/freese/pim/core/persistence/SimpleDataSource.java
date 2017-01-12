@@ -1,7 +1,7 @@
 /**
  * Created on 24.05.2016 17:26:14
  */
-package de.freese.pim.core.utils;
+package de.freese.pim.core.persistence;
 
 import java.io.PrintWriter;
 import java.lang.reflect.InvocationHandler;
@@ -21,8 +21,10 @@ import javax.sql.DataSource;
 
 import org.slf4j.LoggerFactory;
 
+import de.freese.pim.core.utils.Utils;
+
 /**
- * Implementierung analog der org.springframework.jdbc.datasource.SingleConnectionDataSource<br>
+ * Analog-Implementierung der org.springframework.jdbc.datasource.SingleConnectionDataSource<br>
  * jedoch ohne die Abhängigkeiten zum Spring-Framework.<br>
  * Die Connection wird in einem Proxy verpackt, der die close-Methode nicht ausführt.
  *

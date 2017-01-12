@@ -131,7 +131,7 @@ public class MailFolder
 
         nameProperty().set(name);
 
-        if ("SEND".equals(name.toUpperCase()) || "SENT".equals(name.toUpperCase()))
+        if ("SEND".equals(name.toUpperCase()) || "SENT".equals(name.toUpperCase()) || name.toUpperCase().startsWith("GESENDETE"))
         {
             this.mails.setComparator(Comparator.comparing(Mail::getSendDate));
         }
