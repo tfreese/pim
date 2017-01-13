@@ -9,6 +9,7 @@ import java.util.Optional;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
 
 /**
@@ -47,25 +48,29 @@ public class MailFolder
      * Erzeugt eine neue Instanz von {@link MailFolder}
      *
      * @param account {@link MailAccount}
+     * @param name String
      */
-    public MailFolder(final MailAccount account)
+    public MailFolder(final MailAccount account, final String name)
     {
-        this(account, null);
+        this(account, name, null);
     }
 
     /**
      * Erzeugt eine neue Instanz von {@link MailFolder}
      *
      * @param account {@link MailAccount}
+     * @param name String
      * @param parent {@link MailFolder}
      */
-    public MailFolder(final MailAccount account, final MailFolder parent)
+    public MailFolder(final MailAccount account, final String name, final MailFolder parent)
     {
         super();
 
-        Objects.requireNonNull(account, () -> "account required");
+        Objects.requireNonNull(account, "account required");
+        Objects.requireNonNull(name, "name required");
 
         this.account = account;
+        setName(name);
         this.parent = parent;
     }
 
@@ -82,9 +87,9 @@ public class MailFolder
     }
 
     /**
-     * @return {@link SortedList}
+     * @return {@link ObservableList}
      */
-    public SortedList<Mail> getMails()
+    public ObservableList<Mail> getMails()
     {
         return this.mails;
     }
@@ -108,6 +113,8 @@ public class MailFolder
     {
         Path basePath = Optional.ofNullable(getParent()).map(p -> p.getPath()).orElse(getAccount().getPath());
         Path path = basePath.resolve(getName());
+        // Path basePath = getAccount().getPath();
+        // Path path = basePath.resolve(getFullName().replaceAll("/", "__"));
 
         return path;
     }
@@ -121,24 +128,13 @@ public class MailFolder
     }
 
     /**
-     * Setzt den Namen des Folders.
+     * Liefert den {@link MailAccount}.
      *
-     * @param name String
+     * @return {@link MailAccount}
      */
-    public void setName(final String name)
+    private MailAccount getAccount()
     {
-        Objects.requireNonNull(name, () -> "name required");
-
-        nameProperty().set(name);
-
-        if ("SEND".equals(name.toUpperCase()) || "SENT".equals(name.toUpperCase()) || name.toUpperCase().startsWith("GESENDETE"))
-        {
-            this.mails.setComparator(Comparator.comparing(Mail::getSendDate));
-        }
-        else
-        {
-            this.mails.setComparator(Comparator.comparing(Mail::getReceivedDate));
-        }
+        return this.account;
     }
 
     // /**
@@ -152,20 +148,31 @@ public class MailFolder
     // }
 
     /**
-     * Liefert den {@link MailAccount}.
-     *
-     * @return {@link MailAccount}
-     */
-    private MailAccount getAccount()
-    {
-        return this.account;
-    }
-
-    /**
      * @return {@link MailFolder}
      */
     private MailFolder getParent()
     {
         return this.parent;
+    }
+
+    /**
+     * Setzt den Namen des Folders.
+     *
+     * @param name String
+     */
+    private void setName(final String name)
+    {
+        // Objects.requireNonNull(name, "name required");
+
+        nameProperty().set(name);
+
+        if ("SEND".equals(name.toUpperCase()) || "SENT".equals(name.toUpperCase()) || name.toUpperCase().startsWith("GESENDETE"))
+        {
+            this.mails.setComparator(Comparator.comparing(Mail::getSendDate));
+        }
+        else
+        {
+            this.mails.setComparator(Comparator.comparing(Mail::getReceivedDate));
+        }
     }
 }
