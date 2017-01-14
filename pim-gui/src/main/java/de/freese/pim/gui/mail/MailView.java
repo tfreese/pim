@@ -1,7 +1,7 @@
 // Created: 13.12.2016
 package de.freese.pim.gui.mail;
 
-import de.freese.pim.core.mail.model.IMail;
+import de.freese.pim.core.mail.model.Mail;
 import de.freese.pim.gui.view.IView;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
@@ -43,7 +43,7 @@ public class MailView implements IView
     *
     */
     @FXML
-    private TableView<IMail> tableViewMail = null;
+    private TableView<Mail> tableViewMail = null;
 
     /**
     *

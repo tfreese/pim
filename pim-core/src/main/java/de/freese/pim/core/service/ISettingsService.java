@@ -49,6 +49,13 @@ public interface ISettingsService
     public Path getHome();
 
     /**
+     * Liefert den Namen des angemeldeten Systemusers.
+     *
+     * @return String
+     */
+    public String getSystemUserName();
+
+    /**
      * Setzt die {@link DataSource}.
      *
      * @param dataSource {@link DataSource}

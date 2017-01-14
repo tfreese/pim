@@ -1,10 +1,7 @@
 // Created: 13.12.2016
 package de.freese.pim.gui.mail;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.net.URL;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -12,24 +9,21 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
-
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.JavaType;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-
-import de.freese.pim.core.mail.model.IMail;
-import de.freese.pim.core.mail.model.IMailAccount;
-import de.freese.pim.core.mail.model.IMailFolder;
-import de.freese.pim.core.mail.model.ImapMailAccount;
-import de.freese.pim.core.mail.model.MailConfig;
+import de.freese.pim.core.mail.dao.DefaultMailDAO;
+import de.freese.pim.core.mail.dao.IMailDAO;
+import de.freese.pim.core.mail.model.Mail;
+import de.freese.pim.core.mail.model.MailAccount;
+import de.freese.pim.core.mail.model.MailFolder;
+import de.freese.pim.core.mail.service.IMailService;
+import de.freese.pim.core.mail.service.JavaMailService;
+import de.freese.pim.core.service.SettingService;
 import de.freese.pim.gui.PIMApplication;
 import de.freese.pim.gui.controller.AbstractController;
 import de.freese.pim.gui.view.ErrorDialog;
+import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.Cursor;
@@ -42,7 +36,6 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TreeCell;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
-import javafx.scene.control.cell.PropertyValueFactory;
 
 /**
  * Controller des Mail-Clients.
@@ -56,6 +49,11 @@ public class MailController extends AbstractController
      * DateTimeFormatter formatterReceivedDate = DateTimeFormatter.ofPattern("EE dd.MM.yyyy HH:mm:ss");
      */
     private final DateFormat formatterReceivedDate = new SimpleDateFormat("EE dd.MM.yyyy HH:mm:ss");
+
+    /**
+     *
+     */
+    private IMailDAO mailDAO = null;
 
     /**
     *
@@ -83,18 +81,18 @@ public class MailController extends AbstractController
     /**
      * Spalten für die Empfangs-Sicht.
      */
-    private List<TableColumn<IMail, ?>> tableColumnsReceived = null;
+    private List<TableColumn<Mail, ?>> tableColumnsReceived = null;
 
     /**
      * Spalten für die Sende-Sicht.
      */
-    private List<TableColumn<IMail, ?>> tableColumnsSend = null;
+    private List<TableColumn<Mail, ?>> tableColumnsSend = null;
 
     /**
     *
     */
     @FXML
-    private TableView<IMail> tableViewMail = null;
+    private TableView<Mail> tableViewMail = null;
 
     /**
     *
@@ -134,17 +132,18 @@ public class MailController extends AbstractController
     @Override
     public void initialize(final URL location, final ResourceBundle resources)
     {
+        this.mailDAO = new DefaultMailDAO();
+
         // Tabelle
-        this.tableViewMail.setRowFactory(tableView ->
-        {
-            return new TableRow<IMail>()
+        this.tableViewMail.setRowFactory(tableView -> {
+            return new TableRow<Mail>()
             {
                 /**
-                 * @param item {@link IMail}
+                 * @param item {@link Mail}
                  * @param empty boolean
                  */
                 @Override
-                public void updateItem(final IMail item, final boolean empty)
+                public void updateItem(final Mail item, final boolean empty)
                 {
                     super.updateItem(item, empty);
 
@@ -166,8 +165,7 @@ public class MailController extends AbstractController
             };
         });
 
-        this.selectedTreeItem.addListener((observable, oldValue, newValue) ->
-        {
+        this.selectedTreeItem.addListener((observable, oldValue, newValue) -> {
 
             this.tableViewMail.setItems(null);
 
@@ -178,29 +176,39 @@ public class MailController extends AbstractController
 
             Object value = ((TreeItem) newValue).getValue();
 
-            if (value instanceof IMailFolder)
+            if (value instanceof MailFolder)
             {
+                MailFolder folder = (MailFolder) value;
+
                 setReceivedTableColumns(resources);
 
-                Task<ObservableList<IMail>> loadMailsTask = new Task<ObservableList<IMail>>()
+                this.tableViewMail.setItems(folder.getMailsSorted());
+
+                if (!folder.getMailsSorted().isEmpty())
+                {
+                    return;
+                }
+
+                Task<Void> loadMailsTask = new Task<Void>()
                 {
                     /**
                      * @see javafx.concurrent.Task#call()
                      */
                     @Override
-                    protected ObservableList<IMail> call() throws Exception
+                    protected Void call() throws Exception
                     {
-                        ObservableList<IMail> mails = ((IMailFolder) value).getMessages();
+                        IMailService mailService = folder.getMailService();
 
-                        return mails;
+                        mailService.loadMails(folder, m -> {
+                            Platform.runLater(() -> {
+                                folder.getMails().add(m);
+                            });
+                        });
+
+                        return null;
                     }
                 };
-                loadMailsTask.setOnSucceeded(event ->
-                {
-                    this.tableViewMail.setItems(loadMailsTask.getValue());
-                });
-                loadMailsTask.setOnFailed(event ->
-                {
+                loadMailsTask.setOnFailed(event -> {
                     Throwable th = loadMailsTask.getException();
 
                     getLogger().error(null, th);
@@ -212,8 +220,7 @@ public class MailController extends AbstractController
                 ReadOnlyBooleanProperty runningProperty = loadMailsTask.runningProperty();
 
                 this.progressIndicator.visibleProperty().bind(runningProperty);
-                PIMApplication.getMainWindow().getScene().cursorProperty()
-                        .bind(Bindings.when(runningProperty).then(Cursor.WAIT).otherwise(Cursor.DEFAULT));
+                PIMApplication.getMainWindow().getScene().cursorProperty().bind(Bindings.when(runningProperty).then(Cursor.WAIT).otherwise(Cursor.DEFAULT));
 
                 getExecutorService().execute(loadMailsTask);
             }
@@ -246,15 +253,15 @@ public class MailController extends AbstractController
                 String text = null;
                 int newMails = 0;
 
-                if (item instanceof IMailAccount)
+                if (item instanceof IMailService)
                 {
-                    text = ((IMailAccount) item).getName();
-                    newMails = ((IMailAccount) item).getUnreadMessageCount();
+                    text = ((IMailService) item).getAccount().getMail();
+                    // newMails = ((IMailFolder) item).getUnreadMessageCount();
                 }
-                else if (item instanceof IMailFolder)
+                else if (item instanceof MailFolder)
                 {
-                    text = ((IMailFolder) item).getName();
-                    newMails = ((IMailFolder) item).getUnreadMessageCount();
+                    text = ((MailFolder) item).getName();
+                    // newMails = ((IMailFolder) item).getUnreadMessageCount();
                 }
 
                 if (newMails > 0)
@@ -270,71 +277,47 @@ public class MailController extends AbstractController
         TreeItem<Object> root = new TreeItem<>("Mail-Accounts");
         this.treeViewMail.setRoot(root);
 
-        // TODO Aus DB laden.
-        ObjectMapper jsonMapper = new ObjectMapper();
-        jsonMapper.enable(SerializationFeature.INDENT_OUTPUT);
-        jsonMapper.enable(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT);
-
-        Path configs = getSettingService().getHome().resolve(".mailconfigs");
-        List<MailConfig> configList = new ArrayList<>();
-
-        if (Files.exists(configs))
-        {
-            try (InputStream is = Files.newInputStream(configs))
-            {
-                // MailAccount mailAccount = jsonMapper.readValue(is, MailAccount.class);
-                // root.getChildren().add(new TreeItem<>(mailAccount));
-
-                JavaType type = jsonMapper.getTypeFactory().constructCollectionType(ArrayList.class, MailConfig.class);
-                configList.addAll(jsonMapper.readValue(is, type));
-            }
-            catch (IOException ex)
-            {
-                getLogger().error(null, ex);
-
-                new ErrorDialog().forThrowable(ex).showAndWait();
-            }
-        }
-        // else
-        // {
-        // MailConfig config = new MailConfig();
-        // config.setMail("commercial@freese-home.de");
-        // config.setImapHost(MailProvider.EinsUndEins.getImapHost());
-        // config.setSmtpHost(MailProvider.EinsUndEins.getSmtpHost());
-        // configList.add(config);
-        //
-        // try (OutputStream os = Files.newOutputStream(configs))
-        // {
-        // jsonMapper.writer().writeValue(os, Arrays.asList(config));
-        // }
-        // catch (IOException ex)
-        // {
-        // getLogger().error(null, ex);
-        //
-        // new ErrorDialog().forThrowable(ex).showAndWait();
-        // }
-        // }
-
         try
         {
-            for (MailConfig mailConfig : configList)
-            {
-                mailConfig.setExecutor(getExecutorService());
+            List<MailAccount> accountList = this.mailDAO.getMailAccounts();
+            Path basePath = SettingService.getInstance().getHome();
 
-                IMailAccount mailAccount = new ImapMailAccount();
-                TreeItem<Object> treeItem = new TreeItem<>(mailAccount);
+            for (MailAccount mailAccount : accountList)
+            {
+                Path accountPath = basePath.resolve(mailAccount.getMail());
+                IMailService mailService = new JavaMailService(mailAccount, accountPath);
+                mailService.setExecutor(getExecutorService());
+
+                TreeItem<Object> treeItem = new TreeItem<>(mailService);
                 root.getChildren().add(treeItem);
 
-                PIMApplication.registerCloseable(() ->
-                {
-                    getLogger().info("Close " + mailConfig.getMail());
-                    mailAccount.disconnect();
+                PIMApplication.registerCloseable(() -> {
+                    getLogger().info("Close " + mailService.getAccount().getMail());
+                    mailService.disconnect();
                 });
 
-                getLogger().info("Init MailAccount {}", mailConfig.getMail());
-                InitMailAccountService service = new InitMailAccountService(treeItem, mailConfig);
+                getLogger().info("Init MailAccount {}", mailService.getAccount().getMail());
+                InitMailService service = new InitMailService(treeItem, mailService);
                 service.start();
             }
+
+            // for (MailConfig mailConfig : configList)
+            // {
+            // mailConfig.setExecutor(getExecutorService());
+            //
+            // IMailAccount mailAccount = new ImapMailAccount();
+            // TreeItem<Object> treeItem = new TreeItem<>(mailAccount);
+            // root.getChildren().add(treeItem);
+            //
+            // PIMApplication.registerCloseable(() -> {
+            // getLogger().info("Close " + mailConfig.getMail());
+            // mailAccount.disconnect();
+            // });
+            //
+            // getLogger().info("Init MailAccount {}", mailConfig.getMail());
+            // InitMailAccountService service = new InitMailAccountService(treeItem, mailConfig);
+            // service.start();
+            // }
         }
         catch (Exception ex)
         {
@@ -355,26 +338,27 @@ public class MailController extends AbstractController
         {
             this.tableColumnsReceived = new ArrayList<>();
 
-            TableColumn<IMail, String> columnFrom = new TableColumn<>(resources.getString("mail.from"));
+            TableColumn<Mail, String> columnFrom = new TableColumn<>(resources.getString("mail.from"));
             // columnFrom.setResizable(false);
-            // columnFrom.setCellValueFactory(cell -> (ObservableValue) cell.getValue().getPropertytID()); // Für reine FX-Bean
-            columnFrom.setCellValueFactory(new PropertyValueFactory<>("from")); // Updates erfolgen nur, wenn Bean PropertyChangeSupport hat
+            columnFrom.setCellValueFactory(cell -> cell.getValue().fromProperty().asString()); // Für reine FX-Bean
+            // columnFrom.setCellValueFactory(new PropertyValueFactory<>("from")); // Updates erfolgen nur, wenn Bean PropertyChangeSupport hat
             columnFrom.setStyle("-fx-alignment: center-left;");
             columnFrom.prefWidthProperty().bind(this.tableViewMail.widthProperty().multiply(0.30D)); // 30% Breite
             // columnFrom.setMaxWidth(50);
 
-            TableColumn<IMail, String> columnSubject = new TableColumn<>(resources.getString("mail.subject"));
-            columnSubject.setCellValueFactory(new PropertyValueFactory<>("subject"));
+            TableColumn<Mail, String> columnSubject = new TableColumn<>(resources.getString("mail.subject"));
+            columnSubject.setCellValueFactory(cell -> cell.getValue().subjectProperty());
+            // columnSubject.setCellValueFactory(new PropertyValueFactory<>("subject"));
             columnSubject.setStyle("-fx-alignment: center-left;");
             columnSubject.prefWidthProperty().bind(this.tableViewMail.widthProperty().multiply(0.55D)); // 60% Breite
 
-            TableColumn<IMail, Date> columnReceived = new TableColumn<>(resources.getString("mail.received"));
+            TableColumn<Mail, Date> columnReceived = new TableColumn<>(resources.getString("mail.received"));
             columnReceived.setStyle("-fx-alignment: center-right;");
             columnReceived.prefWidthProperty().bind(this.tableViewMail.widthProperty().multiply(0.15D)); // 10% Breite
-            columnReceived.setCellValueFactory(new PropertyValueFactory<>("receivedDate"));
-            columnReceived.setCellFactory(column ->
-            {
-                return new TableCell<IMail, Date>()
+            columnReceived.setCellValueFactory(cell -> cell.getValue().receivedDateProperty());
+            // columnReceived.setCellValueFactory(new PropertyValueFactory<>("receivedDate"));
+            columnReceived.setCellFactory(column -> {
+                return new TableCell<Mail, Date>()
                 {
                     /**
                      * @param item Date
@@ -416,23 +400,25 @@ public class MailController extends AbstractController
         {
             this.tableColumnsSend = new ArrayList<>();
 
-            TableColumn<IMail, String> columnFrom = new TableColumn<>(resources.getString("mail.to"));
-            columnFrom.setCellValueFactory(new PropertyValueFactory<>("to"));
+            TableColumn<Mail, String> columnFrom = new TableColumn<>(resources.getString("mail.to"));
+            // columnFrom.setCellValueFactory(new PropertyValueFactory<>("to"));
+            columnFrom.setCellValueFactory(cell -> cell.getValue().toProperty().asString());
             columnFrom.setStyle("-fx-alignment: center-left;");
             columnFrom.prefWidthProperty().bind(this.tableViewMail.widthProperty().multiply(0.30D)); // 30% Breite
 
-            TableColumn<IMail, String> columnSubject = new TableColumn<>(resources.getString("mail.subject"));
-            columnSubject.setCellValueFactory(new PropertyValueFactory<>("subject"));
+            TableColumn<Mail, String> columnSubject = new TableColumn<>(resources.getString("mail.subject"));
+            // columnSubject.setCellValueFactory(new PropertyValueFactory<>("subject"));
+            columnSubject.setCellValueFactory(cell -> cell.getValue().subjectProperty());
             columnSubject.setStyle("-fx-alignment: center-left;");
             columnSubject.prefWidthProperty().bind(this.tableViewMail.widthProperty().multiply(0.55D)); // 60% Breite
 
-            TableColumn<IMail, Date> columnSend = new TableColumn<>(resources.getString("mail.send"));
+            TableColumn<Mail, Date> columnSend = new TableColumn<>(resources.getString("mail.send"));
             columnSend.setStyle("-fx-alignment: center-right;");
             columnSend.prefWidthProperty().bind(this.tableViewMail.widthProperty().multiply(0.15D)); // 10% Breite
-            columnSend.setCellValueFactory(new PropertyValueFactory<>("sendDate"));
-            columnSend.setCellFactory(column ->
-            {
-                return new TableCell<IMail, Date>()
+            columnSend.setCellValueFactory(cell -> cell.getValue().sendDateProperty());
+            // columnSend.setCellValueFactory(new PropertyValueFactory<>("sendDate"));
+            columnSend.setCellFactory(column -> {
+                return new TableCell<Mail, Date>()
                 {
                     /**
                      * @param item Date

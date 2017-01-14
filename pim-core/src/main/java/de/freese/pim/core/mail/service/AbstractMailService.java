@@ -1,13 +1,12 @@
 // Created: 13.01.2017
 package de.freese.pim.core.mail.service;
 
-import java.util.List;
-
+import java.nio.file.Path;
+import java.util.Objects;
+import java.util.concurrent.Executor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import de.freese.pim.core.mail.model_new.MailAccount;
-import de.freese.pim.core.mail.model_new.MailFolder;
+import de.freese.pim.core.mail.model.MailAccount;
 
 /**
  * Basis-Implementierung des {@link IMailService}.
@@ -19,7 +18,17 @@ public abstract class AbstractMailService implements IMailService
     /**
      *
      */
-    private MailAccount account = null;
+    private final MailAccount account;
+
+    /**
+    *
+    */
+    private final Path basePath;
+
+    /**
+     *
+     */
+    private Executor executor = null;
 
     /**
      *
@@ -28,37 +37,48 @@ public abstract class AbstractMailService implements IMailService
 
     /**
      * Erzeugt eine neue Instanz von {@link AbstractMailService}
+     *
+     * @param account {@link MailAccount}
+     * @param basePath {@link Path}
      */
-    public AbstractMailService()
+    public AbstractMailService(final MailAccount account, final Path basePath)
     {
         super();
+
+        Objects.requireNonNull(account, "account required");
+        Objects.requireNonNull(basePath, "basePath required");
+
+        this.account = account;
+        this.basePath = basePath;
     }
 
     /**
-     * @see de.freese.pim.core.mail.service.IMailService#setAccount(de.freese.pim.core.mail.model_new.MailAccount)
+     * @see de.freese.pim.core.mail.service.IMailService#getAccount()
      */
     @Override
-    public void setAccount(final MailAccount account)
-    {
-        this.account = account;
-    }
-
-    /**
-     * @return {@link MailAccount}
-     */
-    protected MailAccount getAccount()
+    public MailAccount getAccount()
     {
         return this.account;
     }
 
     /**
-     * Liefert die Children des Folders.
-     *
-     * @param parent {@link MailFolder}
-     * @return {@link List}
-     * @throws Exception Falls was schief geht.
+     * @see de.freese.pim.core.mail.service.IMailService#getBasePath()
      */
-    protected abstract List<MailFolder> getChildFolder(MailFolder parent) throws Exception;
+    @Override
+    public Path getBasePath()
+    {
+        return this.basePath;
+    }
+
+    /**
+     * Optionaler {@link Executor} für die Mail-API.
+     *
+     * @return {@link Executor}
+     */
+    protected Executor getExecutor()
+    {
+        return this.executor;
+    }
 
     /**
      * @return {@link Logger}
@@ -66,5 +86,14 @@ public abstract class AbstractMailService implements IMailService
     protected Logger getLogger()
     {
         return this.logger;
+    }
+
+    /**
+     * @see de.freese.pim.core.mail.service.IMailService#setExecutor(java.util.concurrent.Executor)
+     */
+    @Override
+    public void setExecutor(final Executor executor)
+    {
+        this.executor = executor;
     }
 }

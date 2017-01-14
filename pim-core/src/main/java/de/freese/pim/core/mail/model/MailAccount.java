@@ -4,10 +4,6 @@
 
 package de.freese.pim.core.mail.model;
 
-import java.util.concurrent.Executor;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -22,14 +18,8 @@ import javafx.beans.property.StringProperty;
  */
 // @SuppressWarnings("restriction")
 // @JsonRootName("mailAccount")
-public class MailConfig
+public class MailAccount
 {
-    /**
-     *
-     */
-    @JsonIgnore
-    private Executor executor = null;
-
     /**
     *
     */
@@ -71,21 +61,11 @@ public class MailConfig
     private final IntegerProperty smtpPortProperty = new SimpleIntegerProperty(this, "smtpPort", 587);
 
     /**
-     * Erstellt ein neues {@link MailConfig} Object.
+     * Erstellt ein neues {@link MailAccount} Object.
      */
-    public MailConfig()
+    public MailAccount()
     {
         super();
-    }
-
-    /**
-     * {@link Executor} für die MAIL-API, ist optional.
-     *
-     * @return {@link Executor}
-     */
-    public Executor getExecutor()
-    {
-        return this.executor;
     }
 
     /**
@@ -190,16 +170,6 @@ public class MailConfig
     public StringProperty passwordProperty()
     {
         return this.passwordProperty;
-    }
-
-    /**
-     * {@link Executor} für die MAIL-API, ist optional.
-     *
-     * @param executor {@link Executor}
-     */
-    public void setExecutor(final Executor executor)
-    {
-        this.executor = executor;
     }
 
     /**

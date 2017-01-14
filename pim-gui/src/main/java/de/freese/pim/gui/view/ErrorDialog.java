@@ -3,7 +3,6 @@ package de.freese.pim.gui.view;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
-
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Label;
@@ -34,6 +33,8 @@ public class ErrorDialog
         this.alert = new Alert(AlertType.ERROR);
         this.alert.initModality(Modality.APPLICATION_MODAL);
         // this.alert.initOwner(PIMApplication.getMainWindow());
+
+        this.alert.getDialogPane().setMinSize(640, 480);
 
         title("Error");
     }

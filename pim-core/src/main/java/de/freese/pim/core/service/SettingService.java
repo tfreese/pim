@@ -3,8 +3,8 @@ package de.freese.pim.core.service;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
-
 import javax.sql.DataSource;
+import de.freese.pim.core.utils.Utils;
 
 /**
  * Service für die Einstellungen.
@@ -92,6 +92,15 @@ public class SettingService implements ISettingsService
     public Path getHome()
     {
         return HOME_DEFAULT;
+    }
+
+    /**
+     * @see de.freese.pim.core.service.ISettingsService#getSystemUserName()
+     */
+    @Override
+    public String getSystemUserName()
+    {
+        return Utils.getSystemUserName();
     }
 
     /**

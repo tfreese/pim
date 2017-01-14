@@ -1,11 +1,13 @@
 // Created: 09.01.2017
-package de.freese.pim.core.mail.model_new;
+package de.freese.pim.core.mail.model;
 
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-
+import de.freese.pim.core.mail.service.IMailService;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
@@ -22,7 +24,7 @@ public class MailFolder
     /**
      *
      */
-    private final MailAccount account;
+    private final List<MailFolder> childs = new ArrayList<>();
 
     // /**
     // *
@@ -30,9 +32,19 @@ public class MailFolder
     // private String fullName = null;
 
     /**
+      *
+      */
+    private final ObservableList<Mail> mails = FXCollections.observableArrayList();
+
+    /**
+    *
+    */
+    private final IMailService mailService;
+
+    /**
      *
      */
-    private final SortedList<Mail> mails = new SortedList<>(FXCollections.observableArrayList());
+    private final SortedList<Mail> mailsSorted = new SortedList<>(this.mails);
 
     /**
     *
@@ -47,31 +59,40 @@ public class MailFolder
     /**
      * Erzeugt eine neue Instanz von {@link MailFolder}
      *
-     * @param account {@link MailAccount}
+     * @param mailService {@link IMailService}
      * @param name String
      */
-    public MailFolder(final MailAccount account, final String name)
+    public MailFolder(final IMailService mailService, final String name)
     {
-        this(account, name, null);
+        this(mailService, name, null);
     }
 
     /**
      * Erzeugt eine neue Instanz von {@link MailFolder}
      *
-     * @param account {@link MailAccount}
+     * @param mailService {@link MailAccount}
      * @param name String
      * @param parent {@link MailFolder}
      */
-    public MailFolder(final MailAccount account, final String name, final MailFolder parent)
+    public MailFolder(final IMailService mailService, final String name, final MailFolder parent)
     {
         super();
 
-        Objects.requireNonNull(account, "account required");
+        Objects.requireNonNull(mailService, "mailService required");
         Objects.requireNonNull(name, "name required");
 
-        this.account = account;
+        this.mailService = mailService;
         setName(name);
         this.parent = parent;
+    }
+
+    /**
+     * @return {@link List}<MailFolder>
+     * @throws Exception Falls was schief geht.
+     */
+    public List<MailFolder> getChilds() throws Exception
+    {
+        return this.childs;
     }
 
     /**
@@ -95,6 +116,24 @@ public class MailFolder
     }
 
     /**
+     * Liefert den {@link IMailService}.
+     *
+     * @return {@link IMailService}
+     */
+    public IMailService getMailService()
+    {
+        return this.mailService;
+    }
+
+    /**
+     * @return {@link SortedList}
+     */
+    public SortedList<Mail> getMailsSorted()
+    {
+        return this.mailsSorted;
+    }
+
+    /**
      * Liefert den Namen des Folders.
      *
      * @return String
@@ -105,13 +144,21 @@ public class MailFolder
     }
 
     /**
+     * @return {@link MailFolder}
+     */
+    private MailFolder getParent()
+    {
+        return this.parent;
+    }
+
+    /**
      * Liefert den lokalen Temp-{@link Path} des Folders.
      *
      * @return {@link Path}
      */
     public Path getPath()
     {
-        Path basePath = Optional.ofNullable(getParent()).map(p -> p.getPath()).orElse(getAccount().getPath());
+        Path basePath = Optional.ofNullable(getParent()).map(p -> p.getPath()).orElse(getMailService().getBasePath());
         Path path = basePath.resolve(getName());
         // Path basePath = getAccount().getPath();
         // Path path = basePath.resolve(getFullName().replaceAll("/", "__"));
@@ -127,16 +174,6 @@ public class MailFolder
         return this.nameProperty;
     }
 
-    /**
-     * Liefert den {@link MailAccount}.
-     *
-     * @return {@link MailAccount}
-     */
-    private MailAccount getAccount()
-    {
-        return this.account;
-    }
-
     // /**
     // * Setzt den vollen Hierarchie-Namen, zB PARENT_NAME/FOLDER_NAME.
     // *
@@ -146,14 +183,6 @@ public class MailFolder
     // {
     // this.fullName = fullName;
     // }
-
-    /**
-     * @return {@link MailFolder}
-     */
-    private MailFolder getParent()
-    {
-        return this.parent;
-    }
 
     /**
      * Setzt den Namen des Folders.
@@ -168,11 +197,25 @@ public class MailFolder
 
         if ("SEND".equals(name.toUpperCase()) || "SENT".equals(name.toUpperCase()) || name.toUpperCase().startsWith("GESENDETE"))
         {
-            this.mails.setComparator(Comparator.comparing(Mail::getSendDate));
+            this.mailsSorted.setComparator(Comparator.comparing(Mail::getSendDate).reversed());
         }
         else
         {
-            this.mails.setComparator(Comparator.comparing(Mail::getReceivedDate));
+            this.mailsSorted.setComparator(Comparator.comparing(Mail::getReceivedDate).reversed());
         }
+    }
+
+    /**
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString()
+    {
+        StringBuilder builder = new StringBuilder();
+        builder.append("MailFolder [name=");
+        builder.append(getName());
+        builder.append("]");
+
+        return builder.toString();
     }
 }

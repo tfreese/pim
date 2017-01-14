@@ -14,7 +14,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-
 import javax.sql.DataSource;
 
 /**
@@ -211,6 +210,51 @@ public class JdbcTemplate
     }
 
     /**
+     * Schliesst die {@link Connection}.
+     *
+     * @param connection {@link Connection}
+     * @throws Exception Falls was schief geht.
+     */
+    protected void closeConnection(final Connection connection) throws Exception
+    {
+        if (ConnectionHolder.isEmpty())
+        {
+            // Kein Transaction-Context -> reset ReadOnly Connection
+            connection.setReadOnly(false);
+            connection.close();
+        }
+        else
+        {
+            // Transaction-Context, nichts tun.
+            // Wird vom TransactionalInvocationHandler erledigt.
+        }
+    }
+
+    /**
+     * Konvertiert bei Bedarf eine Exception.<br>
+     * Default: Bei RuntimeException und SQLException wird jeweils der Cause geliefert.
+     *
+     * @param ex {@link Exception}
+     * @return {@link Exception}
+     */
+    protected Exception convertException(final Exception ex)
+    {
+        Throwable th = ex;
+
+        if (th instanceof RuntimeException)
+        {
+            th = th.getCause();
+        }
+
+        // if (th.getCause() instanceof SQLException)
+        // {
+        // th = th.getCause();
+        // }
+
+        return (Exception) th;
+    }
+
+    /**
      * Führt ein einfaches {@link Statement#execute(String)} aus.
      *
      * @param sql String
@@ -241,6 +285,30 @@ public class JdbcTemplate
     }
 
     /**
+     * @return {@link Connection}
+     * @throws Exception Falls was schief geht.
+     */
+    @SuppressWarnings("resource")
+    protected Connection getConnection() throws Exception
+    {
+        Connection connection = null;
+
+        if (ConnectionHolder.isEmpty())
+        {
+            // Kein Transaction-Context -> ReadOnly Connection
+            connection = getDataSource().getConnection();
+            connection.setReadOnly(true);
+        }
+        else
+        {
+            // Transaction-Context
+            connection = ConnectionHolder.get();
+        }
+
+        return connection;
+    }
+
+    /**
      * @return {@link DataSource}
      */
     public DataSource getDataSource()
@@ -253,6 +321,7 @@ public class JdbcTemplate
     /**
      * Extrahiert ein Objekt aus dem {@link ResultSet}.
      *
+     * @param <T> Konkreter Return-Typ
      * @param sql String
      * @param setter {@link PreparedStatementSetter}
      * @param rse {@link ResultSetExtractor}
@@ -296,6 +365,7 @@ public class JdbcTemplate
     /**
      * Erzeugt über den {@link RowMapper} eine Liste aus Entities.
      *
+     * @param <T> Konkreter Row-Typ
      * @param sql String
      * @param setter {@link PreparedStatementSetter}
      * @param rowMapper {@link RowMapper}
@@ -310,6 +380,7 @@ public class JdbcTemplate
     /**
      * Extrahiert ein Objekt aus dem {@link ResultSet}.
      *
+     * @param <T> Konkreter Return-Typ
      * @param sql String
      * @param rse {@link ResultSetExtractor}
      * @return Object
@@ -345,7 +416,8 @@ public class JdbcTemplate
 
     /**
      * Erzeugt über den {@link RowMapper} eine Liste aus Entities.
-     *
+     * 
+     * @param <T> Konkreter Row-Typ
      * @param sql String
      * @param rowMapper {@link RowMapper}
      * @return {@link List}
@@ -450,74 +522,5 @@ public class JdbcTemplate
         {
             closeConnection(connection);
         }
-    }
-
-    /**
-     * Schliesst die {@link Connection}.
-     *
-     * @param connection {@link Connection}
-     * @throws Exception Falls was schief geht.
-     */
-    protected void closeConnection(final Connection connection) throws Exception
-    {
-        if (ConnectionHolder.isEmpty())
-        {
-            // Kein Transaction-Context -> reset ReadOnly Connection
-            connection.setReadOnly(false);
-            connection.close();
-        }
-        else
-        {
-            // Transaction-Context, nichts tun.
-            // Wird vom TransactionalInvocationHandler erledigt.
-        }
-    }
-
-    /**
-     * Konvertiert bei Bedarf eine Exception.<br>
-     * Default: Bei RuntimeException und SQLException wird jeweils der Cause geliefert.
-     *
-     * @param ex {@link Exception}
-     * @return {@link Exception}
-     */
-    protected Exception convertException(final Exception ex)
-    {
-        Throwable th = ex;
-
-        if (th instanceof RuntimeException)
-        {
-            th = th.getCause();
-        }
-
-        // if (th.getCause() instanceof SQLException)
-        // {
-        // th = th.getCause();
-        // }
-
-        return (Exception) th;
-    }
-
-    /**
-     * @return {@link Connection}
-     * @throws Exception Falls was schief geht.
-     */
-    @SuppressWarnings("resource")
-    protected Connection getConnection() throws Exception
-    {
-        Connection connection = null;
-
-        if (ConnectionHolder.isEmpty())
-        {
-            // Kein Transaction-Context -> ReadOnly Connection
-            connection = getDataSource().getConnection();
-            connection.setReadOnly(true);
-        }
-        else
-        {
-            // Transaction-Context
-            connection = ConnectionHolder.get();
-        }
-
-        return connection;
     }
 }

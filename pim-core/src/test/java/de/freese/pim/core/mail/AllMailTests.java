@@ -12,9 +12,9 @@ import org.junit.runners.Suite.SuiteClasses;
  */
 @RunWith(Suite.class)
 @SuiteClasses(
-        {
-            TestSendMail.class, TestReceiveMail.class, TestMailModel.class
-        })
+{
+        TestSendMail.class, TestReceiveMail.class
+})
 public class AllMailTests
 {
     /**

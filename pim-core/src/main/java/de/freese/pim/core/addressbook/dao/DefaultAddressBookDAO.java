@@ -1,15 +1,11 @@
 // Created: 11.01.2017
 package de.freese.pim.core.addressbook.dao;
 
-import java.sql.Connection;
-
 import javax.sql.DataSource;
-
-import de.freese.pim.core.persistence.ConnectionHolder;
 import de.freese.pim.core.persistence.JdbcTemplate;
 
 /**
- * DAO-Implementierung für das Addressbuch, welches sich die {@link Connection} aus dem {@link ConnectionHolder} holt.<br>
+ * Default-Implementierung für das Addressbuch DAO.<br>
  *
  * @author Thomas Freese
  */

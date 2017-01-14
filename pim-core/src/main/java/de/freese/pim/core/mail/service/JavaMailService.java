@@ -1,14 +1,15 @@
 // Created: 13.01.2017
 package de.freese.pim.core.mail.service;
 
+import java.nio.file.Path;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.Properties;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
 import javax.mail.Authenticator;
 import javax.mail.FetchProfile;
 import javax.mail.Flags;
@@ -20,12 +21,10 @@ import javax.mail.Store;
 import javax.mail.Transport;
 import javax.mail.UIDFolder;
 import javax.mail.internet.InternetAddress;
-
 import com.sun.mail.imap.IMAPFolder;
-
-import de.freese.pim.core.mail.model_new.Mail;
-import de.freese.pim.core.mail.model_new.MailFolder;
-import javafx.collections.ObservableList;
+import de.freese.pim.core.mail.model.Mail;
+import de.freese.pim.core.mail.model.MailAccount;
+import de.freese.pim.core.mail.model.MailFolder;
 
 /**
  * JavaMail-Implementierung des {@link IMailService}.
@@ -34,6 +33,11 @@ import javafx.collections.ObservableList;
  */
 public class JavaMailService extends AbstractMailService
 {
+    /**
+    *
+    */
+    private List<MailFolder> childFolder;
+
     /**
     *
     */
@@ -46,107 +50,13 @@ public class JavaMailService extends AbstractMailService
 
     /**
      * Erzeugt eine neue Instanz von {@link JavaMailService}
+     *
+     * @param account {@link MailAccount}
+     * @param basePath {@link Path}
      */
-    public JavaMailService()
+    public JavaMailService(final MailAccount account, final Path basePath)
     {
-        super();
-    }
-
-    /**
-     * @see de.freese.pim.core.mail.service.IMailService#connect()
-     */
-    @Override
-    public void connect() throws Exception
-    {
-        this.session = createSession();
-
-        // Test Connection Empfang.
-        Store s = createStore(this.session);
-        connectStore(s);
-        disconnectStore(s);
-        s = null;
-
-        // Test Connection Versand.
-        Transport t = createTransport(this.session);
-        connectTransport(t);
-        disconnectTransport(t);
-        t = null;
-    }
-
-    /**
-     * @see de.freese.pim.core.mail.service.IMailService#getMails(de.freese.pim.core.mail.model_new.MailFolder)
-     */
-    @Override
-    public ObservableList<Mail> getMails(final MailFolder folder) throws Exception
-    {
-        ObservableList<Mail> mails = folder.getMails();
-
-        // TODO Lokaler Cache synchronisieren.
-        if (!mails.isEmpty())
-        {
-            return mails;
-        }
-
-        Folder f = getStore().getFolder(folder.getFullName());
-
-        checkRead(f);
-
-        Message[] msgs = f.getMessages();
-
-        // Nur bestimmte Mail-Attribute vorladen.
-        FetchProfile fp = new FetchProfile();
-        fp.add(FetchProfile.Item.ENVELOPE);
-        fp.add(UIDFolder.FetchProfileItem.UID);
-        fp.add(IMAPFolder.FetchProfileItem.HEADERS);
-        // fp.add(FetchProfile.Item.CONTENT_INFO);
-
-        f.fetch(msgs, fp);
-
-        for (Message message : msgs)
-        {
-            Mail mail = new Mail(folder);
-            populate(mail, message);
-
-            mails.add(mail);
-        }
-
-        return mails;
-    }
-
-    /**
-     * @see de.freese.pim.core.mail.service.IMailService#getNewMails(de.freese.pim.core.mail.model_new.MailFolder)
-     */
-    @Override
-    public List<Mail> getNewMails(final MailFolder folder) throws Exception
-    {
-        return Collections.emptyList();
-    }
-
-    /**
-     * @see de.freese.pim.core.mail.service.IMailService#getRootFolder()
-     */
-    @Override
-    public List<MailFolder> getRootFolder() throws Exception
-    {
-        // TODO Lokaler Cache synchronisieren.
-        // Lokale Folder auslesen.
-        // Predicate<Path> isDirectory = Files::isDirectory;
-        // Predicate<Path> isHidden = p -> p.getFileName().toString().startsWith(".");
-        //
-        // Path basePath = getAccount().getPath();
-        // Objects.requireNonNull(basePath, "basePath required");
-        //
-        // Map<String, Path> localMap = Files.list(basePath).filter(isDirectory.negate().and(isHidden.negate()))
-        // .collect(Collectors.toMap(p -> p.getFileName().toString(), Function.identity()));
-
-        Folder root = getStore().getDefaultFolder();
-
-        checkRead(root);
-
-        List<MailFolder> parentFolder = Stream.of(root.list("%")).map(f -> new MailFolder(getAccount(), f.getName()))
-                .collect(Collectors.toList());
-
-        return parentFolder;
+        super(account, basePath);
     }
 
     /**
@@ -175,6 +85,27 @@ public class JavaMailService extends AbstractMailService
         {
             folder.open(Folder.READ_WRITE);
         }
+    }
+
+    /**
+     * @see de.freese.pim.core.mail.service.IMailService#connect()
+     */
+    @Override
+    public void connect() throws Exception
+    {
+        this.session = createSession();
+
+        // Test Connection Empfang.
+        Store s = createStore(this.session);
+        connectStore(s);
+        disconnectStore(s);
+        s = null;
+
+        // Test Connection Versand.
+        Transport t = createTransport(this.session);
+        connectTransport(t);
+        disconnectTransport(t);
+        t = null;
     }
 
     /**
@@ -240,9 +171,9 @@ public class JavaMailService extends AbstractMailService
             properties.put("mail.smtp.starttls.enable", "true");
         }
 
-        if (getAccount().getExecutor() != null)
+        if (getExecutor() != null)
         {
-            properties.put("mail.event.executor", getAccount().getExecutor());
+            properties.put("mail.event.executor", getExecutor());
         }
 
         Session session = Session.getInstance(properties, authenticator);
@@ -275,6 +206,34 @@ public class JavaMailService extends AbstractMailService
     }
 
     /**
+     * @see de.freese.pim.core.mail.service.IMailService#disconnect()
+     */
+    @Override
+    public void disconnect() throws Exception
+    {
+        // Folder schliessen.
+        // if (this.topLevelFolder != null)
+        // {
+        // for (IMailFolder folder : this.topLevelFolder)
+        // {
+        // folder.close();
+        // }
+        // }
+        // if (getFolder().isOpen())
+        // {
+        // getFolder().close(true);
+        // }
+
+        disconnectStore(this.store);
+        // disconnectTransport(transport);
+
+        this.store = null;
+        // transport = null;
+
+        this.session = null;
+    }
+
+    /**
      * Schliessen des {@link Store}.
      *
      * @param store {@link Store}
@@ -303,18 +262,55 @@ public class JavaMailService extends AbstractMailService
     }
 
     /**
-     * @see de.freese.pim.core.mail.service.AbstractMailService#getChildFolder(de.freese.pim.core.mail.model_new.MailFolder)
+     * @see de.freese.pim.core.mail.service.IMailService#getChilds(de.freese.pim.core.mail.model.MailFolder)
      */
     @Override
-    protected List<MailFolder> getChildFolder(final MailFolder parent) throws Exception
+    public List<MailFolder> getChilds(final MailFolder parent) throws Exception
     {
         Folder folder = getStore().getFolder(parent.getFullName());
         checkRead(folder);
 
-        List<MailFolder> childFolder = Stream.of(folder.list("%")).map(f -> new MailFolder(getAccount(), f.getName(), parent))
-                .collect(Collectors.toList());
+        List<MailFolder> childFolder = Stream.of(folder.list("%")).map(f -> new MailFolder(this, f.getName(), parent)).collect(Collectors.toList());
 
         return childFolder;
+    }
+
+    /**
+     * @see de.freese.pim.core.mail.service.IMailService#getNewMails(de.freese.pim.core.mail.model.MailFolder)
+     */
+    @Override
+    public List<Mail> getNewMails(final MailFolder folder) throws Exception
+    {
+        return Collections.emptyList();
+    }
+
+    /**
+     * @see de.freese.pim.core.mail.service.IMailService#getRootFolder()
+     */
+    @Override
+    public List<MailFolder> getRootFolder() throws Exception
+    {
+        if (this.childFolder == null)
+        {
+            // TODO Lokaler Cache synchronisieren.
+            // Lokale Folder auslesen.
+            // Predicate<Path> isDirectory = Files::isDirectory;
+            // Predicate<Path> isHidden = p -> p.getFileName().toString().startsWith(".");
+            //
+            // Path basePath = getAccount().getPath();
+            // Objects.requireNonNull(basePath, "basePath required");
+            //
+            // Map<String, Path> localMap = Files.list(basePath).filter(isDirectory.negate().and(isHidden.negate()))
+            // .collect(Collectors.toMap(p -> p.getFileName().toString(), Function.identity()));
+
+            Folder root = getStore().getDefaultFolder();
+
+            // checkRead(root);
+
+            this.childFolder = Stream.of(root.list("%")).map(f -> new MailFolder(this, f.getName())).collect(Collectors.toList());
+        }
+
+        return this.childFolder;
     }
 
     /**
@@ -343,6 +339,38 @@ public class JavaMailService extends AbstractMailService
         }
 
         return this.store;
+    }
+
+    /**
+     * @see de.freese.pim.core.mail.service.IMailService#loadMails(de.freese.pim.core.mail.model.MailFolder, java.util.function.Consumer)
+     */
+    @Override
+    public void loadMails(final MailFolder folder, final Consumer<Mail> consumer) throws Exception
+    {
+        Folder f = getStore().getFolder(folder.getFullName());
+
+        checkRead(f);
+
+        Message[] msgs = f.getMessages();
+        // int count = f.getMessageCount();
+        // Message[] msgs = f.getMessages(1, count);
+
+        // Nur bestimmte Mail-Attribute vorladen.
+        FetchProfile fp = new FetchProfile();
+        fp.add(FetchProfile.Item.ENVELOPE);
+        fp.add(UIDFolder.FetchProfileItem.UID);
+        fp.add(IMAPFolder.FetchProfileItem.HEADERS);
+        // fp.add(FetchProfile.Item.CONTENT_INFO);
+
+        f.fetch(msgs, fp);
+
+        for (Message message : msgs)
+        {
+            Mail mail = new Mail(folder);
+            populate(mail, message);
+
+            consumer.accept(mail);
+        }
     }
 
     /**
@@ -379,5 +407,14 @@ public class JavaMailService extends AbstractMailService
         mail.setSendDate(sendDate);
         mail.setSeen(isSeen);
         mail.setID(id);
+    }
+
+    /**
+     * @see de.freese.pim.core.mail.service.IMailService#syncFolders()
+     */
+    @Override
+    public void syncFolders() throws Exception
+    {
+        // TODO Auto-generated method stub
     }
 }

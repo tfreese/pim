@@ -1,12 +1,10 @@
 // Created: 09.01.2017
-package de.freese.pim.core.mail.model_new;
+package de.freese.pim.core.mail.model;
 
 import java.nio.file.Path;
 import java.util.Date;
 import java.util.Objects;
-
 import javax.mail.internet.InternetAddress;
-
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -70,7 +68,7 @@ public class Mail
     {
         super();
 
-        Objects.requireNonNull(folder, () -> "folder required");
+        Objects.requireNonNull(folder, "folder required");
 
         this.folder = folder;
     }
@@ -81,6 +79,14 @@ public class Mail
     public ObjectProperty<InternetAddress> fromProperty()
     {
         return this.fromProperty;
+    }
+
+    /**
+     * @return {@link MailFolder}
+     */
+    private MailFolder getFolder()
+    {
+        return this.folder;
     }
 
     /**
@@ -274,13 +280,5 @@ public class Mail
     public ObjectProperty<InternetAddress> toProperty()
     {
         return this.toProperty;
-    }
-
-    /**
-     * @return {@link MailFolder}
-     */
-    private MailFolder getFolder()
-    {
-        return this.folder;
     }
 }
