@@ -74,6 +74,7 @@ public class MailView implements IView
         this.tableViewMail = new TableView<>();
         this.tableViewMail.setEditable(false);
         this.tableViewMail.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+        // this.tableViewMail.setColumnResizePolicy(TableView.UNCONSTRAINED_RESIZE_POLICY);
 
         this.progressIndicator = new ProgressIndicator();
         this.progressIndicator.setId("progressIndicator"); // Für lookupAll("#progressIndicator")

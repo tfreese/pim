@@ -7,6 +7,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Predicate;
 import de.freese.pim.core.mail.service.IMailService;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -32,6 +33,11 @@ public class MailFolder
     // private String fullName = null;
 
     /**
+     *
+     */
+    private boolean isSendFolder = false;
+
+    /**
       *
       */
     private final ObservableList<Mail> mails = FXCollections.observableArrayList();
@@ -55,6 +61,11 @@ public class MailFolder
     *
     */
     private final MailFolder parent;
+
+    /**
+     *
+     */
+    private int unreadMailsCount = 0;
 
     /**
      * Erzeugt eine neue Instanz von {@link MailFolder}
@@ -84,13 +95,25 @@ public class MailFolder
         this.mailService = mailService;
         setName(name);
         this.parent = parent;
+
+        // this.mails.addListener((ListChangeListener<Mail>) c -> {
+        // while (c.next())
+        // {
+        // if (c.wasAdded())
+        // {
+        // for (int i = c.getFrom(); i < c.getTo(); ++i)
+        // {
+        // // permutate
+        // }
+        // }
+        // }
+        // });
     }
 
     /**
      * @return {@link List}<MailFolder>
-     * @throws Exception Falls was schief geht.
      */
-    public List<MailFolder> getChilds() throws Exception
+    public List<MailFolder> getChilds()
     {
         return this.childs;
     }
@@ -126,6 +149,8 @@ public class MailFolder
     }
 
     /**
+     * Wird nur für die Tabelle verwendet.
+     *
      * @return {@link SortedList}
      */
     public SortedList<Mail> getMailsSorted()
@@ -167,6 +192,29 @@ public class MailFolder
     }
 
     /**
+     * Liefert die Anzahl ungelesener Mails, inklusive der Children.
+     *
+     * @return int
+     */
+    public int getUnreadMailsCount()
+    {
+        int sum = getChilds().stream().mapToInt(MailFolder::getUnreadMailsCount).sum();
+        sum += this.unreadMailsCount;
+
+        return sum;
+    }
+
+    /**
+     * Liefert true, wenn dieser Folder die gesendeten Mails enthält.
+     *
+     * @return boolean
+     */
+    public boolean isSendFolder()
+    {
+        return this.isSendFolder;
+    }
+
+    /**
      * @return {@link StringProperty}
      */
     public StringProperty nameProperty()
@@ -195,7 +243,13 @@ public class MailFolder
 
         nameProperty().set(name);
 
-        if ("SEND".equals(name.toUpperCase()) || "SENT".equals(name.toUpperCase()) || name.toUpperCase().startsWith("GESENDETE"))
+        Predicate<String> predicate = n -> "send".equals(n);
+        predicate = predicate.or(n -> "sent".equals(n));
+        predicate = predicate.or(n -> n.startsWith("gesendete"));
+
+        this.isSendFolder = predicate.test(name.toLowerCase());
+
+        if (this.isSendFolder)
         {
             this.mailsSorted.setComparator(Comparator.comparing(Mail::getSendDate).reversed());
         }
@@ -217,5 +271,14 @@ public class MailFolder
         builder.append("]");
 
         return builder.toString();
+    }
+
+    /**
+     * Aktualisiert den Zähler der ungelesenen Mails, inklusive der Child-Folder.
+     */
+    public void updateUnreadMailsCount()
+    {
+        this.unreadMailsCount = getMails().parallelStream().mapToInt(m -> m.isSeen() ? 0 : 1).sum();
+        this.unreadMailsCount += getChilds().stream().mapToInt(MailFolder::getUnreadMailsCount).sum();
     }
 }

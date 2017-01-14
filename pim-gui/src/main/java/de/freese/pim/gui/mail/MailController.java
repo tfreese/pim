@@ -174,13 +174,20 @@ public class MailController extends AbstractController
                 return;
             }
 
-            Object value = ((TreeItem) newValue).getValue();
+            Object value = ((TreeItem<?>) newValue).getValue();
 
             if (value instanceof MailFolder)
             {
                 MailFolder folder = (MailFolder) value;
 
-                setReceivedTableColumns(resources);
+                if (folder.isSendFolder())
+                {
+                    setSendTableColumns(resources);
+                }
+                else
+                {
+                    setReceivedTableColumns(resources);
+                }
 
                 this.tableViewMail.setItems(folder.getMailsSorted());
 
@@ -205,9 +212,12 @@ public class MailController extends AbstractController
                             });
                         });
 
+                        folder.updateUnreadMailsCount();
+
                         return null;
                     }
                 };
+                loadMailsTask.setOnSucceeded(event -> this.treeViewMail.refresh());
                 loadMailsTask.setOnFailed(event -> {
                     Throwable th = loadMailsTask.getException();
 
@@ -256,12 +266,12 @@ public class MailController extends AbstractController
                 if (item instanceof IMailService)
                 {
                     text = ((IMailService) item).getAccount().getMail();
-                    // newMails = ((IMailFolder) item).getUnreadMessageCount();
+                    newMails = ((IMailService) item).getUnreadMailsCount();
                 }
                 else if (item instanceof MailFolder)
                 {
                     text = ((MailFolder) item).getName();
-                    // newMails = ((IMailFolder) item).getUnreadMessageCount();
+                    newMails = ((MailFolder) item).getUnreadMailsCount();
                 }
 
                 if (newMails > 0)
@@ -299,25 +309,9 @@ public class MailController extends AbstractController
                 getLogger().info("Init MailAccount {}", mailService.getAccount().getMail());
                 InitMailService service = new InitMailService(treeItem, mailService);
                 service.start();
-            }
 
-            // for (MailConfig mailConfig : configList)
-            // {
-            // mailConfig.setExecutor(getExecutorService());
-            //
-            // IMailAccount mailAccount = new ImapMailAccount();
-            // TreeItem<Object> treeItem = new TreeItem<>(mailAccount);
-            // root.getChildren().add(treeItem);
-            //
-            // PIMApplication.registerCloseable(() -> {
-            // getLogger().info("Close " + mailConfig.getMail());
-            // mailAccount.disconnect();
-            // });
-            //
-            // getLogger().info("Init MailAccount {}", mailConfig.getMail());
-            // InitMailAccountService service = new InitMailAccountService(treeItem, mailConfig);
-            // service.start();
-            // }
+                break;
+            }
         }
         catch (Exception ex)
         {
@@ -348,15 +342,18 @@ public class MailController extends AbstractController
 
             TableColumn<Mail, String> columnSubject = new TableColumn<>(resources.getString("mail.subject"));
             columnSubject.setCellValueFactory(cell -> cell.getValue().subjectProperty());
-            // columnSubject.setCellValueFactory(new PropertyValueFactory<>("subject"));
             columnSubject.setStyle("-fx-alignment: center-left;");
             columnSubject.prefWidthProperty().bind(this.tableViewMail.widthProperty().multiply(0.55D)); // 60% Breite
 
             TableColumn<Mail, Date> columnReceived = new TableColumn<>(resources.getString("mail.received"));
             columnReceived.setStyle("-fx-alignment: center-right;");
             columnReceived.prefWidthProperty().bind(this.tableViewMail.widthProperty().multiply(0.15D)); // 10% Breite
+
+            // // Datums-Spalte bekommt restlichen Platz.
+            // columnReceived.prefWidthProperty()
+            // .bind(this.tableViewMail.widthProperty().subtract(columnFrom.widthProperty().add(columnSubject.widthProperty()).add(16)));
+
             columnReceived.setCellValueFactory(cell -> cell.getValue().receivedDateProperty());
-            // columnReceived.setCellValueFactory(new PropertyValueFactory<>("receivedDate"));
             columnReceived.setCellFactory(column -> {
                 return new TableCell<Mail, Date>()
                 {
@@ -407,7 +404,6 @@ public class MailController extends AbstractController
             columnFrom.prefWidthProperty().bind(this.tableViewMail.widthProperty().multiply(0.30D)); // 30% Breite
 
             TableColumn<Mail, String> columnSubject = new TableColumn<>(resources.getString("mail.subject"));
-            // columnSubject.setCellValueFactory(new PropertyValueFactory<>("subject"));
             columnSubject.setCellValueFactory(cell -> cell.getValue().subjectProperty());
             columnSubject.setStyle("-fx-alignment: center-left;");
             columnSubject.prefWidthProperty().bind(this.tableViewMail.widthProperty().multiply(0.55D)); // 60% Breite
@@ -415,8 +411,11 @@ public class MailController extends AbstractController
             TableColumn<Mail, Date> columnSend = new TableColumn<>(resources.getString("mail.send"));
             columnSend.setStyle("-fx-alignment: center-right;");
             columnSend.prefWidthProperty().bind(this.tableViewMail.widthProperty().multiply(0.15D)); // 10% Breite
+
+            // // Datums-Spalte bekommt restlichen Platz.
+            // columnSend.prefWidthProperty().bind(this.tableViewMail.widthProperty().subtract(columnFrom.widthProperty().add(columnSubject.widthProperty())));
+
             columnSend.setCellValueFactory(cell -> cell.getValue().sendDateProperty());
-            // columnSend.setCellValueFactory(new PropertyValueFactory<>("sendDate"));
             columnSend.setCellFactory(column -> {
                 return new TableCell<Mail, Date>()
                 {

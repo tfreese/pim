@@ -61,7 +61,7 @@ public class MainView extends BorderPane implements IView
 
         this.splitPane = new SplitPane();
         this.splitPane.setOrientation(Orientation.HORIZONTAL);
-        this.splitPane.setDividerPositions(0.15D);
+        this.splitPane.setDividerPositions(0.2D);
         setCenter(this.splitPane);
 
         this.toolBar = new ToolBar();

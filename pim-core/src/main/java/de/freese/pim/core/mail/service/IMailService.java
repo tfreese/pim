@@ -71,6 +71,13 @@ public interface IMailService
     public List<MailFolder> getRootFolder() throws Exception;
 
     /**
+     * Liefert die Anzahl ungelesener Mails des Accounts.
+     *
+     * @return int
+     */
+    public int getUnreadMailsCount();
+
+    /**
      * Holt Mails des Folders und übergibt sie dem {@link Consumer}.
      *
      * @param folder {@link MailFolder}

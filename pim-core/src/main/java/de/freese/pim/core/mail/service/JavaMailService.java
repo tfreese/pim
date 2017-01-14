@@ -15,6 +15,7 @@ import javax.mail.FetchProfile;
 import javax.mail.Flags;
 import javax.mail.Folder;
 import javax.mail.Message;
+import javax.mail.Message.RecipientType;
 import javax.mail.MessagingException;
 import javax.mail.Session;
 import javax.mail.Store;
@@ -84,6 +85,25 @@ public class JavaMailService extends AbstractMailService
         if (!folder.isOpen() || (folder.getMode() == Folder.READ_ONLY))
         {
             folder.open(Folder.READ_WRITE);
+        }
+    }
+
+    /**
+     * Schliesst den {@link Folder} mit close(true).
+     *
+     * @param folder {@link Folder}
+     * @throws MessagingException Falls was schief geht.
+     */
+    protected void closeFolder(final Folder folder) throws MessagingException
+    {
+        if (folder == null)
+        {
+            return;
+        }
+
+        if (folder.isOpen())
+        {
+            folder.close(true);
         }
     }
 
@@ -270,7 +290,13 @@ public class JavaMailService extends AbstractMailService
         Folder folder = getStore().getFolder(parent.getFullName());
         checkRead(folder);
 
-        List<MailFolder> childFolder = Stream.of(folder.list("%")).map(f -> new MailFolder(this, f.getName(), parent)).collect(Collectors.toList());
+        // @formatter:off
+        List<MailFolder> childFolder = Stream.of(folder.list("%"))
+                .map(f -> new MailFolder(this, f.getName(), parent))
+                .collect(Collectors.toList());
+        // @formatter:on
+
+        closeFolder(folder);
 
         return childFolder;
     }
@@ -307,7 +333,13 @@ public class JavaMailService extends AbstractMailService
 
             // checkRead(root);
 
-            this.childFolder = Stream.of(root.list("%")).map(f -> new MailFolder(this, f.getName())).collect(Collectors.toList());
+            // @formatter:off
+            this.childFolder = Stream.of(root.list("%"))
+                    .map(f -> new MailFolder(this, f.getName()))
+                    .collect(Collectors.toList());
+            // @formatter:on
+
+            closeFolder(root);
         }
 
         return this.childFolder;
@@ -342,6 +374,31 @@ public class JavaMailService extends AbstractMailService
     }
 
     /**
+     * @see de.freese.pim.core.mail.service.IMailService#getUnreadMailsCount()
+     */
+    @Override
+    public int getUnreadMailsCount()
+    {
+        try
+        {
+            int sum = getRootFolder().stream().mapToInt(MailFolder::getUnreadMailsCount).sum();
+
+            return sum;
+        }
+        catch (Exception ex)
+        {
+            if (ex instanceof RuntimeException)
+            {
+                throw (RuntimeException) ex;
+            }
+            else
+            {
+                throw new RuntimeException(ex);
+            }
+        }
+    }
+
+    /**
      * @see de.freese.pim.core.mail.service.IMailService#loadMails(de.freese.pim.core.mail.model.MailFolder, java.util.function.Consumer)
      */
     @Override
@@ -371,6 +428,8 @@ public class JavaMailService extends AbstractMailService
 
             consumer.accept(mail);
         }
+
+        closeFolder(f);
     }
 
     /**
@@ -383,6 +442,7 @@ public class JavaMailService extends AbstractMailService
     protected void populate(final Mail mail, final Message message) throws MessagingException
     {
         InternetAddress from = Optional.ofNullable(message.getFrom()).map(f -> (InternetAddress) f[0]).orElse(null);
+        InternetAddress to = Optional.ofNullable(message.getRecipients(RecipientType.TO)).map(t -> (InternetAddress) t[0]).orElse(null);
         String subject = message.getSubject();
         Date receivedDate = message.getReceivedDate();
         Date sendDate = message.getSentDate();
@@ -402,6 +462,7 @@ public class JavaMailService extends AbstractMailService
         }
 
         mail.setFrom(from);
+        mail.setTo(to);
         mail.setSubject(subject);
         mail.setReceivedDate(receivedDate);
         mail.setSendDate(sendDate);
