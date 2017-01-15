@@ -409,8 +409,6 @@ public class JavaMailService extends AbstractMailService
         checkRead(f);
 
         Message[] msgs = f.getMessages();
-        // int count = f.getMessageCount();
-        // Message[] msgs = f.getMessages(1, count);
 
         // Nur bestimmte Mail-Attribute vorladen.
         FetchProfile fp = new FetchProfile();

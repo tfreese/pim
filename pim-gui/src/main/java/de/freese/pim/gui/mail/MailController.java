@@ -6,9 +6,9 @@ import java.nio.file.Path;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
+import javax.mail.internet.InternetAddress;
 import de.freese.pim.core.mail.dao.DefaultMailDAO;
 import de.freese.pim.core.mail.dao.IMailDAO;
 import de.freese.pim.core.mail.model.Mail;
@@ -29,7 +29,6 @@ import javafx.fxml.FXML;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.control.ProgressIndicator;
-import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
@@ -46,9 +45,14 @@ import javafx.scene.control.TreeView;
 public class MailController extends AbstractController
 {
     /**
-     * DateTimeFormatter formatterReceivedDate = DateTimeFormatter.ofPattern("EE dd.MM.yyyy HH:mm:ss");
+     *
      */
-    private final DateFormat formatterReceivedDate = new SimpleDateFormat("EE dd.MM.yyyy HH:mm:ss");
+    private final String formatDate = "%1$ta %1$td.%1$tm.%1$ty %1$tH:%1$tM:%1$tS";
+
+    /**
+     * DateTimeFormatter formatterDate = DateTimeFormatter.ofPattern("EE dd.MM.yy HH:mm:ss");
+     */
+    private final DateFormat formatterDate = new SimpleDateFormat("EE dd.MM.yy HH:mm:ss");
 
     /**
      *
@@ -332,50 +336,47 @@ public class MailController extends AbstractController
         {
             this.tableColumnsReceived = new ArrayList<>();
 
-            TableColumn<Mail, String> columnFrom = new TableColumn<>(resources.getString("mail.from"));
-            // columnFrom.setResizable(false);
-            columnFrom.setCellValueFactory(cell -> cell.getValue().fromProperty().asString()); // Für reine FX-Bean
-            // columnFrom.setCellValueFactory(new PropertyValueFactory<>("from")); // Updates erfolgen nur, wenn Bean PropertyChangeSupport hat
-            columnFrom.setStyle("-fx-alignment: center-left;");
-            columnFrom.prefWidthProperty().bind(this.tableViewMail.widthProperty().multiply(0.30D)); // 30% Breite
-            // columnFrom.setMaxWidth(50);
-
+            TableColumn<Mail, InternetAddress> columnFrom = new TableColumn<>(resources.getString("mail.from"));
             TableColumn<Mail, String> columnSubject = new TableColumn<>(resources.getString("mail.subject"));
-            columnSubject.setCellValueFactory(cell -> cell.getValue().subjectProperty());
+            TableColumn<Mail, String> columnReceived = new TableColumn<>(resources.getString("mail.received"));
+
+            // columnFrom.prefWidthProperty().bind(this.tableViewMail.widthProperty().multiply(0.30D)); // 30% Breite
+            columnFrom.setPrefWidth(280);
+            columnReceived.setPrefWidth(170);
+            columnSubject.prefWidthProperty()
+                    .bind(this.tableViewMail.widthProperty().subtract(columnFrom.widthProperty().add(columnReceived.widthProperty()).add(2)));
+
+            columnFrom.setStyle("-fx-alignment: center-left;");
+            columnFrom.setCellValueFactory(cell -> cell.getValue().fromProperty()); // Für reine FX-Bean
+            // columnFrom.setCellValueFactory(new PropertyValueFactory<>("from")); // Updates erfolgen nur, wenn Bean PropertyChangeSupport hat
+
             columnSubject.setStyle("-fx-alignment: center-left;");
-            columnSubject.prefWidthProperty().bind(this.tableViewMail.widthProperty().multiply(0.55D)); // 60% Breite
+            columnSubject.setCellValueFactory(cell -> cell.getValue().subjectProperty());
 
-            TableColumn<Mail, Date> columnReceived = new TableColumn<>(resources.getString("mail.received"));
             columnReceived.setStyle("-fx-alignment: center-right;");
-            columnReceived.prefWidthProperty().bind(this.tableViewMail.widthProperty().multiply(0.15D)); // 10% Breite
-
-            // // Datums-Spalte bekommt restlichen Platz.
-            // columnReceived.prefWidthProperty()
-            // .bind(this.tableViewMail.widthProperty().subtract(columnFrom.widthProperty().add(columnSubject.widthProperty()).add(16)));
-
-            columnReceived.setCellValueFactory(cell -> cell.getValue().receivedDateProperty());
-            columnReceived.setCellFactory(column -> {
-                return new TableCell<Mail, Date>()
-                {
-                    /**
-                     * @param item Date
-                     * @param empty boolean
-                     */
-                    @Override
-                    protected void updateItem(final Date item, final boolean empty)
-                    {
-                        super.updateItem(item, empty);
-
-                        if ((item == null) || empty)
-                        {
-                            setText(null);
-                            return;
-                        }
-
-                        setText(MailController.this.formatterReceivedDate.format(item));
-                    }
-                };
-            });
+            columnReceived.setCellValueFactory(cell -> cell.getValue().receivedDateProperty().asString(this.formatDate));
+            // columnReceived.setCellFactory(column -> {
+            // return new TableCell<Mail, Date>()
+            // {
+            // /**
+            // * @param item Date
+            // * @param empty boolean
+            // */
+            // @Override
+            // protected void updateItem(final Date item, final boolean empty)
+            // {
+            // super.updateItem(item, empty);
+            //
+            // if ((item == null) || empty)
+            // {
+            // setText(null);
+            // return;
+            // }
+            //
+            // setText(MailController.this.formatterReceivedDate.format(item));
+            // }
+            // };
+            // });
 
             this.tableColumnsReceived.add(columnFrom);
             this.tableColumnsReceived.add(columnSubject);
@@ -397,49 +398,47 @@ public class MailController extends AbstractController
         {
             this.tableColumnsSend = new ArrayList<>();
 
-            TableColumn<Mail, String> columnFrom = new TableColumn<>(resources.getString("mail.to"));
-            // columnFrom.setCellValueFactory(new PropertyValueFactory<>("to"));
-            columnFrom.setCellValueFactory(cell -> cell.getValue().toProperty().asString());
-            columnFrom.setStyle("-fx-alignment: center-left;");
-            columnFrom.prefWidthProperty().bind(this.tableViewMail.widthProperty().multiply(0.30D)); // 30% Breite
-
+            TableColumn<Mail, InternetAddress> columnTo = new TableColumn<>(resources.getString("mail.to"));
             TableColumn<Mail, String> columnSubject = new TableColumn<>(resources.getString("mail.subject"));
-            columnSubject.setCellValueFactory(cell -> cell.getValue().subjectProperty());
+            TableColumn<Mail, String> columnSend = new TableColumn<>(resources.getString("mail.send"));
+
+            columnTo.setPrefWidth(280);
+            columnSend.setPrefWidth(170);
+            columnSubject.prefWidthProperty()
+                    .bind(this.tableViewMail.widthProperty().subtract(columnTo.widthProperty().add(columnSend.widthProperty()).add(2)));
+
+            columnTo.setStyle("-fx-alignment: center-left;");
+            columnTo.setCellValueFactory(cell -> cell.getValue().toProperty());
+
             columnSubject.setStyle("-fx-alignment: center-left;");
-            columnSubject.prefWidthProperty().bind(this.tableViewMail.widthProperty().multiply(0.55D)); // 60% Breite
+            columnSubject.setCellValueFactory(cell -> cell.getValue().subjectProperty());
 
-            TableColumn<Mail, Date> columnSend = new TableColumn<>(resources.getString("mail.send"));
             columnSend.setStyle("-fx-alignment: center-right;");
-            columnSend.prefWidthProperty().bind(this.tableViewMail.widthProperty().multiply(0.15D)); // 10% Breite
+            columnSend.setCellValueFactory(cell -> cell.getValue().sendDateProperty().asString(this.formatDate));
+            // columnSend.setCellFactory(column -> {
+            // return new TableCell<Mail, Date>()
+            // {
+            // /**
+            // * @param item Date
+            // * @param empty boolean
+            // */
+            // @Override
+            // protected void updateItem(final Date item, final boolean empty)
+            // {
+            // super.updateItem(item, empty);
+            //
+            // if ((item == null) || empty)
+            // {
+            // setText(null);
+            // return;
+            // }
+            //
+            // setText(MailController.this.formatterDate.format(item));
+            // }
+            // };
+            // });
 
-            // // Datums-Spalte bekommt restlichen Platz.
-            // columnSend.prefWidthProperty().bind(this.tableViewMail.widthProperty().subtract(columnFrom.widthProperty().add(columnSubject.widthProperty())));
-
-            columnSend.setCellValueFactory(cell -> cell.getValue().sendDateProperty());
-            columnSend.setCellFactory(column -> {
-                return new TableCell<Mail, Date>()
-                {
-                    /**
-                     * @param item Date
-                     * @param empty boolean
-                     */
-                    @Override
-                    protected void updateItem(final Date item, final boolean empty)
-                    {
-                        super.updateItem(item, empty);
-
-                        if ((item == null) || empty)
-                        {
-                            setText(null);
-                            return;
-                        }
-
-                        setText(MailController.this.formatterReceivedDate.format(item));
-                    }
-                };
-            });
-
-            this.tableColumnsSend.add(columnFrom);
+            this.tableColumnsSend.add(columnTo);
             this.tableColumnsSend.add(columnSubject);
             this.tableColumnsSend.add(columnSend);
         }
