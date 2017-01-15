@@ -168,6 +168,18 @@ https://docs.oracle.com/javase/8/javafx/api/javafx/scene/doc-files/cssref.html
     -fx-background-color: #0093ff;
 }
 
+/* disable vertical scrollbar */
+/*
+.table-view .scroll-bar:vertical .increment-arrow,
+.table-view .scroll-bar:vertical .decrement-arrow,
+.table-view .scroll-bar:vertical > .increment-button,
+.table-view .scroll-bar:vertical > .decrement-button {
+    -fx-background-color: null;
+    -fx-background-radius: 0;
+    -fx-background-insets: 0;
+    -fx-padding: 0;
+}*/
+
 .table-view .column-header
 {
     -fx-alignment: center;

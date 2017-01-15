@@ -11,6 +11,11 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.ServerSocket;
+import java.nio.file.FileVisitResult;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
@@ -20,6 +25,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -37,6 +43,49 @@ public final class Utils
      *
      */
     private static final Logger LOGGER = LoggerFactory.getLogger(Utils.class);
+
+    /**
+     *
+     */
+    public static final Predicate<Path> PREDICATE_IS_DIR = Files::isDirectory;
+
+    /**
+     *
+     */
+    public static final Predicate<Path> PREDICATE_IS_DIR_NOT = PREDICATE_IS_DIR.negate();
+    /**
+     * p -> p.getFileName().toString().startsWith(".");
+     */
+    public static final Predicate<Path> PREDICATE_IS_HIDDEN = p -> {
+        try
+        {
+            return Files.isHidden(p);
+        }
+        catch (Exception ex)
+        {
+            return false;
+        }
+    };
+
+    /**
+     *
+     */
+    public static final Predicate<Path> PREDICATE_IS_HIDDEN_NOT = PREDICATE_IS_HIDDEN.negate();
+
+    /**
+     *
+     */
+    public static final Predicate<Path> PREDICATE_MAIL_FOLDER = PREDICATE_IS_DIR_NOT.or(PREDICATE_IS_HIDDEN_NOT);
+
+    /**
+    *
+    */
+    public static final Predicate<Path> PREDICATE_MAIL_FOLDER_LEAF = p -> p.getFileName().toString().equals(".leaf");
+
+    /**
+    *
+    */
+    public static final Predicate<Path> PREDICATE_MAIL_FOLDER_LEAF_NOT = PREDICATE_MAIL_FOLDER_LEAF.negate();
 
     /**
     *
@@ -73,6 +122,43 @@ public final class Utils
         }
 
         rows.add(1, (T[]) row);
+    }
+
+    /**
+     * Löscht das Verzeichnis rekursiv inklusive Dateien und Unterverzeichnisse.
+     *
+     * @param path {@link Path}
+     * @throws IOException Falls was schief geht.
+     */
+    public static void deleteDirectoryRecursiv(final Path path) throws IOException
+    {
+        if (!Files.isDirectory(path))
+        {
+            throw new IllegalArgumentException("path is not a dirctory: " + path);
+        }
+
+        Files.walkFileTree(path, new SimpleFileVisitor<Path>()
+        {
+            /**
+             * @see java.nio.file.SimpleFileVisitor#postVisitDirectory(java.lang.Object, java.io.IOException)
+             */
+            @Override
+            public FileVisitResult postVisitDirectory(final Path dir, final IOException exc) throws IOException
+            {
+                Files.delete(dir);
+                return FileVisitResult.CONTINUE;
+            }
+
+            /**
+             * @see java.nio.file.SimpleFileVisitor#visitFile(java.lang.Object, java.nio.file.attribute.BasicFileAttributes)
+             */
+            @Override
+            public FileVisitResult visitFile(final Path file, final BasicFileAttributes attrs) throws IOException
+            {
+                Files.delete(file);
+                return FileVisitResult.CONTINUE;
+            }
+        });
     }
 
     /**

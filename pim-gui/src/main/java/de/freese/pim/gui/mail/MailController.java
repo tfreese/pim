@@ -24,6 +24,7 @@ import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.collections.transformation.SortedList;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.Cursor;
@@ -193,9 +194,15 @@ public class MailController extends AbstractController
                     setReceivedTableColumns(resources);
                 }
 
-                this.tableViewMail.setItems(folder.getMailsSorted());
+                SortedList<Mail> mailsSorted = folder.getMailsSorted();
 
-                if (!folder.getMailsSorted().isEmpty())
+                // Damit ColumnsSortierung funktioniert, da ich schon eine SortedList verwendet.
+                // mailsSorted.comparatorProperty().unbind();
+                // mailsSorted.comparatorProperty().bind(this.tableViewMail.comparatorProperty());
+
+                this.tableViewMail.setItems(mailsSorted);
+
+                if (!mailsSorted.isEmpty())
                 {
                     return;
                 }
@@ -295,6 +302,7 @@ public class MailController extends AbstractController
         {
             List<MailAccount> accountList = this.mailDAO.getMailAccounts();
             Path basePath = SettingService.getInstance().getHome();
+            // Collections.reverse(accountList);
 
             for (MailAccount mailAccount : accountList)
             {
@@ -314,7 +322,7 @@ public class MailController extends AbstractController
                 InitMailService service = new InitMailService(treeItem, mailService);
                 service.start();
 
-                break;
+                // break;
             }
         }
         catch (Exception ex)
@@ -341,19 +349,23 @@ public class MailController extends AbstractController
             TableColumn<Mail, String> columnReceived = new TableColumn<>(resources.getString("mail.received"));
 
             // columnFrom.prefWidthProperty().bind(this.tableViewMail.widthProperty().multiply(0.30D)); // 30% Breite
-            columnFrom.setPrefWidth(280);
-            columnReceived.setPrefWidth(170);
+            columnFrom.setPrefWidth(300);
+            columnReceived.setPrefWidth(180);
             columnSubject.prefWidthProperty()
                     .bind(this.tableViewMail.widthProperty().subtract(columnFrom.widthProperty().add(columnReceived.widthProperty()).add(2)));
 
+            columnFrom.setSortable(false);
             columnFrom.setStyle("-fx-alignment: center-left;");
             columnFrom.setCellValueFactory(cell -> cell.getValue().fromProperty()); // Für reine FX-Bean
             // columnFrom.setCellValueFactory(new PropertyValueFactory<>("from")); // Updates erfolgen nur, wenn Bean PropertyChangeSupport hat
+            columnFrom.setCellFactory(new InternetAddressCellFactory<Mail>());
 
+            columnSubject.setSortable(false);
             columnSubject.setStyle("-fx-alignment: center-left;");
             columnSubject.setCellValueFactory(cell -> cell.getValue().subjectProperty());
 
-            columnReceived.setStyle("-fx-alignment: center-right;");
+            columnReceived.setSortable(false);
+            columnReceived.setStyle("-fx-alignment: center-left;");
             columnReceived.setCellValueFactory(cell -> cell.getValue().receivedDateProperty().asString(this.formatDate));
             // columnReceived.setCellFactory(column -> {
             // return new TableCell<Mail, Date>()
@@ -402,41 +414,23 @@ public class MailController extends AbstractController
             TableColumn<Mail, String> columnSubject = new TableColumn<>(resources.getString("mail.subject"));
             TableColumn<Mail, String> columnSend = new TableColumn<>(resources.getString("mail.send"));
 
-            columnTo.setPrefWidth(280);
-            columnSend.setPrefWidth(170);
+            columnTo.setPrefWidth(300);
+            columnSend.setPrefWidth(180);
             columnSubject.prefWidthProperty()
                     .bind(this.tableViewMail.widthProperty().subtract(columnTo.widthProperty().add(columnSend.widthProperty()).add(2)));
 
+            columnTo.setSortable(false);
             columnTo.setStyle("-fx-alignment: center-left;");
             columnTo.setCellValueFactory(cell -> cell.getValue().toProperty());
+            columnTo.setCellFactory(new InternetAddressCellFactory<Mail>());
 
+            columnSubject.setSortable(false);
             columnSubject.setStyle("-fx-alignment: center-left;");
             columnSubject.setCellValueFactory(cell -> cell.getValue().subjectProperty());
 
-            columnSend.setStyle("-fx-alignment: center-right;");
+            columnSend.setSortable(false);
+            columnSend.setStyle("-fx-alignment: center-left;");
             columnSend.setCellValueFactory(cell -> cell.getValue().sendDateProperty().asString(this.formatDate));
-            // columnSend.setCellFactory(column -> {
-            // return new TableCell<Mail, Date>()
-            // {
-            // /**
-            // * @param item Date
-            // * @param empty boolean
-            // */
-            // @Override
-            // protected void updateItem(final Date item, final boolean empty)
-            // {
-            // super.updateItem(item, empty);
-            //
-            // if ((item == null) || empty)
-            // {
-            // setText(null);
-            // return;
-            // }
-            //
-            // setText(MailController.this.formatterDate.format(item));
-            // }
-            // };
-            // });
 
             this.tableColumnsSend.add(columnTo);
             this.tableColumnsSend.add(columnSubject);

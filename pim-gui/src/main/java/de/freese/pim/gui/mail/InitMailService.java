@@ -70,13 +70,12 @@ public class InitMailService extends Service<Void>
             protected Void call() throws Exception
             {
                 Platform.runLater(() -> {
-                    InitMailService.this.root.setExpanded(true);
+                    getRoot().setExpanded(true);
                 });
 
                 IMailService mailService = InitMailService.this.mailService;
 
                 mailService.connect();
-                mailService.syncFolders();
 
                 List<MailFolder> rootFolders = mailService.getRootFolder();
 
@@ -85,18 +84,23 @@ public class InitMailService extends Service<Void>
                     TreeItem<Object> treeItem = new TreeItem<>(rootFolder);
 
                     Platform.runLater(() -> {
-                        InitMailService.this.root.getChildren().add(treeItem);
+                        getRoot().getChildren().add(treeItem);
                     });
 
                     treeItem.getChildren().addAll(loadChildFolders(rootFolder));
                 }
+
+                PIMApplication.LOGGER.info("Initialisation of {} finished", mailService.getAccount().getMail());
 
                 return null;
             }
         };
 
         setOnSucceeded(event -> {
-            // InitMailService.this.root.setExpanded(true);
+            PIMApplication.LOGGER.info("Start Synchronisation of {}", this.mailService.getAccount().getMail());
+
+            SyncMailFolderService service = new SyncMailFolderService(getRoot(), this.mailService);
+            service.start();
         });
 
         setOnFailed(event -> {
@@ -108,6 +112,14 @@ public class InitMailService extends Service<Void>
         });
 
         return task;
+    }
+
+    /**
+     * @return {@link TreeItem}<Object>
+     */
+    private TreeItem<Object> getRoot()
+    {
+        return this.root;
     }
 
     /**

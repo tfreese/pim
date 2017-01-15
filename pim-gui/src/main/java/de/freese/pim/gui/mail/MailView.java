@@ -75,6 +75,16 @@ public class MailView implements IView
         this.tableViewMail.setEditable(false);
         this.tableViewMail.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
         // this.tableViewMail.setColumnResizePolicy(TableView.UNCONSTRAINED_RESIZE_POLICY);
+        // this.tableViewMail.setManaged(false);
+
+        // ScrollPane scrollPane = new ScrollPane();
+        // // scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
+        // scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+        // // scrollPane.prefWidthProperty().bind(this.tableViewMail.widthProperty());
+        // // scrollPane.prefHeightProperty().bind(this.tableViewMail.heightProperty());
+        // scrollPane.setFitToHeight(true);
+        // scrollPane.setFitToWidth(true);
+        // scrollPane.setContent(this.tableViewMail);
 
         this.progressIndicator = new ProgressIndicator();
         this.progressIndicator.setId("progressIndicator"); // Für lookupAll("#progressIndicator")

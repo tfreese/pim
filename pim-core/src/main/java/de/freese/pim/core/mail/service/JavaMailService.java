@@ -1,13 +1,17 @@
 // Created: 13.01.2017
 package de.freese.pim.core.mail.service;
 
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Properties;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.mail.Authenticator;
@@ -26,6 +30,7 @@ import com.sun.mail.imap.IMAPFolder;
 import de.freese.pim.core.mail.model.Mail;
 import de.freese.pim.core.mail.model.MailAccount;
 import de.freese.pim.core.mail.model.MailFolder;
+import de.freese.pim.core.utils.Utils;
 
 /**
  * JavaMail-Implementierung des {@link IMailService}.
@@ -37,7 +42,7 @@ public class JavaMailService extends AbstractMailService
     /**
     *
     */
-    private List<MailFolder> childFolder;
+    private List<MailFolder> rootFolder = null;
 
     /**
     *
@@ -115,17 +120,17 @@ public class JavaMailService extends AbstractMailService
     {
         this.session = createSession();
 
-        // Test Connection Empfang.
-        Store s = createStore(this.session);
-        connectStore(s);
-        disconnectStore(s);
-        s = null;
-
-        // Test Connection Versand.
-        Transport t = createTransport(this.session);
-        connectTransport(t);
-        disconnectTransport(t);
-        t = null;
+        // // Test Connection Empfang.
+        // Store s = createStore(this.session);
+        // connectStore(s);
+        // disconnectStore(s);
+        // s = null;
+        //
+        // // Test Connection Versand.
+        // Transport t = createTransport(this.session);
+        // connectTransport(t);
+        // disconnectTransport(t);
+        // t = null;
     }
 
     /**
@@ -287,16 +292,56 @@ public class JavaMailService extends AbstractMailService
     @Override
     public List<MailFolder> getChilds(final MailFolder parent) throws Exception
     {
-        Folder folder = getStore().getFolder(parent.getFullName());
-        checkRead(folder);
+        Files.createDirectories(parent.getPath());
+        Path leafPath = parent.getPath().resolve(".leaf");
 
-        // @formatter:off
-        List<MailFolder> childFolder = Stream.of(folder.list("%"))
-                .map(f -> new MailFolder(this, f.getName(), parent))
-                .collect(Collectors.toList());
-        // @formatter:on
+        if (Files.exists(leafPath))
+        {
+            // Folder hat keine Children.
+            return Collections.emptyList();
+        }
 
-        closeFolder(folder);
+        List<MailFolder> childFolder = null;
+
+        List<Path> folderList = Files.list(parent.getPath()).filter(Utils.PREDICATE_MAIL_FOLDER).collect(Collectors.toList());
+
+        if (folderList.isEmpty())
+        {
+            // Initiale Füllung
+            Folder folder = getStore().getFolder(parent.getFullName());
+            checkRead(folder);
+
+            // @formatter:off
+            childFolder = Stream.of(folder.list("%"))
+                    .map(f -> new MailFolder(this, f.getName(), parent))
+                    .collect(Collectors.toList());
+            // @formatter:on
+
+            if (childFolder.isEmpty())
+            {
+                // Folder hat keine Children.
+                Files.createFile(leafPath);
+            }
+            else
+            {
+                // Folder anlegen
+                for (MailFolder mf : childFolder)
+                {
+                    Files.createDirectories(mf.getPath());
+                }
+            }
+
+            closeFolder(folder);
+        }
+        else
+        {
+            // @formatter:off
+            childFolder = folderList.stream()
+                 .map(p -> p.getFileName())
+                 .map(p -> new MailFolder(this, p.toString(), parent))
+                 .collect(Collectors.toList());
+             // @formatter:on
+        }
 
         return childFolder;
     }
@@ -314,35 +359,47 @@ public class JavaMailService extends AbstractMailService
      * @see de.freese.pim.core.mail.service.IMailService#getRootFolder()
      */
     @Override
-    public List<MailFolder> getRootFolder() throws Exception
+    public synchronized List<MailFolder> getRootFolder() throws Exception
     {
-        if (this.childFolder == null)
+        if (this.rootFolder == null)
         {
-            // TODO Lokaler Cache synchronisieren.
-            // Lokale Folder auslesen.
-            // Predicate<Path> isDirectory = Files::isDirectory;
-            // Predicate<Path> isHidden = p -> p.getFileName().toString().startsWith(".");
-            //
-            // Path basePath = getAccount().getPath();
-            // Objects.requireNonNull(basePath, "basePath required");
-            //
-            // Map<String, Path> localMap = Files.list(basePath).filter(isDirectory.negate().and(isHidden.negate()))
-            // .collect(Collectors.toMap(p -> p.getFileName().toString(), Function.identity()));
+            Path path = getBasePath();
+            Files.createDirectories(path);
 
-            Folder root = getStore().getDefaultFolder();
+            List<Path> folderList = Files.list(path).filter(Utils.PREDICATE_MAIL_FOLDER).collect(Collectors.toList());
 
-            // checkRead(root);
+            if (folderList.isEmpty())
+            {
+                // Initiale Füllung
+                Folder root = getStore().getDefaultFolder();
+                // checkRead(root); // Wirft Fehler bei Default-Folder.
 
-            // @formatter:off
-            this.childFolder = Stream.of(root.list("%"))
-                    .map(f -> new MailFolder(this, f.getName()))
-                    .collect(Collectors.toList());
-            // @formatter:on
+                // @formatter:off
+                this.rootFolder = Stream.of(root.list("%"))
+                        .map(f -> new MailFolder(this, f.getName()))
+                        .collect(Collectors.toList());
+                // @formatter:on
 
-            closeFolder(root);
+                // Folder anlegen
+                for (MailFolder mf : this.rootFolder)
+                {
+                    Files.createDirectories(mf.getPath());
+                }
+
+                closeFolder(root);
+            }
+            else
+            {
+                // @formatter:off
+                this.rootFolder = folderList.stream()
+                     .map(p -> p.getFileName())
+                     .map(p -> new MailFolder(this, p.toString()))
+                     .collect(Collectors.toList());
+                 // @formatter:on
+            }
         }
 
-        return this.childFolder;
+        return this.rootFolder;
     }
 
     /**
@@ -379,6 +436,11 @@ public class JavaMailService extends AbstractMailService
     @Override
     public int getUnreadMailsCount()
     {
+        if (this.rootFolder == null)
+        {
+            return 0;
+        }
+
         try
         {
             int sum = getRootFolder().stream().mapToInt(MailFolder::getUnreadMailsCount).sum();
@@ -405,7 +467,6 @@ public class JavaMailService extends AbstractMailService
     public void loadMails(final MailFolder folder, final Consumer<Mail> consumer) throws Exception
     {
         Folder f = getStore().getFolder(folder.getFullName());
-
         checkRead(f);
 
         Message[] msgs = f.getMessages();
@@ -469,11 +530,63 @@ public class JavaMailService extends AbstractMailService
     }
 
     /**
-     * @see de.freese.pim.core.mail.service.IMailService#syncFolders()
+     * @see de.freese.pim.core.mail.service.IMailService#syncChildFolder(de.freese.pim.core.mail.model.MailFolder, java.util.function.Consumer,
+     *      java.util.function.Consumer)
      */
     @Override
-    public void syncFolders() throws Exception
+    public void syncChildFolder(final MailFolder parent, final Consumer<MailFolder> newFolderConsumer, final Consumer<String> removedFolderConsumer)
+        throws Exception
     {
-        // TODO Auto-generated method stub
+        Path leafPath = parent.getPath().resolve(".leaf");
+
+        Folder f = getStore().getFolder(parent.getFullName());
+        checkRead(f);
+
+        // @formatter:off
+        Map<String, Path> localMap = Files.list(parent.getPath())
+                .filter(Utils.PREDICATE_MAIL_FOLDER.and(Utils.PREDICATE_MAIL_FOLDER_LEAF_NOT))
+                .collect(Collectors.toMap(p -> p.getFileName().toString(), Function.identity()));
+        // @formatter:on
+
+        List<Folder> childList = Stream.of(f.list("%")).collect(Collectors.toList());
+        closeFolder(f);
+
+        if (childList.isEmpty())
+        {
+            // Folder hat keine Children.
+            if (!Files.exists(leafPath))
+            {
+                Files.createFile(leafPath);
+            }
+        }
+        else
+        {
+            Files.deleteIfExists(leafPath);
+
+            for (Folder child : childList)
+            {
+                String name = child.getName();
+                localMap.remove(name);
+
+                Path childPath = parent.getPath().resolve(name);
+
+                if (!Files.exists(childPath))
+                {
+                    // Neuer Folder
+                    Files.createDirectories(childPath);
+                    newFolderConsumer.accept(new MailFolder(this, name, parent));
+                }
+            }
+        }
+
+        // Folder, die jetzt noch in der Map sind, wurden gelöscht.
+        for (Entry<String, Path> entry : localMap.entrySet())
+        {
+            Utils.deleteDirectoryRecursiv(entry.getValue());
+            removedFolderConsumer.accept(entry.getKey());
+        }
+
+        localMap.clear();
+        localMap = null;
     }
 }

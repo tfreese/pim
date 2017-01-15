@@ -94,9 +94,12 @@ public interface IMailService
     public void setExecutor(final Executor executor);
 
     /**
-     * Synchronisiert den lokalen Cache der Mail-Folder.
+     * Synchronisiert den lokalen Cache des Folders.
      *
+     * @param parent {@link MailFolder}
+     * @param newFolderConsumer {@link Consumer} für neue Folder
+     * @param removedFolderConsumer {@link Consumer} für gelöschte Folder
      * @throws Exception Falls was schief geht.
      */
-    public void syncFolders() throws Exception;
+    public void syncChildFolder(MailFolder parent, Consumer<MailFolder> newFolderConsumer, Consumer<String> removedFolderConsumer) throws Exception;
 }
