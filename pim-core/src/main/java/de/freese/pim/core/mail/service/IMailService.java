@@ -5,6 +5,7 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.function.Consumer;
+
 import de.freese.pim.core.mail.model.Mail;
 import de.freese.pim.core.mail.model.MailAccount;
 import de.freese.pim.core.mail.model.MailFolder;
@@ -17,7 +18,7 @@ import de.freese.pim.core.mail.model.MailFolder;
 public interface IMailService
 {
     /**
-     * Initialisiert den Service mit der konkreten Mail-API und testet die Verbindung.
+     * Initialisiert den Service mit der konkreten Mail-API.
      *
      * @throws Exception Falls was schief geht.
      */
@@ -101,5 +102,13 @@ public interface IMailService
      * @param removedFolderConsumer {@link Consumer} für gelöschte Folder
      * @throws Exception Falls was schief geht.
      */
-    public void syncChildFolder(MailFolder parent, Consumer<MailFolder> newFolderConsumer, Consumer<String> removedFolderConsumer) throws Exception;
+    public void syncChildFolder(MailFolder parent, Consumer<MailFolder> newFolderConsumer, Consumer<String> removedFolderConsumer)
+            throws Exception;
+
+    /**
+     * Testet die Verbindung.
+     *
+     * @throws Exception Falls was schief geht.
+     */
+    public void testConnection() throws Exception;
 }

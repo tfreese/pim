@@ -1,7 +1,6 @@
 /**
  * Created: 26.12.2016
  */
-
 package de.freese.pim.core.mail.model;
 
 import javafx.beans.property.BooleanProperty;
@@ -21,43 +20,48 @@ import javafx.beans.property.StringProperty;
 public class MailAccount
 {
     /**
-    *
-    */
+     *
+     */
+    private long id = 0;
+
+    /**
+     *
+     */
     private final StringProperty imapHostProperty = new SimpleStringProperty(this, "imapHost", null);
 
     /**
-    *
-    */
+     *
+     */
     private final BooleanProperty imapLegitimationProperty = new SimpleBooleanProperty(this, "imapLegitimation", true);
 
     /**
-    *
-    */
+     *
+     */
     private final IntegerProperty imapPortProperty = new SimpleIntegerProperty(this, "imapPort", 993);
 
     /**
-    *
-    */
+     *
+     */
     private final StringProperty mailProperty = new SimpleStringProperty(this, "mail", null);
 
     /**
-    *
-    */
+     *
+     */
     private final StringProperty passwordProperty = new SimpleStringProperty(this, "password", null);
 
     /**
-    *
-    */
+     *
+     */
     private final StringProperty smtpHostProperty = new SimpleStringProperty(this, "smtpHost", null);
 
     /**
-    *
-    */
+     *
+     */
     private final BooleanProperty smtpLegitimationProperty = new SimpleBooleanProperty(this, "smtpLegitimation", true);
 
     /**
-    *
-    */
+     *
+     */
     private final IntegerProperty smtpPortProperty = new SimpleIntegerProperty(this, "smtpPort", 587);
 
     /**
@@ -66,6 +70,14 @@ public class MailAccount
     public MailAccount()
     {
         super();
+    }
+
+    /**
+     * @return long
+     */
+    public long getID()
+    {
+        return this.id;
     }
 
     /**
@@ -170,6 +182,14 @@ public class MailAccount
     public StringProperty passwordProperty()
     {
         return this.passwordProperty;
+    }
+
+    /**
+     * @param id long
+     */
+    public void setID(final long id)
+    {
+        this.id = id;
     }
 
     /**

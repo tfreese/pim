@@ -3,6 +3,7 @@ package de.freese.pim.gui.controller;
 
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.control.ToolBar;
 
 /**
  * Interface eines Controllers.
@@ -13,16 +14,23 @@ import javafx.scene.Node;
 public interface IController extends Initializable
 {
     /**
-     * Liefert den {@link Node} der Haupt-Ansicht.
+     * Liefert den {@link Node} der Ansicht.
      *
      * @return {@link Node}
      */
     public Node getMainNode();
 
     /**
-     * Liefert den {@link Node} der Navigations-Ansicht.
+     * Liefert den {@link Node} der Ansicht.
      *
      * @return {@link Node}
      */
     public Node getNaviNode();
+
+    /**
+     * Liefert die {@link ToolBar} der Ansicht.
+     *
+     * @return {@link ToolBar}
+     */
+    public ToolBar getToolBar();
 }

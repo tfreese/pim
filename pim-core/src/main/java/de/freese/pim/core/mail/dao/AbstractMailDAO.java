@@ -11,12 +11,16 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
+
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+
 import de.freese.pim.core.mail.MailProvider;
 import de.freese.pim.core.mail.model.MailAccount;
+import de.freese.pim.core.persistence.JdbcTemplate;
 import de.freese.pim.core.service.SettingService;
 import de.freese.pim.core.utils.Utils;
 
@@ -28,6 +32,11 @@ import de.freese.pim.core.utils.Utils;
  */
 public class AbstractMailDAO implements IMailDAO
 {
+    /**
+    *
+    */
+    private JdbcTemplate jdbcTemplate = null;
+
     /**
      * Erstellt ein neues {@link AbstractMailDAO} Object.
      */
@@ -75,7 +84,33 @@ public class AbstractMailDAO implements IMailDAO
             }
         }
 
+        // IDs hart setzen
+        for (int i = 0; i < accountList.size(); i++)
+        {
+            accountList.get(i).setID(i + 1);
+        }
+
         return accountList;
+    }
+
+    /**
+     * @param jdbcTemplate {@link JdbcTemplate}
+     */
+    public void setJdbcTemplate(final JdbcTemplate jdbcTemplate)
+    {
+        Objects.requireNonNull(jdbcTemplate, "jdbcTemplate required");
+
+        this.jdbcTemplate = jdbcTemplate;
+    }
+
+    /**
+     * @return {@link JdbcTemplate}
+     */
+    protected JdbcTemplate getJdbcTemplate()
+    {
+        Objects.requireNonNull(this.jdbcTemplate, "jdbcTemplate required");
+
+        return this.jdbcTemplate;
     }
 
     /**

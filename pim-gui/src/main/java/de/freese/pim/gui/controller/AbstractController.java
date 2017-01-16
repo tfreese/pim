@@ -3,11 +3,16 @@ package de.freese.pim.gui.controller;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ScheduledExecutorService;
+
 import javax.sql.DataSource;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import de.freese.pim.core.service.ISettingsService;
 import de.freese.pim.gui.PIMApplication;
+import javafx.scene.Node;
+import javafx.scene.control.ToolBar;
 import javafx.stage.Window;
 
 /**
@@ -56,11 +61,29 @@ public abstract class AbstractController implements IController
     }
 
     /**
+     * @see de.freese.pim.gui.controller.IController#getMainNode()
+     */
+    @Override
+    public Node getMainNode()
+    {
+        return null;
+    }
+
+    /**
      * @return {@link Window}
      */
     public Window getMainWindow()
     {
         return PIMApplication.getMainWindow();
+    }
+
+    /**
+     * @see de.freese.pim.gui.controller.IController#getNaviNode()
+     */
+    @Override
+    public Node getNaviNode()
+    {
+        return null;
     }
 
     /**
@@ -77,5 +100,14 @@ public abstract class AbstractController implements IController
     public ISettingsService getSettingService()
     {
         return PIMApplication.getSettingService();
+    }
+
+    /**
+     * @see de.freese.pim.gui.controller.IController#getToolBar()
+     */
+    @Override
+    public ToolBar getToolBar()
+    {
+        return null;
     }
 }

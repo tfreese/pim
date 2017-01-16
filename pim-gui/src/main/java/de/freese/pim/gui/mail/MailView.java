@@ -6,11 +6,15 @@ import de.freese.pim.gui.view.IView;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TitledPane;
+import javafx.scene.control.ToolBar;
+import javafx.scene.control.Tooltip;
 import javafx.scene.control.TreeView;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 
 /**
@@ -21,6 +25,12 @@ import javafx.scene.layout.StackPane;
 @SuppressWarnings("restriction")
 public class MailView implements IView
 {
+    /**
+     *
+     */
+    @FXML
+    private Button buttonAddAccount = null;
+
     /**
      *
      */
@@ -46,6 +56,12 @@ public class MailView implements IView
     private TableView<Mail> tableViewMail = null;
 
     /**
+     *
+     */
+    @FXML
+    private ToolBar toolBar = null;
+
+    /**
     *
     */
     @FXML
@@ -58,6 +74,7 @@ public class MailView implements IView
     {
         super();
 
+        this.toolBar = createToolbar();
         this.mainNode = createMainNode();
         this.naviNode = createNaviNode();
     }
@@ -114,5 +131,29 @@ public class MailView implements IView
         // titledPane.setContent(treeViewMail);
 
         return titledPane;
+    }
+
+    /**
+     * @return {@link ToolBar}
+     */
+    private ToolBar createToolbar()
+    {
+        ToolBar toolBar = new ToolBar();
+
+        // Image image = new Image("images/mail.png", 16, 16, true, true);
+        ImageView imageViewAddAccount = new ImageView();
+        imageViewAddAccount.setFitHeight(32);
+        imageViewAddAccount.setFitWidth(32);
+        imageViewAddAccount.getStyleClass().add("imageview-new");
+
+        this.buttonAddAccount = new Button();
+        // this.buttonAddAccount.setPadding(new Insets(0));
+        // this.buttonAddAccount.setPrefSize(imageViewMail.getFitWidth(), imageViewMail.getFitHeight());
+        this.buttonAddAccount.setGraphic(imageViewAddAccount);
+        this.buttonAddAccount.setTooltip(new Tooltip("%mail.add.account"));
+
+        toolBar.getItems().add(this.buttonAddAccount);
+
+        return toolBar;
     }
 }

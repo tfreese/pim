@@ -3,6 +3,7 @@ package de.freese.pim.gui.controller;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+
 import de.freese.pim.gui.contact.ContactController;
 import de.freese.pim.gui.contact.ContactView;
 import de.freese.pim.gui.mail.MailController;
@@ -50,12 +51,6 @@ public class MainController extends AbstractController
     private MainView mainView = null;
 
     /**
-    *
-    */
-    @FXML
-    private ToolBar toolBar = null;
-
-    /**
      * Erzeugt eine neue Instanz von {@link MainController}
      *
      * @param resources {@link ResourceBundle}
@@ -87,6 +82,15 @@ public class MainController extends AbstractController
     }
 
     /**
+     * @see de.freese.pim.gui.controller.IController#getToolBar()
+     */
+    @Override
+    public ToolBar getToolBar()
+    {
+        throw new UnsupportedOperationException();
+    }
+
+    /**
      * @see javafx.fxml.Initializable#initialize(java.net.URL, java.util.ResourceBundle)
      */
     @Override
@@ -101,12 +105,16 @@ public class MainController extends AbstractController
         FXUtils.translate(this.buttonMailView, resources);
         FXUtils.translate(this.buttonContactView, resources);
 
-        this.buttonMailView.setOnAction(event -> {
+        this.buttonMailView.setOnAction(event ->
+        {
+            this.mainView.setToolbar(this.mailController.getToolBar());
             this.mainView.setNavNode(this.mailController.getNaviNode());
             this.mainView.setMainNode(this.mailController.getMainNode());
         });
 
-        this.buttonContactView.setOnAction(event -> {
+        this.buttonContactView.setOnAction(event ->
+        {
+            this.mainView.setToolbar(this.contactController.getToolBar());
             this.mainView.setNavNode(this.contactController.getNaviNode());
             this.mainView.setMainNode(this.contactController.getMainNode());
         });

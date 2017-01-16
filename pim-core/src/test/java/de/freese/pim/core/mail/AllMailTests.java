@@ -13,7 +13,7 @@ import org.junit.runners.Suite.SuiteClasses;
 @RunWith(Suite.class)
 @SuiteClasses(
 {
-        TestSendMail.class, TestReceiveMail.class
+        TestSendMail.class, TestReceiveMail.class, TestMailRegEx.class
 })
 public class AllMailTests
 {

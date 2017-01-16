@@ -7,10 +7,12 @@ package de.freese.pim.core.mail.utils;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Multipart;
 import javax.mail.Part;
+
 import org.apache.commons.collections4.CollectionUtils;
 
 /**
@@ -91,6 +93,11 @@ public final class MailUtils
             super(text);
         }
     }
+
+    /**
+     *
+     */
+    public static final String MAIL_REGEX = "^(.+)@(.+)\\.\\w{2,3}$";
 
     /**
      * Liefert alle vorhandenen Text Parts einer {@link Message}.

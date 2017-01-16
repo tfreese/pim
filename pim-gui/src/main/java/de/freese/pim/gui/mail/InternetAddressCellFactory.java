@@ -4,13 +4,14 @@
 package de.freese.pim.gui.mail;
 
 import javax.mail.internet.InternetAddress;
+
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.util.Callback;
 
 /**
  * @author Thomas Freese
- * @param <S> Konkretr Typ des Row-Objektes
+ * @param <S> Konkreter Typ des Row-Objektes
  */
 public class InternetAddressCellFactory<S> implements Callback<TableColumn<S, InternetAddress>, TableCell<S, InternetAddress>>
 {

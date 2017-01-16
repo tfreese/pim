@@ -6,21 +6,24 @@ import java.net.InetSocketAddress;
 /**
  * Enums für die verschiedenen Konfigurationen der MailProvider.
  *
- * @author Thomas Freese (EFREEST / AuVi)
+ * @author Thomas Freese
  */
 public enum MailProvider
 {
-    // IMAP: 993 (SSL)
-    // SMTP: 465 (SSL), 587 (TLS/STARTTLS)
     /**
      *
      */
-    EinsUndEins("imap.1und1.de", 993, "smtp.1und1.de", 587),
+    EinsUndEins("1&1", "imap.1und1.de", MailPort.IMAPS, "smtp.1und1.de", MailPort.SMTPS),
 
     /**
     *
     */
-    GoogleMail("imap.gmail.com", 993, "smtp.gmail.com", 587);
+    Google("Google", "imap.gmail.com", MailPort.IMAPS, "smtp.gmail.com", MailPort.SMTPS);
+
+    /**
+     *
+     */
+    private final String displayName;
 
     /**
     *
@@ -35,15 +38,26 @@ public enum MailProvider
     /**
      * Erzeugt eine neue Instanz von {@link MailProvider}
      *
+     * @param displayName String
      * @param imapHost String
-     * @param imapPort int
+     * @param imapPort {@link MailPort}
      * @param smtpHost String
-     * @param smtpPort int
+     * @param smtpPort {@link MailPort}
      */
-    private MailProvider(final String imapHost, final int imapPort, final String smtpHost, final int smtpPort)
+    private MailProvider(final String displayName, final String imapHost, final MailPort imapPort, final String smtpHost,
+            final MailPort smtpPort)
     {
-        this.imap = new InetSocketAddress(imapHost, imapPort);
-        this.smtp = new InetSocketAddress(smtpHost, smtpPort);
+        this.displayName = displayName;
+        this.imap = new InetSocketAddress(imapHost, imapPort.getPort());
+        this.smtp = new InetSocketAddress(smtpHost, smtpPort.getPort());
+    }
+
+    /**
+     * @return String
+     */
+    public String getDisplayName()
+    {
+        return this.displayName;
     }
 
     /**
@@ -76,5 +90,14 @@ public enum MailProvider
     public int getSmtpPort()
     {
         return this.smtp.getPort();
+    }
+
+    /**
+     * @see java.lang.Enum#toString()
+     */
+    @Override
+    public String toString()
+    {
+        return getDisplayName();
     }
 }

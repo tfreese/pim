@@ -42,12 +42,6 @@ public class MainView extends BorderPane implements IView
     private final SplitPane splitPane;
 
     /**
-    *
-    */
-    @FXML
-    private ToolBar toolBar = null;
-
-    /**
      *
      */
     private VBox vBox = null;
@@ -63,9 +57,6 @@ public class MainView extends BorderPane implements IView
         this.splitPane.setOrientation(Orientation.HORIZONTAL);
         this.splitPane.setDividerPositions(0.2D);
         setCenter(this.splitPane);
-
-        this.toolBar = new ToolBar();
-        setTop(this.toolBar);
 
         this.vBox = new VBox();
         this.vBox.getStyleClass().add("vbox");
@@ -126,5 +117,15 @@ public class MainView extends BorderPane implements IView
     {
         VBox.setVgrow(node, Priority.ALWAYS);
         this.vBox.getChildren().set(0, node);
+    }
+
+    /**
+     * Setzt die {@link ToolBar} der Haupt-Ansicht.
+     *
+     * @param toolBar {@link ToolBar}
+     */
+    public void setToolbar(final ToolBar toolBar)
+    {
+        setTop(toolBar);
     }
 }
