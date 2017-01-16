@@ -32,10 +32,10 @@ public class TestMailRegEx
     }
 
     /**
-     * @throws Exception Falls was schief geht.
+     * Falsche Mail-Formate.
      */
     @Test
-    public void test010False() throws Exception
+    public void test010False()
     {
         Assert.assertFalse("a".matches(MAIL_REGEX));
         Assert.assertFalse("a@".matches(MAIL_REGEX));
@@ -45,10 +45,10 @@ public class TestMailRegEx
     }
 
     /**
-     * @throws Exception Falls was schief geht.
+     * Richtige Mail-Formate.
      */
     @Test
-    public void test020True() throws Exception
+    public void test020True()
     {
         Assert.assertTrue("a@b.de".matches(MAIL_REGEX));
         Assert.assertTrue("a@b.com".matches(MAIL_REGEX));

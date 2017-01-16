@@ -95,9 +95,9 @@ public final class MailUtils
     }
 
     /**
-     *
+     * ^(.+)@(.+)\\.\\w{2,3}$
      */
-    public static final String MAIL_REGEX = "^(.+)@(.+)\\.\\w{2,3}$";
+    public static final String MAIL_REGEX = "^(.+)@(.+)\\.[a-zA-Z]{2,3}$";
 
     /**
      * Liefert alle vorhandenen Text Parts einer {@link Message}.
