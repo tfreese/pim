@@ -58,6 +58,8 @@ public class ErrorDialog
      */
     public ErrorDialog forThrowable(final Throwable throwable)
     {
+        headerText(throwable.getMessage());
+
         StringWriter stringWriter = new StringWriter();
         PrintWriter printWriter = new PrintWriter(stringWriter);
 
@@ -83,6 +85,7 @@ public class ErrorDialog
 
         // Set expandable Exception into the dialog pane.
         this.alert.getDialogPane().setExpandableContent(gridPane);
+        this.alert.getDialogPane().setExpanded(true);
 
         return this;
     }
