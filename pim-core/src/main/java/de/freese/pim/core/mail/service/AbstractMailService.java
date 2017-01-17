@@ -4,8 +4,11 @@ package de.freese.pim.core.mail.service;
 import java.nio.file.Path;
 import java.util.Objects;
 import java.util.concurrent.Executor;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import de.freese.pim.core.mail.dao.IMailDAO;
 import de.freese.pim.core.mail.model.MailAccount;
 
 /**
@@ -36,20 +39,28 @@ public abstract class AbstractMailService implements IMailService
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     /**
+     *
+     */
+    private final IMailDAO mailDAO;
+
+    /**
      * Erzeugt eine neue Instanz von {@link AbstractMailService}
      *
      * @param account {@link MailAccount}
      * @param basePath {@link Path}
+     * @param mailDAO {@link IMailDAO}
      */
-    public AbstractMailService(final MailAccount account, final Path basePath)
+    public AbstractMailService(final MailAccount account, final Path basePath, final IMailDAO mailDAO)
     {
         super();
 
         Objects.requireNonNull(account, "account required");
         Objects.requireNonNull(basePath, "basePath required");
+        Objects.requireNonNull(mailDAO, "mailDAO required");
 
         this.account = account;
         this.basePath = basePath;
+        this.mailDAO = mailDAO;
     }
 
     /**
@@ -71,6 +82,15 @@ public abstract class AbstractMailService implements IMailService
     }
 
     /**
+     * @see de.freese.pim.core.mail.service.IMailService#setExecutor(java.util.concurrent.Executor)
+     */
+    @Override
+    public void setExecutor(final Executor executor)
+    {
+        this.executor = executor;
+    }
+
+    /**
      * Optionaler {@link Executor} für die Mail-API.
      *
      * @return {@link Executor}
@@ -89,11 +109,10 @@ public abstract class AbstractMailService implements IMailService
     }
 
     /**
-     * @see de.freese.pim.core.mail.service.IMailService#setExecutor(java.util.concurrent.Executor)
+     * @return {@link IMailDAO}
      */
-    @Override
-    public void setExecutor(final Executor executor)
+    protected IMailDAO getMailDAO()
     {
-        this.executor = executor;
+        return this.mailDAO;
     }
 }

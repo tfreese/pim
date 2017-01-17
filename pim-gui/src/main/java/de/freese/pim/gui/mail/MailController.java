@@ -1,6 +1,7 @@
 // Created: 13.12.2016
 package de.freese.pim.gui.mail;
 
+import java.lang.reflect.Proxy;
 import java.net.URL;
 import java.nio.file.Path;
 import java.text.DateFormat;
@@ -9,8 +10,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
+
 import javax.mail.internet.InternetAddress;
+
 import org.apache.commons.lang3.StringUtils;
+
 import de.freese.pim.core.mail.dao.DefaultMailDAO;
 import de.freese.pim.core.mail.dao.IMailDAO;
 import de.freese.pim.core.mail.model.Mail;
@@ -18,6 +22,7 @@ import de.freese.pim.core.mail.model.MailAccount;
 import de.freese.pim.core.mail.model.MailFolder;
 import de.freese.pim.core.mail.service.IMailService;
 import de.freese.pim.core.mail.service.JavaMailService;
+import de.freese.pim.core.persistence.TransactionalInvocationHandler;
 import de.freese.pim.core.service.SettingService;
 import de.freese.pim.gui.PIMApplication;
 import de.freese.pim.gui.controller.AbstractController;
@@ -68,7 +73,7 @@ public class MailController extends AbstractController
     /**
      *
      */
-    private IMailDAO mailDAO = null;
+    private final IMailDAO mailDAO;
 
     /**
     *
@@ -127,6 +132,28 @@ public class MailController extends AbstractController
     public MailController()
     {
         super();
+
+        this.mailDAO = new DefaultMailDAO(getDataSource());
+    }
+
+    /**
+     * @see de.freese.pim.gui.controller.IController#activate()
+     */
+    @Override
+    public void activate()
+    {
+        // Wenn der Baum leer ist -> befüllen.
+        TreeItem<Object> root = this.treeViewMail.getRoot();
+
+        if (root != null)
+        {
+            return;
+        }
+
+        root = new TreeItem<>("Mail-Accounts");
+        this.treeViewMail.setRoot(root);
+
+        loadMailAccounts(root);
     }
 
     /**
@@ -162,19 +189,20 @@ public class MailController extends AbstractController
     @Override
     public void initialize(final URL location, final ResourceBundle resources)
     {
-        this.mailDAO = new DefaultMailDAO();
-
-        this.buttonAddAccount.setOnAction(event -> {
+        this.buttonAddAccount.setOnAction(event ->
+        {
             EditMailAccountDialog dialog = new EditMailAccountDialog();
 
             Optional<MailAccount> result = dialog.addAccount(resources);
-            result.ifPresent(account -> {
+            result.ifPresent(account ->
+            {
                 // TODO Speichern
             });
         });
 
         // Tabelle
-        this.tableViewMail.setRowFactory(tableView -> {
+        this.tableViewMail.setRowFactory(tableView ->
+        {
             return new TableRow<Mail>()
             {
                 /**
@@ -204,7 +232,8 @@ public class MailController extends AbstractController
             };
         });
 
-        this.selectedTreeItem.addListener((observable, oldValue, newValue) -> {
+        this.selectedTreeItem.addListener((observable, oldValue, newValue) ->
+        {
             this.tableViewMail.setItems(null);
 
             if (newValue == null)
@@ -250,8 +279,10 @@ public class MailController extends AbstractController
                     {
                         IMailService mailService = folder.getMailService();
 
-                        mailService.loadMails(folder, m -> {
-                            Platform.runLater(() -> {
+                        mailService.loadMails(folder, m ->
+                        {
+                            Platform.runLater(() ->
+                            {
                                 folder.getMails().add(m);
                             });
                         });
@@ -262,7 +293,8 @@ public class MailController extends AbstractController
                     }
                 };
                 loadMailsTask.setOnSucceeded(event -> this.treeViewMail.refresh());
-                loadMailsTask.setOnFailed(event -> {
+                loadMailsTask.setOnFailed(event ->
+                {
                     Throwable th = loadMailsTask.getException();
 
                     getLogger().error(null, th);
@@ -274,7 +306,8 @@ public class MailController extends AbstractController
                 ReadOnlyBooleanProperty runningProperty = loadMailsTask.runningProperty();
 
                 this.progressIndicator.visibleProperty().bind(runningProperty);
-                PIMApplication.getMainWindow().getScene().cursorProperty().bind(Bindings.when(runningProperty).then(Cursor.WAIT).otherwise(Cursor.DEFAULT));
+                PIMApplication.getMainWindow().getScene().cursorProperty()
+                        .bind(Bindings.when(runningProperty).then(Cursor.WAIT).otherwise(Cursor.DEFAULT));
 
                 getExecutorService().execute(loadMailsTask);
             }
@@ -328,8 +361,37 @@ public class MailController extends AbstractController
             }
         });
 
-        TreeItem<Object> root = new TreeItem<>("Mail-Accounts");
-        this.treeViewMail.setRoot(root);
+        this.treeViewMail.setRoot(null);
+    }
+
+    /**
+     * Erzeugt einen {@link IMailService}, der in einem tranaktionellen Proxy gekapselt ist.
+     *
+     * @param account {@link MailAccount}
+     * @param path {@link Path}
+     * @return {@link IMailService}
+     */
+    private IMailService createMailService(final MailAccount account, final Path path)
+    {
+        IMailService mailService = (IMailService) Proxy.newProxyInstance(getClass().getClassLoader(), new Class<?>[]
+        {
+                IMailService.class
+        }, new TransactionalInvocationHandler(getDataSource(), new JavaMailService(account, path, this.mailDAO)));
+
+        return mailService;
+    }
+
+    /**
+     * Laden der {@link MailAccount}s und befüllen des Trees.
+     *
+     * @param root {@link TreeItem}
+     */
+    private void loadMailAccounts(final TreeItem<Object> root)
+    {
+        if (getLogger().isDebugEnabled())
+        {
+            getLogger().debug("Load MailAccounts");
+        }
 
         try
         {
@@ -345,13 +407,14 @@ public class MailController extends AbstractController
                 }
 
                 Path accountPath = basePath.resolve(mailAccount.getMail());
-                IMailService mailService = new JavaMailService(mailAccount, accountPath);
+                IMailService mailService = createMailService(mailAccount, accountPath);
                 mailService.setExecutor(getExecutorService());
 
                 TreeItem<Object> treeItem = new TreeItem<>(mailService);
                 root.getChildren().add(treeItem);
 
-                PIMApplication.registerCloseable(() -> {
+                PIMApplication.registerCloseable(() ->
+                {
                     getLogger().info("Close " + mailService.getAccount().getMail());
                     mailService.disconnect();
                 });
@@ -389,15 +452,16 @@ public class MailController extends AbstractController
             // columnFrom.prefWidthProperty().bind(this.tableViewMail.widthProperty().multiply(0.30D)); // 30% Breite
             columnFrom.setPrefWidth(300);
             columnReceived.setPrefWidth(180);
-            columnSubject.prefWidthProperty()
-                    .bind(this.tableViewMail.widthProperty().subtract(columnFrom.widthProperty().add(columnReceived.widthProperty()).add(2)));
+            columnSubject.prefWidthProperty().bind(
+                    this.tableViewMail.widthProperty().subtract(columnFrom.widthProperty().add(columnReceived.widthProperty()).add(2)));
 
             columnFrom.setSortable(false);
             columnFrom.setStyle("-fx-alignment: center-left;");
             columnFrom.setCellValueFactory(cell -> cell.getValue().fromProperty()); // Für reine FX-Bean.
             // columnFrom.setCellValueFactory(new PropertyValueFactory<>("from")); // Updates erfolgen nur, wenn Bean PropertyChangeSupport
             // hat.
-            // columnFrom.setCellValueFactory(cell -> ObjectPropertyFormatter.toString(cell.getValue().fromProperty(), addr -> addr.getAddress()));
+            // columnFrom.setCellValueFactory(cell -> ObjectPropertyFormatter.toString(cell.getValue().fromProperty(), addr ->
+            // addr.getAddress()));
             columnFrom.setCellFactory(new InternetAddressCellFactory<Mail>());
 
             columnSubject.setSortable(false);

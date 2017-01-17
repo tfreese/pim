@@ -12,6 +12,7 @@ import de.freese.pim.core.mail.model.MailAccount;
 import de.freese.pim.core.mail.utils.MailUtils;
 import de.freese.pim.gui.PIMApplication;
 import javafx.application.Platform;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
@@ -103,8 +104,24 @@ public class EditMailAccountDialog
         // Provider
         ComboBox<MailProvider> provider = new ComboBox<>();
         // provider.getItems().addAll(MailProvider.values());
-        Platform.runLater(() -> provider.getItems().addAll(MailProvider.values()));
-        // Stream.of(MailProvider.values()).forEach(provider.getItems()::add);
+        // Platform.runLater(() -> provider.getItems().addAll(MailProvider.values()));
+        Task<Void> task = new Task<Void>()
+        {
+            /**
+             * @see javafx.concurrent.Task#call()
+             */
+            @Override
+            protected Void call() throws Exception
+            {
+                for (MailProvider mp : MailProvider.values())
+                {
+                    Platform.runLater(() -> provider.getItems().add(mp));
+                }
+
+                return null;
+            }
+        };
+        PIMApplication.getExecutorService().execute(task);
 
         // Mail
         TextField mail = new TextField();

@@ -122,6 +122,21 @@ public class ContactController extends AbstractController
     }
 
     /**
+     * @see de.freese.pim.gui.controller.IController#activate()
+     */
+    @Override
+    public void activate()
+    {
+        // Wenn die Liste leer ist -> befüllen.
+        if (getKontakteList().size() > 1)
+        {
+            return;
+        }
+
+        loadKontakte();
+    }
+
+    /**
      * @see de.freese.pim.gui.controller.IController#getMainNode()
      */
     @Override
@@ -256,8 +271,6 @@ public class ContactController extends AbstractController
                 }
             }
         });
-
-        loadKontakte();
     }
 
     /**

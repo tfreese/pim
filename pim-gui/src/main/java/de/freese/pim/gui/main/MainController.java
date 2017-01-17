@@ -1,15 +1,16 @@
 // Created: 29.11.2016
-package de.freese.pim.gui.controller;
+package de.freese.pim.gui.main;
 
 import java.net.URL;
 import java.util.ResourceBundle;
 
 import de.freese.pim.gui.contact.ContactController;
 import de.freese.pim.gui.contact.ContactView;
+import de.freese.pim.gui.controller.AbstractController;
+import de.freese.pim.gui.controller.IController;
 import de.freese.pim.gui.mail.MailController;
 import de.freese.pim.gui.mail.MailView;
 import de.freese.pim.gui.utils.FXUtils;
-import de.freese.pim.gui.view.MainView;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -64,6 +65,15 @@ public class MainController extends AbstractController
     }
 
     /**
+     * @see de.freese.pim.gui.controller.IController#activate()
+     */
+    @Override
+    public void activate()
+    {
+        throw new UnsupportedOperationException();
+    }
+
+    /**
      * @see de.freese.pim.gui.controller.IController#getMainNode()
      */
     @Override
@@ -110,6 +120,7 @@ public class MainController extends AbstractController
             this.mainView.setToolbar(this.mailController.getToolBar());
             this.mainView.setNavNode(this.mailController.getNaviNode());
             this.mainView.setMainNode(this.mailController.getMainNode());
+            this.mailController.activate();
         });
 
         this.buttonContactView.setOnAction(event ->
@@ -117,6 +128,7 @@ public class MainController extends AbstractController
             this.mainView.setToolbar(this.contactController.getToolBar());
             this.mainView.setNavNode(this.contactController.getNaviNode());
             this.mainView.setMainNode(this.contactController.getMainNode());
+            this.contactController.activate();
         });
     }
 

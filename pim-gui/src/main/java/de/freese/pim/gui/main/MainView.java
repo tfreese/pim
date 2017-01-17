@@ -1,6 +1,7 @@
 // Created: 29.11.2016
-package de.freese.pim.gui.view;
+package de.freese.pim.gui.main;
 
+import de.freese.pim.gui.view.IView;
 import javafx.fxml.FXML;
 import javafx.geometry.Orientation;
 import javafx.scene.Node;
@@ -55,7 +56,7 @@ public class MainView extends BorderPane implements IView
 
         this.splitPane = new SplitPane();
         this.splitPane.setOrientation(Orientation.HORIZONTAL);
-        this.splitPane.setDividerPositions(0.2D);
+        this.splitPane.setDividerPositions(0.25D);
         setCenter(this.splitPane);
 
         this.vBox = new VBox();

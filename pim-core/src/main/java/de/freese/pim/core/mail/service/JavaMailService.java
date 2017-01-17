@@ -30,6 +30,7 @@ import javax.mail.internet.InternetAddress;
 
 import com.sun.mail.imap.IMAPFolder;
 
+import de.freese.pim.core.mail.dao.IMailDAO;
 import de.freese.pim.core.mail.model.Mail;
 import de.freese.pim.core.mail.model.MailAccount;
 import de.freese.pim.core.mail.model.MailFolder;
@@ -62,10 +63,11 @@ public class JavaMailService extends AbstractMailService
      *
      * @param account {@link MailAccount}
      * @param basePath {@link Path}
+     * @param mailDAO {@link IMailDAO}
      */
-    public JavaMailService(final MailAccount account, final Path basePath)
+    public JavaMailService(final MailAccount account, final Path basePath, final IMailDAO mailDAO)
     {
-        super(account, basePath);
+        super(account, basePath, mailDAO);
     }
 
     /**

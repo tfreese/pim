@@ -2,6 +2,7 @@
 package de.freese.pim.gui.contact;
 
 import org.apache.commons.lang3.StringUtils;
+
 import de.freese.pim.core.addressbook.model.Kontakt;
 import de.freese.pim.gui.view.IView;
 import javafx.beans.property.StringProperty;
@@ -221,36 +222,31 @@ public class ContactView implements IView
         // tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
         TableColumn<Kontakt, Number> columnID = new TableColumn<>("%id");
-        columnID.setResizable(false);
-        columnID.setCellValueFactory(cell -> cell.getValue().idProperty()); // Für reine FX-Bean
-        // columnID.setCellValueFactory(new PropertyValueFactory<>("ID")); // Updates erfolgen nur, wenn Bean PropertyChangeSupport hat
-        columnID.setStyle("-fx-alignment: center-right;");
-        columnID.prefWidthProperty().bind(tableView.widthProperty().multiply(0.1D)); // 10% Breite
-        // columnID.setMaxWidth(50);
-
         TableColumn<Kontakt, String> columnNachname = new TableColumn<>("%nachname");
-        columnNachname.setCellValueFactory(cell -> cell.getValue().nachnameProperty());
-        // columnNachname.prefWidthProperty().bind(tableView.widthProperty().multiply(0.45D).add(-1.5D)); // 45% Breite
-        // columnNachname.setSortType(TableColumn.SortType.ASCENDING);
-
         TableColumn<Kontakt, String> columnVorname = new TableColumn<>("%vorname");
-        columnVorname.setCellValueFactory(cell -> cell.getValue().vornameProperty());
-        // columnVorname.prefWidthProperty().bind(tableView.widthProperty().multiply(0.45D).add(-1.5D)); // 45% Breite
 
-        // Aller verfügbarer Platz für Vorname-Spalte, Rest hat feste Breite.
-        // columnVorname.prefWidthProperty().bind(tableView.widthProperty().subtract(columnID.getMaxWidth() +
-        // columnNachname.getPrefWidth()));
+        columnID.prefWidthProperty().bind(tableView.widthProperty().multiply(0.1D)); // 10% Breite
+
+        columnID.setResizable(false);
+        columnID.setCellValueFactory(cell -> cell.getValue().idProperty());
+        columnID.setStyle("-fx-alignment: center-right;");
+
+        columnNachname.setCellValueFactory(cell -> cell.getValue().nachnameProperty());
+
+        columnVorname.setCellValueFactory(cell -> cell.getValue().vornameProperty());
 
         // tableView.getColumns().add(columnID);
         tableView.getColumns().add(columnNachname);
         tableView.getColumns().add(columnVorname);
 
         // Für Filter
-        FilteredList<Kontakt> filteredData = new FilteredList<>(FXCollections.observableArrayList(), p -> true);
+        FilteredList<Kontakt> filteredData = new FilteredList<>(FXCollections.observableArrayList());
 
         // Filter-Textfeld mit FilteredList verbinden.
-        propertyKontaktFilter.addListener((observable, oldValue, newValue) -> {
-            filteredData.setPredicate(kontakt -> {
+        propertyKontaktFilter.addListener((observable, oldValue, newValue) ->
+        {
+            filteredData.setPredicate(kontakt ->
+            {
                 if (StringUtils.isBlank(newValue))
                 {
                     return true;

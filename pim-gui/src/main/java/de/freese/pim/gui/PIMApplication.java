@@ -32,7 +32,7 @@ import de.freese.pim.core.service.ISettingsService;
 import de.freese.pim.core.service.SettingService;
 import de.freese.pim.core.thread.PIMThreadFactory;
 import de.freese.pim.core.utils.Utils;
-import de.freese.pim.gui.controller.MainController;
+import de.freese.pim.gui.main.MainController;
 import de.freese.pim.gui.utils.FXUtils;
 import de.freese.pim.gui.utils.PIMFXThreadGroup;
 import de.freese.pim.gui.view.ErrorDialog;
