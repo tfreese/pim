@@ -1,8 +1,6 @@
 // Created: 04.01.2017
 package de.freese.pim.core.mail;
 
-import java.net.InetSocketAddress;
-
 /**
  * Enums für die verschiedenen Konfigurationen der MailProvider.
  *
@@ -14,11 +12,18 @@ public enum MailProvider
      *
      */
     EinsUndEins("1&1", "imap.1und1.de", MailPort.IMAPS, "smtp.1und1.de", MailPort.SMTPS),
-
     /**
-    *
-    */
-    Google("Google", "imap.gmail.com", MailPort.IMAPS, "smtp.gmail.com", MailPort.SMTPS);
+     *
+     */
+    Google("Google", "imap.gmail.com", MailPort.IMAPS, "smtp.gmail.com", MailPort.SMTPS),
+    /**
+     *
+     */
+    WebDe("web.de", "imap.web.de", MailPort.IMAPS, "smtp.web.de", MailPort.SMTPS),
+    /**
+     *
+     */
+    GMX("GMX", "imap.gmx.net", MailPort.IMAPS, "mail.gmx.net", MailPort.SMTPS);
 
     /**
      *
@@ -26,30 +31,42 @@ public enum MailProvider
     private final String displayName;
 
     /**
-    *
-    */
-    private final InetSocketAddress imap;
+     *
+     */
+    private final String imapHost;
 
     /**
-    *
-    */
-    private final InetSocketAddress smtp;
+     *
+     */
+    private final String smtpHost;
+
+    /**
+     *
+     */
+    private final MailPort imapPort;
+
+    /**
+     *
+     */
+    private final MailPort smtpPort;
 
     /**
      * Erzeugt eine neue Instanz von {@link MailProvider}
      *
      * @param displayName String
-     * @param imapHost String
-     * @param imapPort {@link MailPort}
-     * @param smtpHost String
-     * @param smtpPort {@link MailPort}
+     * @param imapHost    String
+     * @param imapPort    {@link MailPort}
+     * @param smtpHost    String
+     * @param smtpPort    {@link MailPort}
      */
     private MailProvider(final String displayName, final String imapHost, final MailPort imapPort, final String smtpHost,
-            final MailPort smtpPort)
+                         final MailPort smtpPort)
     {
         this.displayName = displayName;
-        this.imap = new InetSocketAddress(imapHost, imapPort.getPort());
-        this.smtp = new InetSocketAddress(smtpHost, smtpPort.getPort());
+        this.imapHost = imapHost;
+        this.imapPort = imapPort;
+        this.smtpHost = smtpHost;
+        this.smtpPort = smtpPort;
     }
 
     /**
@@ -65,15 +82,15 @@ public enum MailProvider
      */
     public String getImapHost()
     {
-        return this.imap.getHostName();
+        return this.imapHost;
     }
 
     /**
-     * @return int
+     * @return {@link MailPort}
      */
-    public int getImapPort()
+    public MailPort getImapPort()
     {
-        return this.imap.getPort();
+        return this.imapPort;
     }
 
     /**
@@ -81,15 +98,15 @@ public enum MailProvider
      */
     public String getSmtpHost()
     {
-        return this.smtp.getHostName();
+        return this.smtpHost;
     }
 
     /**
-     * @return int
+     * @return {@link MailPort}
      */
-    public int getSmtpPort()
+    public MailPort getSmtpPort()
     {
-        return this.smtp.getPort();
+        return this.smtpPort;
     }
 
     /**

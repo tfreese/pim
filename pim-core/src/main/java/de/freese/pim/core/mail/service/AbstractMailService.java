@@ -56,7 +56,6 @@ public abstract class AbstractMailService implements IMailService
 
         Objects.requireNonNull(account, "account required");
         Objects.requireNonNull(basePath, "basePath required");
-        Objects.requireNonNull(mailDAO, "mailDAO required");
 
         this.account = account;
         this.basePath = basePath;
@@ -109,6 +108,8 @@ public abstract class AbstractMailService implements IMailService
     }
 
     /**
+     * Darf auch null sein !
+     *
      * @return {@link IMailDAO}
      */
     protected IMailDAO getMailDAO()

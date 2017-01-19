@@ -1,6 +1,7 @@
 // Created: 16.01.2017
 package de.freese.pim.gui.mail;
 
+import java.nio.file.Paths;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -9,13 +10,15 @@ import org.apache.commons.lang3.StringUtils;
 import de.freese.pim.core.mail.MailPort;
 import de.freese.pim.core.mail.MailProvider;
 import de.freese.pim.core.mail.model.MailAccount;
+import de.freese.pim.core.mail.service.IMailService;
+import de.freese.pim.core.mail.service.JavaMailService;
 import de.freese.pim.core.mail.utils.MailUtils;
 import de.freese.pim.gui.PIMApplication;
 import javafx.application.Platform;
-import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Dialog;
@@ -84,7 +87,6 @@ public class EditMailAccountDialog
         dialog.setHeaderText(bundle.getString(titleKey));
 
         // dialog.getDialogPane().setPrefSize(500, 500);
-
         ImageView imageView = new ImageView();
         imageView.setFitHeight(32);
         imageView.setFitWidth(32);
@@ -103,25 +105,15 @@ public class EditMailAccountDialog
 
         // Provider
         ComboBox<MailProvider> provider = new ComboBox<>();
-        // provider.getItems().addAll(MailProvider.values());
-        // Platform.runLater(() -> provider.getItems().addAll(MailProvider.values()));
-        Task<Void> task = new Task<Void>()
-        {
-            /**
-             * @see javafx.concurrent.Task#call()
-             */
-            @Override
-            protected Void call() throws Exception
-            {
-                for (MailProvider mp : MailProvider.values())
-                {
-                    Platform.runLater(() -> provider.getItems().add(mp));
-                }
-
-                return null;
-            }
-        };
-        PIMApplication.getExecutorService().execute(task);
+        provider.setPrefWidth(200);
+        provider.getItems().addAll(MailProvider.values());
+        // PIMApplication.getExecutorService().execute(() ->
+        // {
+        // for (MailProvider mp : MailProvider.values())
+        // {
+        // Platform.runLater(() -> provider.getItems().add(mp));
+        // }
+        // });
 
         // Mail
         TextField mail = new TextField();
@@ -145,6 +137,8 @@ public class EditMailAccountDialog
         // Spinner<Integer> imapPort = new Spinner<>(25, 1000, MailProvider.EinsUndEins.getImapPort());
         // imapPort.setEditable(true);
         ComboBox<MailPort> imapPort = new ComboBox<>();
+        imapPort.setPromptText("IMAP-Port");
+        imapPort.setPrefWidth(200);
         imapPort.getItems().addAll(MailPort.IMAP, MailPort.IMAPS);
         imapPort.getSelectionModel().select(MailPort.IMAPS);
         // imapPort.setEditable(true);
@@ -152,7 +146,10 @@ public class EditMailAccountDialog
         // SMTP
         TextField smtpHost = new TextField();
         imapHost.setPromptText("SMTP-Host");
+
         ComboBox<MailPort> smtpPort = new ComboBox<>();
+        smtpPort.setPromptText("SMTP-Port");
+        smtpPort.setPrefWidth(200);
         smtpPort.getItems().addAll(MailPort.SMTP, MailPort.SMTP_SSL, MailPort.SMTPS);
         smtpPort.getSelectionModel().select(MailPort.SMTPS);
 
@@ -238,9 +235,9 @@ public class EditMailAccountDialog
                 }
 
                 imapHost.setText(newValue.getImapHost());
-                imapPort.getSelectionModel().select(MailPort.findByPort(newValue.getImapPort()));
+                imapPort.getSelectionModel().select(newValue.getImapPort());
                 smtpHost.setText(newValue.getSmtpHost());
-                smtpPort.getSelectionModel().select(MailPort.findByPort(newValue.getSmtpPort()));
+                smtpPort.getSelectionModel().select(newValue.getSmtpPort());
             });
 
             gridPane.add(new Label(bundle.getString("provider")), 0, ++row);
@@ -262,6 +259,55 @@ public class EditMailAccountDialog
         gridPane.add(new Label(bundle.getString("passwort") + " (" + bundle.getString("wiederholung") + ")"), 0, ++row);
         gridPane.add(password2, 1, row);
 
+        // Test
+        Button buttonTest = new Button("Test");
+        buttonTest.setPrefWidth(150);
+        gridPane.add(buttonTest, 0, ++row);
+        Label labelTestResult = new Label();
+        gridPane.add(labelTestResult, 1, row);
+
+        buttonTest.setOnAction(event ->
+        {
+            labelTestResult.setText(null);
+            labelTestResult.setStyle(null);
+
+            MailAccount ma = new MailAccount();
+            ma.setMail(mail.getText());
+            ma.setImapHost(imapHost.getText());
+            ma.setImapPort(imapPort.getSelectionModel().getSelectedItem().getPort());
+            ma.setSmtpHost(smtpHost.getText());
+            ma.setSmtpPort(smtpPort.getSelectionModel().getSelectedItem().getPort());
+            ma.setPassword(password1.getText());
+
+            IMailService mailService = new JavaMailService(ma, Paths.get("."));
+
+            try
+            {
+                mailService.connect();
+                mailService.testConnection();
+
+                labelTestResult.setText("OK");
+                labelTestResult.setStyle("-fx-text-fill: darkgreen;"); // fx-text-inner-color
+            }
+            catch (Exception ex)
+            {
+                labelTestResult.setText(ex.getMessage());
+                labelTestResult.setStyle("-fx-text-fill: red;"); // fx-text-inner-color
+            }
+            finally
+            {
+                try
+                {
+                    mailService.disconnect();
+                }
+                catch (Exception ex)
+                {
+                    // Ignore
+                }
+            }
+        });
+
+        // Rest
         dialog.getDialogPane().setContent(gridPane);
 
         Platform.runLater(() -> mail.requestFocus());

@@ -27,8 +27,8 @@ public class TestSendMail extends AbstractMailTest
     private static JavaMailSender sender = null;
 
     /**
-    *
-    */
+     *
+     */
     @AfterClass
     public static void afterClass()
     {
@@ -44,7 +44,7 @@ public class TestSendMail extends AbstractMailTest
         sender = new JavaMailSender();
         sender.setEncoding(StandardCharsets.UTF_8.name());
         sender.setHost(MAIL_SMPT_HOST);
-        sender.setPort(MAIL_SMPT_PORT);
+        sender.setPort(MAIL_SMPT_PORT.getPort());
         sender.setProtocol("smtp");
 
         // Legitimation für Versand.
@@ -111,7 +111,6 @@ public class TestSendMail extends AbstractMailTest
 
         // byte[] bytes = Files.readAllBytes(resource.getFile().toPath());
         // InputStream inputStream = new ByteArrayInputStream(bytes);
-
         // @formatter:off
         JavaMailBuilder.create(sender, true)
                 .from(this.from)

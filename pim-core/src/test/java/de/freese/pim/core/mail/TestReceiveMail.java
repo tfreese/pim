@@ -1,9 +1,13 @@
 /**
  * Created: 27.12.2016
  */
-
 package de.freese.pim.core.mail;
 
+import com.sun.mail.imap.IMAPFolder;
+import com.sun.mail.util.ASCIIUtility;
+import de.freese.pim.core.mail.function.FunctionStripNotLetter;
+import de.freese.pim.core.mail.utils.MailUtils;
+import de.freese.pim.core.mail.utils.MailUtils.AbstractTextPart;
 import java.io.BufferedInputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -45,11 +49,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
 import org.junit.runners.Parameterized;
-import com.sun.mail.imap.IMAPFolder;
-import com.sun.mail.util.ASCIIUtility;
-import de.freese.pim.core.mail.function.FunctionStripNotLetter;
-import de.freese.pim.core.mail.utils.MailUtils;
-import de.freese.pim.core.mail.utils.MailUtils.AbstractTextPart;
 
 /**
  * @author Thomas Freese
@@ -114,7 +113,6 @@ public class TestReceiveMail extends AbstractMailTest
     // {
     // store.close();
     // }
-
     /**
      * @throws Exception Falls was schief geht.
      */
@@ -132,7 +130,7 @@ public class TestReceiveMail extends AbstractMailTest
     public void test000Connect() throws Exception
     {
         store = session.getStore("imaps");
-        store.connect(MAIL_IMAP_HOST, MAIL_IMAP_PORT, this.from, this.password);
+        store.connect(MAIL_IMAP_HOST, MAIL_IMAP_PORT.getPort(), this.from, this.password);
     }
 
     /**
@@ -317,7 +315,7 @@ public class TestReceiveMail extends AbstractMailTest
                     String mailRegEx = "^(.+)@(.+).(.+)$"; // ^[A-Za-z0-9+_.-]+@(.+)$
 
                     // @formatter:off
-                    List<String> values= textParts.stream()
+                    List<String> values = textParts.stream()
                             .map(AbstractTextPart::getText)
                             .map(t -> Jsoup.parse(t).text())
                             //.parallel()
@@ -354,8 +352,7 @@ public class TestReceiveMail extends AbstractMailTest
 //                        .filter(t -> t.length() > 2) // Nur Texte mit mehr als 2 Zeichen
 //                        .distinct()
 //                        .collect(Collectors.toList());
-                        // @formatter:on
-
+                    // @formatter:on
                     // Locale locale = FunctionStripStopWords.guessLocale(values);
                     // Function<String, String> functionStemmer = FunctionStemmer.get(locale);
                     //

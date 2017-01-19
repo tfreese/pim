@@ -63,6 +63,17 @@ public class JavaMailService extends AbstractMailService
      *
      * @param account {@link MailAccount}
      * @param basePath {@link Path}
+     */
+    public JavaMailService(final MailAccount account, final Path basePath)
+    {
+        this(account, basePath, null);
+    }
+
+    /**
+     * Erzeugt eine neue Instanz von {@link JavaMailService}
+     *
+     * @param account {@link MailAccount}
+     * @param basePath {@link Path}
      * @param mailDAO {@link IMailDAO}
      */
     public JavaMailService(final MailAccount account, final Path basePath, final IMailDAO mailDAO)
