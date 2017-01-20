@@ -279,4 +279,18 @@ public class MailAccount
     {
         return this.smtpPortProperty;
     }
+
+    /**
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString()
+    {
+        StringBuilder builder = new StringBuilder();
+        builder.append("MailAccount [id=").append(this.id);
+        builder.append(", mail=").append(getMail());
+        builder.append("]");
+
+        return builder.toString();
+    }
 }

@@ -10,8 +10,8 @@ import org.apache.commons.lang3.StringUtils;
 import de.freese.pim.core.mail.MailPort;
 import de.freese.pim.core.mail.MailProvider;
 import de.freese.pim.core.mail.model.MailAccount;
-import de.freese.pim.core.mail.service.IMailService;
-import de.freese.pim.core.mail.service.JavaMailService;
+import de.freese.pim.core.mail.service.IMailAccountService;
+import de.freese.pim.core.mail.service.JavaMailAccountService;
 import de.freese.pim.core.mail.utils.MailUtils;
 import de.freese.pim.gui.PIMApplication;
 import javafx.application.Platform;
@@ -53,7 +53,7 @@ public class EditMailAccountDialog
      */
     public Optional<MailAccount> addAccount(final ResourceBundle bundle)
     {
-        return openDialog(bundle, null, "mail.add.account", "imageview-new");
+        return openDialog(bundle, null, "mail.add.account", "imageview-add");
     }
 
     /**
@@ -169,7 +169,7 @@ public class EditMailAccountDialog
             if (!mail.getText().matches(mailRegEx))
             {
                 Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setHeaderText(bundle.getString("mail.ungueltiges_format"));
+                alert.setHeaderText(bundle.getString("mail.format.invalid"));
                 alert.showAndWait();
 
                 event.consume();
@@ -279,7 +279,7 @@ public class EditMailAccountDialog
             ma.setSmtpPort(smtpPort.getSelectionModel().getSelectedItem().getPort());
             ma.setPassword(password1.getText());
 
-            IMailService mailService = new JavaMailService(ma, Paths.get("."));
+            IMailAccountService mailService = new JavaMailAccountService(ma, Paths.get("."));
 
             try
             {

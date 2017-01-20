@@ -12,9 +12,9 @@ import org.apache.commons.lang3.tuple.MutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
 import de.freese.pim.core.addressbook.dao.DefaultAddressBookDAO;
-import de.freese.pim.core.addressbook.dao.IAddressBookDAO;
 import de.freese.pim.core.addressbook.model.Kontakt;
 import de.freese.pim.core.addressbook.service.DefaultAddressBookService;
+import de.freese.pim.core.addressbook.service.IAddressBookService;
 import de.freese.pim.core.persistence.TransactionalInvocationHandler;
 import de.freese.pim.gui.PIMApplication;
 import de.freese.pim.gui.controller.AbstractController;
@@ -54,24 +54,19 @@ public class ContactController extends AbstractController
     *
     */
     @FXML
-    private Button buttonDelete = null;
+    private Button buttonAddContact = null;
 
     /**
     *
     */
     @FXML
-    private Button buttonEdit = null;
+    private Button buttonDeleteContact = null;
 
     /**
     *
     */
     @FXML
-    private Button buttonNew = null;
-
-    /**
-    *
-    */
-    private final IAddressBookDAO dao;
+    private Button buttonEditContact = null;
 
     /**
     *
@@ -89,6 +84,11 @@ public class ContactController extends AbstractController
     *
     */
     private final SimpleObjectProperty<Kontakt> selectedKontakt = new SimpleObjectProperty<>();
+
+    /**
+    *
+    */
+    private final IAddressBookService service;
 
     /**
     *
@@ -115,9 +115,9 @@ public class ContactController extends AbstractController
     {
         super();
 
-        this.dao = (IAddressBookDAO) Proxy.newProxyInstance(getClass().getClassLoader(), new Class<?>[]
+        this.service = (IAddressBookService) Proxy.newProxyInstance(getClass().getClassLoader(), new Class<?>[]
         {
-                IAddressBookDAO.class
+                IAddressBookService.class
         }, new TransactionalInvocationHandler(getDataSource(), new DefaultAddressBookService(new DefaultAddressBookDAO(getDataSource()))));
     }
 
@@ -171,9 +171,9 @@ public class ContactController extends AbstractController
         this.textFieldVorname.textProperty().bind(
                 Bindings.when(this.selectedKontakt.isNull()).then("").otherwise(Bindings.selectString(this.selectedKontakt, "vorname")));
 
-        this.buttonNew.setOnAction(event ->
+        this.buttonAddContact.setOnAction(event ->
         {
-            Dialog<Pair<String, String>> dialog = createAddEditKontaktDialog("kontakt.neu", "kontakt.neu", "imageview-new", null,
+            Dialog<Pair<String, String>> dialog = createAddEditKontaktDialog("contact.add", "contact.add", "imageview-add", null,
                     resources);
 
             Optional<Pair<String, String>> result = dialog.showAndWait();
@@ -181,7 +181,7 @@ public class ContactController extends AbstractController
             {
                 try
                 {
-                    long id = this.dao.insertKontakt(pair.getLeft(), StringUtils.defaultIfBlank(pair.getRight(), null));
+                    long id = this.service.insertKontakt(pair.getLeft(), StringUtils.defaultIfBlank(pair.getRight(), null));
 
                     Kontakt kontakt = new Kontakt(id, pair.getLeft(), StringUtils.defaultIfBlank(pair.getRight(), null));
                     getKontakteList().add(kontakt);
@@ -197,9 +197,9 @@ public class ContactController extends AbstractController
             });
         });
 
-        this.buttonEdit.setOnAction(event ->
+        this.buttonEditContact.setOnAction(event ->
         {
-            Dialog<Pair<String, String>> dialog = createAddEditKontaktDialog("kontakt.aendern", "kontakt.aendern", "imageview-edit",
+            Dialog<Pair<String, String>> dialog = createAddEditKontaktDialog("contact.edit", "contact.edit", "imageview-edit",
                     this.selectedKontakt.getValue(), resources);
 
             Optional<Pair<String, String>> result = dialog.showAndWait();
@@ -207,7 +207,7 @@ public class ContactController extends AbstractController
             {
                 try
                 {
-                    this.dao.updateKontakt(this.selectedKontakt.getValue().getID(), pair.getLeft(), pair.getRight());
+                    this.service.updateKontakt(this.selectedKontakt.getValue().getID(), pair.getLeft(), pair.getRight());
 
                     this.selectedKontakt.getValue().setNachname(pair.getLeft());
                     this.selectedKontakt.getValue().setVorname(StringUtils.defaultIfBlank(pair.getRight(), null));
@@ -221,13 +221,13 @@ public class ContactController extends AbstractController
             });
         });
 
-        this.buttonDelete.setOnAction(event ->
+        this.buttonDeleteContact.setOnAction(event ->
         {
             Alert alert = new Alert(AlertType.WARNING);
             alert.getDialogPane().getStylesheets().add("styles/styles.css");
-            alert.setTitle(resources.getString("kontakt.loeschen"));
-            alert.setHeaderText(resources.getString("kontakt.loeschen"));
-            alert.setContentText(resources.getString("kontakt.loeschen.wirklich"));
+            alert.setTitle(resources.getString("contact.delete"));
+            alert.setHeaderText(resources.getString("contact.delete"));
+            alert.setContentText(resources.getString("contact.delete.wirklich"));
             alert.getButtonTypes().setAll(ButtonType.YES, ButtonType.NO);
 
             ImageView imageView = new ImageView();
@@ -260,7 +260,7 @@ public class ContactController extends AbstractController
             {
                 try
                 {
-                    this.dao.deleteKontakt(this.selectedKontakt.getValue().getID());
+                    this.service.deleteKontakt(this.selectedKontakt.getValue().getID());
                     getKontakteList().remove(this.selectedKontakt.getValue());
                 }
                 catch (Exception ex)
@@ -390,7 +390,7 @@ public class ContactController extends AbstractController
             @Override
             protected List<Kontakt> call() throws Exception
             {
-                return ContactController.this.dao.getKontaktDetails();
+                return ContactController.this.service.getKontaktDetails();
             }
         };
 

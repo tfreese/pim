@@ -278,10 +278,8 @@ public abstract class AbstractAddressBookDAO implements IAddressBookDAO
         // kontakte = new KontaktDetailsResultSetExtractor().extract(rs);
         // }
         // }
-        List<Kontakt> kontakte = getJdbcTemplate().query(sql.toString(), ps ->
-        {
-            ps.setString(1, userID);
-        }, new KontaktDetailsResultSetExtractor());
+        List<Kontakt> kontakte = getJdbcTemplate().query(sql.toString(), ps -> ps.setString(1, userID),
+                new KontaktDetailsResultSetExtractor());
 
         return kontakte;
     }
@@ -321,10 +319,7 @@ public abstract class AbstractAddressBookDAO implements IAddressBookDAO
         // }
         // }
 
-        List<Kontakt> kontakte = getJdbcTemplate().query(sql.toString(), ps ->
-        {
-            ps.setString(1, userID);
-        }, new KontaktRowMapper());
+        List<Kontakt> kontakte = getJdbcTemplate().query(sql.toString(), ps -> ps.setString(1, userID), new KontaktRowMapper());
 
         return kontakte;
     }

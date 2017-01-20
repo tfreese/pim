@@ -30,18 +30,17 @@ import javax.mail.internet.InternetAddress;
 
 import com.sun.mail.imap.IMAPFolder;
 
-import de.freese.pim.core.mail.dao.IMailDAO;
 import de.freese.pim.core.mail.model.Mail;
 import de.freese.pim.core.mail.model.MailAccount;
 import de.freese.pim.core.mail.model.MailFolder;
 import de.freese.pim.core.utils.Utils;
 
 /**
- * JavaMail-Implementierung des {@link IMailService}.
+ * JavaMail-Implementierung des {@link IMailAccountService}.
  *
  * @author Thomas Freese
  */
-public class JavaMailService extends AbstractMailService
+public class JavaMailAccountService extends AbstractMailAccountService
 {
     /**
     *
@@ -59,30 +58,30 @@ public class JavaMailService extends AbstractMailService
     private Store store = null;
 
     /**
-     * Erzeugt eine neue Instanz von {@link JavaMailService}
+     * Erzeugt eine neue Instanz von {@link JavaMailAccountService}
      *
      * @param account {@link MailAccount}
      * @param basePath {@link Path}
      */
-    public JavaMailService(final MailAccount account, final Path basePath)
+    public JavaMailAccountService(final MailAccount account, final Path basePath)
     {
         this(account, basePath, null);
     }
 
     /**
-     * Erzeugt eine neue Instanz von {@link JavaMailService}
+     * Erzeugt eine neue Instanz von {@link JavaMailAccountService}
      *
      * @param account {@link MailAccount}
      * @param basePath {@link Path}
-     * @param mailDAO {@link IMailDAO}
+     * @param mailService {@link IMailService}
      */
-    public JavaMailService(final MailAccount account, final Path basePath, final IMailDAO mailDAO)
+    public JavaMailAccountService(final MailAccount account, final Path basePath, final IMailService mailService)
     {
-        super(account, basePath, mailDAO);
+        super(account, basePath, mailService);
     }
 
     /**
-     * @see de.freese.pim.core.mail.service.IMailService#connect()
+     * @see de.freese.pim.core.mail.service.IMailAccountService#connect()
      */
     @Override
     public void connect() throws Exception
@@ -93,7 +92,7 @@ public class JavaMailService extends AbstractMailService
     }
 
     /**
-     * @see de.freese.pim.core.mail.service.IMailService#disconnect()
+     * @see de.freese.pim.core.mail.service.IMailAccountService#disconnect()
      */
     @Override
     public void disconnect() throws Exception
@@ -121,7 +120,7 @@ public class JavaMailService extends AbstractMailService
     }
 
     /**
-     * @see de.freese.pim.core.mail.service.IMailService#getChilds(de.freese.pim.core.mail.model.MailFolder)
+     * @see de.freese.pim.core.mail.service.IMailAccountService#getChilds(de.freese.pim.core.mail.model.MailFolder)
      */
     @Override
     public List<MailFolder> getChilds(final MailFolder parent) throws Exception
@@ -181,7 +180,7 @@ public class JavaMailService extends AbstractMailService
     }
 
     /**
-     * @see de.freese.pim.core.mail.service.IMailService#getNewMails(de.freese.pim.core.mail.model.MailFolder)
+     * @see de.freese.pim.core.mail.service.IMailAccountService#getNewMails(de.freese.pim.core.mail.model.MailFolder)
      */
     @Override
     public List<Mail> getNewMails(final MailFolder folder) throws Exception
@@ -190,7 +189,7 @@ public class JavaMailService extends AbstractMailService
     }
 
     /**
-     * @see de.freese.pim.core.mail.service.IMailService#getRootFolder()
+     * @see de.freese.pim.core.mail.service.IMailAccountService#getRootFolder()
      */
     @Override
     public synchronized List<MailFolder> getRootFolder() throws Exception
@@ -237,7 +236,7 @@ public class JavaMailService extends AbstractMailService
     }
 
     /**
-     * @see de.freese.pim.core.mail.service.IMailService#getUnreadMailsCount()
+     * @see de.freese.pim.core.mail.service.IMailAccountService#getUnreadMailsCount()
      */
     @Override
     public int getUnreadMailsCount()
@@ -267,7 +266,8 @@ public class JavaMailService extends AbstractMailService
     }
 
     /**
-     * @see de.freese.pim.core.mail.service.IMailService#loadMails(de.freese.pim.core.mail.model.MailFolder, java.util.function.Consumer)
+     * @see de.freese.pim.core.mail.service.IMailAccountService#loadMails(de.freese.pim.core.mail.model.MailFolder,
+     *      java.util.function.Consumer)
      */
     @Override
     public void loadMails(final MailFolder folder, final Consumer<Mail> consumer) throws Exception
@@ -298,7 +298,7 @@ public class JavaMailService extends AbstractMailService
     }
 
     /**
-     * @see de.freese.pim.core.mail.service.IMailService#syncChildFolder(de.freese.pim.core.mail.model.MailFolder,
+     * @see de.freese.pim.core.mail.service.IMailAccountService#syncChildFolder(de.freese.pim.core.mail.model.MailFolder,
      *      java.util.function.Consumer, java.util.function.Consumer)
      */
     @Override
@@ -359,7 +359,7 @@ public class JavaMailService extends AbstractMailService
     }
 
     /**
-     * @see de.freese.pim.core.mail.service.IMailService#testConnection()
+     * @see de.freese.pim.core.mail.service.IMailAccountService#testConnection()
      */
     @Override
     public void testConnection() throws Exception

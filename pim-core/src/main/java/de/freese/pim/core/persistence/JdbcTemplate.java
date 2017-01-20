@@ -14,6 +14,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+
 import javax.sql.DataSource;
 
 /**
@@ -210,12 +211,258 @@ public class JdbcTemplate
     }
 
     /**
+     * Führt ein einfaches {@link Statement#execute(String)} aus.
+     *
+     * @param sql String
+     * @throws SQLException Falls was schief geht.
+     */
+    @SuppressWarnings("resource")
+    public void execute(final String sql) throws SQLException
+    {
+        Connection connection = null;
+
+        try
+        {
+            connection = getConnection();
+
+            try (Statement stmt = connection.createStatement())
+            {
+                stmt.execute(sql);
+            }
+        }
+        // catch (Exception ex)
+        // {
+        // throw convertException(ex);
+        // }
+        finally
+        {
+            closeConnection(connection);
+        }
+    }
+
+    /**
+     * @return {@link DataSource}
+     */
+    public DataSource getDataSource()
+    {
+        Objects.requireNonNull(this.dataSource, "dataSource required");
+
+        return this.dataSource;
+    }
+
+    /**
+     * Extrahiert ein Objekt aus dem {@link ResultSet}.
+     *
+     * @param <T> Konkreter Return-Typ
+     * @param sql String
+     * @param setter {@link PreparedStatementSetter}
+     * @param rse {@link ResultSetExtractor}
+     * @return Object
+     * @throws SQLException Falls was schief geht.
+     */
+    @SuppressWarnings("resource")
+    public <T> T query(final String sql, final PreparedStatementSetter setter, final ResultSetExtractor<T> rse) throws SQLException
+    {
+        Connection connection = null;
+
+        try
+        {
+            connection = getConnection();
+            T result = null;
+
+            try (PreparedStatement ps = connection.prepareStatement(sql))
+            {
+                ps.clearParameters();
+
+                setter.setValues(ps);
+
+                try (ResultSet rs = ps.executeQuery())
+                {
+                    result = rse.extract(rs);
+                }
+            }
+
+            return result;
+        }
+        // catch (Exception ex)
+        // {
+        // throw convertException(ex);
+        // }
+        finally
+        {
+            closeConnection(connection);
+        }
+    }
+
+    /**
+     * Erzeugt über den {@link RowMapper} eine Liste aus Entities.
+     *
+     * @param <T> Konkreter Row-Typ
+     * @param sql String
+     * @param setter {@link PreparedStatementSetter}
+     * @param rowMapper {@link RowMapper}
+     * @return {@link List}
+     * @throws SQLException Falls was schief geht.
+     */
+    public <T> List<T> query(final String sql, final PreparedStatementSetter setter, final RowMapper<T> rowMapper) throws SQLException
+    {
+        return query(sql, setter, new RowMapperResultSetExtractor<>(rowMapper));
+    }
+
+    /**
+     * Extrahiert ein Objekt aus dem {@link ResultSet}.
+     *
+     * @param <T> Konkreter Return-Typ
+     * @param sql String
+     * @param rse {@link ResultSetExtractor}
+     * @return Object
+     * @throws SQLException Falls was schief geht.
+     */
+    @SuppressWarnings("resource")
+    public <T> T query(final String sql, final ResultSetExtractor<T> rse) throws SQLException
+    {
+        Connection connection = null;
+
+        try
+        {
+            connection = getConnection();
+            T result = null;
+
+            try (Statement stmt = connection.createStatement();
+                 ResultSet rs = stmt.executeQuery(sql))
+            {
+                result = rse.extract(rs);
+            }
+
+            return result;
+        }
+        // catch (Exception ex)
+        // {
+        // throw convertException(ex);
+        // }
+        finally
+        {
+            closeConnection(connection);
+        }
+    }
+
+    /**
+     * Erzeugt über den {@link RowMapper} eine Liste aus Entities.
+     *
+     * @param <T> Konkreter Row-Typ
+     * @param sql String
+     * @param rowMapper {@link RowMapper}
+     * @return {@link List}
+     * @throws SQLException Falls was schief geht.
+     */
+    public <T> List<T> query(final String sql, final RowMapper<T> rowMapper) throws SQLException
+    {
+        return query(sql, new RowMapperResultSetExtractor<>(rowMapper));
+    }
+
+    /**
+     * Liefert eine Liste aus Maps.<br>
+     *
+     * @param sql String
+     * @return {@link List}
+     * @throws SQLException Falls was schief geht.
+     */
+    public List<Map<String, Object>> queryForList(final String sql) throws SQLException
+    {
+        return query(sql, new ColumnMapResultSetExtractor());
+    }
+
+    /**
+     * @param dataSource {@link DataSource}
+     * @return {@link JdbcTemplate}
+     */
+    public JdbcTemplate setDataSource(final DataSource dataSource)
+    {
+        this.dataSource = dataSource;
+
+        return this;
+    }
+
+    /**
+     * Führt ein {@link Statement#executeUpdate(String)} aus (INSERT, UPDATE, DELETE).
+     *
+     * @param sql String
+     * @return int; affectedRows
+     * @throws SQLException Falls was schief geht.
+     */
+    @SuppressWarnings("resource")
+    public int update(final String sql) throws SQLException
+    {
+        Connection connection = null;
+
+        try
+        {
+            connection = getConnection();
+            int affectedRows = 0;
+
+            try (Statement stmt = connection.createStatement())
+            {
+                affectedRows = stmt.executeUpdate(sql);
+            }
+
+            return affectedRows;
+        }
+        // catch (Exception ex)
+        // {
+        // throw convertException(ex);
+        // }
+        finally
+        {
+            closeConnection(connection);
+        }
+    }
+
+    /**
+     * Führt ein {@link Statement#executeUpdate(String)} aus (INSERT, UPDATE, DELETE).
+     *
+     * @param sql String
+     * @param setter {@link PreparedStatementSetter}
+     * @return int; affectedRows
+     * @throws SQLException Falls was schief geht.
+     */
+    @SuppressWarnings("resource")
+    public int update(final String sql, final PreparedStatementSetter setter) throws SQLException
+    {
+        Connection connection = null;
+
+        try
+        {
+            connection = getConnection();
+            int affectedRows = 0;
+
+            try (PreparedStatement ps = connection.prepareStatement(sql))
+            {
+                ps.clearParameters();
+
+                setter.setValues(ps);
+
+                affectedRows = ps.executeUpdate();
+            }
+
+            return affectedRows;
+        }
+        // catch (Exception ex)
+        // {
+        // throw convertException(ex);
+        // }
+        finally
+        {
+            closeConnection(connection);
+        }
+    }
+
+    /**
      * Schliesst die {@link Connection}.
      *
      * @param connection {@link Connection}
-     * @throws Exception Falls was schief geht.
+     * @throws SQLException Falls was schief geht.
      */
-    protected void closeConnection(final Connection connection) throws Exception
+    protected void closeConnection(final Connection connection) throws SQLException
     {
         if (ConnectionHolder.isEmpty())
         {
@@ -255,41 +502,11 @@ public class JdbcTemplate
     }
 
     /**
-     * Führt ein einfaches {@link Statement#execute(String)} aus.
-     *
-     * @param sql String
-     * @throws Exception Falls was schief geht.
-     */
-    @SuppressWarnings("resource")
-    public void execute(final String sql) throws Exception
-    {
-        Connection connection = null;
-
-        try
-        {
-            connection = getConnection();
-
-            try (Statement stmt = connection.createStatement())
-            {
-                stmt.execute(sql);
-            }
-        }
-        catch (Exception ex)
-        {
-            throw convertException(ex);
-        }
-        finally
-        {
-            closeConnection(connection);
-        }
-    }
-
-    /**
      * @return {@link Connection}
-     * @throws Exception Falls was schief geht.
+     * @throws SQLException Falls was schief geht.
      */
     @SuppressWarnings("resource")
-    protected Connection getConnection() throws Exception
+    protected Connection getConnection() throws SQLException
     {
         Connection connection = null;
 
@@ -306,221 +523,5 @@ public class JdbcTemplate
         }
 
         return connection;
-    }
-
-    /**
-     * @return {@link DataSource}
-     */
-    public DataSource getDataSource()
-    {
-        Objects.requireNonNull(this.dataSource, "dataSource required");
-
-        return this.dataSource;
-    }
-
-    /**
-     * Extrahiert ein Objekt aus dem {@link ResultSet}.
-     *
-     * @param <T> Konkreter Return-Typ
-     * @param sql String
-     * @param setter {@link PreparedStatementSetter}
-     * @param rse {@link ResultSetExtractor}
-     * @return Object
-     * @throws Exception Falls was schief geht.
-     */
-    @SuppressWarnings("resource")
-    public <T> T query(final String sql, final PreparedStatementSetter setter, final ResultSetExtractor<T> rse) throws Exception
-    {
-        Connection connection = null;
-
-        try
-        {
-            connection = getConnection();
-            T result = null;
-
-            try (PreparedStatement ps = connection.prepareStatement(sql))
-            {
-                ps.clearParameters();
-
-                setter.setValues(ps);
-
-                try (ResultSet rs = ps.executeQuery())
-                {
-                    result = rse.extract(rs);
-                }
-            }
-
-            return result;
-        }
-        catch (Exception ex)
-        {
-            throw convertException(ex);
-        }
-        finally
-        {
-            closeConnection(connection);
-        }
-    }
-
-    /**
-     * Erzeugt über den {@link RowMapper} eine Liste aus Entities.
-     *
-     * @param <T> Konkreter Row-Typ
-     * @param sql String
-     * @param setter {@link PreparedStatementSetter}
-     * @param rowMapper {@link RowMapper}
-     * @return {@link List}
-     * @throws Exception Falls was schief geht.
-     */
-    public <T> List<T> query(final String sql, final PreparedStatementSetter setter, final RowMapper<T> rowMapper) throws Exception
-    {
-        return query(sql, setter, new RowMapperResultSetExtractor<>(rowMapper));
-    }
-
-    /**
-     * Extrahiert ein Objekt aus dem {@link ResultSet}.
-     *
-     * @param <T> Konkreter Return-Typ
-     * @param sql String
-     * @param rse {@link ResultSetExtractor}
-     * @return Object
-     * @throws Exception Falls was schief geht.
-     */
-    @SuppressWarnings("resource")
-    public <T> T query(final String sql, final ResultSetExtractor<T> rse) throws Exception
-    {
-        Connection connection = null;
-
-        try
-        {
-            connection = getConnection();
-            T result = null;
-
-            try (Statement stmt = connection.createStatement();
-                 ResultSet rs = stmt.executeQuery(sql))
-            {
-                result = rse.extract(rs);
-            }
-
-            return result;
-        }
-        catch (Exception ex)
-        {
-            throw convertException(ex);
-        }
-        finally
-        {
-            closeConnection(connection);
-        }
-    }
-
-    /**
-     * Erzeugt über den {@link RowMapper} eine Liste aus Entities.
-     * 
-     * @param <T> Konkreter Row-Typ
-     * @param sql String
-     * @param rowMapper {@link RowMapper}
-     * @return {@link List}
-     * @throws Exception Falls was schief geht.
-     */
-    public <T> List<T> query(final String sql, final RowMapper<T> rowMapper) throws Exception
-    {
-        return query(sql, new RowMapperResultSetExtractor<>(rowMapper));
-    }
-
-    /**
-     * Liefert eine Liste aus Maps.<br>
-     *
-     * @param sql String
-     * @return {@link List}
-     * @throws Exception Falls was schief geht.
-     */
-    public List<Map<String, Object>> queryForList(final String sql) throws Exception
-    {
-        return query(sql, new ColumnMapResultSetExtractor());
-    }
-
-    /**
-     * @param dataSource {@link DataSource}
-     * @return {@link JdbcTemplate}
-     */
-    public JdbcTemplate setDataSource(final DataSource dataSource)
-    {
-        this.dataSource = dataSource;
-
-        return this;
-    }
-
-    /**
-     * Führt ein {@link Statement#executeUpdate(String)} aus (INSERT, UPDATE, DELETE).
-     *
-     * @param sql String
-     * @return int; affectedRows
-     * @throws Exception Falls was schief geht.
-     */
-    @SuppressWarnings("resource")
-    public int update(final String sql) throws Exception
-    {
-        Connection connection = null;
-
-        try
-        {
-            connection = getConnection();
-            int affectedRows = 0;
-
-            try (Statement stmt = connection.createStatement())
-            {
-                affectedRows = stmt.executeUpdate(sql);
-            }
-
-            return affectedRows;
-        }
-        catch (Exception ex)
-        {
-            throw convertException(ex);
-        }
-        finally
-        {
-            closeConnection(connection);
-        }
-    }
-
-    /**
-     * Führt ein {@link Statement#executeUpdate(String)} aus (INSERT, UPDATE, DELETE).
-     *
-     * @param sql String
-     * @param setter {@link PreparedStatementSetter}
-     * @return int; affectedRows
-     * @throws Exception Falls was schief geht.
-     */
-    @SuppressWarnings("resource")
-    public int update(final String sql, final PreparedStatementSetter setter) throws Exception
-    {
-        Connection connection = null;
-
-        try
-        {
-            connection = getConnection();
-            int affectedRows = 0;
-
-            try (PreparedStatement ps = connection.prepareStatement(sql))
-            {
-                ps.clearParameters();
-
-                setter.setValues(ps);
-
-                affectedRows = ps.executeUpdate();
-            }
-
-            return affectedRows;
-        }
-        catch (Exception ex)
-        {
-            throw convertException(ex);
-        }
-        finally
-        {
-            closeConnection(connection);
-        }
     }
 }

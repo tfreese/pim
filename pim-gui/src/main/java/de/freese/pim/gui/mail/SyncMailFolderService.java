@@ -6,8 +6,11 @@ package de.freese.pim.gui.mail;
 
 import java.util.Iterator;
 import java.util.Objects;
+
+import org.slf4j.Logger;
+
 import de.freese.pim.core.mail.model.MailFolder;
-import de.freese.pim.core.mail.service.IMailService;
+import de.freese.pim.core.mail.service.IMailAccountService;
 import de.freese.pim.gui.PIMApplication;
 import de.freese.pim.gui.view.ErrorDialog;
 import javafx.application.Platform;
@@ -26,7 +29,12 @@ public class SyncMailFolderService extends Service<Void>
     /**
     *
     */
-    private final IMailService mailService;
+    private static final Logger LOGGER = PIMApplication.LOGGER;
+
+    /**
+    *
+    */
+    private final IMailAccountService mailAccountService;
 
     /**
     *
@@ -37,17 +45,17 @@ public class SyncMailFolderService extends Service<Void>
      * Erstellt ein neues {@link SyncMailFolderService} Object.
      *
      * @param root {@link TreeItem}
-     * @param mailService {@link IMailService}
+     * @param mailAccountService {@link IMailAccountService}
      */
-    public SyncMailFolderService(final TreeItem<Object> root, final IMailService mailService)
+    public SyncMailFolderService(final TreeItem<Object> root, final IMailAccountService mailAccountService)
     {
         super();
 
         Objects.requireNonNull(root, "root item required");
-        Objects.requireNonNull(mailService, "mailService required");
+        Objects.requireNonNull(mailAccountService, "mailAccountService required");
 
         this.root = root;
-        this.mailService = mailService;
+        this.mailAccountService = mailAccountService;
 
         setExecutor(PIMApplication.getExecutorService());
     }
@@ -64,44 +72,11 @@ public class SyncMailFolderService extends Service<Void>
     }
 
     /**
-     * @see javafx.concurrent.Service#createTask()
+     * @return {@link IMailAccountService}
      */
-    @Override
-    protected Task<Void> createTask()
+    private IMailAccountService getMailAccountService()
     {
-        Task<Void> task = new Task<Void>()
-        {
-            /**
-             * @see javafx.concurrent.Task#call()
-             */
-            @Override
-            protected Void call() throws Exception
-            {
-                for (TreeItem<Object> childItem : getRoot().getChildren())
-                {
-                    MailFolder folder = (MailFolder) childItem.getValue();
-
-                    syncChildFolder(childItem, folder);
-                }
-
-                PIMApplication.LOGGER.info("Synchronisation of {} finished", SyncMailFolderService.this.mailService.getAccount().getMail());
-
-                return null;
-            }
-        };
-
-        setOnSucceeded(event -> {
-        });
-
-        setOnFailed(event -> {
-            Throwable th = getException();
-
-            PIMApplication.LOGGER.error(null, th);
-
-            new ErrorDialog().forThrowable(th).showAndWait();
-        });
-
-        return task;
+        return this.mailAccountService;
     }
 
     /**
@@ -120,7 +95,8 @@ public class SyncMailFolderService extends Service<Void>
      */
     private void removeFolder(final TreeItem<Object> parent, final String name)
     {
-        Platform.runLater(() -> {
+        Platform.runLater(() ->
+        {
             for (Iterator<TreeItem<Object>> iterator = parent.getChildren().iterator(); iterator.hasNext();)
             {
                 TreeItem<Object> child = iterator.next();
@@ -144,7 +120,7 @@ public class SyncMailFolderService extends Service<Void>
      */
     private void syncChildFolder(final TreeItem<Object> treeItem, final MailFolder parent) throws Exception
     {
-        this.mailService.syncChildFolder(parent, mf -> addFolder(treeItem, mf), name -> removeFolder(treeItem, name));
+        getMailAccountService().syncChildFolder(parent, mf -> addFolder(treeItem, mf), name -> removeFolder(treeItem, name));
 
         for (TreeItem<Object> childItem : treeItem.getChildren())
         {
@@ -152,5 +128,48 @@ public class SyncMailFolderService extends Service<Void>
 
             syncChildFolder(childItem, folder);
         }
+    }
+
+    /**
+     * @see javafx.concurrent.Service#createTask()
+     */
+    @Override
+    protected Task<Void> createTask()
+    {
+        Task<Void> task = new Task<Void>()
+        {
+            /**
+             * @see javafx.concurrent.Task#call()
+             */
+            @Override
+            protected Void call() throws Exception
+            {
+                for (TreeItem<Object> childItem : getRoot().getChildren())
+                {
+                    MailFolder folder = (MailFolder) childItem.getValue();
+
+                    syncChildFolder(childItem, folder);
+                }
+
+                LOGGER.info("Synchronisation of {} finished", getMailAccountService().getAccount().getMail());
+
+                return null;
+            }
+        };
+
+        setOnSucceeded(event ->
+        {
+        });
+
+        setOnFailed(event ->
+        {
+            Throwable th = getException();
+
+            LOGGER.error(null, th);
+
+            new ErrorDialog().forThrowable(th).showAndWait();
+        });
+
+        return task;
     }
 }

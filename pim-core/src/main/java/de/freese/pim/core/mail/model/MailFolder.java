@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Predicate;
-import de.freese.pim.core.mail.service.IMailService;
+import de.freese.pim.core.mail.service.IMailAccountService;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
@@ -45,7 +45,7 @@ public class MailFolder
     /**
     *
     */
-    private final IMailService mailService;
+    private final IMailAccountService mailService;
 
     /**
      *
@@ -70,10 +70,10 @@ public class MailFolder
     /**
      * Erzeugt eine neue Instanz von {@link MailFolder}
      *
-     * @param mailService {@link IMailService}
+     * @param mailService {@link IMailAccountService}
      * @param name String
      */
-    public MailFolder(final IMailService mailService, final String name)
+    public MailFolder(final IMailAccountService mailService, final String name)
     {
         this(mailService, name, null);
     }
@@ -85,7 +85,7 @@ public class MailFolder
      * @param name String
      * @param parent {@link MailFolder}
      */
-    public MailFolder(final IMailService mailService, final String name, final MailFolder parent)
+    public MailFolder(final IMailAccountService mailService, final String name, final MailFolder parent)
     {
         super();
 
@@ -139,11 +139,11 @@ public class MailFolder
     }
 
     /**
-     * Liefert den {@link IMailService}.
+     * Liefert den {@link IMailAccountService}.
      *
-     * @return {@link IMailService}
+     * @return {@link IMailAccountService}
      */
-    public IMailService getMailService()
+    public IMailAccountService getMailService()
     {
         return this.mailService;
     }

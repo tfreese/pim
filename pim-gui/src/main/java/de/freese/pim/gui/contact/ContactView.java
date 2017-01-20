@@ -13,7 +13,9 @@ import javafx.fxml.FXML;
 import javafx.geometry.HPos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -37,19 +39,19 @@ public class ContactView implements IView
     *
     */
     @FXML
-    private Button buttonDelete = null;
+    private Button buttonAddContact = null;
 
     /**
     *
     */
     @FXML
-    private Button buttonEdit = null;
+    private Button buttonDeleteContact = null;
 
     /**
     *
     */
     @FXML
-    private Button buttonNew = null;
+    private Button buttonEditContact = null;
 
     /**
      *
@@ -158,28 +160,31 @@ public class ContactView implements IView
         gridPane.add(toolBar, 0, 0, 2, 1);
 
         ImageView imageView = new ImageView();
-        imageView.setFitHeight(16);
-        imageView.setFitWidth(16);
-        imageView.getStyleClass().add("imageview-new");
-        this.buttonNew = new Button("%neu", imageView);
-        this.buttonNew.setTooltip(new Tooltip("%kontakt.neu"));
-        toolBar.getItems().add(this.buttonNew);
+        imageView.setFitHeight(32);
+        imageView.setFitWidth(32);
+        imageView.getStyleClass().add("imageview-add");
+        this.buttonAddContact = new Button();
+        this.buttonAddContact.setGraphic(imageView);
+        this.buttonAddContact.setTooltip(new Tooltip("%contact.add"));
+        toolBar.getItems().add(this.buttonAddContact);
 
         imageView = new ImageView();
-        imageView.setFitHeight(16);
-        imageView.setFitWidth(16);
+        imageView.setFitHeight(32);
+        imageView.setFitWidth(32);
         imageView.getStyleClass().add("imageview-edit");
-        this.buttonEdit = new Button("%aendern", imageView);
-        this.buttonEdit.setTooltip(new Tooltip("%kontakt.aendern"));
-        toolBar.getItems().add(this.buttonEdit);
+        this.buttonEditContact = new Button();
+        this.buttonEditContact.setGraphic(imageView);
+        this.buttonEditContact.setTooltip(new Tooltip("%contact.edit"));
+        toolBar.getItems().add(this.buttonEditContact);
 
         imageView = new ImageView();
-        imageView.setFitHeight(16);
-        imageView.setFitWidth(16);
+        imageView.setFitHeight(32);
+        imageView.setFitWidth(32);
         imageView.getStyleClass().add("imageview-delete");
-        this.buttonDelete = new Button("%loeschen", imageView);
-        this.buttonDelete.setTooltip(new Tooltip("%kontakt.loeschen"));
-        toolBar.getItems().add(this.buttonDelete);
+        this.buttonDeleteContact = new Button();
+        this.buttonDeleteContact.setGraphic(imageView);
+        this.buttonDeleteContact.setTooltip(new Tooltip("%contact.delete"));
+        toolBar.getItems().add(this.buttonDeleteContact);
 
         // FilterLabel
         this.labelFilter = new Label("%filter");
@@ -195,7 +200,7 @@ public class ContactView implements IView
         gridPane.add(this.tableViewKontakt, 0, 2, 2, 1);
         GridPane.setVgrow(this.tableViewKontakt, Priority.ALWAYS);
 
-        TitledPane titledPane = new TitledPane("%kontakte", gridPane);
+        TitledPane titledPane = new TitledPane("%contacts", gridPane);
         titledPane.setPrefHeight(Double.MAX_VALUE);
         // titledPane.setContent(gridPane);
 
@@ -216,8 +221,8 @@ public class ContactView implements IView
         tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         // tableView.setColumnResizePolicy(TableView.UNCONSTRAINED_RESIZE_POLICY);
 
-        this.buttonEdit.disableProperty().bind(tableView.getSelectionModel().selectedItemProperty().isNull());
-        this.buttonDelete.disableProperty().bind(tableView.getSelectionModel().selectedItemProperty().isNull());
+        this.buttonEditContact.disableProperty().bind(tableView.getSelectionModel().selectedItemProperty().isNull());
+        this.buttonDeleteContact.disableProperty().bind(tableView.getSelectionModel().selectedItemProperty().isNull());
 
         // tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
@@ -268,6 +273,40 @@ public class ContactView implements IView
         sortedData.comparatorProperty().bind(tableView.comparatorProperty());
 
         tableView.setItems(sortedData);
+
+        ContextMenu contextMenu = new ContextMenu();
+        tableView.setContextMenu(contextMenu);
+
+        ImageView imageView = new ImageView();
+        imageView.setFitHeight(16);
+        imageView.setFitWidth(16);
+        imageView.getStyleClass().add("imageview-add");
+        MenuItem menuItemAddContact = new MenuItem("%contact.add", imageView);
+        // menuItemAddContact.disableProperty().bind(tableView.getSelectionModel().selectedItemProperty().isNull());
+        menuItemAddContact.setOnAction(event -> this.buttonAddContact.fire());
+        contextMenu.getItems().add(menuItemAddContact);
+
+        imageView = new ImageView();
+        imageView.setFitHeight(16);
+        imageView.setFitWidth(16);
+        imageView.getStyleClass().add("imageview-edit");
+        MenuItem menuItemEditContact = new MenuItem("%contact.edit", imageView);
+        menuItemEditContact.disableProperty().bind(tableView.getSelectionModel().selectedItemProperty().isNull());
+        menuItemEditContact.setOnAction(event -> this.buttonEditContact.fire());
+        contextMenu.getItems().add(menuItemEditContact);
+
+        imageView = new ImageView();
+        imageView.setFitHeight(16);
+        imageView.setFitWidth(16);
+        imageView.getStyleClass().add("imageview-delete");
+        MenuItem menuItemDeleteContact = new MenuItem("%contact.delete", imageView);
+        menuItemDeleteContact.disableProperty().bind(tableView.getSelectionModel().selectedItemProperty().isNull());
+        menuItemDeleteContact.setOnAction(event -> this.buttonDeleteContact.fire());
+        contextMenu.getItems().add(menuItemDeleteContact);
+
+        // menuItemExcelExport.setOnAction(event -> excelExport());
+        // menuItemExcelExport.disableProperty().bind(Bindings.when(Bindings.isEmpty(this.tableView.getItems())).then(true).otherwise(false));
+        // contextMenu.getItems().add(menuItemExcelExport);
 
         return tableView;
     }

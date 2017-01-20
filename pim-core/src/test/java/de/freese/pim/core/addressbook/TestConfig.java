@@ -5,6 +5,7 @@
 package de.freese.pim.core.addressbook;
 
 import java.sql.Connection;
+import java.sql.SQLException;
 
 import javax.sql.DataSource;
 
@@ -52,7 +53,7 @@ public class TestConfig
              * @see de.freese.pim.core.persistence.JdbcTemplate#closeConnection(java.sql.Connection)
              */
             @Override
-            protected void closeConnection(final Connection connection) throws Exception
+            protected void closeConnection(final Connection connection) throws SQLException
             {
                 DataSourceUtils.releaseConnection(connection, getDataSource());
             }
@@ -61,7 +62,7 @@ public class TestConfig
              * @see de.freese.pim.core.persistence.JdbcTemplate#getConnection()
              */
             @Override
-            protected Connection getConnection() throws Exception
+            protected Connection getConnection() throws SQLException
             {
                 return DataSourceUtils.getConnection(getDataSource());
             }

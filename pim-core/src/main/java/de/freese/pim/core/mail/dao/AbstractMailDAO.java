@@ -8,6 +8,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -21,7 +23,9 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import de.freese.pim.core.mail.MailProvider;
 import de.freese.pim.core.mail.model.MailAccount;
 import de.freese.pim.core.persistence.JdbcTemplate;
+import de.freese.pim.core.persistence.RowMapper;
 import de.freese.pim.core.service.SettingService;
+import de.freese.pim.core.utils.Crypt;
 import de.freese.pim.core.utils.Utils;
 
 /**
@@ -32,6 +36,55 @@ import de.freese.pim.core.utils.Utils;
  */
 public class AbstractMailDAO implements IMailDAO
 {
+    /**
+     * @author Thomas Freese
+     */
+    private static class MailAccountRowMapper implements RowMapper<MailAccount>
+    {
+        /**
+         * Erzeugt eine neue Instanz von {@link MailAccountRowMapper}
+         */
+        public MailAccountRowMapper()
+        {
+            super();
+        }
+
+        /**
+         * @see de.freese.pim.core.persistence.RowMapper#map(java.sql.ResultSet, int)
+         */
+        @Override
+        public MailAccount map(final ResultSet rs, final int rowNum) throws SQLException
+        {
+            MailAccount account = new MailAccount();
+
+            account.setID(rs.getLong("ID"));
+            account.setMail(rs.getString("MAIL"));
+
+            account.setImapHost(rs.getString("IMAP_HOST"));
+            account.setImapPort(rs.getInt("IMAP_PORT"));
+            account.setImapLegitimation(rs.getBoolean("IMAP_LEGITIMATION"));
+            account.setSmtpHost(rs.getString("SMTP_HOST"));
+            account.setSmtpPort(rs.getInt("SMTP_PORT"));
+            account.setSmtpLegitimation(rs.getBoolean("SMTP_LEGITIMATION"));
+
+            try
+            {
+                account.setPassword(Crypt.getUTF8Instance().decrypt(rs.getString("PASSWORD")));
+            }
+            catch (Exception ex)
+            {
+                if (ex instanceof SQLException)
+                {
+                    throw (SQLException) ex;
+                }
+
+                throw new SQLException(ex);
+            }
+
+            return account;
+        }
+    }
+
     /**
     *
     */
@@ -51,7 +104,121 @@ public class AbstractMailDAO implements IMailDAO
     @Override
     public List<MailAccount> getMailAccounts() throws Exception
     {
-        // TODO Aus DB laden.
+        String userID = getUserID();
+
+        StringBuilder sql = new StringBuilder();
+        sql.append("select * from MAILACCOUNT where user_id = ? order by mail asc");
+
+        List<MailAccount> accountList = getJdbcTemplate().query(sql.toString(), ps -> ps.setString(1, userID), new MailAccountRowMapper());
+
+        accountList.addAll(getMailAccountsJSON());
+
+        return accountList;
+    }
+
+    /**
+     * @see de.freese.pim.core.mail.dao.IMailDAO#insert(de.freese.pim.core.mail.model.MailAccount)
+     */
+    @Override
+    public void insert(final MailAccount account) throws Exception
+    {
+        String userID = getUserID();
+        long id = getNextID();
+        String encryptedPassword = Crypt.getUTF8Instance().encrypt(account.getPassword());
+
+        StringBuilder sql = new StringBuilder();
+        sql.append("insert into MAILACCOUNT");
+        sql.append(" (");
+        sql.append(" USER_ID, ID, MAIL, PASSWORT");
+        sql.append(", IMAP_HOST, IMAP_PORT, IMAP_LEGITIMATION");
+        sql.append(", SMTP_HOST, SMTP_PORT, SMTP_LEGITIMATION");
+        sql.append(") values (");
+        sql.append("?, ?, ?, ?");
+        sql.append(", ?, ?, ?");
+        sql.append(", ?, ?, ?");
+        sql.append(")");
+
+        this.jdbcTemplate.update(sql.toString(), ps ->
+        {
+            ps.setString(1, userID);
+            ps.setLong(2, id);
+            ps.setString(3, account.getMail());
+            ps.setString(4, encryptedPassword);
+            ps.setString(5, account.getImapHost());
+            ps.setInt(6, account.getImapPort());
+            ps.setBoolean(7, account.isImapLegitimation());
+            ps.setString(8, account.getSmtpHost());
+            ps.setInt(9, account.getSmtpPort());
+            ps.setBoolean(10, account.isSmtpLegitimation());
+        });
+
+        account.setID(id);
+    }
+
+    /**
+     * @param jdbcTemplate {@link JdbcTemplate}
+     */
+    public void setJdbcTemplate(final JdbcTemplate jdbcTemplate)
+    {
+        Objects.requireNonNull(jdbcTemplate, "jdbcTemplate required");
+
+        this.jdbcTemplate = jdbcTemplate;
+    }
+
+    /**
+     * @see de.freese.pim.core.mail.dao.IMailDAO#update(de.freese.pim.core.mail.model.MailAccount)
+     */
+    @Override
+    public void update(final MailAccount account) throws Exception
+    {
+        String encryptedPassword = Crypt.getUTF8Instance().encrypt(account.getPassword());
+
+        StringBuilder sql = new StringBuilder();
+        sql.append("update MAILACCOUNT");
+        sql.append(" set");
+        sql.append(" MAIL = ?");
+        sql.append(", PASSWORT = ?");
+        sql.append(", IMAP_HOST = ?");
+        sql.append(", IMAP_PORT = ?");
+        sql.append(", IMAP_LEGITIMATION = ?");
+        sql.append(", SMTP_HOST = ?");
+        sql.append(", SMTP_PORT = ?");
+        sql.append(", SMTP_LEGITIMATION = ?");
+        sql.append(" where id = ?");
+
+        // int affectedRows =
+        this.jdbcTemplate.update(sql.toString(), ps ->
+        {
+            ps.setString(1, account.getMail());
+            ps.setString(2, encryptedPassword);
+            ps.setString(3, account.getImapHost());
+            ps.setInt(4, account.getImapPort());
+            ps.setBoolean(5, account.isImapLegitimation());
+            ps.setString(6, account.getSmtpHost());
+            ps.setInt(7, account.getSmtpPort());
+            ps.setBoolean(8, account.isSmtpLegitimation());
+            ps.setLong(9, account.getID());
+        });
+    }
+
+    /**
+     * @return {@link JdbcTemplate}
+     */
+    protected JdbcTemplate getJdbcTemplate()
+    {
+        Objects.requireNonNull(this.jdbcTemplate, "jdbcTemplate required");
+
+        return this.jdbcTemplate;
+    }
+
+    /**
+     * Liefert alle MailAccounts aus der lokalen JSON-Datei.
+     *
+     * @return {@link List}
+     * @throws Exception Falls was schief geht.
+     */
+    protected List<MailAccount> getMailAccountsJSON() throws Exception
+    {
         ObjectMapper jsonMapper = new ObjectMapper();
         jsonMapper.enable(SerializationFeature.INDENT_OUTPUT);
         jsonMapper.enable(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT);
@@ -94,23 +261,23 @@ public class AbstractMailDAO implements IMailDAO
     }
 
     /**
-     * @param jdbcTemplate {@link JdbcTemplate}
+     * Liefert die nächste ID.
+     *
+     * @return long
+     * @throws SQLException Falls was schief geht.
      */
-    public void setJdbcTemplate(final JdbcTemplate jdbcTemplate)
+    protected long getNextID() throws SQLException
     {
-        Objects.requireNonNull(jdbcTemplate, "jdbcTemplate required");
+        // String sql = "select nvl(max(id), 0) + 1 from MAILACCOUNT";
+        String sql = "call next value for MAIL_SEQ";
+        long id = getJdbcTemplate().query(sql, rs ->
+        {
+            rs.next();
 
-        this.jdbcTemplate = jdbcTemplate;
-    }
+            return rs.getLong(1);
+        });
 
-    /**
-     * @return {@link JdbcTemplate}
-     */
-    protected JdbcTemplate getJdbcTemplate()
-    {
-        Objects.requireNonNull(this.jdbcTemplate, "jdbcTemplate required");
-
-        return this.jdbcTemplate;
+        return id;
     }
 
     /**

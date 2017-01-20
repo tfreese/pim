@@ -32,6 +32,12 @@ public class MailView implements IView
     private Button buttonAddAccount = null;
 
     /**
+    *
+    */
+    @FXML
+    private Button buttonEditAccount = null;
+
+    /**
      *
      */
     @FXML
@@ -141,18 +147,26 @@ public class MailView implements IView
         ToolBar toolBar = new ToolBar();
 
         // Image image = new Image("images/mail.png", 16, 16, true, true);
-        ImageView imageViewAddAccount = new ImageView();
-        imageViewAddAccount.setFitHeight(32);
-        imageViewAddAccount.setFitWidth(32);
-        imageViewAddAccount.getStyleClass().add("imageview-new");
-
+        ImageView imageView = new ImageView();
+        imageView.setFitHeight(32);
+        imageView.setFitWidth(32);
+        imageView.getStyleClass().add("imageview-add");
         this.buttonAddAccount = new Button();
         // this.buttonAddAccount.setPadding(new Insets(0));
         // this.buttonAddAccount.setPrefSize(imageViewMail.getFitWidth(), imageViewMail.getFitHeight());
-        this.buttonAddAccount.setGraphic(imageViewAddAccount);
-        this.buttonAddAccount.setTooltip(new Tooltip("%mail.add.account"));
+        this.buttonAddAccount.setGraphic(imageView);
+        this.buttonAddAccount.setTooltip(new Tooltip("%mailaccount.add"));
+
+        imageView = new ImageView();
+        imageView.setFitHeight(32);
+        imageView.setFitWidth(32);
+        imageView.getStyleClass().add("imageview-edit");
+        this.buttonEditAccount = new Button();
+        this.buttonEditAccount.setGraphic(imageView);
+        this.buttonEditAccount.setTooltip(new Tooltip("%mailaccount.edit"));
 
         toolBar.getItems().add(this.buttonAddAccount);
+        toolBar.getItems().add(this.buttonEditAccount);
 
         return toolBar;
     }

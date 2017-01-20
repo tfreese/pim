@@ -83,10 +83,10 @@ public class MainView extends BorderPane implements IView
         imageViewContact.setFitWidth(32);
         imageViewContact.getStyleClass().add("imageview-contact");
 
-        this.buttonContactView = new Button("%kontakte");
+        this.buttonContactView = new Button("%contacts");
         // this.buttonContactView.setPrefSize(imageViewContact.getFitWidth(), imageViewContact.getFitHeight());
         this.buttonContactView.setGraphic(imageViewContact);
-        this.buttonContactView.setTooltip(new Tooltip("%kontakte"));
+        this.buttonContactView.setTooltip(new Tooltip("%contacts"));
 
         HBox hBox = new HBox();
         hBox.getStyleClass().add("hbox");

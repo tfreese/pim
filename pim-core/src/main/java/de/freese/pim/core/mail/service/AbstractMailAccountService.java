@@ -8,15 +8,14 @@ import java.util.concurrent.Executor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.freese.pim.core.mail.dao.IMailDAO;
 import de.freese.pim.core.mail.model.MailAccount;
 
 /**
- * Basis-Implementierung des {@link IMailService}.
+ * Basis-Implementierung des {@link IMailAccountService}.
  *
  * @author Thomas Freese
  */
-public abstract class AbstractMailService implements IMailService
+public abstract class AbstractMailAccountService implements IMailAccountService
 {
     /**
      *
@@ -41,16 +40,16 @@ public abstract class AbstractMailService implements IMailService
     /**
      *
      */
-    private final IMailDAO mailDAO;
+    private final IMailService mailService;
 
     /**
-     * Erzeugt eine neue Instanz von {@link AbstractMailService}
+     * Erzeugt eine neue Instanz von {@link AbstractMailAccountService}
      *
      * @param account {@link MailAccount}
      * @param basePath {@link Path}
-     * @param mailDAO {@link IMailDAO}
+     * @param mailService {@link IMailService}
      */
-    public AbstractMailService(final MailAccount account, final Path basePath, final IMailDAO mailDAO)
+    public AbstractMailAccountService(final MailAccount account, final Path basePath, final IMailService mailService)
     {
         super();
 
@@ -59,11 +58,11 @@ public abstract class AbstractMailService implements IMailService
 
         this.account = account;
         this.basePath = basePath;
-        this.mailDAO = mailDAO;
+        this.mailService = mailService;
     }
 
     /**
-     * @see de.freese.pim.core.mail.service.IMailService#getAccount()
+     * @see de.freese.pim.core.mail.service.IMailAccountService#getAccount()
      */
     @Override
     public MailAccount getAccount()
@@ -72,7 +71,7 @@ public abstract class AbstractMailService implements IMailService
     }
 
     /**
-     * @see de.freese.pim.core.mail.service.IMailService#getBasePath()
+     * @see de.freese.pim.core.mail.service.IMailAccountService#getBasePath()
      */
     @Override
     public Path getBasePath()
@@ -81,7 +80,7 @@ public abstract class AbstractMailService implements IMailService
     }
 
     /**
-     * @see de.freese.pim.core.mail.service.IMailService#setExecutor(java.util.concurrent.Executor)
+     * @see de.freese.pim.core.mail.service.IMailAccountService#setExecutor(java.util.concurrent.Executor)
      */
     @Override
     public void setExecutor(final Executor executor)
@@ -110,10 +109,10 @@ public abstract class AbstractMailService implements IMailService
     /**
      * Darf auch null sein !
      *
-     * @return {@link IMailDAO}
+     * @return {@link IMailService}
      */
-    protected IMailDAO getMailDAO()
+    protected IMailService getMailService()
     {
-        return this.mailDAO;
+        return this.mailService;
     }
 }

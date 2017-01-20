@@ -16,9 +16,11 @@ import java.util.StringTokenizer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import de.freese.pim.core.utils.Utils;
 import de.freese.pim.gui.PIMApplication;
 import de.freese.pim.gui.controller.IController;
@@ -34,9 +36,11 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Control;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Labeled;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableColumnBase;
 import javafx.scene.control.TablePosition;
@@ -127,7 +131,8 @@ public final class FXUtils
      * @param controller {@link IController}
      * @param controllerMap {@link Map}
      */
-    public static void copyFields(final IView view, final Map<String, Field> viewMap, final IController controller, final Map<String, Field> controllerMap)
+    public static void copyFields(final IView view, final Map<String, Field> viewMap, final IController controller,
+            final Map<String, Field> controllerMap)
     {
         for (Field viewField : new HashSet<>(viewMap.values()))
         {
@@ -244,7 +249,8 @@ public final class FXUtils
      */
     public static void installCopyHandler(final Node node)
     {
-        node.setOnKeyPressed(event -> {
+        node.setOnKeyPressed(event ->
+        {
             if (KEYCODE_COPY.match(event))
             {
                 if (event.getSource() instanceof TableView)
@@ -253,7 +259,8 @@ public final class FXUtils
                 }
                 else
                 {
-                    LOGGER.warn("No implementation for #copySelectionToClipboard found for {}", event.getSource().getClass().getSimpleName());
+                    LOGGER.warn("No implementation for #copySelectionToClipboard found for {}",
+                            event.getSource().getClass().getSimpleName());
                 }
 
                 event.consume();
@@ -268,7 +275,8 @@ public final class FXUtils
      */
     public static void installPasteHandler(final Node node)
     {
-        node.setOnKeyPressed(event -> {
+        node.setOnKeyPressed(event ->
+        {
             if (KEYCODE_PASTE.match(event))
             {
                 if (event.getSource() instanceof TableView)
@@ -493,19 +501,44 @@ public final class FXUtils
         // Control
         Predicate<Object> isControl = v -> v instanceof Control;
 
+        // Tooltip
         // @formatter:off
         nodes.stream()
             .filter(isControl)
             .forEach(node ->
             {
-                Method getMethod = Utils.getMethod(node,"getTooltip");
-                Tooltip tooltip = (Tooltip) Utils.invokeMethod(getMethod,node);
+                Method getMethod = Utils.getMethod(node, "getTooltip");
+                Tooltip tooltip = (Tooltip) Utils.invokeMethod(getMethod, node);
 
                 if((tooltip != null) &&  tooltip.getText().startsWith("%"))
                 {
                     String translated = resources.getString(tooltip.getText().substring(1));
 
                     tooltip.setText(translated);
+                }
+            });
+        // @formatter:on
+
+        // ContextMenu
+        // @formatter:off
+        nodes.stream()
+            .filter(isControl)
+            .forEach(node ->
+            {
+                Method getMethod = Utils.getMethod(node, "getContextMenu");
+                ContextMenu contextMenu = (ContextMenu) Utils.invokeMethod(getMethod, node);
+
+                if(contextMenu != null)
+                {
+                    for (MenuItem menuItem : contextMenu.getItems())
+                    {
+                        if(menuItem.getText().startsWith("%"))
+                        {
+                            String translated = resources.getString(menuItem.getText().substring(1));
+
+                            menuItem.setText(translated);
+                        }
+                    }
                 }
             });
         // @formatter:on

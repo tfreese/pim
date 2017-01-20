@@ -9,12 +9,12 @@ https://docs.oracle.com/javase/8/javafx/api/javafx/scene/doc-files/cssref.html
     /*-fx-font-size: 14pt;*/ /* absolute Größe */
     /*-fx-background-color: linear-gradient(#61a2b1, #2A5058);*/
     
+    add-icon: url("../images/add.png"); 
     contact-icon: url("../images/contact.png");
     delete-icon: url("../images/delete.png");
     edit-icon: url("../images/edit.png");
     pim-icon: url("../images/pim.png");
-    mail-icon: url("../images/mail.png");
-    new-icon: url("../images/new.png");   
+    mail-icon: url("../images/mail.png");  
 }
 
 /*a*/
@@ -57,6 +57,11 @@ https://docs.oracle.com/javase/8/javafx/api/javafx/scene/doc-files/cssref.html
 }
 
 /*i*/
+.imageview-add
+{
+    -fx-image: add-icon;
+}
+
 .imageview-application
 {
 	-fx-image: pim-icon;
@@ -80,11 +85,6 @@ https://docs.oracle.com/javase/8/javafx/api/javafx/scene/doc-files/cssref.html
 .imageview-mail
 {
 	-fx-image: mail-icon;
-}
-
-.imageview-new
-{
-	-fx-image: new-icon;
 }
 
 /*j*/
