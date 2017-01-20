@@ -4,9 +4,7 @@ package de.freese.pim.gui.mail;
 import java.nio.file.Paths;
 import java.util.Optional;
 import java.util.ResourceBundle;
-
 import org.apache.commons.lang3.StringUtils;
-
 import de.freese.pim.core.mail.MailPort;
 import de.freese.pim.core.mail.MailProvider;
 import de.freese.pim.core.mail.model.MailAccount;
@@ -77,8 +75,7 @@ public class EditMailAccountDialog
      * @param imageStyleClass String
      * @return {@link Optional}
      */
-    private Optional<MailAccount> openDialog(final ResourceBundle bundle, final MailAccount account, final String titleKey,
-            final String imageStyleClass)
+    private Optional<MailAccount> openDialog(final ResourceBundle bundle, final MailAccount account, final String titleKey, final String imageStyleClass)
     {
         Dialog<MailAccount> dialog = new Dialog<>();
         dialog.initOwner(PIMApplication.getMainWindow());
@@ -103,8 +100,19 @@ public class EditMailAccountDialog
         // ButtonType loginButtonType = new ButtonType("Login", ButtonData.OK_DONE);
         dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
 
-        // Provider
+        // Felder
         ComboBox<MailProvider> provider = new ComboBox<>();
+        TextField mail = new TextField();
+        TextField imapHost = new TextField();
+        ComboBox<MailPort> imapPort = new ComboBox<>();
+        TextField smtpHost = new TextField();
+        ComboBox<MailPort> smtpPort = new ComboBox<>();
+        PasswordField password1 = new PasswordField();
+        PasswordField password2 = new PasswordField();
+        Button buttonTest = new Button("Test");
+        Label labelTestResult = new Label();
+
+        // Provider
         provider.setPrefWidth(200);
         provider.getItems().addAll(MailProvider.values());
         // PIMApplication.getExecutorService().execute(() ->
@@ -116,9 +124,7 @@ public class EditMailAccountDialog
         // });
 
         // Mail
-        TextField mail = new TextField();
         mail.setPromptText(bundle.getString("mail"));
-        // mail.setPrefWidth(200);
         mail.setPrefColumnCount(30);
         // mail.setTextFormatter(new TextFormatter<>( change -> {
         // String mailRegEx = "^(.+)@(.+).(.+)$";
@@ -129,14 +135,12 @@ public class EditMailAccountDialog
         // }));
 
         // IMAP
-        TextField imapHost = new TextField();
         imapHost.setPromptText("IMAP-Host");
         // TextField imapPort = new TextField();
         // imapHost.setPromptText("IMAP-Port");
         // imapPort.setTextFormatter(new TextFormatter<>(new NumberStringConverter()));
         // Spinner<Integer> imapPort = new Spinner<>(25, 1000, MailProvider.EinsUndEins.getImapPort());
         // imapPort.setEditable(true);
-        ComboBox<MailPort> imapPort = new ComboBox<>();
         imapPort.setPromptText("IMAP-Port");
         imapPort.setPrefWidth(200);
         imapPort.getItems().addAll(MailPort.IMAP, MailPort.IMAPS);
@@ -144,26 +148,20 @@ public class EditMailAccountDialog
         // imapPort.setEditable(true);
 
         // SMTP
-        TextField smtpHost = new TextField();
         imapHost.setPromptText("SMTP-Host");
-
-        ComboBox<MailPort> smtpPort = new ComboBox<>();
         smtpPort.setPromptText("SMTP-Port");
         smtpPort.setPrefWidth(200);
         smtpPort.getItems().addAll(MailPort.SMTP, MailPort.SMTP_SSL, MailPort.SMTPS);
         smtpPort.getSelectionModel().select(MailPort.SMTPS);
 
         // Passwort
-        PasswordField password1 = new PasswordField();
         password1.setPromptText(bundle.getString("passwort"));
-        PasswordField password2 = new PasswordField();
         password2.setPromptText(bundle.getString("passwort") + " (" + bundle.getString("wiederholung") + ")");
 
         Node okButton = dialog.getDialogPane().lookupButton(ButtonType.OK);
 
         // Mail-Format und Passwörter vergleichen.
-        okButton.addEventFilter(ActionEvent.ACTION, event ->
-        {
+        okButton.addEventFilter(ActionEvent.ACTION, event -> {
             String mailRegEx = MailUtils.MAIL_REGEX;
 
             if (!mail.getText().matches(mailRegEx))
@@ -197,9 +195,27 @@ public class EditMailAccountDialog
         });
 
         // OK-Button disablen, wenn eines dieser Felder leer ist.
-        mail.textProperty().addListener((observable, oldValue, newValue) ->
-        {
+        mail.textProperty().addListener((observable, oldValue, newValue) -> {
             okButton.setDisable(newValue.trim().isEmpty());
+
+            labelTestResult.setText(null);
+            labelTestResult.setStyle(null);
+        });
+        imapHost.textProperty().addListener((observable, oldValue, newValue) -> {
+            labelTestResult.setText(null);
+            labelTestResult.setStyle(null);
+        });
+        smtpHost.textProperty().addListener((observable, oldValue, newValue) -> {
+            labelTestResult.setText(null);
+            labelTestResult.setStyle(null);
+        });
+        password1.textProperty().addListener((observable, oldValue, newValue) -> {
+            labelTestResult.setText(null);
+            labelTestResult.setStyle(null);
+        });
+        password2.textProperty().addListener((observable, oldValue, newValue) -> {
+            labelTestResult.setText(null);
+            labelTestResult.setStyle(null);
         });
 
         // Laypout
@@ -227,8 +243,7 @@ public class EditMailAccountDialog
         {
             okButton.setDisable(true);
 
-            provider.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) ->
-            {
+            provider.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
                 if (newValue == null)
                 {
                     return;
@@ -260,14 +275,11 @@ public class EditMailAccountDialog
         gridPane.add(password2, 1, row);
 
         // Test
-        Button buttonTest = new Button("Test");
         buttonTest.setPrefWidth(150);
         gridPane.add(buttonTest, 0, ++row);
-        Label labelTestResult = new Label();
         gridPane.add(labelTestResult, 1, row);
 
-        buttonTest.setOnAction(event ->
-        {
+        buttonTest.setOnAction(event -> {
             labelTestResult.setText(null);
             labelTestResult.setStyle(null);
 
@@ -312,8 +324,7 @@ public class EditMailAccountDialog
 
         Platform.runLater(() -> mail.requestFocus());
 
-        dialog.setResultConverter(buttonType ->
-        {
+        dialog.setResultConverter(buttonType -> {
             if (buttonType == ButtonType.OK)
             {
                 MailAccount ma = account;
