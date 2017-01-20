@@ -6,9 +6,7 @@ package de.freese.pim.core.addressbook;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-
 import javax.sql.DataSource;
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
@@ -18,7 +16,6 @@ import org.springframework.jdbc.datasource.SingleConnectionDataSource;
 import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-
 import de.freese.pim.core.addressbook.dao.DefaultAddressBookDAO;
 import de.freese.pim.core.addressbook.dao.IAddressBookDAO;
 import de.freese.pim.core.persistence.JdbcTemplate;

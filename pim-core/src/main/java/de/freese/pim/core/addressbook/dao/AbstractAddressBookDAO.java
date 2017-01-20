@@ -7,13 +7,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.IntStream;
-
 import org.apache.commons.lang3.StringUtils;
-
 import de.freese.pim.core.addressbook.model.Kontakt;
-import de.freese.pim.core.persistence.JdbcTemplate;
+import de.freese.pim.core.dao.AbstractDAO;
 import de.freese.pim.core.persistence.ResultSetExtractor;
 import de.freese.pim.core.persistence.RowMapper;
 import de.freese.pim.core.utils.Utils;
@@ -24,7 +21,7 @@ import de.freese.pim.core.utils.Utils;
  *
  * @author Thomas Freese
  */
-public abstract class AbstractAddressBookDAO implements IAddressBookDAO
+public abstract class AbstractAddressBookDAO extends AbstractDAO implements IAddressBookDAO
 {
     /**
      * Mapped die Kontakte mit Attributen.
@@ -114,11 +111,6 @@ public abstract class AbstractAddressBookDAO implements IAddressBookDAO
     }
 
     /**
-     *
-     */
-    private JdbcTemplate jdbcTemplate = null;
-
-    /**
      * Erzeugt eine neue Instanz von {@link AbstractAddressBookDAO}
      */
     public AbstractAddressBookDAO()
@@ -177,8 +169,7 @@ public abstract class AbstractAddressBookDAO implements IAddressBookDAO
         //
         // affectedRows = stmt.executeUpdate();
         // }
-        int affectedRows = this.jdbcTemplate.update(sql, ps ->
-        {
+        int affectedRows = getJdbcTemplate().update(sql, ps -> {
             ps.setString(1, userID);
             ps.setLong(2, kontaktID);
             ps.setString(3, attribut.toUpperCase());
@@ -213,14 +204,12 @@ public abstract class AbstractAddressBookDAO implements IAddressBookDAO
         // affectedRows = stmtKontakt.executeUpdate();
         // }
 
-        this.jdbcTemplate.update(sqlAttribut, ps ->
-        {
+        getJdbcTemplate().update(sqlAttribut, ps -> {
             ps.setString(1, userID);
             ps.setLong(2, id);
         });
 
-        int affectedRows = this.jdbcTemplate.update(sqlKontakt, ps ->
-        {
+        int affectedRows = getJdbcTemplate().update(sqlKontakt, ps -> {
             ps.setString(1, userID);
             ps.setLong(2, id);
         });
@@ -232,7 +221,7 @@ public abstract class AbstractAddressBookDAO implements IAddressBookDAO
      * @see de.freese.pim.core.addressbook.dao.IAddressBookDAO#getKontaktDetails(long[])
      */
     @Override
-    public List<Kontakt> getKontaktDetails(final long... ids) throws Exception
+    public List<Kontakt> getKontaktDetails(final long...ids) throws Exception
     {
         String userID = getUserID();
 
@@ -246,8 +235,7 @@ public abstract class AbstractAddressBookDAO implements IAddressBookDAO
         {
             whereClause.append(" and id in (");
 
-            IntStream.range(0, ids.length).forEach(index ->
-            {
+            IntStream.range(0, ids.length).forEach(index -> {
                 whereClause.append(ids[index]);
 
                 if (index < (ids.length - 1))
@@ -278,8 +266,7 @@ public abstract class AbstractAddressBookDAO implements IAddressBookDAO
         // kontakte = new KontaktDetailsResultSetExtractor().extract(rs);
         // }
         // }
-        List<Kontakt> kontakte = getJdbcTemplate().query(sql.toString(), ps -> ps.setString(1, userID),
-                new KontaktDetailsResultSetExtractor());
+        List<Kontakt> kontakte = getJdbcTemplate().query(sql.toString(), ps -> ps.setString(1, userID), new KontaktDetailsResultSetExtractor());
 
         return kontakte;
     }
@@ -325,6 +312,14 @@ public abstract class AbstractAddressBookDAO implements IAddressBookDAO
     }
 
     /**
+     * @return String
+     */
+    protected String getUserID()
+    {
+        return Utils.getSystemUserName();
+    }
+
+    /**
      * @see de.freese.pim.core.addressbook.dao.IAddressBookDAO#insertAttribut(long, java.lang.String, java.lang.String)
      */
     @Override
@@ -348,8 +343,7 @@ public abstract class AbstractAddressBookDAO implements IAddressBookDAO
         // affectedRows = stmt.executeUpdate();
         // }
 
-        int affectedRows = this.jdbcTemplate.update(sql.toString(), ps ->
-        {
+        int affectedRows = getJdbcTemplate().update(sql.toString(), ps -> {
             ps.setString(1, userID);
             ps.setLong(2, kontaktID);
             ps.setString(3, attribut == null ? null : attribut.toUpperCase());
@@ -366,6 +360,7 @@ public abstract class AbstractAddressBookDAO implements IAddressBookDAO
     public long insertKontakt(final String nachname, final String vorname) throws Exception
     {
         String userID = getUserID();
+        long id = getNextID("KONTAKT_SEQ");
 
         String sql = "insert into KONTAKT (user_id, id, nachname, vorname) values (?, ?, ?, ?)";
 
@@ -389,15 +384,7 @@ public abstract class AbstractAddressBookDAO implements IAddressBookDAO
         // insertStmt.executeUpdate();
         // }
 
-        long id = getJdbcTemplate().query("select nvl(max(id), 0) + 1 from KONTAKT", rs ->
-        {
-            rs.next();
-
-            return rs.getLong(1);
-        });
-
-        this.jdbcTemplate.update(sql.toString(), ps ->
-        {
+        getJdbcTemplate().update(sql.toString(), ps -> {
             ps.setString(1, userID);
             ps.setLong(2, id);
             ps.setString(3, nachname);
@@ -437,24 +424,13 @@ public abstract class AbstractAddressBookDAO implements IAddressBookDAO
         // }
         // }
 
-        List<Kontakt> kontakte = getJdbcTemplate().query(sql.toString(), ps ->
-        {
+        List<Kontakt> kontakte = getJdbcTemplate().query(sql.toString(), ps -> {
             ps.setString(1, userID);
             ps.setString(2, "%" + name.toLowerCase() + "%");
             ps.setString(3, "%" + name.toLowerCase() + "%");
         }, new KontaktDetailsResultSetExtractor());
 
         return kontakte;
-    }
-
-    /**
-     * @param jdbcTemplate {@link JdbcTemplate}
-     */
-    public void setJdbcTemplate(final JdbcTemplate jdbcTemplate)
-    {
-        Objects.requireNonNull(jdbcTemplate, "jdbcTemplate required");
-
-        this.jdbcTemplate = jdbcTemplate;
     }
 
     /**
@@ -480,8 +456,7 @@ public abstract class AbstractAddressBookDAO implements IAddressBookDAO
         // affectedRows = stmt.executeUpdate();
         // }
 
-        int affectedRows = getJdbcTemplate().update(sql, ps ->
-        {
+        int affectedRows = getJdbcTemplate().update(sql, ps -> {
             ps.setString(1, wert);
             ps.setString(2, userID);
             ps.setLong(3, kontaktID);
@@ -514,8 +489,7 @@ public abstract class AbstractAddressBookDAO implements IAddressBookDAO
         // affectedRows = stmt.executeUpdate();
         // }
 
-        int affectedRows = getJdbcTemplate().update(sql, ps ->
-        {
+        int affectedRows = getJdbcTemplate().update(sql, ps -> {
             ps.setString(1, nachname);
             ps.setString(2, vorname);
             ps.setString(3, userID);
@@ -523,23 +497,5 @@ public abstract class AbstractAddressBookDAO implements IAddressBookDAO
         });
 
         return affectedRows > 0;
-    }
-
-    /**
-     * @return {@link JdbcTemplate}
-     */
-    protected JdbcTemplate getJdbcTemplate()
-    {
-        Objects.requireNonNull(this.jdbcTemplate, "jdbcTemplate required");
-
-        return this.jdbcTemplate;
-    }
-
-    /**
-     * @return String
-     */
-    protected String getUserID()
-    {
-        return Utils.getSystemUserName();
     }
 }

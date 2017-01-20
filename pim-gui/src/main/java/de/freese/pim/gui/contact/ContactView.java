@@ -2,7 +2,6 @@
 package de.freese.pim.gui.contact;
 
 import org.apache.commons.lang3.StringUtils;
-
 import de.freese.pim.core.addressbook.model.Kontakt;
 import de.freese.pim.gui.view.IView;
 import javafx.beans.property.StringProperty;
@@ -248,10 +247,8 @@ public class ContactView implements IView
         FilteredList<Kontakt> filteredData = new FilteredList<>(FXCollections.observableArrayList());
 
         // Filter-Textfeld mit FilteredList verbinden.
-        propertyKontaktFilter.addListener((observable, oldValue, newValue) ->
-        {
-            filteredData.setPredicate(kontakt ->
-            {
+        propertyKontaktFilter.addListener((observable, oldValue, newValue) -> {
+            filteredData.setPredicate(kontakt -> {
                 if (StringUtils.isBlank(newValue))
                 {
                     return true;
@@ -274,6 +271,7 @@ public class ContactView implements IView
 
         tableView.setItems(sortedData);
 
+        // ContextMenu
         ContextMenu contextMenu = new ContextMenu();
         tableView.setContextMenu(contextMenu);
 
@@ -291,7 +289,7 @@ public class ContactView implements IView
         imageView.setFitWidth(16);
         imageView.getStyleClass().add("imageview-edit");
         MenuItem menuItemEditContact = new MenuItem("%contact.edit", imageView);
-        menuItemEditContact.disableProperty().bind(tableView.getSelectionModel().selectedItemProperty().isNull());
+        menuItemAddContact.disableProperty().bind(this.buttonAddContact.disableProperty());
         menuItemEditContact.setOnAction(event -> this.buttonEditContact.fire());
         contextMenu.getItems().add(menuItemEditContact);
 
@@ -300,7 +298,7 @@ public class ContactView implements IView
         imageView.setFitWidth(16);
         imageView.getStyleClass().add("imageview-delete");
         MenuItem menuItemDeleteContact = new MenuItem("%contact.delete", imageView);
-        menuItemDeleteContact.disableProperty().bind(tableView.getSelectionModel().selectedItemProperty().isNull());
+        menuItemDeleteContact.disableProperty().bind(this.buttonDeleteContact.disableProperty());
         menuItemDeleteContact.setOnAction(event -> this.buttonDeleteContact.fire());
         contextMenu.getItems().add(menuItemDeleteContact);
 
