@@ -18,12 +18,13 @@ import de.freese.pim.core.persistence.JdbcTemplate;
  * Basis-Implementierung eines DAOs.
  *
  * @author Thomas Freese
+ * @param <D> Konkreter DAO-Typ für Builder-Pattern
  */
-public abstract class AbstractDAO
+public abstract class AbstractDAO<D>
 {
     /**
-    *
-    */
+     *
+     */
     private JdbcTemplate jdbcTemplate = null;
 
     /**
@@ -42,6 +43,20 @@ public abstract class AbstractDAO
     public AbstractDAO()
     {
         super();
+    }
+
+    /**
+     * Ersetzt ggf. ein vorhandenes {@link JdbcTemplate}.
+     *
+     * @param dataSource {@link DataSource}
+     * @return {@link AbstractDAO}: Konkretes DAO für Builder-Pattern
+     */
+    @SuppressWarnings("unchecked")
+    public D dataSource(final DataSource dataSource)
+    {
+        setDataSource(dataSource);
+
+        return (D) this;
     }
 
     /**
@@ -77,7 +92,8 @@ public abstract class AbstractDAO
                 // break;
 
                 default:
-                    this.sequenceFunction = seq -> "select nvl(max(id), 0) + 1 from " + seq;
+                    // this.sequenceFunction = seq -> "select nvl(max(id), 0) + 1 from " + seq;
+                    this.sequenceFunction = seq -> "select count(*) + 1 from " + seq;
 
                     String msg = String.format("%s: use following sql for sequence \"%s\"%n", this.sequenceFunction.apply("<SEQ/TABLE>"),
                             dbmd.getDatabaseProductName());
@@ -88,6 +104,14 @@ public abstract class AbstractDAO
         {
             throw new RuntimeException(ex);
         }
+    }
+
+    /**
+     * @return {@link DataSource}
+     */
+    protected DataSource getDataSource()
+    {
+        return getJdbcTemplate().getDataSource();
     }
 
     /**
@@ -127,6 +151,20 @@ public abstract class AbstractDAO
     }
 
     /**
+     * Setzt das {@link JdbcTemplate}.
+     *
+     * @param jdbcTemplate {@link JdbcTemplate}
+     * @return {@link AbstractDAO}: Konkretes DAO für Builder-Pattern
+     */
+    @SuppressWarnings("unchecked")
+    public D jdbcTemplate(final JdbcTemplate jdbcTemplate)
+    {
+        setJdbcTemplate(jdbcTemplate);
+
+        return (D) this;
+    }
+
+    /**
      * Ersetzt ggf. ein vorhandenes {@link JdbcTemplate}.
      *
      * @param dataSource {@link DataSource}
@@ -135,12 +173,12 @@ public abstract class AbstractDAO
     {
         Objects.requireNonNull(dataSource, "dataSource required");
 
-        this.jdbcTemplate = new JdbcTemplate().setDataSource(dataSource);
-
-        detectDatabaseType(dataSource);
+        setJdbcTemplate(new JdbcTemplate().setDataSource(dataSource));
     }
 
     /**
+     * Setzt das {@link JdbcTemplate}.
+     *
      * @param jdbcTemplate {@link JdbcTemplate}
      */
     public void setJdbcTemplate(final JdbcTemplate jdbcTemplate)

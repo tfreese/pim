@@ -1,18 +1,6 @@
 // Created: 13.12.2016
 package de.freese.pim.gui.mail;
 
-import java.lang.reflect.Proxy;
-import java.net.URL;
-import java.nio.file.Path;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.ResourceBundle;
-
-import javax.mail.internet.InternetAddress;
-
 import de.freese.pim.core.mail.dao.DefaultMailDAO;
 import de.freese.pim.core.mail.model.Mail;
 import de.freese.pim.core.mail.model.MailAccount;
@@ -26,6 +14,15 @@ import de.freese.pim.core.service.SettingService;
 import de.freese.pim.gui.PIMApplication;
 import de.freese.pim.gui.controller.AbstractController;
 import de.freese.pim.gui.view.ErrorDialog;
+import java.lang.reflect.Proxy;
+import java.net.URL;
+import java.nio.file.Path;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.ResourceBundle;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ReadOnlyBooleanProperty;
@@ -44,6 +41,7 @@ import javafx.scene.control.ToolBar;
 import javafx.scene.control.TreeCell;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
+import javax.mail.internet.InternetAddress;
 
 /**
  * Controller des Mail-Clients.
@@ -139,9 +137,9 @@ public class MailController extends AbstractController
         super();
 
         this.mailService = (IMailService) Proxy.newProxyInstance(getClass().getClassLoader(), new Class<?>[]
-        {
-                IMailService.class
-        }, new TransactionalInvocationHandler(getDataSource(), new DefaultMailService(new DefaultMailDAO(getDataSource()))));
+                                                         {
+                                                             IMailService.class
+        }, new TransactionalInvocationHandler(getDataSource(), new DefaultMailService(new DefaultMailDAO().dataSource(getDataSource()))));
     }
 
     /**
@@ -162,6 +160,33 @@ public class MailController extends AbstractController
         this.treeViewMail.setRoot(root);
 
         loadMailAccounts(root);
+    }
+
+    /**
+     * Hinzufügen eines {@link MailAccount} in die GUI
+     *
+     * @param root    {@link TreeItem}
+     * @param account {@link MailAccount}
+     */
+    private void addMailAccountToGUI(final TreeItem<Object> root, final MailAccount account)
+    {
+        Path basePath = SettingService.getInstance().getHome();
+        Path accountPath = basePath.resolve(account.getMail());
+        IMailAccountService mailService = new JavaMailAccountService(account, accountPath, this.mailService);
+        mailService.setExecutor(getExecutorService());
+
+        TreeItem<Object> treeItem = new TreeItem<>(mailService);
+        root.getChildren().add(treeItem);
+
+        PIMApplication.registerCloseable(() ->
+        {
+            getLogger().info("Close " + mailService.getAccount().getMail());
+            mailService.disconnect();
+        });
+
+        getLogger().info("Init MailAccount {}", mailService.getAccount().getMail());
+        InitMailAccountService service = new InitMailAccountService(treeItem, mailService);
+        service.start();
     }
 
     /**
@@ -204,7 +229,17 @@ public class MailController extends AbstractController
             Optional<MailAccount> result = dialog.addAccount(resources);
             result.ifPresent(account ->
             {
-                // TODO Speichern
+                try
+                {
+                    mailService.insert(account);
+                    addMailAccountToGUI(this.treeViewMail.getRoot(), account);
+                }
+                catch (Exception ex)
+                {
+                    getLogger().error(null, ex);
+
+                    new ErrorDialog().forThrowable(ex).showAndWait();
+                }
             });
         });
 
@@ -237,7 +272,7 @@ public class MailController extends AbstractController
             return new TableRow<Mail>()
             {
                 /**
-                 * @param item {@link Mail}
+                 * @param item  {@link Mail}
                  * @param empty boolean
                  */
                 @Override
@@ -310,12 +345,12 @@ public class MailController extends AbstractController
                         IMailAccountService mailService = folder.getMailService();
 
                         mailService.loadMails(folder, m ->
-                        {
-                            Platform.runLater(() ->
-                            {
-                                folder.getMails().add(m);
-                            });
-                        });
+                                      {
+                                          Platform.runLater(() ->
+                                          {
+                                              folder.getMails().add(m);
+                                          });
+                                      });
 
                         folder.updateUnreadMailsCount();
 
@@ -336,8 +371,7 @@ public class MailController extends AbstractController
                 ReadOnlyBooleanProperty runningProperty = loadMailsTask.runningProperty();
 
                 this.progressIndicator.visibleProperty().bind(runningProperty);
-                PIMApplication.getMainWindow().getScene().cursorProperty()
-                        .bind(Bindings.when(runningProperty).then(Cursor.WAIT).otherwise(Cursor.DEFAULT));
+                PIMApplication.getMainWindow().getScene().cursorProperty().bind(Bindings.when(runningProperty).then(Cursor.WAIT).otherwise(Cursor.DEFAULT));
 
                 getExecutorService().execute(loadMailsTask);
             }
@@ -350,7 +384,7 @@ public class MailController extends AbstractController
         this.treeViewMail.setCellFactory(v -> new TreeCell<Object>()
         {
             /**
-             * @param item Object
+             * @param item  Object
              * @param empty boolean
              */
             @Override
@@ -395,33 +429,6 @@ public class MailController extends AbstractController
     }
 
     /**
-     * Hinzufügen eines {@link MailAccount} in die GUI
-     *
-     * @param root {@link TreeItem}
-     * @param account {@link MailAccount}
-     */
-    private void addMailAccountToGUI(final TreeItem<Object> root, final MailAccount account)
-    {
-        Path basePath = SettingService.getInstance().getHome();
-        Path accountPath = basePath.resolve(account.getMail());
-        IMailAccountService mailService = new JavaMailAccountService(account, accountPath, this.mailService);
-        mailService.setExecutor(getExecutorService());
-
-        TreeItem<Object> treeItem = new TreeItem<>(mailService);
-        root.getChildren().add(treeItem);
-
-        PIMApplication.registerCloseable(() ->
-        {
-            getLogger().info("Close " + mailService.getAccount().getMail());
-            mailService.disconnect();
-        });
-
-        getLogger().info("Init MailAccount {}", mailService.getAccount().getMail());
-        InitMailAccountService service = new InitMailAccountService(treeItem, mailService);
-        service.start();
-    }
-
-    /**
      * Laden der {@link MailAccount}s und befüllen des Trees.
      *
      * @param root {@link TreeItem}
@@ -437,7 +444,6 @@ public class MailController extends AbstractController
         // Bindings.when(Bindings.equal(itemProperty(),"TABS"))
         // .then(addMenu)
         // .otherwise((ContextMenu)null));
-
         try
         {
             List<MailAccount> accountList = this.mailService.getMailAccounts();
@@ -476,8 +482,8 @@ public class MailController extends AbstractController
             // columnFrom.prefWidthProperty().bind(this.tableViewMail.widthProperty().multiply(0.30D)); // 30% Breite
             columnFrom.setPrefWidth(300);
             columnReceived.setPrefWidth(180);
-            columnSubject.prefWidthProperty().bind(
-                    this.tableViewMail.widthProperty().subtract(columnFrom.widthProperty().add(columnReceived.widthProperty()).add(2)));
+            columnSubject.prefWidthProperty()
+                    .bind(this.tableViewMail.widthProperty().subtract(columnFrom.widthProperty().add(columnReceived.widthProperty()).add(2)));
 
             columnFrom.setSortable(false);
             columnFrom.setStyle("-fx-alignment: center-left;");

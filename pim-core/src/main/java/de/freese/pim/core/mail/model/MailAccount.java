@@ -3,10 +3,11 @@
  */
 package de.freese.pim.core.mail.model;
 
+import de.freese.pim.core.mail.MailPort;
 import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
@@ -37,7 +38,7 @@ public class MailAccount
     /**
      *
      */
-    private final IntegerProperty imapPortProperty = new SimpleIntegerProperty(this, "imapPort", 993);
+    private final ObjectProperty<MailPort> imapPortProperty = new SimpleObjectProperty<>(this, "imapPort", MailPort.IMAPS);
 
     /**
      *
@@ -62,7 +63,7 @@ public class MailAccount
     /**
      *
      */
-    private final IntegerProperty smtpPortProperty = new SimpleIntegerProperty(this, "smtpPort", 587);
+    private final ObjectProperty<MailPort> smtpPortProperty = new SimpleObjectProperty<>(this, "smtpPort", MailPort.SMTPS);
 
     /**
      * Erstellt ein neues {@link MailAccount} Object.
@@ -70,6 +71,36 @@ public class MailAccount
     public MailAccount()
     {
         super();
+    }
+
+    /**
+     * Erstellt ein neues {@link MailAccount} Object mit den Attributen der Quelle.
+     *
+     * @param src {@link MailAccount}
+     */
+    public MailAccount(final MailAccount src)
+    {
+        super();
+
+        copyFrom(src);
+    }
+
+    /**
+     * Kopiert die Attribute von der Quelle.
+     *
+     * @param src {@link MailAccount}
+     */
+    public void copyFrom(final MailAccount src)
+    {
+        setID(src.getID());
+        setImapHost(src.getImapHost());
+        setImapLegitimation(src.isImapLegitimation());
+        setImapPort(src.getImapPort());
+        setMail(src.getMail());
+        setPassword(src.getPassword());
+        setSmtpHost(src.getSmtpHost());
+        setSmtpLegitimation(src.isSmtpLegitimation());
+        setSmtpPort(src.getSmtpPort());
     }
 
     /**
@@ -89,9 +120,9 @@ public class MailAccount
     }
 
     /**
-     * @return int
+     * @return {@link MailPort}
      */
-    public int getImapPort()
+    public MailPort getImapPort()
     {
         return imapPortProperty().get();
     }
@@ -121,9 +152,9 @@ public class MailAccount
     }
 
     /**
-     * @return int
+     * @return {@link MailPort}
      */
-    public int getSmtpPort()
+    public MailPort getSmtpPort()
     {
         return smtpPortProperty().get();
     }
@@ -145,9 +176,9 @@ public class MailAccount
     }
 
     /**
-     * @return {@link IntegerProperty}
+     * @return {@link ObjectProperty}
      */
-    public IntegerProperty imapPortProperty()
+    public ObjectProperty<MailPort> imapPortProperty()
     {
         return this.imapPortProperty;
     }
@@ -209,9 +240,9 @@ public class MailAccount
     }
 
     /**
-     * @param port int
+     * @param port {@link MailPort}
      */
-    public void setImapPort(final int port)
+    public void setImapPort(final MailPort port)
     {
         imapPortProperty().set(port);
     }
@@ -249,9 +280,9 @@ public class MailAccount
     }
 
     /**
-     * @param port int
+     * @param port {@link MailPort}
      */
-    public void setSmtpPort(final int port)
+    public void setSmtpPort(final MailPort port)
     {
         smtpPortProperty().set(port);
     }
@@ -273,9 +304,9 @@ public class MailAccount
     }
 
     /**
-     * @return {@link IntegerProperty}
+     * @return {@link ObjectProperty}
      */
-    public IntegerProperty smtpPortProperty()
+    public ObjectProperty<MailPort> smtpPortProperty()
     {
         return this.smtpPortProperty;
     }

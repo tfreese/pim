@@ -222,16 +222,6 @@ public class MailFolder
         return this.nameProperty;
     }
 
-    // /**
-    // * Setzt den vollen Hierarchie-Namen, zB PARENT_NAME/FOLDER_NAME.
-    // *
-    // * @param fullName String
-    // */
-    // public void setFullName(final String fullName)
-    // {
-    // this.fullName = fullName;
-    // }
-
     /**
      * Setzt den Namen des Folders.
      *
@@ -245,7 +235,7 @@ public class MailFolder
 
         Predicate<String> predicate = n -> "send".equals(n);
         predicate = predicate.or(n -> "sent".equals(n));
-        predicate = predicate.or(n -> n.startsWith("gesendete"));
+        predicate = predicate.or(n -> n.startsWith("gesendet"));
 
         this.isSendFolder = predicate.test(name.toLowerCase());
 
@@ -257,6 +247,26 @@ public class MailFolder
         {
             this.mailsSorted.setComparator(Comparator.comparing(Mail::getReceivedDate).reversed());
         }
+    }
+
+    // /**
+    // * Setzt den vollen Hierarchie-Namen, zB PARENT_NAME/FOLDER_NAME.
+    // *
+    // * @param fullName String
+    // */
+    // public void setFullName(final String fullName)
+    // {
+    // this.fullName = fullName;
+    // }
+
+    /**
+     * Setzt die Anzahl ungelesener Mails.
+     *
+     * @param unreadMailsCount int
+     */
+    public void setUnreadMailsCount(final int unreadMailsCount)
+    {
+        this.unreadMailsCount = unreadMailsCount;
     }
 
     /**

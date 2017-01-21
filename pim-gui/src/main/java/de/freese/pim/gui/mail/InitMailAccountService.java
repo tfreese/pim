@@ -8,11 +8,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
-
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
-
 import de.freese.pim.core.mail.model.MailFolder;
 import de.freese.pim.core.mail.service.IMailAccountService;
 import de.freese.pim.gui.PIMApplication;
@@ -65,6 +63,68 @@ public class InitMailAccountService extends Service<Void>
     }
 
     /**
+     * @see javafx.concurrent.Service#createTask()
+     */
+    @Override
+    protected Task<Void> createTask()
+    {
+        Task<Void> task = new Task<Void>()
+        {
+            /**
+             * @see javafx.concurrent.Task#call()
+             */
+            @Override
+            protected Void call() throws Exception
+            {
+                Platform.runLater(() -> {
+                    getRoot().setExpanded(true);
+                });
+
+                if (StringUtils.isBlank(getMailAccountService().getAccount().getPassword()))
+                {
+                    throw new Exception("empty password for {}" + getMailAccountService().getAccount().getMail());
+                }
+
+                getMailAccountService().connect();
+
+                List<MailFolder> rootFolders = getMailAccountService().getRootFolder();
+
+                for (MailFolder rootFolder : rootFolders)
+                {
+                    TreeItem<Object> treeItem = new TreeItem<>(rootFolder);
+
+                    Platform.runLater(() -> {
+                        getRoot().getChildren().add(treeItem);
+                    });
+
+                    treeItem.getChildren().addAll(loadChildFolders(rootFolder));
+                }
+
+                PIMApplication.LOGGER.info("Initialisation of {} finished", getMailAccountService().getAccount().getMail());
+
+                return null;
+            }
+        };
+
+        setOnSucceeded(event -> {
+            // LOGGER.info("Start Synchronisation of {}", getMailAccountService().getAccount().getMail());
+
+            // SyncMailFolderService service = new SyncMailFolderService(getRoot(), getMailAccountService());
+            // service.start();
+        });
+
+        setOnFailed(event -> {
+            Throwable th = getException();
+
+            LOGGER.error(null, th);
+
+            new ErrorDialog().forThrowable(th).showAndWait();
+        });
+
+        return task;
+    }
+
+    /**
      * @return {@link IMailAccountService}
      */
     private IMailAccountService getMailAccountService()
@@ -109,71 +169,5 @@ public class InitMailAccountService extends Service<Void>
         }
 
         return childItems;
-    }
-
-    /**
-     * @see javafx.concurrent.Service#createTask()
-     */
-    @Override
-    protected Task<Void> createTask()
-    {
-        Task<Void> task = new Task<Void>()
-        {
-            /**
-             * @see javafx.concurrent.Task#call()
-             */
-            @Override
-            protected Void call() throws Exception
-            {
-                Platform.runLater(() ->
-                {
-                    getRoot().setExpanded(true);
-                });
-
-                if (StringUtils.isBlank(getMailAccountService().getAccount().getPassword()))
-                {
-                    throw new Exception("empty password for {}" + getMailAccountService().getAccount().getMail());
-                }
-
-                getMailAccountService().connect();
-
-                List<MailFolder> rootFolders = getMailAccountService().getRootFolder();
-
-                for (MailFolder rootFolder : rootFolders)
-                {
-                    TreeItem<Object> treeItem = new TreeItem<>(rootFolder);
-
-                    Platform.runLater(() ->
-                    {
-                        getRoot().getChildren().add(treeItem);
-                    });
-
-                    treeItem.getChildren().addAll(loadChildFolders(rootFolder));
-                }
-
-                PIMApplication.LOGGER.info("Initialisation of {} finished", getMailAccountService().getAccount().getMail());
-
-                return null;
-            }
-        };
-
-        setOnSucceeded(event ->
-        {
-            LOGGER.info("Start Synchronisation of {}", getMailAccountService().getAccount().getMail());
-
-            SyncMailFolderService service = new SyncMailFolderService(getRoot(), getMailAccountService());
-            service.start();
-        });
-
-        setOnFailed(event ->
-        {
-            Throwable th = getException();
-
-            LOGGER.error(null, th);
-
-            new ErrorDialog().forThrowable(th).showAndWait();
-        });
-
-        return task;
     }
 }

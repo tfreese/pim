@@ -35,6 +35,7 @@ public final class ConnectionHolder
 
     /**
      * Ruft die Methode {@link Connection#close()} auf der aktuellen {@link Connection} auf.<br>
+     * Die {@link Connection} wird anschliessend ,it {@link #remove()} aus der {@link ThreadLocal} entfernt.<br>
      * Wirft eine {@link NullPointerException}, wenn der aktuelle Thread keine {@link Connection} hat.
      *
      * @throws SQLException Falls was schief geht.
@@ -45,23 +46,9 @@ public final class ConnectionHolder
     {
         try (Connection connection = get())
         {
-            connection.setAutoCommit(true);
-            connection.setReadOnly(false);
+            // connection.setReadOnly(true);
         }
-    }
 
-    /**
-     * Ruft die Methode {@link Connection#close()} auf der aktuellen {@link Connection} auf.<br>
-     * Die {@link Connection} wird anschliessend aus der {@link ThreadLocal} entfernt.<br>
-     * Wirft eine {@link NullPointerException}, wenn der aktuelle Thread keine {@link Connection} hat.
-     *
-     * @throws SQLException Falls was schief geht.
-     * @see #isEmpty()
-     * @see #set(Connection)
-     */
-    public static void closeAndRemove() throws SQLException
-    {
-        close();
         remove();
     }
 
@@ -92,11 +79,6 @@ public final class ConnectionHolder
         Connection connection = THREAD_LOCAL.get();
 
         Objects.requireNonNull(connection, "connection required, call #set(Connection) first");
-
-        // if (connection.isReadOnly())
-        // {
-        // connection.setReadOnly(false);
-        // }
 
         return connection;
     }
@@ -137,10 +119,11 @@ public final class ConnectionHolder
      * Wirft eine {@link IllegalStateException}, wenn der aktuelle Thread bereits eine {@link Connection} hat.
      *
      * @param connection {@link Connection}
+     * @throws SQLException Falls was schief geht.
      * @see #isEmpty()
      * @see #set(Connection)
      */
-    public static final void set(final Connection connection)
+    public static void set(final Connection connection) throws SQLException
     {
         if (THREAD_LOCAL.get() != null)
         {
@@ -148,6 +131,11 @@ public final class ConnectionHolder
         }
 
         Objects.requireNonNull(connection, "connection required");
+
+        // if (connection.isReadOnly())
+        // {
+        // connection.setReadOnly(false);
+        // }
 
         THREAD_LOCAL.set(connection);
     }

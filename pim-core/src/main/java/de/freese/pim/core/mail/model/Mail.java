@@ -30,9 +30,9 @@ public class Mail
     private final ObjectProperty<InternetAddress> fromProperty = new SimpleObjectProperty<>(this, "from", null);
 
     /**
-     *
+     * Ist immer größer als 0.
      */
-    private String id = null;
+    private int msgNum = 0;
 
     /**
     *
@@ -58,6 +58,11 @@ public class Mail
     *
     */
     private final ObjectProperty<InternetAddress> toProperty = new SimpleObjectProperty<>(this, "to", null);
+
+    /**
+     *
+     */
+    private String uid = null;
 
     /**
      * Erzeugt eine neue Instanz von {@link Mail}
@@ -100,13 +105,13 @@ public class Mail
     }
 
     /**
-     * Liefert die Message-ID oder bei IMAP die UID.
+     * Ist immer größer als 0.
      *
-     * @return String
+     * @return int
      */
-    public String getID()
+    public int getMsgNum()
     {
-        return this.id;
+        return this.msgNum;
     }
 
     /**
@@ -117,7 +122,7 @@ public class Mail
     public Path getPath()
     {
         Path basePath = getFolder().getPath();
-        Path path = basePath.resolve(getID()).resolve(getID() + ".eml");
+        Path path = basePath.resolve(getUID()).resolve(getUID() + ".eml");
 
         return path;
     }
@@ -160,6 +165,16 @@ public class Mail
     public InternetAddress getTo()
     {
         return toProperty().get();
+    }
+
+    /**
+     * Liefert die Message-ID oder bei IMAP die UID.
+     *
+     * @return String
+     */
+    public String getUID()
+    {
+        return this.uid;
     }
 
     /**
@@ -207,13 +222,13 @@ public class Mail
     }
 
     /**
-     * Setzt die Message-ID oder bei IMAP die UID.
+     * Ist immer größer als 0.
      *
-     * @param id String
+     * @param msgNum int
      */
-    public void setID(final String id)
+    public void setMsgNum(final int msgNum)
     {
-        this.id = id;
+        this.msgNum = msgNum;
     }
 
     /**
@@ -264,6 +279,16 @@ public class Mail
     public void setTo(final InternetAddress to)
     {
         toProperty().set(to);
+    }
+
+    /**
+     * Setzt die Message-ID oder bei IMAP die UID.
+     *
+     * @param uid String
+     */
+    public void setUID(final String uid)
+    {
+        this.uid = uid;
     }
 
     /**

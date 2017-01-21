@@ -10,9 +10,7 @@ import java.nio.file.Path;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.sql.DataSource;
-
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
@@ -23,7 +21,6 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import de.freese.pim.core.addressbook.dao.DefaultAddressBookDAO;
 import de.freese.pim.core.addressbook.dao.IAddressBookDAO;
 import de.freese.pim.core.addressbook.model.Kontakt;
@@ -31,7 +28,6 @@ import de.freese.pim.core.addressbook.model.KontaktAttribut;
 import de.freese.pim.core.addressbook.service.DefaultAddressBookService;
 import de.freese.pim.core.db.HsqldbLocalFile;
 import de.freese.pim.core.db.IDataSourceBean;
-import de.freese.pim.core.persistence.JdbcTemplate;
 import de.freese.pim.core.persistence.TransactionalInvocationHandler;
 import de.freese.pim.core.service.ISettingsService;
 import de.freese.pim.core.service.SettingService;
@@ -55,117 +51,6 @@ public class PIMAddressbookConsole
      *
      */
     public static PrintStream PRINTSTREAM = System.out;
-
-    /**
-     * @param args String[]
-     * @throws Exception Falls was schief geht.
-     */
-    public static void main(String[] args) throws Exception
-    {
-        if (args.length == 0)
-        {
-            usage();
-        }
-
-        CommandLine line = null;
-
-        try
-        {
-            CommandLineParser parser = new DefaultParser();
-            line = parser.parse(getCommandOptions(), args);
-        }
-        catch (Exception ex)
-        {
-            LOGGER.error(ex.getMessage());
-
-            usage();
-        }
-
-        // SysOutOverSLF4J.sendSystemOutAndErrToSLF4J();
-
-        ISettingsService settingsService = SettingService.getInstance();
-
-        Path home = settingsService.getHome();
-
-        if (!Files.exists(home))
-        {
-            Files.createDirectories(home);
-        }
-
-        try (IDataSourceBean dataSourceBean = new HsqldbLocalFile())
-        {
-            dataSourceBean.configure(settingsService);
-            dataSourceBean.testConnection();
-            dataSourceBean.populateIfEmpty(null);
-
-            DataSource dataSource = dataSourceBean.getDataSource();
-            DefaultAddressBookDAO defaultDAO = new DefaultAddressBookDAO();
-            defaultDAO.setJdbcTemplate(new JdbcTemplate().setDataSource(dataSource));
-
-            IAddressBookDAO addressBookDAO = (IAddressBookDAO) Proxy.newProxyInstance(PIMAddressbookConsole.class.getClassLoader(),
-                    new Class<?>[]
-                    {
-                            IAddressBookDAO.class
-                    }, new TransactionalInvocationHandler(dataSource, new DefaultAddressBookService(defaultDAO)));
-
-            PIMAddressbookConsole addressbook = new PIMAddressbookConsole();
-            addressbook.setAddressBookDAO(addressBookDAO);
-            addressbook.setPrintStream(PRINTSTREAM);
-
-            if (line.hasOption("ik"))
-            {
-                args = line.getOptionValues("insert-kontakt");
-                addressbook.insertKontakt(args[0], args[1]);
-            }
-            else if (line.hasOption("uk"))
-            {
-                args = line.getOptionValues("update-kontakt");
-                long id = Long.parseLong(args[0]);
-                addressbook.updateKontakt(id, args[1], args[2]);
-            }
-            else if (line.hasOption("dk"))
-            {
-                long id = Long.parseLong(line.getOptionValue("delete-kontakt"));
-                addressbook.deleteKontakt(id);
-            }
-            else if (line.hasOption("ia"))
-            {
-                args = line.getOptionValues("insert-attribut");
-                long id = Long.parseLong(args[0]);
-                addressbook.insertAttribut(id, args[1], args[2]);
-            }
-            else if (line.hasOption("ua"))
-            {
-                args = line.getOptionValues("update-attribut");
-                long id = Long.parseLong(args[0]);
-                addressbook.updateAttribut(id, args[1], args[2]);
-                // long id = Long.parseLong(args[1]);
-                // addressbook.updateAttribut(id, args[2], StringUtils.join(args, ' ', 3, args.length));
-            }
-            else if (line.hasOption("da"))
-            {
-                args = line.getOptionValues("delete-attribut");
-                long id = Long.parseLong(args[0]);
-                addressbook.deleteAttribut(id, args[1]);
-            }
-            else if (line.hasOption("lk"))
-            {
-                addressbook.getKontakte();
-            }
-            else if (line.hasOption("vk"))
-            {
-                long id = Long.parseLong(line.getOptionValue("view-kontakt"));
-                addressbook.getKontaktDetails(id);
-            }
-            else if (line.hasOption("s"))
-            {
-                args = line.getOptionValues("search");
-                addressbook.search(args[0]);
-            }
-        }
-
-        // dataSource.destroy();
-    }
 
     /**
      * Liefert die möglichen Optionen der Kommandozeile.<br>
@@ -224,6 +109,115 @@ public class PIMAddressbookConsole
         options.addOptionGroup(group);
 
         return options;
+    }
+
+    /**
+     * @param args String[]
+     * @throws Exception Falls was schief geht.
+     */
+    public static void main(String[] args) throws Exception
+    {
+        if (args.length == 0)
+        {
+            usage();
+        }
+
+        CommandLine line = null;
+
+        try
+        {
+            CommandLineParser parser = new DefaultParser();
+            line = parser.parse(getCommandOptions(), args);
+        }
+        catch (Exception ex)
+        {
+            LOGGER.error(ex.getMessage());
+
+            usage();
+        }
+
+        // SysOutOverSLF4J.sendSystemOutAndErrToSLF4J();
+
+        ISettingsService settingsService = SettingService.getInstance();
+
+        Path home = settingsService.getHome();
+
+        if (!Files.exists(home))
+        {
+            Files.createDirectories(home);
+        }
+
+        try (IDataSourceBean dataSourceBean = new HsqldbLocalFile())
+        {
+            dataSourceBean.configure(settingsService);
+            dataSourceBean.testConnection();
+            dataSourceBean.populateIfEmpty(null);
+
+            DataSource dataSource = dataSourceBean.getDataSource();
+            IAddressBookDAO defaultDAO = new DefaultAddressBookDAO().dataSource(dataSource);
+
+            IAddressBookDAO addressBookDAO = (IAddressBookDAO) Proxy.newProxyInstance(PIMAddressbookConsole.class.getClassLoader(), new Class<?>[]
+            {
+                    IAddressBookDAO.class
+            }, new TransactionalInvocationHandler(dataSource, new DefaultAddressBookService(defaultDAO)));
+
+            PIMAddressbookConsole addressbook = new PIMAddressbookConsole();
+            addressbook.setAddressBookDAO(addressBookDAO);
+            addressbook.setPrintStream(PRINTSTREAM);
+
+            if (line.hasOption("ik"))
+            {
+                args = line.getOptionValues("insert-kontakt");
+                addressbook.insertKontakt(args[0], args[1]);
+            }
+            else if (line.hasOption("uk"))
+            {
+                args = line.getOptionValues("update-kontakt");
+                long id = Long.parseLong(args[0]);
+                addressbook.updateKontakt(id, args[1], args[2]);
+            }
+            else if (line.hasOption("dk"))
+            {
+                long id = Long.parseLong(line.getOptionValue("delete-kontakt"));
+                addressbook.deleteKontakt(id);
+            }
+            else if (line.hasOption("ia"))
+            {
+                args = line.getOptionValues("insert-attribut");
+                long id = Long.parseLong(args[0]);
+                addressbook.insertAttribut(id, args[1], args[2]);
+            }
+            else if (line.hasOption("ua"))
+            {
+                args = line.getOptionValues("update-attribut");
+                long id = Long.parseLong(args[0]);
+                addressbook.updateAttribut(id, args[1], args[2]);
+                // long id = Long.parseLong(args[1]);
+                // addressbook.updateAttribut(id, args[2], StringUtils.join(args, ' ', 3, args.length));
+            }
+            else if (line.hasOption("da"))
+            {
+                args = line.getOptionValues("delete-attribut");
+                long id = Long.parseLong(args[0]);
+                addressbook.deleteAttribut(id, args[1]);
+            }
+            else if (line.hasOption("lk"))
+            {
+                addressbook.getKontakte();
+            }
+            else if (line.hasOption("vk"))
+            {
+                long id = Long.parseLong(line.getOptionValue("view-kontakt"));
+                addressbook.getKontaktDetails(id);
+            }
+            else if (line.hasOption("s"))
+            {
+                args = line.getOptionValues("search");
+                addressbook.search(args[0]);
+            }
+        }
+
+        // dataSource.destroy();
     }
 
     /**
@@ -345,8 +339,7 @@ public class PIMAddressbookConsole
                     "ID", "VORNAME", "NACHNAME"
             });
 
-            kontakte.forEach(k ->
-            {
+            kontakte.forEach(k -> {
                 String[] row = new String[3];
                 rows.add(row);
 
@@ -433,8 +426,7 @@ public class PIMAddressbookConsole
                 "ID", "VORNAME", "NACHNAME", "ATTRIBUT", "WERT"
         });
 
-        kontakte.forEach(kontakt ->
-        {
+        kontakte.forEach(kontakt -> {
             rows.add(new String[]
             {
                     Long.toString(kontakt.getID()), kontakt.getNachname(), kontakt.getVorname(), StringUtils.EMPTY, StringUtils.EMPTY
@@ -450,8 +442,7 @@ public class PIMAddressbookConsole
 
             if (kontaktAttribute.size() > 1)
             {
-                kontaktAttribute.stream().skip(1).forEach(ka ->
-                {
+                kontaktAttribute.stream().skip(1).forEach(ka -> {
                     String[] row = new String[5];
                     rows.add(row);
 

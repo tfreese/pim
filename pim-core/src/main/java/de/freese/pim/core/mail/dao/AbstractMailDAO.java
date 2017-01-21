@@ -18,6 +18,7 @@ import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import de.freese.pim.core.dao.AbstractDAO;
+import de.freese.pim.core.mail.MailPort;
 import de.freese.pim.core.mail.MailProvider;
 import de.freese.pim.core.mail.model.MailAccount;
 import de.freese.pim.core.persistence.RowMapper;
@@ -31,7 +32,7 @@ import de.freese.pim.core.utils.Utils;
  *
  * @author Thomas Freese
  */
-public class AbstractMailDAO extends AbstractDAO implements IMailDAO
+public class AbstractMailDAO extends AbstractDAO<IMailDAO> implements IMailDAO
 {
     /**
      * @author Thomas Freese
@@ -58,10 +59,10 @@ public class AbstractMailDAO extends AbstractDAO implements IMailDAO
             account.setMail(rs.getString("MAIL"));
 
             account.setImapHost(rs.getString("IMAP_HOST"));
-            account.setImapPort(rs.getInt("IMAP_PORT"));
+            account.setImapPort(MailPort.findByPort(rs.getInt("IMAP_PORT")));
             account.setImapLegitimation(rs.getBoolean("IMAP_LEGITIMATION"));
             account.setSmtpHost(rs.getString("SMTP_HOST"));
-            account.setSmtpPort(rs.getInt("SMTP_PORT"));
+            account.setSmtpPort(MailPort.findByPort(rs.getInt("SMTP_PORT")));
             account.setSmtpLegitimation(rs.getBoolean("SMTP_LEGITIMATION"));
 
             String passwort = rs.getString("PASSWORT");
@@ -73,11 +74,6 @@ public class AbstractMailDAO extends AbstractDAO implements IMailDAO
             }
             catch (Exception ex)
             {
-                if (ex instanceof SQLException)
-                {
-                    throw (SQLException) ex;
-                }
-
                 throw new SQLException(ex);
             }
 
@@ -198,10 +194,10 @@ public class AbstractMailDAO extends AbstractDAO implements IMailDAO
             ps.setString(3, account.getMail());
             ps.setString(4, encryptedPassword);
             ps.setString(5, account.getImapHost());
-            ps.setInt(6, account.getImapPort());
+            ps.setInt(6, account.getImapPort().getPort());
             ps.setBoolean(7, account.isImapLegitimation());
             ps.setString(8, account.getSmtpHost());
-            ps.setInt(9, account.getSmtpPort());
+            ps.setInt(9, account.getSmtpPort().getPort());
             ps.setBoolean(10, account.isSmtpLegitimation());
         });
 
@@ -235,10 +231,10 @@ public class AbstractMailDAO extends AbstractDAO implements IMailDAO
             ps.setString(1, account.getMail());
             ps.setString(2, encryptedPassword);
             ps.setString(3, account.getImapHost());
-            ps.setInt(4, account.getImapPort());
+            ps.setInt(4, account.getImapPort().getPort());
             ps.setBoolean(5, account.isImapLegitimation());
             ps.setString(6, account.getSmtpHost());
-            ps.setInt(7, account.getSmtpPort());
+            ps.setInt(7, account.getSmtpPort().getPort());
             ps.setBoolean(8, account.isSmtpLegitimation());
             ps.setLong(9, account.getID());
         });

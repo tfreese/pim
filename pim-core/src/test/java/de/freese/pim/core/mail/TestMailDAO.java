@@ -55,28 +55,11 @@ public class TestMailDAO
         ((SimpleDataSource) dataSource).destroy();
     }
 
-    // /**
-    // *
-    // */
-    // // @Rule // bei jeder Methode
-    // @ClassRule // beforeClass, afterClass
-    // public static ExternalResource externalResource = new ExternalResource()
-    // {
-    // /**
-    // * @see org.junit.rules.ExternalResource#after()
-    // */
-    // @Override
-    // protected void after()
-    // {
-    // System.out.println("after");
-    // closeDataSource(dataSource);
-    // }
-    // };
     /**
-     *
+     * @throws Exception Falls was schief geht.
      */
     @BeforeClass
-    public static void beforeClass()
+    public static void beforeClass() throws Exception
     {
         SimpleDataSource ds = new SimpleDataSource();
         ds.setDriverClassName("org.hsqldb.jdbc.JDBCDriver");
@@ -85,20 +68,9 @@ public class TestMailDAO
         // ds.setSuppressClose(true);
         dataSource = ds;
 
-        try
-        {
-            ResourceDatabasePopulator populator = new ResourceDatabasePopulator();
-            populator.addScript(new ClassPathResource("db/hsqldb/V3__pim_mail_schema.sql"));
-            populator.execute(dataSource);
-        }
-        catch (RuntimeException rex)
-        {
-            throw rex;
-        }
-        catch (Exception ex)
-        {
-            throw new RuntimeException(ex);
-        }
+        ResourceDatabasePopulator populator = new ResourceDatabasePopulator();
+        populator.addScript(new ClassPathResource("db/hsqldb/V3__pim_mail_schema.sql"));
+        populator.execute(dataSource);
 
         jdbcTemplate = new JdbcTemplate().setDataSource(dataSource);
         DefaultMailDAO dao = new DefaultMailDAO();
@@ -123,7 +95,7 @@ public class TestMailDAO
     public void after() throws Exception
     {
         ConnectionHolder.commitTX();
-        ConnectionHolder.closeAndRemove();
+        ConnectionHolder.close();
     }
 
     /**
@@ -159,10 +131,10 @@ public class TestMailDAO
         account.setMail("a@b.de");
         account.setPassword("gehaim");
         account.setImapHost("imap-host");
-        account.setImapPort(1);
+        account.setImapPort(MailPort.IMAP);
         account.setImapLegitimation(true);
         account.setSmtpHost("smtp-host");
-        account.setSmtpPort(2);
+        account.setSmtpPort(MailPort.SMTP);
         account.setSmtpLegitimation(false);
 
         TestMailDAO.mailDAO.insert(account);
@@ -186,10 +158,10 @@ public class TestMailDAO
         Assert.assertEquals("a@b.de", account.getMail());
         Assert.assertEquals("gehaim", account.getPassword());
         Assert.assertEquals("imap-host", account.getImapHost());
-        Assert.assertEquals(1, account.getImapPort());
+        Assert.assertEquals(MailPort.IMAP, account.getImapPort());
         Assert.assertEquals(true, account.isImapLegitimation());
         Assert.assertEquals("smtp-host", account.getSmtpHost());
-        Assert.assertEquals(2, account.getSmtpPort());
+        Assert.assertEquals(MailPort.SMTP, account.getSmtpPort());
         Assert.assertEquals(false, account.isSmtpLegitimation());
     }
 
@@ -209,10 +181,10 @@ public class TestMailDAO
         account.setMail("c@d.com");
         account.setPassword("gehaim2");
         account.setImapHost("host-imap");
-        account.setImapPort(2);
+        account.setImapPort(MailPort.IMAPS);
         account.setImapLegitimation(false);
         account.setSmtpHost("host-smtp");
-        account.setSmtpPort(1);
+        account.setSmtpPort(MailPort.SMTPS);
         account.setSmtpLegitimation(true);
 
         TestMailDAO.mailDAO.update(account);
@@ -234,10 +206,10 @@ public class TestMailDAO
         Assert.assertEquals("c@d.com", account.getMail());
         Assert.assertEquals("gehaim2", account.getPassword());
         Assert.assertEquals("host-imap", account.getImapHost());
-        Assert.assertEquals(2, account.getImapPort());
+        Assert.assertEquals(MailPort.IMAPS, account.getImapPort());
         Assert.assertEquals(false, account.isImapLegitimation());
         Assert.assertEquals("host-smtp", account.getSmtpHost());
-        Assert.assertEquals(1, account.getSmtpPort());
+        Assert.assertEquals(MailPort.SMTPS, account.getSmtpPort());
         Assert.assertEquals(true, account.isSmtpLegitimation());
     }
 }

@@ -2,12 +2,9 @@
 package de.freese.pim.core.db;
 
 import java.nio.file.Path;
-
 import javax.sql.DataSource;
-
 import org.hsqldb.Database;
 import org.hsqldb.server.Server;
-
 import de.freese.pim.core.service.ISettingsService;
 import de.freese.pim.core.utils.Utils;
 
@@ -74,8 +71,7 @@ public class HsqldbEmbeddedServer extends AbstractHsqldbBean
 
         this.server.start();
 
-        Runtime.getRuntime().addShutdownHook(new Thread(() ->
-        {
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             try
             {
                 disconnect();
@@ -89,6 +85,23 @@ public class HsqldbEmbeddedServer extends AbstractHsqldbBean
         DataSource dataSource = createDataSource(driver, url, userName, password, validationQuery);
         setDataSource(dataSource);
     }
+
+    // /**
+    // * @see de.freese.pim.core.db.AbstractDataSourceBean#createDataSource(java.lang.String, java.lang.String, java.lang.String, java.lang.String,
+    // * java.lang.String)
+    // */
+    // @Override
+    // protected DataSource createDataSource(final String driver, final String url, final String username, final String password, final String validationQuery)
+    // {
+    // SimpleDataSource ds = new SimpleDataSource();
+    // ds.setDriverClassName(driver);
+    // ds.setUrl(url);
+    // ds.setUsername(username);
+    // ds.setPassword(password);
+    // ds.setAutoCommit(false);
+    //
+    // return ds;
+    // }
 
     /**
      * @see de.freese.pim.core.db.AbstractDataSourceBean#disconnect()

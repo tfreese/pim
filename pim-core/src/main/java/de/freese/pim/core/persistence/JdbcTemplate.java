@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import javax.sql.DataSource;
+import org.slf4j.LoggerFactory;
 
 /**
  * Analog-Implementierung vom org.springframework.jdbc.core.JdbcTemplate<br>
@@ -219,8 +220,8 @@ public class JdbcTemplate
     {
         if (ConnectionHolder.isEmpty())
         {
-            // Kein Transaction-Context -> reset ReadOnly Connection
-            connection.setReadOnly(false);
+            // Kein Transaction-Context.
+            // connection.setReadOnly(false);
             connection.close();
         }
         else
@@ -296,12 +297,17 @@ public class JdbcTemplate
         {
             // Kein Transaction-Context -> ReadOnly Connection
             connection = getDataSource().getConnection();
-            connection.setReadOnly(true);
+            // connection.setReadOnly(true);
         }
         else
         {
             // Transaction-Context
             connection = ConnectionHolder.get();
+
+            if (connection.isReadOnly())
+            {
+                LoggerFactory.getLogger(getClass()).warn("connection is read-only");
+            }
         }
 
         return connection;

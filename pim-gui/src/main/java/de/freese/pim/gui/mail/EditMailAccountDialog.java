@@ -51,7 +51,7 @@ public class EditMailAccountDialog
      */
     public Optional<MailAccount> addAccount(final ResourceBundle bundle)
     {
-        return openDialog(bundle, null, "mail.add.account", "imageview-add");
+        return openDialog(bundle, null, "mailaccount.add", "imageview-add");
     }
 
     /**
@@ -63,7 +63,7 @@ public class EditMailAccountDialog
      */
     public Optional<MailAccount> editAccount(final ResourceBundle bundle, final MailAccount account)
     {
-        return openDialog(bundle, account, "mail.edit.account", "imageview-edit");
+        return openDialog(bundle, account, "mailaccount.edit", "imageview-edit");
     }
 
     /**
@@ -77,7 +77,16 @@ public class EditMailAccountDialog
      */
     private Optional<MailAccount> openDialog(final ResourceBundle bundle, final MailAccount account, final String titleKey, final String imageStyleClass)
     {
-        Dialog<MailAccount> dialog = new Dialog<>();
+        // DialogObject
+        MailAccount bean = new MailAccount();
+
+        // Attribute kopieren.
+        if (account != null)
+        {
+            bean.copyFrom(account);
+        }
+
+        Dialog<ButtonType> dialog = new Dialog<>();
         dialog.initOwner(PIMApplication.getMainWindow());
         dialog.initModality(Modality.APPLICATION_MODAL);
         dialog.setTitle(bundle.getString(titleKey));
@@ -158,6 +167,15 @@ public class EditMailAccountDialog
         password1.setPromptText(bundle.getString("passwort"));
         password2.setPromptText(bundle.getString("passwort") + " (" + bundle.getString("wiederholung") + ")");
 
+        // Object-Attribute an GUI binden.
+        mail.textProperty().bindBidirectional(bean.mailProperty());
+        imapHost.textProperty().bindBidirectional(bean.imapHostProperty());
+        imapPort.valueProperty().bindBidirectional(bean.imapPortProperty());
+        smtpHost.textProperty().bindBidirectional(bean.smtpHostProperty());
+        smtpPort.valueProperty().bindBidirectional(bean.smtpPortProperty());
+        password1.textProperty().bindBidirectional(bean.passwordProperty());
+        password2.setText(bean.getPassword());
+
         Node okButton = dialog.getDialogPane().lookupButton(ButtonType.OK);
 
         // Mail-Format und Passwörter vergleichen.
@@ -224,22 +242,7 @@ public class EditMailAccountDialog
 
         int row = -1;
 
-        if (account != null)
-        {
-            mail.setText(account.getMail());
-
-            imapHost.setText(account.getImapHost());
-            // imapPort.setv(Integer.toString(account.getImapPort()));
-            // imapPort.getValueFactory().setValue(account.getImapPort());
-            imapPort.getSelectionModel().select(MailPort.findByPort(account.getImapPort()));
-
-            smtpHost.setText(account.getSmtpHost());
-            smtpPort.getSelectionModel().select(MailPort.findByPort(account.getSmtpPort()));
-
-            password1.setText(account.getPassword());
-            password2.setText(account.getPassword());
-        }
-        else
+        if (account == null)
         {
             okButton.setDisable(true);
 
@@ -283,15 +286,7 @@ public class EditMailAccountDialog
             labelTestResult.setText(null);
             labelTestResult.setStyle(null);
 
-            MailAccount ma = new MailAccount();
-            ma.setMail(mail.getText());
-            ma.setImapHost(imapHost.getText());
-            ma.setImapPort(imapPort.getSelectionModel().getSelectedItem().getPort());
-            ma.setSmtpHost(smtpHost.getText());
-            ma.setSmtpPort(smtpPort.getSelectionModel().getSelectedItem().getPort());
-            ma.setPassword(password1.getText());
-
-            IMailAccountService mailService = new JavaMailAccountService(ma, Paths.get("."));
+            IMailAccountService mailService = new JavaMailAccountService(bean, Paths.get("."));
 
             try
             {
@@ -324,36 +319,21 @@ public class EditMailAccountDialog
 
         Platform.runLater(() -> mail.requestFocus());
 
-        dialog.setResultConverter(buttonType -> {
-            if (buttonType == ButtonType.OK)
-            {
-                MailAccount ma = account;
+        Optional<ButtonType> result = dialog.showAndWait();
 
-                if (account == null)
-                {
-                    ma = new MailAccount();
-                }
+        if (result.filter(response -> response != ButtonType.OK).isPresent())
+        {
+            return Optional.empty();
+        }
 
-                ma.setMail(mail.getText());
+        // Attribute kopieren.
+        if (account != null)
+        {
+            account.copyFrom(bean);
 
-                ma.setImapHost(imapHost.getText());
-                // ma.setImapPort(Integer.parseInt(imapPort.getText()));
-                // ma.setImapPort(imapPort.getValue());
-                ma.setImapPort(imapPort.getSelectionModel().getSelectedItem().getPort());
+            return Optional.ofNullable(account);
+        }
 
-                ma.setSmtpHost(smtpHost.getText());
-                ma.setSmtpPort(smtpPort.getSelectionModel().getSelectedItem().getPort());
-
-                ma.setPassword(password1.getText());
-
-                return account;
-            }
-
-            return null;
-        });
-
-        Optional<MailAccount> result = dialog.showAndWait();
-
-        return result;
+        return Optional.ofNullable(bean);
     }
 }

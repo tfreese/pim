@@ -8,7 +8,6 @@ import java.sql.Statement;
 import javax.sql.DataSource;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.tomcat.jdbc.pool.PoolProperties;
-
 import de.freese.pim.core.persistence.SimpleDataSource;
 
 /**
@@ -51,17 +50,17 @@ public abstract class AbstractDataSourceBean implements IDataSourceBean
      *
      * @param driver String
      * @param url String
-     * @param userName String
+     * @param username String
      * @param password String
      * @param validationQuery String
      * @return {@link DataSource}
      */
-    protected DataSource createDataSource(final String driver, final String url, final String userName, final String password, final String validationQuery)
+    protected DataSource createDataSource(final String driver, final String url, final String username, final String password, final String validationQuery)
     {
         PoolProperties poolProperties = new PoolProperties();
         poolProperties.setDriverClassName(driver);
         poolProperties.setUrl(url);
-        poolProperties.setUsername(userName);
+        poolProperties.setUsername(username);
         poolProperties.setPassword(password);
 
         poolProperties.setMaxActive(6);

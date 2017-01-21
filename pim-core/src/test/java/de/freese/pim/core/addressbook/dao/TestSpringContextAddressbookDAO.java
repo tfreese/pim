@@ -17,7 +17,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
-import de.freese.pim.core.addressbook.TestConfig;
+import de.freese.pim.core.addressbook.TestAddressbookConfig;
 
 /**
  * TestCase für die TX-Steuerung mit Spring.
@@ -27,7 +27,7 @@ import de.freese.pim.core.addressbook.TestConfig;
 @RunWith(SpringRunner.class)
 @ContextConfiguration(classes =
 {
-        TestConfig.class
+        TestAddressbookConfig.class
 })
 @Transactional(transactionManager = "transactionManager")
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)

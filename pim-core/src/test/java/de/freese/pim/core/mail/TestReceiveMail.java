@@ -3,11 +3,6 @@
  */
 package de.freese.pim.core.mail;
 
-import com.sun.mail.imap.IMAPFolder;
-import com.sun.mail.util.ASCIIUtility;
-import de.freese.pim.core.mail.function.FunctionStripNotLetter;
-import de.freese.pim.core.mail.utils.MailUtils;
-import de.freese.pim.core.mail.utils.MailUtils.AbstractTextPart;
 import java.io.BufferedInputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -49,6 +44,11 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
 import org.junit.runners.Parameterized;
+import com.sun.mail.imap.IMAPFolder;
+import com.sun.mail.util.ASCIIUtility;
+import de.freese.pim.core.mail.function.FunctionStripNotLetter;
+import de.freese.pim.core.mail.utils.MailUtils;
+import de.freese.pim.core.mail.utils.MailUtils.AbstractTextPart;
 
 /**
  * @author Thomas Freese
@@ -184,7 +184,6 @@ public class TestReceiveMail extends AbstractMailTest
             inboxFolder.fetch(messages, fp);
 
             Assert.assertNotNull(messages);
-            Assert.assertTrue(messages.length > 0);
 
             for (Message message : messages)
             {

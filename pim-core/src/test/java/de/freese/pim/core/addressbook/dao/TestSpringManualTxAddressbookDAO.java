@@ -17,7 +17,7 @@ import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
 
-import de.freese.pim.core.addressbook.TestConfig;
+import de.freese.pim.core.addressbook.TestAddressbookConfig;
 
 /**
  * TestCase für die manuelle TX-Steuerung mit Spring.
@@ -57,7 +57,7 @@ public class TestSpringManualTxAddressbookDAO extends AbstractDAOTextCase
     @BeforeClass
     public static void beforeClass() throws Exception
     {
-        TestConfig config = new TestConfig();
+        TestAddressbookConfig config = new TestAddressbookConfig();
 
         // dataSource = new JndiDataSourceLookup().getDataSource("jdbc/spring/manualTX"); // Wird in AllTests definiert.
         dataSource = config.dataSource();

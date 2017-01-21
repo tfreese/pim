@@ -25,12 +25,12 @@ import de.freese.pim.core.persistence.JdbcTemplate;
  */
 @Configuration
 @EnableTransactionManagement
-public class TestConfig
+public class TestAddressbookConfig
 {
     /**
-     * Erstellt ein neues {@link TestConfig} Object.
+     * Erstellt ein neues {@link TestAddressbookConfig} Object.
      */
-    public TestConfig()
+    public TestAddressbookConfig()
     {
         super();
     }

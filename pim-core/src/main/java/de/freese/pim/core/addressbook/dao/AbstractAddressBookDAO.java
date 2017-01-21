@@ -21,7 +21,7 @@ import de.freese.pim.core.utils.Utils;
  *
  * @author Thomas Freese
  */
-public abstract class AbstractAddressBookDAO extends AbstractDAO implements IAddressBookDAO
+public abstract class AbstractAddressBookDAO extends AbstractDAO<IAddressBookDAO> implements IAddressBookDAO
 {
     /**
      * Mapped die Kontakte mit Attributen.

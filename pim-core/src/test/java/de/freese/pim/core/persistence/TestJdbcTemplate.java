@@ -7,7 +7,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -15,8 +14,7 @@ import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 import org.springframework.jdbc.datasource.SingleConnectionDataSource;
-
-import de.freese.pim.core.addressbook.TestConfig;
+import de.freese.pim.core.addressbook.TestAddressbookConfig;
 
 /**
  * TestCase des eigenen {@link JdbcTemplate}.
@@ -107,7 +105,7 @@ public class TestJdbcTemplate
     @BeforeClass
     public static void beforeClass()
     {
-        jdbcTemplate = new JdbcTemplate().setDataSource(new TestConfig().dataSource());
+        jdbcTemplate = new JdbcTemplate().setDataSource(new TestAddressbookConfig().dataSource());
     }
 
     /**
@@ -162,7 +160,7 @@ public class TestJdbcTemplate
         }
         finally
         {
-            ConnectionHolder.closeAndRemove();
+            ConnectionHolder.close();
         }
     }
 
@@ -244,7 +242,7 @@ public class TestJdbcTemplate
         }
         finally
         {
-            ConnectionHolder.closeAndRemove();
+            ConnectionHolder.close();
         }
     }
 
@@ -257,8 +255,8 @@ public class TestJdbcTemplate
         StringBuilder sql = new StringBuilder();
         sql.append("select user_id, id, nachname, vorname from KONTAKT");
 
-        List<Entity> results = jdbcTemplate.query(sql.toString(),
-                (rs, rowNum) -> new Entity(rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4)));
+        List<Entity> results =
+                jdbcTemplate.query(sql.toString(), (rs, rowNum) -> new Entity(rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4)));
 
         Assert.assertNotNull(results);
         Assert.assertEquals(1, results.size());
@@ -286,8 +284,7 @@ public class TestJdbcTemplate
 
         try
         {
-            long newID = jdbcTemplate.query("call next value for kontakt_seq", rs ->
-            {
+            long newID = jdbcTemplate.query("call next value for kontakt_seq", rs -> {
                 rs.next();
 
                 return rs.getLong(1);
@@ -295,8 +292,7 @@ public class TestJdbcTemplate
 
             Assert.assertEquals(2L, newID);
 
-            int affectedRows = jdbcTemplate.update(sql.toString(), ps ->
-            {
+            int affectedRows = jdbcTemplate.update(sql.toString(), ps -> {
                 ps.setString(1, "TEST");
                 ps.setLong(2, newID);
                 ps.setString(3, "Freesee");
@@ -315,7 +311,7 @@ public class TestJdbcTemplate
         }
         finally
         {
-            ConnectionHolder.closeAndRemove();
+            ConnectionHolder.close();
         }
     }
 
@@ -330,8 +326,7 @@ public class TestJdbcTemplate
         sql.append(" where lower(nachname) like ? or lower(vorname) like ?");
         sql.append(" order by id asc");
 
-        List<Entity> results = jdbcTemplate.query(sql.toString(), ps ->
-        {
+        List<Entity> results = jdbcTemplate.query(sql.toString(), ps -> {
             ps.setString(1, "%ree%");
             ps.setString(2, "%hom%");
         }, (rs, rowNum) -> new Entity(rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4)));

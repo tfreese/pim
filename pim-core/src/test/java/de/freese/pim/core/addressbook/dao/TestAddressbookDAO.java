@@ -7,9 +7,7 @@ import java.lang.reflect.Proxy;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.Arrays;
 import java.util.List;
-
 import javax.sql.DataSource;
-
 import org.junit.AfterClass;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
@@ -18,8 +16,7 @@ import org.junit.runners.MethodSorters;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameter;
 import org.junit.runners.Parameterized.Parameters;
-
-import de.freese.pim.core.addressbook.TestConfig;
+import de.freese.pim.core.addressbook.TestAddressbookConfig;
 import de.freese.pim.core.addressbook.service.DefaultAddressBookService;
 import de.freese.pim.core.persistence.TransactionalInvocationHandler;
 
@@ -35,8 +32,7 @@ public class TestAddressbookDAO extends AbstractDAOTextCase
     /**
      *
      */
-    public static List<DataSource> dataSources = Arrays.asList(new TestConfig().dataSource(), new TestConfig().dataSource(),
-            new TestConfig().dataSource());
+    public static List<DataSource> dataSources = Arrays.asList(new TestAddressbookConfig().dataSource(), new TestAddressbookConfig().dataSource());
 
     // /**
     // *
@@ -74,17 +70,14 @@ public class TestAddressbookDAO extends AbstractDAOTextCase
         return Arrays.asList(new Object[][]
         {
                 {
-                        TxProxyAddressBookDAO.class.getSimpleName(), new TxProxyAddressBookDAO(dataSources.get(0))
-                },
-                {
-                        TxLambdaAddressBookDAO.class.getSimpleName(), new TxLambdaAddressBookDAO(dataSources.get(1))
+                        TxLambdaAddressBookDAO.class.getSimpleName(), new TxLambdaAddressBookDAO().dataSource(dataSources.get(0))
                 },
                 {
                         DefaultAddressBookService.class.getSimpleName(),
                         (IAddressBookDAO) Proxy.newProxyInstance(TestAddressbookDAO.class.getClassLoader(), new Class<?>[]
                         {
                                 IAddressBookDAO.class
-                        }, new TransactionalInvocationHandler(dataSources.get(2), new DefaultAddressBookService(new DefaultAddressBookDAO(dataSources.get(2)))))
+                        }, new TransactionalInvocationHandler(dataSources.get(1), new DefaultAddressBookService(new DefaultAddressBookDAO().dataSource(dataSources.get(1)))))
                 }
         });
     }

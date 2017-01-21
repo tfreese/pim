@@ -38,7 +38,11 @@ public enum MailPort
     /**
      * 587, TLS/STARTTLS
      */
-    SMTPS(587);
+    SMTPS(587),
+    /**
+     * -1
+     */
+    UNKNOWN(-1);
 
     /**
      * Liefert den passenden ENUM für den Port oder null.
@@ -50,7 +54,7 @@ public enum MailPort
     {
         Optional<MailPort> result = Stream.of(values()).filter(mp -> mp.getPort() == port).findFirst();
 
-        return result.orElse(null);
+        return result.orElseThrow(() -> new IllegalArgumentException("port not found: " + port));
     }
 
     /**
