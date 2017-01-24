@@ -186,6 +186,7 @@ public class TestReceiveMail extends AbstractMailTest
             fp.add(FetchProfile.Item.ENVELOPE);
             fp.add(UIDFolder.FetchProfileItem.UID);
             fp.add(IMAPFolder.FetchProfileItem.HEADERS);
+            fp.add(FetchProfile.Item.FLAGS);
             // fp.add(FetchProfile.Item.CONTENT_INFO);
             inboxFolder.fetch(messages, fp);
 

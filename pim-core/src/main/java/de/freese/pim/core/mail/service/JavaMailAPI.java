@@ -2,7 +2,6 @@
 package de.freese.pim.core.mail.service;
 
 import java.nio.file.Path;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -14,6 +13,7 @@ import java.util.stream.Stream;
 import javax.mail.Authenticator;
 import javax.mail.FetchProfile;
 import javax.mail.Flags;
+import javax.mail.Flags.Flag;
 import javax.mail.Folder;
 import javax.mail.Message;
 import javax.mail.Message.RecipientType;
@@ -24,6 +24,8 @@ import javax.mail.Store;
 import javax.mail.Transport;
 import javax.mail.UIDFolder;
 import javax.mail.internet.InternetAddress;
+import javax.mail.search.FlagTerm;
+import javax.mail.search.SearchTerm;
 
 import com.sun.mail.imap.IMAPFolder;
 
@@ -156,6 +158,8 @@ public class JavaMailAPI extends AbstractMailAPI
                         })
                         .forEach(folder::add);
                     // @formatter:on
+
+                    closeFolder(root);
                 }
 
                 updateUnreadMailsCount(this.abonnierteFolder);
@@ -167,15 +171,6 @@ public class JavaMailAPI extends AbstractMailAPI
         }
 
         return folder;
-    }
-
-    /**
-     * @see de.freese.pim.core.mail.service.IMailAPI#getNewMails(de.freese.pim.core.mail.model.MailFolder)
-     */
-    @Override
-    public List<Mail> getNewMails(final MailFolder folder) throws Exception
-    {
-        return Collections.emptyList();
     }
 
     /**
@@ -191,15 +186,15 @@ public class JavaMailAPI extends AbstractMailAPI
             return 0;
         }
 
-        int sum = 0;
+        // int sum = 0;
+        //
+        // // Reverse
+        // for (int i = folder.size() - 1; i >= 0; i--)
+        // {
+        // sum += folder.get(i).getUnreadMailsCount();
+        // }
 
-        // Reverse
-        for (int i = folder.size() - 1; i >= 0; i--)
-        {
-            sum += folder.get(i).getUnreadMailsCount();
-        }
-
-        // int sum = folder.stream().mapToInt(MailFolder::getUnreadMailsCount).sum();
+        int sum = folder.stream().mapToInt(MailFolder::getUnreadMailsCount).sum();
 
         return sum;
     }
@@ -220,7 +215,7 @@ public class JavaMailAPI extends AbstractMailAPI
         fp.add(FetchProfile.Item.ENVELOPE);
         fp.add(UIDFolder.FetchProfileItem.UID);
         fp.add(IMAPFolder.FetchProfileItem.HEADERS);
-        // fp.add(FetchProfile.Item.CONTENT_INFO);
+        fp.add(FetchProfile.Item.FLAGS);
 
         f.fetch(msgs, fp);
 
@@ -242,6 +237,60 @@ public class JavaMailAPI extends AbstractMailAPI
 
             consumer.accept(mail);
         }
+
+        closeFolder(f);
+    }
+
+    /**
+     * @see de.freese.pim.core.mail.service.IMailAPI#loadNewMails(de.freese.pim.core.mail.model.MailFolder, java.util.function.Consumer)
+     */
+    @Override
+    public void loadNewMails(final MailFolder folder, final Consumer<Mail> consumer) throws Exception
+    {
+        Folder f = getStore().getFolder(folder.getFullName());
+        checkRead(f);
+
+        SearchTerm searchTerm = new FlagTerm(new Flags(Flags.Flag.SEEN), false);
+        Message[] msgs = f.search(searchTerm);
+
+        // Nur bestimmte Mail-Attribute vorladen.
+        FetchProfile fp = new FetchProfile();
+        fp.add(FetchProfile.Item.ENVELOPE);
+        fp.add(UIDFolder.FetchProfileItem.UID);
+        fp.add(IMAPFolder.FetchProfileItem.HEADERS);
+        fp.add(FetchProfile.Item.FLAGS);
+
+        f.fetch(msgs, fp);
+
+        for (Message message : msgs)
+        {
+            Mail mail = new Mail(folder);
+            populate(mail, message);
+
+            consumer.accept(mail);
+        }
+
+        closeFolder(f);
+    }
+
+    /**
+     * @see de.freese.pim.core.mail.service.IMailAPI#setSeen(de.freese.pim.core.mail.model.Mail, boolean)
+     */
+    @Override
+    public void setSeen(final Mail mail, final boolean seen) throws Exception
+    {
+        Folder f = getStore().getFolder(mail.getFolder().getFullName());
+        checkRead(f);
+
+        // Bulk-Operation auf Server.
+        f.setFlags(new int[]
+        {
+                mail.getMsgNum()
+        }, new Flags(Flags.Flag.SEEN), seen);
+
+        // Einzel-Operation auf Server.
+        // Message message = f.getMessage(mail.getMsgNum());
+        // message.setFlag(Flag.SEEN, seen);
 
         closeFolder(f);
     }
@@ -449,7 +498,7 @@ public class JavaMailAPI extends AbstractMailAPI
         String subject = message.getSubject();
         Date receivedDate = message.getReceivedDate();
         Date sendDate = message.getSentDate();
-        boolean isSeen = message.isSet(Flags.Flag.SEEN);
+        boolean isSeen = message.isSet(Flag.SEEN);
         int msgNum = message.getMessageNumber();
 
         String uid = null;
@@ -491,7 +540,7 @@ public class JavaMailAPI extends AbstractMailAPI
         for (MailFolder mf : folders)
         {
             Folder f = getStore().getFolder(mf.getFullName());
-            checkRead(f);
+            // checkRead(f);
 
             mf.setUnreadMailsCount(f.getUnreadMessageCount());
 

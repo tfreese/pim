@@ -2,7 +2,6 @@
 package de.freese.pim.core.mail.service;
 
 import java.nio.file.Path;
-import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.function.Consumer;
 
@@ -64,15 +63,6 @@ public interface IMailAPI
     public ObservableList<MailFolder> getFolder() throws Exception;
 
     /**
-     * Liefert die neuen Mails des Folders.
-     *
-     * @param folder {@link MailFolder}
-     * @return {@link List}
-     * @throws Exception Falls was schief geht.
-     */
-    public List<Mail> getNewMails(MailFolder folder) throws Exception;
-
-    /**
      * Liefert die Anzahl ungelesener Mails des Accounts.
      *
      * @return int
@@ -80,7 +70,7 @@ public interface IMailAPI
     public int getUnreadMailsCount();
 
     /**
-     * Holt Mails des Folders und übergibt sie dem {@link Consumer}.
+     * Holt die Mails des Folders und übergibt sie dem {@link Consumer}.
      *
      * @param folder {@link MailFolder}
      * @param consumer {@link Consumer}
@@ -89,11 +79,29 @@ public interface IMailAPI
     public void loadMails(MailFolder folder, Consumer<Mail> consumer) throws Exception;
 
     /**
+     * Holt die neuen Mails des Folders und übergibt sie dem {@link Consumer}.
+     *
+     * @param folder {@link MailFolder}
+     * @param consumer {@link Consumer}
+     * @throws Exception Falls was schief geht.
+     */
+    public void loadNewMails(MailFolder folder, final Consumer<Mail> consumer) throws Exception;
+
+    /**
      * Optionaler {@link ExecutorService} für die Mail-API.
      *
      * @param executor {@link ExecutorService}
      */
     public void setExecutorService(final ExecutorService executor);
+
+    /**
+     * Setzt das SEEN-Flag einer Mail.
+     *
+     * @param mail {@link Mail}
+     * @param seen boolean
+     * @throws Exception Falls was schief geht.
+     */
+    public void setSeen(Mail mail, boolean seen) throws Exception;
 
     /**
      * Testet die Verbindung.

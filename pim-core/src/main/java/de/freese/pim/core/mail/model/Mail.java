@@ -4,7 +4,9 @@ package de.freese.pim.core.mail.model;
 import java.nio.file.Path;
 import java.util.Date;
 import java.util.Objects;
+
 import javax.mail.internet.InternetAddress;
+
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -89,7 +91,7 @@ public class Mail
     /**
      * @return {@link MailFolder}
      */
-    private MailFolder getFolder()
+    public MailFolder getFolder()
     {
         return this.folder;
     }

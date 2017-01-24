@@ -316,13 +316,15 @@ public class MailFolder
      */
     public void updateUnreadMailsCount()
     {
-        if (getMails().isEmpty() && getChilds().isEmpty())
+        if (!getMails().isEmpty())
         {
-            return;
+            this.unreadMailsCount = getMails().parallelStream().mapToInt(m -> m.isSeen() ? 0 : 1).sum();
         }
 
-        this.unreadMailsCount = getMails().parallelStream().mapToInt(m -> m.isSeen() ? 0 : 1).sum();
-        this.unreadMailsCount += getChilds().stream().mapToInt(MailFolder::getUnreadMailsCount).sum();
+        if (!getChilds().isEmpty())
+        {
+            this.unreadMailsCount += getChilds().stream().mapToInt(MailFolder::getUnreadMailsCount).sum();
+        }
     }
 
     /**
