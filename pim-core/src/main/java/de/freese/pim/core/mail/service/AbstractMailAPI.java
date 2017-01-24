@@ -4,10 +4,8 @@ package de.freese.pim.core.mail.service;
 import java.nio.file.Path;
 import java.util.Objects;
 import java.util.concurrent.ExecutorService;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import de.freese.pim.core.mail.model.MailAccount;
 
 /**
@@ -78,25 +76,6 @@ public abstract class AbstractMailAPI implements IMailAPI
     }
 
     /**
-     * @see de.freese.pim.core.mail.service.IMailAPI#setExecutorService(java.util.concurrent.ExecutorService)
-     */
-    @Override
-    public void setExecutorService(final ExecutorService executor)
-    {
-        this.executor = executor;
-    }
-
-    /**
-     * Setzt den {@link IMailService}.
-     *
-     * @param mailService {@link IMailService}
-     */
-    public void setMailService(final IMailService mailService)
-    {
-        this.mailService = mailService;
-    }
-
-    /**
      * Optionaler {@link ExecutorService} für die Mail-API.
      *
      * @return {@link ExecutorService}
@@ -122,5 +101,23 @@ public abstract class AbstractMailAPI implements IMailAPI
     protected IMailService getMailService()
     {
         return this.mailService;
+    }
+
+    /**
+     * @see de.freese.pim.core.mail.service.IMailAPI#setExecutorService(java.util.concurrent.ExecutorService)
+     */
+    @Override
+    public void setExecutorService(final ExecutorService executor)
+    {
+        this.executor = executor;
+    }
+
+    /**
+     * @see de.freese.pim.core.mail.service.IMailAPI#setMailService(de.freese.pim.core.mail.service.IMailService)
+     */
+    @Override
+    public void setMailService(final IMailService mailService)
+    {
+        this.mailService = mailService;
     }
 }

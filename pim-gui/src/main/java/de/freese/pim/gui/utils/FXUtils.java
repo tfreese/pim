@@ -10,17 +10,17 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
-
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
+import com.sun.javafx.binding.StringFormatter;
 import de.freese.pim.core.utils.Utils;
 import de.freese.pim.gui.PIMApplication;
 import de.freese.pim.gui.controller.IController;
@@ -32,6 +32,8 @@ import javafx.beans.property.adapter.JavaBeanLongPropertyBuilder;
 import javafx.beans.property.adapter.JavaBeanStringProperty;
 import javafx.beans.property.adapter.JavaBeanStringPropertyBuilder;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -55,6 +57,7 @@ import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
+import javafx.util.StringConverter;
 
 /**
  * JavaFX-Utils.
@@ -65,18 +68,18 @@ import javafx.util.Duration;
 public final class FXUtils
 {
     /**
-    *
-    */
+     *
+     */
     private static final KeyCodeCombination KEYCODE_COPY = new KeyCodeCombination(KeyCode.C, KeyCombination.CONTROL_ANY);
 
     /**
-    *
-    */
+     *
+     */
     private static final KeyCodeCombination KEYCODE_PASTE = new KeyCodeCombination(KeyCode.V, KeyCombination.CONTROL_ANY);
 
     /**
-    *
-    */
+     *
+     */
     private static final Logger LOGGER = LoggerFactory.getLogger(FXUtils.class);
 
     /**
@@ -102,7 +105,6 @@ public final class FXUtils
 
         // viewSet.forEach(System.out::println);
         // viewMap.forEach((key, value) -> System.out.println(key + " " + value));
-
         copyFields(view, viewMap, controller, controllerMap);
 
         translate(view, viewSet, resources);
@@ -131,8 +133,7 @@ public final class FXUtils
      * @param controller {@link IController}
      * @param controllerMap {@link Map}
      */
-    public static void copyFields(final IView view, final Map<String, Field> viewMap, final IController controller,
-            final Map<String, Field> controllerMap)
+    public static void copyFields(final IView view, final Map<String, Field> viewMap, final IController controller, final Map<String, Field> controllerMap)
     {
         for (Field viewField : new HashSet<>(viewMap.values()))
         {
@@ -249,8 +250,7 @@ public final class FXUtils
      */
     public static void installCopyHandler(final Node node)
     {
-        node.setOnKeyPressed(event ->
-        {
+        node.setOnKeyPressed(event -> {
             if (KEYCODE_COPY.match(event))
             {
                 if (event.getSource() instanceof TableView)
@@ -259,8 +259,7 @@ public final class FXUtils
                 }
                 else
                 {
-                    LOGGER.warn("No implementation for #copySelectionToClipboard found for {}",
-                            event.getSource().getClass().getSimpleName());
+                    LOGGER.warn("No implementation for #copySelectionToClipboard found for {}", event.getSource().getClass().getSimpleName());
                 }
 
                 event.consume();
@@ -275,8 +274,7 @@ public final class FXUtils
      */
     public static void installPasteHandler(final Node node)
     {
-        node.setOnKeyPressed(event ->
-        {
+        node.setOnKeyPressed(event -> {
             if (KEYCODE_PASTE.match(event))
             {
                 if (event.getSource() instanceof TableView)
@@ -379,7 +377,7 @@ public final class FXUtils
      * stage.getIcons().add(imageView.getImage());<br>
      * scene.getChildren().add(imageView);<br>
      * stage.setScene(scene);<br>
-     *</code>
+     * </code>
      *
      * @param imageView {@link ImageView}
      */
@@ -414,9 +412,9 @@ public final class FXUtils
 
                 // @formatter:off
                 Object tooltipBehavior = constructor.newInstance(
-                        new Duration(10),   // open
+                        new Duration(10), // open
                         new Duration(5000), // visible
-                        new Duration(200),  // close
+                        new Duration(200), // close
                         false);
                 // @formatter:on
 
@@ -431,6 +429,91 @@ public final class FXUtils
                 // Falsche interne Klasse des Tooltips
             }
         }
+    }
+
+    /**
+     * Formattiert das Objekt als String.
+     *
+     * @param <T> Konkreter Typ des Values
+     * @param converter {@link Function}
+     * @return {@link ObservableValue}<String>
+     */
+    public static <T> StringConverter toStringConverter(final Function<T, String> converter)
+    {
+        Objects.requireNonNull(converter, "converter required");
+
+        final StringConverter<T> stringConverter = new StringConverter<T>()
+        {
+            @Override
+            public T fromString(final String string)
+            {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public String toString(final T object)
+            {
+                return converter.apply(object);
+            }
+        };
+
+        return stringConverter;
+    }
+
+    /**
+     * Formattiert das Objekt als String.
+     *
+     * @param <T> Konkreter Typ des Values
+     * @param ov {@link ObservableValue}
+     * @param formatter {@link Function}
+     * @return {@link ObservableValue}<String>
+     */
+    public static <T> ObservableValue<String> toStringObservable(final ObservableValue<T> ov, final Function<T, String> formatter)
+    {
+        Objects.requireNonNull(ov, "observableValue required");
+        Objects.requireNonNull(formatter, "formatter required");
+
+        final StringFormatter stringFormatter = new StringFormatter()
+        {
+            {
+                super.bind(ov);
+            }
+
+            /**
+             * @see javafx.beans.binding.StringBinding#computeValue()
+             */
+            @Override
+            protected String computeValue()
+            {
+                return formatter.apply(ov.getValue());
+            }
+
+            /**
+             * @see javafx.beans.binding.StringBinding#dispose()
+             */
+            @Override
+            public void dispose()
+            {
+                super.unbind(ov);
+            }
+
+            /**
+             * @see javafx.beans.binding.StringBinding#getDependencies()
+             */
+            @Override
+            public ObservableList<ObservableValue<?>> getDependencies()
+            {
+                ObservableList<ObservableValue<?>> ol = FXCollections.observableArrayList();
+                ol.add(ov);
+
+                return FXCollections.unmodifiableObservableList(ol);
+            }
+        };
+
+        // Check Formatierung
+        stringFormatter.get();
+
+        return stringFormatter;
     }
 
     /**
@@ -465,11 +548,11 @@ public final class FXUtils
 
         // @formatter:off
         Set<Node> nodes = components.stream()
-            .map(f -> Utils.getValue(f, view))
-            .filter(v -> v instanceof Node)
-            .map(v -> (Node) v)
-            .flatMap(node -> node.lookupAll("*").stream())
-            .collect(Collectors.toSet());
+                .map(f -> Utils.getValue(f, view))
+                .filter(v -> v instanceof Node)
+                .map(v -> (Node) v)
+                .flatMap(node -> node.lookupAll("*").stream())
+                .collect(Collectors.toSet());
         // @formatter:on
 
         // Labeled / Text
@@ -478,24 +561,24 @@ public final class FXUtils
 
         // @formatter:off
         nodes.stream()
-            .filter(isLabeled.or(isText))
-            .forEach(node ->
-            {
-                Method getMethod = Utils.getMethod(node,"getText");
-                Method setMethod = Utils.getMethod(node,"setText", String.class);
-
-                String text = (String) Utils.invokeMethod(getMethod,node);
-
-                if((text != null) &&  text.startsWith("%"))
+                .filter(isLabeled.or(isText))
+                .forEach(node ->
                 {
-                    String translated = resources.getString(text.substring(1));
+                    Method getMethod = Utils.getMethod(node, "getText");
+                    Method setMethod = Utils.getMethod(node, "setText", String.class);
 
-                    if((translated != null) && !translated.isEmpty())
+                    String text = (String) Utils.invokeMethod(getMethod, node);
+
+                    if ((text != null) && text.startsWith("%"))
                     {
-                        Utils.invokeMethod(setMethod, node, translated);
+                        String translated = resources.getString(text.substring(1));
+
+                        if ((translated != null) && !translated.isEmpty())
+                        {
+                            Utils.invokeMethod(setMethod, node, translated);
+                        }
                     }
-                }
-            });
+                });
         // @formatter:on
 
         // Control
@@ -504,43 +587,43 @@ public final class FXUtils
         // Tooltip
         // @formatter:off
         nodes.stream()
-            .filter(isControl)
-            .forEach(node ->
-            {
-                Method getMethod = Utils.getMethod(node, "getTooltip");
-                Tooltip tooltip = (Tooltip) Utils.invokeMethod(getMethod, node);
-
-                if((tooltip != null) &&  tooltip.getText().startsWith("%"))
+                .filter(isControl)
+                .forEach(node ->
                 {
-                    String translated = resources.getString(tooltip.getText().substring(1));
+                    Method getMethod = Utils.getMethod(node, "getTooltip");
+                    Tooltip tooltip = (Tooltip) Utils.invokeMethod(getMethod, node);
 
-                    tooltip.setText(translated);
-                }
-            });
+                    if ((tooltip != null) && tooltip.getText().startsWith("%"))
+                    {
+                        String translated = resources.getString(tooltip.getText().substring(1));
+
+                        tooltip.setText(translated);
+                    }
+                });
         // @formatter:on
 
         // ContextMenu
         // @formatter:off
         nodes.stream()
-            .filter(isControl)
-            .forEach(node ->
-            {
-                Method getMethod = Utils.getMethod(node, "getContextMenu");
-                ContextMenu contextMenu = (ContextMenu) Utils.invokeMethod(getMethod, node);
-
-                if(contextMenu != null)
+                .filter(isControl)
+                .forEach(node ->
                 {
-                    for (MenuItem menuItem : contextMenu.getItems())
-                    {
-                        if(menuItem.getText().startsWith("%"))
-                        {
-                            String translated = resources.getString(menuItem.getText().substring(1));
+                    Method getMethod = Utils.getMethod(node, "getContextMenu");
+                    ContextMenu contextMenu = (ContextMenu) Utils.invokeMethod(getMethod, node);
 
-                            menuItem.setText(translated);
+                    if (contextMenu != null)
+                    {
+                        for (MenuItem menuItem : contextMenu.getItems())
+                        {
+                            if (menuItem.getText().startsWith("%"))
+                            {
+                                String translated = resources.getString(menuItem.getText().substring(1));
+
+                                menuItem.setText(translated);
+                            }
                         }
                     }
-                }
-            });
+                });
         // @formatter:on
 
         // TableView
@@ -548,10 +631,10 @@ public final class FXUtils
 
         // @formatter:off
         nodes.stream()
-            .filter(isTableView)
-            .map(n -> (TableView<?>) n)
-            .flatMap(tv -> tv.getColumns().stream())
-            .forEach(column -> translate(column, resources));
+                .filter(isTableView)
+                .map(n -> (TableView<?>) n)
+                .flatMap(tv -> tv.getColumns().stream())
+                .forEach(column -> translate(column, resources));
         // @formatter:on
     }
 

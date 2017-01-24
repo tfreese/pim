@@ -3,8 +3,8 @@ package de.freese.pim.core.mail.service;
 
 import java.nio.file.Path;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Future;
 import java.util.function.Consumer;
-
 import de.freese.pim.core.mail.model.Mail;
 import de.freese.pim.core.mail.model.MailAccount;
 import de.freese.pim.core.mail.model.MailFolder;
@@ -55,12 +55,13 @@ public interface IMailAPI
     public Path getBasePath();
 
     /**
-     * Liefert alle Folder des Accounts.
+     * Liefert alle Folder des Accounts.<br>
+     * Wird im Hintergrund geladen.
      *
-     * @return {@link ObservableList}
+     * @return {@link Future}
      * @throws Exception Falls was schief geht.
      */
-    public ObservableList<MailFolder> getFolder() throws Exception;
+    public Future<ObservableList<MailFolder>> getFolder() throws Exception;
 
     /**
      * Liefert die Anzahl ungelesener Mails des Accounts.
@@ -93,6 +94,13 @@ public interface IMailAPI
      * @param executor {@link ExecutorService}
      */
     public void setExecutorService(final ExecutorService executor);
+
+    /**
+     * Setzt den {@link IMailService}.
+     *
+     * @param mailService {@link IMailService}
+     */
+    public void setMailService(final IMailService mailService);
 
     /**
      * Setzt das SEEN-Flag einer Mail.
