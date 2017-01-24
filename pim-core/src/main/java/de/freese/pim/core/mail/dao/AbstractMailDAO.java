@@ -13,14 +13,17 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+
 import de.freese.pim.core.dao.AbstractDAO;
 import de.freese.pim.core.mail.MailPort;
 import de.freese.pim.core.mail.MailProvider;
 import de.freese.pim.core.mail.model.MailAccount;
+import de.freese.pim.core.mail.model.MailFolder;
 import de.freese.pim.core.persistence.RowMapper;
 import de.freese.pim.core.service.SettingService;
 import de.freese.pim.core.utils.Crypt;
@@ -82,6 +85,36 @@ public class AbstractMailDAO extends AbstractDAO<IMailDAO> implements IMailDAO
     }
 
     /**
+     * @author Thomas Freese
+     */
+    private static class MailFolderRowMapper implements RowMapper<MailFolder>
+    {
+        /**
+         * Erzeugt eine neue Instanz von {@link MailFolderRowMapper}
+         */
+        public MailFolderRowMapper()
+        {
+            super();
+        }
+
+        /**
+         * @see de.freese.pim.core.persistence.RowMapper#map(java.sql.ResultSet, int)
+         */
+        @Override
+        public MailFolder map(final ResultSet rs, final int rowNum) throws SQLException
+        {
+            MailFolder folder = new MailFolder();
+
+            folder.setID(rs.getLong("ID"));
+            folder.setFullName(rs.getString("FULLNAME"));
+            folder.setName(rs.getString("NAME"));
+            folder.setAbonniert(rs.getBoolean("ABONNIERT"));
+
+            return folder;
+        }
+    }
+
+    /**
      * Erstellt ein neues {@link AbstractMailDAO} Object.
      */
     public AbstractMailDAO()
@@ -98,13 +131,157 @@ public class AbstractMailDAO extends AbstractDAO<IMailDAO> implements IMailDAO
         String userID = getUserID();
 
         StringBuilder sql = new StringBuilder();
-        sql.append("select * from MAILACCOUNT where user_id = ? order by mail asc");
+        sql.append("select * from MAILACCOUNT where USER_ID = ? order by MAIL asc");
 
         List<MailAccount> accountList = getJdbcTemplate().query(sql.toString(), ps -> ps.setString(1, userID), new MailAccountRowMapper());
 
         // accountList.addAll(getMailAccountsJSON());
 
         return accountList;
+    }
+
+    /**
+     * @see de.freese.pim.core.mail.dao.IMailDAO#getMailFolder(long)
+     */
+    @Override
+    public List<MailFolder> getMailFolder(final long accountID) throws Exception
+    {
+        StringBuilder sql = new StringBuilder();
+        sql.append("select * from MAILFOLDER where ACCOUNT_ID = ? order by FULLNAME asc");
+
+        List<MailFolder> folderList = getJdbcTemplate().query(sql.toString(), ps -> ps.setLong(1, accountID), new MailFolderRowMapper());
+
+        return folderList;
+    }
+
+    /**
+     * @see de.freese.pim.core.mail.dao.IMailDAO#insert(de.freese.pim.core.mail.model.MailAccount)
+     */
+    @Override
+    public void insert(final MailAccount account) throws Exception
+    {
+        String userID = getUserID();
+        long id = getNextID("MAIL_SEQ");
+
+        String password = account.getPassword();
+        String encryptedPassword = Crypt.getUTF8Instance().encrypt(password);
+
+        StringBuilder sql = new StringBuilder();
+        sql.append("insert into MAILACCOUNT");
+        sql.append(" (");
+        sql.append(" ID, USER_ID, MAIL, PASSWORT");
+        sql.append(", IMAP_HOST, IMAP_PORT, IMAP_LEGITIMATION");
+        sql.append(", SMTP_HOST, SMTP_PORT, SMTP_LEGITIMATION");
+        sql.append(") values (");
+        sql.append("?, ?, ?, ?");
+        sql.append(", ?, ?, ?");
+        sql.append(", ?, ?, ?");
+        sql.append(")");
+
+        getJdbcTemplate().update(sql.toString(), ps ->
+        {
+            ps.setLong(1, id);
+            ps.setString(2, userID);
+            ps.setString(3, account.getMail());
+            ps.setString(4, encryptedPassword);
+            ps.setString(5, account.getImapHost());
+            ps.setInt(6, account.getImapPort().getPort());
+            ps.setBoolean(7, account.isImapLegitimation());
+            ps.setString(8, account.getSmtpHost());
+            ps.setInt(9, account.getSmtpPort().getPort());
+            ps.setBoolean(10, account.isSmtpLegitimation());
+        });
+
+        account.setID(id);
+    }
+
+    /**
+     * @see de.freese.pim.core.mail.dao.IMailDAO#insert(de.freese.pim.core.mail.model.MailFolder, long)
+     */
+    @Override
+    public void insert(final MailFolder folder, final long accountID) throws Exception
+    {
+        long id = getNextID("MAIL_SEQ");
+
+        StringBuilder sql = new StringBuilder();
+        sql.append("insert into MAILFOLDER");
+        sql.append(" (");
+        sql.append(" ID, ACCOUNT_ID, FULLNAME, NAME, ABONNIERT");
+        sql.append(") values (");
+        sql.append("?, ?, ?, ?, ?");
+        sql.append(")");
+
+        getJdbcTemplate().update(sql.toString(), ps ->
+        {
+            ps.setLong(1, id);
+            ps.setLong(2, accountID);
+            ps.setString(3, folder.getFullName());
+            ps.setString(4, folder.getName());
+            ps.setBoolean(5, folder.isAbonniert());
+        });
+
+        folder.setID(id);
+    }
+
+    /**
+     * @see de.freese.pim.core.mail.dao.IMailDAO#update(de.freese.pim.core.mail.model.MailAccount)
+     */
+    @Override
+    public void update(final MailAccount account) throws Exception
+    {
+        String password = account.getPassword();
+        String encryptedPassword = Crypt.getUTF8Instance().encrypt(password);
+
+        StringBuilder sql = new StringBuilder();
+        sql.append("update MAILACCOUNT");
+        sql.append(" set");
+        sql.append(" MAIL = ?");
+        sql.append(", PASSWORT = ?");
+        sql.append(", IMAP_HOST = ?");
+        sql.append(", IMAP_PORT = ?");
+        sql.append(", IMAP_LEGITIMATION = ?");
+        sql.append(", SMTP_HOST = ?");
+        sql.append(", SMTP_PORT = ?");
+        sql.append(", SMTP_LEGITIMATION = ?");
+        sql.append(" where id = ?");
+
+        // int affectedRows =
+        getJdbcTemplate().update(sql.toString(), ps ->
+        {
+            ps.setString(1, account.getMail());
+            ps.setString(2, encryptedPassword);
+            ps.setString(3, account.getImapHost());
+            ps.setInt(4, account.getImapPort().getPort());
+            ps.setBoolean(5, account.isImapLegitimation());
+            ps.setString(6, account.getSmtpHost());
+            ps.setInt(7, account.getSmtpPort().getPort());
+            ps.setBoolean(8, account.isSmtpLegitimation());
+            ps.setLong(9, account.getID());
+        });
+    }
+
+    /**
+     * @see de.freese.pim.core.mail.dao.IMailDAO#update(de.freese.pim.core.mail.model.MailFolder)
+     */
+    @Override
+    public void update(final MailFolder folder) throws Exception
+    {
+        StringBuilder sql = new StringBuilder();
+        sql.append("update MAILFOLDER");
+        sql.append(" set");
+        sql.append(" FULLNAME = ?");
+        sql.append(", NAME = ?");
+        sql.append(", ABONNIERT = ?");
+        sql.append(" where id = ?");
+
+        // int affectedRows =
+        getJdbcTemplate().update(sql.toString(), ps ->
+        {
+            ps.setString(1, folder.getFullName());
+            ps.setString(2, folder.getName());
+            ps.setBoolean(3, folder.isAbonniert());
+            ps.setLong(4, folder.getID());
+        });
     }
 
     /**
@@ -162,81 +339,5 @@ public class AbstractMailDAO extends AbstractDAO<IMailDAO> implements IMailDAO
     protected String getUserID()
     {
         return Utils.getSystemUserName();
-    }
-
-    /**
-     * @see de.freese.pim.core.mail.dao.IMailDAO#insert(de.freese.pim.core.mail.model.MailAccount)
-     */
-    @Override
-    public void insert(final MailAccount account) throws Exception
-    {
-        String userID = getUserID();
-        long id = getNextID("MAIL_SEQ");
-
-        String password = account.getPassword();
-        String encryptedPassword = Crypt.getUTF8Instance().encrypt(password);
-
-        StringBuilder sql = new StringBuilder();
-        sql.append("insert into MAILACCOUNT");
-        sql.append(" (");
-        sql.append(" USER_ID, ID, MAIL, PASSWORT");
-        sql.append(", IMAP_HOST, IMAP_PORT, IMAP_LEGITIMATION");
-        sql.append(", SMTP_HOST, SMTP_PORT, SMTP_LEGITIMATION");
-        sql.append(") values (");
-        sql.append("?, ?, ?, ?");
-        sql.append(", ?, ?, ?");
-        sql.append(", ?, ?, ?");
-        sql.append(")");
-
-        getJdbcTemplate().update(sql.toString(), ps -> {
-            ps.setString(1, userID);
-            ps.setLong(2, id);
-            ps.setString(3, account.getMail());
-            ps.setString(4, encryptedPassword);
-            ps.setString(5, account.getImapHost());
-            ps.setInt(6, account.getImapPort().getPort());
-            ps.setBoolean(7, account.isImapLegitimation());
-            ps.setString(8, account.getSmtpHost());
-            ps.setInt(9, account.getSmtpPort().getPort());
-            ps.setBoolean(10, account.isSmtpLegitimation());
-        });
-
-        account.setID(id);
-    }
-
-    /**
-     * @see de.freese.pim.core.mail.dao.IMailDAO#update(de.freese.pim.core.mail.model.MailAccount)
-     */
-    @Override
-    public void update(final MailAccount account) throws Exception
-    {
-        String password = account.getPassword();
-        String encryptedPassword = Crypt.getUTF8Instance().encrypt(password);
-
-        StringBuilder sql = new StringBuilder();
-        sql.append("update MAILACCOUNT");
-        sql.append(" set");
-        sql.append(" MAIL = ?");
-        sql.append(", PASSWORT = ?");
-        sql.append(", IMAP_HOST = ?");
-        sql.append(", IMAP_PORT = ?");
-        sql.append(", IMAP_LEGITIMATION = ?");
-        sql.append(", SMTP_HOST = ?");
-        sql.append(", SMTP_PORT = ?");
-        sql.append(", SMTP_LEGITIMATION = ?");
-        sql.append(" where id = ?");
-
-        // int affectedRows =
-        getJdbcTemplate().update(sql.toString(), ps -> {
-            ps.setString(1, account.getMail());
-            ps.setString(2, encryptedPassword);
-            ps.setString(3, account.getImapHost());
-            ps.setInt(4, account.getImapPort().getPort());
-            ps.setBoolean(5, account.isImapLegitimation());
-            ps.setString(6, account.getSmtpHost());
-            ps.setInt(7, account.getSmtpPort().getPort());
-            ps.setBoolean(8, account.isSmtpLegitimation());
-            ps.setLong(9, account.getID());
-        });
     }
 }

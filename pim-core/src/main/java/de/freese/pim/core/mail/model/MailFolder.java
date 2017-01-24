@@ -5,10 +5,11 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
 import java.util.function.Predicate;
-import de.freese.pim.core.mail.service.IMailAccountService;
+
+import de.freese.pim.core.mail.service.IMailAPI;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
@@ -25,12 +26,22 @@ public class MailFolder
     /**
      *
      */
+    private final BooleanProperty abonniertProperty = new SimpleBooleanProperty(this, "abonniert", true);
+
+    /**
+     *
+     */
     private final List<MailFolder> childs = new ArrayList<>();
 
-    // /**
-    // *
-    // */
-    // private String fullName = null;
+    /**
+    *
+    */
+    private final StringProperty fullNameProperty = new SimpleStringProperty(this, "fullName", null);
+
+    /**
+    *
+    */
+    private long id = 0;
 
     /**
      *
@@ -38,14 +49,14 @@ public class MailFolder
     private boolean isSendFolder = false;
 
     /**
+     *
+     */
+    private IMailAPI mailAPI = null;
+
+    /**
       *
       */
     private final ObservableList<Mail> mails = FXCollections.observableArrayList();
-
-    /**
-    *
-    */
-    private final IMailAccountService mailService;
 
     /**
      *
@@ -60,7 +71,7 @@ public class MailFolder
     /**
     *
     */
-    private final MailFolder parent;
+    private MailFolder parent = null;
 
     /**
      *
@@ -69,53 +80,26 @@ public class MailFolder
 
     /**
      * Erzeugt eine neue Instanz von {@link MailFolder}
-     *
-     * @param mailService {@link IMailAccountService}
-     * @param name String
      */
-    public MailFolder(final IMailAccountService mailService, final String name)
-    {
-        this(mailService, name, null);
-    }
-
-    /**
-     * Erzeugt eine neue Instanz von {@link MailFolder}
-     *
-     * @param mailService {@link MailAccount}
-     * @param name String
-     * @param parent {@link MailFolder}
-     */
-    public MailFolder(final IMailAccountService mailService, final String name, final MailFolder parent)
+    public MailFolder()
     {
         super();
-
-        Objects.requireNonNull(mailService, "mailService required");
-        Objects.requireNonNull(name, "name required");
-
-        this.mailService = mailService;
-        setName(name);
-        this.parent = parent;
-
-        // this.mails.addListener((ListChangeListener<Mail>) c -> {
-        // while (c.next())
-        // {
-        // if (c.wasAdded())
-        // {
-        // for (int i = c.getFrom(); i < c.getTo(); ++i)
-        // {
-        // // permutate
-        // }
-        // }
-        // }
-        // });
     }
 
     /**
-     * @return {@link List}<MailFolder>
+     * @return {@link BooleanProperty}
      */
-    public List<MailFolder> getChilds()
+    public BooleanProperty abonniertProperty()
     {
-        return this.childs;
+        return this.abonniertProperty;
+    }
+
+    /**
+     * @return {@link StringProperty}
+     */
+    public StringProperty fullNameProperty()
+    {
+        return this.fullNameProperty;
     }
 
     /**
@@ -125,9 +109,23 @@ public class MailFolder
      */
     public String getFullName()
     {
-        String fullName = Optional.ofNullable(getParent()).map(p -> p.getName() + "/" + getName()).orElse(getName());
+        return fullNameProperty().get();
+    }
 
-        return fullName;
+    /**
+     * @return long
+     */
+    public long getID()
+    {
+        return this.id;
+    }
+
+    /**
+     * @return {@link IMailAPI}
+     */
+    public IMailAPI getMailAPI()
+    {
+        return this.mailAPI;
     }
 
     /**
@@ -136,16 +134,6 @@ public class MailFolder
     public ObservableList<Mail> getMails()
     {
         return this.mails;
-    }
-
-    /**
-     * Liefert den {@link IMailAccountService}.
-     *
-     * @return {@link IMailAccountService}
-     */
-    public IMailAccountService getMailService()
-    {
-        return this.mailService;
     }
 
     /**
@@ -169,39 +157,42 @@ public class MailFolder
     }
 
     /**
-     * @return {@link MailFolder}
-     */
-    private MailFolder getParent()
-    {
-        return this.parent;
-    }
-
-    /**
      * Liefert den lokalen Temp-{@link Path} des Folders.
      *
      * @return {@link Path}
      */
     public Path getPath()
     {
-        Path basePath = Optional.ofNullable(getParent()).map(p -> p.getPath()).orElse(getMailService().getBasePath());
+        // Path basePath = Optional.ofNullable(getParent()).map(p -> p.getPath()).orElse(getMailAPI().getBasePath());
+        Path basePath = getMailAPI().getBasePath();
         Path path = basePath.resolve(getName());
-        // Path basePath = getAccount().getPath();
         // Path path = basePath.resolve(getFullName().replaceAll("/", "__"));
 
         return path;
     }
 
     /**
-     * Liefert die Anzahl ungelesener Mails, inklusive der Children.
+     * Liefert die Anzahl ungelesener Mails, inklusive der Child-Folder.
      *
      * @return int
      */
     public int getUnreadMailsCount()
     {
-        int sum = getChilds().stream().mapToInt(MailFolder::getUnreadMailsCount).sum();
-        sum += this.unreadMailsCount;
+        return this.unreadMailsCount;
+        // int sum = getChilds().stream().mapToInt(MailFolder::getUnreadMailsCount).sum();
+        // sum += this.unreadMailsCount;
+        //
+        // return sum;
+    }
 
-        return sum;
+    /**
+     * Liefert das Flag um den Folder zu abonnieren/beobachten.
+     *
+     * @return boolean
+     */
+    public boolean isAbonniert()
+    {
+        return abonniertProperty().get();
     }
 
     /**
@@ -223,11 +214,47 @@ public class MailFolder
     }
 
     /**
+     * Setzt das Flag um den Folder zu abonnieren/beobachten.
+     *
+     * @param abo boolean
+     */
+    public void setAbonniert(final boolean abo)
+    {
+        abonniertProperty().set(abo);
+    }
+
+    /**
+     * Setzt den vollen Hierarchie-Namen, zB PARENT_NAME/FOLDER_NAME.
+     *
+     * @param fullName String
+     */
+    public void setFullName(final String fullName)
+    {
+        fullNameProperty().set(fullName);
+    }
+
+    /**
+     * @param id long
+     */
+    public void setID(final long id)
+    {
+        this.id = id;
+    }
+
+    /**
+     * @param mailAPI {@link IMailAPI}
+     */
+    public void setMailAPI(final IMailAPI mailAPI)
+    {
+        this.mailAPI = mailAPI;
+    }
+
+    /**
      * Setzt den Namen des Folders.
      *
      * @param name String
      */
-    private void setName(final String name)
+    public void setName(final String name)
     {
         // Objects.requireNonNull(name, "name required");
 
@@ -249,15 +276,16 @@ public class MailFolder
         }
     }
 
-    // /**
-    // * Setzt den vollen Hierarchie-Namen, zB PARENT_NAME/FOLDER_NAME.
-    // *
-    // * @param fullName String
-    // */
-    // public void setFullName(final String fullName)
-    // {
-    // this.fullName = fullName;
-    // }
+    /**
+     * Setzt den Parent.
+     *
+     * @param parent {@link MailFolder}
+     */
+    public void setParent(final MailFolder parent)
+    {
+        this.parent = parent;
+        this.parent.getChilds().add(this);
+    }
 
     /**
      * Setzt die Anzahl ungelesener Mails.
@@ -276,8 +304,8 @@ public class MailFolder
     public String toString()
     {
         StringBuilder builder = new StringBuilder();
-        builder.append("MailFolder [name=");
-        builder.append(getName());
+        builder.append("MailFolder [fullName=");
+        builder.append(getFullName());
         builder.append("]");
 
         return builder.toString();
@@ -288,7 +316,30 @@ public class MailFolder
      */
     public void updateUnreadMailsCount()
     {
+        if (getMails().isEmpty() && getChilds().isEmpty())
+        {
+            return;
+        }
+
         this.unreadMailsCount = getMails().parallelStream().mapToInt(m -> m.isSeen() ? 0 : 1).sum();
         this.unreadMailsCount += getChilds().stream().mapToInt(MailFolder::getUnreadMailsCount).sum();
+    }
+
+    /**
+     * Liefert den Parent.
+     *
+     * @return {@link MailFolder}
+     */
+    private MailFolder getParent()
+    {
+        return this.parent;
+    }
+
+    /**
+     * @return {@link List}<MailFolder>
+     */
+    List<MailFolder> getChilds()
+    {
+        return this.childs;
     }
 }

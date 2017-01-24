@@ -3,11 +3,13 @@ package de.freese.pim.core.mail;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Properties;
+
 import org.junit.AfterClass;
 import org.junit.Assume;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
@@ -19,6 +21,7 @@ import org.springframework.core.io.ClassPathResource;
  */
 @RunWith(Parameterized.class)
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
+@Ignore
 public class TestSendMail extends AbstractMailTest
 {
     /**

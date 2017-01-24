@@ -4,16 +4,20 @@ package de.freese.pim.gui.mail;
 import java.nio.file.Paths;
 import java.util.Optional;
 import java.util.ResourceBundle;
+
 import org.apache.commons.lang3.StringUtils;
+
 import de.freese.pim.core.mail.MailPort;
 import de.freese.pim.core.mail.MailProvider;
 import de.freese.pim.core.mail.model.MailAccount;
-import de.freese.pim.core.mail.service.IMailAccountService;
-import de.freese.pim.core.mail.service.JavaMailAccountService;
+import de.freese.pim.core.mail.model.MailFolder;
+import de.freese.pim.core.mail.service.IMailAPI;
+import de.freese.pim.core.mail.service.JavaMailAPI;
 import de.freese.pim.core.mail.utils.MailUtils;
 import de.freese.pim.gui.PIMApplication;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
+import javafx.geometry.VPos;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -21,8 +25,10 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.control.cell.CheckBoxListCell;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Modality;
@@ -35,6 +41,61 @@ import javafx.stage.Stage;
  */
 public class EditMailAccountDialog
 {
+    /**
+     *
+     */
+    private ListView<MailFolder> aboView = new ListView<>();
+
+    /**
+     *
+     */
+    private Button buttonTest = new Button("Test");
+
+    /**
+     *
+     */
+    private TextField imapHost = new TextField();
+
+    /**
+     *
+     */
+    private ComboBox<MailPort> imapPort = new ComboBox<>();
+
+    /**
+     *
+     */
+    private Label labelTestResult = new Label();
+
+    /**
+     *
+     */
+    private TextField mail = new TextField();
+
+    /**
+     *
+     */
+    private PasswordField password1 = new PasswordField();
+
+    /**
+     *
+     */
+    private PasswordField password2 = new PasswordField();
+
+    /**
+     *
+     */
+    private ComboBox<MailProvider> provider = new ComboBox<>();
+
+    /**
+     *
+     */
+    private TextField smtpHost = new TextField();
+
+    /**
+     *
+     */
+    private ComboBox<MailPort> smtpPort = new ComboBox<>();
+
     /**
      * Erzeugt eine neue Instanz von {@link EditMailAccountDialog}
      */
@@ -67,6 +128,50 @@ public class EditMailAccountDialog
     }
 
     /**
+     * Testet die Mail-Einstellungen.
+     *
+     * @param event {@link ActionEvent}
+     * @param bundle {@link ResourceBundle}
+     */
+    private void checkValidConfig(final ActionEvent event, final ResourceBundle bundle)
+    {
+        StringBuilder message = new StringBuilder();
+
+        String mailRegEx = MailUtils.MAIL_REGEX;
+
+        if (!this.mail.getText().matches(mailRegEx))
+        {
+            message.append(bundle.getString("mail.format.invalid")).append("\n");
+        }
+
+        String pw1 = this.password1.getText();
+        String pw2 = this.password2.getText();
+
+        if (StringUtils.isBlank(pw1) || StringUtils.isBlank(pw1))
+        {
+            message.append(bundle.getString("passwoerter.nicht_ausgefuellt")).append("\n");
+        }
+        else if (!pw1.equals(pw2))
+        {
+            message.append(bundle.getString("passwoerter.nicht_identisch")).append("\n");
+        }
+
+        if (this.aboView.getItems().stream().filter(MailFolder::isAbonniert).count() == 0)
+        {
+            message.append(bundle.getString("mail.folder.abonniert.nicht")).append("\n");
+        }
+
+        if (message.length() > 0)
+        {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setHeaderText(message.toString());
+            alert.showAndWait();
+
+            event.consume();
+        }
+    }
+
+    /**
      * Initialisiert und öffnet den Dialog.
      *
      * @param bundle {@link ResourceBundle}
@@ -75,7 +180,8 @@ public class EditMailAccountDialog
      * @param imageStyleClass String
      * @return {@link Optional}
      */
-    private Optional<MailAccount> openDialog(final ResourceBundle bundle, final MailAccount account, final String titleKey, final String imageStyleClass)
+    private Optional<MailAccount> openDialog(final ResourceBundle bundle, final MailAccount account, final String titleKey,
+            final String imageStyleClass)
     {
         // DialogObject
         MailAccount bean = new MailAccount();
@@ -91,8 +197,9 @@ public class EditMailAccountDialog
         dialog.initModality(Modality.APPLICATION_MODAL);
         dialog.setTitle(bundle.getString(titleKey));
         dialog.setHeaderText(bundle.getString(titleKey));
-
+        // dialog.setResizable(true);
         // dialog.getDialogPane().setPrefSize(500, 500);
+
         ImageView imageView = new ImageView();
         imageView.setFitHeight(32);
         imageView.setFitWidth(32);
@@ -109,34 +216,15 @@ public class EditMailAccountDialog
         // ButtonType loginButtonType = new ButtonType("Login", ButtonData.OK_DONE);
         dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
 
-        // Felder
-        ComboBox<MailProvider> provider = new ComboBox<>();
-        TextField mail = new TextField();
-        TextField imapHost = new TextField();
-        ComboBox<MailPort> imapPort = new ComboBox<>();
-        TextField smtpHost = new TextField();
-        ComboBox<MailPort> smtpPort = new ComboBox<>();
-        PasswordField password1 = new PasswordField();
-        PasswordField password2 = new PasswordField();
-        Button buttonTest = new Button("Test");
-        Label labelTestResult = new Label();
-
         // Provider
-        provider.setPrefWidth(200);
-        provider.getItems().addAll(MailProvider.values());
-        // PIMApplication.getExecutorService().execute(() ->
-        // {
-        // for (MailProvider mp : MailProvider.values())
-        // {
-        // Platform.runLater(() -> provider.getItems().add(mp));
-        // }
-        // });
+        this.provider.setPrefWidth(200);
+        this.provider.getItems().addAll(MailProvider.values());
 
         // Mail
-        mail.setPromptText(bundle.getString("mail"));
-        mail.setPrefColumnCount(30);
+        this.mail.setPromptText(bundle.getString("mail"));
+        this.mail.setPrefColumnCount(30);
         // mail.setTextFormatter(new TextFormatter<>( change -> {
-        // String mailRegEx = "^(.+)@(.+).(.+)$";
+        // String mailRegEx = MailUtils.MAIL_REGEX;
         //
         // change.setText(change.getText().replaceAll("[^a-zA-Z0-9]", ""));
         // return change;
@@ -144,96 +232,65 @@ public class EditMailAccountDialog
         // }));
 
         // IMAP
-        imapHost.setPromptText("IMAP-Host");
-        // TextField imapPort = new TextField();
-        // imapHost.setPromptText("IMAP-Port");
-        // imapPort.setTextFormatter(new TextFormatter<>(new NumberStringConverter()));
-        // Spinner<Integer> imapPort = new Spinner<>(25, 1000, MailProvider.EinsUndEins.getImapPort());
-        // imapPort.setEditable(true);
-        imapPort.setPromptText("IMAP-Port");
-        imapPort.setPrefWidth(200);
-        imapPort.getItems().addAll(MailPort.IMAP, MailPort.IMAPS);
-        imapPort.getSelectionModel().select(MailPort.IMAPS);
-        // imapPort.setEditable(true);
+        this.imapHost.setPromptText("IMAP-Host");
+        this.imapPort.setPromptText("IMAP-Port");
+        this.imapPort.setPrefWidth(200);
+        this.imapPort.getItems().addAll(MailPort.IMAP, MailPort.IMAPS);
+        this.imapPort.getSelectionModel().select(MailPort.IMAPS);
 
         // SMTP
-        imapHost.setPromptText("SMTP-Host");
-        smtpPort.setPromptText("SMTP-Port");
-        smtpPort.setPrefWidth(200);
-        smtpPort.getItems().addAll(MailPort.SMTP, MailPort.SMTP_SSL, MailPort.SMTPS);
-        smtpPort.getSelectionModel().select(MailPort.SMTPS);
+        this.imapHost.setPromptText("SMTP-Host");
+        this.smtpPort.setPromptText("SMTP-Port");
+        this.smtpPort.setPrefWidth(200);
+        this.smtpPort.getItems().addAll(MailPort.SMTP, MailPort.SMTP_SSL, MailPort.SMTPS);
+        this.smtpPort.getSelectionModel().select(MailPort.SMTPS);
 
         // Passwort
-        password1.setPromptText(bundle.getString("passwort"));
-        password2.setPromptText(bundle.getString("passwort") + " (" + bundle.getString("wiederholung") + ")");
+        this.password1.setPromptText(bundle.getString("passwort"));
+        this.password2.setPromptText(bundle.getString("passwort") + " (" + bundle.getString("wiederholung") + ")");
 
         // Object-Attribute an GUI binden.
-        mail.textProperty().bindBidirectional(bean.mailProperty());
-        imapHost.textProperty().bindBidirectional(bean.imapHostProperty());
-        imapPort.valueProperty().bindBidirectional(bean.imapPortProperty());
-        smtpHost.textProperty().bindBidirectional(bean.smtpHostProperty());
-        smtpPort.valueProperty().bindBidirectional(bean.smtpPortProperty());
-        password1.textProperty().bindBidirectional(bean.passwordProperty());
-        password2.setText(bean.getPassword());
+        this.mail.textProperty().bindBidirectional(bean.mailProperty());
+        this.imapHost.textProperty().bindBidirectional(bean.imapHostProperty());
+        this.imapPort.valueProperty().bindBidirectional(bean.imapPortProperty());
+        this.smtpHost.textProperty().bindBidirectional(bean.smtpHostProperty());
+        this.smtpPort.valueProperty().bindBidirectional(bean.smtpPortProperty());
+        this.password1.textProperty().bindBidirectional(bean.passwordProperty());
+        this.password2.setText(bean.getPassword());
 
         Node okButton = dialog.getDialogPane().lookupButton(ButtonType.OK);
 
         // Mail-Format und Passwörter vergleichen.
-        okButton.addEventFilter(ActionEvent.ACTION, event -> {
-            String mailRegEx = MailUtils.MAIL_REGEX;
-
-            if (!mail.getText().matches(mailRegEx))
-            {
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setHeaderText(bundle.getString("mail.format.invalid"));
-                alert.showAndWait();
-
-                event.consume();
-            }
-
-            String pw1 = password1.getText();
-            String pw2 = password2.getText();
-
-            if (StringUtils.isBlank(pw1) || StringUtils.isBlank(pw1))
-            {
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setHeaderText(bundle.getString("passwoerter.nicht_ausgefuellt"));
-                alert.showAndWait();
-
-                event.consume();
-            }
-            else if (!pw1.equals(pw2))
-            {
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setHeaderText(bundle.getString("passwoerter.nicht_identisch"));
-                alert.showAndWait();
-
-                event.consume();
-            }
-        });
+        okButton.addEventFilter(ActionEvent.ACTION, event -> checkValidConfig(event, bundle));
 
         // OK-Button disablen, wenn eines dieser Felder leer ist.
-        mail.textProperty().addListener((observable, oldValue, newValue) -> {
+        this.mail.textProperty().addListener((observable, oldValue, newValue) ->
+        {
             okButton.setDisable(newValue.trim().isEmpty());
 
-            labelTestResult.setText(null);
-            labelTestResult.setStyle(null);
+            this.labelTestResult.setText(null);
+            this.labelTestResult.setStyle(null);
         });
-        imapHost.textProperty().addListener((observable, oldValue, newValue) -> {
-            labelTestResult.setText(null);
-            labelTestResult.setStyle(null);
+        this.imapHost.textProperty().addListener((observable, oldValue, newValue) ->
+        {
+            this.labelTestResult.setText(null);
+            this.labelTestResult.setStyle(null);
         });
-        smtpHost.textProperty().addListener((observable, oldValue, newValue) -> {
-            labelTestResult.setText(null);
-            labelTestResult.setStyle(null);
+        this.smtpHost.textProperty().addListener((observable, oldValue, newValue) ->
+        {
+            this.labelTestResult.setText(null);
+            this.labelTestResult.setStyle(null);
         });
-        password1.textProperty().addListener((observable, oldValue, newValue) -> {
-            labelTestResult.setText(null);
-            labelTestResult.setStyle(null);
+        this.password1.textProperty().addListener((observable, oldValue, newValue) ->
+        {
+            this.labelTestResult.setText(null);
+            this.labelTestResult.setStyle(null);
+            this.password2.clear();
         });
-        password2.textProperty().addListener((observable, oldValue, newValue) -> {
-            labelTestResult.setText(null);
-            labelTestResult.setStyle(null);
+        this.password2.textProperty().addListener((observable, oldValue, newValue) ->
+        {
+            this.labelTestResult.setText(null);
+            this.labelTestResult.setStyle(null);
         });
 
         // Laypout
@@ -246,78 +303,54 @@ public class EditMailAccountDialog
         {
             okButton.setDisable(true);
 
-            provider.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            this.provider.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) ->
+            {
                 if (newValue == null)
                 {
                     return;
                 }
 
-                imapHost.setText(newValue.getImapHost());
-                imapPort.getSelectionModel().select(newValue.getImapPort());
-                smtpHost.setText(newValue.getSmtpHost());
-                smtpPort.getSelectionModel().select(newValue.getSmtpPort());
+                this.imapHost.setText(newValue.getImapHost());
+                this.imapPort.getSelectionModel().select(newValue.getImapPort());
+                this.smtpHost.setText(newValue.getSmtpHost());
+                this.smtpPort.getSelectionModel().select(newValue.getSmtpPort());
             });
 
             gridPane.add(new Label(bundle.getString("provider")), 0, ++row);
-            gridPane.add(provider, 1, row);
+            gridPane.add(this.provider, 1, row);
         }
 
         gridPane.add(new Label(bundle.getString("mail")), 0, ++row);
-        gridPane.add(mail, 1, row);
+        gridPane.add(this.mail, 1, row);
         gridPane.add(new Label("IMAP-Host"), 0, ++row);
-        gridPane.add(imapHost, 1, row);
+        gridPane.add(this.imapHost, 1, row);
         gridPane.add(new Label("IMAP-Port"), 0, ++row);
-        gridPane.add(imapPort, 1, row);
+        gridPane.add(this.imapPort, 1, row);
         gridPane.add(new Label("SMTP-Host"), 0, ++row);
-        gridPane.add(smtpHost, 1, row);
+        gridPane.add(this.smtpHost, 1, row);
         gridPane.add(new Label("SMTP-Port"), 0, ++row);
-        gridPane.add(smtpPort, 1, row);
+        gridPane.add(this.smtpPort, 1, row);
         gridPane.add(new Label(bundle.getString("passwort")), 0, ++row);
-        gridPane.add(password1, 1, row);
+        gridPane.add(this.password1, 1, row);
         gridPane.add(new Label(bundle.getString("passwort") + " (" + bundle.getString("wiederholung") + ")"), 0, ++row);
-        gridPane.add(password2, 1, row);
+        gridPane.add(this.password2, 1, row);
 
         // Test
-        buttonTest.setPrefWidth(150);
-        gridPane.add(buttonTest, 0, ++row);
-        gridPane.add(labelTestResult, 1, row);
+        this.buttonTest.setPrefWidth(150);
+        this.buttonTest.setOnAction(event -> test(bean));
+        gridPane.add(this.buttonTest, 0, ++row);
+        gridPane.add(this.labelTestResult, 1, row);
 
-        buttonTest.setOnAction(event -> {
-            labelTestResult.setText(null);
-            labelTestResult.setStyle(null);
-
-            IMailAccountService mailService = new JavaMailAccountService(bean, Paths.get("."));
-
-            try
-            {
-                mailService.connect();
-                mailService.testConnection();
-
-                labelTestResult.setText("OK");
-                labelTestResult.setStyle("-fx-text-fill: darkgreen;"); // fx-text-inner-color
-            }
-            catch (Exception ex)
-            {
-                labelTestResult.setText(ex.getMessage());
-                labelTestResult.setStyle("-fx-text-fill: red;"); // fx-text-inner-color
-            }
-            finally
-            {
-                try
-                {
-                    mailService.disconnect();
-                }
-                catch (Exception ex)
-                {
-                    // Ignore
-                }
-            }
-        });
+        Label label = new Label(bundle.getString("mail.folder.abonniert"));
+        gridPane.add(label, 0, ++row);
+        GridPane.setValignment(label, VPos.TOP);
+        this.aboView.setCellFactory(CheckBoxListCell.forListView(MailFolder::abonniertProperty));
+        gridPane.add(this.aboView, 1, row);
 
         // Rest
         dialog.getDialogPane().setContent(gridPane);
 
-        Platform.runLater(() -> mail.requestFocus());
+        Platform.runLater(() -> this.mail.requestFocus());
 
         Optional<ButtonType> result = dialog.showAndWait();
 
@@ -335,5 +368,45 @@ public class EditMailAccountDialog
         }
 
         return Optional.ofNullable(bean);
+    }
+
+    /**
+     * Testet die Mail-Einstellungen.
+     *
+     * @param bean {@link MailAccount}
+     */
+    private void test(final MailAccount bean)
+    {
+        this.labelTestResult.setText(null);
+        this.labelTestResult.setStyle(null);
+        this.aboView.setItems(null);
+
+        IMailAPI mailAPI = new JavaMailAPI(bean, Paths.get("."));
+
+        try
+        {
+            mailAPI.connect();
+            mailAPI.testConnection();
+            this.aboView.setItems(bean.getFolder());
+
+            this.labelTestResult.setText("OK");
+            this.labelTestResult.setStyle("-fx-text-fill: darkgreen;"); // fx-text-inner-color
+        }
+        catch (Exception ex)
+        {
+            this.labelTestResult.setText(ex.getMessage());
+            this.labelTestResult.setStyle("-fx-text-fill: red;"); // fx-text-inner-color
+        }
+        finally
+        {
+            try
+            {
+                mailAPI.disconnect();
+            }
+            catch (Exception ex)
+            {
+                // Ignore
+            }
+        }
     }
 }

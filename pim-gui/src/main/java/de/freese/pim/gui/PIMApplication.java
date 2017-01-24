@@ -1,5 +1,6 @@
 package de.freese.pim.gui;
 
+import java.lang.reflect.Proxy;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -26,8 +27,15 @@ import org.slf4j.LoggerFactory;
 
 import com.sun.javafx.application.LauncherImpl;
 
+import de.freese.pim.core.addressbook.dao.DefaultAddressBookDAO;
+import de.freese.pim.core.addressbook.service.DefaultAddressBookService;
+import de.freese.pim.core.addressbook.service.IAddressBookService;
 import de.freese.pim.core.db.HsqldbEmbeddedServer;
 import de.freese.pim.core.db.IDataSourceBean;
+import de.freese.pim.core.mail.dao.DefaultMailDAO;
+import de.freese.pim.core.mail.service.DefaultMailService;
+import de.freese.pim.core.mail.service.IMailService;
+import de.freese.pim.core.persistence.TransactionalInvocationHandler;
 import de.freese.pim.core.service.ISettingsService;
 import de.freese.pim.core.service.SettingService;
 import de.freese.pim.core.thread.PIMThreadFactory;
@@ -70,6 +78,11 @@ public class PIMApplication extends Application
     /**
     *
     */
+    private static IAddressBookService addressBookService = null;
+
+    /**
+    *
+    */
     private static IDataSourceBean dataSourceBean = null;
 
     /**
@@ -80,12 +93,34 @@ public class PIMApplication extends Application
     /**
     *
     */
+    private static IMailService mailService = null;
+
+    /**
+    *
+    */
     private static Window mainWindow = null;
 
     /**
     *
     */
     private static ScheduledExecutorService scheduledExecutorService = null;
+
+    /**
+     * @return {@link IAddressBookService}
+     */
+    public static IAddressBookService getAddressBookService()
+    {
+        if (addressBookService == null)
+        {
+            addressBookService = (IAddressBookService) Proxy.newProxyInstance(PIMApplication.class.getClassLoader(), new Class<?>[]
+            {
+                    IAddressBookService.class
+            }, new TransactionalInvocationHandler(getDataSource(),
+                    new DefaultAddressBookService(new DefaultAddressBookDAO().dataSource(getDataSource()))));
+        }
+
+        return addressBookService;
+    }
 
     /**
      * @return {@link DataSource}
@@ -101,6 +136,23 @@ public class PIMApplication extends Application
     public static ExecutorService getExecutorService()
     {
         return executorService;
+    }
+
+    /**
+     * @return {@link IMailService}
+     */
+    public static IMailService getMailService()
+    {
+        if (mailService == null)
+        {
+            mailService = (IMailService) Proxy.newProxyInstance(PIMApplication.class.getClassLoader(), new Class<?>[]
+            {
+                    IMailService.class
+            }, new TransactionalInvocationHandler(getDataSource(),
+                    new DefaultMailService(new DefaultMailDAO().dataSource(getDataSource()))));
+        }
+
+        return mailService;
     }
 
     /**
@@ -154,6 +206,14 @@ public class PIMApplication extends Application
             usage();
         }
 
+        // java.util.logging ausschalten.
+        // LogManager.getLogManager().reset();
+        // java.util.logging.Logger globalLogger = java.util.logging.Logger.getLogger(java.util.logging.Logger.GLOBAL_LOGGER_NAME);
+        // globalLogger.setLevel(java.util.logging.Level.OFF);
+        // com.sun.webkit.perf.Locks
+        // com.sun.webkit.perf.WCGraphicsPerfLogger
+
+        // System.setProperty("org.slf4j.simpleLogger.log.de.freese.pim", "DEBUG");
         SysOutOverSLF4J.sendSystemOutAndErrToSLF4J();
 
         Thread.setDefaultUncaughtExceptionHandler((t, ex) ->
@@ -173,7 +233,6 @@ public class PIMApplication extends Application
         Thread thread = new Thread(threadGroup, () ->
         {
             LOGGER.info("Startup P.I.M.");
-            // System.setProperty("org.slf4j.simpleLogger.log.de.freese.pim", "DEBUG");
 
             // launch(args);
             LauncherImpl.launchApplication(PIMApplication.class, PIMPreloader.class, args);

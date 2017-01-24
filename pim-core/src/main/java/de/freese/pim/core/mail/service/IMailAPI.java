@@ -3,19 +3,21 @@ package de.freese.pim.core.mail.service;
 
 import java.nio.file.Path;
 import java.util.List;
-import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
 import java.util.function.Consumer;
 
 import de.freese.pim.core.mail.model.Mail;
 import de.freese.pim.core.mail.model.MailAccount;
 import de.freese.pim.core.mail.model.MailFolder;
+import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 
 /**
- * Interface für den Service des Mail-Clients.<br>
+ * Interface für die Mail-API.<br>
  *
  * @author Thomas Freese
  */
-public interface IMailAccountService
+public interface IMailAPI
 {
     /**
      * Initialisiert den Service mit der konkreten Mail-API.
@@ -32,6 +34,14 @@ public interface IMailAccountService
     public void disconnect() throws Exception;
 
     /**
+     * Liefert alle abonnierte Folder des Accounts.
+     *
+     * @return {@link FilteredList}
+     * @throws Exception Falls was schief geht.
+     */
+    public FilteredList<MailFolder> getAbonnierteFolder() throws Exception;
+
+    /**
      * Liefert den Account des Services.
      *
      * @return {@link MailAccount}
@@ -46,13 +56,12 @@ public interface IMailAccountService
     public Path getBasePath();
 
     /**
-     * Liefert die Children des Folders.
+     * Liefert alle Folder des Accounts.
      *
-     * @param parent {@link MailFolder}
-     * @return {@link List}
+     * @return {@link ObservableList}
      * @throws Exception Falls was schief geht.
      */
-    public List<MailFolder> getChilds(MailFolder parent) throws Exception;
+    public ObservableList<MailFolder> getFolder() throws Exception;
 
     /**
      * Liefert die neuen Mails des Folders.
@@ -62,14 +71,6 @@ public interface IMailAccountService
      * @throws Exception Falls was schief geht.
      */
     public List<Mail> getNewMails(MailFolder folder) throws Exception;
-
-    /**
-     * Liefert die Root-/Top-Level Folder des Accounts.
-     *
-     * @return {@link List}
-     * @throws Exception Falls was schief geht.
-     */
-    public List<MailFolder> getRootFolder() throws Exception;
 
     /**
      * Liefert die Anzahl ungelesener Mails des Accounts.
@@ -88,22 +89,11 @@ public interface IMailAccountService
     public void loadMails(MailFolder folder, Consumer<Mail> consumer) throws Exception;
 
     /**
-     * Optionaler {@link Executor} für die Mail-API.
+     * Optionaler {@link ExecutorService} für die Mail-API.
      *
-     * @param executor {@link Executor}
+     * @param executor {@link ExecutorService}
      */
-    public void setExecutor(final Executor executor);
-
-    /**
-     * Synchronisiert den lokalen Cache des Folders.
-     *
-     * @param parent {@link MailFolder}
-     * @param newFolderConsumer {@link Consumer} für neue Folder
-     * @param removedFolderConsumer {@link Consumer} für gelöschte Folder
-     * @throws Exception Falls was schief geht.
-     */
-    public void syncChildFolder(MailFolder parent, Consumer<MailFolder> newFolderConsumer, Consumer<String> removedFolderConsumer)
-            throws Exception;
+    public void setExecutorService(final ExecutorService executor);
 
     /**
      * Testet die Verbindung.

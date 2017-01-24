@@ -5,7 +5,9 @@ package de.freese.pim.core.mail;
 
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
+
 import javax.sql.DataSource;
+
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -16,9 +18,11 @@ import org.junit.Test;
 import org.junit.runners.MethodSorters;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
+
 import de.freese.pim.core.mail.dao.DefaultMailDAO;
 import de.freese.pim.core.mail.dao.IMailDAO;
 import de.freese.pim.core.mail.model.MailAccount;
+import de.freese.pim.core.mail.model.MailFolder;
 import de.freese.pim.core.persistence.ConnectionHolder;
 import de.freese.pim.core.persistence.JdbcTemplate;
 import de.freese.pim.core.persistence.SimpleDataSource;
@@ -146,7 +150,7 @@ public class TestMailDAO
      * @throws Exception Falls was schief geht.
      */
     @Test
-    public void test020SelectAccount() throws Exception
+    public void test012SelectAccount() throws Exception
     {
         List<MailAccount> accounts = TestMailDAO.mailDAO.getMailAccounts();
 
@@ -169,7 +173,7 @@ public class TestMailDAO
      * @throws Exception Falls was schief geht.
      */
     @Test
-    public void test030UpdateAccount() throws Exception
+    public void test013UpdateAccount() throws Exception
     {
         List<MailAccount> accounts = TestMailDAO.mailDAO.getMailAccounts();
 
@@ -194,7 +198,7 @@ public class TestMailDAO
      * @throws Exception Falls was schief geht.
      */
     @Test
-    public void test030UpdateAccountCheck() throws Exception
+    public void test014UpdateAccountCheck() throws Exception
     {
         List<MailAccount> accounts = TestMailDAO.mailDAO.getMailAccounts();
 
@@ -211,5 +215,88 @@ public class TestMailDAO
         Assert.assertEquals("host-smtp", account.getSmtpHost());
         Assert.assertEquals(MailPort.SMTPS, account.getSmtpPort());
         Assert.assertEquals(true, account.isSmtpLegitimation());
+    }
+
+    /**
+     * @throws Exception Falls was schief geht.
+     */
+    @Test(expected = SQLIntegrityConstraintViolationException.class)
+    public void test020InsertFolderFail() throws Exception
+    {
+        MailFolder folder = new MailFolder();
+
+        TestMailDAO.mailDAO.insert(folder, 2);
+    }
+
+    /**
+     * @throws Exception Falls was schief geht.
+     */
+    @Test
+    public void test021InsertFolder() throws Exception
+    {
+        MailFolder folder = new MailFolder();
+        folder.setFullName("a/b");
+        folder.setName("b");
+        folder.setAbonniert(false);
+
+        TestMailDAO.mailDAO.insert(folder, 2);
+
+        Assert.assertEquals(4, folder.getID());
+    }
+
+    /**
+     * @throws Exception Falls was schief geht.
+     */
+    @Test
+    public void test022SelectFolder() throws Exception
+    {
+        List<MailFolder> folders = TestMailDAO.mailDAO.getMailFolder(2);
+
+        Assert.assertNotNull(folders);
+        Assert.assertEquals(1, folders.size());
+
+        MailFolder folder = folders.get(0);
+        Assert.assertEquals(4, folder.getID());
+        Assert.assertEquals("a/b", folder.getFullName());
+        Assert.assertEquals("b", folder.getName());
+        Assert.assertFalse(folder.isAbonniert());
+    }
+
+    /**
+     * @throws Exception Falls was schief geht.
+     */
+    @Test
+    public void test023UpdateFolder() throws Exception
+    {
+        List<MailFolder> folders = TestMailDAO.mailDAO.getMailFolder(2);
+
+        Assert.assertNotNull(folders);
+        Assert.assertEquals(1, folders.size());
+
+        MailFolder folder = folders.get(0);
+
+        folder.setFullName("b/c");
+        folder.setName("c");
+        folder.setAbonniert(true);
+
+        TestMailDAO.mailDAO.update(folder);
+    }
+
+    /**
+     * @throws Exception Falls was schief geht.
+     */
+    @Test
+    public void test024UpdateFolderCheck() throws Exception
+    {
+        List<MailFolder> folders = TestMailDAO.mailDAO.getMailFolder(2);
+
+        Assert.assertNotNull(folders);
+        Assert.assertEquals(1, folders.size());
+
+        MailFolder folder = folders.get(0);
+        Assert.assertEquals(4, folder.getID());
+        Assert.assertEquals("b/c", folder.getFullName());
+        Assert.assertEquals("c", folder.getName());
+        Assert.assertTrue(folder.isAbonniert());
     }
 }

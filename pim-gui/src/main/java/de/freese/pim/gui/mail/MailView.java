@@ -5,10 +5,12 @@ import de.freese.pim.core.mail.model.Mail;
 import de.freese.pim.gui.view.IView;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
+import javafx.geometry.Orientation;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.SelectionMode;
+import javafx.scene.control.SplitPane;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TitledPane;
 import javafx.scene.control.ToolBar;
@@ -16,6 +18,7 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.control.TreeView;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
+import javafx.scene.web.WebView;
 
 /**
  * View des Mail-Clients.
@@ -36,6 +39,12 @@ public class MailView implements IView
     */
     @FXML
     private Button buttonEditAccount = null;
+
+    // /**
+    // *
+    // */
+    // @FXML
+    // private HTMLEditor editor = null;
 
     /**
      *
@@ -72,6 +81,12 @@ public class MailView implements IView
     */
     @FXML
     private TreeView<Object> treeViewMail = null;
+
+    /**
+    *
+    */
+    @FXML
+    private WebView webView = null;
 
     /**
      * Erzeugt eine neue Instanz von {@link MailView}
@@ -114,10 +129,20 @@ public class MailView implements IView
         this.progressIndicator.setVisible(false);
         this.progressIndicator.setMaxSize(250D, 250D);
 
+        SplitPane splitPane = new SplitPane();
+        splitPane.setOrientation(Orientation.VERTICAL);
+        splitPane.getItems().add(this.tableViewMail);
+
+        this.webView = new WebView();
+        splitPane.getItems().add(this.webView);
+
+        // this.editor = new HTMLEditor();
+        // splitPane.getItems().add(this.editor);
+
         StackPane stackPane = new StackPane();
         stackPane.setPadding(new Insets(0));
         // StackPane.setMargin(this.tableView, new Insets(0));
-        stackPane.getChildren().add(this.tableViewMail);
+        stackPane.getChildren().add(splitPane);
         stackPane.getChildren().add(this.progressIndicator);
 
         return stackPane;

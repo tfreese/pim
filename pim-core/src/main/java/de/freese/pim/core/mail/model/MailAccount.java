@@ -10,6 +10,8 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 /**
  * Entity für einen Mail-Account.
@@ -20,6 +22,11 @@ import javafx.beans.property.StringProperty;
 // @JsonRootName("mailAccount")
 public class MailAccount
 {
+    /**
+    *
+    */
+    private final ObservableList<MailFolder> folder = FXCollections.observableArrayList();
+
     /**
      *
      */
@@ -101,6 +108,17 @@ public class MailAccount
         setSmtpHost(src.getSmtpHost());
         setSmtpLegitimation(src.isSmtpLegitimation());
         setSmtpPort(src.getSmtpPort());
+
+        getFolder().clear();
+        getFolder().addAll(src.getFolder());
+    }
+
+    /**
+     * @return {@link ObservableList}
+     */
+    public ObservableList<MailFolder> getFolder()
+    {
+        return this.folder;
     }
 
     /**

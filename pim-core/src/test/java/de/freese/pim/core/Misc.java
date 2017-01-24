@@ -8,6 +8,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
+
 import de.freese.pim.core.service.SettingService;
 import de.freese.pim.core.utils.Utils;
 
@@ -36,7 +37,13 @@ public class Misc
     public static void main(final String[] args) throws Exception
     {
         // testFiles();
-        mailFiles();
+        // mailFiles();
+
+        Path basePath = AbstractPimTest.TMP_TEST_PATH;
+        Path path = basePath.resolve("arbeit/java/mail.txt");
+        System.out.println(path);
+        Files.createDirectories(path.getParent());
+        Files.createFile(path);
     }
 
     /**
@@ -65,7 +72,8 @@ public class Misc
 
         Predicate<Path> isDirectory = Files::isDirectory;
         // Predicate<Path> isHidden = p -> p.getFileName().toString().startsWith(".");
-        Predicate<Path> isHidden = p -> {
+        Predicate<Path> isHidden = p ->
+        {
             try
             {
                 return Files.isHidden(p);
