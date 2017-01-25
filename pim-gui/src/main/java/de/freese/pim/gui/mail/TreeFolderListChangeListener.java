@@ -2,7 +2,6 @@
 package de.freese.pim.gui.mail;
 
 import java.util.Objects;
-
 import de.freese.pim.core.mail.model.MailFolder;
 import javafx.application.Platform;
 import javafx.collections.ListChangeListener;
@@ -35,6 +34,25 @@ public class TreeFolderListChangeListener implements ListChangeListener<MailFold
     }
 
     /**
+     * Hinzufügen des Childs zum Parent.
+     *
+     * @param parent {@link TreeItem}
+     * @param child {@link TreeItem}
+     */
+    private void addChild(final TreeItem<Object> parent, final TreeItem<Object> child)
+    {
+        Platform.runLater(() -> parent.getChildren().add(child));
+    }
+
+    /**
+     * @return {@link TreeItem}
+     */
+    private TreeItem<Object> getParent()
+    {
+        return this.parent;
+    }
+
+    /**
      * @see javafx.collections.ListChangeListener#onChanged(javafx.collections.ListChangeListener.Change)
      */
     @Override
@@ -58,9 +76,9 @@ public class TreeFolderListChangeListener implements ListChangeListener<MailFold
                         {
                             mf.setParent(lastFolder);
                             addChild(lastTreeItem, treeItem);
-                        }
 
-                        continue;
+                            continue;
+                        }
                     }
 
                     addChild(getParent(), treeItem);
@@ -91,25 +109,6 @@ public class TreeFolderListChangeListener implements ListChangeListener<MailFold
                 }
             }
         }
-    }
-
-    /**
-     * Hinzufügen des Childs zum Parent.
-     *
-     * @param parent {@link TreeItem}
-     * @param child {@link TreeItem}
-     */
-    private void addChild(final TreeItem<Object> parent, final TreeItem<Object> child)
-    {
-        Platform.runLater(() -> parent.getChildren().add(child));
-    }
-
-    /**
-     * @return {@link TreeItem}
-     */
-    private TreeItem<Object> getParent()
-    {
-        return this.parent;
     }
 
     /**

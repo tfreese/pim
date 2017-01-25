@@ -14,9 +14,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
-
 import javax.sql.DataSource;
-
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
@@ -24,9 +22,7 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Options;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import com.sun.javafx.application.LauncherImpl;
-
 import de.freese.pim.core.addressbook.dao.DefaultAddressBookDAO;
 import de.freese.pim.core.addressbook.service.DefaultAddressBookService;
 import de.freese.pim.core.addressbook.service.IAddressBookService;
@@ -49,9 +45,12 @@ import javafx.application.Platform;
 import javafx.application.Preloader.StateChangeNotification;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.collections.ObservableList;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 import uk.org.lidalia.sysoutslf4j.context.SysOutOverSLF4J;
@@ -66,19 +65,14 @@ import uk.org.lidalia.sysoutslf4j.context.SysOutOverSLF4J;
 public class PIMApplication extends Application
 {
     /**
-     *
-     */
-    public static final List<AutoCloseable> CLOSEABLES = new ArrayList<>();
-
-    /**
-    *
-    */
-    public static final Logger LOGGER = LoggerFactory.getLogger(PIMApplication.class);
-
-    /**
     *
     */
     private static IAddressBookService addressBookService = null;
+
+    /**
+     *
+     */
+    public static final List<AutoCloseable> CLOSEABLES = new ArrayList<>();
 
     /**
     *
@@ -89,6 +83,11 @@ public class PIMApplication extends Application
      *
      */
     private static ExecutorService executorService = null;
+
+    /**
+    *
+    */
+    public static final Logger LOGGER = LoggerFactory.getLogger(PIMApplication.class);
 
     /**
     *
@@ -106,6 +105,11 @@ public class PIMApplication extends Application
     private static ScheduledExecutorService scheduledExecutorService = null;
 
     /**
+     * Bildschirm auf dem PIM läuft.
+     */
+    private static Screen screen = null;
+
+    /**
      * @return {@link IAddressBookService}
      */
     public static IAddressBookService getAddressBookService()
@@ -115,11 +119,26 @@ public class PIMApplication extends Application
             addressBookService = (IAddressBookService) Proxy.newProxyInstance(PIMApplication.class.getClassLoader(), new Class<?>[]
             {
                     IAddressBookService.class
-            }, new TransactionalInvocationHandler(getDataSource(),
-                    new DefaultAddressBookService(new DefaultAddressBookDAO().dataSource(getDataSource()))));
+            }, new TransactionalInvocationHandler(getDataSource(), new DefaultAddressBookService(new DefaultAddressBookDAO().dataSource(getDataSource()))));
         }
 
         return addressBookService;
+    }
+
+    /**
+     * Liefert die möglichen Optionen der Kommandozeile.<br>
+     * Dies sind die JRE Programm Argumente.
+     *
+     * @return {@link Options}
+     */
+    private static Options getCommandOptions()
+    {
+        // OptionGroup group = new OptionGroup();
+
+        Options options = new Options();
+        // options.addOptionGroup(group);
+
+        return options;
     }
 
     /**
@@ -148,8 +167,7 @@ public class PIMApplication extends Application
             mailService = (IMailService) Proxy.newProxyInstance(PIMApplication.class.getClassLoader(), new Class<?>[]
             {
                     IMailService.class
-            }, new TransactionalInvocationHandler(getDataSource(),
-                    new DefaultMailService(new DefaultMailDAO().dataSource(getDataSource()))));
+            }, new TransactionalInvocationHandler(getDataSource(), new DefaultMailService(new DefaultMailDAO().dataSource(getDataSource()))));
         }
 
         return mailService;
@@ -172,6 +190,16 @@ public class PIMApplication extends Application
     }
 
     /**
+     * Liefert den Bildschirm auf dem PIM läuft.
+     *
+     * @return {@link Screen}
+     */
+    public static Screen getScreen()
+    {
+        return screen;
+    }
+
+    /**
      * @return {@link ISettingsService}
      */
     public static ISettingsService getSettingService()
@@ -180,8 +208,8 @@ public class PIMApplication extends Application
     }
 
     /**
-     * The main() method is ignored in correctly deployed JavaFX application. main() serves only as fallback in case the application can not
-     * be launched through deployment artifacts, e.g., in IDEs with limited FX support. NetBeans ignores main().
+     * The main() method is ignored in correctly deployed JavaFX application. main() serves only as fallback in case the application can not be launched through
+     * deployment artifacts, e.g., in IDEs with limited FX support. NetBeans ignores main().
      *
      * @param args the command line arguments
      */
@@ -208,16 +236,16 @@ public class PIMApplication extends Application
 
         // java.util.logging ausschalten.
         // LogManager.getLogManager().reset();
-        // java.util.logging.Logger globalLogger = java.util.logging.Logger.getLogger(java.util.logging.Logger.GLOBAL_LOGGER_NAME);
-        // globalLogger.setLevel(java.util.logging.Level.OFF);
+        java.util.logging.Logger globalLogger = java.util.logging.Logger.getLogger(java.util.logging.Logger.GLOBAL_LOGGER_NAME);
+        globalLogger.setLevel(java.util.logging.Level.OFF);
         // com.sun.webkit.perf.Locks
         // com.sun.webkit.perf.WCGraphicsPerfLogger
+        // com.sun.webkit.perf.WCFontPerfLogger
 
         // System.setProperty("org.slf4j.simpleLogger.log.de.freese.pim", "DEBUG");
         SysOutOverSLF4J.sendSystemOutAndErrToSLF4J();
 
-        Thread.setDefaultUncaughtExceptionHandler((t, ex) ->
-        {
+        Thread.setDefaultUncaughtExceptionHandler((t, ex) -> {
             LOGGER.error("***Default exception handler***");
             LOGGER.error(null, ex);
 
@@ -230,8 +258,7 @@ public class PIMApplication extends Application
         // Kein Thread des gesamten Clients kann eine höhere Prio haben.
         threadGroup.setMaxPriority(Thread.NORM_PRIORITY + 1);
 
-        Thread thread = new Thread(threadGroup, () ->
-        {
+        Thread thread = new Thread(threadGroup, () -> {
             LOGGER.info("Startup P.I.M.");
 
             // launch(args);
@@ -247,22 +274,6 @@ public class PIMApplication extends Application
     public static void registerCloseable(final AutoCloseable closeable)
     {
         CLOSEABLES.add(closeable);
-    }
-
-    /**
-     * Liefert die möglichen Optionen der Kommandozeile.<br>
-     * Dies sind die JRE Programm Argumente.
-     *
-     * @return {@link Options}
-     */
-    private static Options getCommandOptions()
-    {
-        // OptionGroup group = new OptionGroup();
-
-        Options options = new Options();
-        // options.addOptionGroup(group);
-
-        return options;
     }
 
     /**
@@ -320,21 +331,19 @@ public class PIMApplication extends Application
         // BlockingQueue<Runnable> workQueue = new SynchronousQueue<>(false);
         BlockingQueue<Runnable> workQueue = new LinkedBlockingQueue<>(100);
 
-        ExecutorService executor = new ThreadPoolExecutor(2, 10, 60, TimeUnit.SECONDS, workQueue, new PIMThreadFactory("thread"),
-                new ThreadPoolExecutor.AbortPolicy());
+        ExecutorService executor =
+                new ThreadPoolExecutor(2, 10, 60, TimeUnit.SECONDS, workQueue, new PIMThreadFactory("thread"), new ThreadPoolExecutor.AbortPolicy());
         PIMApplication.executorService = Executors.unconfigurableExecutorService(executor);
-        registerCloseable(() ->
-        {
+        registerCloseable(() -> {
             LOGGER.info("Close ExecutorService");
             Utils.shutdown(PIMApplication.executorService);
             PIMApplication.executorService = null;
         });
 
-        ScheduledExecutorService scheduledExecutor = new ScheduledThreadPoolExecutor(3, new PIMThreadFactory("scheduler"),
-                new ThreadPoolExecutor.AbortPolicy());
+        ScheduledExecutorService scheduledExecutor =
+                new ScheduledThreadPoolExecutor(3, new PIMThreadFactory("scheduler"), new ThreadPoolExecutor.AbortPolicy());
         PIMApplication.scheduledExecutorService = Executors.unconfigurableScheduledExecutorService(scheduledExecutor);
-        registerCloseable(() ->
-        {
+        registerCloseable(() -> {
             LOGGER.info("Close ScheduledExecutorService");
             Utils.shutdown(PIMApplication.scheduledExecutorService);
             PIMApplication.scheduledExecutorService = null;
@@ -346,14 +355,12 @@ public class PIMApplication extends Application
         PIMApplication.dataSourceBean = new HsqldbEmbeddedServer();
         PIMApplication.dataSourceBean.configure(getSettingService());
         PIMApplication.dataSourceBean.testConnection();
-        PIMApplication.dataSourceBean.populateIfEmpty(() ->
-        {
+        PIMApplication.dataSourceBean.populateIfEmpty(() -> {
             LOGGER.info("Populate Database");
             notifyPreloader(new PIMPreloaderNotification("Populate Database"));
             Utils.sleep(1, TimeUnit.SECONDS);
         });
-        registerCloseable(() ->
-        {
+        registerCloseable(() -> {
             LOGGER.info("Stop Database");
             PIMApplication.dataSourceBean.disconnect();
             PIMApplication.dataSourceBean = null;
@@ -383,23 +390,41 @@ public class PIMApplication extends Application
 
         MainController mainController = new MainController(resources);
 
-        // Scene scene = new Scene((Parent) mainController.getMainNode());
-        Scene scene = new Scene((Parent) mainController.getMainNode(), 1400, 900);
+        Scene scene = new Scene((Parent) mainController.getMainNode());
+        // Scene scene = new Scene((Parent) mainController.getMainNode(), 1400, 900);
         scene.getStylesheets().add("/styles/styles.css");
 
         primaryStage.getIcons().add(new Image("images/pim.png"));
         primaryStage.setTitle(resources.getString("titel"));
         primaryStage.setScene(scene);
-        primaryStage.centerOnScreen();
+        // primaryStage.centerOnScreen();
         // primaryStage.setMaximized(true);
 
-        // After the app is ready, show the stage
-        this.ready.addListener((observable, oldValue, newValue) ->
+        // Default: GUI auf 2. Monitor, wenn vorhanden.
+        ObservableList<Screen> screens = Screen.getScreens();
+
+        if (screens.size() > 1)
         {
+            screen = screens.get(1);
+        }
+        else
+        {
+            screen = screens.get(0);
+        }
+
+        // Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
+        Rectangle2D screenBounds = screen.getVisualBounds();
+
+        primaryStage.setX(screenBounds.getMinX() + 100);
+        primaryStage.setY(screenBounds.getMinY() + 100);
+        primaryStage.setWidth(screenBounds.getWidth() - 200);
+        primaryStage.setHeight(screenBounds.getHeight() - 200);
+
+        // After the app is ready, show the stage
+        this.ready.addListener((observable, oldValue, newValue) -> {
             if (Boolean.TRUE.equals(newValue))
             {
-                Platform.runLater(() ->
-                {
+                Platform.runLater(() -> {
                     primaryStage.show();
                     mainController.selectDefaultView();
                 });
