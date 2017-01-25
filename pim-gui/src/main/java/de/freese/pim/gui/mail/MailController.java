@@ -6,11 +6,12 @@ import java.nio.file.Path;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
+
 import javax.mail.internet.InternetAddress;
+
 import de.freese.pim.core.mail.model.Mail;
 import de.freese.pim.core.mail.model.MailAccount;
 import de.freese.pim.core.mail.model.MailFolder;
@@ -26,7 +27,6 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.collections.ListChangeListener;
 import javafx.collections.transformation.SortedList;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
@@ -151,100 +151,18 @@ public class MailController extends AbstractController
     @Override
     public void activate()
     {
-        // Wenn der Baum leer ist -> befüllen.
-        TreeItem<Object> root = this.treeViewMail.getRoot();
-
-        if (root != null)
+        if (isActivated())
         {
             return;
         }
 
-        root = new TreeItem<>("Mail-Accounts");
+        setActivated(true);
+
+        // Daten laden.
+        TreeItem<Object> root = new TreeItem<>("Mail-Accounts");
         this.treeViewMail.setRoot(root);
 
         loadMailAccounts(root);
-    }
-
-    /**
-     * Hinzufügen eines {@link MailAccount} in die GUI
-     *
-     * @param root {@link TreeItem}
-     * @param account {@link MailAccount}
-     * @throws Exception Falls was schief geht.
-     */
-    private void addMailAccountToGUI(final TreeItem<Object> root, final MailAccount account) throws Exception
-    {
-        Path basePath = SettingService.getInstance().getHome();
-        Path accountPath = basePath.resolve(account.getMail());
-        IMailAPI mailAPI = new JavaMailAPI(account, accountPath);
-        mailAPI.setMailService(this.mailService);
-        mailAPI.setExecutorService(getExecutorService());
-        mailAPI.connect();
-
-        TreeItem<Object> parent = new TreeItem<>(mailAPI);
-        root.getChildren().add(parent);
-        parent.setExpanded(true);
-
-        PIMApplication.registerCloseable(() -> {
-            getLogger().info("Close " + mailAPI.getAccount().getMail());
-            mailAPI.disconnect();
-        });
-
-        // getLogger().info("Init MailAccount {}", mailAPI.getAccount().getMail());
-
-        // Tree aufbauen.
-        mailAPI.getAbonnierteFolder().addListener((ListChangeListener<MailFolder>) change -> {
-            Platform.runLater(() -> {
-                while (change.next())
-                {
-                    if (change.wasAdded())
-                    {
-                        for (MailFolder mf : change.getAddedSubList())
-                        {
-                            TreeItem<Object> treeItem = new TreeItem<>(mf);
-
-                            // Prüfen auf Hierarchie.
-                            if (parent.getChildren().size() > 0)
-                            {
-                                TreeItem<Object> lastTreeItem = parent.getChildren().get(parent.getChildren().size() - 1);
-                                MailFolder lastFolder = (MailFolder) lastTreeItem.getValue();
-
-                                if (mf.getFullName().startsWith(lastFolder.getFullName()))
-                                {
-                                    mf.setParent(lastFolder);
-                                    lastTreeItem.getChildren().add(treeItem);
-                                }
-                                else
-                                {
-                                    parent.getChildren().add(treeItem);
-                                }
-                            }
-                            else
-                            {
-                                parent.getChildren().add(treeItem);
-                            }
-                        }
-                    }
-                    else if (change.wasRemoved())
-                    {
-                        for (MailFolder mf : change.getRemoved())
-                        {
-                            // Knoten finden.
-                            for (Iterator<TreeItem<Object>> iterator = parent.getChildren().iterator(); iterator.hasNext();)
-                            {
-                                TreeItem<Object> ti = iterator.next();
-                                MailFolder tiMF = (MailFolder) ti.getValue();
-
-                                if (tiMF.getFullName().equals(mf.getFullName()))
-                                {
-                                    iterator.remove();
-                                }
-                            }
-                        }
-                    }
-                }
-            });
-        });
     }
 
     /**
@@ -281,10 +199,12 @@ public class MailController extends AbstractController
     public void initialize(final URL location, final ResourceBundle resources)
     {
         // Buttons
-        this.buttonAddAccount.setOnAction(event -> {
+        this.buttonAddAccount.setOnAction(event ->
+        {
             EditMailAccountDialog dialog = new EditMailAccountDialog();
             Optional<MailAccount> result = dialog.addAccount(resources);
-            result.ifPresent(account -> {
+            result.ifPresent(account ->
+            {
                 try
                 {
                     this.mailService.insert(account);
@@ -306,7 +226,8 @@ public class MailController extends AbstractController
         });
 
         this.buttonEditAccount.disableProperty().bind(this.selectedTreeItem.isNull());
-        this.buttonEditAccount.setOnAction(event -> {
+        this.buttonEditAccount.setOnAction(event ->
+        {
             TreeItem<Object> treeItem = this.selectedTreeItem.get();
             MailAccount ma = null;
 
@@ -321,7 +242,8 @@ public class MailController extends AbstractController
 
             EditMailAccountDialog dialog = new EditMailAccountDialog();
             Optional<MailAccount> result = dialog.editAccount(resources, ma);
-            result.ifPresent(account -> {
+            result.ifPresent(account ->
+            {
                 try
                 {
                     this.mailService.update(account);
@@ -341,7 +263,8 @@ public class MailController extends AbstractController
         });
 
         // Tabelle
-        this.tableViewMail.setRowFactory(tableView -> {
+        this.tableViewMail.setRowFactory(tableView ->
+        {
             return new TableRow<Mail>()
             {
                 /**
@@ -370,20 +293,36 @@ public class MailController extends AbstractController
                 }
             };
         });
-        this.tableViewMail.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue == null)
+        this.tableViewMail.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) ->
+        {
+            Mail mail = newValue;
+
+            if (mail == null)
             {
                 this.webView.getEngine().loadContent(null);
 
                 return;
             }
 
-            this.webView.getEngine().loadContent("<html><body>Test</body></html>");
+            try
+            {
+                IMailAPI mailAPI = mail.getFolder().getMailAPI();
+                String content = mailAPI.loadContent(mail, (size, current) -> System.out.printf("%d / %d%n", size, current));
+
+                this.webView.getEngine().loadContent(content);
+            }
+            catch (Exception ex)
+            {
+                getLogger().error(null, ex);
+
+                new ErrorDialog().forThrowable(ex).showAndWait();
+            }
         });
 
         // Tree
         this.selectedTreeItem.bind(this.treeViewMail.getSelectionModel().selectedItemProperty());
-        this.selectedTreeItem.addListener((observable, oldValue, newValue) -> {
+        this.selectedTreeItem.addListener((observable, oldValue, newValue) ->
+        {
             this.tableViewMail.setItems(null);
 
             if (newValue == null)
@@ -428,8 +367,10 @@ public class MailController extends AbstractController
                     {
                         IMailAPI mailAPI = folder.getMailAPI();
 
-                        mailAPI.loadMails(folder, m -> {
-                            Platform.runLater(() -> {
+                        mailAPI.loadMails(folder, m ->
+                        {
+                            Platform.runLater(() ->
+                            {
                                 folder.getMails().add(m);
                             });
                         });
@@ -438,7 +379,8 @@ public class MailController extends AbstractController
                     }
                 };
                 loadMailsTask.setOnSucceeded(event -> this.treeViewMail.refresh());
-                loadMailsTask.setOnFailed(event -> {
+                loadMailsTask.setOnFailed(event ->
+                {
                     Throwable th = loadMailsTask.getException();
 
                     getLogger().error(null, th);
@@ -450,7 +392,8 @@ public class MailController extends AbstractController
                 ReadOnlyBooleanProperty runningProperty = loadMailsTask.runningProperty();
 
                 this.progressIndicator.visibleProperty().bind(runningProperty);
-                PIMApplication.getMainWindow().getScene().cursorProperty().bind(Bindings.when(runningProperty).then(Cursor.WAIT).otherwise(Cursor.DEFAULT));
+                PIMApplication.getMainWindow().getScene().cursorProperty()
+                        .bind(Bindings.when(runningProperty).then(Cursor.WAIT).otherwise(Cursor.DEFAULT));
 
                 getExecutorService().execute(loadMailsTask);
             }
@@ -505,6 +448,26 @@ public class MailController extends AbstractController
     }
 
     /**
+     * Hinzufügen eines {@link MailAccount} in die GUI
+     *
+     * @param root {@link TreeItem}
+     * @param account {@link MailAccount}
+     * @throws Exception Falls was schief geht.
+     */
+    private void addMailAccountToGUI(final TreeItem<Object> root, final MailAccount account) throws Exception
+    {
+        Path basePath = SettingService.getInstance().getHome();
+        Path accountPath = basePath.resolve(account.getMail());
+
+        IMailAPI mailAPI = new JavaMailAPI(account, accountPath);
+        mailAPI.setMailService(this.mailService);
+        mailAPI.setExecutorService(getExecutorService());
+
+        InitMailAPITask service = new InitMailAPITask(this.treeViewMail, root, mailAPI);
+        getExecutorService().execute(service);
+    }
+
+    /**
      * Laden der {@link MailAccount}s und befüllen des Trees.
      *
      * @param root {@link TreeItem}
@@ -532,7 +495,7 @@ public class MailController extends AbstractController
                 // break;
             }
 
-            this.treeViewMail.refresh();
+            // this.treeViewMail.refresh();
         }
         catch (Exception ex)
         {
@@ -560,8 +523,8 @@ public class MailController extends AbstractController
             // columnFrom.prefWidthProperty().bind(this.tableViewMail.widthProperty().multiply(0.30D)); // 30% Breite
             columnFrom.setPrefWidth(300);
             columnReceived.setPrefWidth(180);
-            columnSubject.prefWidthProperty()
-                    .bind(this.tableViewMail.widthProperty().subtract(columnFrom.widthProperty().add(columnReceived.widthProperty()).add(2)));
+            columnSubject.prefWidthProperty().bind(
+                    this.tableViewMail.widthProperty().subtract(columnFrom.widthProperty().add(columnReceived.widthProperty()).add(2)));
 
             columnFrom.setSortable(false);
             columnFrom.setStyle("-fx-alignment: center-left;");

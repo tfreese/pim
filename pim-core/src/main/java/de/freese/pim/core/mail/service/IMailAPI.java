@@ -4,7 +4,9 @@ package de.freese.pim.core.mail.service;
 import java.nio.file.Path;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
+
 import de.freese.pim.core.mail.model.Mail;
 import de.freese.pim.core.mail.model.MailAccount;
 import de.freese.pim.core.mail.model.MailFolder;
@@ -33,14 +35,6 @@ public interface IMailAPI
     public void disconnect() throws Exception;
 
     /**
-     * Liefert alle abonnierte Folder des Accounts.
-     *
-     * @return {@link FilteredList}
-     * @throws Exception Falls was schief geht.
-     */
-    public FilteredList<MailFolder> getAbonnierteFolder() throws Exception;
-
-    /**
      * Liefert den Account des Services.
      *
      * @return {@link MailAccount}
@@ -59,9 +53,15 @@ public interface IMailAPI
      * Wird im Hintergrund geladen.
      *
      * @return {@link Future}
-     * @throws Exception Falls was schief geht.
      */
-    public Future<ObservableList<MailFolder>> getFolder() throws Exception;
+    public ObservableList<MailFolder> getFolder();
+
+    /**
+     * Liefert alle abonnierte Folder des Accounts.
+     *
+     * @return {@link FilteredList}
+     */
+    public FilteredList<MailFolder> getFolderSubscribed();
 
     /**
      * Liefert die Anzahl ungelesener Mails des Accounts.
@@ -71,7 +71,26 @@ public interface IMailAPI
     public int getUnreadMailsCount();
 
     /**
-     * Holt die Mails des Folders und übergibt sie dem {@link Consumer}.
+     * Liefert den Inhalt der Mail.<br>
+     * Der Monitor dient zur Anzeige des Lade-Fortschritts.
+     *
+     * @param mail {@link Mail}
+     * @param loadMonitor {@link BiConsumer}
+     * @return String
+     * @throws Exception Falls was schief geht.
+     */
+    public String loadContent(Mail mail, BiConsumer<Long, Long> loadMonitor) throws Exception;
+
+    /**
+     * Lädt die Folder des Accounts und übergibt sie dem {@link Consumer}.
+     *
+     * @param consumer {@link Consumer}
+     * @throws Exception Falls was schief geht.
+     */
+    public void loadFolder(Consumer<MailFolder> consumer) throws Exception;
+
+    /**
+     * Lädt die Mails des Folders und übergibt sie dem {@link Consumer}.
      *
      * @param folder {@link MailFolder}
      * @param consumer {@link Consumer}

@@ -52,6 +52,11 @@ public class Mail
     private final ObjectProperty<Date> sendDateProperty = new SimpleObjectProperty<>(this, "sendDate", null);
 
     /**
+     *
+     */
+    private int size = -1;
+
+    /**
     *
     */
     private final StringProperty subjectProperty = new SimpleStringProperty(this, "subject", null);
@@ -147,6 +152,16 @@ public class Mail
     public Date getSendDate()
     {
         return this.sendDateProperty.get();
+    }
+
+    /**
+     * Liefert die Größe der Mail.
+     * 
+     * @return int
+     */
+    public int getSize()
+    {
+        return this.size;
     }
 
     /**
@@ -261,6 +276,16 @@ public class Mail
     public void setSendDate(final Date date)
     {
         sendDateProperty().set(date);
+    }
+
+    /**
+     * Setzt die Größe der Mail.
+     *
+     * @param size int
+     */
+    public void setSize(final int size)
+    {
+        this.size = size;
     }
 
     /**

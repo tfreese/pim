@@ -111,7 +111,7 @@ public class MailView implements IView
         // return borderPane;
         this.tableViewMail = new TableView<>();
         this.tableViewMail.setEditable(false);
-        this.tableViewMail.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+        this.tableViewMail.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         // this.tableViewMail.setColumnResizePolicy(TableView.UNCONSTRAINED_RESIZE_POLICY);
         // this.tableViewMail.setManaged(false);
 

@@ -121,12 +121,14 @@ public class ContactController extends AbstractController
     @Override
     public void activate()
     {
-        // Wenn die Liste leer ist -> befüllen.
-        if (getKontakteList().size() > 1)
+        if (isActivated())
         {
             return;
         }
 
+        setActivated(true);
+
+        // Daten laden.
         loadKontakte();
     }
 

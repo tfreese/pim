@@ -29,6 +29,11 @@ public abstract class AbstractController implements IController
     public final Logger logger = LoggerFactory.getLogger(getClass());
 
     /**
+    *
+    */
+    private boolean activated = false;
+
+    /**
      * Erzeugt eine neue Instanz von {@link AbstractController}
      */
     public AbstractController()
@@ -109,5 +114,25 @@ public abstract class AbstractController implements IController
     public ToolBar getToolBar()
     {
         return null;
+    }
+
+    /**
+     * Liefert true, wenn der Controller bereits aktiviert wurde.
+     *
+     * @return boolean
+     */
+    protected boolean isActivated()
+    {
+        return this.activated;
+    }
+
+    /**
+     * Setzt true, wenn der Controller bereits aktiviert wurde.
+     *
+     * @param activated boolean
+     */
+    protected void setActivated(final boolean activated)
+    {
+        this.activated = activated;
     }
 }
