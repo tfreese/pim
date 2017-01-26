@@ -326,7 +326,7 @@ public class TestReceiveMail extends AbstractMailTest
 
                     // @formatter:off
                     List<String> values = textParts.stream()
-                            .map(AbstractTextPart::getText)
+                            .map(AbstractTextPart::getContent)
                             .map(t -> Jsoup.parse(t).text())
                             //.parallel()
                             .map(t -> t.split(" "))

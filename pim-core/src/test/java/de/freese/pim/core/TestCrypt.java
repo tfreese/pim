@@ -3,10 +3,13 @@
  */
 package de.freese.pim.core;
 
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.util.stream.Collectors;
 
-import org.apache.commons.io.IOUtils;
 import org.junit.Assert;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
@@ -40,15 +43,24 @@ public class TestCrypt
 
         Crypt crypt = Crypt.getUTF8Instance();
 
-        try (InputStream isEncrypted = crypt.encrypt(IOUtils.toInputStream(clearText, StandardCharsets.UTF_8));
-             InputStream decryptedStream = crypt.decrypt(isEncrypted))
+        // try (InputStream isEncrypted = crypt.encrypt(IOUtils.toInputStream(clearText, StandardCharsets.UTF_8));
+        // InputStream decryptedStream = crypt.decrypt(isEncrypted))
+        // {
+        // String decrypted = IOUtils.toString(decryptedStream, StandardCharsets.UTF_8);
+        // Assert.assertEquals(clearText, decrypted);
+        // }
+
+        try (InputStream isClear = new ByteArrayInputStream(clearText.getBytes(StandardCharsets.UTF_8));
+             InputStream isEncrypted = crypt.encrypt(isClear); // Verschlüsseln
+             InputStream decryptedStream = crypt.decrypt(isEncrypted); // Entschlüsseln
+             BufferedReader buffer = new BufferedReader(new InputStreamReader(decryptedStream, StandardCharsets.UTF_8)))
         {
-            String decrypted = IOUtils.toString(decryptedStream, StandardCharsets.UTF_8);
+            String decrypted = buffer.lines().collect(Collectors.joining("\n"));
             Assert.assertEquals(clearText, decrypted);
         }
 
         // InputStream isClear = new ReaderInputStream(new StringReader(clearText);
-        // InputStreamReader isr = new InputStreamReader(decryptedStream, StandardCharsets.UTF_8);
+        // Reader isr = new InputStreamReader(decryptedStream, StandardCharsets.UTF_8);
     }
 
     /**

@@ -38,6 +38,11 @@ public class JavaMailBuilder
     /**
      *
      */
+    public static final String HEADER_CONTENT_ID = "Content-ID";
+
+    /**
+     *
+     */
     private static final String CONTENT_TYPE_CHARSET_SUFFIX = ";charset=";
 
     /**
@@ -49,11 +54,6 @@ public class JavaMailBuilder
     *
     */
     private static final String CONTENT_TYPE_PLAIN = "text/plain";
-
-    /**
-     *
-     */
-    private static final String HEADER_CONTENT_ID = "Content-ID";
 
     /**
      *

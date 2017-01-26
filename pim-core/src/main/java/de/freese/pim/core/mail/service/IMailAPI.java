@@ -7,9 +7,12 @@ import java.util.concurrent.Future;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
+import javax.activation.DataSource;
+
 import de.freese.pim.core.mail.model.Mail;
 import de.freese.pim.core.mail.model.MailAccount;
 import de.freese.pim.core.mail.model.MailFolder;
+import de.freese.pim.core.mail.utils.MailContent;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 
@@ -71,17 +74,6 @@ public interface IMailAPI
     public int getUnreadMailsCount();
 
     /**
-     * Liefert den Inhalt der Mail.<br>
-     * Der Monitor dient zur Anzeige des Lade-Fortschritts.
-     *
-     * @param mail {@link Mail}
-     * @param loadMonitor {@link BiConsumer}
-     * @return String
-     * @throws Exception Falls was schief geht.
-     */
-    public String loadContent(Mail mail, BiConsumer<Long, Long> loadMonitor) throws Exception;
-
-    /**
      * Lädt die Folder des Accounts und übergibt sie dem {@link Consumer}.
      *
      * @param consumer {@link Consumer}
@@ -106,6 +98,17 @@ public interface IMailAPI
      * @throws Exception Falls was schief geht.
      */
     public void loadNewMails(MailFolder folder, final Consumer<Mail> consumer) throws Exception;
+
+    /**
+     * Liefert die {@link DataSource} mit dem Text der Mail.<br>
+     * Der Monitor dient zur Anzeige des Lade-Fortschritts.
+     *
+     * @param mail {@link Mail}
+     * @param loadMonitor {@link BiConsumer}
+     * @return {@link MailContent}
+     * @throws Exception Falls was schief geht.
+     */
+    public MailContent loadTextContent(Mail mail, BiConsumer<Long, Long> loadMonitor) throws Exception;
 
     /**
      * Optionaler {@link ExecutorService} für die Mail-API.
