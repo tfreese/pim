@@ -9,9 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
-
 import javax.mail.internet.InternetAddress;
-
 import de.freese.pim.core.mail.model.Mail;
 import de.freese.pim.core.mail.model.MailAccount;
 import de.freese.pim.core.mail.model.MailFolder;
@@ -167,6 +165,26 @@ public class MailController extends AbstractController
     }
 
     /**
+     * Hinzufügen eines {@link MailAccount} in die GUI
+     *
+     * @param root {@link TreeItem}
+     * @param account {@link MailAccount}
+     * @throws Exception Falls was schief geht.
+     */
+    private void addMailAccountToGUI(final TreeItem<Object> root, final MailAccount account) throws Exception
+    {
+        Path basePath = SettingService.getInstance().getHome();
+        Path accountPath = basePath.resolve(account.getMail());
+
+        IMailAPI mailAPI = new JavaMailAPI(account, accountPath);
+        mailAPI.setMailService(this.mailService);
+        mailAPI.setExecutorService(getExecutorService());
+
+        InitMailAPITask service = new InitMailAPITask(this.treeViewMail, root, mailAPI);
+        getExecutorService().execute(service);
+    }
+
+    /**
      * @see de.freese.pim.gui.controller.IController#getMainNode()
      */
     @Override
@@ -200,12 +218,10 @@ public class MailController extends AbstractController
     public void initialize(final URL location, final ResourceBundle resources)
     {
         // Buttons
-        this.buttonAddAccount.setOnAction(event ->
-        {
+        this.buttonAddAccount.setOnAction(event -> {
             EditMailAccountDialog dialog = new EditMailAccountDialog();
             Optional<MailAccount> result = dialog.addAccount(resources);
-            result.ifPresent(account ->
-            {
+            result.ifPresent(account -> {
                 try
                 {
                     this.mailService.insert(account);
@@ -227,8 +243,7 @@ public class MailController extends AbstractController
         });
 
         this.buttonEditAccount.disableProperty().bind(this.selectedTreeItem.isNull());
-        this.buttonEditAccount.setOnAction(event ->
-        {
+        this.buttonEditAccount.setOnAction(event -> {
             TreeItem<Object> treeItem = this.selectedTreeItem.get();
             MailAccount ma = null;
 
@@ -243,8 +258,7 @@ public class MailController extends AbstractController
 
             EditMailAccountDialog dialog = new EditMailAccountDialog();
             Optional<MailAccount> result = dialog.editAccount(resources, ma);
-            result.ifPresent(account ->
-            {
+            result.ifPresent(account -> {
                 try
                 {
                     this.mailService.update(account);
@@ -264,8 +278,7 @@ public class MailController extends AbstractController
         });
 
         // Tabelle
-        this.tableViewMail.setRowFactory(tableView ->
-        {
+        this.tableViewMail.setRowFactory(tableView -> {
             return new TableRow<Mail>()
             {
                 /**
@@ -294,9 +307,9 @@ public class MailController extends AbstractController
                 }
             };
         });
-        this.tableViewMail.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) ->
-        {
+        this.tableViewMail.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             Mail mail = newValue;
+            this.webView.getEngine().loadContent("");
 
             if (mail == null)
             {
@@ -304,8 +317,6 @@ public class MailController extends AbstractController
                 {
                     getLogger().debug("no mail selected");
                 }
-
-                this.webView.getEngine().loadContent("");
 
                 return;
             }
@@ -324,29 +335,37 @@ public class MailController extends AbstractController
                     return mailContent;
                 }
             };
-            loadMailTask.setOnSucceeded(event ->
-            {
+            loadMailTask.setOnSucceeded(event -> {
                 MailContent mailContent = loadMailTask.getValue();
 
                 if (mailContent == null)
                 {
-                    String msg = String.format("no content for %s/%s%n", mail.getFolder().getFullName(), mail.getSubject());
+                    // String msg = String.format("no content: %s/%s%n", mail.getFolder().getFullName(), mail.getSubject());
+                    // getLogger().error(msg);
+                    // new ErrorDialog().headerText(msg).showAndWait();
 
-                    getLogger().error(msg);
-                    new ErrorDialog().headerText(msg).showAndWait();
+                    String msg = String.format("<b>Error: no content found for</b><br>folder=%s<br>subject=%s<br>", mail.getFolder().getFullName(),
+                            mail.getSubject());
+                    this.webView.getEngine().loadContent("<h2><font color=\"red\">" + msg + "</font></h2>");
+
                     return;
+                }
+
+                if (getLogger().isDebugEnabled())
+                {
+                    getLogger().debug("use content: {}", mailContent.getContentType());
                 }
 
                 // this.webView.getEngine().load(mailContent.getUrl().toExternalForm());
                 this.webView.getEngine().loadContent(mailContent.getContent(), mailContent.getContentType());
             });
-            loadMailTask.setOnFailed(event ->
-            {
+            loadMailTask.setOnFailed(event -> {
                 Throwable th = loadMailTask.getException();
 
                 getLogger().error(null, th);
 
-                new ErrorDialog().forThrowable(th).showAndWait();
+                // new ErrorDialog().forThrowable(th).showAndWait();
+                this.webView.getEngine().loadContent(ErrorDialog.toString(th), "text/plain");
             });
 
             // loadMailTask.progressProperty().addListener((obs, old, progress) -> getLogger().debug("{} %", progress.doubleValue() * 100));
@@ -355,16 +374,14 @@ public class MailController extends AbstractController
 
             ReadOnlyBooleanProperty runningProperty = loadMailTask.runningProperty();
             this.progressIndicator.visibleProperty().bind(runningProperty);
-            PIMApplication.getMainWindow().getScene().cursorProperty()
-                    .bind(Bindings.when(runningProperty).then(Cursor.WAIT).otherwise(Cursor.DEFAULT));
+            PIMApplication.getMainWindow().getScene().cursorProperty().bind(Bindings.when(runningProperty).then(Cursor.WAIT).otherwise(Cursor.DEFAULT));
 
             getExecutorService().execute(loadMailTask);
         });
 
         // Tree
         this.selectedTreeItem.bind(this.treeViewMail.getSelectionModel().selectedItemProperty());
-        this.selectedTreeItem.addListener((observable, oldValue, newValue) ->
-        {
+        this.selectedTreeItem.addListener((observable, oldValue, newValue) -> {
             this.tableViewMail.setItems(null);
 
             if (newValue == null)
@@ -409,10 +426,8 @@ public class MailController extends AbstractController
                     {
                         IMailAPI mailAPI = folder.getMailAPI();
 
-                        mailAPI.loadMails(folder, m ->
-                        {
-                            Platform.runLater(() ->
-                            {
+                        mailAPI.loadMails(folder, m -> {
+                            Platform.runLater(() -> {
                                 folder.getMails().add(m);
                             });
                         });
@@ -421,8 +436,7 @@ public class MailController extends AbstractController
                     }
                 };
                 loadMailsTask.setOnSucceeded(event -> this.treeViewMail.refresh());
-                loadMailsTask.setOnFailed(event ->
-                {
+                loadMailsTask.setOnFailed(event -> {
                     Throwable th = loadMailsTask.getException();
 
                     getLogger().error(null, th);
@@ -434,8 +448,7 @@ public class MailController extends AbstractController
                 ReadOnlyBooleanProperty runningProperty = loadMailsTask.runningProperty();
 
                 this.progressIndicator.visibleProperty().bind(runningProperty);
-                PIMApplication.getMainWindow().getScene().cursorProperty()
-                        .bind(Bindings.when(runningProperty).then(Cursor.WAIT).otherwise(Cursor.DEFAULT));
+                PIMApplication.getMainWindow().getScene().cursorProperty().bind(Bindings.when(runningProperty).then(Cursor.WAIT).otherwise(Cursor.DEFAULT));
 
                 getExecutorService().execute(loadMailsTask);
             }
@@ -487,26 +500,6 @@ public class MailController extends AbstractController
         });
 
         this.treeViewMail.setRoot(null);
-    }
-
-    /**
-     * Hinzufügen eines {@link MailAccount} in die GUI
-     *
-     * @param root {@link TreeItem}
-     * @param account {@link MailAccount}
-     * @throws Exception Falls was schief geht.
-     */
-    private void addMailAccountToGUI(final TreeItem<Object> root, final MailAccount account) throws Exception
-    {
-        Path basePath = SettingService.getInstance().getHome();
-        Path accountPath = basePath.resolve(account.getMail());
-
-        IMailAPI mailAPI = new JavaMailAPI(account, accountPath);
-        mailAPI.setMailService(this.mailService);
-        mailAPI.setExecutorService(getExecutorService());
-
-        InitMailAPITask service = new InitMailAPITask(this.treeViewMail, root, mailAPI);
-        getExecutorService().execute(service);
     }
 
     /**
@@ -565,8 +558,8 @@ public class MailController extends AbstractController
             // columnFrom.prefWidthProperty().bind(this.tableViewMail.widthProperty().multiply(0.30D)); // 30% Breite
             columnFrom.setPrefWidth(300);
             columnReceived.setPrefWidth(180);
-            columnSubject.prefWidthProperty().bind(
-                    this.tableViewMail.widthProperty().subtract(columnFrom.widthProperty().add(columnReceived.widthProperty()).add(2)));
+            columnSubject.prefWidthProperty()
+                    .bind(this.tableViewMail.widthProperty().subtract(columnFrom.widthProperty().add(columnReceived.widthProperty()).add(2)));
 
             columnFrom.setSortable(false);
             columnFrom.setStyle("-fx-alignment: center-left;");

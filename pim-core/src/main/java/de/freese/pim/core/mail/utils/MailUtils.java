@@ -8,14 +8,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-
 import javax.activation.DataSource;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Multipart;
 import javax.mail.Part;
 import javax.mail.internet.MimeBodyPart;
-
 import org.apache.commons.collections4.CollectionUtils;
 
 /**
@@ -168,7 +166,7 @@ public final class MailUtils
     {
         List<MimeBodyPart> bodyParts = new ArrayList<>();
 
-        if (Part.INLINE.toLowerCase().equals(part.getDisposition().toLowerCase()))
+        if ((part.getDisposition() != null) && Part.INLINE.toLowerCase().equals(part.getDisposition().toLowerCase()))
         {
             bodyParts.add((MimeBodyPart) part);
         }

@@ -19,6 +19,24 @@ import javafx.stage.Modality;
 public class ErrorDialog
 {
     /**
+     * Konvertiert den StackTrace.
+     * 
+     * @param throwable {@link Throwable}
+     * @return String
+     */
+    public static String toString(final Throwable throwable)
+    {
+        StringWriter stringWriter = new StringWriter();
+        PrintWriter printWriter = new PrintWriter(stringWriter);
+
+        throwable.printStackTrace(printWriter);
+
+        String stackTrace = stringWriter.toString();
+
+        return stackTrace;
+    }
+
+    /**
      *
      */
     private final Alert alert;
@@ -60,12 +78,7 @@ public class ErrorDialog
     {
         headerText(throwable.getMessage());
 
-        StringWriter stringWriter = new StringWriter();
-        PrintWriter printWriter = new PrintWriter(stringWriter);
-
-        throwable.printStackTrace(printWriter);
-
-        String stackTrace = stringWriter.toString();
+        String stackTrace = toString(throwable);
 
         Label label = new Label("The exception stacktrace was:");
 

@@ -5,12 +5,12 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.file.Path;
 import java.util.Objects;
 import java.util.stream.Collectors;
-
 import javax.activation.DataSource;
 import javax.activation.FileDataSource;
 
@@ -40,9 +40,8 @@ public class MailContent
      * Erzeugt eine neue Instanz von {@link MailContent}
      *
      * @param dataSource {@link DataSource}
-     * @throws IOException Falls was schief geht.
      */
-    public MailContent(final DataSource dataSource) throws IOException
+    public MailContent(final DataSource dataSource)
     {
         super();
 
@@ -50,9 +49,16 @@ public class MailContent
 
         this.dataSource = dataSource;
 
-        try (InputStreamReader isr = new InputStreamReader(getInputStream()))
+        try
         {
-            setEncoding(isr.getEncoding());
+            try (InputStreamReader isr = new InputStreamReader(getInputStream()))
+            {
+                setEncoding(isr.getEncoding());
+            }
+        }
+        catch (IOException ioex)
+        {
+            throw new RuntimeException(ioex);
         }
     }
 
@@ -60,13 +66,19 @@ public class MailContent
      * Erzeugt eine neue Instanz von {@link MailContent}
      *
      * @param path {@link Path}
-     * @throws IOException Falls was schief geht.
      */
-    public MailContent(final Path path) throws IOException
+    public MailContent(final Path path)
     {
         this(new FileDataSource(path.toFile()));
 
-        setUrl(path.toUri().toURL());
+        try
+        {
+            setUrl(path.toUri().toURL());
+        }
+        catch (MalformedURLException ioex)
+        {
+            throw new RuntimeException(ioex);
+        }
     }
 
     /**
@@ -96,13 +108,18 @@ public class MailContent
     }
 
     /**
-     * "text/html" oder "text/plain"
+     * "text/html", "text/plain"
      *
      * @return String
      */
     public String getContentType()
     {
-        return this.dataSource.getContentType();
+        String contentType = this.dataSource.getContentType();
+
+        // contentType = contentType.replaceAll(System.getProperty("line.separator"), "");
+        contentType = contentType.replaceAll("\\r\\n|\\r|\\n", "");
+
+        return contentType;
     }
 
     /**
@@ -147,19 +164,23 @@ public class MailContent
     }
 
     /**
+     * text/html
+     *
      * @return boolean
      */
     public boolean isHTML()
     {
-        return "text/html".equals(getContentType());
+        return getContentType().startsWith("text/html");
     }
 
     /**
+     * text/plain
+     *
      * @return boolean
      */
     public boolean isText()
     {
-        return "text/plain".equals(getContentType());
+        return getContentType().startsWith("text/plain");
     }
 
     /**

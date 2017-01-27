@@ -4,6 +4,7 @@ import java.lang.reflect.Proxy;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.concurrent.BlockingQueue;
@@ -236,11 +237,12 @@ public class PIMApplication extends Application
 
         // java.util.logging ausschalten.
         // LogManager.getLogManager().reset();
-        java.util.logging.Logger globalLogger = java.util.logging.Logger.getLogger(java.util.logging.Logger.GLOBAL_LOGGER_NAME);
-        globalLogger.setLevel(java.util.logging.Level.OFF);
-        // com.sun.webkit.perf.Locks
-        // com.sun.webkit.perf.WCGraphicsPerfLogger
-        // com.sun.webkit.perf.WCFontPerfLogger
+        for (String name : Arrays.asList(java.util.logging.Logger.GLOBAL_LOGGER_NAME, "com.sun.webkit.perf.Locks", "com.sun.webkit.perf.WCGraphicsPerfLogger",
+                "com.sun.webkit.perf.WCFontPerfLogger"))
+        {
+            java.util.logging.Logger javaLogger = java.util.logging.Logger.getLogger(name);
+            javaLogger.setLevel(java.util.logging.Level.OFF);
+        }
 
         // System.setProperty("org.slf4j.simpleLogger.log.de.freese.pim", "DEBUG");
         SysOutOverSLF4J.sendSystemOutAndErrToSLF4J();
