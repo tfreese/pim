@@ -388,6 +388,8 @@ public class EditMailAccountDialog
 
             this.aboView.setItems(mailAPI.getFolder());
 
+            mailAPI.getFolder().clear();
+
             if (mailAPI.getFolder().isEmpty())
             {
                 mailAPI.loadFolder(mailAPI.getFolder()::add);

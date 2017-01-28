@@ -2,10 +2,8 @@
 package de.freese.pim.gui.mail;
 
 import java.util.Objects;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import de.freese.pim.core.mail.model.MailAccount;
 import de.freese.pim.core.mail.service.IMailAPI;
 import de.freese.pim.gui.PIMApplication;
@@ -56,8 +54,7 @@ public class InitMailAPITask extends Task<Void>
         this.mailAPI = mailAPI;
 
         setOnSucceeded(event -> treeView.refresh());
-        setOnFailed(event ->
-        {
+        setOnFailed(event -> {
             Throwable th = getException();
 
             LOGGER.error(null, th);
@@ -77,11 +74,13 @@ public class InitMailAPITask extends Task<Void>
         this.mailAPI.connect();
 
         TreeItem<Object> parent = new TreeItem<>(this.mailAPI);
-        this.root.getChildren().add(parent);
-        parent.setExpanded(true);
 
-        PIMApplication.registerCloseable(() ->
-        {
+        Platform.runLater(() -> {
+            this.root.getChildren().add(parent);
+            parent.setExpanded(true);
+        });
+
+        PIMApplication.registerCloseable(() -> {
             PIMApplication.LOGGER.info("Close " + this.mailAPI.getAccount().getMail());
             this.mailAPI.disconnect();
         });
@@ -89,8 +88,7 @@ public class InitMailAPITask extends Task<Void>
         // Tree aufbauen.
         this.mailAPI.getFolderSubscribed().addListener(new TreeFolderListChangeListener(parent));
 
-        this.mailAPI.loadFolder(mf -> Platform.runLater(() ->
-        {
+        this.mailAPI.loadFolder(mf -> Platform.runLater(() -> {
             this.mailAPI.getFolder().add(mf);
         }));
 

@@ -47,10 +47,13 @@ import javafx.application.Preloader.StateChangeNotification;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.ObservableList;
+import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
+import javafx.scene.input.InputEvent;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.Window;
@@ -66,8 +69,8 @@ import uk.org.lidalia.sysoutslf4j.context.SysOutOverSLF4J;
 public class PIMApplication extends Application
 {
     /**
-    *
-    */
+     *
+     */
     private static IAddressBookService addressBookService = null;
 
     /**
@@ -76,8 +79,8 @@ public class PIMApplication extends Application
     public static final List<AutoCloseable> CLOSEABLES = new ArrayList<>();
 
     /**
-    *
-    */
+     *
+     */
     private static IDataSourceBean dataSourceBean = null;
 
     /**
@@ -86,29 +89,42 @@ public class PIMApplication extends Application
     private static ExecutorService executorService = null;
 
     /**
-    *
-    */
+     *
+     */
+    private static final EventHandler<InputEvent> GUI_BLOCKER = Event::consume;
+
+    /**
+     *
+     */
     public static final Logger LOGGER = LoggerFactory.getLogger(PIMApplication.class);
 
     /**
-    *
-    */
+     *
+     */
     private static IMailService mailService = null;
 
     /**
-    *
-    */
+     *
+     */
     private static Window mainWindow = null;
 
     /**
-    *
-    */
+     *
+     */
     private static ScheduledExecutorService scheduledExecutorService = null;
 
     /**
      * Bildschirm auf dem PIM läuft.
      */
     private static Screen screen = null;
+
+    /**
+     * Blockiert die GUI.
+     */
+    public static void blockGUI()
+    {
+        getMainWindow().addEventFilter(InputEvent.ANY, GUI_BLOCKER);
+    }
 
     /**
      * @return {@link IAddressBookService}
@@ -279,8 +295,16 @@ public class PIMApplication extends Application
     }
 
     /**
-    *
-    */
+     * Hebt die GUI Blockade wieder auf..
+     */
+    public static void unblockGUI()
+    {
+        getMainWindow().removeEventFilter(InputEvent.ANY, GUI_BLOCKER);
+    }
+
+    /**
+     *
+     */
     private static void usage()
     {
         HelpFormatter formatter = new HelpFormatter();
@@ -298,8 +322,8 @@ public class PIMApplication extends Application
     }
 
     /**
-    *
-    */
+     *
+     */
     private BooleanProperty ready = new SimpleBooleanProperty(false);
 
     /**
@@ -444,7 +468,6 @@ public class PIMApplication extends Application
         // PIMApplication.this.ready.setValue(Boolean.TRUE);
         // notifyPreloader(new StateChangeNotification(StateChangeNotification.Type.BEFORE_START));
         // }).start();
-
         // getScheduledExecutorService().scheduleWithFixedDelay(() -> LOGGER.info(""), 1L, 3L, TimeUnit.SECONDS);
     }
 
@@ -469,6 +492,6 @@ public class PIMApplication extends Application
         }
 
         // Verhindert Fehlerdialog, wenn es Probleme beim Start gibt, z.B. fehlende Resourcen.
-        // System.exit(0);
+        System.exit(0);
     }
 }

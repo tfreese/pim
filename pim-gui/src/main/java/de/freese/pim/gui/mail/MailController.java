@@ -40,6 +40,7 @@ import javafx.scene.control.ToolBar;
 import javafx.scene.control.TreeCell;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
+import javafx.scene.paint.Color;
 import javafx.scene.web.WebView;
 
 /**
@@ -321,6 +322,8 @@ public class MailController extends AbstractController
                 return;
             }
 
+            PIMApplication.blockGUI();
+
             Task<MailContent> loadMailTask = new Task<MailContent>()
             {
                 /**
@@ -336,6 +339,7 @@ public class MailController extends AbstractController
                 }
             };
             loadMailTask.setOnSucceeded(event -> {
+                PIMApplication.unblockGUI();
                 MailContent mailContent = loadMailTask.getValue();
 
                 if (mailContent == null)
@@ -360,6 +364,7 @@ public class MailController extends AbstractController
                 this.webView.getEngine().loadContent(mailContent.getContent(), mailContent.getContentType());
             });
             loadMailTask.setOnFailed(event -> {
+                PIMApplication.unblockGUI();
                 Throwable th = loadMailTask.getException();
 
                 getLogger().error(null, th);
@@ -500,6 +505,32 @@ public class MailController extends AbstractController
         });
 
         this.treeViewMail.setRoot(null);
+
+        this.progressIndicator.styleProperty().bind(Bindings.createStringBinding(() -> {
+            final double percent = this.progressIndicator.getProgress();
+            if (percent < 0)
+            {
+                // indeterminate
+                return null;
+            }
+
+            // Based on http://en.wikibooks.org/wiki/Color_Theory/Color_gradient#Linear_RGB_gradient_with_6_segments
+            Color color = Color.RED.interpolate(Color.GREEN, percent);
+
+            int r = 0;
+            int g = 0;
+            int b = 0;
+
+            // g = (int) (percent * 255);
+            // r = 255 - g;
+
+            r = (int) (color.getRed() * 255);
+            g = (int) (color.getGreen() * 255);
+            b = (int) (color.getBlue() * 255);
+
+            final String style = String.format("-fx-progress-color: rgb(%d,%d,%d)", r, g, b);
+            return style;
+        }, this.progressIndicator.progressProperty()));
     }
 
     /**

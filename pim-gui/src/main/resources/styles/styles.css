@@ -116,6 +116,17 @@ https://docs.oracle.com/javase/8/javafx/api/javafx/scene/doc-files/cssref.html
     -fx-padding: 5.0;
 }
 
+/* Bar
+-fx-progress-color: */
+/*.progress-indicator {       
+    -fx-accent: linear-gradient(red, green);
+}*/
+
+/* %-Anzeige */
+/*.progress-indicator .percentage {	
+    -fx-fill: black;
+}*/
+
 /*q*/
 /*r*/
 /*s*/

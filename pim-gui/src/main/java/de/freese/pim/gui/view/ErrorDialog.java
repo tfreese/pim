@@ -3,6 +3,7 @@ package de.freese.pim.gui.view;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import de.freese.pim.gui.PIMApplication;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Label;
@@ -20,7 +21,7 @@ public class ErrorDialog
 {
     /**
      * Konvertiert den StackTrace.
-     * 
+     *
      * @param throwable {@link Throwable}
      * @return String
      */
@@ -119,6 +120,7 @@ public class ErrorDialog
      */
     public void showAndWait()
     {
+        PIMApplication.unblockGUI();
         this.alert.showAndWait();
     }
 
