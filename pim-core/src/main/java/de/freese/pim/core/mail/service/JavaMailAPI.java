@@ -527,13 +527,14 @@ public class JavaMailAPI extends AbstractMailAPI
             // Laden der kompletten Mail auf der Client.
             // MimeMessage msg = new MimeMessage((MimeMessage) message);
 
-            // try (OutputStream os = new MonitorOutputStream(new BufferedOutputStream(Files.newOutputStream(path)), mail.getSize(), loadMonitor))
+            // try (OutputStream os = new BufferedOutputStream(new MonitorOutputStream(Files.newOutputStream(path), mail.getSize(), loadMonitor)))
             try (OutputStream os = Files.newOutputStream(path);
                  GZIPOutputStream gos = new GZIPOutputStream(os);
-                 BufferedOutputStream bos = new BufferedOutputStream(gos);
-                 MonitorOutputStream mos = new MonitorOutputStream(bos, mail.getSize(), loadMonitor))
+                 MonitorOutputStream mos = new MonitorOutputStream(gos, mail.getSize(), loadMonitor);
+                 BufferedOutputStream bos = new BufferedOutputStream(mos))
+
             {
-                message.writeTo(mos);
+                message.writeTo(bos);
             }
 
             closeFolder(f);

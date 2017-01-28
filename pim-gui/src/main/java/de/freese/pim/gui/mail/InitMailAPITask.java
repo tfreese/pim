@@ -33,24 +33,24 @@ public class InitMailAPITask extends Task<Void>
     /**
      *
      */
-    private final TreeItem<Object> root;
+    private final TreeItem<Object> parent;
 
     /**
      * Erzeugt eine neue Instanz von {@link InitMailAPITask}
      *
      * @param treeView {@link TreeView}
-     * @param root {@link TreeItem}
+     * @param parent {@link TreeItem}
      * @param mailAPI {@link IMailAPI}
      */
-    public InitMailAPITask(final TreeView<Object> treeView, final TreeItem<Object> root, final IMailAPI mailAPI)
+    public InitMailAPITask(final TreeView<Object> treeView, final TreeItem<Object> parent, final IMailAPI mailAPI)
     {
         super();
 
         Objects.requireNonNull(treeView, "treeView required");
-        Objects.requireNonNull(root, "root required");
+        Objects.requireNonNull(parent, "parent required");
         Objects.requireNonNull(mailAPI, "mailAPI required");
 
-        this.root = root;
+        this.parent = parent;
         this.mailAPI = mailAPI;
 
         setOnSucceeded(event -> treeView.refresh());
@@ -73,20 +73,13 @@ public class InitMailAPITask extends Task<Void>
 
         this.mailAPI.connect();
 
-        TreeItem<Object> parent = new TreeItem<>(this.mailAPI);
-
-        Platform.runLater(() -> {
-            this.root.getChildren().add(parent);
-            parent.setExpanded(true);
-        });
-
         PIMApplication.registerCloseable(() -> {
             PIMApplication.LOGGER.info("Close " + this.mailAPI.getAccount().getMail());
             this.mailAPI.disconnect();
         });
 
         // Tree aufbauen.
-        this.mailAPI.getFolderSubscribed().addListener(new TreeFolderListChangeListener(parent));
+        this.mailAPI.getFolderSubscribed().addListener(new TreeFolderListChangeListener(this.parent));
 
         this.mailAPI.loadFolder(mf -> Platform.runLater(() -> {
             this.mailAPI.getFolder().add(mf);

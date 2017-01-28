@@ -55,6 +55,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 import javafx.util.StringConverter;
@@ -241,6 +242,59 @@ public final class FXUtils
         {
             throw new RuntimeException(ex);
         }
+    }
+
+    /**
+     * Vorgegebener Farbverlauf für Progress-Wert.<br>
+     * Progress muss zwischen 0-1 liegen und es werden min 2 Farben benötigt, ansonsten wird Schwarz (0,0,0) geliefert.
+     *
+     * @param progress 0-1
+     * @param colors {@link Color}[]; min. 2 Farben
+     * @return int[], RGB
+     */
+    public static int[] getProgressRGB(final double progress, final Color...colors)
+    {
+        if ((progress < 0D) || (progress > 1D) || (colors.length < 2))
+        {
+            return new int[]
+            {
+                    0, 0, 0
+            };
+        }
+
+        if (progress == 1D)
+        {
+            Color c = colors[colors.length - 1];
+
+            return new int[]
+            {
+                    (int) (c.getRed() * 255), (int) (c.getGreen() * 255), (int) (c.getBlue() * 255)
+            };
+        }
+
+        int r = 0;
+        int g = 0;
+        int b = 0;
+
+        final double segment = (colors.length - 1) * progress;
+        final int step = (int) segment;
+        final double stepProgress = segment - step;
+
+        // System.out.printf("Progress=%f, Segment=%f, Step=%d%n", progress, segment, step);
+
+        Color c1 = colors[step];
+        Color c2 = colors[step + 1];
+
+        Color color = c1.interpolate(c2, stepProgress);
+
+        r = (int) (color.getRed() * 255);
+        g = (int) (color.getGreen() * 255);
+        b = (int) (color.getBlue() * 255);
+
+        return new int[]
+        {
+                r, g, b
+        };
     }
 
     /**
