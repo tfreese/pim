@@ -4,9 +4,7 @@ package de.freese.pim.core.mail.model;
 import java.nio.file.Path;
 import java.util.Comparator;
 import java.util.function.Predicate;
-
 import com.sun.javafx.binding.IntegerConstant;
-
 import de.freese.pim.core.mail.service.IMailAPI;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.IntegerBinding;
@@ -114,6 +112,7 @@ public class MailFolder
         IntegerBinding unreadMailsCountChildFolder = new SumUnreadMailsInChildFolderBinding(this.childs);
 
         this.unreadMailsCountTotal = (ObservableIntegerValue) Bindings.add(this.unreadMailsCount, unreadMailsCountChildFolder);
+        // ((IntegerBinding) this.unreadMailsCountTotal).invalidate();
 
         // this.mails.addListener((final ListChangeListener.Change<? extends Mail> change) -> this.unreadMailsCountTmp = 0);
     }
@@ -126,6 +125,7 @@ public class MailFolder
         IntegerBinding unreadMailsCountChildFolder = new SumUnreadMailsInChildFolderBinding(this.childs);
 
         this.unreadMailsCountTotal = (ObservableIntegerValue) Bindings.add(this.unreadMailsCount, unreadMailsCountChildFolder);
+        // ((IntegerBinding) this.unreadMailsCountTotal).invalidate();
     }
 
     /**
@@ -134,6 +134,14 @@ public class MailFolder
     public StringProperty fullNameProperty()
     {
         return this.fullNameProperty;
+    }
+
+    /**
+     * @return {@link ObservableList}<MailFolder>
+     */
+    ObservableList<MailFolder> getChilds()
+    {
+        return this.childs;
     }
 
     /**
@@ -191,6 +199,16 @@ public class MailFolder
     }
 
     /**
+     * Liefert den Parent.
+     *
+     * @return {@link MailFolder}
+     */
+    private MailFolder getParent()
+    {
+        return this.parent;
+    }
+
+    /**
      * Liefert den lokalen Temp-{@link Path} des Folders.
      *
      * @return {@link Path}
@@ -233,6 +251,16 @@ public class MailFolder
     public boolean isAbonniert()
     {
         return abonniertProperty().get();
+    }
+
+    /**
+     * Liefert das Flag um den Folder zu abonnieren/beobachten.
+     *
+     * @return boolean
+     */
+    public boolean isParent()
+    {
+        return getParent() == null;
     }
 
     /**
@@ -337,30 +365,6 @@ public class MailFolder
         this.unreadMailsCount = IntegerConstant.valueOf(unreadMailsCount);
     }
 
-    /**
-     * @see java.lang.Object#toString()
-     */
-    @Override
-    public String toString()
-    {
-        StringBuilder builder = new StringBuilder();
-        builder.append("MailFolder [fullName=");
-        builder.append(getFullName());
-        builder.append("]");
-
-        return builder.toString();
-    }
-
-    /**
-     * Liefert den Parent.
-     *
-     * @return {@link MailFolder}
-     */
-    private MailFolder getParent()
-    {
-        return this.parent;
-    }
-
     // /**
     // * Aktualisiert den Zähler der ungelesenen Mails, inklusive der Child-Folder.
     // */
@@ -378,11 +382,17 @@ public class MailFolder
     // }
 
     /**
-     * @return {@link ObservableList}<MailFolder>
+     * @see java.lang.Object#toString()
      */
-    ObservableList<MailFolder> getChilds()
+    @Override
+    public String toString()
     {
-        return this.childs;
+        StringBuilder builder = new StringBuilder();
+        builder.append("MailFolder [fullName=");
+        builder.append(getFullName());
+        builder.append("]");
+
+        return builder.toString();
     }
 
     /**

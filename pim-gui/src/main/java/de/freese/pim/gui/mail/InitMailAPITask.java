@@ -83,6 +83,7 @@ public class InitMailAPITask extends Task<Void>
 
         this.mailAPI.loadFolder(mf -> Platform.runLater(() -> {
             this.mailAPI.getFolder().add(mf);
+            mf.bindUnreadMailsChildFolder();
         }));
 
         LOGGER.info("Initialisation of {} finished", this.mailAPI.getAccount().getMail());

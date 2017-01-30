@@ -3,7 +3,6 @@ package de.freese.pim.core.db;
 
 import java.sql.Connection;
 import java.sql.Statement;
-
 import org.flywaydb.core.Flyway;
 
 /**
@@ -27,13 +26,34 @@ public abstract class AbstractHsqldbBean extends AbstractDataSourceBean
     @Override
     public void disconnect() throws Exception
     {
-        try (Connection con = getDataSource().getConnection();
-             Statement stmt = con.createStatement())
+        if (getDataSource() != null)
         {
-            stmt.execute("SHUTDOWN COMPACT");
+            try (Connection con = getDataSource().getConnection();
+                 Statement stmt = con.createStatement())
+            {
+                stmt.execute("SHUTDOWN COMPACT");
+            }
         }
 
         super.disconnect();
+    }
+
+    /**
+     * @see de.freese.pim.core.db.AbstractDataSourceBean#getDriver()
+     */
+    @Override
+    protected String getDriver()
+    {
+        return HSQLDB_DRIVER;
+    }
+
+    /**
+     * @see de.freese.pim.core.db.AbstractDataSourceBean#getValidationQuery()
+     */
+    @Override
+    protected String getValidationQuery()
+    {
+        return HSQLDB_VALIDATION_QUERY;
     }
 
     /**
@@ -75,23 +95,5 @@ public abstract class AbstractHsqldbBean extends AbstractDataSourceBean
         // }
 
         // populateIfEmpty(getDataSource(), populateCallback, scripts);
-    }
-
-    /**
-     * @see de.freese.pim.core.db.AbstractDataSourceBean#getDriver()
-     */
-    @Override
-    protected String getDriver()
-    {
-        return HSQLDB_DRIVER;
-    }
-
-    /**
-     * @see de.freese.pim.core.db.AbstractDataSourceBean#getValidationQuery()
-     */
-    @Override
-    protected String getValidationQuery()
-    {
-        return HSQLDB_VALIDATION_QUERY;
     }
 }

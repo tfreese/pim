@@ -3,14 +3,13 @@ package de.freese.pim.core.mail.model;
 
 import java.util.Objects;
 import java.util.stream.Stream;
-
 import javafx.beans.binding.IntegerBinding;
-import javafx.beans.binding.NumberBinding;
+import javafx.beans.value.ObservableIntegerValue;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 
 /**
- * Bildet ein {@link IntegerBinding}, welches die Summe der ungelesenen Mails liefert der Child-Folder.
+ * Bildet ein {@link IntegerBinding}, welches die Summe der ungelesenen Mails des Folders liefert.
  *
  * @author Thomas Freese
  */
@@ -19,8 +18,8 @@ public class SumUnreadMailsInChildFolderBinding extends IntegerBinding
     /**
      * Listener that has to call rebinding in response of any change in observable list.
      */
-    private final ListChangeListener<MailFolder> BOUND_LIST_CHANGE_LISTENER = (
-            final ListChangeListener.Change<? extends MailFolder> change) -> refreshBinding();
+    private final ListChangeListener<MailFolder> BOUND_LIST_CHANGE_LISTENER =
+            (final ListChangeListener.Change<? extends MailFolder> change) -> refreshBinding();
 
     /**
      * Reference to our observable list.
@@ -30,7 +29,7 @@ public class SumUnreadMailsInChildFolderBinding extends IntegerBinding
     /**
      * Array of currently observed properties of elements of our list.
      */
-    private NumberBinding[] observedProperties = null;
+    private ObservableIntegerValue[] observedProperties = null;
 
     /**
      * Erzeugt eine neue Instanz von {@link SumUnreadMailsInChildFolderBinding}
@@ -46,6 +45,22 @@ public class SumUnreadMailsInChildFolderBinding extends IntegerBinding
         this.boundList = boundList;
         this.boundList.addListener(this.BOUND_LIST_CHANGE_LISTENER);
         refreshBinding();
+    }
+
+    /**
+     * @see javafx.beans.binding.IntegerBinding#computeValue()
+     */
+    @Override
+    protected int computeValue()
+    {
+        int sum = 0;
+
+        if (this.observedProperties != null)
+        {
+            sum = Stream.of(this.observedProperties).parallel().mapToInt(op -> op.intValue()).sum();
+        }
+
+        return sum;
     }
 
     /**
@@ -67,8 +82,12 @@ public class SumUnreadMailsInChildFolderBinding extends IntegerBinding
         unbind(this.observedProperties);
 
         // Load new properties
-        this.observedProperties = this.boundList.parallelStream().map(bl -> bl.unreadMailsCountTotalBinding())
-                .toArray(NumberBinding[]::new);
+        this.observedProperties = null;
+
+        if (!this.boundList.isEmpty())
+        {
+            this.observedProperties = this.boundList.parallelStream().map(bl -> bl.unreadMailsCountTotalBinding()).toArray(ObservableIntegerValue[]::new);
+        }
 
         // Bind IntegerBinding's inner listener to all new properties
         super.bind(this.observedProperties);
@@ -77,16 +96,5 @@ public class SumUnreadMailsInChildFolderBinding extends IntegerBinding
         // Eager/Lazy recalc depends on type of listeners attached to this instance
         // see IntegerBinding sources
         invalidate();
-    }
-
-    /**
-     * @see javafx.beans.binding.IntegerBinding#computeValue()
-     */
-    @Override
-    protected int computeValue()
-    {
-        int sum = Stream.of(this.observedProperties).parallel().mapToInt(op -> op.intValue()).sum();
-
-        return sum;
     }
 }
