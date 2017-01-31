@@ -36,6 +36,16 @@ public class DefaultMailService implements IMailService
     }
 
     /**
+     * @see de.freese.pim.core.mail.dao.IMailDAO#delete(de.freese.pim.core.mail.model.MailFolder)
+     */
+    @Override
+    @Transactional
+    public void delete(final MailFolder folder) throws Exception
+    {
+        this.mailDAO.delete(folder);
+    }
+
+    /**
      * @see de.freese.pim.core.mail.dao.IMailDAO#getMailAccounts()
      */
     @Override

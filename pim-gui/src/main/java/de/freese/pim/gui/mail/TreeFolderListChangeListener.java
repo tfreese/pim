@@ -2,6 +2,9 @@
 package de.freese.pim.gui.mail;
 
 import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.Stream;
+
 import de.freese.pim.core.mail.model.MailFolder;
 import javafx.application.Platform;
 import javafx.collections.ListChangeListener;
@@ -34,25 +37,6 @@ public class TreeFolderListChangeListener implements ListChangeListener<MailFold
     }
 
     /**
-     * Hinzufügen des Childs zum Parent.
-     *
-     * @param parent {@link TreeItem}
-     * @param child {@link TreeItem}
-     */
-    private void addChild(final TreeItem<Object> parent, final TreeItem<Object> child)
-    {
-        Platform.runLater(() -> parent.getChildren().add(child));
-    }
-
-    /**
-     * @return {@link TreeItem}
-     */
-    private TreeItem<Object> getParent()
-    {
-        return this.parent;
-    }
-
-    /**
      * @see javafx.collections.ListChangeListener#onChanged(javafx.collections.ListChangeListener.Change)
      */
     @Override
@@ -64,47 +48,52 @@ public class TreeFolderListChangeListener implements ListChangeListener<MailFold
             {
                 for (MailFolder mf : change.getAddedSubList())
                 {
-                    TreeItem<Object> treeItem = new TreeItem<>(mf);
-
                     // Prüfen auf Hierarchie.
-                    if (getParent().getChildren().size() > 0)
+                    if (!getParent().getChildren().isEmpty())
                     {
+                        // Parent finden.
+//                        // @formatter:off
+//                        Optional<TreeItem<Object>> treeItem = getFlattenedStream(getParent())
+//                            .filter(ti -> ti.getValue() instanceof MailFolder)
+//                            .filter(ti -> mf.getFullName().startsWith(((MailFolder)ti.getValue()).getFullName()))
+//                            .findFirst();
+//                        // @formatter:on
+                        //
+                        // if (treeItem.isPresent())
+                        // {
+                        // addChild(treeItem.get(), mf);
+                        // continue;
+                        // }
+
                         TreeItem<Object> lastTreeItem = getParent().getChildren().get(getParent().getChildren().size() - 1);
                         MailFolder lastFolder = (MailFolder) lastTreeItem.getValue();
 
                         if (mf.getFullName().startsWith(lastFolder.getFullName()))
                         {
-                            mf.setParent(lastFolder);
-                            addChild(lastTreeItem, treeItem);
+                            addChild(lastTreeItem, mf);
 
                             continue;
                         }
                     }
 
-                    addChild(getParent(), treeItem);
+                    addChild(getParent(), mf);
                 }
             }
             else if (change.wasRemoved())
             {
                 for (MailFolder mf : change.getRemoved())
                 {
-                    TreeItem<Object> treeItem = null;
+                    // Knoten suchen.
+                    // @formatter:off
+                    Optional<TreeItem<Object>> treeItem = getFlattenedStream(getParent())
+                        .filter(ti -> ti.getValue() instanceof MailFolder)
+                        .filter(ti -> ((MailFolder)ti.getValue()).getFullName().equals(mf.getFullName()))
+                        .findFirst();
+                    // @formatter:on
 
-                    // Knoten finden.
-                    for (TreeItem<Object> ti : getParent().getChildren())
+                    if (treeItem.isPresent())
                     {
-                        MailFolder tiMF = (MailFolder) ti.getValue();
-
-                        if (tiMF.getFullName().equals(mf.getFullName()))
-                        {
-                            treeItem = ti;
-                            break;
-                        }
-                    }
-
-                    if (treeItem != null)
-                    {
-                        removeChild(getParent(), treeItem);
+                        removeChild(treeItem.get().getParent(), treeItem.get());
                     }
                 }
             }
@@ -115,10 +104,59 @@ public class TreeFolderListChangeListener implements ListChangeListener<MailFold
      * Hinzufügen des Childs zum Parent.
      *
      * @param parent {@link TreeItem}
+     * @param child {@link MailFolder}
+     */
+    private void addChild(final TreeItem<Object> parent, final MailFolder child)
+    {
+        Platform.runLater(() ->
+        {
+            // if (parent.getValue() instanceof MailFolder)
+            // {
+            // MailFolder mfParent = (MailFolder) parent.getValue();
+            // mfParent.addChild(child);
+            // }
+
+            parent.getChildren().add(new TreeItem<>(child));
+        });
+    }
+
+    /**
+     * Liefert den abgeflachten Stream aller {@link TreeItem} der Hierarchie.
+     *
+     * @param treeItem {@link TreeItem}
+     * @return {@link Stream}
+     */
+    private Stream<TreeItem<Object>> getFlattenedStream(final TreeItem<Object> treeItem)
+    {
+        return Stream.concat(Stream.of(treeItem), treeItem.getChildren().stream().flatMap(this::getFlattenedStream));
+    }
+
+    /**
+     * @return {@link TreeItem}
+     */
+    private TreeItem<Object> getParent()
+    {
+        return this.parent;
+    }
+
+    /**
+     * Hinzufügen des Childs zum Parent.
+     *
+     * @param parent {@link TreeItem}
      * @param child {@link TreeItem}
      */
     private void removeChild(final TreeItem<Object> parent, final TreeItem<Object> child)
     {
-        Platform.runLater(() -> parent.getChildren().remove(child));
+        Platform.runLater(() ->
+        {
+            if (parent.getValue() instanceof MailFolder)
+            {
+                MailFolder mfParent = (MailFolder) parent.getValue();
+                MailFolder mfChild = (MailFolder) child.getValue();
+                mfParent.removeChild(mfChild);
+            }
+
+            parent.getChildren().remove(child);
+        });
     }
 }

@@ -74,12 +74,19 @@ public interface IMailAPI
     public int getUnreadMailsCount();
 
     /**
-     * Lädt die Folder des Accounts und übergibt sie dem {@link Consumer}.
+     * Lädt die Folder des Accounts.
      *
-     * @param consumer {@link Consumer}
      * @throws Exception Falls was schief geht.
      */
-    public void loadFolder(Consumer<MailFolder> consumer) throws Exception;
+    public void loadFolder() throws Exception;
+
+    // /**
+    // * Lädt die Folder des Accounts und übergibt sie dem {@link Consumer}.
+    // *
+    // * @param consumer {@link Consumer}
+    // * @throws Exception Falls was schief geht.
+    // */
+    // public void loadFolder(Consumer<MailFolder> consumer) throws Exception;
 
     /**
      * Lädt die Mails des Folders und übergibt sie dem {@link Consumer}.

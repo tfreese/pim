@@ -123,6 +123,21 @@ public class AbstractMailDAO extends AbstractDAO<IMailDAO> implements IMailDAO
     }
 
     /**
+     * @see de.freese.pim.core.mail.dao.IMailDAO#delete(de.freese.pim.core.mail.model.MailFolder)
+     */
+    @Override
+    public void delete(final MailFolder folder) throws Exception
+    {
+        StringBuilder sql = new StringBuilder();
+        sql.append("delete from MAILFOLDER where ID = ?");
+
+        getJdbcTemplate().update(sql.toString(), ps ->
+        {
+            ps.setLong(1, folder.getID());
+        });
+    }
+
+    /**
      * @see de.freese.pim.core.mail.dao.IMailDAO#getMailAccounts()
      */
     @Override

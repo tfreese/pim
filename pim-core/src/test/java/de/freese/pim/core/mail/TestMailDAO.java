@@ -299,4 +299,28 @@ public class TestMailDAO
         Assert.assertEquals("c", folder.getName());
         Assert.assertTrue(folder.isAbonniert());
     }
+
+    /**
+     * @throws Exception Falls was schief geht.
+     */
+    @Test
+    public void test030DeleteFolder() throws Exception
+    {
+        MailFolder folder = new MailFolder();
+        folder.setID(4);
+
+        TestMailDAO.mailDAO.delete(folder);
+    }
+
+    /**
+     * @throws Exception Falls was schief geht.
+     */
+    @Test
+    public void test031DeleteFolderCheck() throws Exception
+    {
+        List<MailFolder> folders = TestMailDAO.mailDAO.getMailFolder(2);
+
+        Assert.assertNotNull(folders);
+        Assert.assertEquals(0, folders.size());
+    }
 }

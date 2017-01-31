@@ -15,6 +15,14 @@ import de.freese.pim.core.mail.model.MailFolder;
 public interface IMailDAO
 {
     /**
+     * Löschen eines {@link MailFolder}.<br>
+     *
+     * @param folder {@link MailFolder}
+     * @throws Exception Falls was schief geht.
+     */
+    public void delete(MailFolder folder) throws Exception;
+
+    /**
      * Liefert alle MailAccounts.
      *
      * @return {@link List}
