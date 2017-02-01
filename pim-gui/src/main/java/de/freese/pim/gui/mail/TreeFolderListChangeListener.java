@@ -4,9 +4,7 @@ package de.freese.pim.gui.mail;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
-
 import de.freese.pim.core.mail.model.MailFolder;
-import javafx.application.Platform;
 import javafx.collections.ListChangeListener;
 import javafx.scene.control.TreeItem;
 
@@ -37,6 +35,48 @@ public class TreeFolderListChangeListener implements ListChangeListener<MailFold
     }
 
     /**
+     * Hinzufügen des Childs zum Parent.
+     *
+     * @param parent {@link TreeItem}
+     * @param child {@link MailFolder}
+     */
+    private void addChild(final TreeItem<Object> parent, final MailFolder child)
+    {
+        Runnable runnable = () -> {
+            // if (parent.getValue() instanceof MailFolder)
+            // {
+            // MailFolder mfParent = (MailFolder) parent.getValue();
+            // mfParent.addChild(child);
+            // }
+
+            parent.getChildren().add(new TreeItem<>(child));
+        };
+
+        runnable.run();
+        // Platform.runLater(runnable;
+    }
+
+    /**
+     * Liefert den abgeflachten Stream aller {@link TreeItem} der Hierarchie.
+     *
+     * @param treeItem {@link TreeItem}
+     * @return {@link Stream}
+     */
+    private Stream<TreeItem<Object>> getFlattenedStream(final TreeItem<Object> treeItem)
+    {
+        return Stream.concat(Stream.of(treeItem), treeItem.getChildren().stream().flatMap(this::getFlattenedStream));
+        // return treeItem.getChildren().stream().flatMap(this::getFlattenedStream);
+    }
+
+    /**
+     * @return {@link TreeItem}
+     */
+    private TreeItem<Object> getParent()
+    {
+        return this.parent;
+    }
+
+    /**
      * @see javafx.collections.ListChangeListener#onChanged(javafx.collections.ListChangeListener.Change)
      */
     @Override
@@ -48,35 +88,24 @@ public class TreeFolderListChangeListener implements ListChangeListener<MailFold
             {
                 for (MailFolder mf : change.getAddedSubList())
                 {
-                    // Prüfen auf Hierarchie.
-                    if (!getParent().getChildren().isEmpty())
+                    // System.out.printf("Stream: count=%d%n", getFlattenedStream(getParent()).count());
+
+                    // @formatter:off
+                    Optional<TreeItem<Object>> parentItem = getFlattenedStream(getParent())
+                            //.peek(System.out::println)
+                            .filter(ti -> ti.getValue() instanceof MailFolder)
+                            .filter(ti -> mf.getFullName().startsWith(((MailFolder)ti.getValue()).getFullName()))
+                            .findFirst();
+                    // @formatter:on
+
+                    if (parentItem.isPresent())
                     {
-                        // Parent finden.
-//                        // @formatter:off
-//                        Optional<TreeItem<Object>> treeItem = getFlattenedStream(getParent())
-//                            .filter(ti -> ti.getValue() instanceof MailFolder)
-//                            .filter(ti -> mf.getFullName().startsWith(((MailFolder)ti.getValue()).getFullName()))
-//                            .findFirst();
-//                        // @formatter:on
-                        //
-                        // if (treeItem.isPresent())
-                        // {
-                        // addChild(treeItem.get(), mf);
-                        // continue;
-                        // }
-
-                        TreeItem<Object> lastTreeItem = getParent().getChildren().get(getParent().getChildren().size() - 1);
-                        MailFolder lastFolder = (MailFolder) lastTreeItem.getValue();
-
-                        if (mf.getFullName().startsWith(lastFolder.getFullName()))
-                        {
-                            addChild(lastTreeItem, mf);
-
-                            continue;
-                        }
+                        addChild(parentItem.get(), mf);
                     }
-
-                    addChild(getParent(), mf);
+                    else
+                    {
+                        addChild(getParent(), mf);
+                    }
                 }
             }
             else if (change.wasRemoved())
@@ -91,52 +120,10 @@ public class TreeFolderListChangeListener implements ListChangeListener<MailFold
                         .findFirst();
                     // @formatter:on
 
-                    if (treeItem.isPresent())
-                    {
-                        removeChild(treeItem.get().getParent(), treeItem.get());
-                    }
+                    treeItem.ifPresent(ti -> removeChild(ti.getParent(), ti));
                 }
             }
         }
-    }
-
-    /**
-     * Hinzufügen des Childs zum Parent.
-     *
-     * @param parent {@link TreeItem}
-     * @param child {@link MailFolder}
-     */
-    private void addChild(final TreeItem<Object> parent, final MailFolder child)
-    {
-        Platform.runLater(() ->
-        {
-            // if (parent.getValue() instanceof MailFolder)
-            // {
-            // MailFolder mfParent = (MailFolder) parent.getValue();
-            // mfParent.addChild(child);
-            // }
-
-            parent.getChildren().add(new TreeItem<>(child));
-        });
-    }
-
-    /**
-     * Liefert den abgeflachten Stream aller {@link TreeItem} der Hierarchie.
-     *
-     * @param treeItem {@link TreeItem}
-     * @return {@link Stream}
-     */
-    private Stream<TreeItem<Object>> getFlattenedStream(final TreeItem<Object> treeItem)
-    {
-        return Stream.concat(Stream.of(treeItem), treeItem.getChildren().stream().flatMap(this::getFlattenedStream));
-    }
-
-    /**
-     * @return {@link TreeItem}
-     */
-    private TreeItem<Object> getParent()
-    {
-        return this.parent;
     }
 
     /**
@@ -147,8 +134,7 @@ public class TreeFolderListChangeListener implements ListChangeListener<MailFold
      */
     private void removeChild(final TreeItem<Object> parent, final TreeItem<Object> child)
     {
-        Platform.runLater(() ->
-        {
+        Runnable runnable = () -> {
             if (parent.getValue() instanceof MailFolder)
             {
                 MailFolder mfParent = (MailFolder) parent.getValue();
@@ -157,6 +143,9 @@ public class TreeFolderListChangeListener implements ListChangeListener<MailFold
             }
 
             parent.getChildren().remove(child);
-        });
+        };
+
+        runnable.run();
+        // Platform.runLater(runnable);
     }
 }

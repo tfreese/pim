@@ -57,7 +57,6 @@ import javafx.scene.input.InputEvent;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.Window;
-import uk.org.lidalia.sysoutslf4j.context.SysOutOverSLF4J;
 
 /**
  * Startklasse der Personal Information Management Anwendung.<br>
@@ -261,7 +260,7 @@ public class PIMApplication extends Application
         }
 
         // System.setProperty("org.slf4j.simpleLogger.log.de.freese.pim", "DEBUG");
-        SysOutOverSLF4J.sendSystemOutAndErrToSLF4J();
+        // SysOutOverSLF4J.sendSystemOutAndErrToSLF4J();
 
         Thread.setDefaultUncaughtExceptionHandler((t, ex) -> {
             LOGGER.error("***Default exception handler***");
@@ -353,12 +352,12 @@ public class PIMApplication extends Application
         notifyPreloader(new PIMPreloaderNotification("Init ThreadPools"));
         Utils.sleep(1, TimeUnit.SECONDS);
 
-        // Threads leben max. 60 Sekunden, wenn es nix zu tun gibt, min. 2 Threads, max. 10.
+        // Threads leben max. 60 Sekunden, wenn es nix zu tun gibt, min. 3 Threads, max. 100.
         // BlockingQueue<Runnable> workQueue = new SynchronousQueue<>(false);
         BlockingQueue<Runnable> workQueue = new LinkedBlockingQueue<>(100);
 
         ExecutorService executor =
-                new ThreadPoolExecutor(2, 10, 60, TimeUnit.SECONDS, workQueue, new PIMThreadFactory("thread"), new ThreadPoolExecutor.AbortPolicy());
+                new ThreadPoolExecutor(3, 100, 60, TimeUnit.SECONDS, workQueue, new PIMThreadFactory("thread"), new ThreadPoolExecutor.AbortPolicy());
         PIMApplication.executorService = Executors.unconfigurableExecutorService(executor);
         registerCloseable(() -> {
             LOGGER.info("Close ExecutorService");

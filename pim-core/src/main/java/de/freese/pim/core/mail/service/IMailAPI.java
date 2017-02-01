@@ -2,13 +2,12 @@
 package de.freese.pim.core.mail.service;
 
 import java.nio.file.Path;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
-
 import javax.activation.DataSource;
-
 import de.freese.pim.core.mail.model.Mail;
 import de.freese.pim.core.mail.model.MailAccount;
 import de.freese.pim.core.mail.model.MailFolder;
@@ -75,10 +74,11 @@ public interface IMailAPI
 
     /**
      * Lädt die Folder des Accounts.
-     *
+     * 
+     * @return {@link List}
      * @throws Exception Falls was schief geht.
      */
-    public void loadFolder() throws Exception;
+    public List<MailFolder> loadFolder() throws Exception;
 
     // /**
     // * Lädt die Folder des Accounts und übergibt sie dem {@link Consumer}.

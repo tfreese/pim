@@ -1,12 +1,12 @@
 // Created: 25.01.2017
 package de.freese.pim.gui.mail;
 
+import java.util.List;
 import java.util.Objects;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import de.freese.pim.core.mail.model.MailAccount;
+import de.freese.pim.core.mail.model.MailFolder;
 import de.freese.pim.core.mail.service.IMailAPI;
 import de.freese.pim.gui.PIMApplication;
 import de.freese.pim.gui.view.ErrorDialog;
@@ -19,7 +19,7 @@ import javafx.scene.control.TreeView;
  *
  * @author Thomas Freese
  */
-public class InitMailAPITask extends Task<Void>
+public class InitMailAPITask extends Task<List<MailFolder>>
 {
     /**
     *
@@ -54,9 +54,18 @@ public class InitMailAPITask extends Task<Void>
         this.parent = parent;
         this.mailAPI = mailAPI;
 
-        setOnSucceeded(event -> treeView.refresh());
-        setOnFailed(event ->
-        {
+        setOnSucceeded(event -> {
+
+            getValue().stream().forEach(mf -> {
+
+                mailAPI.getFolder().add(mf);
+                mf.bindUnreadMailsChildFolder();
+            });
+
+            LOGGER.info("Initialisation of {} finished", this.mailAPI.getAccount().getMail());
+            treeView.refresh();
+        });
+        setOnFailed(event -> {
             Throwable th = getException();
 
             LOGGER.error(null, th);
@@ -69,30 +78,22 @@ public class InitMailAPITask extends Task<Void>
      * @see javafx.concurrent.Task#call()
      */
     @Override
-    protected Void call() throws Exception
+    protected List<MailFolder> call() throws Exception
     {
         LOGGER.info("Init MailAccount {}", this.mailAPI.getAccount().getMail());
 
         this.mailAPI.connect();
 
-        PIMApplication.registerCloseable(() ->
-        {
+        PIMApplication.registerCloseable(() -> {
             PIMApplication.LOGGER.info("Close " + this.mailAPI.getAccount().getMail());
             this.mailAPI.disconnect();
         });
 
         // Tree aufbauen.
-        // this.mailAPI.getFolderSubscribed().addListener(new TreeFolderListChangeListener(this.parent));
         this.mailAPI.getFolderSubscribed().addListener(new TreeFolderListChangeListener(this.parent));
 
-        this.mailAPI.loadFolder();
-        // this.mailAPI.loadFolder(mf -> Platform.runLater(() -> {
-        // this.mailAPI.getFolder().add(mf);
-        // mf.bindUnreadMailsChildFolder();
-        // }));
+        List<MailFolder> folder = this.mailAPI.loadFolder();
 
-        LOGGER.info("Initialisation of {} finished", this.mailAPI.getAccount().getMail());
-
-        return null;
+        return folder;
     }
 }
