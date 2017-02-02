@@ -3,7 +3,6 @@ package de.freese.pim.core.mail.model;
 
 import java.nio.file.Path;
 import java.util.Date;
-import java.util.Objects;
 
 import javax.mail.internet.InternetAddress;
 
@@ -24,7 +23,7 @@ public class Mail
     /**
      *
      */
-    private final MailFolder folder;
+    private MailFolder folder = null;
 
     /**
      *
@@ -69,20 +68,14 @@ public class Mail
     /**
      *
      */
-    private String uid = null;
+    private long uid = 0L;
 
     /**
      * Erzeugt eine neue Instanz von {@link Mail}
-     *
-     * @param folder {@link MailFolder}
      */
-    public Mail(final MailFolder folder)
+    public Mail()
     {
         super();
-
-        Objects.requireNonNull(folder, "folder required");
-
-        this.folder = folder;
     }
 
     /**
@@ -129,7 +122,7 @@ public class Mail
     public Path getPath()
     {
         Path basePath = getFolder().getPath();
-        Path path = basePath.resolve(getUID()).resolve(getUID() + ".eml");
+        Path path = basePath.resolve(Long.toString(getUID())).resolve(getUID() + ".eml");
 
         return path;
     }
@@ -156,7 +149,7 @@ public class Mail
 
     /**
      * Liefert die Größe der Mail.
-     * 
+     *
      * @return int
      */
     public int getSize()
@@ -185,11 +178,11 @@ public class Mail
     }
 
     /**
-     * Liefert die Message-ID oder bei IMAP die UID.
+     * Liefert UID.
      *
-     * @return String
+     * @return long
      */
-    public String getUID()
+    public long getUID()
     {
         return this.uid;
     }
@@ -226,6 +219,14 @@ public class Mail
     public ObjectProperty<Date> sendDateProperty()
     {
         return this.sendDateProperty;
+    }
+
+    /**
+     * @param folder {@link MailFolder}
+     */
+    public void setFolder(final MailFolder folder)
+    {
+        this.folder = folder;
     }
 
     /**
@@ -309,11 +310,11 @@ public class Mail
     }
 
     /**
-     * Setzt die Message-ID oder bei IMAP die UID.
+     * Setzt die UID.
      *
-     * @param uid String
+     * @param uid long
      */
-    public void setUID(final String uid)
+    public void setUID(final long uid)
     {
         this.uid = uid;
     }

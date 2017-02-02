@@ -210,12 +210,8 @@ public class MailController extends AbstractController
             {
                 try
                 {
-                    this.mailService.insert(account);
-
-                    for (MailFolder mf : account.getFolder())
-                    {
-                        this.mailService.insert(mf, account.getID());
-                    }
+                    this.mailService.insertAccount(account);
+                    this.mailService.insertOrUpdate(account.getFolder(), account.getID());
 
                     addMailAccountToGUI(this.treeViewMail.getRoot(), account);
                 }
@@ -249,12 +245,8 @@ public class MailController extends AbstractController
             {
                 try
                 {
-                    this.mailService.update(account);
-
-                    for (MailFolder mf : account.getFolder())
-                    {
-                        this.mailService.update(mf);
-                    }
+                    this.mailService.updateAccount(account);
+                    this.mailService.insertOrUpdate(account.getFolder(), account.getID());
                 }
                 catch (Exception ex)
                 {

@@ -3,8 +3,10 @@ package de.freese.pim.core.mail.service;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import de.freese.pim.core.mail.dao.IMailDAO;
+import de.freese.pim.core.mail.model.Mail;
 import de.freese.pim.core.mail.model.MailAccount;
 import de.freese.pim.core.mail.model.MailFolder;
 import de.freese.pim.core.persistence.Transactional;
@@ -36,13 +38,32 @@ public class DefaultMailService implements IMailService
     }
 
     /**
-     * @see de.freese.pim.core.mail.dao.IMailDAO#delete(de.freese.pim.core.mail.model.MailFolder)
+     * @see de.freese.pim.core.mail.dao.IMailDAO#deleteAccount(long)
      */
     @Override
     @Transactional
-    public void delete(final MailFolder folder) throws Exception
+    public void deleteAccount(final long accountID) throws Exception
     {
-        this.mailDAO.delete(folder);
+        this.mailDAO.deleteAccount(accountID);
+    }
+
+    /**
+     * @see de.freese.pim.core.mail.dao.IMailDAO#deleteFolder(long)
+     */
+    @Override
+    public void deleteFolder(final long folderID) throws Exception
+    {
+        this.mailDAO.deleteFolder(folderID);
+    }
+
+    /**
+     * @see de.freese.pim.core.mail.dao.IMailDAO#deleteMail(long, long)
+     */
+    @Override
+    @Transactional
+    public void deleteMail(final long folderID, final long uid) throws Exception
+    {
+        this.mailDAO.deleteMail(folderID, uid);
     }
 
     /**
@@ -64,42 +85,95 @@ public class DefaultMailService implements IMailService
     }
 
     /**
-     * @see de.freese.pim.core.mail.dao.IMailDAO#insert(de.freese.pim.core.mail.model.MailAccount)
+     * @see de.freese.pim.core.mail.dao.IMailDAO#getMails(long)
      */
     @Override
-    @Transactional
-    public void insert(final MailAccount account) throws Exception
+    public List<Mail> getMails(final long folderID) throws Exception
     {
-        this.mailDAO.insert(account);
+        return this.mailDAO.getMails(folderID);
     }
 
     /**
-     * @see de.freese.pim.core.mail.dao.IMailDAO#insert(de.freese.pim.core.mail.model.MailFolder, long)
+     * @see de.freese.pim.core.mail.dao.IMailDAO#insertAccount(de.freese.pim.core.mail.model.MailAccount)
      */
     @Override
     @Transactional
-    public void insert(final MailFolder folder, final long accountID) throws Exception
+    public void insertAccount(final MailAccount account) throws Exception
     {
-        this.mailDAO.insert(folder, accountID);
+        this.mailDAO.insertAccount(account);
     }
 
     /**
-     * @see de.freese.pim.core.mail.dao.IMailDAO#update(de.freese.pim.core.mail.model.MailAccount)
+     * @see de.freese.pim.core.mail.dao.IMailDAO#insertFolder(de.freese.pim.core.mail.model.MailFolder, long)
      */
     @Override
     @Transactional
-    public void update(final MailAccount account) throws Exception
+    public void insertFolder(final MailFolder folder, final long accountID) throws Exception
     {
-        this.mailDAO.update(account);
+        this.mailDAO.insertFolder(folder, accountID);
     }
 
     /**
-     * @see de.freese.pim.core.mail.dao.IMailDAO#update(de.freese.pim.core.mail.model.MailFolder)
+     * @see de.freese.pim.core.mail.dao.IMailDAO#insertMail(de.freese.pim.core.mail.model.Mail, long)
      */
     @Override
     @Transactional
-    public void update(final MailFolder folder) throws Exception
+    public void insertMail(final Mail mail, final long folderID) throws Exception
     {
-        this.mailDAO.update(folder);
+        this.mailDAO.insertMail(mail, folderID);
+    }
+
+    /**
+     * @see de.freese.pim.core.mail.service.IMailService#insertOrUpdate(java.util.List, long)
+     */
+    @Override
+    @Transactional
+    public void insertOrUpdate(final List<MailFolder> folders, final long accountID) throws Exception
+    {
+        // ID = 0 -> insert
+        List<MailFolder> toInsert = folders.stream().filter(mf -> mf.getID() == 0).collect(Collectors.toList());
+
+        for (MailFolder mf : toInsert)
+        {
+            this.mailDAO.insertFolder(mf, accountID);
+        }
+
+        // ID != 0 -> update
+        List<MailFolder> toUpdate = folders.stream().filter(mf -> mf.getID() > 0).collect(Collectors.toList());
+
+        for (MailFolder mf : toUpdate)
+        {
+            this.mailDAO.updateFolder(mf);
+        }
+    }
+
+    /**
+     * @see de.freese.pim.core.mail.dao.IMailDAO#updateAccount(de.freese.pim.core.mail.model.MailAccount)
+     */
+    @Override
+    @Transactional
+    public void updateAccount(final MailAccount account) throws Exception
+    {
+        this.mailDAO.updateAccount(account);
+    }
+
+    /**
+     * @see de.freese.pim.core.mail.dao.IMailDAO#updateFolder(de.freese.pim.core.mail.model.MailFolder)
+     */
+    @Override
+    @Transactional
+    public void updateFolder(final MailFolder folder) throws Exception
+    {
+        this.mailDAO.updateFolder(folder);
+    }
+
+    /**
+     * @see de.freese.pim.core.mail.dao.IMailDAO#updateMail(de.freese.pim.core.mail.model.Mail)
+     */
+    @Override
+    @Transactional
+    public void updateMail(final Mail mail) throws Exception
+    {
+        this.mailDAO.updateMail(mail);
     }
 }

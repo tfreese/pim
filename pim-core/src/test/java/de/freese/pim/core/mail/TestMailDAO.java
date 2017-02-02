@@ -4,8 +4,11 @@
 package de.freese.pim.core.mail;
 
 import java.sql.SQLIntegrityConstraintViolationException;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 
+import javax.mail.internet.InternetAddress;
 import javax.sql.DataSource;
 
 import org.junit.After;
@@ -21,6 +24,7 @@ import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
 
 import de.freese.pim.core.mail.dao.DefaultMailDAO;
 import de.freese.pim.core.mail.dao.IMailDAO;
+import de.freese.pim.core.mail.model.Mail;
 import de.freese.pim.core.mail.model.MailAccount;
 import de.freese.pim.core.mail.model.MailFolder;
 import de.freese.pim.core.persistence.ConnectionHolder;
@@ -122,7 +126,7 @@ public class TestMailDAO
     {
         MailAccount account = new MailAccount();
 
-        TestMailDAO.mailDAO.insert(account);
+        TestMailDAO.mailDAO.insertAccount(account);
     }
 
     /**
@@ -141,7 +145,7 @@ public class TestMailDAO
         account.setSmtpPort(MailPort.SMTP);
         account.setSmtpLegitimation(false);
 
-        TestMailDAO.mailDAO.insert(account);
+        TestMailDAO.mailDAO.insertAccount(account);
 
         Assert.assertEquals(2, account.getID());
     }
@@ -191,7 +195,7 @@ public class TestMailDAO
         account.setSmtpPort(MailPort.SMTPS);
         account.setSmtpLegitimation(true);
 
-        TestMailDAO.mailDAO.update(account);
+        TestMailDAO.mailDAO.updateAccount(account);
     }
 
     /**
@@ -225,7 +229,7 @@ public class TestMailDAO
     {
         MailFolder folder = new MailFolder();
 
-        TestMailDAO.mailDAO.insert(folder, 2);
+        TestMailDAO.mailDAO.insertFolder(folder, 2);
     }
 
     /**
@@ -239,7 +243,7 @@ public class TestMailDAO
         folder.setName("b");
         folder.setAbonniert(false);
 
-        TestMailDAO.mailDAO.insert(folder, 2);
+        TestMailDAO.mailDAO.insertFolder(folder, 2);
 
         Assert.assertEquals(4, folder.getID());
     }
@@ -279,7 +283,7 @@ public class TestMailDAO
         folder.setName("c");
         folder.setAbonniert(true);
 
-        TestMailDAO.mailDAO.update(folder);
+        TestMailDAO.mailDAO.updateFolder(folder);
     }
 
     /**
@@ -303,20 +307,161 @@ public class TestMailDAO
     /**
      * @throws Exception Falls was schief geht.
      */
-    @Test
-    public void test030DeleteFolder() throws Exception
+    @Test(expected = NullPointerException.class)
+    public void test030InsertMailFail() throws Exception
     {
-        MailFolder folder = new MailFolder();
-        folder.setID(4);
+        Mail mail = new Mail();
 
-        TestMailDAO.mailDAO.delete(folder);
+        TestMailDAO.mailDAO.insertMail(mail, 2);
     }
 
     /**
      * @throws Exception Falls was schief geht.
      */
     @Test
-    public void test031DeleteFolderCheck() throws Exception
+    public void test031InsertMail() throws Exception
+    {
+        Mail mail = new Mail();
+        mail.setFrom(InternetAddress.parse("a@a.aa")[0]);
+        mail.setMsgNum(1);
+        mail.setReceivedDate(java.util.Date.from(LocalDateTime.of(2017, 02, 03, 15, 00).atZone(ZoneId.systemDefault()).toInstant()));
+        mail.setSeen(false);
+        mail.setSendDate(java.util.Date.from(LocalDateTime.of(2017, 02, 03, 15, 01).atZone(ZoneId.systemDefault()).toInstant()));
+        mail.setSize(13);
+        mail.setSubject("-TEST-");
+        mail.setTo(InternetAddress.parse("b@b.bb")[0]);
+        mail.setUID(2);
+
+        TestMailDAO.mailDAO.insertMail(mail, 2);
+    }
+
+    /**
+     * @throws Exception Falls was schief geht.
+     */
+    @Test
+    public void test032SelectMail() throws Exception
+    {
+        List<Mail> mails = TestMailDAO.mailDAO.getMails(2);
+
+        Assert.assertNotNull(mails);
+        Assert.assertEquals(1, mails.size());
+
+        Mail mail = mails.get(0);
+        Assert.assertEquals("a@a.aa", mail.getFrom().getAddress());
+        Assert.assertEquals(1, mail.getMsgNum());
+        Assert.assertEquals(java.util.Date.from(LocalDateTime.of(2017, 02, 03, 15, 00).atZone(ZoneId.systemDefault()).toInstant()),
+                mail.getReceivedDate());
+        Assert.assertFalse(mail.isSeen());
+        Assert.assertEquals(java.util.Date.from(LocalDateTime.of(2017, 02, 03, 15, 01).atZone(ZoneId.systemDefault()).toInstant()),
+                mail.getSendDate());
+        Assert.assertEquals(13, mail.getSize());
+        Assert.assertEquals("-TEST-", mail.getSubject());
+        Assert.assertEquals("b@b.bb", mail.getTo());
+        Assert.assertEquals(2, mail.getUID());
+    }
+
+    /**
+     * @throws Exception Falls was schief geht.
+     */
+    @Test
+    public void test033UpdateMail() throws Exception
+    {
+        List<Mail> mails = TestMailDAO.mailDAO.getMails(2);
+
+        Assert.assertNotNull(mails);
+        Assert.assertEquals(1, mails.size());
+
+        Mail mail = mails.get(0);
+
+        mail.setSeen(true);
+        mail.setMsgNum(99);
+        mail.setUID(88);
+
+        // Nur SEEN-Flag sollte aktualisiert werden.
+        TestMailDAO.mailDAO.updateMail(mail);
+    }
+
+    /**
+     * @throws Exception Falls was schief geht.
+     */
+    @Test
+    public void test034UpdateMailCheck() throws Exception
+    {
+        List<Mail> mails = TestMailDAO.mailDAO.getMails(2);
+
+        Assert.assertNotNull(mails);
+        Assert.assertEquals(1, mails.size());
+
+        Mail mail = mails.get(0);
+        Assert.assertEquals("a@a.aa", mail.getFrom().getAddress());
+        Assert.assertEquals(1, mail.getMsgNum());
+        Assert.assertEquals(java.util.Date.from(LocalDateTime.of(2017, 02, 03, 15, 00).atZone(ZoneId.systemDefault()).toInstant()),
+                mail.getReceivedDate());
+        Assert.assertTrue(mail.isSeen());
+        Assert.assertEquals(java.util.Date.from(LocalDateTime.of(2017, 02, 03, 15, 01).atZone(ZoneId.systemDefault()).toInstant()),
+                mail.getSendDate());
+        Assert.assertEquals(13, mail.getSize());
+        Assert.assertEquals("-TEST-", mail.getSubject());
+        Assert.assertEquals("b@b.bb", mail.getTo());
+        Assert.assertEquals(2, mail.getUID());
+    }
+
+    /**
+     * @throws Exception Falls was schief geht.
+     */
+    @Test
+    public void test040DeleteMail() throws Exception
+    {
+        TestMailDAO.mailDAO.deleteMail(2, 2);
+    }
+
+    /**
+     * @throws Exception Falls was schief geht.
+     */
+    @Test
+    public void test041DeleteMailCheck() throws Exception
+    {
+        List<Mail> mails = TestMailDAO.mailDAO.getMails(2);
+
+        Assert.assertNotNull(mails);
+        Assert.assertEquals(0, mails.size());
+    }
+
+    /**
+     * @throws Exception Falls was schief geht.
+     */
+    @Test
+    public void test050DeleteFolder() throws Exception
+    {
+        TestMailDAO.mailDAO.deleteFolder(4);
+    }
+
+    /**
+     * @throws Exception Falls was schief geht.
+     */
+    @Test
+    public void test051DeleteFolderCheck() throws Exception
+    {
+        List<MailFolder> folders = TestMailDAO.mailDAO.getMailFolder(2);
+
+        Assert.assertNotNull(folders);
+        Assert.assertEquals(0, folders.size());
+    }
+
+    /**
+     * @throws Exception Falls was schief geht.
+     */
+    @Test
+    public void test060DeleteAccount() throws Exception
+    {
+        TestMailDAO.mailDAO.deleteAccount(2);
+    }
+
+    /**
+     * @throws Exception Falls was schief geht.
+     */
+    @Test
+    public void test061DeleteAccountCheck() throws Exception
     {
         List<MailFolder> folders = TestMailDAO.mailDAO.getMailFolder(2);
 

@@ -7,7 +7,9 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
+
 import javax.activation.DataSource;
+
 import de.freese.pim.core.mail.model.Mail;
 import de.freese.pim.core.mail.model.MailAccount;
 import de.freese.pim.core.mail.model.MailFolder;
@@ -74,7 +76,7 @@ public interface IMailAPI
 
     /**
      * Lädt die Folder des Accounts.
-     * 
+     *
      * @return {@link List}
      * @throws Exception Falls was schief geht.
      */
@@ -89,6 +91,15 @@ public interface IMailAPI
     // public void loadFolder(Consumer<MailFolder> consumer) throws Exception;
 
     /**
+     * Lädt die Mails des Folders vom Provider und aus der DB.
+     *
+     * @param folder {@link MailFolder}
+     * @return {@link List}
+     * @throws Exception Falls was schief geht.
+     */
+    public List<Mail> loadMails(MailFolder folder) throws Exception;
+
+    /**
      * Lädt die Mails des Folders und übergibt sie dem {@link Consumer}.
      *
      * @param folder {@link MailFolder}
@@ -101,10 +112,10 @@ public interface IMailAPI
      * Holt die neuen Mails des Folders und übergibt sie dem {@link Consumer}.
      *
      * @param folder {@link MailFolder}
-     * @param consumer {@link Consumer}
+     * @return {@link List}
      * @throws Exception Falls was schief geht.
      */
-    public void loadNewMails(MailFolder folder, final Consumer<Mail> consumer) throws Exception;
+    public List<Mail> loadNewMails(MailFolder folder) throws Exception;
 
     /**
      * Liefert die {@link DataSource} mit dem Text der Mail.<br>
