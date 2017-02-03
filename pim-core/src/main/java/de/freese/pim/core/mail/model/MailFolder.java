@@ -81,7 +81,7 @@ public class MailFolder
     /**
     *
     */
-    private ObservableIntegerValue unreadMailsCountTotal = null;
+    private IntegerBinding unreadMailsCountTotal = null;
 
     /**
      * Erzeugt eine neue Instanz von {@link MailFolder}
@@ -93,7 +93,7 @@ public class MailFolder
         this.unreadMailsCount = new SumUnreadMailsBinding(this.mails);
         IntegerBinding unreadMailsCountChildFolder = new SumUnreadMailsInChildFolderBinding(this.childs);
 
-        this.unreadMailsCountTotal = (ObservableIntegerValue) this.unreadMailsCount.add(unreadMailsCountChildFolder);
+        this.unreadMailsCountTotal = (IntegerBinding) this.unreadMailsCount.add(unreadMailsCountChildFolder);
         // this.unreadMailsCountTotal = (ObservableIntegerValue) Bindings.add(this.unreadMailsCount, unreadMailsCountChildFolder);
         // ((IntegerBinding) this.unreadMailsCountTotal).invalidate();
 
@@ -190,7 +190,7 @@ public class MailFolder
     {
         // Path basePath = Optional.ofNullable(getParent()).map(p -> p.getPath()).orElse(getMailAPI().getBasePath());
         Path basePath = getMailAPI().getBasePath();
-        Path path = basePath.resolve(getName());
+        Path path = basePath.resolve(getFullName());
         // Path path = basePath.resolve(getFullName().replaceAll("/", "__"));
 
         return path;
