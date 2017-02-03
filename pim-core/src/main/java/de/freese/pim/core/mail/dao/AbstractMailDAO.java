@@ -146,8 +146,10 @@ public class AbstractMailDAO extends AbstractDAO<IMailDAO> implements IMailDAO
                 mail.setMsgNum(rs.getInt("MSG_NUM"));
                 mail.setFrom(InternetAddress.parse(rs.getString("SENDER"))[0]);
                 mail.setTo(InternetAddress.parse(rs.getString("RECIPIENT"))[0]);
-                mail.setReceivedDate(rs.getDate("RECEIVED_DATE"));
-                mail.setSendDate(rs.getDate("SEND_DATE"));
+                mail.setReceivedDate(rs.getTimestamp("RECEIVED_DATE"));
+                mail.setSendDate(rs.getTimestamp("SEND_DATE"));
+                mail.setSubject(rs.getString("SUBJECT"));
+                mail.setSize(rs.getInt("SIZE"));
                 mail.setSeen(rs.getBoolean("SEEN"));
 
                 return mail;
@@ -198,6 +200,21 @@ public class AbstractMailDAO extends AbstractDAO<IMailDAO> implements IMailDAO
     }
 
     /**
+     * @see de.freese.pim.core.mail.dao.IMailDAO#deleteFolders(long)
+     */
+    @Override
+    public void deleteFolders(final long accountID) throws Exception
+    {
+        StringBuilder sql = new StringBuilder();
+        sql.append("delete from MAILFOLDER where ACCOUNT_ID = ?");
+
+        getJdbcTemplate().update(sql.toString(), ps ->
+        {
+            ps.setLong(1, accountID);
+        });
+    }
+
+    /**
      * @see de.freese.pim.core.mail.dao.IMailDAO#deleteMail(long, long)
      */
     @Override
@@ -210,6 +227,21 @@ public class AbstractMailDAO extends AbstractDAO<IMailDAO> implements IMailDAO
         {
             ps.setLong(1, folderID);
             ps.setLong(2, uid);
+        });
+    }
+
+    /**
+     * @see de.freese.pim.core.mail.dao.IMailDAO#deleteMails(long)
+     */
+    @Override
+    public void deleteMails(final long folderID) throws Exception
+    {
+        StringBuilder sql = new StringBuilder();
+        sql.append("delete from MAIL where FOLDER_ID = ?");
+
+        getJdbcTemplate().update(sql.toString(), ps ->
+        {
+            ps.setLong(1, folderID);
         });
     }
 
@@ -337,9 +369,9 @@ public class AbstractMailDAO extends AbstractDAO<IMailDAO> implements IMailDAO
         StringBuilder sql = new StringBuilder();
         sql.append("insert into MAIL");
         sql.append(" (");
-        sql.append(" FOLDER_ID, UID, MSG_NUM, SENDER, RECIPIENT, RECEIVED_DATE, SEND_DATE, SEEN");
+        sql.append(" FOLDER_ID, UID, MSG_NUM, SENDER, RECIPIENT, RECEIVED_DATE, SEND_DATE, SUBJECT, SIZE, SEEN");
         sql.append(") values (");
-        sql.append("?, ?, ?, ?, ?, ?, ?, ?");
+        sql.append("?, ?, ?, ?, ?, ?, ?, ?, ?, ?");
         sql.append(")");
 
         getJdbcTemplate().update(sql.toString(), ps ->
@@ -351,7 +383,9 @@ public class AbstractMailDAO extends AbstractDAO<IMailDAO> implements IMailDAO
             ps.setString(5, mail.getTo().toUnicodeString());
             ps.setDate(6, new Date(mail.getReceivedDate().getTime()));
             ps.setDate(7, new Date(mail.getSendDate().getTime()));
-            ps.setBoolean(8, mail.isSeen());
+            ps.setString(8, mail.getSubject());
+            ps.setInt(9, mail.getSize());
+            ps.setBoolean(10, mail.isSeen());
         });
     }
 

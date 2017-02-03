@@ -24,7 +24,6 @@ import de.freese.pim.gui.PIMApplication;
 import de.freese.pim.gui.controller.AbstractController;
 import de.freese.pim.gui.utils.FXUtils;
 import de.freese.pim.gui.view.ErrorDialog;
-import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyBooleanProperty;
@@ -211,7 +210,7 @@ public class MailController extends AbstractController
                 try
                 {
                     this.mailService.insertAccount(account);
-                    this.mailService.insertOrUpdate(account.getFolder(), account.getID());
+                    this.mailService.insertOrUpdateFolder(account.getID(), account.getFolder());
 
                     addMailAccountToGUI(this.treeViewMail.getRoot(), account);
                 }
@@ -246,7 +245,7 @@ public class MailController extends AbstractController
                 try
                 {
                     this.mailService.updateAccount(account);
-                    this.mailService.insertOrUpdate(account.getFolder(), account.getID());
+                    this.mailService.insertOrUpdateFolder(account.getID(), account.getFolder());
                 }
                 catch (Exception ex)
                 {
@@ -413,30 +412,24 @@ public class MailController extends AbstractController
                 return;
             }
 
-            Task<Void> loadMailsTask = new Task<Void>()
+            Task<List<Mail>> loadMailsTask = new Task<List<Mail>>()
             {
                 /**
                  * @see javafx.concurrent.Task#call()
                  */
                 @Override
-                protected Void call() throws Exception
+                protected List<Mail> call() throws Exception
                 {
                     IMailAPI mailAPI = folder.getMailAPI();
 
-                    mailAPI.loadMails(folder, m ->
-                    {
-                        Platform.runLater(() ->
-                        {
-                            folder.getMails().add(m);
-                        });
-                    });
+                    List<Mail> mails = mailAPI.loadMails(folder);
 
-                    return null;
+                    return mails;
                 }
             };
             loadMailsTask.setOnSucceeded(event ->
             {
-                folder.bindUnreadMails();
+                folder.getMails().addAll(loadMailsTask.getValue());
                 this.treeViewMail.refresh();
             });
             loadMailsTask.setOnFailed(event ->

@@ -53,7 +53,7 @@ public class Mail
     /**
      *
      */
-    private int size = -1;
+    private int size = 0;
 
     /**
     *
@@ -87,6 +87,9 @@ public class Mail
     }
 
     /**
+     * Liefert den Folder der Mail.<br>
+     * Bildet mit der UID den PrimaryKey.
+     * 
      * @return {@link MailFolder}
      */
     public MailFolder getFolder()
@@ -178,7 +181,8 @@ public class Mail
     }
 
     /**
-     * Liefert UID.
+     * Liefert UID.<br>
+     * Bildet mit dem Folder den PrimaryKey.
      *
      * @return long
      */
@@ -222,6 +226,9 @@ public class Mail
     }
 
     /**
+     * Setzt den Folder der Mail.<br>
+     * Bildet mit der UID den PrimaryKey.
+     * 
      * @param folder {@link MailFolder}
      */
     public void setFolder(final MailFolder folder)
@@ -310,7 +317,8 @@ public class Mail
     }
 
     /**
-     * Setzt die UID.
+     * Setzt die UID.<br>
+     * Bildet mit dem Folder den PrimaryKey.
      *
      * @param uid long
      */

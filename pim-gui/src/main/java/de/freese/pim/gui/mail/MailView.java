@@ -6,7 +6,6 @@ import de.freese.pim.gui.view.IView;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
-import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.SelectionMode;
@@ -17,6 +16,7 @@ import javafx.scene.control.ToolBar;
 import javafx.scene.control.Tooltip;
 import javafx.scene.control.TreeView;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.web.WebView;
 
@@ -50,13 +50,13 @@ public class MailView implements IView
      *
      */
     @FXML
-    private final Node mainNode;
+    private final Region mainNode;
 
     /**
      *
      */
     @FXML
-    private final Node naviNode;
+    private final Region naviNode;
 
     /**
     *
@@ -101,9 +101,9 @@ public class MailView implements IView
     }
 
     /**
-     * @return {@link Node}
+     * @return {@link Region}
      */
-    private Node createMainNode()
+    private Region createMainNode()
     {
         // BorderPane borderPane = new BorderPane();
         // borderPane.setCenter(new Label("Mails"));
@@ -149,17 +149,20 @@ public class MailView implements IView
     }
 
     /**
-     * @return {@link Node}
+     * @return {@link Region}
      */
-    private Node createNaviNode()
+    private Region createNaviNode()
     {
         this.treeViewMail = new TreeView<>();
         this.treeViewMail.setEditable(false);
         this.treeViewMail.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
 
         TitledPane titledPane = new TitledPane("%mails", this.treeViewMail);
-        titledPane.setPrefHeight(Double.MAX_VALUE);
+        titledPane.setCollapsible(false);
+        // titledPane.setPrefHeight(Double.MAX_VALUE);
         // titledPane.setContent(treeViewMail);
+
+        // titledPane.setPrefWidth(200);
 
         return titledPane;
     }

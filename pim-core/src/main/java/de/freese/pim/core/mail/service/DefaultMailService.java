@@ -38,36 +38,35 @@ public class DefaultMailService implements IMailService
     }
 
     /**
-     * @see de.freese.pim.core.mail.dao.IMailDAO#deleteAccount(long)
+     * @see de.freese.pim.core.mail.service.IMailService#deleteAccount(long)
      */
     @Override
-    @Transactional
     public void deleteAccount(final long accountID) throws Exception
     {
+        List<MailFolder> folder = this.mailDAO.getMailFolder(accountID);
+
+        for (MailFolder mf : folder)
+        {
+            this.mailDAO.deleteMails(mf.getID());
+        }
+
+        this.mailDAO.deleteFolders(accountID);
         this.mailDAO.deleteAccount(accountID);
     }
 
     /**
-     * @see de.freese.pim.core.mail.dao.IMailDAO#deleteFolder(long)
+     * @see de.freese.pim.core.mail.service.IMailService#deleteFolder(long)
      */
     @Override
+    @Transactional
     public void deleteFolder(final long folderID) throws Exception
     {
+        this.mailDAO.deleteMails(folderID);
         this.mailDAO.deleteFolder(folderID);
     }
 
     /**
-     * @see de.freese.pim.core.mail.dao.IMailDAO#deleteMail(long, long)
-     */
-    @Override
-    @Transactional
-    public void deleteMail(final long folderID, final long uid) throws Exception
-    {
-        this.mailDAO.deleteMail(folderID, uid);
-    }
-
-    /**
-     * @see de.freese.pim.core.mail.dao.IMailDAO#getMailAccounts()
+     * @see de.freese.pim.core.mail.service.IMailService#getMailAccounts()
      */
     @Override
     public List<MailAccount> getMailAccounts() throws Exception
@@ -76,7 +75,7 @@ public class DefaultMailService implements IMailService
     }
 
     /**
-     * @see de.freese.pim.core.mail.dao.IMailDAO#getMailFolder(long)
+     * @see de.freese.pim.core.mail.service.IMailService#getMailFolder(long)
      */
     @Override
     public List<MailFolder> getMailFolder(final long accountID) throws Exception
@@ -88,13 +87,14 @@ public class DefaultMailService implements IMailService
      * @see de.freese.pim.core.mail.dao.IMailDAO#getMails(long)
      */
     @Override
+    @Transactional
     public List<Mail> getMails(final long folderID) throws Exception
     {
         return this.mailDAO.getMails(folderID);
     }
 
     /**
-     * @see de.freese.pim.core.mail.dao.IMailDAO#insertAccount(de.freese.pim.core.mail.model.MailAccount)
+     * @see de.freese.pim.core.mail.service.IMailService#insertAccount(de.freese.pim.core.mail.model.MailAccount)
      */
     @Override
     @Transactional
@@ -104,31 +104,21 @@ public class DefaultMailService implements IMailService
     }
 
     /**
-     * @see de.freese.pim.core.mail.dao.IMailDAO#insertFolder(de.freese.pim.core.mail.model.MailFolder, long)
+     * @see de.freese.pim.core.mail.service.IMailService#insertMail(long, de.freese.pim.core.mail.model.Mail)
      */
     @Override
     @Transactional
-    public void insertFolder(final MailFolder folder, final long accountID) throws Exception
-    {
-        this.mailDAO.insertFolder(folder, accountID);
-    }
-
-    /**
-     * @see de.freese.pim.core.mail.dao.IMailDAO#insertMail(de.freese.pim.core.mail.model.Mail, long)
-     */
-    @Override
-    @Transactional
-    public void insertMail(final Mail mail, final long folderID) throws Exception
+    public void insertMail(final long folderID, final Mail mail) throws Exception
     {
         this.mailDAO.insertMail(mail, folderID);
     }
 
     /**
-     * @see de.freese.pim.core.mail.service.IMailService#insertOrUpdate(java.util.List, long)
+     * @see de.freese.pim.core.mail.service.IMailService#insertOrUpdateFolder(long, java.util.List)
      */
     @Override
     @Transactional
-    public void insertOrUpdate(final List<MailFolder> folders, final long accountID) throws Exception
+    public void insertOrUpdateFolder(final long accountID, final List<MailFolder> folders) throws Exception
     {
         // ID = 0 -> insert
         List<MailFolder> toInsert = folders.stream().filter(mf -> mf.getID() == 0).collect(Collectors.toList());
@@ -148,32 +138,12 @@ public class DefaultMailService implements IMailService
     }
 
     /**
-     * @see de.freese.pim.core.mail.dao.IMailDAO#updateAccount(de.freese.pim.core.mail.model.MailAccount)
+     * @see de.freese.pim.core.mail.service.IMailService#updateAccount(de.freese.pim.core.mail.model.MailAccount)
      */
     @Override
     @Transactional
     public void updateAccount(final MailAccount account) throws Exception
     {
         this.mailDAO.updateAccount(account);
-    }
-
-    /**
-     * @see de.freese.pim.core.mail.dao.IMailDAO#updateFolder(de.freese.pim.core.mail.model.MailFolder)
-     */
-    @Override
-    @Transactional
-    public void updateFolder(final MailFolder folder) throws Exception
-    {
-        this.mailDAO.updateFolder(folder);
-    }
-
-    /**
-     * @see de.freese.pim.core.mail.dao.IMailDAO#updateMail(de.freese.pim.core.mail.model.Mail)
-     */
-    @Override
-    @Transactional
-    public void updateMail(final Mail mail) throws Exception
-    {
-        this.mailDAO.updateMail(mail);
     }
 }

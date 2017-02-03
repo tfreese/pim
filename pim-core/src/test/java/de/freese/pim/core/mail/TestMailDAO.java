@@ -312,7 +312,7 @@ public class TestMailDAO
     {
         Mail mail = new Mail();
 
-        TestMailDAO.mailDAO.insertMail(mail, 2);
+        TestMailDAO.mailDAO.insertMail(mail, 4);
     }
 
     /**
@@ -332,7 +332,7 @@ public class TestMailDAO
         mail.setTo(InternetAddress.parse("b@b.bb")[0]);
         mail.setUID(2);
 
-        TestMailDAO.mailDAO.insertMail(mail, 2);
+        TestMailDAO.mailDAO.insertMail(mail, 4);
     }
 
     /**
@@ -341,7 +341,7 @@ public class TestMailDAO
     @Test
     public void test032SelectMail() throws Exception
     {
-        List<Mail> mails = TestMailDAO.mailDAO.getMails(2);
+        List<Mail> mails = TestMailDAO.mailDAO.getMails(4);
 
         Assert.assertNotNull(mails);
         Assert.assertEquals(1, mails.size());
@@ -356,7 +356,7 @@ public class TestMailDAO
                 mail.getSendDate());
         Assert.assertEquals(13, mail.getSize());
         Assert.assertEquals("-TEST-", mail.getSubject());
-        Assert.assertEquals("b@b.bb", mail.getTo());
+        Assert.assertEquals("b@b.bb", mail.getTo().getAddress());
         Assert.assertEquals(2, mail.getUID());
     }
 
@@ -366,16 +366,19 @@ public class TestMailDAO
     @Test
     public void test033UpdateMail() throws Exception
     {
-        List<Mail> mails = TestMailDAO.mailDAO.getMails(2);
+        List<Mail> mails = TestMailDAO.mailDAO.getMails(4);
 
         Assert.assertNotNull(mails);
         Assert.assertEquals(1, mails.size());
 
         Mail mail = mails.get(0);
 
+        MailFolder mf = new MailFolder();
+        mf.setID(4);
+        mail.setFolder(mf);
+
         mail.setSeen(true);
         mail.setMsgNum(99);
-        mail.setUID(88);
 
         // Nur SEEN-Flag sollte aktualisiert werden.
         TestMailDAO.mailDAO.updateMail(mail);
@@ -387,7 +390,7 @@ public class TestMailDAO
     @Test
     public void test034UpdateMailCheck() throws Exception
     {
-        List<Mail> mails = TestMailDAO.mailDAO.getMails(2);
+        List<Mail> mails = TestMailDAO.mailDAO.getMails(4);
 
         Assert.assertNotNull(mails);
         Assert.assertEquals(1, mails.size());
@@ -402,7 +405,7 @@ public class TestMailDAO
                 mail.getSendDate());
         Assert.assertEquals(13, mail.getSize());
         Assert.assertEquals("-TEST-", mail.getSubject());
-        Assert.assertEquals("b@b.bb", mail.getTo());
+        Assert.assertEquals("b@b.bb", mail.getTo().getAddress());
         Assert.assertEquals(2, mail.getUID());
     }
 
@@ -412,7 +415,7 @@ public class TestMailDAO
     @Test
     public void test040DeleteMail() throws Exception
     {
-        TestMailDAO.mailDAO.deleteMail(2, 2);
+        TestMailDAO.mailDAO.deleteMail(4, 2);
     }
 
     /**
@@ -421,7 +424,7 @@ public class TestMailDAO
     @Test
     public void test041DeleteMailCheck() throws Exception
     {
-        List<Mail> mails = TestMailDAO.mailDAO.getMails(2);
+        List<Mail> mails = TestMailDAO.mailDAO.getMails(4);
 
         Assert.assertNotNull(mails);
         Assert.assertEquals(0, mails.size());

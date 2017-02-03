@@ -32,13 +32,29 @@ public interface IMailDAO
     public void deleteFolder(long folderID) throws Exception;
 
     /**
+     * Löschen aller {@link MailFolder} eines Accounts.<br>
+     *
+     * @param accountID long
+     * @throws Exception Falls was schief geht.
+     */
+    public void deleteFolders(long accountID) throws Exception;
+
+    /**
      * Löschen einer {@link Mail}.<br>
-     * 
+     *
      * @param folderID long
      * @param uid long
      * @throws Exception Falls was schief geht.
      */
     public void deleteMail(long folderID, long uid) throws Exception;
+
+    /**
+     * Löschen aller {@link Mail}s des Folders.<br>
+     *
+     * @param folderID long
+     * @throws Exception Falls was schief geht.
+     */
+    public void deleteMails(long folderID) throws Exception;
 
     /**
      * Liefert alle MailAccounts, sortiert nach MAIL.

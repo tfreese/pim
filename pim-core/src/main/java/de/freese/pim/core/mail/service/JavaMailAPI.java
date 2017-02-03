@@ -10,17 +10,13 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Properties;
-import java.util.concurrent.Callable;
-import java.util.concurrent.CompletionService;
-import java.util.concurrent.Executor;
-import java.util.concurrent.ExecutorCompletionService;
 import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.zip.GZIPInputStream;
@@ -248,102 +244,10 @@ public class JavaMailAPI extends AbstractMailAPI
 
             if (getMailService() != null)
             {
-                for (MailFolder mf : folder)
-                {
-                    getMailService().insertFolder(mf, getAccount().getID());
-                }
+                getMailService().insertOrUpdateFolder(getAccount().getID(), folder);
             }
         }
 
-        Executor executor = getExecutor();
-        // executor = ForkJoinPool.commonPool();
-        // executor = Executors.newCachedThreadPool();
-
-        CompletionService<MailFolder> completionService = new ExecutorCompletionService<>(executor);
-        int count = folder.size();
-
-        for (MailFolder mf : folder)
-        {
-            Callable<MailFolder> callable = () ->
-            {
-                Folder f = getStore().getFolder(mf.getFullName());
-
-                if (getLogger().isDebugEnabled())
-                {
-                    getLogger().debug("processing: folder={} @ {}", f.getFullName(), getAccount().getMail());
-                }
-
-                if (f == null)
-                {
-                    getLogger().warn("Folder {} not exist", mf.getFullName());
-
-                    if (getMailService() != null)
-                    {
-                        getMailService().deleteFolder(mf.getID());
-                    }
-
-                    // Folder entfernen.
-                    return mf;
-                }
-
-                mf.setMailAPI(this);
-
-                // Aktualisiert den Zähler nicht gelesener Mails.
-                // checkRead(f);
-                mf.setUnreadMailsCount(f.getUnreadMessageCount());
-                closeFolder(f);
-
-                // null = alles OK
-                return null;
-            };
-
-            completionService.submit(callable);
-        }
-
-        for (int i = 0; i < count; ++i)
-        {
-            MailFolder mf = completionService.take().get();
-
-            if (mf != null)
-            {
-                // Ordner nicht mehr vorhanden im MailAccount.
-                folder.remove(mf);
-            }
-        }
-
-        // @formatter:off
-        // @formatter:on
-        // for (ListIterator<MailFolder> iterator = folder.listIterator(); iterator.hasNext();)
-        // {
-        // MailFolder mf = iterator.next();
-        //
-        // Folder f = getStore().getFolder(mf.getFullName());
-        //
-        // if (getLogger().isDebugEnabled())
-        // {
-        // getLogger().debug("processing: folder={}@{}", f.getFullName(), getAccount().getMail());
-        // }
-        //
-        // if (f == null)
-        // {
-        // getLogger().warn("Folder {} not exist", mf.getFullName());
-        //
-        // if (getMailService() != null)
-        // {
-        // getMailService().delete(mf);
-        // }
-        //
-        // iterator.remove();
-        // continue;
-        // }
-        //
-        // mf.setMailAPI(this);
-        //
-        // // Aktualisiert den Zähler nicht gelesener Mails.
-        // // checkRead(f);
-        // mf.setUnreadMailsCount(f.getUnreadMessageCount());
-        // closeFolder(f);
-        // }
         // Hierarchie aufbauen basierend auf Namen.
         for (MailFolder mailFolder : folder)
         {
@@ -369,11 +273,21 @@ public class JavaMailAPI extends AbstractMailAPI
         List<Mail> mails = getMailService().getMails(folder.getID());
         // Map<Integer, Mail> map = mails.stream().collect(Collectors.toMap(Mail::getMsgNum, Function.identity()));
 
-        // Höchste msgnum finden
+        // Höchste UID finden.
         long maxUID = mails.parallelStream().mapToLong(Mail::getUID).max().orElse(0);
 
         // Mails von Provider laden, die eine höhere MsgNum/UID als die bereits vorhanden haben.
         IMAPFolder f = (IMAPFolder) getStore().getFolder(folder.getFullName());
+
+        if (f == null)
+        {
+            getLogger().warn("Folder {} not exist", folder.getFullName());
+
+            getMailService().deleteFolder(folder.getID());
+
+            return Collections.emptyList();
+        }
+
         checkRead(f);
 
         long nextUID = f.getUIDNext();
@@ -412,44 +326,11 @@ public class JavaMailAPI extends AbstractMailAPI
             mail.setFolder(folder);
             populate(mail, message);
 
-            getMailService().insertMail(mail, folder.getID());
+            getMailService().insertMail(folder.getID(), mail);
             mails.add(mail);
         }
 
         return mails;
-    }
-
-    /**
-     * @see de.freese.pim.core.mail.service.IMailAPI#loadMails(de.freese.pim.core.mail.model.MailFolder, java.util.function.Consumer)
-     */
-    @Override
-    public void loadMails(final MailFolder folder, final Consumer<Mail> consumer) throws Exception
-    {
-        // Mails von Provider laden.
-        Folder f = getStore().getFolder(folder.getFullName());
-        checkRead(f);
-
-        Message[] msgs = f.getMessages();
-
-        // Nur bestimmte Mail-Attribute vorladen.
-        FetchProfile fp = createDefaultFetchProfile();
-        f.fetch(msgs, fp);
-
-        if (getLogger().isDebugEnabled())
-        {
-            getLogger().debug("mails: number={}", msgs.length);
-        }
-
-        for (Message message : msgs)
-        {
-            Mail mail = new Mail();
-            mail.setFolder(folder);
-            populate(mail, message);
-
-            consumer.accept(mail);
-        }
-
-        closeFolder(f);
     }
 
     /**

@@ -2,6 +2,7 @@
 package de.freese.pim.gui.contact;
 
 import org.apache.commons.lang3.StringUtils;
+
 import de.freese.pim.core.addressbook.model.Kontakt;
 import de.freese.pim.gui.view.IView;
 import javafx.beans.property.StringProperty;
@@ -10,7 +11,6 @@ import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.geometry.HPos;
-import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
@@ -25,6 +25,7 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
 
 /**
  * View des Addressbuchs.
@@ -74,13 +75,13 @@ public class ContactView implements IView
      *
      */
     @FXML
-    private final Node mainNode;
+    private final Region mainNode;
 
     /**
     *
     */
     @FXML
-    private final Node naviNode;
+    private final Region naviNode;
 
     /**
     *
@@ -112,9 +113,9 @@ public class ContactView implements IView
     }
 
     /**
-     * @return {@link Node}
+     * @return {@link Region}
      */
-    private Node createMainNode()
+    private Region createMainNode()
     {
         // return new Label("Contacts");
         GridPane gridPane = new GridPane();
@@ -140,6 +141,7 @@ public class ContactView implements IView
         gridPane.add(this.textFieldVorname, 1, 1);
 
         TitledPane titledPane = new TitledPane("%details", gridPane);
+        titledPane.setCollapsible(false);
         titledPane.setPrefHeight(Double.MAX_VALUE);
         titledPane.setContent(gridPane);
 
@@ -147,9 +149,9 @@ public class ContactView implements IView
     }
 
     /**
-     * @return {@link Node}
+     * @return {@link Region}
      */
-    private Node createNaviNode()
+    private Region createNaviNode()
     {
         GridPane gridPane = new GridPane();
         gridPane.getStyleClass().addAll("gridpane", "padding");
@@ -200,8 +202,10 @@ public class ContactView implements IView
         GridPane.setVgrow(this.tableViewKontakt, Priority.ALWAYS);
 
         TitledPane titledPane = new TitledPane("%contacts", gridPane);
-        titledPane.setPrefHeight(Double.MAX_VALUE);
+        titledPane.setCollapsible(false);
+        // titledPane.setPrefHeight(Double.MAX_VALUE);
         // titledPane.setContent(gridPane);
+        // titledPane.setPrefWidth(200);
 
         return titledPane;
     }
@@ -247,8 +251,10 @@ public class ContactView implements IView
         FilteredList<Kontakt> filteredData = new FilteredList<>(FXCollections.observableArrayList());
 
         // Filter-Textfeld mit FilteredList verbinden.
-        propertyKontaktFilter.addListener((observable, oldValue, newValue) -> {
-            filteredData.setPredicate(kontakt -> {
+        propertyKontaktFilter.addListener((observable, oldValue, newValue) ->
+        {
+            filteredData.setPredicate(kontakt ->
+            {
                 if (StringUtils.isBlank(newValue))
                 {
                     return true;

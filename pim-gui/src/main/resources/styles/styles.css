@@ -208,9 +208,9 @@ https://docs.oracle.com/javase/8/javafx/api/javafx/scene/doc-files/cssref.html
 
 .titled-pane  {
     -fx-animated: true;
-    -fx-collapsible: false;
+    /*-fx-collapsible: false;*/
     -fx-pref-height: 5000.0;
-    -fx-pref-width: 5000.0;
+    /*-fx-pref-width: 5000.0;*/
 }
 
 .titled-pane .title {

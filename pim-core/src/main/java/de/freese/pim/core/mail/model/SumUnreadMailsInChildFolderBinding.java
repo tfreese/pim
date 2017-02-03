@@ -10,7 +10,7 @@ import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 
 /**
- * Bildet ein {@link IntegerBinding}, welches die Summe der ungelesenen Mails des Folders liefert.
+ * Bildet ein {@link IntegerBinding}, welches die Summe der ungelesenen Mails der Folder liefert.
  *
  * @author Thomas Freese
  */

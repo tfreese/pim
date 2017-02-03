@@ -8,6 +8,8 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.SplitPane;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TitledPane;
 import javafx.scene.control.ToolBar;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
@@ -25,6 +27,11 @@ import javafx.scene.layout.VBox;
 @SuppressWarnings("restriction")
 public class MainView extends BorderPane implements IView
 {
+    /**
+     *
+     */
+    public static final TextArea LOG_TEXT_AREA = new TextArea();
+
     /**
      *
      */
@@ -56,7 +63,7 @@ public class MainView extends BorderPane implements IView
 
         this.splitPane = new SplitPane();
         this.splitPane.setOrientation(Orientation.HORIZONTAL);
-        this.splitPane.setDividerPositions(0.25D);
+        this.splitPane.setDividerPositions(0.2D);
         setCenter(this.splitPane);
 
         this.vBox = new VBox();
@@ -96,6 +103,33 @@ public class MainView extends BorderPane implements IView
         this.vBox.getChildren().add(hBox);
 
         this.splitPane.getItems().addAll(this.vBox, new Pane());
+
+        // Logs
+        TitledPane titledPane = new TitledPane();
+        titledPane.setText("Logs");
+        titledPane.setExpanded(true);
+        titledPane.setCollapsible(true);
+        titledPane.setMaxHeight(200);
+
+        // titledPane.heightProperty().addListener((observable, oldValue, newValue) -> PIMApplication.getMainWindow().sizeToScene());
+
+        titledPane.expandedProperty().addListener((obs, oldValue, newValue) ->
+        {
+            if (newValue)
+            {
+                titledPane.setMaxHeight(200);
+            }
+            else
+            {
+                titledPane.setMaxHeight(0);
+            }
+        });
+
+        titledPane.setStyle("-fx-font-size: 75%;");
+        LOG_TEXT_AREA.setStyle("-fx-font-size: 75%;");
+        titledPane.setContent(LOG_TEXT_AREA);
+
+        setBottom(titledPane);
     }
 
     /**
@@ -106,7 +140,10 @@ public class MainView extends BorderPane implements IView
     public void setMainNode(final Node node)
     {
         this.splitPane.getItems().set(1, node);
-        // setCenter(node);
+        // this.splitPane.layout();
+
+        // requestLayout();
+        // layout();
     }
 
     /**
@@ -116,8 +153,12 @@ public class MainView extends BorderPane implements IView
      */
     public void setNavNode(final Node node)
     {
-        VBox.setVgrow(node, Priority.ALWAYS);
+        // VBox.setVgrow(node, Priority.ALWAYS);
         this.vBox.getChildren().set(0, node);
+        // this.vBox.layout();
+
+        // requestLayout();
+        // layout();
     }
 
     /**

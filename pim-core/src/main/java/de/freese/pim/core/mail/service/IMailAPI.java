@@ -100,15 +100,6 @@ public interface IMailAPI
     public List<Mail> loadMails(MailFolder folder) throws Exception;
 
     /**
-     * Lädt die Mails des Folders und übergibt sie dem {@link Consumer}.
-     *
-     * @param folder {@link MailFolder}
-     * @param consumer {@link Consumer}
-     * @throws Exception Falls was schief geht.
-     */
-    public void loadMails(MailFolder folder, Consumer<Mail> consumer) throws Exception;
-
-    /**
      * Holt die neuen Mails des Folders und übergibt sie dem {@link Consumer}.
      *
      * @param folder {@link MailFolder}

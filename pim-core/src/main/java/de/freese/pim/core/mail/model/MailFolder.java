@@ -5,10 +5,7 @@ import java.nio.file.Path;
 import java.util.Comparator;
 import java.util.function.Predicate;
 
-import com.sun.javafx.binding.IntegerConstant;
-
 import de.freese.pim.core.mail.service.IMailAPI;
-import javafx.beans.binding.Bindings;
 import javafx.beans.binding.IntegerBinding;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -79,7 +76,7 @@ public class MailFolder
     /**
     *
     */
-    private ObservableIntegerValue unreadMailsCount = null;
+    private IntegerBinding unreadMailsCount = null;
 
     /**
     *
@@ -93,8 +90,14 @@ public class MailFolder
     {
         super();
 
-        this.unreadMailsCount = IntegerConstant.valueOf(0);
-        this.unreadMailsCountTotal = IntegerConstant.valueOf(0);
+        this.unreadMailsCount = new SumUnreadMailsBinding(this.mails);
+        IntegerBinding unreadMailsCountChildFolder = new SumUnreadMailsInChildFolderBinding(this.childs);
+
+        this.unreadMailsCountTotal = (ObservableIntegerValue) this.unreadMailsCount.add(unreadMailsCountChildFolder);
+        // this.unreadMailsCountTotal = (ObservableIntegerValue) Bindings.add(this.unreadMailsCount, unreadMailsCountChildFolder);
+        // ((IntegerBinding) this.unreadMailsCountTotal).invalidate();
+
+        // this.mails.addListener((final ListChangeListener.Change<? extends Mail> change) -> this.unreadMailsCountTmp = 0);
     }
 
     /**
@@ -114,31 +117,6 @@ public class MailFolder
     {
         getChilds().add(child);
         child.setParent(this);
-    }
-
-    /**
-     * Observerables der Zähler mit den Listen verbinden.
-     */
-    public void bindUnreadMails()
-    {
-        this.unreadMailsCount = new SumUnreadMailsBinding(this.mails);
-        IntegerBinding unreadMailsCountChildFolder = new SumUnreadMailsInChildFolderBinding(this.childs);
-
-        this.unreadMailsCountTotal = (ObservableIntegerValue) Bindings.add(this.unreadMailsCount, unreadMailsCountChildFolder);
-        // ((IntegerBinding) this.unreadMailsCountTotal).invalidate();
-
-        // this.mails.addListener((final ListChangeListener.Change<? extends Mail> change) -> this.unreadMailsCountTmp = 0);
-    }
-
-    /**
-     * Observerables der Zähler mit den Listen verbinden.
-     */
-    public void bindUnreadMailsChildFolder()
-    {
-        IntegerBinding unreadMailsCountChildFolder = new SumUnreadMailsInChildFolderBinding(this.childs);
-
-        this.unreadMailsCountTotal = (ObservableIntegerValue) Bindings.add(this.unreadMailsCount, unreadMailsCountChildFolder);
-        // ((IntegerBinding) this.unreadMailsCountTotal).invalidate();
     }
 
     /**
@@ -351,16 +329,6 @@ public class MailFolder
     }
 
     /**
-     * Setzt die Anzahl ungelesener Mails initial beim Erstellen des Folders-Objektes in der Mail-API.
-     *
-     * @param unreadMailsCount int
-     */
-    public void setUnreadMailsCount(final int unreadMailsCount)
-    {
-        this.unreadMailsCount = IntegerConstant.valueOf(unreadMailsCount);
-    }
-
-    /**
      * @see java.lang.Object#toString()
      */
     @Override
@@ -391,22 +359,6 @@ public class MailFolder
     {
         return this.parent;
     }
-
-    // /**
-    // * Aktualisiert den Zähler der ungelesenen Mails, inklusive der Child-Folder.
-    // */
-    // public void updateUnreadMailsCount()
-    // {
-    // if (!getMails().isEmpty())
-    // {
-    // this.unreadMailsCount = getMails().parallelStream().mapToInt(m -> m.isSeen() ? 0 : 1).sum();
-    // }
-    //
-    // if (!getChilds().isEmpty())
-    // {
-    // this.unreadMailsCount += getChilds().stream().mapToInt(MailFolder::getUnreadMailsCount).sum();
-    // }
-    // }
 
     /**
      * Setzt den Parent.
