@@ -4,7 +4,6 @@ package de.freese.pim.gui.utils;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Objects;
-
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.scene.control.TextArea;
@@ -64,7 +63,8 @@ public class TextAreaOutputStream extends OutputStream
 
     /**
      * Verhindert, das mehr als n Zeilen eingefügt werden können.
-     *
+     * 
+     * @param <T> Konkreter Typ
      * @param maxLines int
      * @return {@link TextFormatter}
      */
@@ -72,8 +72,7 @@ public class TextAreaOutputStream extends OutputStream
     {
         final IntegerProperty lines = new SimpleIntegerProperty(1);
 
-        return new TextFormatter<>(change ->
-        {
+        return new TextFormatter<>(change -> {
             if (change.isAdded())
             {
                 if (change.getText().indexOf('\n') > -1)

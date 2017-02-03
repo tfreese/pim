@@ -9,7 +9,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.TextArea;
-import javafx.scene.control.TitledPane;
 import javafx.scene.control.ToolBar;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
@@ -105,31 +104,31 @@ public class MainView extends BorderPane implements IView
         this.splitPane.getItems().addAll(this.vBox, new Pane());
 
         // Logs
-        TitledPane titledPane = new TitledPane();
-        titledPane.setText("Logs");
-        titledPane.setExpanded(true);
-        titledPane.setCollapsible(true);
-        titledPane.setMaxHeight(200);
-
-        // titledPane.heightProperty().addListener((observable, oldValue, newValue) -> PIMApplication.getMainWindow().sizeToScene());
-
-        titledPane.expandedProperty().addListener((obs, oldValue, newValue) ->
-        {
-            if (newValue)
-            {
-                titledPane.setMaxHeight(200);
-            }
-            else
-            {
-                titledPane.setMaxHeight(0);
-            }
-        });
-
-        titledPane.setStyle("-fx-font-size: 75%;");
-        LOG_TEXT_AREA.setStyle("-fx-font-size: 75%;");
-        titledPane.setContent(LOG_TEXT_AREA);
-
-        setBottom(titledPane);
+        // TitledPane titledPane = new TitledPane();
+        // titledPane.setText("Logs");
+        // titledPane.setExpanded(true);
+        // titledPane.setCollapsible(true);
+        // titledPane.setMaxHeight(200);
+        //
+        // // titledPane.heightProperty().addListener((observable, oldValue, newValue) -> PIMApplication.getMainWindow().sizeToScene());
+        //
+        // titledPane.expandedProperty().addListener((obs, oldValue, newValue) ->
+        // {
+        // if (newValue)
+        // {
+        // titledPane.setMaxHeight(200);
+        // }
+        // else
+        // {
+        // titledPane.setMaxHeight(0);
+        // }
+        // });
+        //
+        // titledPane.setStyle("-fx-font-size: 75%;");
+        // LOG_TEXT_AREA.setStyle("-fx-font-size: 75%;");
+        // titledPane.setContent(LOG_TEXT_AREA);
+        //
+        // setBottom(titledPane);
     }
 
     /**

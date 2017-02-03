@@ -63,11 +63,11 @@ public abstract class AbstractDataSourceBean implements IDataSourceBean
         poolProperties.setUsername(username);
         poolProperties.setPassword(password);
 
-        poolProperties.setMaxActive(6);
+        poolProperties.setMaxActive(10);
         poolProperties.setMaxIdle(2);
         poolProperties.setMinIdle(1);
         poolProperties.setInitialSize(1);
-        poolProperties.setMaxWait(3 * 1000); // max. 3 Sekunden warten auf Connection
+        poolProperties.setMaxWait(10 * 1000); // max. 10 Sekunden warten auf Connection
 
         poolProperties.setDefaultAutoCommit(Boolean.FALSE);
         poolProperties.setDefaultReadOnly(Boolean.FALSE);
