@@ -1,7 +1,7 @@
 /**
  * Created on 24.05.2016 17:26:14
  */
-package de.freese.pim.core.persistence;
+package de.freese.pim.core.jdbc;
 
 import java.io.PrintWriter;
 import java.lang.reflect.InvocationHandler;

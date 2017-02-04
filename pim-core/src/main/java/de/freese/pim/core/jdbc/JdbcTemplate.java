@@ -1,5 +1,5 @@
 // Created: 12.01.2017
-package de.freese.pim.core.persistence;
+package de.freese.pim.core.jdbc;
 
 import java.sql.Blob;
 import java.sql.Clob;
@@ -16,12 +16,16 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.function.Function;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.IntStream;
 import javax.sql.DataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.sun.mail.iap.ConnectionException;
+import de.freese.pim.core.jdbc.sequence.SequenceProvider;
+import de.freese.pim.core.jdbc.sequence.SequenceQuery;
+import de.freese.pim.core.jdbc.sequence.SequenceQueryExecutor;
+import de.freese.pim.core.jdbc.tx.ConnectionHolder;
 
 /**
  * Analog-Implementierung vom org.springframework.jdbc.core.JdbcTemplate<br>
@@ -34,7 +38,7 @@ public class JdbcTemplate
     /**
      * @author Thomas Freese
      */
-    private static class ColumnMapResultSetExtractor implements ResultSetExtractor<List<Map<String, Object>>>
+    public static class ColumnMapResultSetExtractor implements ResultSetExtractor<List<Map<String, Object>>>
     {
         /**
          * Erzeugt eine neue Instanz von {@link ColumnMapResultSetExtractor}
@@ -45,7 +49,7 @@ public class JdbcTemplate
         }
 
         /**
-         * @see de.freese.pim.core.persistence.ResultSetExtractor#extract(java.sql.ResultSet)
+         * @see de.freese.pim.core.jdbc.ResultSetExtractor#extract(java.sql.ResultSet)
          */
         @Override
         public List<Map<String, Object>> extract(final ResultSet rs) throws SQLException
@@ -164,7 +168,7 @@ public class JdbcTemplate
      * @author Thomas Freese
      * @param <T> Konkreter Row-Typ
      */
-    private static class RowMapperResultSetExtractor<T> implements ResultSetExtractor<List<T>>
+    public static class RowMapperResultSetExtractor<T> implements ResultSetExtractor<List<T>>
     {
         /**
          *
@@ -186,7 +190,7 @@ public class JdbcTemplate
         }
 
         /**
-         * @see de.freese.pim.core.persistence.ResultSetExtractor#extract(java.sql.ResultSet)
+         * @see de.freese.pim.core.jdbc.ResultSetExtractor#extract(java.sql.ResultSet)
          */
         @Override
         public List<T> extract(final ResultSet rs) throws SQLException
@@ -216,7 +220,12 @@ public class JdbcTemplate
     /**
     *
     */
-    private Function<String, String> sequenceFunction = null;
+    private final ReentrantLock reentrantLockSequence = new ReentrantLock();
+
+    /**
+     *
+     */
+    private SequenceQueryExecutor sequenceQueryExecutor = null;
 
     /**
      * Erzeugt eine neue Instanz von {@link JdbcTemplate}
@@ -234,16 +243,16 @@ public class JdbcTemplate
      */
     protected void closeConnection(final Connection connection) throws SQLException
     {
-        if (ConnectionHolder.isEmpty())
-        {
-            // Kein Transaction-Context.
-            // connection.setReadOnly(false);
-            connection.close();
-        }
-        else
+        if (!ConnectionHolder.isEmpty())
         {
             // Transaction-Context, nichts tun.
             // Wird vom TransactionalInvocationHandler erledigt.
+        }
+        else
+        {
+            // Kein Transaction-Context.
+            connection.setReadOnly(false);
+            connection.close();
         }
     }
 
@@ -272,12 +281,13 @@ public class JdbcTemplate
     }
 
     /**
-     * Führt ein einfaches {@link Statement#execute(String)} aus.
-     *
-     * @param sql String
+     * @param <T> Konkreter Return-Typ.
+     * @param action {@link ConnectionCallback}
+     * @return Object
      * @throws SQLException Falls was schief geht.
      */
-    public void execute(final String sql) throws SQLException
+    @SuppressWarnings("resource")
+    public <T> T execute(final ConnectionCallback<T> action) throws SQLException
     {
         Connection connection = null;
 
@@ -285,10 +295,9 @@ public class JdbcTemplate
         {
             connection = getConnection();
 
-            try (Statement stmt = connection.createStatement())
-            {
-                stmt.execute(sql);
-            }
+            T result = action.doInConnection(connection);
+
+            return result;
         }
         // catch (Exception ex)
         // {
@@ -301,6 +310,54 @@ public class JdbcTemplate
     }
 
     /**
+     * @param <T> Konkreter Return-Typ.
+     * @param psc {@link PreparedStatementCreator}
+     * @param action {@link PreparedStatementCallback}
+     * @return Object
+     * @throws SQLException Falls was schief geht.
+     */
+    public <T> T execute(final PreparedStatementCreator psc, final PreparedStatementCallback<T> action) throws SQLException
+    {
+        return execute((ConnectionCallback<T>) con -> {
+            try (PreparedStatement ps = psc.createPreparedStatement(con))
+            {
+                T result = action.doInPreparedStatement(ps);
+
+                return result;
+            }
+        });
+    }
+
+    /**
+     * @param <T> Konkreter Return-Typ.
+     * @param action {@link StatementCallback}
+     * @return Object
+     * @throws SQLException Falls was schief geht.
+     */
+    public <T> T execute(final StatementCallback<T> action) throws SQLException
+    {
+        return execute((ConnectionCallback<T>) con -> {
+            try (Statement stmt = con.createStatement())
+            {
+                T result = action.doInStatement(stmt);
+
+                return result;
+            }
+        });
+    }
+
+    /**
+     * Führt ein einfaches {@link Statement#execute(String)} aus.
+     *
+     * @param sql String
+     * @throws SQLException Falls was schief geht.
+     */
+    public void execute(final String sql) throws SQLException
+    {
+        execute((StatementCallback<?>) stmt -> stmt.execute(sql));
+    }
+
+    /**
      * @return {@link Connection}
      * @throws SQLException Falls was schief geht.
      */
@@ -309,21 +366,16 @@ public class JdbcTemplate
     {
         Connection connection = null;
 
-        if (ConnectionHolder.isEmpty())
+        if (!ConnectionHolder.isEmpty())
+        {
+            // Transaction-Context
+            connection = ConnectionHolder.get();
+        }
+        else
         {
             // Kein Transaction-Context -> ReadOnly Connection
             connection = getDataSource().getConnection();
             // connection.setReadOnly(true);
-        }
-        else
-        {
-            // Transaction-Context
-            connection = ConnectionHolder.get();
-
-            if (connection.isReadOnly())
-            {
-                LoggerFactory.getLogger(getClass()).warn("connection is read-only");
-            }
         }
 
         return connection;
@@ -352,22 +404,20 @@ public class JdbcTemplate
      * @param sequence String
      * @return long
      * @throws SQLException Falls was schief geht.
+     * @see SequenceQuery
+     * @see SequenceProvider
+     * @see SequenceQueryExecutor
      */
-    @SuppressWarnings("resource")
-    public synchronized long getNextSequenceID(final String sequence) throws SQLException
+    public long getNextID(final String sequence) throws SQLException
     {
-        Connection connection = null;
+        return execute((ConnectionCallback<Long>) con -> {
+            try (Statement stmt = con.createStatement())
+            {
+                long result = getNextID(sequence, con);
 
-        try
-        {
-            connection = getConnection();
-
-            return getNextSequenceID(sequence, connection);
-        }
-        finally
-        {
-            closeConnection(connection);
-        }
+                return result;
+            }
+        });
     }
 
     /**
@@ -384,51 +434,31 @@ public class JdbcTemplate
      * @param connection {@link Connection}
      * @return long
      * @throws SQLException Falls was schief geht.
+     * @see SequenceQuery
+     * @see SequenceProvider
+     * @see SequenceQueryExecutor
      */
-    public synchronized long getNextSequenceID(final String sequence, final Connection connection) throws SQLException
+    public long getNextID(final String sequence, final Connection connection) throws SQLException
     {
-        if (this.sequenceFunction == null)
+        if (this.sequenceQueryExecutor == null)
         {
-            DatabaseMetaData dbmd = connection.getMetaData();
+            this.reentrantLockSequence.lock();
 
-            String product = dbmd.getDatabaseProductName().toLowerCase();
-            product = product.split(" ")[0];
-            // int majorVersion = dbmd.getDatabaseMajorVersion();
-            // int minorVersion = dbmd.getDatabaseMinorVersion();
-
-            switch (product)
+            try
             {
-                case "oracle":
-                    this.sequenceFunction = seq -> "select " + seq + ".nextval from dual";
-                    break;
-                case "hsql":
-                    this.sequenceFunction = seq -> "call next value for " + seq;
-                    break;
-                // case "mysql":
-                // // CREATE TABLE sequence (id INT NOT NULL);
-                // // INSERT INTO sequence VALUES (0);
-                //
-                // this.sequenceFunction = seq -> "UPDATE sequence SET id=LAST_INSERT_ID(id + 1); SELECT LAST_INSERT_ID();";
-                // break;
-
-                default:
-                    // this.sequenceFunction = seq -> "select nvl(max(id), 0) + 1 from " + seq;
-                    this.sequenceFunction = seq -> "select count(*) + 1 from " + seq;
-
-                    String msg = String.format("%s: use following sql for sequence \"%s\"%n", this.sequenceFunction.apply("<SEQ/TABLE>"),
-                            dbmd.getDatabaseProductName());
-                    LOGGER.warn(msg);
+                if (this.sequenceQueryExecutor == null)
+                {
+                    SequenceQuery sequenceQuery = SequenceQuery.determineQuery(connection);
+                    this.sequenceQueryExecutor = new SequenceQueryExecutor(sequenceQuery);
+                }
+            }
+            finally
+            {
+                this.reentrantLockSequence.unlock();
             }
         }
 
-        long id = 0;
-
-        try (Statement stmt = connection.createStatement();
-             ResultSet rs = stmt.executeQuery(this.sequenceFunction.apply(sequence)))
-        {
-            rs.next();
-            id = rs.getLong(1);
-        }
+        long id = this.sequenceQueryExecutor.getNextID(sequence, connection);
 
         return id;
     }
@@ -441,10 +471,14 @@ public class JdbcTemplate
      */
     protected boolean isBatchSupported() throws SQLException
     {
-        try (Connection connection = getDataSource().getConnection())
-        {
-            return isBatchSupported(connection);
-        }
+        return execute((ConnectionCallback<Boolean>) con -> {
+            try (Statement stmt = con.createStatement())
+            {
+                boolean result = isBatchSupported(con);
+
+                return result;
+            }
+        });
     }
 
     /**
@@ -471,38 +505,22 @@ public class JdbcTemplate
      * @return Object
      * @throws SQLException Falls was schief geht.
      */
-    @SuppressWarnings("resource")
     public <T> T query(final String sql, final PreparedStatementSetter setter, final ResultSetExtractor<T> rse) throws SQLException
     {
-        Connection connection = null;
-
-        try
-        {
-            connection = getConnection();
-            T result = null;
-
-            try (PreparedStatement ps = connection.prepareStatement(sql))
+        return execute(con -> con.prepareStatement(sql), ps -> {
+            if (LOGGER.isDebugEnabled())
             {
-                ps.clearParameters();
-
-                setter.setValues(ps);
-
-                try (ResultSet rs = ps.executeQuery())
-                {
-                    result = rse.extract(rs);
-                }
+                LOGGER.debug("execute: {}", sql);
             }
 
-            return result;
-        }
-        // catch (Exception ex)
-        // {
-        // throw convertException(ex);
-        // }
-        finally
-        {
-            closeConnection(connection);
-        }
+            ps.clearParameters();
+            setter.setValues(ps);
+
+            try (ResultSet rs = ps.executeQuery())
+            {
+                return rse.extract(rs);
+            }
+        });
     }
 
     /**
@@ -529,32 +547,19 @@ public class JdbcTemplate
      * @return Object
      * @throws SQLException Falls was schief geht.
      */
-    @SuppressWarnings("resource")
     public <T> T query(final String sql, final ResultSetExtractor<T> rse) throws SQLException
     {
-        Connection connection = null;
-
-        try
-        {
-            connection = getConnection();
-            T result = null;
-
-            try (Statement stmt = connection.createStatement();
-                 ResultSet rs = stmt.executeQuery(sql))
+        return execute((StatementCallback<T>) stmt -> {
+            if (LOGGER.isDebugEnabled())
             {
-                result = rse.extract(rs);
+                LOGGER.debug("execute: {}", sql);
             }
 
-            return result;
-        }
-        // catch (Exception ex)
-        // {
-        // throw convertException(ex);
-        // }
-        finally
-        {
-            closeConnection(connection);
-        }
+            try (ResultSet rs = stmt.executeQuery(sql))
+            {
+                return rse.extract(rs);
+            }
+        });
     }
 
     /**
@@ -603,31 +608,16 @@ public class JdbcTemplate
      * @return int; affectedRows
      * @throws SQLException Falls was schief geht.
      */
-    @SuppressWarnings("resource")
     public int update(final String sql) throws SQLException
     {
-        Connection connection = null;
-
-        try
-        {
-            connection = getConnection();
-            int affectedRows = 0;
-
-            try (Statement stmt = connection.createStatement())
+        return execute((StatementCallback<Integer>) stmt -> {
+            if (LOGGER.isDebugEnabled())
             {
-                affectedRows = stmt.executeUpdate(sql);
+                LOGGER.debug("execute: {}", sql);
             }
 
-            return affectedRows;
-        }
-        // catch (Exception ex)
-        // {
-        // throw convertException(ex);
-        // }
-        finally
-        {
-            closeConnection(connection);
-        }
+            return stmt.executeUpdate(sql);
+        });
     }
 
     /**
@@ -638,31 +628,35 @@ public class JdbcTemplate
      * @return int; affectedRows
      * @throws SQLException Falls was schief geht.
      */
-    @SuppressWarnings("resource")
     public int update(final String sql, final PreparedStatementSetter setter) throws SQLException
     {
-        Connection connection = null;
-
-        try
-        {
-            connection = getConnection();
-            int affectedRows = 0;
-
-            try (PreparedStatement ps = connection.prepareStatement(sql))
+        return execute(con -> con.prepareStatement(sql), ps -> {
+            if (LOGGER.isDebugEnabled())
             {
-                ps.clearParameters();
-
-                setter.setValues(ps);
-
-                affectedRows = ps.executeUpdate();
+                LOGGER.debug("execute: {}", sql);
             }
 
-            return affectedRows;
-        }
-        finally
-        {
-            closeConnection(connection);
-        }
+            ps.clearParameters();
+            setter.setValues(ps);
+
+            return ps.executeUpdate();
+        });
+    }
+
+    /**
+     * Führt ein {@link Statement#executeBatch()} aus (INSERT, UPDATE, DELETE).<br>
+     * Die Default Batch-Size beträgt 100.
+     *
+     * @param <T> Konkreter Row-Typ
+     * @param sql String
+     * @param batchArgs {@link Collection}
+     * @param setter {@link ParameterizedPreparedStatementSetter}
+     * @return int[]; affectedRows
+     * @throws SQLException Falls was schief geht.
+     */
+    public <T> int[] updateBatch(final String sql, final Collection<T> batchArgs, final ParameterizedPreparedStatementSetter<T> setter) throws SQLException
+    {
+        return updateBatch(sql, batchArgs, setter, 100);
     }
 
     /**
@@ -672,54 +666,61 @@ public class JdbcTemplate
      * @param sql String
      * @param batchArgs {@link Collection}
      * @param setter {@link ParameterizedPreparedStatementSetter}
+     * @param batchSize int
      * @return int[]; affectedRows
      * @throws SQLException Falls was schief geht.
      */
-    @SuppressWarnings("resource")
-    public <T> int[] updateBatch(final String sql, final Collection<T> batchArgs, final ParameterizedPreparedStatementSetter<T> setter) throws SQLException
+    public <T> int[] updateBatch(final String sql, final Collection<T> batchArgs, final ParameterizedPreparedStatementSetter<T> setter, final int batchSize)
+        throws SQLException
     {
-        List<int[]> rowsAffected = new ArrayList<>();
-        Connection connection = null;
-        boolean supportsBatch = isBatchSupported();
-
-        try
-        {
-            connection = getConnection();
-
-            try (PreparedStatement ps = connection.prepareStatement(sql))
+        return execute(con -> con.prepareStatement(sql), ps -> {
+            if (LOGGER.isDebugEnabled())
             {
-                for (T arg : batchArgs)
-                {
-                    ps.clearParameters();
+                LOGGER.debug("execute batch: size={}; {}", batchArgs.size(), sql);
+            }
 
-                    setter.setValues(ps, arg);
+            boolean supportsBatch = isBatchSupported(ps.getConnection());
+            SequenceProvider sequenceProvider = sequence -> getNextID(sequence, ps.getConnection());
 
-                    if (supportsBatch)
-                    {
-                        ps.addBatch();
-                    }
-                    else
-                    {
-                        // Batch nicht möglich -> direkt ausführen.
-                        int i = ps.executeUpdate();
-                        rowsAffected.add(new int[]
-                        {
-                                i
-                        });
-                    }
-                }
+            List<int[]> affectedRows = new ArrayList<>();
+            int n = 0;
+
+            for (T arg : batchArgs)
+            {
+                ps.clearParameters();
+                setter.setValues(ps, arg, sequenceProvider);
+                n++;
 
                 if (supportsBatch)
                 {
-                    rowsAffected.add(ps.executeBatch());
+                    ps.addBatch();
+
+                    if (((n % batchSize) == 0) || (n == batchArgs.size()))
+                    {
+                        if (LOGGER.isDebugEnabled())
+                        {
+                            int batchIndex = ((n % batchSize) == 0) ? n / batchSize : (n / batchSize) + 1;
+                            int items = n - ((((n % batchSize) == 0) ? (n / batchSize) - 1 : (n / batchSize)) * batchSize);
+                            LOGGER.debug("Sending SQL batch update #{} with {} items", batchIndex, items);
+                        }
+
+                        affectedRows.add(ps.executeBatch());
+                        ps.clearBatch();
+                    }
+                }
+                else
+                {
+                    // Batch nicht möglich -> direkt ausführen.
+                    int affectedRow = ps.executeUpdate();
+
+                    affectedRows.add(new int[]
+                    {
+                            affectedRow
+                    });
                 }
             }
 
-            return rowsAffected.stream().flatMapToInt(af -> IntStream.of(af)).toArray();
-        }
-        finally
-        {
-            closeConnection(connection);
-        }
+            return affectedRows.stream().flatMapToInt(af -> IntStream.of(af)).toArray();
+        });
     }
 }

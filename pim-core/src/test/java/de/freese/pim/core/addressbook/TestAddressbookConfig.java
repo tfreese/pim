@@ -18,7 +18,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import de.freese.pim.core.addressbook.dao.DefaultAddressBookDAO;
 import de.freese.pim.core.addressbook.dao.IAddressBookDAO;
-import de.freese.pim.core.persistence.JdbcTemplate;
+import de.freese.pim.core.jdbc.JdbcTemplate;
 
 /**
  * @author Thomas Freese
@@ -47,7 +47,7 @@ public class TestAddressbookConfig
         JdbcTemplate jdbcTemplate = new JdbcTemplate()
         {
             /**
-             * @see de.freese.pim.core.persistence.JdbcTemplate#closeConnection(java.sql.Connection)
+             * @see de.freese.pim.core.jdbc.JdbcTemplate#closeConnection(java.sql.Connection)
              */
             @Override
             protected void closeConnection(final Connection connection) throws SQLException
@@ -56,7 +56,7 @@ public class TestAddressbookConfig
             }
 
             /**
-             * @see de.freese.pim.core.persistence.JdbcTemplate#getConnection()
+             * @see de.freese.pim.core.jdbc.JdbcTemplate#getConnection()
              */
             @Override
             protected Connection getConnection() throws SQLException

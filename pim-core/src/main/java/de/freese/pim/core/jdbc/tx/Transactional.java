@@ -1,5 +1,5 @@
 // Created: 11.01.2017
-package de.freese.pim.core.persistence;
+package de.freese.pim.core.jdbc.tx;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;

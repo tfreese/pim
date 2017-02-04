@@ -2,7 +2,7 @@
  * Created: 11.01.2017
  */
 
-package de.freese.pim.core.persistence;
+package de.freese.pim.core.jdbc.tx;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -28,14 +28,18 @@ public final class ConnectionHolder
      * @see #isEmpty()
      * @see #set(Connection)
      */
+    @SuppressWarnings("resource")
     public static void beginTX() throws SQLException
     {
-        get().setAutoCommit(false);
+        Connection connection = get();
+
+        connection.setReadOnly(false); // ReadOnly Flag ändern geht nur ausserhalb einer TX.
+        connection.setAutoCommit(false);
     }
 
     /**
      * Ruft die Methode {@link Connection#close()} auf der aktuellen {@link Connection} auf.<br>
-     * Die {@link Connection} wird anschliessend ,it {@link #remove()} aus der {@link ThreadLocal} entfernt.<br>
+     * Die {@link Connection} wird anschliessend mit {@link #remove()} aus der {@link ThreadLocal} entfernt.<br>
      * Wirft eine {@link NullPointerException}, wenn der aktuelle Thread keine {@link Connection} hat.
      *
      * @throws SQLException Falls was schief geht.
@@ -46,7 +50,8 @@ public final class ConnectionHolder
     {
         try (Connection connection = get())
         {
-            // connection.setReadOnly(true);
+            connection.setAutoCommit(true);
+            // connection.setReadOnly(true); // ReadOnly Flag ändern geht nur ausserhalb einer TX.
         }
 
         remove();
@@ -131,11 +136,6 @@ public final class ConnectionHolder
         }
 
         Objects.requireNonNull(connection, "connection required");
-
-        // if (connection.isReadOnly())
-        // {
-        // connection.setReadOnly(false);
-        // }
 
         THREAD_LOCAL.set(connection);
     }

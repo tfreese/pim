@@ -4,8 +4,7 @@ package de.freese.pim.core.db;
 import java.nio.file.Path;
 
 import javax.sql.DataSource;
-
-import de.freese.pim.core.persistence.SimpleDataSource;
+import de.freese.pim.core.jdbc.SimpleDataSource;
 import de.freese.pim.core.service.ISettingsService;
 
 /**

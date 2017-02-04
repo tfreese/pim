@@ -8,7 +8,7 @@ import java.sql.Statement;
 import javax.sql.DataSource;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.tomcat.jdbc.pool.PoolProperties;
-import de.freese.pim.core.persistence.SimpleDataSource;
+import de.freese.pim.core.jdbc.SimpleDataSource;
 
 /**
  * Basis-implementierung einer {@link IDataSourceBean}.

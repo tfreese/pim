@@ -10,7 +10,7 @@ import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 import org.springframework.mock.jndi.SimpleNamingContextBuilder;
 import de.freese.pim.core.addressbook.AllAddressbookTests;
-import de.freese.pim.core.persistence.TestJdbcTemplate;
+import de.freese.pim.core.jdbc.TestJdbcTemplate;
 import de.freese.pim.core.utils.io.TestMonitorIO;
 
 /**

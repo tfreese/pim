@@ -28,7 +28,7 @@ import de.freese.pim.core.addressbook.model.KontaktAttribut;
 import de.freese.pim.core.addressbook.service.DefaultAddressBookService;
 import de.freese.pim.core.db.HsqldbLocalFile;
 import de.freese.pim.core.db.IDataSourceBean;
-import de.freese.pim.core.persistence.TransactionalInvocationHandler;
+import de.freese.pim.core.jdbc.tx.TransactionalInvocationHandler;
 import de.freese.pim.core.service.ISettingsService;
 import de.freese.pim.core.service.SettingService;
 import de.freese.pim.core.utils.PreserveOrderOptionGroup;

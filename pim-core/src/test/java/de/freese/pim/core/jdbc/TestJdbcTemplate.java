@@ -1,7 +1,8 @@
 // Created: 12.01.2017
-package de.freese.pim.core.persistence;
+package de.freese.pim.core.jdbc;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -15,6 +16,8 @@ import org.junit.Test;
 import org.junit.runners.MethodSorters;
 import org.springframework.jdbc.datasource.SingleConnectionDataSource;
 import de.freese.pim.core.addressbook.TestAddressbookConfig;
+import de.freese.pim.core.addressbook.model.Kontakt;
+import de.freese.pim.core.jdbc.tx.ConnectionHolder;
 
 /**
  * TestCase des eigenen {@link JdbcTemplate}.
@@ -168,6 +171,52 @@ public class TestJdbcTemplate
      * @throws Exception Falls was schief geht.
      */
     @Test
+    public void test012InsertBatch() throws Exception
+    {
+        StringBuilder sql = new StringBuilder();
+        sql.append("INSERT INTO KONTAKT (user_id, id, nachname, vorname)");
+        sql.append(" VALUES");
+        sql.append(" (?, ?, ?, ?)");
+
+        ConnectionHolder.set(jdbcTemplate.getDataSource().getConnection());
+        ConnectionHolder.beginTX();
+
+        try
+        {
+            List<Kontakt> kontakte = new ArrayList<>();
+            kontakte.add(new Kontakt(0, "Nachname1", "Vorname1"));
+            kontakte.add(new Kontakt(0, "Nachname2", "Vorname2"));
+
+            int[] affectedRows = jdbcTemplate.updateBatch(sql.toString(), kontakte, (ps, kontakt, sequenceProvider) -> {
+                long id = sequenceProvider.getNextID("KONTAKT_SEQ");
+                ps.setString(1, "TEST");
+                ps.setLong(2, id);
+                ps.setString(3, kontakt.getNachname());
+                ps.setString(4, kontakt.getVorname());
+            });
+
+            ConnectionHolder.commitTX();
+
+            Assert.assertEquals(2, affectedRows.length);
+            Assert.assertEquals(1, affectedRows[0]);
+            Assert.assertEquals(1, affectedRows[1]);
+        }
+        catch (Exception ex)
+        {
+            ConnectionHolder.rollbackTX();
+
+            throw ex;
+        }
+        finally
+        {
+            ConnectionHolder.close();
+        }
+    }
+
+    /**
+     * @throws Exception Falls was schief geht.
+     */
+    @Test
     public void test020QueryAsListReadOnly() throws Exception
     {
         StringBuilder sql = new StringBuilder();
@@ -176,7 +225,7 @@ public class TestJdbcTemplate
         List<Map<String, Object>> results = jdbcTemplate.queryForList(sql.toString());
 
         Assert.assertNotNull(results);
-        Assert.assertEquals(1, results.size());
+        Assert.assertEquals(3, results.size());
 
         // Keys
         Set<String> keys = results.get(0).keySet();
@@ -206,16 +255,13 @@ public class TestJdbcTemplate
         sql.append("select user_id, id, nachname, vorname from KONTAKT");
 
         ConnectionHolder.set(jdbcTemplate.getDataSource().getConnection());
-        ConnectionHolder.beginTX();
 
         try
         {
             List<Map<String, Object>> results = jdbcTemplate.queryForList(sql.toString());
 
-            ConnectionHolder.commitTX();
-
             Assert.assertNotNull(results);
-            Assert.assertEquals(1, results.size());
+            Assert.assertEquals(3, results.size());
 
             // Keys
             Set<String> keys = results.get(0).keySet();
@@ -236,8 +282,6 @@ public class TestJdbcTemplate
         }
         catch (Exception ex)
         {
-            ConnectionHolder.rollbackTX();
-
             throw ex;
         }
         finally
@@ -259,13 +303,25 @@ public class TestJdbcTemplate
                 jdbcTemplate.query(sql.toString(), (rs, rowNum) -> new Entity(rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4)));
 
         Assert.assertNotNull(results);
-        Assert.assertEquals(1, results.size());
+        Assert.assertEquals(3, results.size());
 
         Entity entity = results.get(0);
         Assert.assertEquals("TEST", entity.getUserID());
         Assert.assertEquals("1", entity.getID());
         Assert.assertEquals("Freese", entity.getNachname());
         Assert.assertEquals("Thomas", entity.getVorname());
+
+        entity = results.get(1);
+        Assert.assertEquals("TEST", entity.getUserID());
+        Assert.assertEquals("2", entity.getID());
+        Assert.assertEquals("Nachname1", entity.getNachname());
+        Assert.assertEquals("Vorname1", entity.getVorname());
+
+        entity = results.get(2);
+        Assert.assertEquals("TEST", entity.getUserID());
+        Assert.assertEquals("3", entity.getID());
+        Assert.assertEquals("Nachname2", entity.getNachname());
+        Assert.assertEquals("Vorname2", entity.getVorname());
     }
 
     /**
@@ -284,17 +340,18 @@ public class TestJdbcTemplate
 
         try
         {
-            long newID = jdbcTemplate.query("call next value for kontakt_seq", rs -> {
-                rs.next();
+            // long id = jdbcTemplate.query("call next value for kontakt_seq", rs -> {
+            // rs.next();
+            //
+            // return rs.getLong(1);
+            // });
+            long id = jdbcTemplate.getNextID("KONTAKT_SEQ");
 
-                return rs.getLong(1);
-            });
-
-            Assert.assertEquals(2L, newID);
+            Assert.assertEquals(4L, id);
 
             int affectedRows = jdbcTemplate.update(sql.toString(), ps -> {
                 ps.setString(1, "TEST");
-                ps.setLong(2, newID);
+                ps.setLong(2, id);
                 ps.setString(3, "Freesee");
                 ps.setString(4, "Thomass");
             });
@@ -342,7 +399,7 @@ public class TestJdbcTemplate
 
         entity = results.get(1);
         Assert.assertEquals("TEST", entity.getUserID());
-        Assert.assertEquals("2", entity.getID());
+        Assert.assertEquals("4", entity.getID());
         Assert.assertEquals("Freesee", entity.getNachname());
         Assert.assertEquals("Thomass", entity.getVorname());
     }

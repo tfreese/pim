@@ -1,5 +1,5 @@
 // Created: 11.01.2017
-package de.freese.pim.core.persistence;
+package de.freese.pim.core.jdbc.tx;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;

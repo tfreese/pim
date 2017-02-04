@@ -18,7 +18,7 @@ import org.junit.runners.Parameterized.Parameter;
 import org.junit.runners.Parameterized.Parameters;
 import de.freese.pim.core.addressbook.TestAddressbookConfig;
 import de.freese.pim.core.addressbook.service.DefaultAddressBookService;
-import de.freese.pim.core.persistence.TransactionalInvocationHandler;
+import de.freese.pim.core.jdbc.tx.TransactionalInvocationHandler;
 
 /**
  * TestCase für die TX-Steuerung mit Proxy und Lambdas.

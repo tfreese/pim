@@ -42,15 +42,7 @@ public class TreeFolderListChangeListener implements ListChangeListener<MailFold
      */
     private void addChild(final TreeItem<Object> parent, final MailFolder child)
     {
-        Runnable runnable = () -> {
-            // if (parent.getValue() instanceof MailFolder)
-            // {
-            // MailFolder mfParent = (MailFolder) parent.getValue();
-            // mfParent.addChild(child);
-            // }
-
-            parent.getChildren().add(new TreeItem<>(child));
-        };
+        Runnable runnable = () -> parent.getChildren().add(new TreeItem<>(child));
 
         runnable.run();
         // Platform.runLater(runnable;
@@ -80,7 +72,7 @@ public class TreeFolderListChangeListener implements ListChangeListener<MailFold
      * @see javafx.collections.ListChangeListener#onChanged(javafx.collections.ListChangeListener.Change)
      */
     @Override
-    public void onChanged(final javafx.collections.ListChangeListener.Change<? extends MailFolder> change)
+    public void onChanged(final ListChangeListener.Change<? extends MailFolder> change)
     {
         while (change.next())
         {

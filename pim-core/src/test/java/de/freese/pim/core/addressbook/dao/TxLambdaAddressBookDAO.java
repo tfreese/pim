@@ -7,7 +7,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.function.Supplier;
 import de.freese.pim.core.addressbook.model.Kontakt;
-import de.freese.pim.core.persistence.ConnectionHolder;
+import de.freese.pim.core.jdbc.tx.ConnectionHolder;
 import de.freese.pim.core.utils.Utils;
 
 /**

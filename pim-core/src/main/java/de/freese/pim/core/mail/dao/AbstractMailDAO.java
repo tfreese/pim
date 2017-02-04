@@ -24,12 +24,12 @@ import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import de.freese.pim.core.dao.AbstractDAO;
+import de.freese.pim.core.jdbc.RowMapper;
 import de.freese.pim.core.mail.MailPort;
 import de.freese.pim.core.mail.MailProvider;
 import de.freese.pim.core.mail.model.Mail;
 import de.freese.pim.core.mail.model.MailAccount;
 import de.freese.pim.core.mail.model.MailFolder;
-import de.freese.pim.core.persistence.RowMapper;
 import de.freese.pim.core.service.SettingService;
 import de.freese.pim.core.utils.Crypt;
 import de.freese.pim.core.utils.Utils;
@@ -56,7 +56,7 @@ public class AbstractMailDAO extends AbstractDAO<IMailDAO> implements IMailDAO
         }
 
         /**
-         * @see de.freese.pim.core.persistence.RowMapper#map(java.sql.ResultSet, int)
+         * @see de.freese.pim.core.jdbc.RowMapper#map(java.sql.ResultSet, int)
          */
         @Override
         public MailAccount map(final ResultSet rs, final int rowNum) throws SQLException
@@ -103,7 +103,7 @@ public class AbstractMailDAO extends AbstractDAO<IMailDAO> implements IMailDAO
         }
 
         /**
-         * @see de.freese.pim.core.persistence.RowMapper#map(java.sql.ResultSet, int)
+         * @see de.freese.pim.core.jdbc.RowMapper#map(java.sql.ResultSet, int)
          */
         @Override
         public MailFolder map(final ResultSet rs, final int rowNum) throws SQLException
@@ -133,7 +133,7 @@ public class AbstractMailDAO extends AbstractDAO<IMailDAO> implements IMailDAO
         }
 
         /**
-         * @see de.freese.pim.core.persistence.RowMapper#map(java.sql.ResultSet, int)
+         * @see de.freese.pim.core.jdbc.RowMapper#map(java.sql.ResultSet, int)
          */
         @Override
         public Mail map(final ResultSet rs, final int rowNum) throws SQLException
@@ -376,7 +376,7 @@ public class AbstractMailDAO extends AbstractDAO<IMailDAO> implements IMailDAO
     public int insertAccount(final MailAccount account) throws Exception
     {
         String userID = getUserID();
-        long id = getJdbcTemplate().getNextSequenceID("MAIL_SEQ");
+        long id = getJdbcTemplate().getNextID("MAIL_SEQ");
 
         String password = account.getPassword();
         String encryptedPassword = Crypt.getUTF8Instance().encrypt(password);
@@ -431,8 +431,8 @@ public class AbstractMailDAO extends AbstractDAO<IMailDAO> implements IMailDAO
         sb.append(")");
         String sql = sb.toString();
 
-        int[] affectedRows = getJdbcTemplate().updateBatch(sql, folders, (ps, mf) -> {
-            long id = getJdbcTemplate().getNextSequenceID("MAIL_SEQ");
+        int[] affectedRows = getJdbcTemplate().updateBatch(sql, folders, (ps, mf, sequenceProvider) -> {
+            long id = sequenceProvider.getNextID("MAIL_SEQ");
 
             ps.setLong(1, id);
             ps.setLong(2, accountID);
@@ -466,7 +466,7 @@ public class AbstractMailDAO extends AbstractDAO<IMailDAO> implements IMailDAO
         sb.append(")");
         String sql = sb.toString();
 
-        int[] affectedRows = getJdbcTemplate().updateBatch(sql, mails, (ps, mail) -> {
+        int[] affectedRows = getJdbcTemplate().updateBatch(sql, mails, (ps, mail, sequenceProvider) -> {
             String from = Optional.ofNullable(mail.getFrom()).map(InternetAddress::toUnicodeString).orElse(null);
             String to = Optional.ofNullable(mail.getTo()).map(InternetAddress::toUnicodeString).orElse(null);
             Date reveicedDate = Optional.ofNullable(mail.getReceivedDate()).map(rd -> new Date(rd.getTime())).orElse(null);

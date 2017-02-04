@@ -5,11 +5,11 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import org.apache.commons.lang3.ArrayUtils;
+import de.freese.pim.core.jdbc.tx.Transactional;
 import de.freese.pim.core.mail.dao.IMailDAO;
 import de.freese.pim.core.mail.model.Mail;
 import de.freese.pim.core.mail.model.MailAccount;
 import de.freese.pim.core.mail.model.MailFolder;
-import de.freese.pim.core.persistence.Transactional;
 
 /**
  * Service für das AddressBook.

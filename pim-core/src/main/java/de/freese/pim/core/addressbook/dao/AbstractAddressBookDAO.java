@@ -11,8 +11,8 @@ import java.util.stream.IntStream;
 import org.apache.commons.lang3.StringUtils;
 import de.freese.pim.core.addressbook.model.Kontakt;
 import de.freese.pim.core.dao.AbstractDAO;
-import de.freese.pim.core.persistence.ResultSetExtractor;
-import de.freese.pim.core.persistence.RowMapper;
+import de.freese.pim.core.jdbc.ResultSetExtractor;
+import de.freese.pim.core.jdbc.RowMapper;
 import de.freese.pim.core.utils.Utils;
 
 /**
@@ -44,7 +44,7 @@ public abstract class AbstractAddressBookDAO extends AbstractDAO<IAddressBookDAO
         }
 
         /**
-         * @see de.freese.pim.core.persistence.ResultSetExtractor#extract(java.sql.ResultSet)
+         * @see de.freese.pim.core.jdbc.ResultSetExtractor#extract(java.sql.ResultSet)
          */
         @Override
         public List<Kontakt> extract(final ResultSet rs) throws SQLException
@@ -95,7 +95,7 @@ public abstract class AbstractAddressBookDAO extends AbstractDAO<IAddressBookDAO
         }
 
         /**
-         * @see de.freese.pim.core.persistence.RowMapper#map(java.sql.ResultSet, int)
+         * @see de.freese.pim.core.jdbc.RowMapper#map(java.sql.ResultSet, int)
          */
         @Override
         public Kontakt map(final ResultSet rs, final int rowNum) throws SQLException
@@ -353,7 +353,7 @@ public abstract class AbstractAddressBookDAO extends AbstractDAO<IAddressBookDAO
     public long insertKontakt(final String nachname, final String vorname) throws Exception
     {
         String userID = getUserID();
-        long id = getJdbcTemplate().getNextSequenceID("KONTAKT_SEQ");
+        long id = getJdbcTemplate().getNextID("KONTAKT_SEQ");
 
         String sql = "insert into KONTAKT (id, user_id, nachname, vorname) values (?, ?, ?, ?)";
 

@@ -20,14 +20,14 @@ import org.junit.Test;
 import org.junit.runners.MethodSorters;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
+import de.freese.pim.core.jdbc.JdbcTemplate;
+import de.freese.pim.core.jdbc.SimpleDataSource;
+import de.freese.pim.core.jdbc.tx.ConnectionHolder;
 import de.freese.pim.core.mail.dao.DefaultMailDAO;
 import de.freese.pim.core.mail.dao.IMailDAO;
 import de.freese.pim.core.mail.model.Mail;
 import de.freese.pim.core.mail.model.MailAccount;
 import de.freese.pim.core.mail.model.MailFolder;
-import de.freese.pim.core.persistence.ConnectionHolder;
-import de.freese.pim.core.persistence.JdbcTemplate;
-import de.freese.pim.core.persistence.SimpleDataSource;
 
 /**
  * TestCase für das {@link IMailDAO}.

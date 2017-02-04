@@ -7,7 +7,7 @@ import java.util.Objects;
 
 import de.freese.pim.core.addressbook.dao.IAddressBookDAO;
 import de.freese.pim.core.addressbook.model.Kontakt;
-import de.freese.pim.core.persistence.Transactional;
+import de.freese.pim.core.jdbc.tx.Transactional;
 
 /**
  * Service für das AddressBook.
