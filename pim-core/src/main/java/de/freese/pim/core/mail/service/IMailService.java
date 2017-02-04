@@ -2,7 +2,6 @@
 package de.freese.pim.core.mail.service;
 
 import java.util.List;
-
 import de.freese.pim.core.mail.model.Mail;
 import de.freese.pim.core.mail.model.MailAccount;
 import de.freese.pim.core.mail.model.MailFolder;
@@ -18,17 +17,19 @@ public interface IMailService
      * Löschen eines {@link MailAccount}.<br>
      *
      * @param accountID long
+     * @return int; affectedRows
      * @throws Exception Falls was schief geht.
      */
-    public void deleteAccount(long accountID) throws Exception;
+    public int deleteAccount(long accountID) throws Exception;
 
     /**
      * Löschen eines {@link MailFolder}.<br>
      *
      * @param folderID long
+     * @return int; affectedRows
      * @throws Exception Falls was schief geht.
      */
-    public void deleteFolder(long folderID) throws Exception;
+    public int deleteFolder(long folderID) throws Exception;
 
     /**
      * Liefert alle MailAccounts, sortiert nach MAIL.
@@ -61,19 +62,21 @@ public interface IMailService
      * Die ID wird dabei in die Entity gesetzt.
      *
      * @param account {@link MailAccount}
+     * @return int; affectedRows
      * @throws Exception Falls was schief geht.
      */
-    public void insertAccount(MailAccount account) throws Exception;
+    public int insertAccount(MailAccount account) throws Exception;
 
     /**
-     * Anlegen einer neuen {@link Mail}.<br>
+     * Anlegen von neuen {@link Mail}.<br>
      * Die Mail hat keinen eigene PrimaryKey.
      *
      * @param folderID long
-     * @param mail {@link Mail}
+     * @param mails {@link List}
+     * @return int[]; affectedRows
      * @throws Exception Falls was schief geht.
      */
-    public void insertMail(long folderID, Mail mail) throws Exception;
+    public int[] insertMails(long folderID, List<Mail> mails) throws Exception;
 
     /**
      * Anlegen oder ändern von {@link MailFolder}.<br>
@@ -81,15 +84,17 @@ public interface IMailService
      *
      * @param accountID long
      * @param folders {@link List}
+     * @return int[]; affectedRows
      * @throws Exception Falls was schief geht.
      */
-    public void insertOrUpdateFolder(long accountID, List<MailFolder> folders) throws Exception;
+    public int[] insertOrUpdateFolder(long accountID, List<MailFolder> folders) throws Exception;
 
     /**
      * Ändern eines {@link MailAccount}.
      *
      * @param account {@link MailAccount}
+     * @return int; affectedRows
      * @throws Exception Falls was schief geht.
      */
-    public void updateAccount(MailAccount account) throws Exception;
+    public int updateAccount(MailAccount account) throws Exception;
 }

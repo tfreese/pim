@@ -3,10 +3,8 @@ package de.freese.pim.gui.mail;
 
 import java.util.List;
 import java.util.Objects;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import de.freese.pim.core.mail.model.MailAccount;
 import de.freese.pim.core.mail.model.MailFolder;
 import de.freese.pim.core.mail.service.IMailAPI;
@@ -56,23 +54,18 @@ public class InitMailAPITask extends Task<List<MailFolder>>
         this.parent = parent;
         this.mailAPI = mailAPI;
 
-        setOnSucceeded(event ->
-        {
-            List<MailFolder> folder = getValue();
+        setOnSucceeded(event -> {
+            List<MailFolder> folders = getValue();
 
-            mailAPI.getFolder().addAll(folder);
+            mailAPI.getFolder().addAll(folders);
 
             LOGGER.info("Initialisation of {} finished", this.mailAPI.getAccount().getMail());
             treeView.refresh();
 
-            // Laden der Mails pro Folder.
-            for (MailFolder mf : folder)
-            {
-                PIMApplication.getExecutorService().execute(new LoadMailsTask(mf));
-            }
+            // Laden der Mails.
+            PIMApplication.getExecutorService().execute(new LoadMailsTask(treeView, folders));
         });
-        setOnFailed(event ->
-        {
+        setOnFailed(event -> {
             Throwable th = getException();
 
             LOGGER.error(null, th);
@@ -91,8 +84,7 @@ public class InitMailAPITask extends Task<List<MailFolder>>
 
         this.mailAPI.connect();
 
-        PIMApplication.registerCloseable(() ->
-        {
+        PIMApplication.registerCloseable(() -> {
             PIMApplication.LOGGER.info("Close " + this.mailAPI.getAccount().getMail());
             this.mailAPI.disconnect();
         });
@@ -100,8 +92,8 @@ public class InitMailAPITask extends Task<List<MailFolder>>
         // Tree aufbauen.
         this.mailAPI.getFolderSubscribed().addListener(new TreeFolderListChangeListener(this.parent));
 
-        List<MailFolder> folder = this.mailAPI.loadFolder();
+        List<MailFolder> folders = this.mailAPI.loadFolder();
 
-        return folder;
+        return folders;
     }
 }

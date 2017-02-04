@@ -8,9 +8,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.IntStream;
-
 import org.apache.commons.lang3.StringUtils;
-
 import de.freese.pim.core.addressbook.model.Kontakt;
 import de.freese.pim.core.dao.AbstractDAO;
 import de.freese.pim.core.persistence.ResultSetExtractor;
@@ -169,8 +167,7 @@ public abstract class AbstractAddressBookDAO extends AbstractDAO<IAddressBookDAO
         //
         // affectedRows = stmt.executeUpdate();
         // }
-        int affectedRows = getJdbcTemplate().update(sql, ps ->
-        {
+        int affectedRows = getJdbcTemplate().update(sql, ps -> {
             ps.setLong(1, kontaktID);
             ps.setString(2, attribut.toUpperCase());
         });
@@ -204,13 +201,11 @@ public abstract class AbstractAddressBookDAO extends AbstractDAO<IAddressBookDAO
         // affectedRows = stmtKontakt.executeUpdate();
         // }
 
-        getJdbcTemplate().update(sqlAttribut, ps ->
-        {
+        getJdbcTemplate().update(sqlAttribut, ps -> {
             ps.setLong(1, id);
         });
 
-        int affectedRows = getJdbcTemplate().update(sqlKontakt, ps ->
-        {
+        int affectedRows = getJdbcTemplate().update(sqlKontakt, ps -> {
             ps.setString(1, userID);
             ps.setLong(2, id);
         });
@@ -222,7 +217,7 @@ public abstract class AbstractAddressBookDAO extends AbstractDAO<IAddressBookDAO
      * @see de.freese.pim.core.addressbook.dao.IAddressBookDAO#getKontaktDetails(long[])
      */
     @Override
-    public List<Kontakt> getKontaktDetails(final long... ids) throws Exception
+    public List<Kontakt> getKontaktDetails(final long...ids) throws Exception
     {
         String userID = getUserID();
 
@@ -236,8 +231,7 @@ public abstract class AbstractAddressBookDAO extends AbstractDAO<IAddressBookDAO
         {
             whereClause.append(" and id in (");
 
-            IntStream.range(0, ids.length).forEach(index ->
-            {
+            IntStream.range(0, ids.length).forEach(index -> {
                 whereClause.append(ids[index]);
 
                 if (index < (ids.length - 1))
@@ -268,8 +262,7 @@ public abstract class AbstractAddressBookDAO extends AbstractDAO<IAddressBookDAO
         // kontakte = new KontaktDetailsResultSetExtractor().extract(rs);
         // }
         // }
-        List<Kontakt> kontakte = getJdbcTemplate().query(sql.toString(), ps -> ps.setString(1, userID),
-                new KontaktDetailsResultSetExtractor());
+        List<Kontakt> kontakte = getJdbcTemplate().query(sql.toString(), ps -> ps.setString(1, userID), new KontaktDetailsResultSetExtractor());
 
         return kontakte;
     }
@@ -315,6 +308,14 @@ public abstract class AbstractAddressBookDAO extends AbstractDAO<IAddressBookDAO
     }
 
     /**
+     * @return String
+     */
+    protected String getUserID()
+    {
+        return Utils.getSystemUserName();
+    }
+
+    /**
      * @see de.freese.pim.core.addressbook.dao.IAddressBookDAO#insertAttribut(long, java.lang.String, java.lang.String)
      */
     @Override
@@ -336,8 +337,7 @@ public abstract class AbstractAddressBookDAO extends AbstractDAO<IAddressBookDAO
         // affectedRows = stmt.executeUpdate();
         // }
 
-        int affectedRows = getJdbcTemplate().update(sql.toString(), ps ->
-        {
+        int affectedRows = getJdbcTemplate().update(sql.toString(), ps -> {
             ps.setLong(1, kontaktID);
             ps.setString(2, attribut == null ? null : attribut.toUpperCase());
             ps.setString(3, wert);
@@ -353,7 +353,7 @@ public abstract class AbstractAddressBookDAO extends AbstractDAO<IAddressBookDAO
     public long insertKontakt(final String nachname, final String vorname) throws Exception
     {
         String userID = getUserID();
-        long id = getNextID("KONTAKT_SEQ");
+        long id = getJdbcTemplate().getNextSequenceID("KONTAKT_SEQ");
 
         String sql = "insert into KONTAKT (id, user_id, nachname, vorname) values (?, ?, ?, ?)";
 
@@ -377,8 +377,7 @@ public abstract class AbstractAddressBookDAO extends AbstractDAO<IAddressBookDAO
         // insertStmt.executeUpdate();
         // }
 
-        getJdbcTemplate().update(sql.toString(), ps ->
-        {
+        getJdbcTemplate().update(sql.toString(), ps -> {
             ps.setLong(1, id);
             ps.setString(2, userID);
             ps.setString(3, nachname);
@@ -418,8 +417,7 @@ public abstract class AbstractAddressBookDAO extends AbstractDAO<IAddressBookDAO
         // }
         // }
 
-        List<Kontakt> kontakte = getJdbcTemplate().query(sql.toString(), ps ->
-        {
+        List<Kontakt> kontakte = getJdbcTemplate().query(sql.toString(), ps -> {
             ps.setString(1, userID);
             ps.setString(2, "%" + name.toLowerCase() + "%");
             ps.setString(3, "%" + name.toLowerCase() + "%");
@@ -449,8 +447,7 @@ public abstract class AbstractAddressBookDAO extends AbstractDAO<IAddressBookDAO
         // affectedRows = stmt.executeUpdate();
         // }
 
-        int affectedRows = getJdbcTemplate().update(sql, ps ->
-        {
+        int affectedRows = getJdbcTemplate().update(sql, ps -> {
             ps.setString(1, wert);
             ps.setLong(2, kontaktID);
             ps.setString(3, attribut.toUpperCase());
@@ -482,8 +479,7 @@ public abstract class AbstractAddressBookDAO extends AbstractDAO<IAddressBookDAO
         // affectedRows = stmt.executeUpdate();
         // }
 
-        int affectedRows = getJdbcTemplate().update(sql, ps ->
-        {
+        int affectedRows = getJdbcTemplate().update(sql, ps -> {
             ps.setString(1, nachname);
             ps.setString(2, vorname);
             ps.setString(3, userID);
@@ -491,13 +487,5 @@ public abstract class AbstractAddressBookDAO extends AbstractDAO<IAddressBookDAO
         });
 
         return affectedRows > 0;
-    }
-
-    /**
-     * @return String
-     */
-    protected String getUserID()
-    {
-        return Utils.getSystemUserName();
     }
 }

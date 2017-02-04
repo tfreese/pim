@@ -4,18 +4,24 @@ package de.freese.pim.core.persistence;
 import java.sql.Blob;
 import java.sql.Clob;
 import java.sql.Connection;
+import java.sql.DatabaseMetaData;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.Function;
+import java.util.stream.IntStream;
 import javax.sql.DataSource;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import com.sun.mail.iap.ConnectionException;
 
 /**
  * Analog-Implementierung vom org.springframework.jdbc.core.JdbcTemplate<br>
@@ -198,9 +204,19 @@ public class JdbcTemplate
     }
 
     /**
+    *
+    */
+    private static final Logger LOGGER = LoggerFactory.getLogger(JdbcTemplate.class);
+
+    /**
      *
      */
     private DataSource dataSource = null;
+
+    /**
+    *
+    */
+    private Function<String, String> sequenceFunction = null;
 
     /**
      * Erzeugt eine neue Instanz von {@link JdbcTemplate}
@@ -321,6 +337,128 @@ public class JdbcTemplate
         Objects.requireNonNull(this.dataSource, "dataSource required");
 
         return this.dataSource;
+    }
+
+    /**
+     * Liefert die nächste ID/PK der Sequence/Tabelle.<br>
+     * Unterstützte Datenbanken:<br>
+     *
+     * <pre>
+     * - Oracle: select SEQ.nextval from dual
+     * - HSQLDB: call next value for SEQ
+     * - Default: select count(*) + 1 from SEQ (Tabelle)
+     * </pre>
+     *
+     * @param sequence String
+     * @return long
+     * @throws SQLException Falls was schief geht.
+     */
+    @SuppressWarnings("resource")
+    public synchronized long getNextSequenceID(final String sequence) throws SQLException
+    {
+        Connection connection = null;
+
+        try
+        {
+            connection = getConnection();
+
+            return getNextSequenceID(sequence, connection);
+        }
+        finally
+        {
+            closeConnection(connection);
+        }
+    }
+
+    /**
+     * Liefert die nächste ID/PK der Sequence/Tabelle.<br>
+     * Unterstützte Datenbanken:<br>
+     *
+     * <pre>
+     * - Oracle: select SEQ.nextval from dual
+     * - HSQLDB: call next value for SEQ
+     * - Default: select count(*) + 1 from SEQ (Tabelle)
+     * </pre>
+     *
+     * @param sequence String
+     * @param connection {@link Connection}
+     * @return long
+     * @throws SQLException Falls was schief geht.
+     */
+    public synchronized long getNextSequenceID(final String sequence, final Connection connection) throws SQLException
+    {
+        if (this.sequenceFunction == null)
+        {
+            DatabaseMetaData dbmd = connection.getMetaData();
+
+            String product = dbmd.getDatabaseProductName().toLowerCase();
+            product = product.split(" ")[0];
+            // int majorVersion = dbmd.getDatabaseMajorVersion();
+            // int minorVersion = dbmd.getDatabaseMinorVersion();
+
+            switch (product)
+            {
+                case "oracle":
+                    this.sequenceFunction = seq -> "select " + seq + ".nextval from dual";
+                    break;
+                case "hsql":
+                    this.sequenceFunction = seq -> "call next value for " + seq;
+                    break;
+                // case "mysql":
+                // // CREATE TABLE sequence (id INT NOT NULL);
+                // // INSERT INTO sequence VALUES (0);
+                //
+                // this.sequenceFunction = seq -> "UPDATE sequence SET id=LAST_INSERT_ID(id + 1); SELECT LAST_INSERT_ID();";
+                // break;
+
+                default:
+                    // this.sequenceFunction = seq -> "select nvl(max(id), 0) + 1 from " + seq;
+                    this.sequenceFunction = seq -> "select count(*) + 1 from " + seq;
+
+                    String msg = String.format("%s: use following sql for sequence \"%s\"%n", this.sequenceFunction.apply("<SEQ/TABLE>"),
+                            dbmd.getDatabaseProductName());
+                    LOGGER.warn(msg);
+            }
+        }
+
+        long id = 0;
+
+        try (Statement stmt = connection.createStatement();
+             ResultSet rs = stmt.executeQuery(this.sequenceFunction.apply(sequence)))
+        {
+            rs.next();
+            id = rs.getLong(1);
+        }
+
+        return id;
+    }
+
+    /**
+     * Abfrage der {@link DatabaseMetaData}.
+     *
+     * @return boolean
+     * @throws SQLException Falls was schief geht.
+     */
+    protected boolean isBatchSupported() throws SQLException
+    {
+        try (Connection connection = getDataSource().getConnection())
+        {
+            return isBatchSupported(connection);
+        }
+    }
+
+    /**
+     * Abfrage der {@link DatabaseMetaData}.
+     *
+     * @param connection {@link ConnectionException}
+     * @return boolean
+     * @throws SQLException Falls was schief geht.
+     */
+    protected boolean isBatchSupported(final Connection connection) throws SQLException
+    {
+        DatabaseMetaData dbmd = connection.getMetaData();
+
+        return dbmd.supportsBatchUpdates();
     }
 
     /**
@@ -451,6 +589,8 @@ public class JdbcTemplate
      */
     public JdbcTemplate setDataSource(final DataSource dataSource)
     {
+        Objects.requireNonNull(dataSource, "dataSource required");
+
         this.dataSource = dataSource;
 
         return this;
@@ -519,10 +659,64 @@ public class JdbcTemplate
 
             return affectedRows;
         }
-        // catch (Exception ex)
-        // {
-        // throw convertException(ex);
-        // }
+        finally
+        {
+            closeConnection(connection);
+        }
+    }
+
+    /**
+     * Führt ein {@link Statement#executeBatch()} aus (INSERT, UPDATE, DELETE).
+     *
+     * @param <T> Konkreter Row-Typ
+     * @param sql String
+     * @param batchArgs {@link Collection}
+     * @param setter {@link ParameterizedPreparedStatementSetter}
+     * @return int[]; affectedRows
+     * @throws SQLException Falls was schief geht.
+     */
+    @SuppressWarnings("resource")
+    public <T> int[] updateBatch(final String sql, final Collection<T> batchArgs, final ParameterizedPreparedStatementSetter<T> setter) throws SQLException
+    {
+        List<int[]> rowsAffected = new ArrayList<>();
+        Connection connection = null;
+        boolean supportsBatch = isBatchSupported();
+
+        try
+        {
+            connection = getConnection();
+
+            try (PreparedStatement ps = connection.prepareStatement(sql))
+            {
+                for (T arg : batchArgs)
+                {
+                    ps.clearParameters();
+
+                    setter.setValues(ps, arg);
+
+                    if (supportsBatch)
+                    {
+                        ps.addBatch();
+                    }
+                    else
+                    {
+                        // Batch nicht möglich -> direkt ausführen.
+                        int i = ps.executeUpdate();
+                        rowsAffected.add(new int[]
+                        {
+                                i
+                        });
+                    }
+                }
+
+                if (supportsBatch)
+                {
+                    rowsAffected.add(ps.executeBatch());
+                }
+            }
+
+            return rowsAffected.stream().flatMapToInt(af -> IntStream.of(af)).toArray();
+        }
         finally
         {
             closeConnection(connection);

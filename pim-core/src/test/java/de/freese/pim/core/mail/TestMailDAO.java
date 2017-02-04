@@ -6,11 +6,10 @@ package de.freese.pim.core.mail;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.Arrays;
 import java.util.List;
-
 import javax.mail.internet.InternetAddress;
 import javax.sql.DataSource;
-
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -21,7 +20,6 @@ import org.junit.Test;
 import org.junit.runners.MethodSorters;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
-
 import de.freese.pim.core.mail.dao.DefaultMailDAO;
 import de.freese.pim.core.mail.dao.IMailDAO;
 import de.freese.pim.core.mail.model.Mail;
@@ -229,7 +227,7 @@ public class TestMailDAO
     {
         MailFolder folder = new MailFolder();
 
-        TestMailDAO.mailDAO.insertFolder(folder, 2);
+        TestMailDAO.mailDAO.insertFolder(2, Arrays.asList(folder));
     }
 
     /**
@@ -243,7 +241,7 @@ public class TestMailDAO
         folder.setName("b");
         folder.setAbonniert(false);
 
-        TestMailDAO.mailDAO.insertFolder(folder, 2);
+        TestMailDAO.mailDAO.insertFolder(2, Arrays.asList(folder));
 
         Assert.assertEquals(4, folder.getID());
     }
@@ -312,7 +310,7 @@ public class TestMailDAO
     {
         Mail mail = new Mail();
 
-        TestMailDAO.mailDAO.insertMail(mail, 4);
+        TestMailDAO.mailDAO.insertMail(4, Arrays.asList(mail));
     }
 
     /**
@@ -332,7 +330,7 @@ public class TestMailDAO
         mail.setTo(InternetAddress.parse("b@b.bb")[0]);
         mail.setUID(2);
 
-        TestMailDAO.mailDAO.insertMail(mail, 4);
+        TestMailDAO.mailDAO.insertMail(4, Arrays.asList(mail));
     }
 
     /**
@@ -349,11 +347,9 @@ public class TestMailDAO
         Mail mail = mails.get(0);
         Assert.assertEquals("a@a.aa", mail.getFrom().getAddress());
         Assert.assertEquals(1, mail.getMsgNum());
-        Assert.assertEquals(java.util.Date.from(LocalDateTime.of(2017, 02, 03, 15, 00).atZone(ZoneId.systemDefault()).toInstant()),
-                mail.getReceivedDate());
+        Assert.assertEquals(java.util.Date.from(LocalDateTime.of(2017, 02, 03, 15, 00).atZone(ZoneId.systemDefault()).toInstant()), mail.getReceivedDate());
         Assert.assertFalse(mail.isSeen());
-        Assert.assertEquals(java.util.Date.from(LocalDateTime.of(2017, 02, 03, 15, 01).atZone(ZoneId.systemDefault()).toInstant()),
-                mail.getSendDate());
+        Assert.assertEquals(java.util.Date.from(LocalDateTime.of(2017, 02, 03, 15, 01).atZone(ZoneId.systemDefault()).toInstant()), mail.getSendDate());
         Assert.assertEquals(13, mail.getSize());
         Assert.assertEquals("-TEST-", mail.getSubject());
         Assert.assertEquals("b@b.bb", mail.getTo().getAddress());
@@ -398,11 +394,9 @@ public class TestMailDAO
         Mail mail = mails.get(0);
         Assert.assertEquals("a@a.aa", mail.getFrom().getAddress());
         Assert.assertEquals(1, mail.getMsgNum());
-        Assert.assertEquals(java.util.Date.from(LocalDateTime.of(2017, 02, 03, 15, 00).atZone(ZoneId.systemDefault()).toInstant()),
-                mail.getReceivedDate());
+        Assert.assertEquals(java.util.Date.from(LocalDateTime.of(2017, 02, 03, 15, 00).atZone(ZoneId.systemDefault()).toInstant()), mail.getReceivedDate());
         Assert.assertTrue(mail.isSeen());
-        Assert.assertEquals(java.util.Date.from(LocalDateTime.of(2017, 02, 03, 15, 01).atZone(ZoneId.systemDefault()).toInstant()),
-                mail.getSendDate());
+        Assert.assertEquals(java.util.Date.from(LocalDateTime.of(2017, 02, 03, 15, 01).atZone(ZoneId.systemDefault()).toInstant()), mail.getSendDate());
         Assert.assertEquals(13, mail.getSize());
         Assert.assertEquals("-TEST-", mail.getSubject());
         Assert.assertEquals("b@b.bb", mail.getTo().getAddress());

@@ -4,7 +4,7 @@ package de.freese.pim.core.mail.service;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
-
+import org.apache.commons.lang3.ArrayUtils;
 import de.freese.pim.core.mail.dao.IMailDAO;
 import de.freese.pim.core.mail.model.Mail;
 import de.freese.pim.core.mail.model.MailAccount;
@@ -41,17 +41,21 @@ public class DefaultMailService implements IMailService
      * @see de.freese.pim.core.mail.service.IMailService#deleteAccount(long)
      */
     @Override
-    public void deleteAccount(final long accountID) throws Exception
+    @Transactional
+    public int deleteAccount(final long accountID) throws Exception
     {
         List<MailFolder> folder = this.mailDAO.getMailFolder(accountID);
+        int affectedRows = 0;
 
         for (MailFolder mf : folder)
         {
-            this.mailDAO.deleteMails(mf.getID());
+            affectedRows += this.mailDAO.deleteMails(mf.getID());
         }
 
-        this.mailDAO.deleteFolders(accountID);
-        this.mailDAO.deleteAccount(accountID);
+        affectedRows += this.mailDAO.deleteFolders(accountID);
+        affectedRows += this.mailDAO.deleteAccount(accountID);
+
+        return affectedRows;
     }
 
     /**
@@ -59,10 +63,12 @@ public class DefaultMailService implements IMailService
      */
     @Override
     @Transactional
-    public void deleteFolder(final long folderID) throws Exception
+    public int deleteFolder(final long folderID) throws Exception
     {
-        this.mailDAO.deleteMails(folderID);
-        this.mailDAO.deleteFolder(folderID);
+        int affectedRows = this.mailDAO.deleteMails(folderID);
+        affectedRows += this.mailDAO.deleteFolder(folderID);
+
+        return affectedRows;
     }
 
     /**
@@ -98,19 +104,19 @@ public class DefaultMailService implements IMailService
      */
     @Override
     @Transactional
-    public void insertAccount(final MailAccount account) throws Exception
+    public int insertAccount(final MailAccount account) throws Exception
     {
-        this.mailDAO.insertAccount(account);
+        return this.mailDAO.insertAccount(account);
     }
 
     /**
-     * @see de.freese.pim.core.mail.service.IMailService#insertMail(long, de.freese.pim.core.mail.model.Mail)
+     * @see de.freese.pim.core.mail.service.IMailService#insertMails(long, java.util.List)
      */
     @Override
     @Transactional
-    public void insertMail(final long folderID, final Mail mail) throws Exception
+    public int[] insertMails(final long folderID, final List<Mail> mails) throws Exception
     {
-        this.mailDAO.insertMail(mail, folderID);
+        return this.mailDAO.insertMail(folderID, mails);
     }
 
     /**
@@ -118,23 +124,21 @@ public class DefaultMailService implements IMailService
      */
     @Override
     @Transactional
-    public void insertOrUpdateFolder(final long accountID, final List<MailFolder> folders) throws Exception
+    public int[] insertOrUpdateFolder(final long accountID, final List<MailFolder> folders) throws Exception
     {
         // ID = 0 -> insert
         List<MailFolder> toInsert = folders.stream().filter(mf -> mf.getID() == 0).collect(Collectors.toList());
-
-        for (MailFolder mf : toInsert)
-        {
-            this.mailDAO.insertFolder(mf, accountID);
-        }
+        int[] affectedRows = this.mailDAO.insertFolder(accountID, toInsert);
 
         // ID != 0 -> update
         List<MailFolder> toUpdate = folders.stream().filter(mf -> mf.getID() > 0).collect(Collectors.toList());
 
         for (MailFolder mf : toUpdate)
         {
-            this.mailDAO.updateFolder(mf);
+            ArrayUtils.add(affectedRows, this.mailDAO.updateFolder(mf));
         }
+
+        return affectedRows;
     }
 
     /**
@@ -142,8 +146,8 @@ public class DefaultMailService implements IMailService
      */
     @Override
     @Transactional
-    public void updateAccount(final MailAccount account) throws Exception
+    public int updateAccount(final MailAccount account) throws Exception
     {
-        this.mailDAO.updateAccount(account);
+        return this.mailDAO.updateAccount(account);
     }
 }

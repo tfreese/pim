@@ -4,8 +4,8 @@
 
 package de.freese.pim.core.mail.dao;
 
+import java.util.Collection;
 import java.util.List;
-
 import de.freese.pim.core.mail.model.Mail;
 import de.freese.pim.core.mail.model.MailAccount;
 import de.freese.pim.core.mail.model.MailFolder;
@@ -19,42 +19,47 @@ public interface IMailDAO
      * Löschen eines {@link MailAccount}.<br>
      *
      * @param accountID long
+     * @return int; affectedRows
      * @throws Exception Falls was schief geht.
      */
-    public void deleteAccount(long accountID) throws Exception;
+    public int deleteAccount(long accountID) throws Exception;
 
     /**
      * Löschen eines {@link MailFolder}.<br>
      *
      * @param folderID long
+     * @return int; affectedRows
      * @throws Exception Falls was schief geht.
      */
-    public void deleteFolder(long folderID) throws Exception;
+    public int deleteFolder(long folderID) throws Exception;
 
     /**
      * Löschen aller {@link MailFolder} eines Accounts.<br>
      *
      * @param accountID long
+     * @return int; affectedRows
      * @throws Exception Falls was schief geht.
      */
-    public void deleteFolders(long accountID) throws Exception;
+    public int deleteFolders(long accountID) throws Exception;
 
     /**
      * Löschen einer {@link Mail}.<br>
      *
      * @param folderID long
      * @param uid long
+     * @return int; affectedRows
      * @throws Exception Falls was schief geht.
      */
-    public void deleteMail(long folderID, long uid) throws Exception;
+    public int deleteMail(long folderID, long uid) throws Exception;
 
     /**
      * Löschen aller {@link Mail}s des Folders.<br>
      *
      * @param folderID long
+     * @return int; affectedRows
      * @throws Exception Falls was schief geht.
      */
-    public void deleteMails(long folderID) throws Exception;
+    public int deleteMails(long folderID) throws Exception;
 
     /**
      * Liefert alle MailAccounts, sortiert nach MAIL.
@@ -87,52 +92,58 @@ public interface IMailDAO
      * Die ID wird dabei in die Entity gesetzt.
      *
      * @param account {@link MailAccount}
+     * @return int; affectedRows
      * @throws Exception Falls was schief geht.
      */
-    public void insertAccount(MailAccount account) throws Exception;
+    public int insertAccount(MailAccount account) throws Exception;
 
     /**
-     * Anlegen eines neuen {@link MailFolder}.<br>
+     * Anlegen von neuen {@link MailFolder}.<br>
      * Die ID wird dabei in die Entity gesetzt.
      *
-     * @param folder {@link MailFolder}
      * @param accountID long
+     * @param folders {@link Collection}
+     * @return int[]; affectedRows
      * @throws Exception Falls was schief geht.
      */
-    public void insertFolder(MailFolder folder, long accountID) throws Exception;
+    public int[] insertFolder(long accountID, Collection<MailFolder> folders) throws Exception;
 
     /**
      * Anlegen einer neuen {@link Mail}.<br>
      * Die Mail hat keinen eigene PrimaryKey.
      *
-     * @param mail {@link Mail}
      * @param folderID long
+     * @param mails {@link Collection}
+     * @return int[]; affectedRows
      * @throws Exception Falls was schief geht.
      */
-    public void insertMail(Mail mail, long folderID) throws Exception;
+    public int[] insertMail(long folderID, Collection<Mail> mails) throws Exception;
 
     /**
      * Ändern eines {@link MailAccount}.
      *
      * @param account {@link MailAccount}
+     * @return int; affectedRows
      * @throws Exception Falls was schief geht.
      */
-    public void updateAccount(MailAccount account) throws Exception;
+    public int updateAccount(MailAccount account) throws Exception;
 
     /**
      * Ändern eines {@link MailFolder}.
      *
      * @param folder {@link MailFolder}
+     * @return int; affectedRows
      * @throws Exception Falls was schief geht.
      */
-    public void updateFolder(MailFolder folder) throws Exception;
+    public int updateFolder(MailFolder folder) throws Exception;
 
     /**
      * Ändern einer {@link Mail}.<br>
      * Hier wird nur das SEEN-Flag aktualisiert.
      *
      * @param mail {@link Mail}
+     * @return int; affectedRows
      * @throws Exception Falls was schief geht.
      */
-    public void updateMail(Mail mail) throws Exception;
+    public int updateMail(Mail mail) throws Exception;
 }

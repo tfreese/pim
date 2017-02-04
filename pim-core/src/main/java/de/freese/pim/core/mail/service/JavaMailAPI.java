@@ -19,6 +19,7 @@ import java.util.Properties;
 import java.util.concurrent.Semaphore;
 import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
@@ -96,7 +97,7 @@ public class JavaMailAPI extends AbstractMailAPI
     /**
      * Für RoundRobin-Pool.
      */
-    private final IMAPStore[] stores = new IMAPStore[5];
+    private final IMAPStore[] stores = new IMAPStore[3];
 
     /**
      *
@@ -459,7 +460,12 @@ public class JavaMailAPI extends AbstractMailAPI
 
                 if (getMailService() != null)
                 {
-                    getMailService().insertOrUpdateFolder(getAccount().getID(), folder);
+                    int[] affectedRows = getMailService().insertOrUpdateFolder(getAccount().getID(), folder);
+
+                    if (getLogger().isDebugEnabled())
+                    {
+                        getLogger().debug("new folder saved: number={}", IntStream.of(affectedRows).sum());
+                    }
                 }
             }
 
@@ -500,7 +506,7 @@ public class JavaMailAPI extends AbstractMailAPI
             // Map<Integer, Mail> map = mails.stream().collect(Collectors.toMap(Mail::getMsgNum, Function.identity()));
 
             // Höchste UID finden.
-            long maxUID = mails.parallelStream().mapToLong(Mail::getUID).max().orElse(1);
+            long maxUID = mails.parallelStream().peek(m -> m.setFolder(folder)).mapToLong(Mail::getUID).max().orElse(1);
 
             if (maxUID > 1)
             {
@@ -547,10 +553,7 @@ public class JavaMailAPI extends AbstractMailAPI
             FetchProfile fp = createDefaultFetchProfile();
             f.fetch(msgs, fp);
 
-            if (getLogger().isDebugEnabled())
-            {
-                getLogger().debug("mails: number={}", msgs.length);
-            }
+            List<Mail> newMails = new ArrayList<>();
 
             for (Message message : msgs)
             {
@@ -558,9 +561,17 @@ public class JavaMailAPI extends AbstractMailAPI
                 mail.setFolder(folder);
                 populate(mail, message);
 
-                getMailService().insertMail(folder.getID(), mail);
-                mails.add(mail);
+                newMails.add(mail);
             }
+
+            int[] affectedRows = getMailService().insertMails(folder.getID(), newMails);
+
+            if (getLogger().isDebugEnabled())
+            {
+                getLogger().debug("new mails saved: number={}", IntStream.of(affectedRows).sum());
+            }
+
+            mails.addAll(newMails);
 
             return mails;
         }
