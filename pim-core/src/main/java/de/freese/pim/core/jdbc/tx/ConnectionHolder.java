@@ -33,8 +33,16 @@ public final class ConnectionHolder
     {
         Connection connection = get();
 
-        connection.setReadOnly(false); // ReadOnly Flag ändern geht nur ausserhalb einer TX.
-        connection.setAutoCommit(false);
+        // ReadOnly Flag ändern geht nur ausserhalb einer TX.
+        if (connection.isReadOnly())
+        {
+            connection.setReadOnly(false);
+        }
+
+        if (connection.getAutoCommit())
+        {
+            connection.setAutoCommit(false);
+        }
     }
 
     /**
@@ -51,7 +59,7 @@ public final class ConnectionHolder
         try (Connection connection = get())
         {
             connection.setAutoCommit(true);
-            // connection.setReadOnly(true); // ReadOnly Flag ändern geht nur ausserhalb einer TX.
+            connection.setReadOnly(true); // ReadOnly Flag ändern geht nur ausserhalb einer TX.
         }
 
         remove();

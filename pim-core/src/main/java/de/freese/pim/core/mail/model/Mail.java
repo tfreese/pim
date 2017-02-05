@@ -3,9 +3,7 @@ package de.freese.pim.core.mail.model;
 
 import java.nio.file.Path;
 import java.util.Date;
-
 import javax.mail.internet.InternetAddress;
-
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -20,6 +18,16 @@ import javafx.beans.property.StringProperty;
  */
 public class Mail
 {
+    /**
+    *
+    */
+    private final ObjectProperty<InternetAddress[]> bccProperty = new SimpleObjectProperty<>(this, "to", null);
+
+    /**
+    *
+    */
+    private final ObjectProperty<InternetAddress[]> ccProperty = new SimpleObjectProperty<>(this, "to", null);
+
     /**
      *
      */
@@ -63,7 +71,7 @@ public class Mail
     /**
     *
     */
-    private final ObjectProperty<InternetAddress> toProperty = new SimpleObjectProperty<>(this, "to", null);
+    private final ObjectProperty<InternetAddress[]> toProperty = new SimpleObjectProperty<>(this, "to", null);
 
     /**
      *
@@ -81,15 +89,51 @@ public class Mail
     /**
      * @return {@link ObjectProperty}
      */
+    public ObjectProperty<InternetAddress[]> bccProperty()
+    {
+        return this.bccProperty;
+    }
+
+    /**
+     * @return {@link ObjectProperty}
+     */
+    public ObjectProperty<InternetAddress[]> ccProperty()
+    {
+        return this.ccProperty;
+    }
+
+    /**
+     * @return {@link ObjectProperty}
+     */
     public ObjectProperty<InternetAddress> fromProperty()
     {
         return this.fromProperty;
     }
 
     /**
+     * Liefert den Empfänger, blind Copy.
+     *
+     * @return {@link InternetAddress}
+     */
+    public InternetAddress[] getBcc()
+    {
+        return bccProperty().get();
+    }
+
+    /**
+     * Liefert den Empfänger, Copy.
+     *
+     * @return {@link InternetAddress}
+     */
+    public InternetAddress[] getCc()
+    {
+        return ccProperty().get();
+    }
+
+    /**
      * Liefert den Folder der Mail.<br>
      * Bildet mit der UID den PrimaryKey.
-     * 
+     *
      * @return {@link MailFolder}
      */
     public MailFolder getFolder()
@@ -175,7 +219,7 @@ public class Mail
      *
      * @return {@link InternetAddress}
      */
-    public InternetAddress getTo()
+    public InternetAddress[] getTo()
     {
         return toProperty().get();
     }
@@ -226,9 +270,29 @@ public class Mail
     }
 
     /**
+     * Setzt den Empfänger, Blind Copy.
+     *
+     * @param bcc {@link InternetAddress}
+     */
+    public void setBcc(final InternetAddress[] bcc)
+    {
+        bccProperty().set(bcc);
+    }
+
+    /**
+     * Setzt den Empfänger, Copy.
+     *
+     * @param cc {@link InternetAddress}
+     */
+    public void setCc(final InternetAddress[] cc)
+    {
+        ccProperty().set(cc);
+    }
+
+    /**
      * Setzt den Folder der Mail.<br>
      * Bildet mit der UID den PrimaryKey.
-     * 
+     *
      * @param folder {@link MailFolder}
      */
     public void setFolder(final MailFolder folder)
@@ -311,7 +375,7 @@ public class Mail
      *
      * @param to {@link InternetAddress}
      */
-    public void setTo(final InternetAddress to)
+    public void setTo(final InternetAddress[] to)
     {
         toProperty().set(to);
     }
@@ -338,7 +402,7 @@ public class Mail
     /**
      * @return {@link ObjectProperty}
      */
-    public ObjectProperty<InternetAddress> toProperty()
+    public ObjectProperty<InternetAddress[]> toProperty()
     {
         return this.toProperty;
     }

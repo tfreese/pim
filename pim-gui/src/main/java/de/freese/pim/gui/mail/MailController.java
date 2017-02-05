@@ -590,7 +590,7 @@ public class MailController extends AbstractController
             // hat.
             // columnFrom.setCellValueFactory(cell -> FXUtils.toStringObservable(cell.getValue().fromProperty(), addr ->
             // addr.getAddress()));
-            columnFrom.setCellFactory(new InternetAddressCellFactory<Mail>());
+            // columnFrom.setCellFactory(new InternetAddressCellFactory<Mail>());
 
             columnSubject.setSortable(false);
             columnSubject.setStyle("-fx-alignment: center-left;");
@@ -642,7 +642,7 @@ public class MailController extends AbstractController
         {
             this.tableColumnsSend = new ArrayList<>();
 
-            TableColumn<Mail, InternetAddress> columnTo = new TableColumn<>(resources.getString("mail.to"));
+            TableColumn<Mail, InternetAddress[]> columnTo = new TableColumn<>(resources.getString("mail.to"));
             TableColumn<Mail, String> columnSubject = new TableColumn<>(resources.getString("mail.subject"));
             TableColumn<Mail, String> columnSend = new TableColumn<>(resources.getString("mail.send"));
 

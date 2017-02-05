@@ -2,7 +2,6 @@
 package de.freese.pim.core.db;
 
 import java.nio.file.Path;
-
 import javax.sql.DataSource;
 import de.freese.pim.core.jdbc.SimpleDataSource;
 import de.freese.pim.core.service.ISettingsService;
@@ -40,17 +39,19 @@ public class HsqldbLocalFile extends AbstractHsqldbBean
     }
 
     /**
-     * @see de.freese.pim.core.db.AbstractDataSourceBean#createDataSource(java.lang.String, java.lang.String, java.lang.String,
-     *      java.lang.String, java.lang.String)
+     * @see de.freese.pim.core.db.AbstractDataSourceBean#createDataSource(java.lang.String, java.lang.String, java.lang.String, java.lang.String,
+     *      java.lang.String)
      */
     @Override
-    protected DataSource createDataSource(final String driver, final String url, final String userName, final String password,
-            final String validationQuery)
+    protected DataSource createDataSource(final String driver, final String url, final String userName, final String password, final String validationQuery)
     {
+        ISettingsService.MAX_ACTIVE_CONNECTIONS.set(1);
+
         SimpleDataSource dataSource = new SimpleDataSource();
         dataSource.setDriverClassName(driver);
         dataSource.setUrl(url);
-        dataSource.setAutoCommit(false);
+        dataSource.setReadOnly(true);
+        dataSource.setAutoCommit(true);
         // dataSource.setSuppressClose(true);
 
         return dataSource;

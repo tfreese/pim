@@ -4,33 +4,25 @@
 
 package de.freese.pim.core.mail.dao;
 
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.sql.Clob;
 import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import org.apache.commons.lang3.StringUtils;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.JavaType;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import de.freese.pim.core.dao.AbstractDAO;
 import de.freese.pim.core.jdbc.RowMapper;
 import de.freese.pim.core.mail.MailPort;
-import de.freese.pim.core.mail.MailProvider;
 import de.freese.pim.core.mail.model.Mail;
 import de.freese.pim.core.mail.model.MailAccount;
 import de.freese.pim.core.mail.model.MailFolder;
-import de.freese.pim.core.service.SettingService;
 import de.freese.pim.core.utils.Crypt;
 import de.freese.pim.core.utils.Utils;
 
@@ -133,6 +125,51 @@ public class AbstractMailDAO extends AbstractDAO<IMailDAO> implements IMailDAO
         }
 
         /**
+         * @param clob {@link Clob}
+         * @return String
+         * @throws SQLException Falls was schief geht.
+         * @throws IOException Falls was schief geht.
+         */
+        private String clobToString(final Clob clob) throws IOException, SQLException
+        {
+            String clobString = null;
+
+            // clobString = clob.getSubString(0,(int) clob.length());
+
+            try (BufferedReader buffer = new BufferedReader(clob.getCharacterStream()))
+            {
+                clobString = buffer.lines().collect(Collectors.joining());
+            }
+
+            // StringBuilder sb = new StringBuilder();
+            //
+            // try (Reader reader = clob.getCharacterStream();
+            // BufferedReader br = new BufferedReader(reader))
+            // {
+            // int b = 0;
+            //
+            // while (-1 != (b = br.read()))
+            // {
+            // sb.append((char) b);
+            // }
+            // }
+
+            // try (InputStream in = clob.getAsciiStream();
+            // Reader read = new InputStreamReader(in);
+            // StringWriter sw = new StringWriter())
+            // {
+            // int c = -1;
+            //
+            // while ((c = read.read()) != -1)
+            // {
+            // sw.write(c);
+            // }
+            // }
+
+            return clobString;
+        }
+
+        /**
          * @see de.freese.pim.core.jdbc.RowMapper#map(java.sql.ResultSet, int)
          */
         @Override
@@ -142,26 +179,26 @@ public class AbstractMailDAO extends AbstractDAO<IMailDAO> implements IMailDAO
 
             try
             {
-                String from = rs.getString("SENDER");
-                InternetAddress fromAddress = null;
+                InternetAddress fromAddress = Optional.ofNullable(parseInternetAddress(rs.getString("SENDER"))).map(f -> f[0]).orElse(null);
 
-                if (StringUtils.isNotBlank(from))
-                {
-                    fromAddress = InternetAddress.parse(from)[0];
-                }
+                Clob clob = rs.getClob("RECIPIENT_TO");
+                String clobString = clobToString(clob);
+                InternetAddress[] toRecipient = parseInternetAddress(clobString);
 
-                String to = rs.getString("RECIPIENT");
-                InternetAddress toAddress = null;
+                clob = rs.getClob("RECIPIENT_CC");
+                clobString = clobToString(clob);
+                InternetAddress[] ccRecipient = parseInternetAddress(clobString);
 
-                if (StringUtils.isNotBlank(to))
-                {
-                    toAddress = InternetAddress.parse(to)[0];
-                }
+                clob = rs.getClob("RECIPIENT_BCC");
+                clobString = clobToString(clob);
+                InternetAddress[] bccRecipient = parseInternetAddress(clobString);
 
                 mail.setUID(rs.getLong("UID"));
                 mail.setMsgNum(rs.getInt("MSG_NUM"));
                 mail.setFrom(fromAddress);
-                mail.setTo(toAddress);
+                mail.setTo(toRecipient);
+                mail.setCc(ccRecipient);
+                mail.setBcc(bccRecipient);
                 mail.setReceivedDate(rs.getTimestamp("RECEIVED_DATE"));
                 mail.setSendDate(rs.getTimestamp("SEND_DATE"));
                 mail.setSubject(rs.getString("SUBJECT"));
@@ -170,11 +207,34 @@ public class AbstractMailDAO extends AbstractDAO<IMailDAO> implements IMailDAO
 
                 return mail;
             }
-            catch (AddressException aex)
+            catch (AddressException | IOException ex)
             {
-                throw new SQLException(aex);
+                throw new SQLException(ex);
             }
         }
+
+        /**
+         * @param value String
+         * @return {@link InternetAddress}
+         * @throws AddressException Falls was schief geht.
+         */
+        private InternetAddress[] parseInternetAddress(final String value) throws AddressException
+        {
+            if (StringUtils.isBlank(value))
+            {
+                return null;
+            }
+
+            InternetAddress[] recipients = null;
+
+            if (StringUtils.isNotBlank(value))
+            {
+                recipients = InternetAddress.parse(value);
+            }
+
+            return recipients;
+        }
+
     }
 
     /**
@@ -284,54 +344,54 @@ public class AbstractMailDAO extends AbstractDAO<IMailDAO> implements IMailDAO
         return accountList;
     }
 
-    /**
-     * Liefert alle MailAccounts aus der lokalen JSON-Datei.
-     *
-     * @return {@link List}
-     * @throws Exception Falls was schief geht.
-     */
-    protected List<MailAccount> getMailAccountsJSON() throws Exception
-    {
-        ObjectMapper jsonMapper = new ObjectMapper();
-        jsonMapper.enable(SerializationFeature.INDENT_OUTPUT);
-        jsonMapper.enable(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT);
-
-        Path path = SettingService.getInstance().getHome().resolve(".mailaccounts");
-        List<MailAccount> accountList = new ArrayList<>();
-
-        if (Files.exists(path))
-        {
-            try (InputStream is = Files.newInputStream(path))
-            {
-                // MailAccount mailAccount = jsonMapper.readValue(is, MailAccount.class);
-                // root.getChildren().add(new TreeItem<>(mailAccount));
-
-                JavaType type = jsonMapper.getTypeFactory().constructCollectionType(ArrayList.class, MailAccount.class);
-                accountList.addAll(jsonMapper.readValue(is, type));
-            }
-        }
-        else
-        {
-            MailAccount account = new MailAccount();
-            account.setMail("commercial@freese-home.de");
-            account.setImapHost(MailProvider.EinsUndEins.getImapHost());
-            account.setSmtpHost(MailProvider.EinsUndEins.getSmtpHost());
-            accountList.add(account);
-
-            try (OutputStream os = Files.newOutputStream(path))
-            {
-                jsonMapper.writer().writeValue(os, Arrays.asList(account));
-            }
-        }
-
-        // IDs hart setzen
-        for (int i = 0; i < accountList.size(); i++)
-        {
-            accountList.get(i).setID(i + 1);
-        }
-
-        return accountList;
-    }
+    // /**
+    // * Liefert alle MailAccounts aus der lokalen JSON-Datei.
+    // *
+    // * @return {@link List}
+    // * @throws Exception Falls was schief geht.
+    // */
+    // protected List<MailAccount> getMailAccountsJSON() throws Exception
+    // {
+    // ObjectMapper jsonMapper = new ObjectMapper();
+    // jsonMapper.enable(SerializationFeature.INDENT_OUTPUT);
+    // jsonMapper.enable(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT);
+    //
+    // Path path = SettingService.getInstance().getHome().resolve(".mailaccounts");
+    // List<MailAccount> accountList = new ArrayList<>();
+    //
+    // if (Files.exists(path))
+    // {
+    // try (InputStream is = Files.newInputStream(path))
+    // {
+    // // MailAccount mailAccount = jsonMapper.readValue(is, MailAccount.class);
+    // // root.getChildren().add(new TreeItem<>(mailAccount));
+    //
+    // JavaType type = jsonMapper.getTypeFactory().constructCollectionType(ArrayList.class, MailAccount.class);
+    // accountList.addAll(jsonMapper.readValue(is, type));
+    // }
+    // }
+    // else
+    // {
+    // MailAccount account = new MailAccount();
+    // account.setMail("commercial@freese-home.de");
+    // account.setImapHost(MailProvider.EinsUndEins.getImapHost());
+    // account.setSmtpHost(MailProvider.EinsUndEins.getSmtpHost());
+    // accountList.add(account);
+    //
+    // try (OutputStream os = Files.newOutputStream(path))
+    // {
+    // jsonMapper.writer().writeValue(os, Arrays.asList(account));
+    // }
+    // }
+    //
+    // // IDs hart setzen
+    // for (int i = 0; i < accountList.size(); i++)
+    // {
+    // accountList.get(i).setID(i + 1);
+    // }
+    //
+    // return accountList;
+    // }
 
     /**
      * @see de.freese.pim.core.mail.dao.IMailDAO#getMailFolder(long)
@@ -460,28 +520,41 @@ public class AbstractMailDAO extends AbstractDAO<IMailDAO> implements IMailDAO
         StringBuilder sb = new StringBuilder();
         sb.append("insert into MAIL");
         sb.append(" (");
-        sb.append(" FOLDER_ID, UID, MSG_NUM, SENDER, RECIPIENT, RECEIVED_DATE, SEND_DATE, SUBJECT, SIZE, SEEN");
+        sb.append(" FOLDER_ID, UID, MSG_NUM, SENDER, RECIPIENT_TO, RECIPIENT_CC, RECIPIENT_BCC, RECEIVED_DATE, SEND_DATE, SUBJECT, SIZE, SEEN");
         sb.append(") values (");
-        sb.append("?, ?, ?, ?, ?, ?, ?, ?, ?, ?");
+        sb.append("?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?");
         sb.append(")");
         String sql = sb.toString();
 
         int[] affectedRows = getJdbcTemplate().updateBatch(sql, mails, (ps, mail, sequenceProvider) -> {
             String from = Optional.ofNullable(mail.getFrom()).map(InternetAddress::toUnicodeString).orElse(null);
-            String to = Optional.ofNullable(mail.getTo()).map(InternetAddress::toUnicodeString).orElse(null);
+            String to = Optional.ofNullable(mail.getTo()).map(InternetAddress::toString).orElse(null);
+            String cc = Optional.ofNullable(mail.getCc()).map(InternetAddress::toString).orElse(null);
+            String bcc = Optional.ofNullable(mail.getBcc()).map(InternetAddress::toString).orElse(null);
             Date reveicedDate = Optional.ofNullable(mail.getReceivedDate()).map(rd -> new Date(rd.getTime())).orElse(null);
             Date sendDate = Optional.ofNullable(mail.getSendDate()).map(rd -> new Date(rd.getTime())).orElse(null);
+
+            Clob clobTo = ps.getConnection().createClob();
+            clobTo.setString(1, StringUtils.defaultString(to, ""));
+
+            Clob clobCc = ps.getConnection().createClob();
+            clobCc.setString(1, StringUtils.defaultString(cc, ""));
+
+            Clob clobBcc = ps.getConnection().createClob();
+            clobBcc.setString(1, StringUtils.defaultString(bcc, ""));
 
             ps.setLong(1, folderID);
             ps.setLong(2, mail.getUID());
             ps.setInt(3, mail.getMsgNum());
             ps.setString(4, from);
-            ps.setString(5, to);
-            ps.setDate(6, reveicedDate);
-            ps.setDate(7, sendDate);
-            ps.setString(8, mail.getSubject());
-            ps.setInt(9, mail.getSize());
-            ps.setBoolean(10, mail.isSeen());
+            ps.setClob(5, clobTo);
+            ps.setClob(6, clobCc);
+            ps.setClob(7, clobBcc);
+            ps.setDate(8, reveicedDate);
+            ps.setDate(9, sendDate);
+            ps.setString(10, mail.getSubject());
+            ps.setInt(11, mail.getSize());
+            ps.setBoolean(12, mail.isSeen());
         });
 
         return affectedRows;

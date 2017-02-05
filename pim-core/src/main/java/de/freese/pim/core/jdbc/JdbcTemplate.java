@@ -251,7 +251,7 @@ public class JdbcTemplate
         else
         {
             // Kein Transaction-Context.
-            connection.setReadOnly(false);
+            // connection.setReadOnly(false);
             connection.close();
         }
     }
@@ -375,7 +375,17 @@ public class JdbcTemplate
         {
             // Kein Transaction-Context -> ReadOnly Connection
             connection = getDataSource().getConnection();
-            // connection.setReadOnly(true);
+
+            // ReadOnly Flag ändern geht nur ausserhalb einer TX.
+            if (!connection.isReadOnly())
+            {
+                connection.setReadOnly(true);
+            }
+
+            if (!connection.getAutoCommit())
+            {
+                connection.setAutoCommit(true);
+            }
         }
 
         return connection;

@@ -4,7 +4,6 @@
 package de.freese.pim.gui.mail;
 
 import javax.mail.internet.InternetAddress;
-
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.util.Callback;
@@ -13,7 +12,7 @@ import javafx.util.Callback;
  * @author Thomas Freese
  * @param <S> Konkreter Typ des Row-Objektes
  */
-public class InternetAddressCellFactory<S> implements Callback<TableColumn<S, InternetAddress>, TableCell<S, InternetAddress>>
+public class InternetAddressCellFactory<S> implements Callback<TableColumn<S, InternetAddress[]>, TableCell<S, InternetAddress[]>>
 {
     /**
      * Erstellt ein neues Object.
@@ -27,16 +26,16 @@ public class InternetAddressCellFactory<S> implements Callback<TableColumn<S, In
      * @see javafx.util.Callback#call(java.lang.Object)
      */
     @Override
-    public TableCell<S, InternetAddress> call(final TableColumn<S, InternetAddress> param)
+    public TableCell<S, InternetAddress[]> call(final TableColumn<S, InternetAddress[]> param)
     {
-        return new TableCell<S, InternetAddress>()
+        return new TableCell<S, InternetAddress[]>()
         {
             /**
              * @param item Date
              * @param empty boolean
              */
             @Override
-            protected void updateItem(final InternetAddress item, final boolean empty)
+            protected void updateItem(final InternetAddress[] item, final boolean empty)
             {
                 super.updateItem(item, empty);
 
@@ -46,19 +45,22 @@ public class InternetAddressCellFactory<S> implements Callback<TableColumn<S, In
                     return;
                 }
 
-                String personal = item.getPersonal();
-                String address = item.getAddress();
+                String value = InternetAddress.toString(item);
+                setText(value);
 
-                if (personal == null)
-                {
-                    setText(address);
-                }
-                else
-                {
-                    String p = personal.replaceAll("\"", "");
-
-                    setText(p + " <" + address + ">");
-                }
+                // String personal = item.getPersonal();
+                // String address = item.getAddress();
+                //
+                // if (personal == null)
+                // {
+                // setText(address);
+                // }
+                // else
+                // {
+                // String p = personal.replaceAll("\"", "");
+                //
+                // setText(p + " <" + address + ">");
+                // }
             }
         };
     }

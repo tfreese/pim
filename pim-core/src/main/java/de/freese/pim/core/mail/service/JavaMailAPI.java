@@ -52,6 +52,7 @@ import de.freese.pim.core.mail.model.MailFolder;
 import de.freese.pim.core.mail.model.SumUnreadMailsInChildFolderBinding;
 import de.freese.pim.core.mail.utils.MailContent;
 import de.freese.pim.core.mail.utils.MailUtils;
+import de.freese.pim.core.service.ISettingsService;
 import de.freese.pim.core.utils.io.MonitorOutputStream;
 import javafx.beans.value.ObservableIntegerValue;
 import javafx.collections.ObservableList;
@@ -77,7 +78,7 @@ public class JavaMailAPI extends AbstractMailAPI
     /**
      *
      */
-    private final Semaphore semaphore = new Semaphore(10, true);
+    private final Semaphore semaphore = new Semaphore(ISettingsService.MAX_ACTIVE_CONNECTIONS.get(), true);
 
     // /**
     // *
@@ -587,35 +588,44 @@ public class JavaMailAPI extends AbstractMailAPI
     @Override
     public List<Mail> loadNewMails(final MailFolder folder) throws Exception
     {
-        Folder f = getStore().getFolder(folder.getFullName());
-        checkRead(f);
+        this.semaphore.acquire();
 
-        SearchTerm searchTerm = new FlagTerm(new Flags(Flags.Flag.SEEN), false);
-        Message[] msgs = f.search(searchTerm);
-
-        // Nur bestimmte Mail-Attribute vorladen.
-        FetchProfile fp = createDefaultFetchProfile();
-        f.fetch(msgs, fp);
-
-        if (getLogger().isDebugEnabled())
+        try
         {
-            getLogger().debug("new mails: number={}", msgs.length);
+            Folder f = getStore().getFolder(folder.getFullName());
+            checkRead(f);
+
+            SearchTerm searchTerm = new FlagTerm(new Flags(Flags.Flag.SEEN), false);
+            Message[] msgs = f.search(searchTerm);
+
+            // Nur bestimmte Mail-Attribute vorladen.
+            FetchProfile fp = createDefaultFetchProfile();
+            f.fetch(msgs, fp);
+
+            if (getLogger().isDebugEnabled())
+            {
+                getLogger().debug("new mails: number={}", msgs.length);
+            }
+
+            List<Mail> mails = new ArrayList<>();
+
+            for (Message message : msgs)
+            {
+                Mail mail = new Mail();
+                mail.setFolder(folder);
+                populate(mail, message);
+
+                mails.add(mail);
+            }
+
+            closeFolder(f);
+
+            return mails;
         }
-
-        List<Mail> mails = new ArrayList<>();
-
-        for (Message message : msgs)
+        finally
         {
-            Mail mail = new Mail();
-            mail.setFolder(folder);
-            populate(mail, message);
-
-            mails.add(mail);
+            this.semaphore.release();
         }
-
-        closeFolder(f);
-
-        return mails;
     }
 
     /**
@@ -793,7 +803,10 @@ public class JavaMailAPI extends AbstractMailAPI
     protected void populate(final Mail mail, final Message message) throws MessagingException
     {
         InternetAddress from = Optional.ofNullable(message.getFrom()).map(f -> (InternetAddress) f[0]).orElse(null);
-        InternetAddress to = Optional.ofNullable(message.getRecipients(RecipientType.TO)).map(t -> (InternetAddress) t[0]).orElse(null);
+        InternetAddress[] to = (InternetAddress[]) Optional.ofNullable(message.getRecipients(RecipientType.TO)).orElse(null);
+        InternetAddress[] cc = (InternetAddress[]) Optional.ofNullable(message.getRecipients(RecipientType.CC)).orElse(null);
+        InternetAddress[] bcc = (InternetAddress[]) Optional.ofNullable(message.getRecipients(RecipientType.BCC)).orElse(null);
+
         String subject = message.getSubject();
         Date receivedDate = message.getReceivedDate();
         Date sendDate = message.getSentDate();
@@ -803,6 +816,12 @@ public class JavaMailAPI extends AbstractMailAPI
 
         IMAPFolder f = (IMAPFolder) message.getFolder();
         long uid = f.getUID(message);
+
+        // if ((uid == 3066) || (uid == 576) || (uid == 60))
+        // {
+        // // Debug Problemfälle.
+        // System.out.println();
+        // }
 
         // if (message.getFolder() instanceof IMAPFolder)
         // {
@@ -821,6 +840,8 @@ public class JavaMailAPI extends AbstractMailAPI
 
         mail.setFrom(from);
         mail.setTo(to);
+        mail.setCc(cc);
+        mail.setBcc(bcc);
         mail.setSubject(subject);
         mail.setReceivedDate(receivedDate);
         mail.setSendDate(sendDate);

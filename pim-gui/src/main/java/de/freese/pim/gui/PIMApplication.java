@@ -336,7 +336,7 @@ public class PIMApplication extends Application
 
         LOGGER.info("Init P.I.M.");
         notifyPreloader(new PIMPreloaderNotification("Init P.I.M."));
-        Utils.sleep(1, TimeUnit.SECONDS);
+        // Utils.sleep(1, TimeUnit.SECONDS);
 
         Path home = getSettingService().getHome();
 
@@ -350,7 +350,7 @@ public class PIMApplication extends Application
 
         LOGGER.info("Init ThreadPools");
         notifyPreloader(new PIMPreloaderNotification("Init ThreadPools"));
-        Utils.sleep(1, TimeUnit.SECONDS);
+        // Utils.sleep(1, TimeUnit.SECONDS);
 
         // Threads leben max. 60 Sekunden, wenn es nix zu tun gibt, min. 3 Threads, max. 50.
         BlockingQueue<Runnable> workQueue = new SynchronousQueue<>(true);
@@ -376,14 +376,14 @@ public class PIMApplication extends Application
 
         LOGGER.info("Init Database");
         notifyPreloader(new PIMPreloaderNotification("Init Database"));
-        Utils.sleep(1, TimeUnit.SECONDS);
+        // Utils.sleep(1, TimeUnit.SECONDS);
         PIMApplication.dataSourceBean = new HsqldbEmbeddedServer();
         PIMApplication.dataSourceBean.configure(getSettingService());
         PIMApplication.dataSourceBean.testConnection();
         PIMApplication.dataSourceBean.populateIfEmpty(() -> {
             LOGGER.info("Populate Database");
             notifyPreloader(new PIMPreloaderNotification("Populate Database"));
-            Utils.sleep(1, TimeUnit.SECONDS);
+            // Utils.sleep(1, TimeUnit.SECONDS);
         });
         registerCloseable(() -> {
             LOGGER.info("Stop Database");

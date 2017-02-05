@@ -86,23 +86,6 @@ public class HsqldbEmbeddedServer extends AbstractHsqldbBean
         setDataSource(dataSource);
     }
 
-    // /**
-    // * @see de.freese.pim.core.db.AbstractDataSourceBean#createDataSource(java.lang.String, java.lang.String, java.lang.String, java.lang.String,
-    // * java.lang.String)
-    // */
-    // @Override
-    // protected DataSource createDataSource(final String driver, final String url, final String username, final String password, final String validationQuery)
-    // {
-    // SimpleDataSource ds = new SimpleDataSource();
-    // ds.setDriverClassName(driver);
-    // ds.setUrl(url);
-    // ds.setUsername(username);
-    // ds.setPassword(password);
-    // ds.setAutoCommit(false);
-    //
-    // return ds;
-    // }
-
     /**
      * @see de.freese.pim.core.db.AbstractDataSourceBean#disconnect()
      */

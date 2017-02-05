@@ -81,7 +81,7 @@ public class TestAddressbookConfig
         SingleConnectionDataSource dataSource = new SingleConnectionDataSource();
         dataSource.setDriverClassName("org.hsqldb.jdbc.JDBCDriver");
         dataSource.setUrl("jdbc:hsqldb:mem:addressbook_" + System.currentTimeMillis());
-        dataSource.setAutoCommit(false);
+        dataSource.setAutoCommit(true);
         dataSource.setSuppressClose(true);
 
         try

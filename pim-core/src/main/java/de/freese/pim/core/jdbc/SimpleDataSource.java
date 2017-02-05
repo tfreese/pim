@@ -129,6 +129,11 @@ public class SimpleDataSource implements DataSource, AutoCloseable
     private Connection proxyConnection = null;
 
     /**
+    *
+    */
+    private Boolean readOnly;
+
+    /**
      *
      */
     private final ReentrantLock reentrantLock = new ReentrantLock();
@@ -367,6 +372,14 @@ public class SimpleDataSource implements DataSource, AutoCloseable
     }
 
     /**
+     * @return Boolean
+     */
+    private Boolean getReadOnlyValue()
+    {
+        return this.readOnly;
+    }
+
+    /**
      * @return String
      */
     public String getUrl()
@@ -420,6 +433,13 @@ public class SimpleDataSource implements DataSource, AutoCloseable
      */
     private void prepareConnection(final Connection con) throws SQLException
     {
+        final Boolean _readOnly = getReadOnlyValue();
+
+        if ((_readOnly != null) && (con.isReadOnly() != _readOnly))
+        {
+            con.setReadOnly(_readOnly);
+        }
+
         final Boolean _autoCommit = getAutoCommitValue();
 
         if ((_autoCommit != null) && (con.getAutoCommit() != _autoCommit))
@@ -496,6 +516,14 @@ public class SimpleDataSource implements DataSource, AutoCloseable
         // Bei HSQLDB und H2 darf es null sein.
 
         this.password = password;
+    }
+
+    /**
+     * @param readOnly boolean
+     */
+    public void setReadOnly(final boolean readOnly)
+    {
+        this.readOnly = readOnly;
     }
 
     /**

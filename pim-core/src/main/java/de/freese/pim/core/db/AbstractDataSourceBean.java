@@ -9,6 +9,7 @@ import javax.sql.DataSource;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.tomcat.jdbc.pool.PoolProperties;
 import de.freese.pim.core.jdbc.SimpleDataSource;
+import de.freese.pim.core.service.ISettingsService;
 
 /**
  * Basis-implementierung einer {@link IDataSourceBean}.
@@ -63,13 +64,13 @@ public abstract class AbstractDataSourceBean implements IDataSourceBean
         poolProperties.setUsername(username);
         poolProperties.setPassword(password);
 
-        poolProperties.setMaxActive(10);
-        poolProperties.setMaxIdle(2);
+        poolProperties.setMaxActive(ISettingsService.MAX_ACTIVE_CONNECTIONS.get());
+        poolProperties.setMaxIdle(1);
         poolProperties.setMinIdle(1);
         poolProperties.setInitialSize(1);
         poolProperties.setMaxWait(10 * 1000); // max. 10 Sekunden warten auf Connection
 
-        poolProperties.setDefaultAutoCommit(Boolean.FALSE);
+        poolProperties.setDefaultAutoCommit(Boolean.TRUE);
         poolProperties.setDefaultReadOnly(Boolean.FALSE);
 
         if (StringUtils.isNotBlank(validationQuery))

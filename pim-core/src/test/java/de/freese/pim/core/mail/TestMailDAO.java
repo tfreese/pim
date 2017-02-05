@@ -3,6 +3,7 @@
  */
 package de.freese.pim.core.mail;
 
+import java.sql.BatchUpdateException;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -70,6 +71,7 @@ public class TestMailDAO
         SimpleDataSource ds = new SimpleDataSource();
         ds.setDriverClassName("org.hsqldb.jdbc.JDBCDriver");
         ds.setUrl("jdbc:hsqldb:mem:addressbook_" + System.currentTimeMillis());
+        ds.setReadOnly(false);
         ds.setAutoCommit(false);
         // ds.setSuppressClose(true);
         dataSource = ds;
@@ -222,7 +224,7 @@ public class TestMailDAO
     /**
      * @throws Exception Falls was schief geht.
      */
-    @Test(expected = SQLIntegrityConstraintViolationException.class)
+    @Test(expected = BatchUpdateException.class)
     public void test020InsertFolderFail() throws Exception
     {
         MailFolder folder = new MailFolder();
@@ -305,7 +307,7 @@ public class TestMailDAO
     /**
      * @throws Exception Falls was schief geht.
      */
-    @Test(expected = NullPointerException.class)
+    @Test(expected = BatchUpdateException.class)
     public void test030InsertMailFail() throws Exception
     {
         Mail mail = new Mail();
@@ -327,7 +329,9 @@ public class TestMailDAO
         mail.setSendDate(java.util.Date.from(LocalDateTime.of(2017, 02, 03, 15, 01).atZone(ZoneId.systemDefault()).toInstant()));
         mail.setSize(13);
         mail.setSubject("-TEST-");
-        mail.setTo(InternetAddress.parse("b@b.bb")[0]);
+        mail.setTo(InternetAddress.parse("b@b.bb"));
+        mail.setCc(InternetAddress.parse("c@c.cc"));
+        mail.setBcc(InternetAddress.parse("d@d.dd"));
         mail.setUID(2);
 
         TestMailDAO.mailDAO.insertMail(4, Arrays.asList(mail));
@@ -352,7 +356,9 @@ public class TestMailDAO
         Assert.assertEquals(java.util.Date.from(LocalDateTime.of(2017, 02, 03, 15, 01).atZone(ZoneId.systemDefault()).toInstant()), mail.getSendDate());
         Assert.assertEquals(13, mail.getSize());
         Assert.assertEquals("-TEST-", mail.getSubject());
-        Assert.assertEquals("b@b.bb", mail.getTo().getAddress());
+        Assert.assertEquals("b@b.bb", mail.getTo()[0].getAddress());
+        Assert.assertEquals("c@c.cc", mail.getCc()[0].getAddress());
+        Assert.assertEquals("d@d.dd", mail.getBcc()[0].getAddress());
         Assert.assertEquals(2, mail.getUID());
     }
 
@@ -399,7 +405,9 @@ public class TestMailDAO
         Assert.assertEquals(java.util.Date.from(LocalDateTime.of(2017, 02, 03, 15, 01).atZone(ZoneId.systemDefault()).toInstant()), mail.getSendDate());
         Assert.assertEquals(13, mail.getSize());
         Assert.assertEquals("-TEST-", mail.getSubject());
-        Assert.assertEquals("b@b.bb", mail.getTo().getAddress());
+        Assert.assertEquals("b@b.bb", mail.getTo()[0].getAddress());
+        Assert.assertEquals("c@c.cc", mail.getCc()[0].getAddress());
+        Assert.assertEquals("d@d.dd", mail.getBcc()[0].getAddress());
         Assert.assertEquals(2, mail.getUID());
     }
 
