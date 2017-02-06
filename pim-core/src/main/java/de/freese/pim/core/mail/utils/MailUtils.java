@@ -11,17 +11,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-
 import javax.activation.DataSource;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Multipart;
 import javax.mail.Part;
 import javax.mail.internet.MimeBodyPart;
-
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.ArrayUtils;
-
 import de.freese.pim.core.mail.JavaMailBuilder;
 
 /**
@@ -164,7 +161,9 @@ public final class MailUtils
     {
         List<MimeBodyPart> bodyParts = new ArrayList<>();
 
-        if (Part.ATTACHMENT.toLowerCase().equals(part.getDisposition().toLowerCase()))
+        String disposition = Optional.ofNullable(part.getDisposition()).map(String::toLowerCase).orElse("");
+
+        if (Part.ATTACHMENT.toLowerCase().equals(disposition))
         {
             bodyParts.add((MimeBodyPart) part);
         }
@@ -215,11 +214,10 @@ public final class MailUtils
 
             for (String contentID : contentIDs)
             {
+                contentID = contentID.replace("<", "").replace(">", "");
+
                 map.put(contentID, inline);
             }
-
-            // contentID = contentID.replace("<", "");
-            // contentID = contentID.replace(">", "");
         }
 
         return map;
@@ -282,7 +280,7 @@ public final class MailUtils
             dataSource = dataSources.stream().filter(ds -> ds.getContentType().startsWith("text/plain")).findFirst();
         }
 
-        return dataSource.get();
+        return dataSource.orElse(null);
     }
 
     /**

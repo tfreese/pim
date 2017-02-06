@@ -17,7 +17,6 @@ import java.util.Optional;
 import java.util.Properties;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
 import javax.mail.Authenticator;
 import javax.mail.FetchProfile;
 import javax.mail.Flags;
@@ -33,7 +32,6 @@ import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.search.FlagTerm;
 import javax.mail.search.SearchTerm;
-
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
 import org.junit.AfterClass;
@@ -46,10 +44,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
 import org.junit.runners.Parameterized;
-
 import com.sun.mail.imap.IMAPFolder;
 import com.sun.mail.util.ASCIIUtility;
-
 import de.freese.pim.core.mail.function.FunctionStripNotLetter;
 import de.freese.pim.core.mail.model.MailContent;
 
@@ -244,8 +240,7 @@ public class TestReceiveMail extends AbstractMailTest
     {
         // Files.newDirectoryStream(Paths.get("."), path -> path.toString().endsWith(".msg")).forEach(System.out::println);
 
-        try (Stream<Path> mailFiles = Files.find(TMP_TEST_PATH, Integer.MAX_VALUE,
-                (path, attrs) -> attrs.isRegularFile() && path.toString().endsWith(".eml")))
+        try (Stream<Path> mailFiles = Files.find(TMP_TEST_PATH, Integer.MAX_VALUE, (path, attrs) -> attrs.isRegularFile() && path.toString().endsWith(".eml")))
         {
             for (Path mail : mailFiles.collect(Collectors.toList()))
             {
@@ -255,8 +250,7 @@ public class TestReceiveMail extends AbstractMailTest
 
                     int messageNumber = message.getMessageNumber();
                     String messageID = message.getHeader("Message-ID")[0];
-                    Date receivedDate = Optional.ofNullable(message.getReceivedDate())
-                            .orElse(Date.from(Instant.parse(message.getHeader("RECEIVED-DATE")[0])));
+                    Date receivedDate = Optional.ofNullable(message.getReceivedDate()).orElse(Date.from(Instant.parse(message.getHeader("RECEIVED-DATE")[0])));
                     String subject = message.getSubject();
                     String from = Optional.ofNullable(message.getFrom()).map(f -> ((InternetAddress) f[0]).getAddress()).orElse(null);
 
@@ -272,8 +266,7 @@ public class TestReceiveMail extends AbstractMailTest
     @Test
     public void test022ReadAttachementsFromSavedMails() throws Exception
     {
-        try (Stream<Path> mailFiles = Files.find(TMP_TEST_PATH, 1,
-                (path, attrs) -> attrs.isRegularFile() && path.toString().endsWith(".eml")))
+        try (Stream<Path> mailFiles = Files.find(TMP_TEST_PATH, 1, (path, attrs) -> attrs.isRegularFile() && path.toString().endsWith(".eml")))
         {
             for (Path mailPath : mailFiles.collect(Collectors.toList()))
             {
@@ -311,8 +304,7 @@ public class TestReceiveMail extends AbstractMailTest
     @Test
     public void test023ReadTextFromSavedMails() throws Exception
     {
-        try (Stream<Path> mailFiles = Files.find(TMP_TEST_PATH, 1,
-                (path, attrs) -> attrs.isRegularFile() && path.toString().endsWith(".eml")))
+        try (Stream<Path> mailFiles = Files.find(TMP_TEST_PATH, 1, (path, attrs) -> attrs.isRegularFile() && path.toString().endsWith(".eml")))
         {
             for (Path mail : mailFiles.collect(Collectors.toList()))
             {

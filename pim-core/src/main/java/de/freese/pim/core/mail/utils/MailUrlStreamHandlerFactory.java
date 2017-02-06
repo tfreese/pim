@@ -3,12 +3,6 @@ package de.freese.pim.core.mail.utils;
 
 import java.net.URLStreamHandler;
 import java.net.URLStreamHandlerFactory;
-import java.util.Objects;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import de.freese.pim.core.mail.model.MailContent;
 
 /**
  * {@link URLStreamHandlerFactory} für eine Mail.<br>
@@ -26,28 +20,17 @@ import de.freese.pim.core.mail.model.MailContent;
  */
 public class MailUrlStreamHandlerFactory implements URLStreamHandlerFactory
 {
-    /**
-     *
-     */
-    private final static Logger LOGGER = LoggerFactory.getLogger(MailUrlStreamHandlerFactory.class);
-
-    /**
-     *
-     */
-    private final MailContent mailContent;
+    // /**
+    // *
+    // */
+    // private final static Logger LOGGER = LoggerFactory.getLogger(MailUrlStreamHandlerFactory.class);
 
     /**
      * Erzeugt eine neue Instanz von {@link MailUrlStreamHandlerFactory}
-     *
-     * @param mailContent {@link MailContent}
      */
-    public MailUrlStreamHandlerFactory(final MailContent mailContent)
+    public MailUrlStreamHandlerFactory()
     {
         super();
-
-        Objects.requireNonNull(mailContent, "mailContent required");
-
-        this.mailContent = mailContent;
     }
 
     /**
@@ -56,14 +39,30 @@ public class MailUrlStreamHandlerFactory implements URLStreamHandlerFactory
     @Override
     public URLStreamHandler createURLStreamHandler(final String protocol)
     {
-        LOGGER.info(protocol);
+        // LOGGER.info(protocol);
 
         if ("cid".equals(protocol))
         {
-            // TODO Find Inline
-            return new InlineUrlStreamHandler(this.mailContent);
+            // Find Inline
+            return new InlineUrlStreamHandler();
         }
+        else
+        {
+            // Kopie von sun.misc.Launcher$Factory
+            String name = "sun.net.www.protocol." + protocol + ".Handler";
 
-        return null;
+            try
+            {
+                Class<?> clazz = Class.forName(name);
+
+                return (URLStreamHandler) clazz.newInstance();
+            }
+            catch (Exception ex)
+            {
+                ex.printStackTrace();
+            }
+
+            throw new InternalError("could not load " + protocol + "system protocol handler");
+        }
     }
 }

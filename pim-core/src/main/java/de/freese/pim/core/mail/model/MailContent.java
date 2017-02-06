@@ -11,15 +11,15 @@ import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
-
 import javax.activation.DataSource;
 import javax.activation.FileDataSource;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
-
+import org.apache.commons.lang3.StringUtils;
 import de.freese.pim.core.mail.utils.MailUtils;
 
 /**
@@ -57,7 +57,7 @@ public class MailContent
     /**
     *
     */
-    private DataSource messageDataSource = null;
+    private final DataSource messageDataSource;
 
     /**
      *
@@ -81,6 +81,7 @@ public class MailContent
         this.url = url;
 
         this.message = null;
+        this.messageDataSource = null;
 
         try (InputStreamReader isr = new InputStreamReader(getInputStream()))
         {
@@ -106,13 +107,14 @@ public class MailContent
 
         try
         {
-            this.encoding = message.getEncoding();
+            this.messageDataSource = MailUtils.getTextDataSource(this.message);
+            this.encoding = getMessageEncoding(this.message, this.messageDataSource);
 
             // Inlines
-            this.inlineMap.putAll(MailUtils.getInlineMap(message));
+            this.inlineMap.putAll(MailUtils.getInlineMap(this.message));
 
             // Attachments
-            this.attachmentMap.putAll(MailUtils.getAttachmentMap(message));
+            this.attachmentMap.putAll(MailUtils.getAttachmentMap(this.message));
         }
         catch (MessagingException ex)
         {
@@ -232,22 +234,37 @@ public class MailContent
      */
     public String getMessage() throws IOException
     {
-        DataSource dataSource = getMessageDataSource();
-
-        if (dataSource == null)
+        if (getMessageDataSource() == null)
         {
             return null;
         }
 
-        // StandardCharsets.UTF_8
         String content = null;
 
-        try (BufferedReader buffer = new BufferedReader(new InputStreamReader(dataSource.getInputStream(), getEncoding())))
+        try (BufferedReader buffer = new BufferedReader(new InputStreamReader(getMessageDataSource().getInputStream(), getEncoding())))
         {
             content = buffer.lines().collect(Collectors.joining("\n"));
         }
 
         return content;
+    }
+
+    /**
+     * "text/html; charset=UTF-8", "text/html; charset=UTF-8"
+     *
+     * @return String
+     * @throws IOException Falls was schief geht.
+     */
+    public String getMessageContentType() throws IOException
+    {
+        String contentType = getMessageDataSource().getContentType();
+
+        contentType = Optional.ofNullable(contentType).map(ct -> ct.split("[;]")[0]).orElse("text/plain");
+
+        // contentType = contentType.replaceAll(System.getProperty("line.separator"), "");
+        contentType = contentType.replaceAll("\\r\\n|\\r|\\n", "");
+
+        return contentType;
     }
 
     /**
@@ -258,19 +275,36 @@ public class MailContent
      */
     public DataSource getMessageDataSource() throws IOException
     {
-        if (this.messageDataSource == null)
+        return this.messageDataSource;
+    }
+
+    /**
+     * Liefert das Encoding der Message.
+     *
+     * @param message {@link MimeMessage}
+     * @param messageDataSource {@link DataSource}
+     * @return String
+     * @throws MessagingException Falls was schief geht.
+     */
+    private String getMessageEncoding(final MimeMessage message, final DataSource messageDataSource) throws MessagingException
+    {
+        String encoding = message.getEncoding();
+
+        if (StringUtils.isBlank(encoding))
         {
-            try
+            // text/html; charset=UTF-8
+            if (messageDataSource.getContentType().indexOf(';') > 0)
             {
-                this.messageDataSource = MailUtils.getTextDataSource(this.message);
+                encoding = messageDataSource.getContentType().split("[;]")[1].split("[=]")[1].replaceAll("[\"]", "").toUpperCase();
             }
-            catch (MessagingException ex)
+            else
             {
-                throw new IOException(ex);
+                encoding = "UTF-8";
             }
         }
 
-        return this.messageDataSource;
+        // StandardCharsets.UTF_8
+        return encoding;
     }
 
     /**

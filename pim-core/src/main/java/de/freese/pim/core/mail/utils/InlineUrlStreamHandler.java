@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLStreamHandler;
-
 import de.freese.pim.core.mail.model.MailContent;
 
 /**
@@ -17,20 +16,32 @@ import de.freese.pim.core.mail.model.MailContent;
 public class InlineUrlStreamHandler extends URLStreamHandler
 {
     /**
-     *
+    *
+    */
+    private static MailContent mailContent = null;
+
+    /**
+     * @return {@link MailContent}
      */
-    private final MailContent mailContent;
+    public static MailContent getMailContent()
+    {
+        return mailContent;
+    }
+
+    /**
+     * @param mailContent {@link MailContent}
+     */
+    public static void setMailContent(final MailContent mailContent)
+    {
+        InlineUrlStreamHandler.mailContent = mailContent;
+    }
 
     /**
      * Erzeugt eine neue Instanz von {@link InlineUrlStreamHandler}
-     *
-     * @param mailContent {@link MailContent}
      */
-    public InlineUrlStreamHandler(final MailContent mailContent)
+    public InlineUrlStreamHandler()
     {
         super();
-
-        this.mailContent = mailContent;
     }
 
     /**
@@ -39,6 +50,6 @@ public class InlineUrlStreamHandler extends URLStreamHandler
     @Override
     protected URLConnection openConnection(final URL url) throws IOException
     {
-        return new InlineUrlConnection(this.mailContent, url);
+        return new InlineUrlConnection(InlineUrlStreamHandler.mailContent, url);
     }
 }
