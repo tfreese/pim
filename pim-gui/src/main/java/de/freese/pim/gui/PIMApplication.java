@@ -15,7 +15,9 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.SynchronousQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+
 import javax.sql.DataSource;
+
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
@@ -23,7 +25,9 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Options;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import com.sun.javafx.application.LauncherImpl;
+
 import de.freese.pim.core.addressbook.dao.DefaultAddressBookDAO;
 import de.freese.pim.core.addressbook.service.DefaultAddressBookService;
 import de.freese.pim.core.addressbook.service.IAddressBookService;
@@ -47,13 +51,10 @@ import javafx.application.Preloader.StateChangeNotification;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.ObservableList;
-import javafx.event.Event;
-import javafx.event.EventHandler;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
-import javafx.scene.input.InputEvent;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.Window;
@@ -70,12 +71,17 @@ public class PIMApplication extends Application
     /**
      *
      */
-    private static IAddressBookService addressBookService = null;
+    public static final List<AutoCloseable> CLOSEABLES = new ArrayList<>();
 
     /**
      *
      */
-    public static final List<AutoCloseable> CLOSEABLES = new ArrayList<>();
+    public static final Logger LOGGER = LoggerFactory.getLogger(PIMApplication.class);
+
+    /**
+     *
+     */
+    private static IAddressBookService addressBookService = null;
 
     /**
      *
@@ -86,16 +92,6 @@ public class PIMApplication extends Application
      *
      */
     private static ExecutorService executorService = null;
-
-    /**
-     *
-     */
-    private static final EventHandler<InputEvent> GUI_BLOCKER = Event::consume;
-
-    /**
-     *
-     */
-    public static final Logger LOGGER = LoggerFactory.getLogger(PIMApplication.class);
 
     /**
      *
@@ -122,7 +118,7 @@ public class PIMApplication extends Application
      */
     public static void blockGUI()
     {
-        getMainWindow().addEventFilter(InputEvent.ANY, GUI_BLOCKER);
+        FXUtils.blockGUI(getMainWindow());
     }
 
     /**
@@ -135,26 +131,11 @@ public class PIMApplication extends Application
             addressBookService = (IAddressBookService) Proxy.newProxyInstance(PIMApplication.class.getClassLoader(), new Class<?>[]
             {
                     IAddressBookService.class
-            }, new TransactionalInvocationHandler(getDataSource(), new DefaultAddressBookService(new DefaultAddressBookDAO().dataSource(getDataSource()))));
+            }, new TransactionalInvocationHandler(getDataSource(),
+                    new DefaultAddressBookService(new DefaultAddressBookDAO().dataSource(getDataSource()))));
         }
 
         return addressBookService;
-    }
-
-    /**
-     * Liefert die möglichen Optionen der Kommandozeile.<br>
-     * Dies sind die JRE Programm Argumente.
-     *
-     * @return {@link Options}
-     */
-    private static Options getCommandOptions()
-    {
-        // OptionGroup group = new OptionGroup();
-
-        Options options = new Options();
-        // options.addOptionGroup(group);
-
-        return options;
     }
 
     /**
@@ -183,7 +164,8 @@ public class PIMApplication extends Application
             mailService = (IMailService) Proxy.newProxyInstance(PIMApplication.class.getClassLoader(), new Class<?>[]
             {
                     IMailService.class
-            }, new TransactionalInvocationHandler(getDataSource(), new DefaultMailService(new DefaultMailDAO().dataSource(getDataSource()))));
+            }, new TransactionalInvocationHandler(getDataSource(),
+                    new DefaultMailService(new DefaultMailDAO().dataSource(getDataSource()))));
         }
 
         return mailService;
@@ -224,8 +206,8 @@ public class PIMApplication extends Application
     }
 
     /**
-     * The main() method is ignored in correctly deployed JavaFX application. main() serves only as fallback in case the application can not be launched through
-     * deployment artifacts, e.g., in IDEs with limited FX support. NetBeans ignores main().
+     * The main() method is ignored in correctly deployed JavaFX application. main() serves only as fallback in case the application can not
+     * be launched through deployment artifacts, e.g., in IDEs with limited FX support. NetBeans ignores main().
      *
      * @param args the command line arguments
      */
@@ -252,8 +234,8 @@ public class PIMApplication extends Application
 
         // java.util.logging ausschalten.
         // LogManager.getLogManager().reset();
-        for (String name : Arrays.asList(java.util.logging.Logger.GLOBAL_LOGGER_NAME, "com.sun.webkit.perf.Locks", "com.sun.webkit.perf.WCGraphicsPerfLogger",
-                "com.sun.webkit.perf.WCFontPerfLogger"))
+        for (String name : Arrays.asList(java.util.logging.Logger.GLOBAL_LOGGER_NAME, "com.sun.webkit.perf.Locks",
+                "com.sun.webkit.perf.WCGraphicsPerfLogger", "com.sun.webkit.perf.WCFontPerfLogger"))
         {
             java.util.logging.Logger javaLogger = java.util.logging.Logger.getLogger(name);
             javaLogger.setLevel(java.util.logging.Level.OFF);
@@ -262,7 +244,8 @@ public class PIMApplication extends Application
         // System.setProperty("org.slf4j.simpleLogger.log.de.freese.pim", "DEBUG");
         // SysOutOverSLF4J.sendSystemOutAndErrToSLF4J();
 
-        Thread.setDefaultUncaughtExceptionHandler((t, ex) -> {
+        Thread.setDefaultUncaughtExceptionHandler((t, ex) ->
+        {
             LOGGER.error("***Default exception handler***");
             LOGGER.error(null, ex);
 
@@ -275,7 +258,8 @@ public class PIMApplication extends Application
         // Kein Thread des gesamten Clients kann eine höhere Prio haben.
         threadGroup.setMaxPriority(Thread.NORM_PRIORITY + 1);
 
-        Thread thread = new Thread(threadGroup, () -> {
+        Thread thread = new Thread(threadGroup, () ->
+        {
             LOGGER.info("Startup P.I.M.");
 
             // launch(args);
@@ -298,7 +282,23 @@ public class PIMApplication extends Application
      */
     public static void unblockGUI()
     {
-        getMainWindow().removeEventFilter(InputEvent.ANY, GUI_BLOCKER);
+        FXUtils.unblockGUI(getMainWindow());
+    }
+
+    /**
+     * Liefert die möglichen Optionen der Kommandozeile.<br>
+     * Dies sind die JRE Programm Argumente.
+     *
+     * @return {@link Options}
+     */
+    private static Options getCommandOptions()
+    {
+        // OptionGroup group = new OptionGroup();
+
+        Options options = new Options();
+        // options.addOptionGroup(group);
+
+        return options;
     }
 
     /**
@@ -356,19 +356,21 @@ public class PIMApplication extends Application
         BlockingQueue<Runnable> workQueue = new SynchronousQueue<>(true);
         // BlockingQueue<Runnable> workQueue = new LinkedBlockingQueue<>(50);
 
-        ExecutorService executor =
-                new ThreadPoolExecutor(3, 50, 60, TimeUnit.SECONDS, workQueue, new PIMThreadFactory("thread"), new ThreadPoolExecutor.AbortPolicy());
+        ExecutorService executor = new ThreadPoolExecutor(3, 50, 60, TimeUnit.SECONDS, workQueue, new PIMThreadFactory("thread"),
+                new ThreadPoolExecutor.AbortPolicy());
         PIMApplication.executorService = Executors.unconfigurableExecutorService(executor);
-        registerCloseable(() -> {
+        registerCloseable(() ->
+        {
             LOGGER.info("Close ExecutorService");
             Utils.shutdown(PIMApplication.executorService);
             PIMApplication.executorService = null;
         });
 
-        ScheduledExecutorService scheduledExecutor =
-                new ScheduledThreadPoolExecutor(3, new PIMThreadFactory("scheduler"), new ThreadPoolExecutor.AbortPolicy());
+        ScheduledExecutorService scheduledExecutor = new ScheduledThreadPoolExecutor(3, new PIMThreadFactory("scheduler"),
+                new ThreadPoolExecutor.AbortPolicy());
         PIMApplication.scheduledExecutorService = Executors.unconfigurableScheduledExecutorService(scheduledExecutor);
-        registerCloseable(() -> {
+        registerCloseable(() ->
+        {
             LOGGER.info("Close ScheduledExecutorService");
             Utils.shutdown(PIMApplication.scheduledExecutorService);
             PIMApplication.scheduledExecutorService = null;
@@ -380,12 +382,14 @@ public class PIMApplication extends Application
         PIMApplication.dataSourceBean = new HsqldbEmbeddedServer();
         PIMApplication.dataSourceBean.configure(getSettingService());
         PIMApplication.dataSourceBean.testConnection();
-        PIMApplication.dataSourceBean.populateIfEmpty(() -> {
+        PIMApplication.dataSourceBean.populateIfEmpty(() ->
+        {
             LOGGER.info("Populate Database");
             notifyPreloader(new PIMPreloaderNotification("Populate Database"));
             // Utils.sleep(1, TimeUnit.SECONDS);
         });
-        registerCloseable(() -> {
+        registerCloseable(() ->
+        {
             LOGGER.info("Stop Database");
             PIMApplication.dataSourceBean.disconnect();
             PIMApplication.dataSourceBean = null;
@@ -446,10 +450,12 @@ public class PIMApplication extends Application
         primaryStage.setHeight(screenBounds.getHeight() - 200);
 
         // After the app is ready, show the stage
-        this.ready.addListener((observable, oldValue, newValue) -> {
+        this.ready.addListener((observable, oldValue, newValue) ->
+        {
             if (Boolean.TRUE.equals(newValue))
             {
-                Platform.runLater(() -> {
+                Platform.runLater(() ->
+                {
                     primaryStage.show();
 
                     // System.setOut(new PrintStream(new TextAreaOutputStream(MainView.LOG_TEXT_AREA)));

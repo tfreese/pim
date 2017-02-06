@@ -75,12 +75,15 @@ public interface IMailAPI
     public int getUnreadMailsCount();
 
     /**
-     * Lädt die Folder des Accounts.
+     * Liefert den Inhalt der Mail.<br>
+     * Der Monitor dient zur Anzeige des Lade-Fortschritts.
      *
-     * @return {@link List}
+     * @param mail {@link Mail}
+     * @param loadMonitor {@link BiConsumer}
+     * @return {@link MailContent}
      * @throws Exception Falls was schief geht.
      */
-    public List<MailFolder> loadFolder() throws Exception;
+    public MailContent loadContent(Mail mail, BiConsumer<Long, Long> loadMonitor) throws Exception;
 
     // /**
     // * Lädt die Folder des Accounts und übergibt sie dem {@link Consumer}.
@@ -89,6 +92,14 @@ public interface IMailAPI
     // * @throws Exception Falls was schief geht.
     // */
     // public void loadFolder(Consumer<MailFolder> consumer) throws Exception;
+
+    /**
+     * Lädt die Folder des Accounts.
+     *
+     * @return {@link List}
+     * @throws Exception Falls was schief geht.
+     */
+    public List<MailFolder> loadFolder() throws Exception;
 
     /**
      * Lädt die Mails des Folders vom Provider und aus der DB.

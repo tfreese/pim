@@ -6,15 +6,23 @@ package de.freese.pim.core.mail.utils;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
+
 import javax.activation.DataSource;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Multipart;
 import javax.mail.Part;
 import javax.mail.internet.MimeBodyPart;
+
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.ArrayUtils;
+
+import de.freese.pim.core.mail.JavaMailBuilder;
 
 /**
  * Mail-Utils.
@@ -119,6 +127,32 @@ public final class MailUtils
     public static final String MAIL_REGEX = "^(.+)@(.+)\\.[a-zA-Z]{2,3}$";
 
     /**
+     * Liefert alle vorhandenen Attachment-MimeBodyPart einer {@link Message}.<br>
+     * Key = Filename<br>
+     * Value = MimeBodyPart<br>
+     *
+     * @param part {@link Part}, @see {@link Message}
+     * @return {@link Map}; ist niemals null
+     * @throws IOException Falls was schief geht.
+     * @throws MessagingException Falls was schief geht.
+     */
+    public static Map<String, MimeBodyPart> getAttachmentMap(final Part part) throws MessagingException, IOException
+    {
+        Map<String, MimeBodyPart> map = new HashMap<>();
+
+        List<MimeBodyPart> attachments = getAttachments(part);
+
+        for (MimeBodyPart attachment : attachments)
+        {
+            String fileName = attachment.getFileName();
+
+            map.put(fileName, attachment);
+        }
+
+        return map;
+    }
+
+    /**
      * Liefert alle vorhandenen Attachments-MimeBodyPart einer {@link Message}.
      *
      * @param part {@link Part}, @see {@link Message}
@@ -155,6 +189,43 @@ public final class MailUtils
     }
 
     /**
+     * Liefert alle vorhandenen Inline-MimeBodyPart einer {@link Message}.<br>
+     * Key = ContentID<br>
+     * Value = MimeBodyPart<br>
+     *
+     * @param part {@link Part}, @see {@link Message}
+     * @return {@link Map}; ist niemals null
+     * @throws IOException Falls was schief geht.
+     * @throws MessagingException Falls was schief geht.
+     */
+    public static Map<String, MimeBodyPart> getInlineMap(final Part part) throws MessagingException, IOException
+    {
+        Map<String, MimeBodyPart> map = new HashMap<>();
+
+        List<MimeBodyPart> inlines = getInlines(part);
+
+        for (MimeBodyPart inline : inlines)
+        {
+            String[] contentIDs = Optional.ofNullable(inline.getHeader(JavaMailBuilder.HEADER_CONTENT_ID)).orElse(null);
+
+            if (ArrayUtils.isEmpty(contentIDs))
+            {
+                continue;
+            }
+
+            for (String contentID : contentIDs)
+            {
+                map.put(contentID, inline);
+            }
+
+            // contentID = contentID.replace("<", "");
+            // contentID = contentID.replace(">", "");
+        }
+
+        return map;
+    }
+
+    /**
      * Liefert alle vorhandenen Inline-MimeBodyPart einer {@link Message}.
      *
      * @param part {@link Part}, @see {@link Message}
@@ -188,6 +259,30 @@ public final class MailUtils
         }
 
         return bodyParts;
+    }
+
+    /**
+     * Liefert die {@link DataSource} für den Text (text/plain, text/html) einer {@link Message}.<br>
+     * Dabei wird zuerst nach HTML gesucht, dann nach Plain-Text.
+     *
+     * @param part {@link Part}, @see {@link Message}
+     * @return {@link List}; ist niemals null
+     * @throws IOException Falls was schief geht.
+     * @throws MessagingException Falls was schief geht.
+     */
+    public static DataSource getTextDataSource(final Part part) throws MessagingException, IOException
+    {
+        List<DataSource> dataSources = getTextDataSources(part);
+
+        Optional<DataSource> dataSource = dataSources.stream().filter(ds -> ds.getContentType().startsWith("text/html")).findFirst();
+
+        if (!dataSource.isPresent())
+        {
+            // Kein HTML gefunden -> nach Plain-Text suchen.
+            dataSource = dataSources.stream().filter(ds -> ds.getContentType().startsWith("text/plain")).findFirst();
+        }
+
+        return dataSource.get();
     }
 
     /**

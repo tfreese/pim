@@ -86,7 +86,7 @@ public class MailView implements IView
     *
     */
     @FXML
-    private WebView webView = null;
+    private WebView webView;
 
     /**
      * Erzeugt eine neue Instanz von {@link MailView}

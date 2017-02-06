@@ -5,14 +5,19 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.file.Path;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
+
 import javax.activation.DataSource;
 import javax.activation.FileDataSource;
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeBodyPart;
+import javax.mail.internet.MimeMessage;
 
 /**
  * Container für den Inhalt einer Mail.
@@ -22,6 +27,11 @@ import javax.activation.FileDataSource;
 public class MailContent
 {
     /**
+    *
+    */
+    private final Map<String, MimeBodyPart> attachmentMap = new HashMap<>();
+
+    /**
      *
      */
     private final DataSource dataSource;
@@ -29,7 +39,22 @@ public class MailContent
     /**
      *
      */
-    private String encoding = null;
+    private final String encoding;
+
+    /**
+     *
+     */
+    private final Map<String, MimeBodyPart> inlineMap = new HashMap<>();
+
+    /**
+     *
+     */
+    private final MimeMessage message;
+
+    /**
+    *
+    */
+    private DataSource messageDataSource = null;
 
     /**
      *
@@ -40,25 +65,55 @@ public class MailContent
      * Erzeugt eine neue Instanz von {@link MailContent}
      *
      * @param dataSource {@link DataSource}
+     * @param url {@link URL}
+     * @throws IOException Falls was schief geht.
      */
-    public MailContent(final DataSource dataSource)
+    public MailContent(final DataSource dataSource, final URL url) throws IOException
     {
         super();
 
         Objects.requireNonNull(dataSource, "dataSource required");
 
         this.dataSource = dataSource;
+        this.url = url;
+
+        this.message = null;
+
+        try (InputStreamReader isr = new InputStreamReader(getInputStream()))
+        {
+            this.encoding = isr.getEncoding();
+        }
+    }
+
+    /**
+     * Erzeugt eine neue Instanz von {@link MailContent}
+     *
+     * @param message {@link MimeMessage}
+     * @throws IOException Falls was schief geht.
+     */
+    public MailContent(final MimeMessage message) throws IOException
+    {
+        super();
+
+        Objects.requireNonNull(message, "message required");
+
+        this.message = message;
+
+        this.dataSource = null;
 
         try
         {
-            try (InputStreamReader isr = new InputStreamReader(getInputStream()))
-            {
-                setEncoding(isr.getEncoding());
-            }
+            this.encoding = message.getEncoding();
+
+            // Inlines
+            this.inlineMap.putAll(MailUtils.getInlineMap(message));
+
+            // Attachments
+            this.attachmentMap.putAll(MailUtils.getAttachmentMap(message));
         }
-        catch (IOException ioex)
+        catch (MessagingException ex)
         {
-            throw new RuntimeException(ioex);
+            throw new IOException(ex);
         }
     }
 
@@ -66,42 +121,28 @@ public class MailContent
      * Erzeugt eine neue Instanz von {@link MailContent}
      *
      * @param path {@link Path}
+     * @throws IOException Falls was schief geht.
      */
-    public MailContent(final Path path)
+    public MailContent(final Path path) throws IOException
     {
-        this(new FileDataSource(path.toFile()));
-
-        try
-        {
-            setUrl(path.toUri().toURL());
-        }
-        catch (MalformedURLException ioex)
-        {
-            throw new RuntimeException(ioex);
-        }
+        this(new FileDataSource(path.toFile()), path.toUri().toURL());
     }
 
     /**
      * Liefert den Text der Mail.
      *
      * @return String
+     * @throws IOException Falls was schief geht.
      * @throws RuntimeException Falls was schief geht.
      */
-    public String getContent()
+    public String getContent() throws IOException
     {
         // StandardCharsets.UTF_8
         String content = null;
 
-        try
+        try (BufferedReader buffer = new BufferedReader(new InputStreamReader(getInputStream(), Charset.forName(getEncoding()))))
         {
-            try (BufferedReader buffer = new BufferedReader(new InputStreamReader(getInputStream(), Charset.forName(getEncoding()))))
-            {
-                content = buffer.lines().collect(Collectors.joining("\n"));
-            }
-        }
-        catch (IOException ioex)
-        {
-            throw new RuntimeException(ioex);
+            content = buffer.lines().collect(Collectors.joining("\n"));
         }
 
         return content;
@@ -133,6 +174,32 @@ public class MailContent
     }
 
     /**
+     * Liefert die {@link DataSource} des Inlines.
+     *
+     * @param contentID String
+     * @return {@link DataSource} oder null
+     * @throws IOException Falls was schief geht.
+     */
+    public DataSource getInlineDataSource(final String contentID) throws IOException
+    {
+        MimeBodyPart mimeBodyPart = this.inlineMap.get(contentID);
+
+        if (mimeBodyPart != null)
+        {
+            try
+            {
+                return mimeBodyPart.getDataHandler().getDataSource();
+            }
+            catch (MessagingException ex)
+            {
+                throw new IOException(ex);
+            }
+        }
+
+        return null;
+    }
+
+    /**
      * Liefert den {@link InputStream}.
      *
      * @return {@link InputStream}
@@ -144,13 +211,53 @@ public class MailContent
     }
 
     /**
-     * Liefert den Namen der {@link DataSource}.
+     * Liefert den Text der Mail.
      *
      * @return String
+     * @throws IOException Falls was schief geht.
+     * @throws RuntimeException Falls was schief geht.
      */
-    public String getName()
+    public String getMessage() throws IOException
     {
-        return this.dataSource.getName();
+        DataSource dataSource = getMessageDataSource();
+
+        if (dataSource == null)
+        {
+            return null;
+        }
+
+        // StandardCharsets.UTF_8
+        String content = null;
+
+        try (BufferedReader buffer = new BufferedReader(new InputStreamReader(dataSource.getInputStream(), getEncoding())))
+        {
+            content = buffer.lines().collect(Collectors.joining("\n"));
+        }
+
+        return content;
+    }
+
+    /**
+     * Liefert die {@link DataSource} deer Nachricht (Text).
+     *
+     * @return {@link DataSource}
+     * @throws IOException Falls was schief geht.
+     */
+    public DataSource getMessageDataSource() throws IOException
+    {
+        if (this.messageDataSource == null)
+        {
+            try
+            {
+                this.messageDataSource = MailUtils.getTextDataSource(this.message);
+            }
+            catch (MessagingException ex)
+            {
+                throw new IOException(ex);
+            }
+        }
+
+        return this.messageDataSource;
     }
 
     /**
@@ -161,45 +268,5 @@ public class MailContent
     public URL getUrl()
     {
         return this.url;
-    }
-
-    /**
-     * text/html
-     *
-     * @return boolean
-     */
-    public boolean isHTML()
-    {
-        return getContentType().startsWith("text/html");
-    }
-
-    /**
-     * text/plain
-     *
-     * @return boolean
-     */
-    public boolean isText()
-    {
-        return getContentType().startsWith("text/plain");
-    }
-
-    /**
-     * Setzt das Encoding.
-     *
-     * @param encoding String
-     */
-    public void setEncoding(final String encoding)
-    {
-        this.encoding = encoding;
-    }
-
-    /**
-     * Setzt die {@link URL} zum Content.
-     *
-     * @param url {@link URL}
-     */
-    public void setUrl(final URL url)
-    {
-        this.url = url;
     }
 }
