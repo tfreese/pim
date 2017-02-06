@@ -1,5 +1,5 @@
 // Created: 06.02.2017
-package de.freese.pim.core.mail;
+package de.freese.pim.core.mail.utils;
 
 import java.net.URLStreamHandler;
 import java.net.URLStreamHandlerFactory;
@@ -8,7 +8,7 @@ import java.util.Objects;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.freese.pim.core.mail.utils.MailContent;
+import de.freese.pim.core.mail.model.MailContent;
 
 /**
  * {@link URLStreamHandlerFactory} für eine Mail.<br>

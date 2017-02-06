@@ -1,12 +1,12 @@
 // Created: 06.02.2017
-package de.freese.pim.core.mail;
+package de.freese.pim.core.mail.utils;
 
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLStreamHandler;
 
-import de.freese.pim.core.mail.utils.MailContent;
+import de.freese.pim.core.mail.model.MailContent;
 
 /**
  * {@link URLStreamHandler} für ein Inline einer HTML-Mail.

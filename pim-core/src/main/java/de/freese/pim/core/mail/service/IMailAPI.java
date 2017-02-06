@@ -12,8 +12,8 @@ import javax.activation.DataSource;
 
 import de.freese.pim.core.mail.model.Mail;
 import de.freese.pim.core.mail.model.MailAccount;
+import de.freese.pim.core.mail.model.MailContent;
 import de.freese.pim.core.mail.model.MailFolder;
-import de.freese.pim.core.mail.utils.MailContent;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 

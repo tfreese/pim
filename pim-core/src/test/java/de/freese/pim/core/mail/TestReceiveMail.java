@@ -51,7 +51,7 @@ import com.sun.mail.imap.IMAPFolder;
 import com.sun.mail.util.ASCIIUtility;
 
 import de.freese.pim.core.mail.function.FunctionStripNotLetter;
-import de.freese.pim.core.mail.utils.MailContent;
+import de.freese.pim.core.mail.model.MailContent;
 
 /**
  * @author Thomas Freese

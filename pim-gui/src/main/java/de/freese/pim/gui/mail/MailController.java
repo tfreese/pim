@@ -14,14 +14,14 @@ import java.util.ResourceBundle;
 
 import javax.mail.internet.InternetAddress;
 
-import de.freese.pim.core.mail.MailUrlStreamHandlerFactory;
 import de.freese.pim.core.mail.model.Mail;
 import de.freese.pim.core.mail.model.MailAccount;
+import de.freese.pim.core.mail.model.MailContent;
 import de.freese.pim.core.mail.model.MailFolder;
 import de.freese.pim.core.mail.service.IMailAPI;
 import de.freese.pim.core.mail.service.IMailService;
 import de.freese.pim.core.mail.service.JavaMailAPI;
-import de.freese.pim.core.mail.utils.MailContent;
+import de.freese.pim.core.mail.utils.MailUrlStreamHandlerFactory;
 import de.freese.pim.core.service.SettingService;
 import de.freese.pim.gui.PIMApplication;
 import de.freese.pim.gui.controller.AbstractController;

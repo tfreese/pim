@@ -1,5 +1,5 @@
 // Created: 26.01.2017
-package de.freese.pim.core.mail.utils;
+package de.freese.pim.core.mail.model;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -11,6 +11,7 @@ import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 import javax.activation.DataSource;
@@ -18,6 +19,8 @@ import javax.activation.FileDataSource;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
+
+import de.freese.pim.core.mail.utils.MailUtils;
 
 /**
  * Container für den Inhalt einer Mail.
@@ -29,7 +32,7 @@ public class MailContent
     /**
     *
     */
-    private final Map<String, MimeBodyPart> attachmentMap = new HashMap<>();
+    private final Map<String, MimeBodyPart> attachmentMap = new TreeMap<>();
 
     /**
      *
@@ -126,6 +129,16 @@ public class MailContent
     public MailContent(final Path path) throws IOException
     {
         this(new FileDataSource(path.toFile()), path.toUri().toURL());
+    }
+
+    /**
+     * Liefert die {@link DataSource} des Attachements.
+     *
+     * @return {@link Map}
+     */
+    public Map<String, MimeBodyPart> getAttachments()
+    {
+        return this.attachmentMap;
     }
 
     /**
