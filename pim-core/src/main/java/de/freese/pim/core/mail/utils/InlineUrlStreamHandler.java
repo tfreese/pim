@@ -5,7 +5,9 @@ import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLStreamHandler;
-import de.freese.pim.core.mail.model.MailContent;
+
+import de.freese.pim.core.mail.api.IMailContent;
+import de.freese.pim.core.mail.impl.JavaMailContent;
 
 /**
  * {@link URLStreamHandler} für ein Inline einer HTML-Mail.
@@ -18,20 +20,20 @@ public class InlineUrlStreamHandler extends URLStreamHandler
     /**
     *
     */
-    private static MailContent mailContent = null;
+    private static IMailContent mailContent = null;
 
     /**
-     * @return {@link MailContent}
+     * @return {@link JavaMailContent}
      */
-    public static MailContent getMailContent()
+    public static IMailContent getMailContent()
     {
         return mailContent;
     }
 
     /**
-     * @param mailContent {@link MailContent}
+     * @param mailContent {@link IMailContent}
      */
-    public static void setMailContent(final MailContent mailContent)
+    public static void setMailContent(final IMailContent mailContent)
     {
         InlineUrlStreamHandler.mailContent = mailContent;
     }

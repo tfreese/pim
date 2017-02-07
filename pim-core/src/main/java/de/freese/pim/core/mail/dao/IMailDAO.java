@@ -6,6 +6,7 @@ package de.freese.pim.core.mail.dao;
 
 import java.util.Collection;
 import java.util.List;
+
 import de.freese.pim.core.mail.model.Mail;
 import de.freese.pim.core.mail.model.MailAccount;
 import de.freese.pim.core.mail.model.MailFolder;
@@ -140,10 +141,11 @@ public interface IMailDAO
     /**
      * Ändern einer {@link Mail}.<br>
      * Hier wird nur das SEEN-Flag aktualisiert.
-     *
+     * 
+     * @param folderID long
      * @param mail {@link Mail}
      * @return int; affectedRows
      * @throws Exception Falls was schief geht.
      */
-    public int updateMail(Mail mail) throws Exception;
+    public int updateMail(long folderID, Mail mail) throws Exception;
 }

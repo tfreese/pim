@@ -159,14 +159,24 @@ public class PIMApplication extends Application
      */
     public static IMailService getMailService()
     {
+        DefaultMailService defaultMailService = new DefaultMailService();
+        defaultMailService.setMailDAO(new DefaultMailDAO().dataSource(getDataSource()));
+        defaultMailService.setSettingsService(getSettingService());
+        defaultMailService.setExecutorService(getExecutorService());
+
         if (mailService == null)
         {
             mailService = (IMailService) Proxy.newProxyInstance(PIMApplication.class.getClassLoader(), new Class<?>[]
             {
                     IMailService.class
-            }, new TransactionalInvocationHandler(getDataSource(),
-                    new DefaultMailService(new DefaultMailDAO().dataSource(getDataSource()))));
+            }, new TransactionalInvocationHandler(getDataSource(), defaultMailService));
         }
+
+        PIMApplication.registerCloseable(() ->
+        {
+            PIMApplication.LOGGER.info("Close MailService");
+            defaultMailService.disconnectAccounts();
+        });
 
         return mailService;
     }

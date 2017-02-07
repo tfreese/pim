@@ -1,5 +1,5 @@
 // Created: 13.01.2017
-package de.freese.pim.core.mail.service;
+package de.freese.pim.core.mail.api;
 
 import java.nio.file.Path;
 import java.util.List;
@@ -8,12 +8,10 @@ import java.util.concurrent.Future;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
-import javax.activation.DataSource;
-
 import de.freese.pim.core.mail.model.Mail;
 import de.freese.pim.core.mail.model.MailAccount;
-import de.freese.pim.core.mail.model.MailContent;
 import de.freese.pim.core.mail.model.MailFolder;
+import de.freese.pim.core.mail.service.IMailService;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 
@@ -53,12 +51,19 @@ public interface IMailAPI
     public Path getBasePath();
 
     /**
-     * Liefert alle Folder des Accounts.<br>
-     * Wird im Hintergrund geladen.
+     * Liefert alle Folder des Accounts.
      *
      * @return {@link Future}
      */
     public ObservableList<MailFolder> getFolder();
+
+    /**
+     * Liefert alle Folder des Accounts.
+     *
+     * @return {@link Future}
+     * @throws Exception Falls was schief geht.
+     */
+    public List<MailFolder> getFolderRemote() throws Exception;
 
     /**
      * Liefert alle abonnierte Folder des Accounts.
@@ -80,10 +85,10 @@ public interface IMailAPI
      *
      * @param mail {@link Mail}
      * @param loadMonitor {@link BiConsumer}
-     * @return {@link MailContent}
+     * @return {@link IMailContent}
      * @throws Exception Falls was schief geht.
      */
-    public MailContent loadContent(Mail mail, BiConsumer<Long, Long> loadMonitor) throws Exception;
+    public IMailContent loadContent(Mail mail, BiConsumer<Long, Long> loadMonitor) throws Exception;
 
     // /**
     // * Lädt die Folder des Accounts und übergibt sie dem {@link Consumer}.
@@ -119,16 +124,16 @@ public interface IMailAPI
      */
     public List<Mail> loadNewMails(MailFolder folder) throws Exception;
 
-    /**
-     * Liefert die {@link DataSource} mit dem Text der Mail.<br>
-     * Der Monitor dient zur Anzeige des Lade-Fortschritts.
-     *
-     * @param mail {@link Mail}
-     * @param loadMonitor {@link BiConsumer}
-     * @return {@link MailContent}
-     * @throws Exception Falls was schief geht.
-     */
-    public MailContent loadTextContent(Mail mail, BiConsumer<Long, Long> loadMonitor) throws Exception;
+    // /**
+    // * Liefert die {@link DataSource} mit dem Text der Mail.<br>
+    // * Der Monitor dient zur Anzeige des Lade-Fortschritts.
+    // *
+    // * @param mail {@link Mail}
+    // * @param loadMonitor {@link BiConsumer}
+    // * @return {@link MailContent}
+    // * @throws Exception Falls was schief geht.
+    // */
+    // public MailContent loadTextContent(Mail mail, BiConsumer<Long, Long> loadMonitor) throws Exception;
 
     /**
      * Optionaler {@link ExecutorService} für die Mail-API.

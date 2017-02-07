@@ -4,6 +4,9 @@
 package de.freese.pim.core.mail;
 
 import de.freese.pim.core.AbstractPimTest;
+import de.freese.pim.core.mail.model.MailPort;
+import de.freese.pim.core.mail.model.MailProvider;
+
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;

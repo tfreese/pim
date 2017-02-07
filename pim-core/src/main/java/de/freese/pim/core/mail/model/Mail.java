@@ -1,9 +1,10 @@
 // Created: 09.01.2017
 package de.freese.pim.core.mail.model;
 
-import java.nio.file.Path;
 import java.util.Date;
+
 import javax.mail.internet.InternetAddress;
+
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -31,7 +32,12 @@ public class Mail
     /**
      *
      */
-    private MailFolder folder = null;
+    private String folderFullName = null;
+
+    /**
+    *
+    */
+    private long folderID = 0L;
 
     /**
      *
@@ -131,14 +137,21 @@ public class Mail
     }
 
     /**
-     * Liefert den Folder der Mail.<br>
-     * Bildet mit der UID den PrimaryKey.
+     * Kompletter Name des Folders.
      *
-     * @return {@link MailFolder}
+     * @return String
      */
-    public MailFolder getFolder()
+    public String getFolderFullName()
     {
-        return this.folder;
+        return this.folderFullName;
+    }
+
+    /**
+     * @return long
+     */
+    public long getFolderID()
+    {
+        return this.folderID;
     }
 
     /**
@@ -159,19 +172,6 @@ public class Mail
     public int getMsgNum()
     {
         return this.msgNum;
-    }
-
-    /**
-     * Liefert den lokalen Temp-{@link Path} der Mail.
-     *
-     * @return {@link Path}
-     */
-    public Path getPath()
-    {
-        Path basePath = getFolder().getPath();
-        Path path = basePath.resolve(Long.toString(getUID())).resolve(getUID() + ".eml");
-
-        return path;
     }
 
     /**
@@ -290,14 +290,21 @@ public class Mail
     }
 
     /**
-     * Setzt den Folder der Mail.<br>
-     * Bildet mit der UID den PrimaryKey.
+     * Kompletter Name des Folders.
      *
-     * @param folder {@link MailFolder}
+     * @param folderFullName String
      */
-    public void setFolder(final MailFolder folder)
+    public void setFolderFullName(final String folderFullName)
     {
-        this.folder = folder;
+        this.folderFullName = folderFullName;
+    }
+
+    /**
+     * @param folderID long
+     */
+    public void setFolderID(final long folderID)
+    {
+        this.folderID = folderID;
     }
 
     /**

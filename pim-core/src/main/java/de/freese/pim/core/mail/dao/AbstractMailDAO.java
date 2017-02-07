@@ -14,15 +14,18 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
+
 import org.apache.commons.lang3.StringUtils;
+
 import de.freese.pim.core.dao.AbstractDAO;
 import de.freese.pim.core.jdbc.RowMapper;
-import de.freese.pim.core.mail.MailPort;
 import de.freese.pim.core.mail.model.Mail;
 import de.freese.pim.core.mail.model.MailAccount;
 import de.freese.pim.core.mail.model.MailFolder;
+import de.freese.pim.core.mail.model.MailPort;
 import de.freese.pim.core.utils.Crypt;
 import de.freese.pim.core.utils.Utils;
 
@@ -125,6 +128,51 @@ public class AbstractMailDAO extends AbstractDAO<IMailDAO> implements IMailDAO
         }
 
         /**
+         * @see de.freese.pim.core.jdbc.RowMapper#map(java.sql.ResultSet, int)
+         */
+        @Override
+        public Mail map(final ResultSet rs, final int rowNum) throws SQLException
+        {
+            Mail mail = new Mail();
+
+            try
+            {
+                InternetAddress fromAddress = Optional.ofNullable(parseInternetAddress(rs.getString("SENDER"))).map(f -> f[0]).orElse(null);
+
+                Clob clob = rs.getClob("RECIPIENT_TO");
+                String clobString = clobToString(clob);
+                InternetAddress[] toRecipient = parseInternetAddress(clobString);
+
+                clob = rs.getClob("RECIPIENT_CC");
+                clobString = clobToString(clob);
+                InternetAddress[] ccRecipient = parseInternetAddress(clobString);
+
+                clob = rs.getClob("RECIPIENT_BCC");
+                clobString = clobToString(clob);
+                InternetAddress[] bccRecipient = parseInternetAddress(clobString);
+
+                mail.setFolderID(rs.getLong("FOLDER_ID"));
+                mail.setUID(rs.getLong("UID"));
+                mail.setMsgNum(rs.getInt("MSG_NUM"));
+                mail.setFrom(fromAddress);
+                mail.setTo(toRecipient);
+                mail.setCc(ccRecipient);
+                mail.setBcc(bccRecipient);
+                mail.setReceivedDate(rs.getTimestamp("RECEIVED_DATE"));
+                mail.setSendDate(rs.getTimestamp("SEND_DATE"));
+                mail.setSubject(rs.getString("SUBJECT"));
+                mail.setSize(rs.getInt("SIZE"));
+                mail.setSeen(rs.getBoolean("SEEN"));
+
+                return mail;
+            }
+            catch (AddressException | IOException ex)
+            {
+                throw new SQLException(ex);
+            }
+        }
+
+        /**
          * @param clob {@link Clob}
          * @return String
          * @throws SQLException Falls was schief geht.
@@ -170,50 +218,6 @@ public class AbstractMailDAO extends AbstractDAO<IMailDAO> implements IMailDAO
         }
 
         /**
-         * @see de.freese.pim.core.jdbc.RowMapper#map(java.sql.ResultSet, int)
-         */
-        @Override
-        public Mail map(final ResultSet rs, final int rowNum) throws SQLException
-        {
-            Mail mail = new Mail();
-
-            try
-            {
-                InternetAddress fromAddress = Optional.ofNullable(parseInternetAddress(rs.getString("SENDER"))).map(f -> f[0]).orElse(null);
-
-                Clob clob = rs.getClob("RECIPIENT_TO");
-                String clobString = clobToString(clob);
-                InternetAddress[] toRecipient = parseInternetAddress(clobString);
-
-                clob = rs.getClob("RECIPIENT_CC");
-                clobString = clobToString(clob);
-                InternetAddress[] ccRecipient = parseInternetAddress(clobString);
-
-                clob = rs.getClob("RECIPIENT_BCC");
-                clobString = clobToString(clob);
-                InternetAddress[] bccRecipient = parseInternetAddress(clobString);
-
-                mail.setUID(rs.getLong("UID"));
-                mail.setMsgNum(rs.getInt("MSG_NUM"));
-                mail.setFrom(fromAddress);
-                mail.setTo(toRecipient);
-                mail.setCc(ccRecipient);
-                mail.setBcc(bccRecipient);
-                mail.setReceivedDate(rs.getTimestamp("RECEIVED_DATE"));
-                mail.setSendDate(rs.getTimestamp("SEND_DATE"));
-                mail.setSubject(rs.getString("SUBJECT"));
-                mail.setSize(rs.getInt("SIZE"));
-                mail.setSeen(rs.getBoolean("SEEN"));
-
-                return mail;
-            }
-            catch (AddressException | IOException ex)
-            {
-                throw new SQLException(ex);
-            }
-        }
-
-        /**
          * @param value String
          * @return {@link InternetAddress}
          * @throws AddressException Falls was schief geht.
@@ -254,7 +258,8 @@ public class AbstractMailDAO extends AbstractDAO<IMailDAO> implements IMailDAO
         StringBuilder sql = new StringBuilder();
         sql.append("delete from MAILACCOUNT where ID = ?");
 
-        int affectedRows = getJdbcTemplate().update(sql.toString(), ps -> {
+        int affectedRows = getJdbcTemplate().update(sql.toString(), ps ->
+        {
             ps.setLong(1, accountID);
         });
 
@@ -270,7 +275,8 @@ public class AbstractMailDAO extends AbstractDAO<IMailDAO> implements IMailDAO
         StringBuilder sql = new StringBuilder();
         sql.append("delete from MAILFOLDER where ID = ?");
 
-        int affectedRows = getJdbcTemplate().update(sql.toString(), ps -> {
+        int affectedRows = getJdbcTemplate().update(sql.toString(), ps ->
+        {
             ps.setLong(1, folderID);
         });
 
@@ -286,7 +292,8 @@ public class AbstractMailDAO extends AbstractDAO<IMailDAO> implements IMailDAO
         StringBuilder sql = new StringBuilder();
         sql.append("delete from MAILFOLDER where ACCOUNT_ID = ?");
 
-        int affectedRows = getJdbcTemplate().update(sql.toString(), ps -> {
+        int affectedRows = getJdbcTemplate().update(sql.toString(), ps ->
+        {
             ps.setLong(1, accountID);
         });
 
@@ -302,7 +309,8 @@ public class AbstractMailDAO extends AbstractDAO<IMailDAO> implements IMailDAO
         StringBuilder sql = new StringBuilder();
         sql.append("delete from MAIL where FOLDER_ID = ? and UID = ?");
 
-        int affectedRows = getJdbcTemplate().update(sql.toString(), ps -> {
+        int affectedRows = getJdbcTemplate().update(sql.toString(), ps ->
+        {
             ps.setLong(1, folderID);
             ps.setLong(2, uid);
         });
@@ -319,7 +327,8 @@ public class AbstractMailDAO extends AbstractDAO<IMailDAO> implements IMailDAO
         StringBuilder sql = new StringBuilder();
         sql.append("delete from MAIL where FOLDER_ID = ?");
 
-        int affectedRows = getJdbcTemplate().update(sql.toString(), ps -> {
+        int affectedRows = getJdbcTemplate().update(sql.toString(), ps ->
+        {
             ps.setLong(1, folderID);
         });
 
@@ -422,14 +431,6 @@ public class AbstractMailDAO extends AbstractDAO<IMailDAO> implements IMailDAO
     }
 
     /**
-     * @return String
-     */
-    protected String getUserID()
-    {
-        return Utils.getSystemUserName();
-    }
-
-    /**
      * @see de.freese.pim.core.mail.dao.IMailDAO#insertAccount(de.freese.pim.core.mail.model.MailAccount)
      */
     @Override
@@ -453,7 +454,8 @@ public class AbstractMailDAO extends AbstractDAO<IMailDAO> implements IMailDAO
         sql.append(", ?, ?, ?");
         sql.append(")");
 
-        int affectedRows = getJdbcTemplate().update(sql.toString(), ps -> {
+        int affectedRows = getJdbcTemplate().update(sql.toString(), ps ->
+        {
             ps.setLong(1, id);
             ps.setString(2, userID);
             ps.setString(3, account.getMail());
@@ -491,7 +493,8 @@ public class AbstractMailDAO extends AbstractDAO<IMailDAO> implements IMailDAO
         sb.append(")");
         String sql = sb.toString();
 
-        int[] affectedRows = getJdbcTemplate().updateBatch(sql, folders, (ps, mf, sequenceProvider) -> {
+        int[] affectedRows = getJdbcTemplate().updateBatch(sql, folders, (ps, mf, sequenceProvider) ->
+        {
             long id = sequenceProvider.getNextID("MAIL_SEQ");
 
             ps.setLong(1, id);
@@ -520,13 +523,15 @@ public class AbstractMailDAO extends AbstractDAO<IMailDAO> implements IMailDAO
         StringBuilder sb = new StringBuilder();
         sb.append("insert into MAIL");
         sb.append(" (");
-        sb.append(" FOLDER_ID, UID, MSG_NUM, SENDER, RECIPIENT_TO, RECIPIENT_CC, RECIPIENT_BCC, RECEIVED_DATE, SEND_DATE, SUBJECT, SIZE, SEEN");
+        sb.append(
+                " FOLDER_ID, UID, MSG_NUM, SENDER, RECIPIENT_TO, RECIPIENT_CC, RECIPIENT_BCC, RECEIVED_DATE, SEND_DATE, SUBJECT, SIZE, SEEN");
         sb.append(") values (");
         sb.append("?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?");
         sb.append(")");
         String sql = sb.toString();
 
-        int[] affectedRows = getJdbcTemplate().updateBatch(sql, mails, (ps, mail, sequenceProvider) -> {
+        int[] affectedRows = getJdbcTemplate().updateBatch(sql, mails, (ps, mail, sequenceProvider) ->
+        {
             String from = Optional.ofNullable(mail.getFrom()).map(InternetAddress::toUnicodeString).orElse(null);
             String to = Optional.ofNullable(mail.getTo()).map(InternetAddress::toString).orElse(null);
             String cc = Optional.ofNullable(mail.getCc()).map(InternetAddress::toString).orElse(null);
@@ -562,7 +567,8 @@ public class AbstractMailDAO extends AbstractDAO<IMailDAO> implements IMailDAO
         // }
         // catch (Exception ex)
         // {
-        // getLogger().debug("{}: folder={}, from={}, subject={}, receiveDate={}", ex.getMessage(), mail.getFolder().getFullName(), mail.getFrom(),
+        // getLogger().debug("{}: folder={}, from={}, subject={}, receiveDate={}", ex.getMessage(), mail.getFolder().getFullName(),
+        // mail.getFrom(),
         // mail.getSubject(), mail.getReceivedDate());
         //
         // throw ex;
@@ -592,7 +598,8 @@ public class AbstractMailDAO extends AbstractDAO<IMailDAO> implements IMailDAO
         sql.append(", SMTP_LEGITIMATION = ?");
         sql.append(" where id = ?");
 
-        int affectedRows = getJdbcTemplate().update(sql.toString(), ps -> {
+        int affectedRows = getJdbcTemplate().update(sql.toString(), ps ->
+        {
             ps.setString(1, account.getMail());
             ps.setString(2, encryptedPassword);
             ps.setString(3, account.getImapHost());
@@ -621,7 +628,8 @@ public class AbstractMailDAO extends AbstractDAO<IMailDAO> implements IMailDAO
         sql.append(", ABONNIERT = ?");
         sql.append(" where id = ?");
 
-        int affectedRows = getJdbcTemplate().update(sql.toString(), ps -> {
+        int affectedRows = getJdbcTemplate().update(sql.toString(), ps ->
+        {
             ps.setString(1, folder.getFullName());
             ps.setString(2, folder.getName());
             ps.setBoolean(3, folder.isAbonniert());
@@ -632,10 +640,10 @@ public class AbstractMailDAO extends AbstractDAO<IMailDAO> implements IMailDAO
     }
 
     /**
-     * @see de.freese.pim.core.mail.dao.IMailDAO#updateMail(de.freese.pim.core.mail.model.Mail)
+     * @see de.freese.pim.core.mail.dao.IMailDAO#updateMail(long, de.freese.pim.core.mail.model.Mail)
      */
     @Override
-    public int updateMail(final Mail mail) throws Exception
+    public int updateMail(final long folderID, final Mail mail) throws Exception
     {
         StringBuilder sql = new StringBuilder();
         sql.append("update MAIL");
@@ -645,12 +653,21 @@ public class AbstractMailDAO extends AbstractDAO<IMailDAO> implements IMailDAO
         sql.append(" FOLDER_ID = ?");
         sql.append(" and UID = ?");
 
-        int affectedRows = getJdbcTemplate().update(sql.toString(), ps -> {
+        int affectedRows = getJdbcTemplate().update(sql.toString(), ps ->
+        {
             ps.setBoolean(1, mail.isSeen());
-            ps.setLong(2, mail.getFolder().getID());
+            ps.setLong(2, folderID);
             ps.setLong(3, mail.getUID());
         });
 
         return affectedRows;
+    }
+
+    /**
+     * @return String
+     */
+    protected String getUserID()
+    {
+        return Utils.getSystemUserName();
     }
 }

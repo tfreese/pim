@@ -9,8 +9,10 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Arrays;
 import java.util.List;
+
 import javax.mail.internet.InternetAddress;
 import javax.sql.DataSource;
+
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -21,6 +23,7 @@ import org.junit.Test;
 import org.junit.runners.MethodSorters;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
+
 import de.freese.pim.core.jdbc.JdbcTemplate;
 import de.freese.pim.core.jdbc.SimpleDataSource;
 import de.freese.pim.core.jdbc.tx.ConnectionHolder;
@@ -29,6 +32,7 @@ import de.freese.pim.core.mail.dao.IMailDAO;
 import de.freese.pim.core.mail.model.Mail;
 import de.freese.pim.core.mail.model.MailAccount;
 import de.freese.pim.core.mail.model.MailFolder;
+import de.freese.pim.core.mail.model.MailPort;
 
 /**
  * TestCase für das {@link IMailDAO}.
@@ -351,9 +355,11 @@ public class TestMailDAO
         Mail mail = mails.get(0);
         Assert.assertEquals("a@a.aa", mail.getFrom().getAddress());
         Assert.assertEquals(1, mail.getMsgNum());
-        Assert.assertEquals(java.util.Date.from(LocalDateTime.of(2017, 02, 03, 15, 00).atZone(ZoneId.systemDefault()).toInstant()), mail.getReceivedDate());
+        Assert.assertEquals(java.util.Date.from(LocalDateTime.of(2017, 02, 03, 15, 00).atZone(ZoneId.systemDefault()).toInstant()),
+                mail.getReceivedDate());
         Assert.assertFalse(mail.isSeen());
-        Assert.assertEquals(java.util.Date.from(LocalDateTime.of(2017, 02, 03, 15, 01).atZone(ZoneId.systemDefault()).toInstant()), mail.getSendDate());
+        Assert.assertEquals(java.util.Date.from(LocalDateTime.of(2017, 02, 03, 15, 01).atZone(ZoneId.systemDefault()).toInstant()),
+                mail.getSendDate());
         Assert.assertEquals(13, mail.getSize());
         Assert.assertEquals("-TEST-", mail.getSubject());
         Assert.assertEquals("b@b.bb", mail.getTo()[0].getAddress());
@@ -374,16 +380,11 @@ public class TestMailDAO
         Assert.assertEquals(1, mails.size());
 
         Mail mail = mails.get(0);
-
-        MailFolder mf = new MailFolder();
-        mf.setID(4);
-        mail.setFolder(mf);
-
         mail.setSeen(true);
         mail.setMsgNum(99);
 
         // Nur SEEN-Flag sollte aktualisiert werden.
-        TestMailDAO.mailDAO.updateMail(mail);
+        TestMailDAO.mailDAO.updateMail(4, mail);
     }
 
     /**
@@ -400,9 +401,11 @@ public class TestMailDAO
         Mail mail = mails.get(0);
         Assert.assertEquals("a@a.aa", mail.getFrom().getAddress());
         Assert.assertEquals(1, mail.getMsgNum());
-        Assert.assertEquals(java.util.Date.from(LocalDateTime.of(2017, 02, 03, 15, 00).atZone(ZoneId.systemDefault()).toInstant()), mail.getReceivedDate());
+        Assert.assertEquals(java.util.Date.from(LocalDateTime.of(2017, 02, 03, 15, 00).atZone(ZoneId.systemDefault()).toInstant()),
+                mail.getReceivedDate());
         Assert.assertTrue(mail.isSeen());
-        Assert.assertEquals(java.util.Date.from(LocalDateTime.of(2017, 02, 03, 15, 01).atZone(ZoneId.systemDefault()).toInstant()), mail.getSendDate());
+        Assert.assertEquals(java.util.Date.from(LocalDateTime.of(2017, 02, 03, 15, 01).atZone(ZoneId.systemDefault()).toInstant()),
+                mail.getSendDate());
         Assert.assertEquals(13, mail.getSize());
         Assert.assertEquals("-TEST-", mail.getSubject());
         Assert.assertEquals("b@b.bb", mail.getTo()[0].getAddress());

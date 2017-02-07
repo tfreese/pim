@@ -1,40 +1,75 @@
 // Created: 20.01.2017
 package de.freese.pim.core.mail.service;
 
+import java.nio.file.Path;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutorService;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
 import org.apache.commons.lang3.ArrayUtils;
+
 import de.freese.pim.core.jdbc.tx.Transactional;
+import de.freese.pim.core.mail.api.IMailAPI;
 import de.freese.pim.core.mail.dao.IMailDAO;
+import de.freese.pim.core.mail.impl.JavaMailAPI;
 import de.freese.pim.core.mail.model.Mail;
 import de.freese.pim.core.mail.model.MailAccount;
 import de.freese.pim.core.mail.model.MailFolder;
+import de.freese.pim.core.service.ISettingsService;
 
 /**
  * Service für das AddressBook.
  *
  * @author Thomas Freese
  */
-public class DefaultMailService implements IMailService
+public class DefaultMailService extends AbstractService implements IMailService
 {
+    /**
+     *
+     */
+    private ExecutorService executorService = null;
+
+    /**
+     *
+     */
+    private Map<Long, IMailAPI> mailApiMap = new ConcurrentHashMap<>();
+
     /**
     *
     */
-    private final IMailDAO mailDAO;
+    private IMailDAO mailDAO = null;
+
+    /**
+     *
+     */
+    private ISettingsService settingsService = null;
 
     /**
      * Erzeugt eine neue Instanz von {@link DefaultMailService}
-     *
-     * @param mailDAO {@link IMailDAO}
      */
-    public DefaultMailService(final IMailDAO mailDAO)
+    public DefaultMailService()
     {
         super();
+    }
 
-        Objects.requireNonNull(mailDAO, "mailDAO required");
+    /**
+     * @see de.freese.pim.core.mail.service.IMailService#connectAccount(de.freese.pim.core.mail.model.MailAccount)
+     */
+    @Override
+    public void connectAccount(final MailAccount account) throws Exception
+    {
+        Path basePath = this.settingsService.getHome();
+        Path accountPath = basePath.resolve(account.getMail());
 
-        this.mailDAO = mailDAO;
+        IMailAPI mailAPI = new JavaMailAPI(account, accountPath);
+        this.mailApiMap.put(account.getID(), mailAPI);
+
+        mailAPI.connect();
     }
 
     /**
@@ -69,6 +104,29 @@ public class DefaultMailService implements IMailService
         affectedRows += this.mailDAO.deleteFolder(folderID);
 
         return affectedRows;
+    }
+
+    /**
+     * @see de.freese.pim.core.mail.service.IMailService#disconnectAccounts()
+     */
+    @Override
+    public void disconnectAccounts() throws Exception
+    {
+        for (IMailAPI mailAPI : this.mailApiMap.values())
+        {
+            getLogger().info("Close " + mailAPI.getAccount().getMail());
+
+            try
+            {
+                mailAPI.disconnect();
+            }
+            catch (Exception ex)
+            {
+                getLogger().warn(ex.getMessage());
+            }
+        }
+
+        this.mailApiMap.clear();
     }
 
     /**
@@ -142,6 +200,70 @@ public class DefaultMailService implements IMailService
     }
 
     /**
+     * @see de.freese.pim.core.mail.service.IMailService#loadFolder(long)
+     */
+    @Override
+    @Transactional
+    public List<MailFolder> loadFolder(final long accountID) throws Exception
+    {
+        IMailAPI mailAPI = this.mailApiMap.get(accountID);
+
+        List<MailFolder> folder = getMailDAO().getMailFolder(accountID);
+
+        if ((folder == null) || folder.isEmpty())
+        {
+            folder = mailAPI.getFolderRemote();
+
+            int[] affectedRows = insertOrUpdateFolder(accountID, folder);
+
+            if (getLogger().isDebugEnabled())
+            {
+                getLogger().debug("new folder saved: number={}", IntStream.of(affectedRows).sum());
+            }
+        }
+
+        // Hierarchie aufbauen basierend auf Namen.
+        for (MailFolder mailFolder : folder)
+        {
+            // @formatter:off
+            Optional<MailFolder> parent = folder.stream()
+                    .filter(mf -> !Objects.equals(mf, mailFolder))
+                    .filter(mf -> mailFolder.getFullName().startsWith(mf.getFullName()))
+                    .findFirst();
+            // @formatter:on
+
+            parent.ifPresent(p -> p.addChild(mailFolder));
+        }
+
+        return folder;
+
+    }
+
+    /**
+     * @param executorService {@link ExecutorService}
+     */
+    public void setExecutorService(final ExecutorService executorService)
+    {
+        this.executorService = executorService;
+    }
+
+    /**
+     * @param mailDAO {@link IMailDAO}
+     */
+    public void setMailDAO(final IMailDAO mailDAO)
+    {
+        this.mailDAO = mailDAO;
+    }
+
+    /**
+     * @param settingsService {@link ISettingsService}
+     */
+    public void setSettingsService(final ISettingsService settingsService)
+    {
+        this.settingsService = settingsService;
+    }
+
+    /**
      * @see de.freese.pim.core.mail.service.IMailService#updateAccount(de.freese.pim.core.mail.model.MailAccount)
      */
     @Override
@@ -149,5 +271,13 @@ public class DefaultMailService implements IMailService
     public int updateAccount(final MailAccount account) throws Exception
     {
         return this.mailDAO.updateAccount(account);
+    }
+
+    /**
+     * @return {@link IMailDAO}
+     */
+    protected IMailDAO getMailDAO()
+    {
+        return this.mailDAO;
     }
 }

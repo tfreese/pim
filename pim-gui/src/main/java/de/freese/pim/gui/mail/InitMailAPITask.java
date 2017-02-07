@@ -3,11 +3,13 @@ package de.freese.pim.gui.mail;
 
 import java.util.List;
 import java.util.Objects;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import de.freese.pim.core.mail.api.IMailAPI;
 import de.freese.pim.core.mail.model.MailAccount;
 import de.freese.pim.core.mail.model.MailFolder;
-import de.freese.pim.core.mail.service.IMailAPI;
 import de.freese.pim.gui.PIMApplication;
 import de.freese.pim.gui.view.ErrorDialog;
 import javafx.concurrent.Task;
@@ -54,7 +56,8 @@ public class InitMailAPITask extends Task<List<MailFolder>>
         this.parent = parent;
         this.mailAPI = mailAPI;
 
-        setOnSucceeded(event -> {
+        setOnSucceeded(event ->
+        {
             List<MailFolder> folders = getValue();
 
             mailAPI.getFolder().addAll(folders);
@@ -63,9 +66,10 @@ public class InitMailAPITask extends Task<List<MailFolder>>
             treeView.refresh();
 
             // Laden der Mails.
-            PIMApplication.getExecutorService().execute(new LoadMailsTask(treeView, folders));
+            PIMApplication.getExecutorService().execute(new LoadMailsTask(treeView, folders, mailAPI));
         });
-        setOnFailed(event -> {
+        setOnFailed(event ->
+        {
             Throwable th = getException();
 
             LOGGER.error(null, th);
@@ -84,7 +88,8 @@ public class InitMailAPITask extends Task<List<MailFolder>>
 
         this.mailAPI.connect();
 
-        PIMApplication.registerCloseable(() -> {
+        PIMApplication.registerCloseable(() ->
+        {
             PIMApplication.LOGGER.info("Close " + this.mailAPI.getAccount().getMail());
             this.mailAPI.disconnect();
         });

@@ -8,13 +8,14 @@ import java.util.Objects;
 import de.freese.pim.core.addressbook.dao.IAddressBookDAO;
 import de.freese.pim.core.addressbook.model.Kontakt;
 import de.freese.pim.core.jdbc.tx.Transactional;
+import de.freese.pim.core.mail.service.AbstractService;
 
 /**
  * Service für das AddressBook.
  *
  * @author Thomas Freese
  */
-public class DefaultAddressBookService implements IAddressBookService
+public class DefaultAddressBookService extends AbstractService implements IAddressBookService
 {
     /**
      *

@@ -1,11 +1,9 @@
 // Created: 09.01.2017
 package de.freese.pim.core.mail.model;
 
-import java.nio.file.Path;
 import java.util.Comparator;
 import java.util.function.Predicate;
 
-import de.freese.pim.core.mail.service.IMailAPI;
 import javafx.beans.binding.IntegerBinding;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -47,11 +45,6 @@ public class MailFolder
      *
      */
     private boolean isSendFolder = false;
-
-    /**
-     *
-     */
-    private IMailAPI mailAPI = null;
 
     /**
       *
@@ -146,14 +139,6 @@ public class MailFolder
     }
 
     /**
-     * @return {@link IMailAPI}
-     */
-    public IMailAPI getMailAPI()
-    {
-        return this.mailAPI;
-    }
-
-    /**
      * @return {@link ObservableList}
      */
     public ObservableList<Mail> getMails()
@@ -179,21 +164,6 @@ public class MailFolder
     public String getName()
     {
         return nameProperty().get();
-    }
-
-    /**
-     * Liefert den lokalen Temp-{@link Path} des Folders.
-     *
-     * @return {@link Path}
-     */
-    public Path getPath()
-    {
-        // Path basePath = Optional.ofNullable(getParent()).map(p -> p.getPath()).orElse(getMailAPI().getBasePath());
-        Path basePath = getMailAPI().getBasePath();
-        Path path = basePath.resolve(getFullName());
-        // Path path = basePath.resolve(getFullName().replaceAll("/", "__"));
-
-        return path;
     }
 
     /**
@@ -291,14 +261,6 @@ public class MailFolder
     public void setID(final long id)
     {
         this.id = id;
-    }
-
-    /**
-     * @param mailAPI {@link IMailAPI}
-     */
-    public void setMailAPI(final IMailAPI mailAPI)
-    {
-        this.mailAPI = mailAPI;
     }
 
     /**

@@ -3,7 +3,6 @@
  */
 package de.freese.pim.core.mail.model;
 
-import de.freese.pim.core.mail.MailPort;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;

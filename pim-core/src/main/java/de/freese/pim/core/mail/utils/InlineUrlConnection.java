@@ -5,8 +5,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
+
 import javax.activation.DataSource;
-import de.freese.pim.core.mail.model.MailContent;
+
+import de.freese.pim.core.mail.api.IMailContent;
 import de.freese.pim.core.utils.io.EmptyInputStream;
 
 /**
@@ -24,16 +26,16 @@ public class InlineUrlConnection extends URLConnection
     /**
      *
      */
-    private final MailContent mailContent;
+    private final IMailContent mailContent;
 
     /**
      * Erzeugt eine neue Instanz von {@link InlineUrlConnection}
      *
-     * @param mailContent {@link MailContent}
+     * @param mailContent {@link IMailContent}
      * @param url {@link URL}
      * @throws IOException Falls was schief geht.
      */
-    public InlineUrlConnection(final MailContent mailContent, final URL url) throws IOException
+    public InlineUrlConnection(final IMailContent mailContent, final URL url) throws IOException
     {
         super(url);
 

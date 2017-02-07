@@ -11,14 +11,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+
 import javax.activation.DataSource;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Multipart;
 import javax.mail.Part;
 import javax.mail.internet.MimeBodyPart;
+
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.ArrayUtils;
+
 import de.freese.pim.core.mail.JavaMailBuilder;
 
 /**
@@ -126,7 +129,7 @@ public final class MailUtils
     /**
      * Liefert alle vorhandenen Attachment-MimeBodyPart einer {@link Message}.<br>
      * Key = Filename<br>
-     * Value = MimeBodyPart<br>
+     * Value = {@link MimeBodyPart}<br>
      *
      * @param part {@link Part}, @see {@link Message}
      * @return {@link Map}; ist niemals null
@@ -190,7 +193,7 @@ public final class MailUtils
     /**
      * Liefert alle vorhandenen Inline-MimeBodyPart einer {@link Message}.<br>
      * Key = ContentID<br>
-     * Value = MimeBodyPart<br>
+     * Value = {@link MimeBodyPart}<br>
      *
      * @param part {@link Part}, @see {@link Message}
      * @return {@link Map}; ist niemals null

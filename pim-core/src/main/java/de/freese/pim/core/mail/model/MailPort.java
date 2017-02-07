@@ -1,5 +1,5 @@
 // Created: 04.01.2017
-package de.freese.pim.core.mail;
+package de.freese.pim.core.mail.model;
 
 import java.util.Optional;
 import java.util.stream.Stream;

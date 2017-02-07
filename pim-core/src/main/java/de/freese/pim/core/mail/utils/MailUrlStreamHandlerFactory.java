@@ -46,23 +46,21 @@ public class MailUrlStreamHandlerFactory implements URLStreamHandlerFactory
             // Find Inline
             return new InlineUrlStreamHandler();
         }
-        else
+
+        // Kopie von sun.misc.Launcher$Factory
+        String name = "sun.net.www.protocol." + protocol + ".Handler";
+
+        try
         {
-            // Kopie von sun.misc.Launcher$Factory
-            String name = "sun.net.www.protocol." + protocol + ".Handler";
+            Class<?> clazz = Class.forName(name);
 
-            try
-            {
-                Class<?> clazz = Class.forName(name);
-
-                return (URLStreamHandler) clazz.newInstance();
-            }
-            catch (Exception ex)
-            {
-                ex.printStackTrace();
-            }
-
-            throw new InternalError("could not load " + protocol + "system protocol handler");
+            return (URLStreamHandler) clazz.newInstance();
         }
+        catch (Exception ex)
+        {
+            ex.printStackTrace();
+        }
+
+        throw new InternalError("could not load " + protocol + "system protocol handler");
     }
 }
