@@ -9,8 +9,10 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.beans.value.ObservableIntegerValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 
 /**
  * Entity für einen Mail-Account.
@@ -21,6 +23,11 @@ import javafx.collections.ObservableList;
 // @JsonRootName("mailAccount")
 public class MailAccount
 {
+    /**
+    *
+    */
+    private final FilteredList<MailFolder> abonnierteFolder;
+
     /**
     *
     */
@@ -57,6 +64,11 @@ public class MailAccount
     private final StringProperty passwordProperty = new SimpleStringProperty(this, "password", null);
 
     /**
+    *
+    */
+    private final FilteredList<MailFolder> rootFolder;
+
+    /**
      *
      */
     private final StringProperty smtpHostProperty = new SimpleStringProperty(this, "smtpHost", null);
@@ -72,11 +84,22 @@ public class MailAccount
     private final ObjectProperty<MailPort> smtpPortProperty = new SimpleObjectProperty<>(this, "smtpPort", MailPort.SMTPS);
 
     /**
+    *
+    */
+    private ObservableIntegerValue unreadMailsCount = null;
+
+    /**
      * Erstellt ein neues {@link MailAccount} Object.
      */
     public MailAccount()
     {
         super();
+
+        this.abonnierteFolder = new FilteredList<>(getFolder(), MailFolder::isAbonniert);
+        this.rootFolder = new FilteredList<>(this.abonnierteFolder, MailFolder::isParent);
+
+        // Zähler mit der Folder-List verbinden.
+        this.unreadMailsCount = new SumUnreadMailsInChildFolderBinding(this.rootFolder);
     }
 
     /**
@@ -86,7 +109,7 @@ public class MailAccount
      */
     public MailAccount(final MailAccount src)
     {
-        super();
+        this();
 
         copyFrom(src);
     }
@@ -118,6 +141,16 @@ public class MailAccount
     public ObservableList<MailFolder> getFolder()
     {
         return this.folder;
+    }
+
+    /**
+     * Liefert alle abonnierte Folder des Accounts.
+     *
+     * @return {@link FilteredList}
+     */
+    public FilteredList<MailFolder> getFolderSubscribed()
+    {
+        return this.abonnierteFolder;
     }
 
     /**
@@ -174,6 +207,16 @@ public class MailAccount
     public MailPort getSmtpPort()
     {
         return smtpPortProperty().get();
+    }
+
+    /**
+     * Liefert die Anzahl ungelesener Mails des Accounts.
+     *
+     * @return int
+     */
+    public int getUnreadMailsCount()
+    {
+        return this.unreadMailsCount.intValue();
     }
 
     /**

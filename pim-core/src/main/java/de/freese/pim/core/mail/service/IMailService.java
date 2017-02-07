@@ -2,7 +2,6 @@
 package de.freese.pim.core.mail.service;
 
 import java.util.List;
-
 import de.freese.pim.core.mail.api.IMailAPI;
 import de.freese.pim.core.mail.model.Mail;
 import de.freese.pim.core.mail.model.MailAccount;
@@ -55,6 +54,12 @@ public interface IMailService
      * @throws Exception Falls was schief geht.
      */
     public List<MailAccount> getMailAccounts() throws Exception;
+
+    /**
+     * @param accountID long
+     * @return {@link IMailAPI}
+     */
+    public IMailAPI getMailAPI(long accountID);
 
     /**
      * Liefert alle Folder des Mail-Accounts, sortiert nach FULLNAME.

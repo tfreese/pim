@@ -3,13 +3,11 @@ package de.freese.pim.gui.mail;
 
 import java.util.List;
 import java.util.Objects;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import de.freese.pim.core.mail.api.IMailAPI;
 import de.freese.pim.core.mail.model.MailAccount;
 import de.freese.pim.core.mail.model.MailFolder;
+import de.freese.pim.core.mail.service.IMailService;
 import de.freese.pim.gui.PIMApplication;
 import de.freese.pim.gui.view.ErrorDialog;
 import javafx.concurrent.Task;
@@ -31,45 +29,46 @@ public class InitMailAPITask extends Task<List<MailFolder>>
     /**
      *
      */
-    private final IMailAPI mailAPI;
+    private final MailAccount account;
 
     /**
      *
      */
-    private final TreeItem<Object> parent;
+    private final IMailService mailService;
 
     /**
      * Erzeugt eine neue Instanz von {@link InitMailAPITask}
      *
      * @param treeView {@link TreeView}
      * @param parent {@link TreeItem}
-     * @param mailAPI {@link IMailAPI}
+     * @param mailService {@link IMailService}
+     * @param account {@link MailAccount}
      */
-    public InitMailAPITask(final TreeView<Object> treeView, final TreeItem<Object> parent, final IMailAPI mailAPI)
+    public InitMailAPITask(final TreeView<Object> treeView, final TreeItem<Object> parent, final IMailService mailService, final MailAccount account)
     {
         super();
 
         Objects.requireNonNull(treeView, "treeView required");
         Objects.requireNonNull(parent, "parent required");
-        Objects.requireNonNull(mailAPI, "mailAPI required");
+        Objects.requireNonNull(mailService, "mailService required");
+        Objects.requireNonNull(account, "account required");
 
-        this.parent = parent;
-        this.mailAPI = mailAPI;
+        this.mailService = mailService;
+        this.account = account;
 
-        setOnSucceeded(event ->
-        {
+        setOnSucceeded(event -> {
             List<MailFolder> folders = getValue();
 
-            mailAPI.getFolder().addAll(folders);
+            account.getFolderSubscribed().addListener(new TreeFolderListChangeListener(parent));
+            account.getFolder().addAll(folders);
 
-            LOGGER.info("Initialisation of {} finished", this.mailAPI.getAccount().getMail());
+            LOGGER.info("Initialisation of {} finished", account.getMail());
             treeView.refresh();
 
             // Laden der Mails.
-            PIMApplication.getExecutorService().execute(new LoadMailsTask(treeView, folders, mailAPI));
+            PIMApplication.getExecutorService().execute(new LoadMailsTask(treeView, folders, mailService, account));
         });
-        setOnFailed(event ->
-        {
+        setOnFailed(event -> {
             Throwable th = getException();
 
             LOGGER.error(null, th);
@@ -84,20 +83,17 @@ public class InitMailAPITask extends Task<List<MailFolder>>
     @Override
     protected List<MailFolder> call() throws Exception
     {
-        LOGGER.info("Init MailAccount {}", this.mailAPI.getAccount().getMail());
+        LOGGER.info("Init MailAccount {}", this.account.getMail());
 
-        this.mailAPI.connect();
+        this.mailService.connectAccount(this.account);
 
-        PIMApplication.registerCloseable(() ->
-        {
-            PIMApplication.LOGGER.info("Close " + this.mailAPI.getAccount().getMail());
-            this.mailAPI.disconnect();
-        });
+        // PIMApplication.registerCloseable(() ->
+        // {
+        // PIMApplication.LOGGER.info("Close " + this.mailAPI.getAccount().getMail());
+        // this.mailAPI.disconnect();
+        // });
 
-        // Tree aufbauen.
-        this.mailAPI.getFolderSubscribed().addListener(new TreeFolderListChangeListener(this.parent));
-
-        List<MailFolder> folders = this.mailAPI.loadFolder();
+        List<MailFolder> folders = this.mailService.loadFolder(this.account.getID());
 
         return folders;
     }

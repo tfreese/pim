@@ -8,19 +8,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
-
 import javax.activation.DataSource;
-import javax.mail.MessagingException;
 import javax.mail.internet.ContentType;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
-import javax.mail.internet.MimeUtility;
-
 import org.apache.commons.lang3.StringUtils;
-
 import de.freese.pim.core.mail.api.IMailContent;
 import de.freese.pim.core.mail.utils.MailUtils;
 
@@ -95,18 +89,32 @@ public class JavaMailContent implements IMailContent
         Objects.requireNonNull(message, "message required");
 
         DataSource messageDataSource = MailUtils.getTextDataSource(message);
-        this.encoding = detectMessageEncoding(message, messageDataSource);
+
+        String enc = null;
+        // enc = message.getEncoding();
 
         // "text/html; charset=UTF-8", "text/html; charset=UTF-8"
-        ContentType c = new ContentType(messageDataSource.getContentType());
+        ContentType ct = new ContentType(messageDataSource.getContentType());
+        this.messageContentType = ct.getBaseType();
 
-        String contentType = messageDataSource.getContentType();
-        contentType = Optional.ofNullable(contentType).map(ct -> ct.split("[;]")[0]).orElse("text/plain");
+        if (StringUtils.isBlank(enc))
+        {
+            enc = ct.getParameter("charset");
+        }
 
+        if (StringUtils.isBlank(enc))
+        {
+            enc = "UTF-8";
+        }
+
+        this.encoding = enc;
+
+        // this.encoding = detectMessageEncoding(message, messageDataSource);
+        // String contentType = messageDataSource.getContentType();
+        // contentType = Optional.ofNullable(contentType).map(ct -> ct.split("[;]")[0]).orElse("text/plain");
         // contentType = contentType.replaceAll(System.getProperty("line.separator"), "");
         // contentType = contentType.replaceAll("\\r\\n|\\r|\\n", "");
-
-        this.messageContentType = contentType;
+        // this.messageContentType = contentType;
 
         // Text-Nachricht: text/plain, text/html
         try (BufferedReader buffer = new BufferedReader(new InputStreamReader(messageDataSource.getInputStream(), this.encoding)))
@@ -126,9 +134,9 @@ public class JavaMailContent implements IMailContent
             this.attachmentMap.put(entry.getKey(), entry.getValue().getDataHandler().getDataSource());
 
             // Test
-            String fileName = entry.getValue().getFileName();
-            String dsName = entry.getValue().getDataHandler().getDataSource().getName();
-            System.out.printf("%s / %s%n", fileName, dsName);
+            // String fileName = entry.getValue().getFileName();
+            // String dsName = entry.getValue().getDataHandler().getDataSource().getName();
+            // System.out.printf("%s / %s%n", fileName, dsName);
         }
     }
 
@@ -143,6 +151,34 @@ public class JavaMailContent implements IMailContent
     // this(new FileDataSource(path.toFile()), path.toUri().toURL());
     // }
 
+    // /**
+    // * Liefert das Encoding der Message.
+    // *
+    // * @param message {@link MimeMessage}
+    // * @param dataSource {@link DataSource}
+    // * @return String
+    // * @throws MessagingException Falls was schief geht.
+    // */
+    // private String detectMessageEncoding(final MimeMessage message, final DataSource dataSource) throws MessagingException
+    // {
+    // String encoding = message.getEncoding();
+    //
+    // if (StringUtils.isBlank(encoding))
+    // {
+    // if (dataSource.getContentType().indexOf(';') > 0)
+    // {
+    // encoding = dataSource.getContentType().split("[;]")[1].split("[=]")[1].replaceAll("[\"]", "").toUpperCase();
+    // }
+    // else
+    // {
+    // encoding = "UTF-8";
+    // }
+    // }
+    //
+    // // StandardCharsets.UTF_8
+    // return encoding;
+    // }
+
     /**
      * @see de.freese.pim.core.mail.api.IMailContent#getAttachments()
      */
@@ -151,41 +187,6 @@ public class JavaMailContent implements IMailContent
     {
         return this.attachmentMap;
     }
-
-    // /**
-    // * Liefert den Text der Mail.
-    // *
-    // * @return String
-    // * @throws IOException Falls was schief geht.
-    // * @throws RuntimeException Falls was schief geht.
-    // */
-    // public String getContent() throws IOException
-    // {
-    // // StandardCharsets.UTF_8
-    // String content = null;
-    //
-    // try (BufferedReader buffer = new BufferedReader(new InputStreamReader(getInputStream(), Charset.forName(getEncoding()))))
-    // {
-    // content = buffer.lines().collect(Collectors.joining("\n"));
-    // }
-    //
-    // return content;
-    // }
-
-    // /**
-    // * "text/html", "text/plain"
-    // *
-    // * @return String
-    // */
-    // public String getContentType()
-    // {
-    // String contentType = this.dataSource.getContentType();
-    //
-    // // contentType = contentType.replaceAll(System.getProperty("line.separator"), "");
-    // contentType = contentType.replaceAll("\\r\\n|\\r|\\n", "");
-    //
-    // return contentType;
-    // }
 
     /**
      * @see de.freese.pim.core.mail.api.IMailContent#getEncoding()
@@ -202,23 +203,7 @@ public class JavaMailContent implements IMailContent
     @Override
     public DataSource getInlineDataSource(final String contentID) throws IOException
     {
-        DataSource inline = null;
-
-        // MimeBodyPart mimeBodyPart = this.inlineMap.get(contentID);
-        //
-        // if (mimeBodyPart != null)
-        // {
-        // try
-        // {
-        // inline = mimeBodyPart.getDataHandler().getDataSource();
-        // }
-        // catch (MessagingException ex)
-        // {
-        // throw new IOException(ex);
-        // }
-        // }
-
-        inline = this.inlineMap.get(contentID);
+        DataSource inline = this.inlineMap.get(contentID);
 
         return inline;
     }
@@ -239,34 +224,5 @@ public class JavaMailContent implements IMailContent
     public String getMessageContentType()
     {
         return this.messageContentType;
-    }
-
-    /**
-     * Liefert das Encoding der Message.
-     *
-     * @param message {@link MimeMessage}
-     * @param dataSource {@link DataSource}
-     * @return String
-     * @throws MessagingException Falls was schief geht.
-     */
-    private String detectMessageEncoding(final MimeMessage message, final DataSource dataSource) throws MessagingException
-    {
-        String encoding = message.getEncoding();
-
-        if (StringUtils.isBlank(encoding))
-        {
-            encoding = MimeUtility.getEncoding(dataSource);
-            // if (dataSource.getContentType().indexOf(';') > 0)
-            // {
-            // encoding = dataSource.getContentType().split("[;]")[1].split("[=]")[1].replaceAll("[\"]", "").toUpperCase();
-            // }
-            // else
-            // {
-            // encoding = "UTF-8";
-            // }
-        }
-
-        // StandardCharsets.UTF_8
-        return encoding;
     }
 }

@@ -7,13 +7,11 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
-
 import de.freese.pim.core.mail.model.Mail;
 import de.freese.pim.core.mail.model.MailAccount;
 import de.freese.pim.core.mail.model.MailFolder;
 import de.freese.pim.core.mail.service.IMailService;
 import javafx.collections.ObservableList;
-import javafx.collections.transformation.FilteredList;
 
 /**
  * Interface für die Mail-API.<br>
@@ -66,20 +64,6 @@ public interface IMailAPI
     public List<MailFolder> getFolderRemote() throws Exception;
 
     /**
-     * Liefert alle abonnierte Folder des Accounts.
-     *
-     * @return {@link FilteredList}
-     */
-    public FilteredList<MailFolder> getFolderSubscribed();
-
-    /**
-     * Liefert die Anzahl ungelesener Mails des Accounts.
-     *
-     * @return int
-     */
-    public int getUnreadMailsCount();
-
-    /**
      * Liefert den Inhalt der Mail.<br>
      * Der Monitor dient zur Anzeige des Lade-Fortschritts.
      *
@@ -104,7 +88,7 @@ public interface IMailAPI
      * @return {@link List}
      * @throws Exception Falls was schief geht.
      */
-    public List<MailFolder> loadFolder() throws Exception;
+    public List<MailFolder> loadFolderr() throws Exception;
 
     /**
      * Lädt die Mails des Folders vom Provider und aus der DB.

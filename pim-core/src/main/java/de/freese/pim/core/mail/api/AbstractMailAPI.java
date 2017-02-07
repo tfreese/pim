@@ -4,17 +4,12 @@ package de.freese.pim.core.mail.api;
 import java.nio.file.Path;
 import java.util.Objects;
 import java.util.concurrent.ExecutorService;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import de.freese.pim.core.mail.model.MailAccount;
 import de.freese.pim.core.mail.model.MailFolder;
-import de.freese.pim.core.mail.model.SumUnreadMailsInChildFolderBinding;
 import de.freese.pim.core.mail.service.IMailService;
-import javafx.beans.value.ObservableIntegerValue;
 import javafx.collections.ObservableList;
-import javafx.collections.transformation.FilteredList;
 
 /**
  * Basis-Implementierung der {@link IMailAPI}.
@@ -23,11 +18,6 @@ import javafx.collections.transformation.FilteredList;
  */
 public abstract class AbstractMailAPI implements IMailAPI
 {
-    /**
-    *
-    */
-    private final FilteredList<MailFolder> abonnierteFolder;
-
     /**
      *
      */
@@ -54,16 +44,6 @@ public abstract class AbstractMailAPI implements IMailAPI
     private IMailService mailService = null;
 
     /**
-    *
-    */
-    private final FilteredList<MailFolder> rootFolder;
-
-    /**
-    *
-    */
-    private ObservableIntegerValue unreadMailsCount = null;
-
-    /**
      * Erzeugt eine neue Instanz von {@link AbstractMailAPI}
      *
      * @param account {@link MailAccount}
@@ -78,12 +58,6 @@ public abstract class AbstractMailAPI implements IMailAPI
 
         this.account = account;
         this.basePath = basePath;
-
-        this.abonnierteFolder = new FilteredList<>(this.account.getFolder(), MailFolder::isAbonniert);
-        this.rootFolder = new FilteredList<>(this.abonnierteFolder, MailFolder::isParent);
-
-        // Zähler mit der Folder-List verbinden.
-        this.unreadMailsCount = new SumUnreadMailsInChildFolderBinding(this.rootFolder);
     }
 
     /**
@@ -105,6 +79,16 @@ public abstract class AbstractMailAPI implements IMailAPI
     }
 
     /**
+     * Optionaler {@link ExecutorService} für die Mail-API.
+     *
+     * @return {@link ExecutorService}
+     */
+    protected ExecutorService getExecutor()
+    {
+        return this.executor;
+    }
+
+    /**
      * @see de.freese.pim.core.mail.api.IMailAPI#getFolder()
      */
     @Override
@@ -114,21 +98,21 @@ public abstract class AbstractMailAPI implements IMailAPI
     }
 
     /**
-     * @see de.freese.pim.core.mail.api.IMailAPI#getFolderSubscribed()
+     * @return {@link Logger}
      */
-    @Override
-    public FilteredList<MailFolder> getFolderSubscribed()
+    protected Logger getLogger()
     {
-        return this.abonnierteFolder;
+        return this.logger;
     }
 
     /**
-     * @see de.freese.pim.core.mail.api.IMailAPI#getUnreadMailsCount()
+     * Liefert den {@link IMailService}.
+     *
+     * @return {@link IMailService}
      */
-    @Override
-    public int getUnreadMailsCount()
+    protected IMailService getMailService()
     {
-        return this.unreadMailsCount.intValue();
+        return this.mailService;
     }
 
     /**
@@ -159,33 +143,5 @@ public abstract class AbstractMailAPI implements IMailAPI
         builder.append("JavaMailAPI [").append(getAccount()).append("]");
 
         return builder.toString();
-    }
-
-    /**
-     * Optionaler {@link ExecutorService} für die Mail-API.
-     *
-     * @return {@link ExecutorService}
-     */
-    protected ExecutorService getExecutor()
-    {
-        return this.executor;
-    }
-
-    /**
-     * @return {@link Logger}
-     */
-    protected Logger getLogger()
-    {
-        return this.logger;
-    }
-
-    /**
-     * Liefert den {@link IMailService}.
-     *
-     * @return {@link IMailService}
-     */
-    protected IMailService getMailService()
-    {
-        return this.mailService;
     }
 }

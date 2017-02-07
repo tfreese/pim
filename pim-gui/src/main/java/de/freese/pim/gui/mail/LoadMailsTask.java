@@ -3,13 +3,12 @@ package de.freese.pim.gui.mail;
 
 import java.util.List;
 import java.util.Objects;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import de.freese.pim.core.mail.api.IMailAPI;
 import de.freese.pim.core.mail.model.Mail;
+import de.freese.pim.core.mail.model.MailAccount;
 import de.freese.pim.core.mail.model.MailFolder;
+import de.freese.pim.core.mail.service.IMailService;
 import de.freese.pim.gui.view.ErrorDialog;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
@@ -28,39 +27,45 @@ public class LoadMailsTask extends Task<List<Mail>>
     public static final Logger LOGGER = LoggerFactory.getLogger(LoadMailsTask.class);
 
     /**
+    *
+    */
+    private final MailAccount account;
+
+    /**
      *
      */
     private final List<MailFolder> folders;
 
     /**
-     *
-     */
-    private final IMailAPI mailAPI;
+    *
+    */
+    private final IMailService mailService;
 
     /**
      * Erzeugt eine neue Instanz von {@link LoadMailsTask}
      *
      * @param treeView {@link TreeView}
      * @param folders {@link List}
-     * @param mailAPI {@link IMailAPI}
+     * @param mailService {@link IMailService}
+     * @param account {@link MailAccount}
      */
-    public LoadMailsTask(final TreeView<Object> treeView, final List<MailFolder> folders, final IMailAPI mailAPI)
+    public LoadMailsTask(final TreeView<Object> treeView, final List<MailFolder> folders, final IMailService mailService, final MailAccount account)
     {
         super();
 
         Objects.requireNonNull(treeView, "treeView required");
         Objects.requireNonNull(folders, "mailFolder required");
-        Objects.requireNonNull(mailAPI, "mailAPI required");
+        Objects.requireNonNull(mailService, "mailService required");
+        Objects.requireNonNull(account, "account required");
 
         this.folders = folders;
-        this.mailAPI = mailAPI;
+        this.mailService = mailService;
+        this.account = account;
 
-        setOnSucceeded(event ->
-        {
+        setOnSucceeded(event -> {
             treeView.refresh();
         });
-        setOnFailed(event ->
-        {
+        setOnFailed(event -> {
             Throwable th = getException();
 
             LOGGER.error(null, th);
@@ -77,9 +82,8 @@ public class LoadMailsTask extends Task<List<Mail>>
     {
         for (MailFolder mf : this.folders)
         {
-            // LOGGER.info("Load Mails: account={}, folder={}", mailAPI.getAccount().getMail(), mf.getFullName());
-            List<Mail> mails = this.mailAPI.loadMails(mf);
-            LOGGER.info("Load Mails finished: account={}, folder={}", this.mailAPI.getAccount().getMail(), mf.getFullName());
+            List<Mail> mails = this.mailService.getMailAPI(this.account.getID()).loadMails(mf);
+            LOGGER.info("Load Mails finished: account={}, folder={}", this.account.getMail(), mf.getFullName());
 
             Platform.runLater(() -> mf.getMails().addAll(mails));
         }

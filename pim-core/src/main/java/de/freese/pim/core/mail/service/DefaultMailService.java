@@ -10,9 +10,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-
 import org.apache.commons.lang3.ArrayUtils;
-
 import de.freese.pim.core.jdbc.tx.Transactional;
 import de.freese.pim.core.mail.api.IMailAPI;
 import de.freese.pim.core.mail.dao.IMailDAO;
@@ -67,6 +65,7 @@ public class DefaultMailService extends AbstractService implements IMailService
         Path accountPath = basePath.resolve(account.getMail());
 
         IMailAPI mailAPI = new JavaMailAPI(account, accountPath);
+        mailAPI.setMailService(this);
         this.mailApiMap.put(account.getID(), mailAPI);
 
         mailAPI.connect();
@@ -136,6 +135,23 @@ public class DefaultMailService extends AbstractService implements IMailService
     public List<MailAccount> getMailAccounts() throws Exception
     {
         return this.mailDAO.getMailAccounts();
+    }
+
+    /**
+     * @see de.freese.pim.core.mail.service.IMailService#getMailAPI(long)
+     */
+    @Override
+    public IMailAPI getMailAPI(final long accountID)
+    {
+        return this.mailApiMap.get(accountID);
+    }
+
+    /**
+     * @return {@link IMailDAO}
+     */
+    protected IMailDAO getMailDAO()
+    {
+        return this.mailDAO;
     }
 
     /**
@@ -271,13 +287,5 @@ public class DefaultMailService extends AbstractService implements IMailService
     public int updateAccount(final MailAccount account) throws Exception
     {
         return this.mailDAO.updateAccount(account);
-    }
-
-    /**
-     * @return {@link IMailDAO}
-     */
-    protected IMailDAO getMailDAO()
-    {
-        return this.mailDAO;
     }
 }
