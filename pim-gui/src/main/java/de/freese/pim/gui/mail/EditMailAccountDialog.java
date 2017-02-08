@@ -4,7 +4,9 @@ package de.freese.pim.gui.mail;
 import java.nio.file.Paths;
 import java.util.Optional;
 import java.util.ResourceBundle;
+
 import org.apache.commons.lang3.StringUtils;
+
 import de.freese.pim.core.mail.api.IMailAPI;
 import de.freese.pim.core.mail.impl.JavaMailAPI;
 import de.freese.pim.core.mail.model.MailAccount;
@@ -115,6 +117,18 @@ public class EditMailAccountDialog
     }
 
     /**
+     * Editiert einen {@link MailAccount}.
+     *
+     * @param bundle {@link ResourceBundle}
+     * @param account {@link MailAccount}
+     * @return {@link Optional}
+     */
+    public Optional<MailAccount> editAccount(final ResourceBundle bundle, final MailAccount account)
+    {
+        return openDialog(bundle, account, "mailaccount.edit", "imageview-edit");
+    }
+
+    /**
      * Testet die Mail-Einstellungen.
      *
      * @param event {@link ActionEvent}
@@ -162,18 +176,6 @@ public class EditMailAccountDialog
     }
 
     /**
-     * Editiert einen {@link MailAccount}.
-     *
-     * @param bundle {@link ResourceBundle}
-     * @param account {@link MailAccount}
-     * @return {@link Optional}
-     */
-    public Optional<MailAccount> editAccount(final ResourceBundle bundle, final MailAccount account)
-    {
-        return openDialog(bundle, account, "mailaccount.edit", "imageview-edit");
-    }
-
-    /**
      * Initialisiert und öffnet den Dialog.
      *
      * @param bundle {@link ResourceBundle}
@@ -182,7 +184,8 @@ public class EditMailAccountDialog
      * @param imageStyleClass String
      * @return {@link Optional}
      */
-    private Optional<MailAccount> openDialog(final ResourceBundle bundle, final MailAccount account, final String titleKey, final String imageStyleClass)
+    private Optional<MailAccount> openDialog(final ResourceBundle bundle, final MailAccount account, final String titleKey,
+            final String imageStyleClass)
     {
         // DialogObject
         MailAccount bean = new MailAccount();
@@ -265,31 +268,37 @@ public class EditMailAccountDialog
         okButton.addEventFilter(ActionEvent.ACTION, event -> checkValidConfig(event, bundle));
 
         // OK-Button disablen, wenn eines dieser Felder leer ist.
-        this.mail.textProperty().addListener((observable, oldValue, newValue) -> {
+        this.mail.textProperty().addListener((observable, oldValue, newValue) ->
+        {
             okButton.setDisable(newValue.trim().isEmpty());
 
             this.labelTestResult.setText(null);
             this.labelTestResult.setStyle(null);
         });
-        this.imapHost.textProperty().addListener((observable, oldValue, newValue) -> {
+        this.imapHost.textProperty().addListener((observable, oldValue, newValue) ->
+        {
             this.labelTestResult.setText(null);
             this.labelTestResult.setStyle(null);
         });
-        this.smtpHost.textProperty().addListener((observable, oldValue, newValue) -> {
+        this.smtpHost.textProperty().addListener((observable, oldValue, newValue) ->
+        {
             this.labelTestResult.setText(null);
             this.labelTestResult.setStyle(null);
         });
-        this.password1.textProperty().addListener((observable, oldValue, newValue) -> {
+        this.password1.textProperty().addListener((observable, oldValue, newValue) ->
+        {
             this.labelTestResult.setText(null);
             this.labelTestResult.setStyle(null);
             this.password2.clear();
         });
-        this.password2.textProperty().addListener((observable, oldValue, newValue) -> {
+        this.password2.textProperty().addListener((observable, oldValue, newValue) ->
+        {
             this.labelTestResult.setText(null);
             this.labelTestResult.setStyle(null);
         });
 
-        this.aboView.setCellFactory(CheckBoxListCell.forListView(MailFolder::abonniertProperty, FXUtils.toStringConverter(MailFolder::getFullName)));
+        this.aboView.setCellFactory(
+                CheckBoxListCell.forListView(MailFolder::abonniertProperty, FXUtils.toStringConverter(MailFolder::getFullName)));
         this.aboView.setItems(bean.getFolder());
 
         // Laypout
@@ -302,7 +311,8 @@ public class EditMailAccountDialog
         {
             okButton.setDisable(true);
 
-            this.provider.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            this.provider.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) ->
+            {
                 if (newValue == null)
                 {
                     return;
@@ -392,14 +402,10 @@ public class EditMailAccountDialog
             this.labelTestResult.setText("OK");
             this.labelTestResult.setStyle("-fx-text-fill: darkgreen;"); // fx-text-inner-color
 
-            this.aboView.setItems(mailAPI.getFolder());
+            this.aboView.setItems(bean.getFolder());
 
-            mailAPI.getFolder().clear();
-
-            if (mailAPI.getFolder().isEmpty())
-            {
-                mailAPI.getFolder().addAll(mailAPI.loadFolderr());
-            }
+            bean.getFolder().clear();
+            bean.getFolder().addAll(mailAPI.getFolder());
         }
         catch (Exception ex)
         {

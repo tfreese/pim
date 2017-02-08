@@ -27,6 +27,11 @@ public class MailFolder
     private final BooleanProperty abonniertProperty = new SimpleBooleanProperty(this, "abonniert", true);
 
     /**
+    *
+    */
+    private long accountID = 0;
+
+    /**
      *
      */
     private final ObservableList<MailFolder> childs = FXCollections.observableArrayList();
@@ -118,6 +123,14 @@ public class MailFolder
     public StringProperty fullNameProperty()
     {
         return this.fullNameProperty;
+    }
+
+    /**
+     * @return long
+     */
+    public long getAccountID()
+    {
+        return this.accountID;
     }
 
     /**
@@ -243,6 +256,14 @@ public class MailFolder
     public void setAbonniert(final boolean abo)
     {
         abonniertProperty().set(abo);
+    }
+
+    /**
+     * @param accountID long
+     */
+    public void setAccountID(final long accountID)
+    {
+        this.accountID = accountID;
     }
 
     /**

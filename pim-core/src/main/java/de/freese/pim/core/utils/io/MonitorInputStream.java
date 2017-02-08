@@ -10,7 +10,7 @@ import javax.swing.ProgressMonitorInputStream;
 
 /**
  * {@link InputStream} mit der Möglichkeit zur Überwachung durch einen Monitor.<br>
- * Der Monitor empfängt die Gesamtgröße (Parameter 1) und Anzahl gelesener Bytes (Parameter 2).<br>
+ * Der Monitor empfängt die Anzahl gelesener Bytes (Parameter 1) und die Gesamtgröße (Parameter 2).<br>
  *
  * @see ProgressMonitorInputStream
  * @author Thomas Freese
@@ -42,7 +42,7 @@ public class MonitorInputStream extends InputStream
      *
      * @param delegate {@link InputStream}
      * @param size long; Anzahl Bytes (Größe) des gesamten Channels
-     * @param monitor {@link BiConsumer}; Erster Parameter = Gesamtgröße, zweiter Parameter = Anzahl gelesener Bytes
+     * @param monitor {@link BiConsumer}; Erster Parameter = Anzahl gelesener Bytes, zweiter Parameter = Gesamtgröße
      */
     public MonitorInputStream(final InputStream delegate, final long size, final BiConsumer<Long, Long> monitor)
     {
@@ -102,7 +102,7 @@ public class MonitorInputStream extends InputStream
 
         this.sizeRead++;
 
-        this.monitor.accept(this.size, this.sizeRead);
+        this.monitor.accept(this.sizeRead, this.size);
 
         return read;
     }
@@ -119,7 +119,7 @@ public class MonitorInputStream extends InputStream
         {
             this.sizeRead += readCount;
 
-            this.monitor.accept(this.size, this.sizeRead);
+            this.monitor.accept(this.sizeRead, this.size);
         }
 
         return readCount;
@@ -137,7 +137,7 @@ public class MonitorInputStream extends InputStream
         {
             this.sizeRead += readCount;
 
-            this.monitor.accept(this.size, this.sizeRead);
+            this.monitor.accept(this.sizeRead, this.size);
         }
 
         return readCount;
@@ -153,7 +153,7 @@ public class MonitorInputStream extends InputStream
 
         this.sizeRead = this.size - this.delegate.available();
 
-        this.monitor.accept(this.size, this.sizeRead);
+        this.monitor.accept(this.sizeRead, this.size);
     }
 
     /**
@@ -168,7 +168,7 @@ public class MonitorInputStream extends InputStream
         {
             this.sizeRead += readCount;
 
-            this.monitor.accept(this.size, this.sizeRead);
+            this.monitor.accept(this.sizeRead, this.size);
         }
 
         return readCount;

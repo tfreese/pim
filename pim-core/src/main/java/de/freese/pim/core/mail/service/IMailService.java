@@ -2,7 +2,10 @@
 package de.freese.pim.core.mail.service;
 
 import java.util.List;
+import java.util.function.BiConsumer;
+
 import de.freese.pim.core.mail.api.IMailAPI;
+import de.freese.pim.core.mail.api.IMailContent;
 import de.freese.pim.core.mail.model.Mail;
 import de.freese.pim.core.mail.model.MailAccount;
 import de.freese.pim.core.mail.model.MailFolder;
@@ -32,15 +35,6 @@ public interface IMailService
     public int deleteAccount(long accountID) throws Exception;
 
     /**
-     * Löschen eines {@link MailFolder}.<br>
-     *
-     * @param folderID long
-     * @return int; affectedRows
-     * @throws Exception Falls was schief geht.
-     */
-    public int deleteFolder(long folderID) throws Exception;
-
-    /**
      * Schliessen der MailApi-Verbindung aller MailAccounts.
      *
      * @throws Exception Falls was schief geht.
@@ -54,21 +48,6 @@ public interface IMailService
      * @throws Exception Falls was schief geht.
      */
     public List<MailAccount> getMailAccounts() throws Exception;
-
-    /**
-     * @param accountID long
-     * @return {@link IMailAPI}
-     */
-    public IMailAPI getMailAPI(long accountID);
-
-    /**
-     * Liefert alle Folder des Mail-Accounts, sortiert nach FULLNAME.
-     *
-     * @param accountID long
-     * @return {@link List}
-     * @throws Exception Falls was schief geht. //@deprecated Entfällt, see {@link #loadFolder(long)}
-     */
-    public List<MailFolder> getMailFolder(long accountID) throws Exception;
 
     /**
      * Liefert alle Mails des Folders.
@@ -90,17 +69,6 @@ public interface IMailService
     public int insertAccount(MailAccount account) throws Exception;
 
     /**
-     * Anlegen von neuen {@link Mail}.<br>
-     * Die Mail hat keinen eigene PrimaryKey.
-     *
-     * @param folderID long
-     * @param mails {@link List}
-     * @return int[]; affectedRows
-     * @throws Exception Falls was schief geht.
-     */
-    public int[] insertMails(long folderID, List<Mail> mails) throws Exception;
-
-    /**
      * Anlegen oder ändern von {@link MailFolder}.<br>
      * Die ID wird dabei in die Entity gesetzt.
      *
@@ -112,6 +80,18 @@ public interface IMailService
     public int[] insertOrUpdateFolder(long accountID, List<MailFolder> folders) throws Exception;
 
     /**
+     * Liefert den Inhalt der Mail.<br>
+     * Der Monitor dient zur Anzeige des Lade-Fortschritts.
+     *
+     * @param accountID long
+     * @param mail {@link Mail}
+     * @param loadMonitor {@link BiConsumer}
+     * @return {@link IMailContent}
+     * @throws Exception Falls was schief geht.
+     */
+    public IMailContent loadContent(long accountID, Mail mail, BiConsumer<Long, Long> loadMonitor) throws Exception;
+
+    /**
      * Lädt die Folder des Accounts.
      *
      * @param accountID long
@@ -119,6 +99,17 @@ public interface IMailService
      * @throws Exception Falls was schief geht.
      */
     public List<MailFolder> loadFolder(long accountID) throws Exception;
+
+    /**
+     * Lädt die Mails des Folders vom Provider und aus der DB.
+     *
+     * @param accountID long
+     * @param folderID long
+     * @param folderFullName String
+     * @return {@link List}
+     * @throws Exception Falls was schief geht.
+     */
+    public List<Mail> loadMails(long accountID, long folderID, String folderFullName) throws Exception;
 
     /**
      * Ändern eines {@link MailAccount}.

@@ -4,12 +4,12 @@ package de.freese.pim.core.mail.api;
 import java.nio.file.Path;
 import java.util.Objects;
 import java.util.concurrent.ExecutorService;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import de.freese.pim.core.mail.model.MailAccount;
-import de.freese.pim.core.mail.model.MailFolder;
 import de.freese.pim.core.mail.service.IMailService;
-import javafx.collections.ObservableList;
 
 /**
  * Basis-Implementierung der {@link IMailAPI}.
@@ -79,43 +79,6 @@ public abstract class AbstractMailAPI implements IMailAPI
     }
 
     /**
-     * Optionaler {@link ExecutorService} für die Mail-API.
-     *
-     * @return {@link ExecutorService}
-     */
-    protected ExecutorService getExecutor()
-    {
-        return this.executor;
-    }
-
-    /**
-     * @see de.freese.pim.core.mail.api.IMailAPI#getFolder()
-     */
-    @Override
-    public ObservableList<MailFolder> getFolder()
-    {
-        return getAccount().getFolder();
-    }
-
-    /**
-     * @return {@link Logger}
-     */
-    protected Logger getLogger()
-    {
-        return this.logger;
-    }
-
-    /**
-     * Liefert den {@link IMailService}.
-     *
-     * @return {@link IMailService}
-     */
-    protected IMailService getMailService()
-    {
-        return this.mailService;
-    }
-
-    /**
      * @see de.freese.pim.core.mail.api.IMailAPI#setExecutorService(java.util.concurrent.ExecutorService)
      */
     @Override
@@ -143,5 +106,33 @@ public abstract class AbstractMailAPI implements IMailAPI
         builder.append("JavaMailAPI [").append(getAccount()).append("]");
 
         return builder.toString();
+    }
+
+    /**
+     * Optionaler {@link ExecutorService} für die Mail-API.
+     *
+     * @return {@link ExecutorService}
+     */
+    protected ExecutorService getExecutor()
+    {
+        return this.executor;
+    }
+
+    /**
+     * @return {@link Logger}
+     */
+    protected Logger getLogger()
+    {
+        return this.logger;
+    }
+
+    /**
+     * Liefert den {@link IMailService}.
+     *
+     * @return {@link IMailService}
+     */
+    protected IMailService getMailService()
+    {
+        return this.mailService;
     }
 }

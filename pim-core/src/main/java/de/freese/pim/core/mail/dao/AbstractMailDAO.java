@@ -106,6 +106,7 @@ public class AbstractMailDAO extends AbstractDAO<IMailDAO> implements IMailDAO
             MailFolder folder = new MailFolder();
 
             folder.setID(rs.getLong("ID"));
+            folder.setAccountID(rs.getLong("ACCOUNT_ID"));
             folder.setFullName(rs.getString("FULLNAME"));
             folder.setName(rs.getString("NAME"));
             folder.setAbonniert(rs.getBoolean("ABONNIERT"));

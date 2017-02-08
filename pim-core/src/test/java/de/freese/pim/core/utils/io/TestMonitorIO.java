@@ -44,7 +44,7 @@ public class TestMonitorIO
          * @see java.util.function.BiConsumer#accept(java.lang.Object, java.lang.Object)
          */
         @Override
-        public void accept(final Long size, final Long current)
+        public void accept(final Long current, final Long size)
         {
             this.current = current;
         }

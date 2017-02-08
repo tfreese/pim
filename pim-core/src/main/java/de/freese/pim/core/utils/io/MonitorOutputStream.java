@@ -8,7 +8,7 @@ import java.util.function.BiConsumer;
 
 /**
  * {@link OutputStream} mit der Möglichkeit zur Überwachung durch einen Monitor.<br>
- * Der Monitor empfängt die Gesamtgröße (Parameter 1) und Anzahl gelesener Bytes (Parameter 2).<br>
+ * Der Monitor empfängt die Anzahl geschriebener Bytes (Parameter 1) und die Gesamtgröße (Parameter 2).<br>
  *
  * @author Thomas Freese
  */
@@ -39,7 +39,7 @@ public class MonitorOutputStream extends OutputStream
      *
      * @param delegate {@link OutputStream}
      * @param size long; Anzahl Bytes (Größe) des gesamten Channels
-     * @param monitor {@link BiConsumer}; Erster Parameter = Gesamtgröße, zweiter Parameter = Anzahl gelesener Bytes
+     * @param monitor {@link BiConsumer}; Erster Parameter = Anzahl geschriebener Bytes, zweiter Parameter = Gesamtgröße
      */
     public MonitorOutputStream(final OutputStream delegate, final long size, final BiConsumer<Long, Long> monitor)
     {
@@ -81,7 +81,7 @@ public class MonitorOutputStream extends OutputStream
 
         this.sizeWritten += b.length;
 
-        this.monitor.accept(this.size, this.sizeWritten);
+        this.monitor.accept(this.sizeWritten, this.size);
     }
 
     /**
@@ -94,7 +94,7 @@ public class MonitorOutputStream extends OutputStream
 
         this.sizeWritten += len;
 
-        this.monitor.accept(this.size, this.sizeWritten);
+        this.monitor.accept(this.sizeWritten, this.size);
     }
 
     /**
@@ -107,6 +107,6 @@ public class MonitorOutputStream extends OutputStream
 
         this.sizeWritten++;
 
-        this.monitor.accept(this.size, this.sizeWritten);
+        this.monitor.accept(this.sizeWritten, this.size);
     }
 }
