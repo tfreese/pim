@@ -3,6 +3,7 @@ package de.freese.pim.gui.mail;
 
 import java.util.List;
 import java.util.Objects;
+import org.apache.commons.collections4.ListUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import de.freese.pim.core.mail.model.MailAccount;
@@ -65,8 +66,13 @@ public class InitMailAPITask extends Task<List<MailFolder>>
             LOGGER.info("Initialisation of {} finished", account.getMail());
             treeView.refresh();
 
-            // Laden der Mails.
-            PIMApplication.getExecutorService().execute(new LoadMailsTask(treeView, folders, mailService, account));
+            List<List<MailFolder>> partitions = ListUtils.partition(folders, 3);
+
+            for (List<MailFolder> list : partitions)
+            {
+                // Laden der Mails.
+                PIMApplication.getExecutorService().execute(new LoadMailsTask(treeView, list, mailService, account));
+            }
         });
         setOnFailed(event -> {
             Throwable th = getException();

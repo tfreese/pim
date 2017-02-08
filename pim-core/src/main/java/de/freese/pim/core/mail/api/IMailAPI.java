@@ -4,12 +4,11 @@ package de.freese.pim.core.mail.api;
 import java.io.OutputStream;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ExecutorService;
-
 import de.freese.pim.core.mail.model.Mail;
 import de.freese.pim.core.mail.model.MailAccount;
 import de.freese.pim.core.mail.model.MailFolder;
-import de.freese.pim.core.mail.service.IMailService;
 
 /**
  * Interface für die Mail-API.<br>
@@ -55,6 +54,15 @@ public interface IMailAPI
     public List<MailFolder> getFolder() throws Exception;
 
     /**
+     * Liefert die aktuellen Message-UIDs im Folder.<br>
+     *
+     * @param folderFullName String
+     * @return {@link Set}
+     * @throws Exception Falls was schief geht.
+     */
+    public Set<Long> loadCurrentMessageIDs(String folderFullName) throws Exception;
+
+    /**
      * Holt die Mailvom Provider und schreibt sie in den {@link OutputStream}.<br>
      *
      * @param folderFullName String
@@ -65,7 +73,8 @@ public interface IMailAPI
     public void loadMail(String folderFullName, long uid, OutputStream outputStream) throws Exception;
 
     /**
-     * Lädt die Mails des Folders vom Provider.
+     * Lädt die Mails des Folders vom Provider ab der definierten UID.<br>
+     * Ist die Liste null ist der Folder nicht mehr existent.
      *
      * @param folderFullName {@link String}
      * @param uidFrom long; Startindex der zu ladenen Mails
@@ -80,13 +89,6 @@ public interface IMailAPI
      * @param executor {@link ExecutorService}
      */
     public void setExecutorService(final ExecutorService executor);
-
-    /**
-     * Setzt den {@link IMailService}.
-     *
-     * @param mailService {@link IMailService}
-     */
-    public void setMailService(final IMailService mailService);
 
     /**
      * Setzt das SEEN-Flag einer Mail.

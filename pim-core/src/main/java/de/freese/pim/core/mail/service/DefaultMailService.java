@@ -7,23 +7,24 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Semaphore;
 import java.util.function.BiConsumer;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
-
 import javax.mail.internet.MimeMessage;
-
 import org.apache.commons.lang3.ArrayUtils;
-
 import de.freese.pim.core.jdbc.tx.Transactional;
 import de.freese.pim.core.mail.api.IMailAPI;
 import de.freese.pim.core.mail.api.IMailContent;
@@ -76,7 +77,6 @@ public class DefaultMailService extends AbstractService implements IMailService
         Path accountPath = basePath.resolve(account.getMail());
 
         IMailAPI mailAPI = new JavaMailAPI(account, accountPath);
-        mailAPI.setMailService(this);
         mailAPI.setExecutorService(getExecutorService());
         this.mailApiMap.put(account.getID(), mailAPI);
 
@@ -137,6 +137,23 @@ public class DefaultMailService extends AbstractService implements IMailService
     }
 
     /**
+     * @param accountID long
+     * @return {@link IMailAPI}
+     */
+    protected IMailAPI getMailAPI(final long accountID)
+    {
+        return this.mailApiMap.get(accountID);
+    }
+
+    /**
+     * @return {@link IMailDAO}
+     */
+    protected IMailDAO getMailDAO()
+    {
+        return this.mailDAO;
+    }
+
+    /**
      * @see de.freese.pim.core.mail.dao.IMailDAO#getMails(long)
      */
     @Override
@@ -179,16 +196,14 @@ public class DefaultMailService extends AbstractService implements IMailService
     }
 
     /**
-     * @see de.freese.pim.core.mail.service.IMailService#loadContent(long, de.freese.pim.core.mail.model.Mail,
-     *      java.util.function.BiConsumer)
+     * @see de.freese.pim.core.mail.service.IMailService#loadContent(long, de.freese.pim.core.mail.model.Mail, java.util.function.BiConsumer)
      */
     @Override
     public IMailContent loadContent(final long accountID, final Mail mail, final BiConsumer<Long, Long> loadMonitor) throws Exception
     {
         if (getLogger().isDebugEnabled())
         {
-            getLogger().debug("load mail: msgnum={}; uid={}; size={}; subject={}", mail.getMsgNum(), mail.getUID(), mail.getSize(),
-                    mail.getSubject());
+            getLogger().debug("load mail: msgnum={}; uid={}; size={}; subject={}", mail.getMsgNum(), mail.getUID(), mail.getSize(), mail.getSubject());
         }
 
         IMailAPI mailAPI = getMailAPI(accountID);
@@ -200,6 +215,11 @@ public class DefaultMailService extends AbstractService implements IMailService
 
         if (!Files.exists(mailPath))
         {
+            if (getLogger().isDebugEnabled())
+            {
+                getLogger().debug("download mail: msgnum={}; uid={}", mail.getMsgNum(), mail.getUID());
+            }
+
             // Mail download.
             Files.createDirectories(mailPath.getParent());
 
@@ -209,6 +229,12 @@ public class DefaultMailService extends AbstractService implements IMailService
                  MonitorOutputStream mos = new MonitorOutputStream(bos, mail.getSize(), loadMonitor))
             {
                 mailAPI.loadMail(mail.getFolderFullName(), mail.getUID(), mos);
+            }
+            catch (Exception ex)
+            {
+                Files.deleteIfExists(mailPath);
+                Files.deleteIfExists(mailPath.getParent());
+                throw ex;
             }
         }
 
@@ -272,11 +298,31 @@ public class DefaultMailService extends AbstractService implements IMailService
 
         try
         {
-            List<Mail> mails = getMailDAO().getMails(folderID);
-            // Map<Integer, Mail> map = mails.stream().collect(Collectors.toMap(Mail::getMsgNum, Function.identity()));
+            IMailAPI mailAPI = getMailAPI(accountID);
+
+            Map<Long, Mail> mailMap = getMailDAO().getMails(folderID).stream().collect(Collectors.toMap(Mail::getUID, Function.identity()));
+
+            // Alle Mail lokal löschen, die nicht mehr im Remote-Folder vorhanden sind.
+            Set<Long> currentUIDs = mailAPI.loadCurrentMessageIDs(folderFullName);
+
+            Set<Long> remoteDeletedUIDs = new HashSet<>();
+            remoteDeletedUIDs.addAll(mailMap.keySet());
+
+            remoteDeletedUIDs.removeAll(currentUIDs);
+
+            for (Long uid : remoteDeletedUIDs)
+            {
+                if (getLogger().isDebugEnabled())
+                {
+                    getLogger().debug("delete mail: uid={}", uid);
+                }
+
+                getMailDAO().deleteMail(folderID, uid);
+                mailMap.remove(uid);
+            }
 
             // Höchste UID finden.
-            long uidFrom = mails.parallelStream().mapToLong(Mail::getUID).max().orElse(1);
+            long uidFrom = mailMap.values().parallelStream().mapToLong(Mail::getUID).max().orElse(1);
 
             if (uidFrom > 1)
             {
@@ -284,7 +330,7 @@ public class DefaultMailService extends AbstractService implements IMailService
                 uidFrom += 1;
             }
 
-            List<Mail> newMails = getMailAPI(accountID).loadMails(folderFullName, uidFrom);
+            List<Mail> newMails = mailAPI.loadMails(folderFullName, uidFrom);
 
             if (newMails == null)
             {
@@ -309,6 +355,8 @@ public class DefaultMailService extends AbstractService implements IMailService
                 }
             }
 
+            List<Mail> mails = new ArrayList<>();
+            mails.addAll(mailMap.values());
             mails.addAll(newMails);
 
             mails.stream().forEach(m -> m.setFolderFullName(folderFullName));
@@ -337,22 +385,5 @@ public class DefaultMailService extends AbstractService implements IMailService
     public int updateAccount(final MailAccount account) throws Exception
     {
         return getMailDAO().updateAccount(account);
-    }
-
-    /**
-     * @param accountID long
-     * @return {@link IMailAPI}
-     */
-    protected IMailAPI getMailAPI(final long accountID)
-    {
-        return this.mailApiMap.get(accountID);
-    }
-
-    /**
-     * @return {@link IMailDAO}
-     */
-    protected IMailDAO getMailDAO()
-    {
-        return this.mailDAO;
     }
 }

@@ -67,6 +67,7 @@
     <logger name="org.springframework.jdbc.core.JdbcTemplate" level="DEBUG"/>
         
     <logger name="de.freese.pim.core" level="DEBUG"/>
+    <logger name="de.freese.pim.core.jdbc" level="INFO"/>
     <logger name="de.freese.pim.core.mail.service" level="DEBUG"/>
     <logger name="de.freese.pim.gui" level="DEBUG"/>
 

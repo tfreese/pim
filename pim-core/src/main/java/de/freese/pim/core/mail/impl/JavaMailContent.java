@@ -12,8 +12,8 @@ import java.util.TreeMap;
 import java.util.stream.Collectors;
 import javax.activation.DataSource;
 import javax.mail.internet.ContentType;
-import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimePart;
 import org.apache.commons.lang3.StringUtils;
 import de.freese.pim.core.mail.api.IMailContent;
 import de.freese.pim.core.mail.utils.MailUtils;
@@ -123,13 +123,13 @@ public class JavaMailContent implements IMailContent
         }
 
         // Inlines
-        for (Entry<String, MimeBodyPart> entry : MailUtils.getInlineMap(message).entrySet())
+        for (Entry<String, MimePart> entry : MailUtils.getInlineMap(message).entrySet())
         {
             this.inlineMap.put(entry.getKey(), entry.getValue().getDataHandler().getDataSource());
         }
 
         // Attachments
-        for (Entry<String, MimeBodyPart> entry : MailUtils.getAttachmentMap(message).entrySet())
+        for (Entry<String, MimePart> entry : MailUtils.getAttachmentMap(message).entrySet())
         {
             this.attachmentMap.put(entry.getKey(), entry.getValue().getDataHandler().getDataSource());
 

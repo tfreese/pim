@@ -4,12 +4,9 @@ package de.freese.pim.core.mail.api;
 import java.nio.file.Path;
 import java.util.Objects;
 import java.util.concurrent.ExecutorService;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import de.freese.pim.core.mail.model.MailAccount;
-import de.freese.pim.core.mail.service.IMailService;
 
 /**
  * Basis-Implementierung der {@link IMailAPI}.
@@ -37,11 +34,6 @@ public abstract class AbstractMailAPI implements IMailAPI
     *
     */
     private final Logger logger = LoggerFactory.getLogger(getClass());
-
-    /**
-    *
-    */
-    private IMailService mailService = null;
 
     /**
      * Erzeugt eine neue Instanz von {@link AbstractMailAPI}
@@ -79,36 +71,6 @@ public abstract class AbstractMailAPI implements IMailAPI
     }
 
     /**
-     * @see de.freese.pim.core.mail.api.IMailAPI#setExecutorService(java.util.concurrent.ExecutorService)
-     */
-    @Override
-    public void setExecutorService(final ExecutorService executor)
-    {
-        this.executor = executor;
-    }
-
-    /**
-     * @see de.freese.pim.core.mail.api.IMailAPI#setMailService(de.freese.pim.core.mail.service.IMailService)
-     */
-    @Override
-    public void setMailService(final IMailService mailService)
-    {
-        this.mailService = mailService;
-    }
-
-    /**
-     * @see java.lang.Object#toString()
-     */
-    @Override
-    public String toString()
-    {
-        StringBuilder builder = new StringBuilder();
-        builder.append("JavaMailAPI [").append(getAccount()).append("]");
-
-        return builder.toString();
-    }
-
-    /**
      * Optionaler {@link ExecutorService} für die Mail-API.
      *
      * @return {@link ExecutorService}
@@ -127,12 +89,23 @@ public abstract class AbstractMailAPI implements IMailAPI
     }
 
     /**
-     * Liefert den {@link IMailService}.
-     *
-     * @return {@link IMailService}
+     * @see de.freese.pim.core.mail.api.IMailAPI#setExecutorService(java.util.concurrent.ExecutorService)
      */
-    protected IMailService getMailService()
+    @Override
+    public void setExecutorService(final ExecutorService executor)
     {
-        return this.mailService;
+        this.executor = executor;
+    }
+
+    /**
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString()
+    {
+        StringBuilder builder = new StringBuilder();
+        builder.append("JavaMailAPI [").append(getAccount()).append("]");
+
+        return builder.toString();
     }
 }

@@ -11,17 +11,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-
 import javax.activation.DataSource;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Multipart;
 import javax.mail.Part;
-import javax.mail.internet.MimeBodyPart;
-
+import javax.mail.internet.MimePart;
+import javax.mail.internet.MimeUtility;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.ArrayUtils;
-
 import de.freese.pim.core.mail.JavaMailBuilder;
 
 /**
@@ -127,24 +125,25 @@ public final class MailUtils
     public static final String MAIL_REGEX = "^(.+)@(.+)\\.[a-zA-Z]{2,3}$";
 
     /**
-     * Liefert alle vorhandenen Attachment-MimeBodyPart einer {@link Message}.<br>
+     * Liefert alle vorhandenen Attachment-MimeParts einer {@link Message}.<br>
      * Key = Filename<br>
-     * Value = {@link MimeBodyPart}<br>
+     * Value = {@link MimePart}<br>
      *
      * @param part {@link Part}, @see {@link Message}
      * @return {@link Map}; ist niemals null
      * @throws IOException Falls was schief geht.
      * @throws MessagingException Falls was schief geht.
      */
-    public static Map<String, MimeBodyPart> getAttachmentMap(final Part part) throws MessagingException, IOException
+    public static Map<String, MimePart> getAttachmentMap(final Part part) throws MessagingException, IOException
     {
-        Map<String, MimeBodyPart> map = new HashMap<>();
+        Map<String, MimePart> map = new HashMap<>();
 
-        List<MimeBodyPart> attachments = getAttachments(part);
+        List<MimePart> attachments = getAttachments(part);
 
-        for (MimeBodyPart attachment : attachments)
+        for (MimePart attachment : attachments)
         {
-            String fileName = attachment.getFileName();
+            String fileName = Optional.ofNullable(attachment.getFileName()).orElse("Mail");
+            fileName = MimeUtility.decodeText(fileName);
 
             map.put(fileName, attachment);
         }
@@ -153,22 +152,20 @@ public final class MailUtils
     }
 
     /**
-     * Liefert alle vorhandenen Attachments-MimeBodyPart einer {@link Message}.
+     * Liefert alle vorhandenen Attachments-MimeParts einer {@link Message}.
      *
      * @param part {@link Part}, @see {@link Message}
      * @return {@link List}; ist niemals null
      * @throws IOException Falls was schief geht.
      * @throws MessagingException Falls was schief geht.
      */
-    public static List<MimeBodyPart> getAttachments(final Part part) throws MessagingException, IOException
+    public static List<MimePart> getAttachments(final Part part) throws MessagingException, IOException
     {
-        List<MimeBodyPart> bodyParts = new ArrayList<>();
+        List<MimePart> bodyParts = new ArrayList<>();
 
-        String disposition = Optional.ofNullable(part.getDisposition()).map(String::toLowerCase).orElse("");
-
-        if (Part.ATTACHMENT.toLowerCase().equals(disposition))
+        if (Part.ATTACHMENT.equalsIgnoreCase(part.getDisposition()))
         {
-            bodyParts.add((MimeBodyPart) part);
+            bodyParts.add((MimePart) part);
         }
         else if (part.isMimeType("multipart/*"))
         {
@@ -178,7 +175,7 @@ public final class MailUtils
             {
                 Part bp = mp.getBodyPart(i);
 
-                List<MimeBodyPart> list = getAttachments(bp);
+                List<MimePart> list = getAttachments(bp);
 
                 if (CollectionUtils.isNotEmpty(list))
                 {
@@ -191,22 +188,22 @@ public final class MailUtils
     }
 
     /**
-     * Liefert alle vorhandenen Inline-MimeBodyPart einer {@link Message}.<br>
+     * Liefert alle vorhandenen Inline-MimeParts einer {@link Message}.<br>
      * Key = ContentID<br>
-     * Value = {@link MimeBodyPart}<br>
+     * Value = {@link MimePart}<br>
      *
      * @param part {@link Part}, @see {@link Message}
      * @return {@link Map}; ist niemals null
      * @throws IOException Falls was schief geht.
      * @throws MessagingException Falls was schief geht.
      */
-    public static Map<String, MimeBodyPart> getInlineMap(final Part part) throws MessagingException, IOException
+    public static Map<String, MimePart> getInlineMap(final Part part) throws MessagingException, IOException
     {
-        Map<String, MimeBodyPart> map = new HashMap<>();
+        Map<String, MimePart> map = new HashMap<>();
 
-        List<MimeBodyPart> inlines = getInlines(part);
+        List<MimePart> inlines = getInlines(part);
 
-        for (MimeBodyPart inline : inlines)
+        for (MimePart inline : inlines)
         {
             String[] contentIDs = Optional.ofNullable(inline.getHeader(JavaMailBuilder.HEADER_CONTENT_ID)).orElse(null);
 
@@ -227,20 +224,20 @@ public final class MailUtils
     }
 
     /**
-     * Liefert alle vorhandenen Inline-MimeBodyPart einer {@link Message}.
+     * Liefert alle vorhandenen Inline-MimeParts einer {@link Message}.
      *
      * @param part {@link Part}, @see {@link Message}
      * @return {@link List}; ist niemals null
      * @throws IOException Falls was schief geht.
      * @throws MessagingException Falls was schief geht.
      */
-    public static List<MimeBodyPart> getInlines(final Part part) throws MessagingException, IOException
+    public static List<MimePart> getInlines(final Part part) throws MessagingException, IOException
     {
-        List<MimeBodyPart> bodyParts = new ArrayList<>();
+        List<MimePart> bodyParts = new ArrayList<>();
 
-        if ((part.getDisposition() != null) && Part.INLINE.toLowerCase().equals(part.getDisposition().toLowerCase()))
+        if (Part.INLINE.equalsIgnoreCase(part.getDisposition()))
         {
-            bodyParts.add((MimeBodyPart) part);
+            bodyParts.add((MimePart) part);
         }
         else if (part.isMimeType("multipart/*"))
         {
@@ -250,7 +247,7 @@ public final class MailUtils
             {
                 Part bp = mp.getBodyPart(i);
 
-                List<MimeBodyPart> list = getInlines(bp);
+                List<MimePart> list = getInlines(bp);
 
                 if (CollectionUtils.isNotEmpty(list))
                 {
