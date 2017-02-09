@@ -47,7 +47,8 @@ public abstract class AbstractDataSourceBean implements IDataSourceBean
     }
 
     /**
-     * Erzeugt die {@link DataSource}.
+     * Erzeugt die {@link DataSource}.<br>
+     * <a href="http://tomcat.apache.org/tomcat-7.0-doc/jdbc-pool.html#Common_Attributes">Tomcat Common Attributes</a>
      *
      * @param driver String
      * @param url String

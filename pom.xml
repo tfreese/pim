@@ -209,8 +209,7 @@
             <dependency>
                 <groupId>org.hsqldb</groupId>
                 <artifactId>hsqldb</artifactId>
-                <!--version>${version:org.hsqldb:hsqldb}</version -->
-                <version>2.3.3</version><!-- 2.3.4 funktioniert nicht mit flyway -->
+                <version>${version:org.hsqldb:hsqldb}</version>
             </dependency>
             <dependency>
                 <groupId>org.jsoup</groupId>
