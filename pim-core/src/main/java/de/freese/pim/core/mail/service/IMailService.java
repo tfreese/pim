@@ -50,15 +50,6 @@ public interface IMailService
     public List<MailAccount> getMailAccounts() throws Exception;
 
     /**
-     * Liefert alle Mails des Folders.
-     *
-     * @param folderID long
-     * @return {@link List}
-     * @throws Exception Falls was schief geht.
-     */
-    public List<Mail> getMails(long folderID) throws Exception;
-
-    /**
      * Anlegen eines neuen {@link MailAccount}.<br>
      * Die ID wird dabei in die Entity gesetzt.
      *

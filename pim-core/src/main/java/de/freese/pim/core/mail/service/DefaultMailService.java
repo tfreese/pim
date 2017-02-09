@@ -23,8 +23,11 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
+
 import javax.mail.internet.MimeMessage;
+
 import org.apache.commons.lang3.ArrayUtils;
+
 import de.freese.pim.core.jdbc.tx.Transactional;
 import de.freese.pim.core.mail.api.IMailAPI;
 import de.freese.pim.core.mail.api.IMailContent;
@@ -137,33 +140,6 @@ public class DefaultMailService extends AbstractService implements IMailService
     }
 
     /**
-     * @param accountID long
-     * @return {@link IMailAPI}
-     */
-    protected IMailAPI getMailAPI(final long accountID)
-    {
-        return this.mailApiMap.get(accountID);
-    }
-
-    /**
-     * @return {@link IMailDAO}
-     */
-    protected IMailDAO getMailDAO()
-    {
-        return this.mailDAO;
-    }
-
-    /**
-     * @see de.freese.pim.core.mail.dao.IMailDAO#getMails(long)
-     */
-    @Override
-    @Transactional
-    public List<Mail> getMails(final long folderID) throws Exception
-    {
-        return getMailDAO().getMails(folderID);
-    }
-
-    /**
      * @see de.freese.pim.core.mail.service.IMailService#insertAccount(de.freese.pim.core.mail.model.MailAccount)
      */
     @Override
@@ -196,14 +172,16 @@ public class DefaultMailService extends AbstractService implements IMailService
     }
 
     /**
-     * @see de.freese.pim.core.mail.service.IMailService#loadContent(long, de.freese.pim.core.mail.model.Mail, java.util.function.BiConsumer)
+     * @see de.freese.pim.core.mail.service.IMailService#loadContent(long, de.freese.pim.core.mail.model.Mail,
+     *      java.util.function.BiConsumer)
      */
     @Override
     public IMailContent loadContent(final long accountID, final Mail mail, final BiConsumer<Long, Long> loadMonitor) throws Exception
     {
         if (getLogger().isDebugEnabled())
         {
-            getLogger().debug("load mail: msgnum={}; uid={}; size={}; subject={}", mail.getMsgNum(), mail.getUID(), mail.getSize(), mail.getSubject());
+            getLogger().debug("load mail: msgnum={}; uid={}; size={}; subject={}", mail.getMsgNum(), mail.getUID(), mail.getSize(),
+                    mail.getSubject());
         }
 
         IMailAPI mailAPI = getMailAPI(accountID);
@@ -302,12 +280,14 @@ public class DefaultMailService extends AbstractService implements IMailService
 
             Map<Long, Mail> mailMap = getMailDAO().getMails(folderID).stream().collect(Collectors.toMap(Mail::getUID, Function.identity()));
 
-            // Alle Mail lokal löschen, die nicht mehr im Remote-Folder vorhanden sind.
+            // Höchste UID finden.
+            long uidFrom = mailMap.values().parallelStream().mapToLong(Mail::getUID).max().orElse(1);
+
+            // Alle Mails lokal löschen, die zwischenzeitlich auch Remote gelöscht worden sind.
             Set<Long> currentUIDs = mailAPI.loadCurrentMessageIDs(folderFullName);
 
             Set<Long> remoteDeletedUIDs = new HashSet<>();
             remoteDeletedUIDs.addAll(mailMap.keySet());
-
             remoteDeletedUIDs.removeAll(currentUIDs);
 
             for (Long uid : remoteDeletedUIDs)
@@ -320,9 +300,6 @@ public class DefaultMailService extends AbstractService implements IMailService
                 getMailDAO().deleteMail(folderID, uid);
                 mailMap.remove(uid);
             }
-
-            // Höchste UID finden.
-            long uidFrom = mailMap.values().parallelStream().mapToLong(Mail::getUID).max().orElse(1);
 
             if (uidFrom > 1)
             {
@@ -385,5 +362,22 @@ public class DefaultMailService extends AbstractService implements IMailService
     public int updateAccount(final MailAccount account) throws Exception
     {
         return getMailDAO().updateAccount(account);
+    }
+
+    /**
+     * @param accountID long
+     * @return {@link IMailAPI}
+     */
+    protected IMailAPI getMailAPI(final long accountID)
+    {
+        return this.mailApiMap.get(accountID);
+    }
+
+    /**
+     * @return {@link IMailDAO}
+     */
+    protected IMailDAO getMailDAO()
+    {
+        return this.mailDAO;
     }
 }

@@ -4,7 +4,7 @@ import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * @author Thomas Freese (AuVi)
+ * @author Thomas Freese
  */
 public class PIMThreadFactory implements ThreadFactory
 {
@@ -33,8 +33,9 @@ public class PIMThreadFactory implements ThreadFactory
         super();
 
         this.namePrefix = namePrefix + "-";
-        SecurityManager s = System.getSecurityManager();
-        this.threadGroup = (s != null) ? s.getThreadGroup() : Thread.currentThread().getThreadGroup();
+
+        SecurityManager sm = System.getSecurityManager();
+        this.threadGroup = (sm != null) ? sm.getThreadGroup() : Thread.currentThread().getThreadGroup();
     }
 
     /**

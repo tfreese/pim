@@ -8,9 +8,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Threads leben max. 60 Sekunden, wenn es nix zu tun gibt, min. 3 Threads, max. 20.
+ * Threads leben max. 60 Sekunden, wenn es nix zu tun gibt.
  *
- * @author Thomas Freese (AuVi)
+ * @author Thomas Freese
  */
 public class PIMThreadPoolExecutor extends ThreadPoolExecutor
 {
@@ -21,10 +21,13 @@ public class PIMThreadPoolExecutor extends ThreadPoolExecutor
 
     /**
      * Erzeugt eine neue Instanz von {@link PIMThreadPoolExecutor}
+     *
+     * @param coreSize int
+     * @param maxSize int
      */
-    public PIMThreadPoolExecutor()
+    public PIMThreadPoolExecutor(final int coreSize, final int maxSize)
     {
-        super(3, 20, 60L, TimeUnit.SECONDS, new SynchronousQueue<Runnable>(), new PIMThreadFactory("EPS"),
+        super(coreSize, maxSize, 60L, TimeUnit.SECONDS, new SynchronousQueue<Runnable>(), new PIMThreadFactory("PIM"),
                 new ThreadPoolExecutor.CallerRunsPolicy());
     }
 
@@ -41,14 +44,14 @@ public class PIMThreadPoolExecutor extends ThreadPoolExecutor
         try
         {
             // Wait a while for existing tasks to terminate
-            if (!awaitTermination(30, TimeUnit.SECONDS))
+            if (!awaitTermination(10, TimeUnit.SECONDS))
             {
                 shutdownNow();
 
                 // Cancel currently executing tasks
                 // Wait a while for tasks to respond to being
                 // cancelled
-                if (!awaitTermination(30, TimeUnit.SECONDS))
+                if (!awaitTermination(10, TimeUnit.SECONDS))
                 {
                     LOGGER.error("Pool did not terminate");
                 }
