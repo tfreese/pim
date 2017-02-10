@@ -11,6 +11,7 @@ import org.junit.runners.Suite.SuiteClasses;
 import org.springframework.mock.jndi.SimpleNamingContextBuilder;
 import de.freese.pim.core.addressbook.AllAddressbookTests;
 import de.freese.pim.core.jdbc.TestJdbcTemplate;
+import de.freese.pim.core.mail.AllMailTests;
 import de.freese.pim.core.utils.io.TestMonitorIO;
 
 /**
@@ -19,8 +20,7 @@ import de.freese.pim.core.utils.io.TestMonitorIO;
 @RunWith(Suite.class)
 @SuiteClasses(
 {
-        // AllMailTests.class
-        AllAddressbookTests.class, TestJdbcTemplate.class, TestMonitorIO.class
+        TestJdbcTemplate.class, TestMonitorIO.class, AllAddressbookTests.class, AllMailTests.class
 })
 public class AllPIMTests
 {

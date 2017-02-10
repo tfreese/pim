@@ -27,7 +27,7 @@ import de.freese.pim.core.utils.Utils;
  *
  * @author Thomas Freese
  */
-public class SimpleDataSource implements DataSource, AutoCloseable
+public class SimpleDataSource implements DataSource
 {
     /**
      * {@link InvocationHandler} der die close-Methode nicht ausführt.
@@ -157,22 +157,6 @@ public class SimpleDataSource implements DataSource, AutoCloseable
     }
 
     /**
-     * @see java.lang.AutoCloseable#close()
-     */
-    @Override
-    public void close()
-    {
-        try
-        {
-            destroy();
-        }
-        catch (Throwable th)
-        {
-            LOGGER.error(null, th);
-        }
-    }
-
-    /**
      *
      */
     private void closeConnection()
@@ -193,6 +177,7 @@ public class SimpleDataSource implements DataSource, AutoCloseable
     }
 
     /**
+     * Schliessen der {@link DataSource}.
      */
     public void destroy()
     {

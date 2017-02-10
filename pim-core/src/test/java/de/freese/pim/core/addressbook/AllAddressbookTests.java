@@ -9,7 +9,6 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 import org.springframework.mock.jndi.SimpleNamingContextBuilder;
-
 import de.freese.pim.core.addressbook.dao.TestAddressbookDAO;
 import de.freese.pim.core.addressbook.dao.TestSpringContextAddressbookDAO;
 import de.freese.pim.core.addressbook.dao.TestSpringManualTxAddressbookDAO;
@@ -20,7 +19,7 @@ import de.freese.pim.core.addressbook.dao.TestSpringManualTxAddressbookDAO;
 @RunWith(Suite.class)
 @SuiteClasses(
 {
-        TestAddressbookDAO.class, TestSpringContextAddressbookDAO.class, TestSpringManualTxAddressbookDAO.class
+        TestSpringContextAddressbookDAO.class, TestSpringManualTxAddressbookDAO.class, TestAddressbookDAO.class
 })
 public class AllAddressbookTests
 {

@@ -21,11 +21,11 @@ import java.util.stream.IntStream;
 import javax.sql.DataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.jdbc.datasource.DataSourceUtils;
 import com.sun.mail.iap.ConnectionException;
 import de.freese.pim.core.jdbc.sequence.SequenceProvider;
 import de.freese.pim.core.jdbc.sequence.SequenceQuery;
 import de.freese.pim.core.jdbc.sequence.SequenceQueryExecutor;
-import de.freese.pim.core.jdbc.tx.ConnectionHolder;
 
 /**
  * Analog-Implementierung vom org.springframework.jdbc.core.JdbcTemplate<br>
@@ -243,17 +243,19 @@ public class JdbcTemplate
      */
     protected void closeConnection(final Connection connection) throws SQLException
     {
-        if (!ConnectionHolder.isEmpty())
-        {
-            // Transaction-Context, nichts tun.
-            // Wird vom TransactionalInvocationHandler erledigt.
-        }
-        else
-        {
-            // Kein Transaction-Context.
-            // connection.setReadOnly(false);
-            connection.close();
-        }
+        DataSourceUtils.releaseConnection(connection, getDataSource());
+
+        // if (!ConnectionHolder.isEmpty())
+        // {
+        // // Transaction-Context, nichts tun.
+        // // Wird vom TransactionalInvocationHandler erledigt.
+        // }
+        // else
+        // {
+        // // Kein Transaction-Context.
+        // // connection.setReadOnly(false);
+        // connection.close();
+        // }
     }
 
     /**
@@ -278,6 +280,17 @@ public class JdbcTemplate
         // }
 
         return (Exception) th;
+    }
+
+    /**
+     * @param dataSource {@link DataSource}
+     * @return {@link JdbcTemplate}
+     */
+    public JdbcTemplate dataSource(final DataSource dataSource)
+    {
+        setDataSource(dataSource);
+
+        return this;
     }
 
     /**
@@ -361,32 +374,33 @@ public class JdbcTemplate
      * @return {@link Connection}
      * @throws SQLException Falls was schief geht.
      */
-    @SuppressWarnings("resource")
     protected Connection getConnection() throws SQLException
     {
         Connection connection = null;
 
-        if (!ConnectionHolder.isEmpty())
-        {
-            // Transaction-Context
-            connection = ConnectionHolder.get();
-        }
-        else
-        {
-            // Kein Transaction-Context -> ReadOnly Connection
-            connection = getDataSource().getConnection();
+        connection = DataSourceUtils.getConnection(getDataSource());
 
-            // ReadOnly Flag ändern geht nur ausserhalb einer TX.
-            if (!connection.isReadOnly())
-            {
-                connection.setReadOnly(true);
-            }
-
-            if (!connection.getAutoCommit())
-            {
-                connection.setAutoCommit(true);
-            }
-        }
+        // if (!ConnectionHolder.isEmpty())
+        // {
+        // // Transaction-Context
+        // connection = ConnectionHolder.get();
+        // }
+        // else
+        // {
+        // // Kein Transaction-Context -> ReadOnly Connection
+        // connection = getDataSource().getConnection();
+        //
+        // // ReadOnly Flag ändern geht nur ausserhalb einer TX.
+        // if (!connection.isReadOnly())
+        // {
+        // connection.setReadOnly(true);
+        // }
+        //
+        // if (!connection.getAutoCommit())
+        // {
+        // connection.setAutoCommit(true);
+        // }
+        // }
 
         return connection;
     }
@@ -600,15 +614,12 @@ public class JdbcTemplate
 
     /**
      * @param dataSource {@link DataSource}
-     * @return {@link JdbcTemplate}
      */
-    public JdbcTemplate setDataSource(final DataSource dataSource)
+    public void setDataSource(final DataSource dataSource)
     {
         Objects.requireNonNull(dataSource, "dataSource required");
 
         this.dataSource = dataSource;
-
-        return this;
     }
 
     /**

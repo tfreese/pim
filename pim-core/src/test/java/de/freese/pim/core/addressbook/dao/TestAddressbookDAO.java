@@ -4,6 +4,8 @@
 package de.freese.pim.core.addressbook.dao;
 
 import java.lang.reflect.Proxy;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.Arrays;
 import java.util.List;
@@ -18,10 +20,12 @@ import org.junit.runners.Parameterized.Parameter;
 import org.junit.runners.Parameterized.Parameters;
 import de.freese.pim.core.addressbook.TestAddressbookConfig;
 import de.freese.pim.core.addressbook.service.DefaultAddressBookService;
+import de.freese.pim.core.jdbc.JdbcTemplate;
+import de.freese.pim.core.jdbc.tx.ConnectionHolder;
 import de.freese.pim.core.jdbc.tx.TransactionalInvocationHandler;
 
 /**
- * TestCase für die TX-Steuerung mit Proxy und Lambdas.
+ * TestCase mit eigenem TX-Management durch Proxy und Lambdas.
  *
  * @author Thomas Freese
  */
@@ -29,6 +33,75 @@ import de.freese.pim.core.jdbc.tx.TransactionalInvocationHandler;
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class TestAddressbookDAO extends AbstractDAOTextCase
 {
+    /**
+     * {@link JdbcTemplate} mit eigenem TX-Management.
+     *
+     * @author Thomas Freese
+     */
+    private static class TestJdbcTemplate extends JdbcTemplate
+    {
+        /**
+         * Erstellt ein neues {@link TestJdbcTemplate} Object.
+         */
+        public TestJdbcTemplate()
+        {
+            super();
+        }
+
+        /**
+         * @see de.freese.pim.core.jdbc.JdbcTemplate#closeConnection(java.sql.Connection)
+         */
+        @Override
+        protected void closeConnection(final Connection connection) throws SQLException
+        {
+            if (!ConnectionHolder.isEmpty())
+            {
+                // Transaction-Context, nichts tun.
+                // Wird vom TransactionalInvocationHandler erledigt.
+            }
+            else
+            {
+                // Kein Transaction-Context.
+                // connection.setReadOnly(false);
+                connection.close();
+            }
+        }
+
+        /**
+         * @see de.freese.pim.core.jdbc.JdbcTemplate#getConnection()
+         */
+        @SuppressWarnings("resource")
+        @Override
+        protected Connection getConnection() throws SQLException
+        {
+            Connection connection = null;
+
+            if (!ConnectionHolder.isEmpty())
+            {
+                // Transaction-Context
+                connection = ConnectionHolder.get();
+            }
+            else
+            {
+                // Kein Transaction-Context -> ReadOnly Connection
+                connection = getDataSource().getConnection();
+
+                // ReadOnly Flag ändern geht nur ausserhalb einer TX.
+                if (!connection.isReadOnly())
+                {
+                    connection.setReadOnly(true);
+                }
+
+                if (!connection.getAutoCommit())
+                {
+                    connection.setAutoCommit(true);
+                }
+            }
+
+            return connection;
+        }
+    }
+
     /**
      *
      */
@@ -70,14 +143,15 @@ public class TestAddressbookDAO extends AbstractDAOTextCase
         return Arrays.asList(new Object[][]
         {
                 {
-                        TxLambdaAddressBookDAO.class.getSimpleName(), new TxLambdaAddressBookDAO().dataSource(dataSources.get(0))
+                        TxLambdaAddressBookDAO.class.getSimpleName(),
+                        new TxLambdaAddressBookDAO().jdbcTemplate(new TestJdbcTemplate().dataSource(dataSources.get(0)))
                 },
                 {
                         DefaultAddressBookService.class.getSimpleName(),
                         (IAddressBookDAO) Proxy.newProxyInstance(TestAddressbookDAO.class.getClassLoader(), new Class<?>[]
                         {
                                 IAddressBookDAO.class
-                        }, new TransactionalInvocationHandler(dataSources.get(1), new DefaultAddressBookService(new DefaultAddressBookDAO().dataSource(dataSources.get(1)))))
+                        }, new TransactionalInvocationHandler(dataSources.get(1), new DefaultAddressBookService(new DefaultAddressBookDAO().jdbcTemplate(new TestJdbcTemplate().dataSource(dataSources.get(1))))))
                 }
         });
     }

@@ -7,8 +7,8 @@ import java.lang.reflect.Method;
 import java.sql.Connection;
 import java.util.Arrays;
 import java.util.Objects;
-
 import javax.sql.DataSource;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Steuert eine Transaktion auf Methoden-Ebene wenn diese mit {@link Transactional} annotiert ist.<br>
@@ -65,8 +65,7 @@ public class TransactionalInvocationHandler implements InvocationHandler
 
         if (beanMethod == null)
         {
-            throw new RuntimeException(
-                    "no bean method found: " + method.getName() + " with " + Arrays.toString(method.getParameterTypes()));
+            throw new RuntimeException("no bean method found: " + method.getName() + " with " + Arrays.toString(method.getParameterTypes()));
         }
 
         // Transactional transactional = beanMethod.getAnnotation(Transactional.class);

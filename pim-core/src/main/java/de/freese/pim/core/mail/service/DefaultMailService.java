@@ -23,12 +23,9 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
-
 import javax.mail.internet.MimeMessage;
-
 import org.apache.commons.lang3.ArrayUtils;
-
-import de.freese.pim.core.jdbc.tx.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import de.freese.pim.core.mail.api.IMailAPI;
 import de.freese.pim.core.mail.api.IMailContent;
 import de.freese.pim.core.mail.dao.IMailDAO;
@@ -136,9 +133,27 @@ public class DefaultMailService extends AbstractService implements IMailService
      * @see de.freese.pim.core.mail.service.IMailService#getMailAccounts()
      */
     @Override
+    @Transactional(readOnly = true)
     public List<MailAccount> getMailAccounts() throws Exception
     {
         return getMailDAO().getMailAccounts();
+    }
+
+    /**
+     * @param accountID long
+     * @return {@link IMailAPI}
+     */
+    protected IMailAPI getMailAPI(final long accountID)
+    {
+        return this.mailApiMap.get(accountID);
+    }
+
+    /**
+     * @return {@link IMailDAO}
+     */
+    protected IMailDAO getMailDAO()
+    {
+        return this.mailDAO;
     }
 
     /**
@@ -174,16 +189,14 @@ public class DefaultMailService extends AbstractService implements IMailService
     }
 
     /**
-     * @see de.freese.pim.core.mail.service.IMailService#loadContent(long, de.freese.pim.core.mail.model.Mail,
-     *      java.util.function.BiConsumer)
+     * @see de.freese.pim.core.mail.service.IMailService#loadContent(long, de.freese.pim.core.mail.model.Mail, java.util.function.BiConsumer)
      */
     @Override
     public IMailContent loadContent(final long accountID, final Mail mail, final BiConsumer<Long, Long> loadMonitor) throws Exception
     {
         if (getLogger().isDebugEnabled())
         {
-            getLogger().debug("load mail: msgnum={}; uid={}; size={}; subject={}", mail.getMsgNum(), mail.getUID(), mail.getSize(),
-                    mail.getSubject());
+            getLogger().debug("load mail: msgnum={}; uid={}; size={}; subject={}", mail.getMsgNum(), mail.getUID(), mail.getSize(), mail.getSubject());
         }
 
         IMailAPI mailAPI = getMailAPI(accountID);
@@ -364,22 +377,5 @@ public class DefaultMailService extends AbstractService implements IMailService
     public int updateAccount(final MailAccount account) throws Exception
     {
         return getMailDAO().updateAccount(account);
-    }
-
-    /**
-     * @param accountID long
-     * @return {@link IMailAPI}
-     */
-    protected IMailAPI getMailAPI(final long accountID)
-    {
-        return this.mailApiMap.get(accountID);
-    }
-
-    /**
-     * @return {@link IMailDAO}
-     */
-    protected IMailDAO getMailDAO()
-    {
-        return this.mailDAO;
     }
 }

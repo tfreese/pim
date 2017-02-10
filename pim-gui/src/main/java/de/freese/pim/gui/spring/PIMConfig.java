@@ -10,12 +10,10 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.SynchronousQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
-
 import javax.sql.DataSource;
-
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-
 import de.freese.pim.core.addressbook.dao.DefaultAddressBookDAO;
 import de.freese.pim.core.addressbook.service.DefaultAddressBookService;
 import de.freese.pim.core.addressbook.service.IAddressBookService;
@@ -34,6 +32,7 @@ import de.freese.pim.gui.PIMApplication;
  * @author Thomas Freese
  */
 @Configuration
+@ComponentScan(basePackages = "de.freese.pim.core.spring")
 public class PIMConfig
 {
     /**
@@ -51,11 +50,10 @@ public class PIMConfig
     @Bean
     public IAddressBookService addressBookService(final DataSource dataSource)
     {
-        IAddressBookService addressBookService = (IAddressBookService) Proxy.newProxyInstance(PIMApplication.class.getClassLoader(),
-                new Class<?>[]
-                {
-                        IAddressBookService.class
-                }, new TransactionalInvocationHandler(dataSource, new DefaultAddressBookService(new DefaultAddressBookDAO().dataSource(dataSource))));
+        IAddressBookService addressBookService = (IAddressBookService) Proxy.newProxyInstance(PIMApplication.class.getClassLoader(), new Class<?>[]
+        {
+                IAddressBookService.class
+        }, new TransactionalInvocationHandler(dataSource, new DefaultAddressBookService(new DefaultAddressBookDAO().dataSource(dataSource))));
 
         return addressBookService;
     }
@@ -72,8 +70,8 @@ public class PIMConfig
         // Max. 50 elemente in der Queue.
         // BlockingQueue<Runnable> workQueue = new LinkedBlockingQueue<>(50);
 
-        ExecutorService executor = new ThreadPoolExecutor(3, 10, 60, TimeUnit.SECONDS, workQueue, new PIMThreadFactory("pimthread"),
-                new ThreadPoolExecutor.AbortPolicy());
+        ExecutorService executor =
+                new ThreadPoolExecutor(3, 10, 60, TimeUnit.SECONDS, workQueue, new PIMThreadFactory("pimthread"), new ThreadPoolExecutor.AbortPolicy());
         ExecutorService executorService = Executors.unconfigurableExecutorService(executor);
         // registerCloseable(() ->
         // {
@@ -92,8 +90,7 @@ public class PIMConfig
      * @return {@link IMailService}
      */
     @Bean(destroyMethod = "disconnectAccounts")
-    public IMailService mailService(final DataSource dataSource, final ISettingsService settingsService,
-            final ExecutorService executorService)
+    public IMailService mailService(final DataSource dataSource, final ISettingsService settingsService, final ExecutorService executorService)
     {
         DefaultMailService defaultMailService = new DefaultMailService();
         defaultMailService.setMailDAO(new DefaultMailDAO().dataSource(dataSource));
@@ -120,8 +117,8 @@ public class PIMConfig
     @Bean(destroyMethod = "shutdownNow")
     public ExecutorService scheduledExecutorService()
     {
-        ScheduledExecutorService scheduledExecutor = new ScheduledThreadPoolExecutor(3, new PIMThreadFactory("pimscheduler"),
-                new ThreadPoolExecutor.AbortPolicy());
+        ScheduledExecutorService scheduledExecutor =
+                new ScheduledThreadPoolExecutor(3, new PIMThreadFactory("pimscheduler"), new ThreadPoolExecutor.AbortPolicy());
         ScheduledExecutorService scheduledExecutorService = Executors.unconfigurableScheduledExecutorService(scheduledExecutor);
         // registerCloseable(() ->
         // {

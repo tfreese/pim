@@ -125,7 +125,7 @@ public abstract class AbstractDataSourceBean implements IDataSourceBean
         }
         else if (dataSource instanceof SimpleDataSource)
         {
-            ((SimpleDataSource) dataSource).close();
+            ((SimpleDataSource) dataSource).destroy();
         }
 
         dataSource = null;

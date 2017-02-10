@@ -1,8 +1,8 @@
 /**
- * Created: 10.07.2016
+ * Created: 10.02.2017
  */
 
-package de.freese.pim.core.addressbook;
+package de.freese.pim.core.mail;
 
 import javax.sql.DataSource;
 import org.springframework.context.annotation.Bean;
@@ -13,56 +13,43 @@ import org.springframework.jdbc.datasource.SingleConnectionDataSource;
 import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-import de.freese.pim.core.addressbook.dao.DefaultAddressBookDAO;
-import de.freese.pim.core.addressbook.dao.IAddressBookDAO;
+import de.freese.pim.core.mail.dao.DefaultMailDAO;
+import de.freese.pim.core.mail.dao.IMailDAO;
 
 /**
  * @author Thomas Freese
  */
 @Configuration
 @EnableTransactionManagement
-public class TestAddressbookConfig
+public class TestMailConfig
 {
     /**
-     * Erstellt ein neues {@link TestAddressbookConfig} Object.
+     * Erstellt ein neues {@link TestMailConfig} Object.
      */
-    public TestAddressbookConfig()
+    public TestMailConfig()
     {
         super();
     }
 
     /**
-     * @param dataSource {@link DataSource}
-     * @return {@link IAddressBookDAO}
-     */
-    @Bean
-    public IAddressBookDAO addressBookDAO(final DataSource dataSource)
-    {
-        DefaultAddressBookDAO dao = new DefaultAddressBookDAO();
-        dao.setDataSource(dataSource);
-
-        return dao;
-    }
-
-    /**
      * @return {@link DataSource}
+     * @throws Exception Falls was schief geht.
      */
     @Bean(destroyMethod = "destroy")
-    public DataSource dataSource()
+    public DataSource dataSource() throws Exception
     {
         // DataSource dataSource = new JndiDataSourceLookup().getDataSource("jdbc/spring/manualTX"); // Wird in AllTests definiert.
 
         SingleConnectionDataSource dataSource = new SingleConnectionDataSource();
         dataSource.setDriverClassName("org.hsqldb.jdbc.JDBCDriver");
-        dataSource.setUrl("jdbc:hsqldb:mem:addressbook_" + System.currentTimeMillis());
-        dataSource.setAutoCommit(true);
+        dataSource.setUrl("jdbc:hsqldb:mem:mail_" + System.currentTimeMillis());
+        dataSource.setAutoCommit(false);
         dataSource.setSuppressClose(true);
 
         try
         {
             ResourceDatabasePopulator populator = new ResourceDatabasePopulator();
-            populator.addScript(new ClassPathResource("db/hsqldb/V2__pim_addressbook_schema.sql"));
-            // populator.addScript(new ClassPathResource("db/hsqldb/pim_addressbook_data.sql"));
+            populator.addScript(new ClassPathResource("db/hsqldb/V3__pim_mail_schema.sql"));
             populator.execute(dataSource);
         }
         catch (Exception ex)
@@ -76,6 +63,19 @@ public class TestAddressbookConfig
         }
 
         return dataSource;
+    }
+
+    /**
+     * @param dataSource {@link DataSource}
+     * @return {@link IMailDAO}
+     */
+    @Bean
+    public IMailDAO mailDAO(final DataSource dataSource)
+    {
+        DefaultMailDAO dao = new DefaultMailDAO();
+        dao.setDataSource(dataSource);
+
+        return dao;
     }
 
     /**

@@ -122,7 +122,7 @@ public abstract class AbstractDAO<D>
     {
         Objects.requireNonNull(dataSource, "dataSource required");
 
-        setJdbcTemplate(new JdbcTemplate().setDataSource(dataSource));
+        setJdbcTemplate(new JdbcTemplate().dataSource(dataSource));
     }
 
     /**

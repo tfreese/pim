@@ -4,10 +4,9 @@ package de.freese.pim.core.addressbook.service;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Objects;
-
+import org.springframework.transaction.annotation.Transactional;
 import de.freese.pim.core.addressbook.dao.IAddressBookDAO;
 import de.freese.pim.core.addressbook.model.Kontakt;
-import de.freese.pim.core.jdbc.tx.Transactional;
 import de.freese.pim.core.mail.service.AbstractService;
 
 /**
@@ -69,7 +68,8 @@ public class DefaultAddressBookService extends AbstractService implements IAddre
      * @see de.freese.pim.core.addressbook.dao.IAddressBookDAO#getKontaktDetails(long[])
      */
     @Override
-    public List<Kontakt> getKontaktDetails(final long... ids) throws Exception
+    @Transactional(readOnly = true)
+    public List<Kontakt> getKontaktDetails(final long...ids) throws Exception
     {
         return this.addressBookDAO.getKontaktDetails(ids);
     }
@@ -78,6 +78,7 @@ public class DefaultAddressBookService extends AbstractService implements IAddre
      * @see de.freese.pim.core.addressbook.dao.IAddressBookDAO#getKontakte()
      */
     @Override
+    @Transactional(readOnly = true)
     public List<Kontakt> getKontakte() throws Exception
     {
         return this.addressBookDAO.getKontakte();
@@ -107,6 +108,7 @@ public class DefaultAddressBookService extends AbstractService implements IAddre
      * @see de.freese.pim.core.addressbook.dao.IAddressBookDAO#searchKontakte(java.lang.String)
      */
     @Override
+    @Transactional(readOnly = true)
     public List<Kontakt> searchKontakte(final String name) throws Exception
     {
         return this.addressBookDAO.searchKontakte(name);

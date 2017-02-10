@@ -8,23 +8,36 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import org.junit.AfterClass;
+import javax.annotation.Resource;
+import javax.sql.DataSource;
 import org.junit.Assert;
-import org.junit.BeforeClass;
+import org.junit.Before;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
-import org.springframework.jdbc.datasource.SingleConnectionDataSource;
+import org.springframework.test.annotation.Commit;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.annotation.Rollback;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.transaction.annotation.Transactional;
 import de.freese.pim.core.addressbook.TestAddressbookConfig;
 import de.freese.pim.core.addressbook.model.Kontakt;
-import de.freese.pim.core.jdbc.tx.ConnectionHolder;
 
 /**
  * TestCase des eigenen {@link JdbcTemplate}.
  *
  * @author Thomas Freese
  */
+@RunWith(SpringRunner.class)
+@ContextConfiguration(classes =
+{
+        TestAddressbookConfig.class
+})
+@Transactional(transactionManager = "transactionManager")
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
+@DirtiesContext
 public class TestJdbcTemplate
 {
     /**
@@ -89,27 +102,15 @@ public class TestJdbcTemplate
     }
 
     /**
-     *
-     */
-    private static JdbcTemplate jdbcTemplate = null;
+    *
+    */
+    @Resource
+    private DataSource dataSource = null;
 
     /**
      *
      */
-    @AfterClass
-    public static void afterClass()
-    {
-        ((SingleConnectionDataSource) jdbcTemplate.getDataSource()).destroy();
-    }
-
-    /**
-     *
-     */
-    @BeforeClass
-    public static void beforeClass()
-    {
-        jdbcTemplate = new JdbcTemplate().setDataSource(new TestAddressbookConfig().dataSource());
-    }
+    private JdbcTemplate jdbcTemplate = null;
 
     /**
      * Erzeugt eine neue Instanz von {@link TestJdbcTemplate}
@@ -120,9 +121,23 @@ public class TestJdbcTemplate
     }
 
     /**
+     *
+     */
+    @Before
+    public void beforeMethod()
+    {
+        if (this.jdbcTemplate == null)
+        {
+            this.jdbcTemplate = new JdbcTemplate().dataSource(this.dataSource);
+        }
+    }
+
+    /**
      * @throws Exception Falls was schief geht.
      */
     @Test(expected = SQLException.class)
+    @Transactional(readOnly = true)
+    @Rollback
     public void test010InsertReadOnly() throws Exception
     {
         StringBuilder sql = new StringBuilder();
@@ -130,13 +145,14 @@ public class TestJdbcTemplate
         sql.append(" VALUES");
         sql.append(" ('TEST', next value for kontakt_seq, 'Freese', 'Thomas')");
 
-        jdbcTemplate.update(sql.toString());
+        this.jdbcTemplate.update(sql.toString());
     }
 
     /**
      * @throws Exception Falls was schief geht.
      */
     @Test
+    @Commit
     public void test011Insert() throws Exception
     {
         StringBuilder sql = new StringBuilder();
@@ -144,33 +160,16 @@ public class TestJdbcTemplate
         sql.append(" VALUES");
         sql.append(" ('TEST', next value for kontakt_seq, 'Freese', 'Thomas')");
 
-        ConnectionHolder.set(jdbcTemplate.getDataSource().getConnection());
-        ConnectionHolder.beginTX();
+        int affectedRows = this.jdbcTemplate.update(sql.toString());
 
-        try
-        {
-            int affectedRows = jdbcTemplate.update(sql.toString());
-
-            ConnectionHolder.commitTX();
-
-            Assert.assertEquals(1, affectedRows);
-        }
-        catch (Exception ex)
-        {
-            ConnectionHolder.rollbackTX();
-
-            throw ex;
-        }
-        finally
-        {
-            ConnectionHolder.close();
-        }
+        Assert.assertEquals(1, affectedRows);
     }
 
     /**
      * @throws Exception Falls was schief geht.
      */
     @Test
+    @Commit
     public void test012InsertBatch() throws Exception
     {
         StringBuilder sql = new StringBuilder();
@@ -178,51 +177,35 @@ public class TestJdbcTemplate
         sql.append(" VALUES");
         sql.append(" (?, ?, ?, ?)");
 
-        ConnectionHolder.set(jdbcTemplate.getDataSource().getConnection());
-        ConnectionHolder.beginTX();
+        List<Kontakt> kontakte = new ArrayList<>();
+        kontakte.add(new Kontakt(0, "Nachname1", "Vorname1"));
+        kontakte.add(new Kontakt(0, "Nachname2", "Vorname2"));
 
-        try
-        {
-            List<Kontakt> kontakte = new ArrayList<>();
-            kontakte.add(new Kontakt(0, "Nachname1", "Vorname1"));
-            kontakte.add(new Kontakt(0, "Nachname2", "Vorname2"));
+        int[] affectedRows = this.jdbcTemplate.updateBatch(sql.toString(), kontakte, (ps, kontakt, sequenceProvider) -> {
+            long id = sequenceProvider.getNextID("KONTAKT_SEQ");
+            ps.setString(1, "TEST");
+            ps.setLong(2, id);
+            ps.setString(3, kontakt.getNachname());
+            ps.setString(4, kontakt.getVorname());
+        });
 
-            int[] affectedRows = jdbcTemplate.updateBatch(sql.toString(), kontakte, (ps, kontakt, sequenceProvider) -> {
-                long id = sequenceProvider.getNextID("KONTAKT_SEQ");
-                ps.setString(1, "TEST");
-                ps.setLong(2, id);
-                ps.setString(3, kontakt.getNachname());
-                ps.setString(4, kontakt.getVorname());
-            });
-
-            ConnectionHolder.commitTX();
-
-            Assert.assertEquals(2, affectedRows.length);
-            Assert.assertEquals(1, affectedRows[0]);
-            Assert.assertEquals(1, affectedRows[1]);
-        }
-        catch (Exception ex)
-        {
-            ConnectionHolder.rollbackTX();
-
-            throw ex;
-        }
-        finally
-        {
-            ConnectionHolder.close();
-        }
+        Assert.assertEquals(2, affectedRows.length);
+        Assert.assertEquals(1, affectedRows[0]);
+        Assert.assertEquals(1, affectedRows[1]);
     }
 
     /**
      * @throws Exception Falls was schief geht.
      */
     @Test
+    @Transactional(readOnly = true)
+    @Rollback
     public void test020QueryAsListReadOnly() throws Exception
     {
         StringBuilder sql = new StringBuilder();
         sql.append("select user_id, id, nachname, vorname from KONTAKT");
 
-        List<Map<String, Object>> results = jdbcTemplate.queryForList(sql.toString());
+        List<Map<String, Object>> results = this.jdbcTemplate.queryForList(sql.toString());
 
         Assert.assertNotNull(results);
         Assert.assertEquals(3, results.size());
@@ -249,58 +232,49 @@ public class TestJdbcTemplate
      * @throws Exception Falls was schief geht.
      */
     @Test
+    @Transactional(readOnly = true)
+    @Rollback
     public void test021QueryAsList() throws Exception
     {
         StringBuilder sql = new StringBuilder();
         sql.append("select user_id, id, nachname, vorname from KONTAKT");
 
-        ConnectionHolder.set(jdbcTemplate.getDataSource().getConnection());
+        List<Map<String, Object>> results = this.jdbcTemplate.queryForList(sql.toString());
 
-        try
-        {
-            List<Map<String, Object>> results = jdbcTemplate.queryForList(sql.toString());
+        Assert.assertNotNull(results);
+        Assert.assertEquals(3, results.size());
 
-            Assert.assertNotNull(results);
-            Assert.assertEquals(3, results.size());
+        // Keys
+        Set<String> keys = results.get(0).keySet();
+        Iterator<String> keyIterator = keys.iterator();
 
-            // Keys
-            Set<String> keys = results.get(0).keySet();
-            Iterator<String> keyIterator = keys.iterator();
+        Assert.assertEquals("USER_ID", keyIterator.next());
+        Assert.assertEquals("ID", keyIterator.next());
+        Assert.assertEquals("NACHNAME", keyIterator.next());
+        Assert.assertEquals("VORNAME", keyIterator.next());
 
-            Assert.assertEquals("USER_ID", keyIterator.next());
-            Assert.assertEquals("ID", keyIterator.next());
-            Assert.assertEquals("NACHNAME", keyIterator.next());
-            Assert.assertEquals("VORNAME", keyIterator.next());
+        // Values
+        Map<String, Object> map = results.get(0);
 
-            // Values
-            Map<String, Object> map = results.get(0);
-
-            Assert.assertEquals("TEST", map.get("USER_ID"));
-            Assert.assertEquals("1", map.get("ID").toString());
-            Assert.assertEquals("Freese", map.get("NACHNAME"));
-            Assert.assertEquals("Thomas", map.get("VORNAME"));
-        }
-        catch (Exception ex)
-        {
-            throw ex;
-        }
-        finally
-        {
-            ConnectionHolder.close();
-        }
+        Assert.assertEquals("TEST", map.get("USER_ID"));
+        Assert.assertEquals("1", map.get("ID").toString());
+        Assert.assertEquals("Freese", map.get("NACHNAME"));
+        Assert.assertEquals("Thomas", map.get("VORNAME"));
     }
 
     /**
      * @throws Exception Falls was schief geht.
      */
     @Test
+    @Transactional(readOnly = true)
+    @Rollback
     public void test022QueryReadOnlyWithRowMapper() throws Exception
     {
         StringBuilder sql = new StringBuilder();
         sql.append("select user_id, id, nachname, vorname from KONTAKT");
 
         List<Entity> results =
-                jdbcTemplate.query(sql.toString(), (rs, rowNum) -> new Entity(rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4)));
+                this.jdbcTemplate.query(sql.toString(), (rs, rowNum) -> new Entity(rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4)));
 
         Assert.assertNotNull(results);
         Assert.assertEquals(3, results.size());
@@ -328,6 +302,7 @@ public class TestJdbcTemplate
      * @throws Exception Falls was schief geht.
      */
     @Test
+    @Commit
     public void test030InsertPrepared() throws Exception
     {
         StringBuilder sql = new StringBuilder();
@@ -335,47 +310,31 @@ public class TestJdbcTemplate
         sql.append(" VALUES");
         sql.append(" (?, ?, ?, ?)");
 
-        ConnectionHolder.set(jdbcTemplate.getDataSource().getConnection());
-        ConnectionHolder.beginTX();
+        // long id = jdbcTemplate.query("call next value for kontakt_seq", rs -> {
+        // rs.next();
+        //
+        // return rs.getLong(1);
+        // });
+        long id = this.jdbcTemplate.getNextID("KONTAKT_SEQ");
 
-        try
-        {
-            // long id = jdbcTemplate.query("call next value for kontakt_seq", rs -> {
-            // rs.next();
-            //
-            // return rs.getLong(1);
-            // });
-            long id = jdbcTemplate.getNextID("KONTAKT_SEQ");
+        Assert.assertEquals(4L, id);
 
-            Assert.assertEquals(4L, id);
+        int affectedRows = this.jdbcTemplate.update(sql.toString(), ps -> {
+            ps.setString(1, "TEST");
+            ps.setLong(2, id);
+            ps.setString(3, "Freesee");
+            ps.setString(4, "Thomass");
+        });
 
-            int affectedRows = jdbcTemplate.update(sql.toString(), ps -> {
-                ps.setString(1, "TEST");
-                ps.setLong(2, id);
-                ps.setString(3, "Freesee");
-                ps.setString(4, "Thomass");
-            });
-
-            ConnectionHolder.commitTX();
-
-            Assert.assertEquals(1, affectedRows);
-        }
-        catch (Exception ex)
-        {
-            ConnectionHolder.rollbackTX();
-
-            throw ex;
-        }
-        finally
-        {
-            ConnectionHolder.close();
-        }
+        Assert.assertEquals(1, affectedRows);
     }
 
     /**
      * @throws Exception Falls was schief geht.
      */
     @Test
+    @Transactional(readOnly = true)
+    @Rollback
     public void test040QueryReadOnlyPrepared() throws Exception
     {
         StringBuilder sql = new StringBuilder();
@@ -383,7 +342,7 @@ public class TestJdbcTemplate
         sql.append(" where lower(nachname) like ? or lower(vorname) like ?");
         sql.append(" order by id asc");
 
-        List<Entity> results = jdbcTemplate.query(sql.toString(), ps -> {
+        List<Entity> results = this.jdbcTemplate.query(sql.toString(), ps -> {
             ps.setString(1, "%ree%");
             ps.setString(2, "%hom%");
         }, (rs, rowNum) -> new Entity(rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4)));
