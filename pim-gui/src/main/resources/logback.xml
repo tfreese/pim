@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration debug="false" scan="false" scanPeriod="60 seconds">
+    <conversionRule conversionWord="clr" converterClass="org.springframework.boot.logging.logback.ColorConverter" />
 
     <!--Levels are ordered: TRACE < DEBUG < INFO < WARN < ERROR -->
     <!--property name="pattern" value="%date{yyyy-MM-dd HH:mm:ss.SSS} - %-5level[%thread] - %logger{0}[%method] - %message%n" /-->
     <!--property name="pattern" value="%date{HH:mm:ss.SSS} - %.-1level[%-12thread] - %-35.-35logger{0} - %message%n" /-->
-    <property name="pattern" value="%date{HH:mm:ss.SSS} - %.-1level[%-12thread] - %logger{0} - %message%n" />
+    <!--property name="pattern" value="%date{HH:mm:ss.SSS} - %.-1level[%-12thread] - %logger{0} - %message%n" /-->
+    <property name="pattern" value="%date{HH:mm:ss.SSS} - %clr(%.-1level){yellow}[%-12thread] - %logger{0} - %message%n" />
     <property name="log.dir" value="${user.dir}/log" />
 
 	<!-- conditions brauchen janino -->
@@ -64,14 +66,14 @@
     <logger name="javax.mail" level="INFO"/>
     <logger name="org.apache.tomcat.jdbc.pool" level="WARN"/>
     <logger name="org.springframework.boot.autoconfigure" level="INFO"/>
-    <logger name="org.springframework.jdbc.core.JdbcTemplate" level="DEBUG"/>
+    <logger name="org.springframework.jdbc.core.JdbcTemplate" level="INFO"/>
         
-    <logger name="de.freese.pim.core" level="DEBUG"/>
+    <logger name="de.freese.pim.core" level="INFO"/>
     <logger name="de.freese.pim.core.jdbc" level="INFO"/>
-    <logger name="de.freese.pim.core.mail.service" level="DEBUG"/>
-    <logger name="de.freese.pim.gui" level="DEBUG"/>
+    <logger name="de.freese.pim.core.mail.service" level="INFO"/>
+    <logger name="de.freese.pim.gui" level="INFO"/>
 
-    <root level="DEBUG">
+    <root level="INFO">
         <appender-ref ref="STDOUT" />
         <appender-ref ref="STDERR" />
         <appender-ref ref="FILE" />

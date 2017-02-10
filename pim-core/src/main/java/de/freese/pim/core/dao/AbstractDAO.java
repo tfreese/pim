@@ -55,53 +55,6 @@ public abstract class AbstractDAO<D>
         return (D) this;
     }
 
-    // /**
-    // * Erkennt den DB-Typ für die Definition der Sequence-Function.<br>
-    // * see org.springframework.data.jdbc.support.DatabaseType
-    // *
-    // * @param dataSource {@link DataSource}
-    // */
-    // protected void detectDatabaseType(final DataSource dataSource)
-    // {
-    // try (Connection connection = dataSource.getConnection())
-    // {
-    // DatabaseMetaData dbmd = connection.getMetaData();
-    //
-    // String product = dbmd.getDatabaseProductName().toLowerCase();
-    // product = product.split(" ")[0];
-    // // int majorVersion = dbmd.getDatabaseMajorVersion();
-    // // int minorVersion = dbmd.getDatabaseMinorVersion();
-    //
-    // switch (product)
-    // {
-    // case "oracle":
-    // this.sequenceFunction = seq -> "select " + seq + ".nextval from dual";
-    // break;
-    // case "hsql":
-    // this.sequenceFunction = seq -> "call next value for " + seq;
-    // break;
-    // // case "mysql":
-    // // // CREATE TABLE sequence (id INT NOT NULL);
-    // // // INSERT INTO sequence VALUES (0);
-    // //
-    // // this.sequenceFunction = seq -> "UPDATE sequence SET id=LAST_INSERT_ID(id + 1); SELECT LAST_INSERT_ID();";
-    // // break;
-    //
-    // default:
-    // // this.sequenceFunction = seq -> "select nvl(max(id), 0) + 1 from " + seq;
-    // this.sequenceFunction = seq -> "select count(*) + 1 from " + seq;
-    //
-    // String msg = String.format("%s: use following sql for sequence \"%s\"%n", this.sequenceFunction.apply("<SEQ/TABLE>"),
-    // dbmd.getDatabaseProductName());
-    // getLogger().warn(msg);
-    // }
-    // }
-    // catch (SQLException ex)
-    // {
-    // throw new RuntimeException(ex);
-    // }
-    // }
-
     /**
      * @return {@link DataSource}
      */

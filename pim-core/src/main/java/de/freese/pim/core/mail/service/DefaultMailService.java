@@ -113,6 +113,8 @@ public class DefaultMailService extends AbstractService implements IMailService
     @Override
     public void disconnectAccounts() throws Exception
     {
+        getLogger().info("Disconnect Accounts");
+
         for (IMailAPI mailAPI : this.mailApiMap.values())
         {
             getLogger().info("Close " + mailAPI.getAccount().getMail());

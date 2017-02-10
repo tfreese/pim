@@ -1,0 +1,3 @@
+
+${AnsiColor.BRIGHT_GREEN}P.I.M. - Personal Information Management
+${AnsiColor.DEFAULT}:: Spring Boot :: (v${spring-boot.version})

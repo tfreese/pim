@@ -1,20 +1,13 @@
 package de.freese.pim.gui;
 
-import java.lang.reflect.Proxy;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
-import java.util.concurrent.SynchronousQueue;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
 
 import javax.sql.DataSource;
 
@@ -23,24 +16,26 @@ import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Options;
+import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeansException;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.flyway.FlywayAutoConfiguration;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
+import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
+import org.springframework.core.io.Resource;
+import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 import com.sun.javafx.application.LauncherImpl;
 
-import de.freese.pim.core.addressbook.dao.DefaultAddressBookDAO;
-import de.freese.pim.core.addressbook.service.DefaultAddressBookService;
 import de.freese.pim.core.addressbook.service.IAddressBookService;
-import de.freese.pim.core.db.HsqldbEmbeddedServer;
-import de.freese.pim.core.db.IDataSourceBean;
-import de.freese.pim.core.jdbc.tx.TransactionalInvocationHandler;
-import de.freese.pim.core.mail.dao.DefaultMailDAO;
-import de.freese.pim.core.mail.service.DefaultMailService;
 import de.freese.pim.core.mail.service.IMailService;
 import de.freese.pim.core.service.ISettingsService;
-import de.freese.pim.core.service.SettingService;
-import de.freese.pim.core.thread.PIMThreadFactory;
-import de.freese.pim.core.utils.Utils;
 import de.freese.pim.gui.main.MainController;
 import de.freese.pim.gui.utils.FXUtils;
 import de.freese.pim.gui.utils.PIMFXThreadGroup;
@@ -66,7 +61,20 @@ import javafx.stage.Window;
  * @author Thomas Freese
  */
 @SuppressWarnings("restriction")
-public class PIMApplication extends Application
+// @SpringBootConfiguration
+// @EnableAutoConfiguration
+// @SpringBootApplication(exclude =
+// {
+// // disabled, da multiple Instanzen aus COMPASS und BIJAVA
+// DataSourceAutoConfiguration.class, DataSourceTransactionManagerAutoConfiguration.class
+// })
+@SpringBootApplication(exclude =
+{
+        DataSourceAutoConfiguration.class, FlywayAutoConfiguration.class,
+})
+@EnableAsync // @Async("executorService")
+@EnableScheduling
+public class PIMApplication extends Application implements ApplicationContextAware
 {
     /**
      *
@@ -79,34 +87,14 @@ public class PIMApplication extends Application
     public static final Logger LOGGER = LoggerFactory.getLogger(PIMApplication.class);
 
     /**
-     *
-     */
-    private static IAddressBookService addressBookService = null;
-
-    /**
-     *
-     */
-    private static IDataSourceBean dataSourceBean = null;
-
-    /**
-     *
-     */
-    private static ExecutorService executorService = null;
-
-    /**
-     *
-     */
-    private static IMailService mailService = null;
+    *
+    */
+    private static ApplicationContext applicationContext = null;
 
     /**
      *
      */
     private static Window mainWindow = null;
-
-    /**
-     *
-     */
-    private static ScheduledExecutorService scheduledExecutorService = null;
 
     /**
      * Bildschirm auf dem PIM läuft.
@@ -126,16 +114,7 @@ public class PIMApplication extends Application
      */
     public static IAddressBookService getAddressBookService()
     {
-        if (addressBookService == null)
-        {
-            addressBookService = (IAddressBookService) Proxy.newProxyInstance(PIMApplication.class.getClassLoader(), new Class<?>[]
-            {
-                    IAddressBookService.class
-            }, new TransactionalInvocationHandler(getDataSource(),
-                    new DefaultAddressBookService(new DefaultAddressBookDAO().dataSource(getDataSource()))));
-        }
-
-        return addressBookService;
+        return getApplicationContext().getBean("addressBookService", IAddressBookService.class);
     }
 
     /**
@@ -143,7 +122,7 @@ public class PIMApplication extends Application
      */
     public static DataSource getDataSource()
     {
-        return dataSourceBean.getDataSource();
+        return getApplicationContext().getBean("dataSource", DataSource.class);
     }
 
     /**
@@ -151,7 +130,7 @@ public class PIMApplication extends Application
      */
     public static ExecutorService getExecutorService()
     {
-        return executorService;
+        return getApplicationContext().getBean("executorService", ExecutorService.class);
     }
 
     /**
@@ -159,26 +138,7 @@ public class PIMApplication extends Application
      */
     public static IMailService getMailService()
     {
-        DefaultMailService defaultMailService = new DefaultMailService();
-        defaultMailService.setMailDAO(new DefaultMailDAO().dataSource(getDataSource()));
-        defaultMailService.setSettingsService(getSettingService());
-        defaultMailService.setExecutorService(getExecutorService());
-
-        if (mailService == null)
-        {
-            mailService = (IMailService) Proxy.newProxyInstance(PIMApplication.class.getClassLoader(), new Class<?>[]
-            {
-                    IMailService.class
-            }, new TransactionalInvocationHandler(getDataSource(), defaultMailService));
-        }
-
-        PIMApplication.registerCloseable(() ->
-        {
-            PIMApplication.LOGGER.info("Close MailService");
-            defaultMailService.disconnectAccounts();
-        });
-
-        return mailService;
+        return getApplicationContext().getBean("mailService", IMailService.class);
     }
 
     /**
@@ -190,11 +150,22 @@ public class PIMApplication extends Application
     }
 
     /**
+     * Liefert die Resource.
+     *
+     * @param location String
+     * @return {@link Resource}
+     */
+    public static Resource getResource(final String location)
+    {
+        return getApplicationContext().getResource(location);
+    }
+
+    /**
      * @return {@link ScheduledExecutorService}
      */
     public static ScheduledExecutorService getScheduledExecutorService()
     {
-        return scheduledExecutorService;
+        return getApplicationContext().getBean("scheduledExecutorService", ScheduledExecutorService.class);
     }
 
     /**
@@ -212,7 +183,7 @@ public class PIMApplication extends Application
      */
     public static ISettingsService getSettingService()
     {
-        return SettingService.getInstance();
+        return getApplicationContext().getBean("settingsService", ISettingsService.class);
     }
 
     /**
@@ -270,8 +241,6 @@ public class PIMApplication extends Application
 
         Thread thread = new Thread(threadGroup, () ->
         {
-            LOGGER.info("Startup P.I.M.");
-
             // launch(args);
             LauncherImpl.launchApplication(PIMApplication.class, PIMPreloader.class, args);
         }, "PIM-Startup");
@@ -293,6 +262,14 @@ public class PIMApplication extends Application
     public static void unblockGUI()
     {
         FXUtils.unblockGUI(getMainWindow());
+    }
+
+    /**
+     * @return {@link ApplicationContext}
+     */
+    private static ApplicationContext getApplicationContext()
+    {
+        return applicationContext;
     }
 
     /**
@@ -344,6 +321,50 @@ public class PIMApplication extends Application
         // "JavaFX-Launcher" umbenennen.
         Thread.currentThread().setName("JavaFX-Init.");
 
+        List<String> parameters = getParameters().getRaw();
+        String profile = null;
+        // Class<?> clazz = null;
+
+        if (CollectionUtils.isEmpty(parameters))
+        {
+            // clazz = AppConfigMySQL.class;
+            profile = "embeddedHSQLServer";
+        }
+        else
+        {
+            // clazz = Class.forName(parameters.get(0));
+            profile = parameters.get(0);
+        }
+
+        String[] args = getParameters().getRaw().toArray(new String[0]);
+
+        notifyPreloader(new PIMPreloaderNotification("Init Springframework"));
+
+        // SpringApplication.run(Application.class, args);
+        //
+        // @formatter:off
+        SpringApplication application = new SpringApplicationBuilder(PIMApplication.class)
+                .headless(false) // Default true, hier false wegen Swing
+                .web(false) // Wird eigentlich automatisch ermittelt.
+                .profiles(profile)
+                .registerShutdownHook(true) // Default true
+                //.banner(new MyBanner())
+                //.listeners(new ApplicationPidFileWriter("eps-monitor.pid"))
+                //.run(args)
+                .build();
+        // @formatter:on
+        //
+        // SpringApplication application = new SpringApplication(PIMApplication.class);
+        // application.setHeadless(false); // Wegen JavaFX
+        // application.registerShutdownHook(true);
+        //
+        // try (ConfigurableApplicationContext ctx = application.run(args))
+        // {
+        // ctx.registerShutdownHook();
+        // }
+
+        application.run(args);
+
         LOGGER.info("Init P.I.M.");
         notifyPreloader(new PIMPreloaderNotification("Init P.I.M."));
         // Utils.sleep(1, TimeUnit.SECONDS);
@@ -358,54 +379,39 @@ public class PIMApplication extends Application
         // getHostServices().showDocument("https://eclipse.org");
         FXUtils.tooltipBehaviorHack();
 
-        LOGGER.info("Init ThreadPools");
-        notifyPreloader(new PIMPreloaderNotification("Init ThreadPools"));
+        // LOGGER.info("Init ThreadPools");
+        // notifyPreloader(new PIMPreloaderNotification("Init ThreadPools"));
         // Utils.sleep(1, TimeUnit.SECONDS);
 
-        // Threads leben max. 60 Sekunden, wenn es nix zu tun gibt, min. 3 Threads, max. 50.
-        BlockingQueue<Runnable> workQueue = new SynchronousQueue<>(true);
-        // BlockingQueue<Runnable> workQueue = new LinkedBlockingQueue<>(50);
+        // LOGGER.info("Init Database");
+        // notifyPreloader(new PIMPreloaderNotification("Init Database"));
+        // // Utils.sleep(1, TimeUnit.SECONDS);
+        // PIMApplication.dataSourceBean = new HsqldbEmbeddedServer();
+        // PIMApplication.dataSourceBean.configure(getSettingService());
+        // PIMApplication.dataSourceBean.testConnection();
+        // PIMApplication.dataSourceBean.populateIfEmpty(() ->
+        // {
+        // LOGGER.info("Populate Database");
+        // notifyPreloader(new PIMPreloaderNotification("Populate Database"));
+        // // Utils.sleep(1, TimeUnit.SECONDS);
+        // });
+        // registerCloseable(() ->
+        // {
+        // LOGGER.info("Stop Database");
+        // PIMApplication.dataSourceBean.disconnect();
+        // PIMApplication.dataSourceBean = null;
+        // });
 
-        ExecutorService executor = new ThreadPoolExecutor(3, 50, 60, TimeUnit.SECONDS, workQueue, new PIMThreadFactory("thread"),
-                new ThreadPoolExecutor.AbortPolicy());
-        PIMApplication.executorService = Executors.unconfigurableExecutorService(executor);
-        registerCloseable(() ->
-        {
-            LOGGER.info("Close ExecutorService");
-            Utils.shutdown(PIMApplication.executorService);
-            PIMApplication.executorService = null;
-        });
+        // getSettingService().setDataSource(getDataSource());
+    }
 
-        ScheduledExecutorService scheduledExecutor = new ScheduledThreadPoolExecutor(3, new PIMThreadFactory("scheduler"),
-                new ThreadPoolExecutor.AbortPolicy());
-        PIMApplication.scheduledExecutorService = Executors.unconfigurableScheduledExecutorService(scheduledExecutor);
-        registerCloseable(() ->
-        {
-            LOGGER.info("Close ScheduledExecutorService");
-            Utils.shutdown(PIMApplication.scheduledExecutorService);
-            PIMApplication.scheduledExecutorService = null;
-        });
-
-        LOGGER.info("Init Database");
-        notifyPreloader(new PIMPreloaderNotification("Init Database"));
-        // Utils.sleep(1, TimeUnit.SECONDS);
-        PIMApplication.dataSourceBean = new HsqldbEmbeddedServer();
-        PIMApplication.dataSourceBean.configure(getSettingService());
-        PIMApplication.dataSourceBean.testConnection();
-        PIMApplication.dataSourceBean.populateIfEmpty(() ->
-        {
-            LOGGER.info("Populate Database");
-            notifyPreloader(new PIMPreloaderNotification("Populate Database"));
-            // Utils.sleep(1, TimeUnit.SECONDS);
-        });
-        registerCloseable(() ->
-        {
-            LOGGER.info("Stop Database");
-            PIMApplication.dataSourceBean.disconnect();
-            PIMApplication.dataSourceBean = null;
-        });
-
-        getSettingService().setDataSource(getDataSource());
+    /**
+     * @see org.springframework.context.ApplicationContextAware#setApplicationContext(org.springframework.context.ApplicationContext)
+     */
+    @Override
+    public void setApplicationContext(final ApplicationContext ctx) throws BeansException
+    {
+        applicationContext = ctx;
     }
 
     /**
