@@ -3,10 +3,8 @@ package de.freese.pim.gui.mail;
 
 import java.util.List;
 import java.util.Objects;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import de.freese.pim.core.mail.model.Mail;
 import de.freese.pim.core.mail.model.MailAccount;
 import de.freese.pim.core.mail.model.MailFolder;
@@ -21,7 +19,7 @@ import javafx.scene.control.TreeView;
  *
  * @author Thomas Freese
  */
-public class LoadMailsTask extends Task<List<Mail>>
+public class LoadMailsTask extends Task<Void>
 {
     /**
     *
@@ -51,8 +49,7 @@ public class LoadMailsTask extends Task<List<Mail>>
      * @param mailService {@link IMailService}
      * @param account {@link MailAccount}
      */
-    public LoadMailsTask(final TreeView<Object> treeView, final List<MailFolder> folders, final IMailService mailService,
-            final MailAccount account)
+    public LoadMailsTask(final TreeView<Object> treeView, final List<MailFolder> folders, final IMailService mailService, final MailAccount account)
     {
         super();
 
@@ -65,12 +62,10 @@ public class LoadMailsTask extends Task<List<Mail>>
         this.mailService = mailService;
         this.account = account;
 
-        setOnSucceeded(event ->
-        {
+        setOnSucceeded(event -> {
             treeView.refresh();
         });
-        setOnFailed(event ->
-        {
+        setOnFailed(event -> {
             Throwable th = getException();
 
             LOGGER.error(null, th);
@@ -83,11 +78,12 @@ public class LoadMailsTask extends Task<List<Mail>>
      * @see javafx.concurrent.Task#call()
      */
     @Override
-    protected List<Mail> call() throws Exception
+    protected Void call() throws Exception
     {
         for (MailFolder mf : this.folders)
         {
             List<Mail> mails = this.mailService.loadMails(mf.getAccountID(), mf.getID(), mf.getFullName());
+
             LOGGER.info("Load Mails finished: account={}, folder={}", this.account.getMail(), mf.getFullName());
 
             Platform.runLater(() -> mf.getMails().addAll(mails));

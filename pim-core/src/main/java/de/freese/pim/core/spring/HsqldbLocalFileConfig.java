@@ -2,11 +2,9 @@
 package de.freese.pim.core.spring;
 
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import javax.annotation.PreDestroy;
 import javax.annotation.Resource;
 import javax.sql.DataSource;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -39,15 +37,15 @@ public class HsqldbLocalFileConfig extends AbstractHSQLDBConfig
     /**
      * Die {@link DataSource} wird in {@link #preDestroy()} geschlossen.
      *
-     * @param pimHome String
+     * @param basePath {@link Path}
      * @return {@link DataSource}
      */
     @Bean(destroyMethod = "")
-    public DataSource dataSource(@Value("${pim.home}") final String pimHome)
+    public DataSource dataSource(final Path basePath)
     {
         ISettingsService.MAX_ACTIVE_CONNECTIONS.set(1);
 
-        Path dbPath = Paths.get(pimHome).resolve(getDatabaseName());
+        Path dbPath = basePath.resolve(getDatabaseName());
 
         // ;hsqldb.tx=mvcc
         String url = String.format("jdbc:hsqldb:file:%s;shutdown=true", dbPath);

@@ -2,8 +2,8 @@
 package de.freese.pim.core.mail.service;
 
 import java.util.List;
+import java.util.concurrent.Future;
 import java.util.function.BiConsumer;
-
 import de.freese.pim.core.mail.api.IMailAPI;
 import de.freese.pim.core.mail.api.IMailContent;
 import de.freese.pim.core.mail.model.Mail;
@@ -101,6 +101,17 @@ public interface IMailService
      * @throws Exception Falls was schief geht.
      */
     public List<Mail> loadMails(long accountID, long folderID, String folderFullName) throws Exception;
+
+    /**
+     * Lädt die Mails des Folders vom Provider und aus der DB.
+     *
+     * @param accountID long
+     * @param folderID long
+     * @param folderFullName String
+     * @return {@link List}
+     * @throws Exception Falls was schief geht.
+     */
+    public Future<List<Mail>> loadMails2(long accountID, long folderID, String folderFullName) throws Exception;
 
     /**
      * Ändern eines {@link MailAccount}.

@@ -7,9 +7,6 @@ package de.freese.pim.core.spring;
 import javax.sql.DataSource;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.tomcat.jdbc.pool.PoolProperties;
-import org.flywaydb.core.Flyway;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.DependsOn;
 import org.springframework.jdbc.datasource.SingleConnectionDataSource;
 import de.freese.pim.core.jdbc.SimpleDataSource;
 
@@ -122,24 +119,6 @@ public abstract class AbstractDBConfig
         DataSource dataSource = new org.apache.tomcat.jdbc.pool.DataSource(poolProperties);
 
         return dataSource;
-    }
-
-    /**
-     * @param dataSource {@link DataSource}
-     * @return {@link Flyway}
-     */
-    @Bean(initMethod = "migrate")
-    @DependsOn("dataSource")
-    public Flyway flyway(final DataSource dataSource)
-    {
-        Flyway flyway = new Flyway();
-        flyway.setEncoding("UTF-8");
-        flyway.setBaselineOnMigrate(true);
-        flyway.setDataSource(dataSource);
-        // flyway.setLocations("filesystem:/path/to/migrations/");
-        flyway.setLocations("classpath:db/hsqldb");
-
-        return flyway;
     }
 
     /**

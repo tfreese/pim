@@ -147,7 +147,7 @@ public class PIMAddressbookConsole
 
         try
         {
-            DataSource dataSource = config.dataSource(home.toString());
+            DataSource dataSource = config.dataSource(home);
 
             IAddressBookDAO defaultDAO = new DefaultAddressBookDAO().dataSource(dataSource);
 

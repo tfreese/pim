@@ -2,12 +2,10 @@
 package de.freese.pim.core.spring;
 
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import javax.annotation.PreDestroy;
 import javax.annotation.Resource;
 import javax.sql.DataSource;
 import org.hsqldb.server.Server;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
@@ -73,15 +71,15 @@ public class HsqldbEmbeddedServerDBConfig extends AbstractHSQLDBConfig
     }
 
     /**
-     * @param pimHome String
+     * @param basePath {@link Path}
      * @return {@link Server}
      * @throws Exception Falls was schief geht.
      */
     @Bean(initMethod = "start", destroyMethod = "shutdown")
     // @Scope(ConfigurableBeanFactory#SCOPE_SINGLETON)
-    public Server hsqldbServer(@Value("${pim.home}") final String pimHome) throws Exception
+    public Server hsqldbServer(final Path basePath) throws Exception
     {
-        Path dbPath = Paths.get(pimHome).resolve(getDatabaseName());
+        Path dbPath = basePath.resolve(getDatabaseName());
 
         String dbName = getDatabaseName();
         int port = SocketUtils.findAvailableTcpPort();

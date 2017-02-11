@@ -16,6 +16,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.Future;
 import java.util.concurrent.Semaphore;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
@@ -25,6 +26,8 @@ import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 import javax.mail.internet.MimeMessage;
 import org.apache.commons.lang3.ArrayUtils;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.transaction.annotation.Transactional;
 import de.freese.pim.core.mail.api.IMailAPI;
 import de.freese.pim.core.mail.api.IMailContent;
@@ -136,7 +139,7 @@ public class DefaultMailService extends AbstractService implements IMailService
 
     /**
      * Pfad zum lokalen Speicherort.
-     * 
+     *
      * @return {@link Path}
      */
     protected Path getBasePath()
@@ -302,10 +305,12 @@ public class DefaultMailService extends AbstractService implements IMailService
     @Transactional
     public List<Mail> loadMails(final long accountID, final long folderID, final String folderFullName) throws Exception
     {
-        this.semaphore.acquire();
+        // this.semaphore.acquire();
 
         try
         {
+            getLogger().info("Load Mails: account={}, folder={}", accountID, folderFullName);
+
             IMailAPI mailAPI = getMailAPI(accountID);
 
             Map<Long, Mail> mailMap = getMailDAO().getMails(folderID).stream().collect(Collectors.toMap(Mail::getUID, Function.identity()));
@@ -372,13 +377,26 @@ public class DefaultMailService extends AbstractService implements IMailService
         }
         finally
         {
-            this.semaphore.release();
+            // this.semaphore.release();
         }
     }
 
     /**
+     * @see de.freese.pim.core.mail.service.IMailService#loadMails2(long, long, java.lang.String)
+     */
+    @Override
+    @Async("executorService")
+    @Transactional
+    public Future<List<Mail>> loadMails2(final long accountID, final long folderID, final String folderFullName) throws Exception
+    {
+        List<Mail> mails = loadMails(accountID, folderID, folderFullName);
+
+        return new AsyncResult<>(mails);
+    }
+
+    /**
      * Pfad zum lokalen Speicherort.
-     * 
+     *
      * @param basePath {@link Path}
      */
     public void setBasePath(final Path basePath)

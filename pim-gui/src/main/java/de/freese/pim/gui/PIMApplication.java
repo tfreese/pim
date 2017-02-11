@@ -20,7 +20,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.flyway.FlywayAutoConfiguration;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ApplicationContext;
@@ -65,7 +64,7 @@ import javafx.stage.Window;
 // })
 @SpringBootApplication(exclude =
 {
-        DataSourceAutoConfiguration.class, FlywayAutoConfiguration.class,
+        DataSourceAutoConfiguration.class
 })
 @EnableAsync // @Async("executorService")
 @EnableScheduling
