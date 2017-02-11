@@ -3,11 +3,10 @@ package de.freese.pim.core.addressbook.service;
 
 import java.nio.file.Path;
 import java.util.List;
-import java.util.Objects;
 import org.springframework.transaction.annotation.Transactional;
 import de.freese.pim.core.addressbook.dao.IAddressBookDAO;
 import de.freese.pim.core.addressbook.model.Kontakt;
-import de.freese.pim.core.mail.service.AbstractService;
+import de.freese.pim.core.service.AbstractService;
 
 /**
  * Service für das AddressBook.
@@ -19,20 +18,15 @@ public class DefaultAddressBookService extends AbstractService implements IAddre
     /**
      *
      */
-    private final IAddressBookDAO addressBookDAO;
+    private IAddressBookDAO addressBookDAO = null;
 
     /**
      * Erzeugt eine neue Instanz von {@link DefaultAddressBookService}
-     *
-     * @param addressBookDAO {@link IAddressBookDAO}
      */
-    public DefaultAddressBookService(final IAddressBookDAO addressBookDAO)
+    public DefaultAddressBookService()
     {
         super();
 
-        Objects.requireNonNull(addressBookDAO, "addressBookDAO required");
-
-        this.addressBookDAO = addressBookDAO;
     }
 
     /**
@@ -62,6 +56,14 @@ public class DefaultAddressBookService extends AbstractService implements IAddre
     public boolean deleteKontakt(final long id) throws Exception
     {
         return this.addressBookDAO.deleteKontakt(id);
+    }
+
+    /**
+     * @return {@link IAddressBookDAO}
+     */
+    protected IAddressBookDAO getAddressBookDAO()
+    {
+        return this.addressBookDAO;
     }
 
     /**
@@ -112,6 +114,14 @@ public class DefaultAddressBookService extends AbstractService implements IAddre
     public List<Kontakt> searchKontakte(final String name) throws Exception
     {
         return this.addressBookDAO.searchKontakte(name);
+    }
+
+    /**
+     * @param addressBookDAO {@link IAddressBookDAO}
+     */
+    public void setAddressBookDAO(final IAddressBookDAO addressBookDAO)
+    {
+        this.addressBookDAO = addressBookDAO;
     }
 
     /**

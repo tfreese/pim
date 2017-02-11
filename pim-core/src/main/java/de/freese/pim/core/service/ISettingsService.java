@@ -1,9 +1,7 @@
 // Created: 30.11.2016
 package de.freese.pim.core.service;
 
-import java.nio.file.Path;
 import java.util.concurrent.atomic.AtomicInteger;
-import javax.sql.DataSource;
 
 /**
  * Interface für den Service der Einstellungen.<br>
@@ -39,53 +37,4 @@ public interface ISettingsService
     // {
     // MAX_ACTIVE_CONNECTIONS.set(maxActive);
     // }
-
-    /**
-     * Liefert den DB-Host aus der lokalen Property-Datei.
-     *
-     * @return String
-     */
-    public String getDBHost();
-
-    /**
-     * Liefert das DB-Password aus der lokalen Property-Datei.
-     *
-     * @return String
-     */
-    public String getDBPassword();
-
-    /**
-     * Liefert den DB-Port aus der lokalen Property-Datei.
-     *
-     * @return int
-     */
-    public int getDBPort();
-
-    /**
-     * Liefert den DB-User aus der lokalen Property-Datei.
-     *
-     * @return String
-     */
-    public String getDBUser();
-
-    /**
-     * Liefert das fest definiert Home-Verzeichnis der PIM-Anwendung.
-     *
-     * @return {@link Path}
-     */
-    public Path getHome();
-
-    /**
-     * Liefert den Namen des angemeldeten Systemusers.
-     *
-     * @return String
-     */
-    public String getSystemUserName();
-
-    /**
-     * Setzt die {@link DataSource}.
-     *
-     * @param dataSource {@link DataSource}
-     */
-    public void setDataSource(final DataSource dataSource);
 }

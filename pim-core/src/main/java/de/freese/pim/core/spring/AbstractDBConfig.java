@@ -2,7 +2,7 @@
  * Created: 10.02.2017
  */
 
-package de.freese.pim.core.db;
+package de.freese.pim.core.spring;
 
 import javax.sql.DataSource;
 import org.apache.commons.lang3.StringUtils;

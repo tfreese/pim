@@ -2,9 +2,11 @@
 package de.freese.pim.core.spring;
 
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import javax.annotation.PreDestroy;
 import javax.annotation.Resource;
 import javax.sql.DataSource;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -36,17 +38,16 @@ public class HsqldbLocalFileConfig extends AbstractHSQLDBConfig
 
     /**
      * Die {@link DataSource} wird in {@link #preDestroy()} geschlossen.
-     * 
-     * @param settingsService {@link ISettingsService}
+     *
+     * @param pimHome String
      * @return {@link DataSource}
      */
     @Bean(destroyMethod = "")
-    public DataSource dataSource(final ISettingsService settingsService)
+    public DataSource dataSource(@Value("${pim.home}") final String pimHome)
     {
         ISettingsService.MAX_ACTIVE_CONNECTIONS.set(1);
 
-        Path home = settingsService.getHome();
-        Path dbPath = home.resolve(getDatabaseName());
+        Path dbPath = Paths.get(pimHome).resolve(getDatabaseName());
 
         // ;hsqldb.tx=mvcc
         String url = String.format("jdbc:hsqldb:file:%s;shutdown=true", dbPath);
@@ -62,7 +63,7 @@ public class HsqldbLocalFileConfig extends AbstractHSQLDBConfig
     }
 
     /**
-     * @see de.freese.pim.core.db.AbstractDBConfig#preDestroy()
+     * @see de.freese.pim.core.spring.AbstractDBConfig#preDestroy()
      */
     @Override
     @PreDestroy

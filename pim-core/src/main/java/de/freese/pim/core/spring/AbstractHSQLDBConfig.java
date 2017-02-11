@@ -8,7 +8,6 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 import javax.sql.DataSource;
-import de.freese.pim.core.db.AbstractDBConfig;
 
 /**
  * Basis-Konfiguration der Datenbank für HSQLDB.
@@ -26,7 +25,7 @@ public abstract class AbstractHSQLDBConfig extends AbstractDBConfig
     }
 
     /**
-     * @see de.freese.pim.core.db.AbstractDBConfig#getDriver()
+     * @see de.freese.pim.core.spring.AbstractDBConfig#getDriver()
      */
     @Override
     protected String getDriver()
@@ -35,7 +34,7 @@ public abstract class AbstractHSQLDBConfig extends AbstractDBConfig
     }
 
     /**
-     * @see de.freese.pim.core.db.AbstractDBConfig#getValidationQuery()
+     * @see de.freese.pim.core.spring.AbstractDBConfig#getValidationQuery()
      */
     @Override
     protected String getValidationQuery()

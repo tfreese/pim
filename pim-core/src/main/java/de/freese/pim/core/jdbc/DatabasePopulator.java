@@ -1,5 +1,5 @@
 // Created: 30.11.2016
-package de.freese.pim.core.db;
+package de.freese.pim.core.jdbc;
 
 import java.io.BufferedReader;
 import java.io.InputStream;

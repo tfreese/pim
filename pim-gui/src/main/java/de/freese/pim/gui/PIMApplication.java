@@ -2,7 +2,7 @@ package de.freese.pim.gui;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -31,7 +31,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import com.sun.javafx.application.LauncherImpl;
 import de.freese.pim.core.addressbook.service.IAddressBookService;
 import de.freese.pim.core.mail.service.IMailService;
-import de.freese.pim.core.service.ISettingsService;
 import de.freese.pim.gui.main.MainController;
 import de.freese.pim.gui.utils.FXUtils;
 import de.freese.pim.gui.utils.PIMFXThreadGroup;
@@ -73,14 +72,9 @@ import javafx.stage.Window;
 public class PIMApplication extends Application implements ApplicationContextAware
 {
     /**
-    *
-    */
-    private static ApplicationContext applicationContext = null;
-
-    /**
      *
      */
-    public static final List<AutoCloseable> CLOSEABLES = new ArrayList<>();
+    private static ApplicationContext applicationContext = null;
 
     /**
      *
@@ -199,14 +193,6 @@ public class PIMApplication extends Application implements ApplicationContextAwa
     }
 
     /**
-     * @return {@link ISettingsService}
-     */
-    public static ISettingsService getSettingService()
-    {
-        return getApplicationContext().getBean("settingsService", ISettingsService.class);
-    }
-
-    /**
      * The main() method is ignored in correctly deployed JavaFX application. main() serves only as fallback in case the application can not be launched through
      * deployment artifacts, e.g., in IDEs with limited FX support. NetBeans ignores main().
      *
@@ -244,7 +230,6 @@ public class PIMApplication extends Application implements ApplicationContextAwa
 
         // System.setProperty("org.slf4j.simpleLogger.log.de.freese.pim", "DEBUG");
         // SysOutOverSLF4J.sendSystemOutAndErrToSLF4J();
-
         Thread.setDefaultUncaughtExceptionHandler((t, ex) -> {
             LOGGER.error("***Default exception handler***");
             LOGGER.error(null, ex);
@@ -264,14 +249,6 @@ public class PIMApplication extends Application implements ApplicationContextAwa
         }, "PIM-Startup");
         // thread.setDaemon(false);
         thread.start();
-    }
-
-    /**
-     * @param closeable {@link AutoCloseable}
-     */
-    public static void registerCloseable(final AutoCloseable closeable)
-    {
-        CLOSEABLES.add(closeable);
     }
 
     /**
@@ -360,11 +337,12 @@ public class PIMApplication extends Application implements ApplicationContextAwa
         notifyPreloader(new PIMPreloaderNotification("Start P.I.M."));
         // Utils.sleep(1, TimeUnit.SECONDS);
 
-        Path home = getSettingService().getHome();
+        String pimHome = getApplicationContext().getEnvironment().getProperty("pim.home");
+        Path homePath = Paths.get(pimHome);
 
-        if (!Files.exists(home))
+        if (!Files.exists(homePath))
         {
-            Files.createDirectories(home);
+            Files.createDirectories(homePath);
         }
 
         // getHostServices().showDocument("https://eclipse.org");
@@ -388,8 +366,6 @@ public class PIMApplication extends Application implements ApplicationContextAwa
     {
         // "JavaFX Application Thread" umbenennen.
         Thread.currentThread().setName("JavaFX-Appl.");
-
-        LOGGER.info("Start P.I.M.");
 
         PIMApplication.mainWindow = primaryStage;
 
@@ -440,7 +416,6 @@ public class PIMApplication extends Application implements ApplicationContextAwa
 
                     // System.setOut(new PrintStream(new TextAreaOutputStream(MainView.LOG_TEXT_AREA)));
                     // System.setErr(new PrintStream(new TextAreaOutputStream(MainView.LOG_TEXT_AREA)));
-
                     mainController.selectDefaultView();
                 });
             }
@@ -467,18 +442,6 @@ public class PIMApplication extends Application implements ApplicationContextAwa
     public void stop() throws Exception
     {
         LOGGER.info("Stop P.I.M.");
-
-        for (AutoCloseable closeable : CLOSEABLES)
-        {
-            try
-            {
-                closeable.close();
-            }
-            catch (Exception ex)
-            {
-                LOGGER.error(null, ex);
-            }
-        }
 
         // Verhindert Fehlerdialog, wenn es Probleme beim Start gibt, z.B. fehlende Resourcen.
         System.exit(0);

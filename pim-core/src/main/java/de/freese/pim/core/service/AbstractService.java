@@ -1,12 +1,9 @@
 // Created: 07.02.2017
-package de.freese.pim.core.mail.service;
+package de.freese.pim.core.service;
 
 import java.util.concurrent.ExecutorService;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import de.freese.pim.core.service.ISettingsService;
 
 /**
  * Basis-Implementierung eines Service.
@@ -26,32 +23,11 @@ public abstract class AbstractService
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     /**
-    *
-    */
-    private ISettingsService settingsService = null;
-
-    /**
      * Erzeugt eine neue Instanz von {@link AbstractService}
      */
     public AbstractService()
     {
         super();
-    }
-
-    /**
-     * @param executorService {@link ExecutorService}
-     */
-    public void setExecutorService(final ExecutorService executorService)
-    {
-        this.executorService = executorService;
-    }
-
-    /**
-     * @param settingsService {@link ISettingsService}
-     */
-    public void setSettingsService(final ISettingsService settingsService)
-    {
-        this.settingsService = settingsService;
     }
 
     /**
@@ -71,10 +47,11 @@ public abstract class AbstractService
     }
 
     /**
-     * @return {@link ISettingsService}
+     * @param executorService {@link ExecutorService}
      */
-    protected ISettingsService getSettingsService()
+    public void setExecutorService(final ExecutorService executorService)
     {
-        return this.settingsService;
+        this.executorService = executorService;
     }
+
 }

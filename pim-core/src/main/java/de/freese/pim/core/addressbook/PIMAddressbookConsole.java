@@ -7,6 +7,7 @@ import java.io.PrintStream;
 import java.lang.reflect.Proxy;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,11 +27,8 @@ import de.freese.pim.core.addressbook.dao.IAddressBookDAO;
 import de.freese.pim.core.addressbook.model.Kontakt;
 import de.freese.pim.core.addressbook.model.KontaktAttribut;
 import de.freese.pim.core.addressbook.service.DefaultAddressBookService;
-import de.freese.pim.core.db.HsqldbLocalFile;
-import de.freese.pim.core.db.IDataSourceBean;
 import de.freese.pim.core.jdbc.tx.TransactionalInvocationHandler;
-import de.freese.pim.core.service.ISettingsService;
-import de.freese.pim.core.service.SettingService;
+import de.freese.pim.core.spring.HsqldbLocalFileConfig;
 import de.freese.pim.core.utils.PreserveOrderOptionGroup;
 import de.freese.pim.core.utils.Utils;
 
@@ -138,28 +136,28 @@ public class PIMAddressbookConsole
 
         // SysOutOverSLF4J.sendSystemOutAndErrToSLF4J();
 
-        ISettingsService settingsService = SettingService.getInstance();
-
-        Path home = settingsService.getHome();
+        Path home = Paths.get(System.getProperty("user.home"), ".pim");
 
         if (!Files.exists(home))
         {
             Files.createDirectories(home);
         }
 
-        try (IDataSourceBean dataSourceBean = new HsqldbLocalFile())
-        {
-            dataSourceBean.configure(settingsService);
-            dataSourceBean.testConnection();
-            dataSourceBean.populateIfEmpty(null);
+        HsqldbLocalFileConfig config = new HsqldbLocalFileConfig();
 
-            DataSource dataSource = dataSourceBean.getDataSource();
+        try
+        {
+            DataSource dataSource = config.dataSource(home.toString());
+
             IAddressBookDAO defaultDAO = new DefaultAddressBookDAO().dataSource(dataSource);
+
+            DefaultAddressBookService defaultAddressBookService = new DefaultAddressBookService();
+            defaultAddressBookService.setAddressBookDAO(defaultDAO);
 
             IAddressBookDAO addressBookDAO = (IAddressBookDAO) Proxy.newProxyInstance(PIMAddressbookConsole.class.getClassLoader(), new Class<?>[]
             {
                     IAddressBookDAO.class
-            }, new TransactionalInvocationHandler(dataSource, new DefaultAddressBookService(defaultDAO)));
+            }, new TransactionalInvocationHandler(dataSource, defaultAddressBookService));
 
             PIMAddressbookConsole addressbook = new PIMAddressbookConsole();
             addressbook.setAddressBookDAO(addressBookDAO);
@@ -216,8 +214,10 @@ public class PIMAddressbookConsole
                 addressbook.search(args[0]);
             }
         }
-
-        // dataSource.destroy();
+        finally
+        {
+            config.preDestroy();
+        }
     }
 
     /**

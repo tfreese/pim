@@ -34,6 +34,7 @@ import de.freese.pim.core.mail.impl.JavaMailContent;
 import de.freese.pim.core.mail.model.Mail;
 import de.freese.pim.core.mail.model.MailAccount;
 import de.freese.pim.core.mail.model.MailFolder;
+import de.freese.pim.core.service.AbstractService;
 import de.freese.pim.core.service.ISettingsService;
 import de.freese.pim.core.utils.io.MonitorOutputStream;
 
@@ -44,6 +45,11 @@ import de.freese.pim.core.utils.io.MonitorOutputStream;
  */
 public class DefaultMailService extends AbstractService implements IMailService
 {
+    /**
+     *
+     */
+    private Path basePath = null;
+
     /**
      *
      */
@@ -73,8 +79,7 @@ public class DefaultMailService extends AbstractService implements IMailService
     @Override
     public void connectAccount(final MailAccount account) throws Exception
     {
-        Path basePath = getSettingsService().getHome();
-        Path accountPath = basePath.resolve(account.getMail());
+        Path accountPath = getBasePath().resolve(account.getMail());
 
         IMailAPI mailAPI = new JavaMailAPI(account, accountPath);
         mailAPI.setExecutorService(getExecutorService());
@@ -127,6 +132,16 @@ public class DefaultMailService extends AbstractService implements IMailService
         }
 
         this.mailApiMap.clear();
+    }
+
+    /**
+     * Pfad zum lokalen Speicherort.
+     * 
+     * @return {@link Path}
+     */
+    protected Path getBasePath()
+    {
+        return this.basePath;
     }
 
     /**
@@ -359,6 +374,16 @@ public class DefaultMailService extends AbstractService implements IMailService
         {
             this.semaphore.release();
         }
+    }
+
+    /**
+     * Pfad zum lokalen Speicherort.
+     * 
+     * @param basePath {@link Path}
+     */
+    public void setBasePath(final Path basePath)
+    {
+        this.basePath = basePath;
     }
 
     /**

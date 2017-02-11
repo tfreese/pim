@@ -14,6 +14,11 @@ import java.nio.file.Paths;
 public abstract class AbstractPimTest
 {
     /**
+    *
+    */
+    public static final Path HOME_DEFAULT = Paths.get(System.getProperty("user.home"), ".pim");
+
+    /**
      * {@link Path} für TMP-Dateien.
      */
     public static final Path TMP_TEST_PATH = Paths.get(System.getProperty("user.dir"), "test");

@@ -140,18 +140,21 @@ public class TestAddressbookDAO extends AbstractDAOTextCase
     @Parameters(name = "DAO: {0}") // {index}
     public static Iterable<Object[]> connectionPool() throws Exception
     {
+        DefaultAddressBookService defaultAddressBookService = new DefaultAddressBookService();
+        defaultAddressBookService.setAddressBookDAO(new DefaultAddressBookDAO().jdbcTemplate(new TestJdbcTemplate().dataSource(dataSources.get(0))));
+
         return Arrays.asList(new Object[][]
         {
                 {
-                        TxLambdaAddressBookDAO.class.getSimpleName(),
-                        new TxLambdaAddressBookDAO().jdbcTemplate(new TestJdbcTemplate().dataSource(dataSources.get(0)))
-                },
-                {
-                        DefaultAddressBookService.class.getSimpleName(),
+                        DefaultAddressBookDAO.class.getSimpleName(),
                         (IAddressBookDAO) Proxy.newProxyInstance(TestAddressbookDAO.class.getClassLoader(), new Class<?>[]
                         {
                                 IAddressBookDAO.class
-                        }, new TransactionalInvocationHandler(dataSources.get(1), new DefaultAddressBookService(new DefaultAddressBookDAO().jdbcTemplate(new TestJdbcTemplate().dataSource(dataSources.get(1))))))
+                        }, new TransactionalInvocationHandler(dataSources.get(1), defaultAddressBookService))
+                },
+                {
+                        TxLambdaAddressBookDAO.class.getSimpleName(),
+                        new TxLambdaAddressBookDAO().jdbcTemplate(new TestJdbcTemplate().dataSource(dataSources.get(1)))
                 }
         });
     }

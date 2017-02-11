@@ -9,7 +9,6 @@ import org.slf4j.LoggerFactory;
 import de.freese.pim.core.mail.model.MailAccount;
 import de.freese.pim.core.mail.model.MailFolder;
 import de.freese.pim.core.mail.service.IMailService;
-import de.freese.pim.gui.PIMApplication;
 import de.freese.pim.gui.view.ErrorDialog;
 import javafx.concurrent.Task;
 import javafx.scene.control.TreeItem;
@@ -71,7 +70,7 @@ public class InitMailAPITask extends Task<List<MailFolder>>
             for (List<MailFolder> list : partitions)
             {
                 // Laden der Mails.
-                PIMApplication.getExecutorService().execute(new LoadMailsTask(treeView, list, mailService, account));
+                // PIMApplication.getExecutorService().execute(new LoadMailsTask(treeView, list, mailService, account));
             }
         });
         setOnFailed(event -> {

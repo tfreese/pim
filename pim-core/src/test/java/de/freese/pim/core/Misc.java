@@ -8,8 +8,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
-
-import de.freese.pim.core.service.SettingService;
 import de.freese.pim.core.utils.Utils;
 
 /**
@@ -22,7 +20,7 @@ public class Misc
      */
     public static void mailFiles() throws Exception
     {
-        Path basePath = SettingService.getInstance().getHome().resolve("commercial@freese-home.de");
+        Path basePath = AbstractPimTest.HOME_DEFAULT.resolve("commercial@freese-home.de");
 
         Consumer<Path> log = p -> System.out.printf("%s: FileName = %s%n", p, p.getFileName());
 
@@ -72,8 +70,7 @@ public class Misc
 
         Predicate<Path> isDirectory = Files::isDirectory;
         // Predicate<Path> isHidden = p -> p.getFileName().toString().startsWith(".");
-        Predicate<Path> isHidden = p ->
-        {
+        Predicate<Path> isHidden = p -> {
             try
             {
                 return Files.isHidden(p);

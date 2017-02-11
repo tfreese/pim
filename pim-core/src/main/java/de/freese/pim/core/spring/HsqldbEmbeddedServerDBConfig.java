@@ -2,15 +2,17 @@
 package de.freese.pim.core.spring;
 
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import javax.annotation.PreDestroy;
 import javax.annotation.Resource;
 import javax.sql.DataSource;
-import org.hsqldb.Database;
 import org.hsqldb.server.Server;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.Profile;
+import org.springframework.util.SocketUtils;
 import de.freese.pim.core.service.ISettingsService;
 import de.freese.pim.core.utils.Utils;
 
@@ -50,7 +52,7 @@ public class HsqldbEmbeddedServerDBConfig extends AbstractHSQLDBConfig
      * @return {@link DataSource}
      */
     @Bean(destroyMethod = "")
-    @DependsOn("dbServer")
+    @DependsOn("hsqldbServer")
     public DataSource dataSource(final Server server)
     {
         String userName = "sa";
@@ -71,19 +73,18 @@ public class HsqldbEmbeddedServerDBConfig extends AbstractHSQLDBConfig
     }
 
     /**
-     * @param settingsService {@link ISettingsService}
+     * @param pimHome String
      * @return {@link Server}
      * @throws Exception Falls was schief geht.
      */
-    @Bean(initMethod = "start", destroyMethod = "")
+    @Bean(initMethod = "start", destroyMethod = "shutdown")
     // @Scope(ConfigurableBeanFactory#SCOPE_SINGLETON)
-    public Server dbServer(final ISettingsService settingsService) throws Exception
+    public Server hsqldbServer(@Value("${pim.home}") final String pimHome) throws Exception
     {
-        Path home = settingsService.getHome();
-        Path dbPath = home.resolve(getDatabaseName());
+        Path dbPath = Paths.get(pimHome).resolve(getDatabaseName());
 
         String dbName = getDatabaseName();
-        int port = settingsService.getDBPort();
+        int port = SocketUtils.findAvailableTcpPort();
 
         if (port <= 0)
         {
@@ -93,8 +94,9 @@ public class HsqldbEmbeddedServerDBConfig extends AbstractHSQLDBConfig
         Server server = new Server();
         server.setLogWriter(null); // can use custom writer
         server.setErrWriter(null); // can use custom writer
-        server.setSilent(true);
         server.setNoSystemExit(true);
+        server.setSilent(true);
+        server.setTrace(false);
         // HsqlProperties p = new HsqlProperties();
         // p.setProperty("server.database.0", "file:/" + dbPath);
         // p.setProperty("server.dbname.0", getDBName());
@@ -110,17 +112,17 @@ public class HsqldbEmbeddedServerDBConfig extends AbstractHSQLDBConfig
     }
 
     /**
-     * @see de.freese.pim.core.db.AbstractDBConfig#preDestroy()
+     * @see de.freese.pim.core.spring.AbstractDBConfig#preDestroy()
      */
     @Override
     @PreDestroy
     public void preDestroy() throws Exception
     {
-        shutdownCompact(this.dataSource);
+        // shutdownCompact(this.dataSource);
         close(this.dataSource);
-
-        // server.shutdownWithCatalogs(Database.CLOSEMODE_COMPACT);
-        this.server.shutdownWithCatalogs(Database.CLOSEMODE_IMMEDIATELY);
-        // server.stop();
+        //
+        // // server.shutdownWithCatalogs(Database.CLOSEMODE_COMPACT);
+        // this.server.shutdownWithCatalogs(Database.CLOSEMODE_IMMEDIATELY);
+        // // server.stop();
     }
 }
