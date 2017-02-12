@@ -8,7 +8,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
-import de.freese.pim.core.utils.Utils;
+import de.freese.pim.common.utils.Utils;
 
 /**
  * @author Thomas Freese

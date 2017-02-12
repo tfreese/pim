@@ -22,15 +22,15 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import de.freese.pim.common.jdbc.tx.TransactionalInvocationHandler;
+import de.freese.pim.common.utils.PreserveOrderOptionGroup;
+import de.freese.pim.common.utils.Utils;
 import de.freese.pim.core.addressbook.dao.DefaultAddressBookDAO;
 import de.freese.pim.core.addressbook.dao.IAddressBookDAO;
 import de.freese.pim.core.addressbook.model.Kontakt;
 import de.freese.pim.core.addressbook.model.KontaktAttribut;
 import de.freese.pim.core.addressbook.service.DefaultAddressBookService;
-import de.freese.pim.core.jdbc.tx.TransactionalInvocationHandler;
 import de.freese.pim.core.spring.HsqldbLocalFileConfig;
-import de.freese.pim.core.utils.PreserveOrderOptionGroup;
-import de.freese.pim.core.utils.Utils;
 
 /**
  * Console-Client für das Addressbuch.<br>

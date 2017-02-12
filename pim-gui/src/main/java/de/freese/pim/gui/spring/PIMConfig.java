@@ -4,29 +4,18 @@ package de.freese.pim.gui.spring;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
-import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
 import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
-import org.springframework.scheduling.TaskScheduler;
-import org.springframework.scheduling.annotation.Async;
-import org.springframework.scheduling.concurrent.ConcurrentTaskScheduler;
 import de.freese.pim.core.addressbook.dao.DefaultAddressBookDAO;
 import de.freese.pim.core.addressbook.service.DefaultAddressBookService;
 import de.freese.pim.core.addressbook.service.IAddressBookService;
 import de.freese.pim.core.mail.dao.DefaultMailDAO;
 import de.freese.pim.core.mail.service.DefaultMailService;
 import de.freese.pim.core.mail.service.IMailService;
-import de.freese.pim.core.thread.PIMThreadFactory;
-import de.freese.pim.core.thread.TunedThreadPoolExecutor;
 
 /**
  * Spring-Konfiguration von PIM.
@@ -34,7 +23,10 @@ import de.freese.pim.core.thread.TunedThreadPoolExecutor;
  * @author Thomas Freese
  */
 @Configuration
-@ComponentScan(basePackages = "de.freese.pim.core.spring")
+@ComponentScan(basePackages =
+{
+        "de.freese.pim.core.spring", "de.freese.pim.common.spring"
+})
 public class PIMConfig
 {
     /**
@@ -68,62 +60,12 @@ public class PIMConfig
      * @return {@link Path}
      */
     @Bean
+    @Primary
     public Path basePath(@Value("${pim.home}") final String pimHome)
     {
         Path basePath = Paths.get(pimHome);
 
         return basePath;
-    }
-
-    // /**
-    // * @return {@link ThreadPoolExecutorFactoryBean}
-    // */
-    // @Bean
-    // public ThreadPoolExecutorFactoryBean executorService()
-    // {
-    // ThreadPoolExecutorFactoryBean bean = new ThreadPoolExecutorFactoryBean();
-    // bean.setCorePoolSize(3);
-    // bean.setMaxPoolSize(10);
-    // bean.setKeepAliveSeconds(60);
-    // bean.setQueueCapacity(20);
-    // bean.setThreadPriority(5);
-    // bean.setThreadNamePrefix("pimthread-");
-    // bean.setRejectedExecutionHandler(new ThreadPoolExecutor.AbortPolicy());
-    // bean.setExposeUnconfigurableExecutor(true);
-    //
-    // return bean;
-    // }
-    /**
-     * http://www.angelikalanger.com/Articles/EffectiveJava/20.ThreadPools/20.ThreadPools.html
-     *
-     * @return {@link ExecutorService}
-     */
-    @Bean(destroyMethod = "shutdownNow")
-    public ExecutorService executorService()
-    {
-        int coreSize = 1;
-        // int maxSize = Runtime.getRuntime().availableProcessors() + 1;
-        int maxSize = 10;
-        int queueCapacity = 100;
-
-        // Threads leben max. 60 Sekunden, wenn es nix zu tun gibt, min. 3 Threads, max. 10.
-        // BlockingQueue<Runnable> workQueue = new SynchronousQueue<>(false);
-
-        // BoundedQueue
-        // BlockingQueue<Runnable> workQueue = new LinkedBlockingQueue<>(20);
-
-        // Der ThreadPool erzeugt erst neue Threads, wenn die Queue voll ist maxSize nocht nicht erreicht !
-
-        ThreadFactory threadFactory = new PIMThreadFactory("pimthread", Thread.NORM_PRIORITY);
-
-        // ThreadPoolExecutor executor =
-        // new ThreadPoolExecutor(coreSize, maxSize, 60, TimeUnit.SECONDS, workQueue, threadFactory, new ThreadPoolExecutor.AbortPolicy());
-        // executor.allowCoreThreadTimeOut(true);
-        ThreadPoolExecutor executor = new TunedThreadPoolExecutor(coreSize, maxSize, 60, TimeUnit.SECONDS, queueCapacity, threadFactory);
-
-        ExecutorService executorService = Executors.unconfigurableExecutorService(executor);
-
-        return executorService;
     }
 
     // /**
@@ -166,37 +108,5 @@ public class PIMConfig
 
         return defaultMailService;
 
-    }
-
-    /**
-     * @return {@link ExecutorService}
-     */
-    @Bean(destroyMethod = "shutdownNow")
-    public ExecutorService scheduledExecutorService()
-    {
-        ThreadFactory threadFactory = new PIMThreadFactory("pimscheduler", Thread.NORM_PRIORITY);
-
-        ScheduledExecutorService scheduledExecutor = new ScheduledThreadPoolExecutor(3, threadFactory, new ThreadPoolExecutor.AbortPolicy());
-        ScheduledExecutorService scheduledExecutorService = Executors.unconfigurableScheduledExecutorService(scheduledExecutor);
-
-        return scheduledExecutorService;
-    }
-
-    /**
-     * Wird für {@link Async} benötigt.
-     *
-     * @param executorService {@link ExecutorService}
-     * @param scheduledExecutorService {@link ScheduledExecutorService}
-     * @return {@link TaskScheduler}
-     */
-    @Bean
-    @Primary
-    public TaskScheduler taskScheduler(final ExecutorService executorService, final ScheduledExecutorService scheduledExecutorService)
-    {
-        // LOGGER.info("Create TaskScheduler");
-
-        ConcurrentTaskScheduler bean = new ConcurrentTaskScheduler(executorService, scheduledExecutorService);
-
-        return bean;
     }
 }

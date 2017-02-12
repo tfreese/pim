@@ -23,8 +23,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.sun.javafx.binding.StringFormatter;
-
-import de.freese.pim.core.utils.Utils;
+import de.freese.pim.common.utils.Utils;
 import de.freese.pim.gui.PIMApplication;
 import de.freese.pim.gui.controller.IController;
 import de.freese.pim.gui.view.IView;

@@ -14,8 +14,7 @@ import org.junit.Assert;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
-
-import de.freese.pim.core.utils.Crypt;
+import de.freese.pim.common.utils.Crypt;
 
 /**
  * Testklasse für {@link Crypt}

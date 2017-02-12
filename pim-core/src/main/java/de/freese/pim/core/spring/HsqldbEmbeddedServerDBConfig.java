@@ -11,8 +11,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.Profile;
 import org.springframework.util.SocketUtils;
+import de.freese.pim.common.utils.Utils;
 import de.freese.pim.core.service.ISettingsService;
-import de.freese.pim.core.utils.Utils;
 
 /**
  * Spring-Konfiguration der Datenbank.

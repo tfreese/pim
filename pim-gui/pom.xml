@@ -67,6 +67,11 @@
         <!-- compile scope -->
         <dependency>
             <groupId>de.freese.pim</groupId>
+            <artifactId>pim-common</artifactId>
+            <version>${project.version}</version>
+        </dependency>        
+        <dependency>
+            <groupId>de.freese.pim</groupId>
             <artifactId>pim-core</artifactId>
             <version>${project.version}</version>
         </dependency>

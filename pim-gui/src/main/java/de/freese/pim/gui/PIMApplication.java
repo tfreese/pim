@@ -3,7 +3,6 @@ package de.freese.pim.gui;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutorService;
@@ -28,8 +27,6 @@ import org.springframework.core.io.Resource;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import com.sun.javafx.application.LauncherImpl;
-import de.freese.pim.core.addressbook.service.IAddressBookService;
-import de.freese.pim.core.mail.service.IMailService;
 import de.freese.pim.gui.main.MainController;
 import de.freese.pim.gui.utils.FXUtils;
 import de.freese.pim.gui.utils.PIMFXThreadGroup;
@@ -55,19 +52,13 @@ import javafx.stage.Window;
  * @author Thomas Freese
  */
 @SuppressWarnings("restriction")
-// @SpringBootConfiguration
-// @EnableAutoConfiguration
-// @SpringBootApplication(exclude =
-// {
-// // disabled, da multiple Instanzen aus COMPASS und BIJAVA
-// DataSourceAutoConfiguration.class, DataSourceTransactionManagerAutoConfiguration.class
-// })
 @SpringBootApplication(exclude =
 {
         DataSourceAutoConfiguration.class
 })
 @EnableAsync // @Async("executorService")
 @EnableScheduling
+// @EnableTransactionManagement // Wird durch Spring-Boot automatisch konfiguriert, wenn DataSource-Bean vorhanden.
 public class PIMApplication extends Application implements ApplicationContextAware
 {
     /**
@@ -99,17 +90,9 @@ public class PIMApplication extends Application implements ApplicationContextAwa
     }
 
     /**
-     * @return {@link IAddressBookService}
-     */
-    public static IAddressBookService getAddressBookService()
-    {
-        return getApplicationContext().getBean("addressBookService", IAddressBookService.class);
-    }
-
-    /**
      * @return {@link ApplicationContext}
      */
-    private static ApplicationContext getApplicationContext()
+    public static ApplicationContext getApplicationContext()
     {
         return applicationContext;
     }
@@ -144,14 +127,6 @@ public class PIMApplication extends Application implements ApplicationContextAwa
     public static ExecutorService getExecutorService()
     {
         return getApplicationContext().getBean("executorService", ExecutorService.class);
-    }
-
-    /**
-     * @return {@link IMailService}
-     */
-    public static IMailService getMailService()
-    {
-        return getApplicationContext().getBean("mailService", IMailService.class);
     }
 
     /**
@@ -220,12 +195,13 @@ public class PIMApplication extends Application implements ApplicationContextAwa
 
         // java.util.logging ausschalten.
         // LogManager.getLogManager().reset();
-        for (String name : Arrays.asList(java.util.logging.Logger.GLOBAL_LOGGER_NAME, "com.sun.webkit.perf.Locks", "com.sun.webkit.perf.WCGraphicsPerfLogger",
-                "com.sun.webkit.perf.WCFontPerfLogger"))
-        {
-            java.util.logging.Logger javaLogger = java.util.logging.Logger.getLogger(name);
-            javaLogger.setLevel(java.util.logging.Level.OFF);
-        }
+        // for (String name : Arrays.asList(java.util.logging.Logger.GLOBAL_LOGGER_NAME, "com.sun.webkit.perf.Locks",
+        // "com.sun.webkit.perf.WCGraphicsPerfLogger",
+        // "com.sun.webkit.perf.WCFontPerfLogger"))
+        // {
+        // java.util.logging.Logger javaLogger = java.util.logging.Logger.getLogger(name);
+        // javaLogger.setLevel(java.util.logging.Level.OFF);
+        // }
 
         // System.setProperty("org.slf4j.simpleLogger.log.de.freese.pim", "DEBUG");
         // SysOutOverSLF4J.sendSystemOutAndErrToSLF4J();

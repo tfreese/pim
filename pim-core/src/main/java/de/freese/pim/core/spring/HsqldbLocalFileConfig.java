@@ -8,7 +8,7 @@ import javax.sql.DataSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
-import de.freese.pim.core.jdbc.SimpleDataSource;
+import de.freese.pim.common.jdbc.SimpleDataSource;
 import de.freese.pim.core.service.ISettingsService;
 
 /**

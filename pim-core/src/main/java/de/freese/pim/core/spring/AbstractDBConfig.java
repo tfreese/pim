@@ -8,7 +8,7 @@ import javax.sql.DataSource;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.tomcat.jdbc.pool.PoolProperties;
 import org.springframework.jdbc.datasource.SingleConnectionDataSource;
-import de.freese.pim.core.jdbc.SimpleDataSource;
+import de.freese.pim.common.jdbc.SimpleDataSource;
 
 /**
  * Basis-Konfiguration der Datenbank.

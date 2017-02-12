@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <prerequisites>
         <maven>3.3.3</maven>
@@ -78,13 +78,13 @@
                     <version>${version:org.codehaus.mojo:exec-maven-plugin}</version>
                 </plugin>
                 <!--plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>versions-maven-plugin</artifactId>
-                <version>${version:org.codehaus.mojo:versions-maven-plugin}</version>
-                <configuration>
-                <rulesUri>file:${user.home}/.m2/rule-set.xml</rulesUri>
-                </configuration>
-                </plugin -->
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>versions-maven-plugin</artifactId>
+                    <version>${version:org.codehaus.mojo:versions-maven-plugin}</version>
+                    <configuration>
+                    <rulesUri>file:${user.home}/.m2/rule-set.xml</rulesUri>
+                    </configuration>
+                    </plugin -->
                 <plugin><!-- spring-boot:run, clean package spring-boot:repackage für executable jar -->
                     <groupId>org.springframework.boot</groupId>
                     <artifactId>spring-boot-maven-plugin</artifactId>
@@ -113,7 +113,7 @@
                 <executions>
                     <!-- Bug?: Überschreibt WARs und EARs. -->
                     <!--execution> <id>bundle-classes</id> <phase>package</phase> <goals>
-                    <goal>jar</goal> </goals> </execution -->
+                        <goal>jar</goal> </goals> </execution -->
                     <execution>
                         <id>bundle-classes-test</id>
                         <phase>package</phase>
@@ -261,6 +261,11 @@
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-test</artifactId>
                 <version>${version:org.springframework:spring}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-autoconfigure</artifactId>
+                <version>${version:org.springframework.boot:spring-boot}</version>
             </dependency>
             <dependency>
                 <groupId>org.springframework.boot</groupId>

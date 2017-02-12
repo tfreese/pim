@@ -19,15 +19,14 @@ import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 
 import org.apache.commons.lang3.StringUtils;
-
+import de.freese.pim.common.jdbc.RowMapper;
+import de.freese.pim.common.utils.Crypt;
+import de.freese.pim.common.utils.Utils;
 import de.freese.pim.core.dao.AbstractDAO;
-import de.freese.pim.core.jdbc.RowMapper;
 import de.freese.pim.core.mail.model.Mail;
 import de.freese.pim.core.mail.model.MailAccount;
 import de.freese.pim.core.mail.model.MailFolder;
 import de.freese.pim.core.mail.model.MailPort;
-import de.freese.pim.core.utils.Crypt;
-import de.freese.pim.core.utils.Utils;
 
 /**
  * Basis DAO-Implementierung für die Mailverwaltung.<br>
@@ -51,7 +50,7 @@ public class AbstractMailDAO extends AbstractDAO<IMailDAO> implements IMailDAO
         }
 
         /**
-         * @see de.freese.pim.core.jdbc.RowMapper#map(java.sql.ResultSet, int)
+         * @see de.freese.pim.common.jdbc.RowMapper#map(java.sql.ResultSet, int)
          */
         @Override
         public MailAccount map(final ResultSet rs, final int rowNum) throws SQLException
@@ -98,7 +97,7 @@ public class AbstractMailDAO extends AbstractDAO<IMailDAO> implements IMailDAO
         }
 
         /**
-         * @see de.freese.pim.core.jdbc.RowMapper#map(java.sql.ResultSet, int)
+         * @see de.freese.pim.common.jdbc.RowMapper#map(java.sql.ResultSet, int)
          */
         @Override
         public MailFolder map(final ResultSet rs, final int rowNum) throws SQLException
@@ -129,7 +128,7 @@ public class AbstractMailDAO extends AbstractDAO<IMailDAO> implements IMailDAO
         }
 
         /**
-         * @see de.freese.pim.core.jdbc.RowMapper#map(java.sql.ResultSet, int)
+         * @see de.freese.pim.common.jdbc.RowMapper#map(java.sql.ResultSet, int)
          */
         @Override
         public Mail map(final ResultSet rs, final int rowNum) throws SQLException

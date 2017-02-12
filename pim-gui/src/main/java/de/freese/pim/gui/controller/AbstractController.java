@@ -3,7 +3,6 @@ package de.freese.pim.gui.controller;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ScheduledExecutorService;
-import javax.sql.DataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import de.freese.pim.gui.PIMApplication;
@@ -25,9 +24,19 @@ public abstract class AbstractController implements IController
     private boolean activated = false;
 
     /**
+     *
+     */
+    private final ExecutorService executorService;
+
+    /**
     *
     */
     public final Logger logger = LoggerFactory.getLogger(getClass());
+
+    /**
+     *
+     */
+    private final ScheduledExecutorService scheduledExecutorService;
 
     /**
      * Erzeugt eine neue Instanz von {@link AbstractController}
@@ -35,14 +44,9 @@ public abstract class AbstractController implements IController
     public AbstractController()
     {
         super();
-    }
 
-    /**
-     * @return {@link DataSource}
-     */
-    public DataSource getDataSource()
-    {
-        return PIMApplication.getDataSource();
+        this.executorService = PIMApplication.getExecutorService();
+        this.scheduledExecutorService = PIMApplication.getScheduledExecutorService();
     }
 
     /**
@@ -50,7 +54,7 @@ public abstract class AbstractController implements IController
      */
     public ExecutorService getExecutorService()
     {
-        return PIMApplication.getExecutorService();
+        return this.executorService;
     }
 
     /**
@@ -92,7 +96,7 @@ public abstract class AbstractController implements IController
      */
     public ScheduledExecutorService getScheduledExecutorService()
     {
-        return PIMApplication.getScheduledExecutorService();
+        return this.scheduledExecutorService;
     }
 
     /**

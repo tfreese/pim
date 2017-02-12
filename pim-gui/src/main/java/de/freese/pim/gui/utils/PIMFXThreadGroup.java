@@ -8,7 +8,6 @@ import org.slf4j.LoggerFactory;
  *
  * @author Thomas Freese
  */
-@SuppressWarnings("restriction")
 public class PIMFXThreadGroup extends ThreadGroup
 {
     /**

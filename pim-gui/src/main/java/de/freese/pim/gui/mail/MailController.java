@@ -146,7 +146,7 @@ public class MailController extends AbstractController
     {
         super();
 
-        this.mailService = PIMApplication.getMailService();
+        this.mailService = PIMApplication.getApplicationContext().getBean("mailService", IMailService.class);
     }
 
     /**
@@ -548,7 +548,7 @@ public class MailController extends AbstractController
         getProgressIndicator().visibleProperty().bind(runningProperty);
         PIMApplication.getMainWindow().getScene().cursorProperty().bind(Bindings.when(runningProperty).then(Cursor.WAIT).otherwise(Cursor.DEFAULT));
 
-        PIMApplication.getExecutorService().execute(loadMailTask);
+        getExecutorService().execute(loadMailTask);
     }
 
     /**

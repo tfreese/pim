@@ -29,6 +29,7 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.transaction.annotation.Transactional;
+import de.freese.pim.common.utils.io.MonitorOutputStream;
 import de.freese.pim.core.mail.api.IMailAPI;
 import de.freese.pim.core.mail.api.IMailContent;
 import de.freese.pim.core.mail.dao.IMailDAO;
@@ -39,7 +40,6 @@ import de.freese.pim.core.mail.model.MailAccount;
 import de.freese.pim.core.mail.model.MailFolder;
 import de.freese.pim.core.service.AbstractService;
 import de.freese.pim.core.service.ISettingsService;
-import de.freese.pim.core.utils.io.MonitorOutputStream;
 
 /**
  * Service für das AddressBook.
@@ -305,7 +305,7 @@ public class DefaultMailService extends AbstractService implements IMailService
     @Transactional
     public List<Mail> loadMails(final long accountID, final long folderID, final String folderFullName) throws Exception
     {
-        // this.semaphore.acquire();
+        this.semaphore.acquire();
 
         try
         {
@@ -377,7 +377,7 @@ public class DefaultMailService extends AbstractService implements IMailService
         }
         finally
         {
-            // this.semaphore.release();
+            this.semaphore.release();
         }
     }
 

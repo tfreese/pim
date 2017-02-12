@@ -15,6 +15,7 @@ import de.freese.pim.core.mail.model.MailAccount;
 import de.freese.pim.core.mail.model.MailFolder;
 import de.freese.pim.core.mail.service.IMailService;
 import de.freese.pim.gui.view.ErrorDialog;
+import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
@@ -68,7 +69,8 @@ public class InitMailAPITask extends Task<List<MailFolder>>
             account.getFolder().addAll(folders);
 
             LOGGER.info("Initialisation of {} finished", account.getMail());
-            treeView.refresh();
+
+            Platform.runLater(() -> treeView.refresh());
 
             List<List<MailFolder>> partitions = ListUtils.partition(folders, 3);
 
@@ -122,12 +124,6 @@ public class InitMailAPITask extends Task<List<MailFolder>>
         LOGGER.info("Init MailAccount {}", this.account.getMail());
 
         this.mailService.connectAccount(this.account);
-
-        // PIMApplication.registerCloseable(() ->
-        // {
-        // PIMApplication.LOGGER.info("Close " + this.mailAPI.getAccount().getMail());
-        // this.mailAPI.disconnect();
-        // });
 
         List<MailFolder> folders = this.mailService.loadFolder(this.account.getID());
 

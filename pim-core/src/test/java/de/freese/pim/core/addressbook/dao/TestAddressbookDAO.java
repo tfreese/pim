@@ -18,11 +18,11 @@ import org.junit.runners.MethodSorters;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameter;
 import org.junit.runners.Parameterized.Parameters;
+import de.freese.pim.common.jdbc.JdbcTemplate;
+import de.freese.pim.common.jdbc.tx.ConnectionHolder;
+import de.freese.pim.common.jdbc.tx.TransactionalInvocationHandler;
 import de.freese.pim.core.addressbook.TestAddressbookConfig;
 import de.freese.pim.core.addressbook.service.DefaultAddressBookService;
-import de.freese.pim.core.jdbc.JdbcTemplate;
-import de.freese.pim.core.jdbc.tx.ConnectionHolder;
-import de.freese.pim.core.jdbc.tx.TransactionalInvocationHandler;
 
 /**
  * TestCase mit eigenem TX-Management durch Proxy und Lambdas.
@@ -49,7 +49,7 @@ public class TestAddressbookDAO extends AbstractDAOTextCase
         }
 
         /**
-         * @see de.freese.pim.core.jdbc.JdbcTemplate#closeConnection(java.sql.Connection)
+         * @see de.freese.pim.common.jdbc.JdbcTemplate#closeConnection(java.sql.Connection)
          */
         @Override
         protected void closeConnection(final Connection connection) throws SQLException
@@ -68,7 +68,7 @@ public class TestAddressbookDAO extends AbstractDAOTextCase
         }
 
         /**
-         * @see de.freese.pim.core.jdbc.JdbcTemplate#getConnection()
+         * @see de.freese.pim.common.jdbc.JdbcTemplate#getConnection()
          */
         @SuppressWarnings("resource")
         @Override
