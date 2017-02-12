@@ -398,17 +398,19 @@ public final class Utils
     {
         executorService.shutdown();
 
+        int timeOut = 10;
+
         while (!executorService.isTerminated())
         {
             try
             {
                 // Warten bis laufende Tasks sich beenden.
-                if (!executorService.awaitTermination(10, TimeUnit.SECONDS))
+                if (!executorService.awaitTermination(timeOut, TimeUnit.SECONDS))
                 {
                     executorService.shutdownNow();
 
                     // Laufende Tasks abbrechen und warten auf Rückmeldung.
-                    if (!executorService.awaitTermination(10, TimeUnit.SECONDS))
+                    if (!executorService.awaitTermination(timeOut, TimeUnit.SECONDS))
                     {
                         LOGGER.error("Pool did not terminate");
                     }

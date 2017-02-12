@@ -48,7 +48,7 @@ public class PIMThreadFactory implements ThreadFactory
     {
         super();
 
-        this.namePrefix = namePrefix + "-";
+        this.namePrefix = namePrefix;
         this.priority = priority;
 
         SecurityManager sm = System.getSecurityManager();
@@ -61,9 +61,17 @@ public class PIMThreadFactory implements ThreadFactory
     @Override
     public Thread newThread(final Runnable r)
     {
-        Thread thread = new Thread(this.threadGroup, r, this.namePrefix + this.threadNumber.getAndIncrement());
-        thread.setPriority(this.priority);
-        thread.setDaemon(false);
+        Thread thread = new Thread(this.threadGroup, r, this.namePrefix + "-" + this.threadNumber.getAndIncrement(), 0);
+
+        if (thread.isDaemon())
+        {
+            thread.setDaemon(false);
+        }
+
+        if (thread.getPriority() != this.priority)
+        {
+            thread.setPriority(this.priority);
+        }
 
         return thread;
     }

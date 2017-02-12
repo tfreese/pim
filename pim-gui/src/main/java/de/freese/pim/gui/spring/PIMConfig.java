@@ -3,10 +3,8 @@ package de.freese.pim.gui.spring;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.ThreadFactory;
@@ -28,6 +26,7 @@ import de.freese.pim.core.mail.dao.DefaultMailDAO;
 import de.freese.pim.core.mail.service.DefaultMailService;
 import de.freese.pim.core.mail.service.IMailService;
 import de.freese.pim.core.thread.PIMThreadFactory;
+import de.freese.pim.core.thread.TunedThreadPoolExecutor;
 
 /**
  * Spring-Konfiguration von PIM.
@@ -105,35 +104,23 @@ public class PIMConfig
         int coreSize = 1;
         // int maxSize = Runtime.getRuntime().availableProcessors() + 1;
         int maxSize = 10;
+        int queueCapacity = 100;
 
         // Threads leben max. 60 Sekunden, wenn es nix zu tun gibt, min. 3 Threads, max. 10.
         // BlockingQueue<Runnable> workQueue = new SynchronousQueue<>(false);
 
         // BoundedQueue
-        BlockingQueue<Runnable> workQueue = new LinkedBlockingQueue<>(20);
-        // BlockingQueue<Runnable> workQueue = new ArrayBlockingQueue<>(100);
+        // BlockingQueue<Runnable> workQueue = new LinkedBlockingQueue<>(20);
 
         // Der ThreadPool erzeugt erst neue Threads, wenn die Queue voll ist maxSize nocht nicht erreicht !
-        // javafx.concurrent.Service#IO_QUEUE
-        // BlockingQueue<Runnable> IO_QUEUE = new LinkedBlockingQueue<Runnable>()
-        // {
-        // @Override
-        // public boolean offer(final Runnable runnable)
-        // {
-        // if (EXECUTOR.getPoolSize() < THREAD_POOL_SIZE)
-        // {
-        // return false;
-        // }
-        // return super.offer(runnable);
-        // }
-        // };
 
         ThreadFactory threadFactory = new PIMThreadFactory("pimthread", Thread.NORM_PRIORITY);
 
-        ThreadPoolExecutor executor =
-                new ThreadPoolExecutor(coreSize, maxSize, 60, TimeUnit.SECONDS, workQueue, threadFactory, new ThreadPoolExecutor.AbortPolicy());
+        // ThreadPoolExecutor executor =
+        // new ThreadPoolExecutor(coreSize, maxSize, 60, TimeUnit.SECONDS, workQueue, threadFactory, new ThreadPoolExecutor.AbortPolicy());
         // executor.allowCoreThreadTimeOut(true);
-        // ExecutorService executor = Executors.newCachedThreadPool(threadFactory);
+        ThreadPoolExecutor executor = new TunedThreadPoolExecutor(coreSize, maxSize, 60, TimeUnit.SECONDS, queueCapacity, threadFactory);
+
         ExecutorService executorService = Executors.unconfigurableExecutorService(executor);
 
         return executorService;
