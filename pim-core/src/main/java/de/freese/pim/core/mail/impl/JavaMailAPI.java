@@ -36,7 +36,6 @@ import de.freese.pim.core.mail.api.IMailAPI;
 import de.freese.pim.core.mail.model.Mail;
 import de.freese.pim.core.mail.model.MailAccount;
 import de.freese.pim.core.mail.model.MailFolder;
-import de.freese.pim.core.service.ISettingsService;
 
 /**
  * JavaMail-Implementierung des {@link IMailAPI}.
@@ -58,7 +57,7 @@ public class JavaMailAPI extends AbstractMailAPI
     /**
      * Für RoundRobin-Pool.
      */
-    private final IMAPStore[] stores = new IMAPStore[Math.max(1, ISettingsService.MAX_ACTIVE_CONNECTIONS.get() / 3)];
+    private final IMAPStore[] stores = new IMAPStore[Math.max(1, 3)];
 
     /**
      * Erzeugt eine neue Instanz von {@link JavaMailAPI}

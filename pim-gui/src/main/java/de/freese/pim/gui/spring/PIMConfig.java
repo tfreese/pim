@@ -56,16 +56,26 @@ public class PIMConfig
     }
 
     /**
-     * @param pimHome String
-     * @return {@link Path}
+     * @param dataSource {@link DataSource}
+     * @param executorService {@link ExecutorService}
+     * @param basePath {@link Path}
+     * @return {@link IMailService}
      */
-    @Bean
-    @Primary
-    public Path basePath(@Value("${pim.home}") final String pimHome)
+    @Bean(destroyMethod = "disconnectAccounts")
+    public IMailService mailService(final DataSource dataSource, final ExecutorService executorService, final Path basePath)
     {
-        Path basePath = Paths.get(pimHome);
+        DefaultMailService defaultMailService = new DefaultMailService();
+        defaultMailService.setBasePath(basePath);
+        defaultMailService.setExecutorService(executorService);
+        defaultMailService.setMailDAO(new DefaultMailDAO().dataSource(dataSource));
+        //
+        // IMailService mailService = (IMailService) Proxy.newProxyInstance(PIMApplication.class.getClassLoader(), new Class<?>[]
+        // {
+        // IMailService.class
+        // }, new TransactionalInvocationHandler(PIMApplication.getDataSource(), defaultMailService));
 
-        return basePath;
+        return defaultMailService;
+
     }
 
     // /**
@@ -88,25 +98,15 @@ public class PIMConfig
     // }
 
     /**
-     * @param dataSource {@link DataSource}
-     * @param executorService {@link ExecutorService}
-     * @param basePath {@link Path}
-     * @return {@link IMailService}
+     * @param pimHome String
+     * @return {@link Path}
      */
-    @Bean(destroyMethod = "disconnectAccounts")
-    public IMailService mailService(final DataSource dataSource, final ExecutorService executorService, final Path basePath)
+    @Bean
+    @Primary
+    public Path pimHomePath(@Value("${pim.home}") final String pimHome)
     {
-        DefaultMailService defaultMailService = new DefaultMailService();
-        defaultMailService.setBasePath(basePath);
-        defaultMailService.setExecutorService(executorService);
-        defaultMailService.setMailDAO(new DefaultMailDAO().dataSource(dataSource));
-        //
-        // IMailService mailService = (IMailService) Proxy.newProxyInstance(PIMApplication.class.getClassLoader(), new Class<?>[]
-        // {
-        // IMailService.class
-        // }, new TransactionalInvocationHandler(PIMApplication.getDataSource(), defaultMailService));
+        Path path = Paths.get(pimHome);
 
-        return defaultMailService;
-
+        return path;
     }
 }

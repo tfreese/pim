@@ -25,24 +25,6 @@ public abstract class AbstractHSQLDBConfig extends AbstractDBConfig
     }
 
     /**
-     * @see de.freese.pim.core.spring.AbstractDBConfig#getDriver()
-     */
-    @Override
-    protected String getDriver()
-    {
-        return HSQLDB_DRIVER;
-    }
-
-    /**
-     * @see de.freese.pim.core.spring.AbstractDBConfig#getValidationQuery()
-     */
-    @Override
-    protected String getValidationQuery()
-    {
-        return HSQLDB_VALIDATION_QUERY;
-    }
-
-    /**
      * Führt das Statement "SHUTDOWN COMPACT" aus.
      *
      * @param dataSource {@link DataSource}
@@ -50,6 +32,11 @@ public abstract class AbstractHSQLDBConfig extends AbstractDBConfig
      */
     protected void shutdownCompact(final DataSource dataSource) throws SQLException
     {
+        if (dataSource == null)
+        {
+            return;
+        }
+
         try (Connection con = dataSource.getConnection();
              Statement stmt = con.createStatement())
         {

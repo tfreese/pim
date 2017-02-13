@@ -17,11 +17,9 @@ import java.util.StringTokenizer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
-
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import com.sun.javafx.binding.StringFormatter;
 import de.freese.pim.common.utils.Utils;
 import de.freese.pim.gui.PIMApplication;
@@ -143,6 +141,11 @@ public final class FXUtils
      */
     public static void blockGUI(final Window window)
     {
+        if (window == null)
+        {
+            return;
+        }
+
         window.addEventFilter(InputEvent.ANY, EVENT_HANDLER_CONSUME_ALL);
     }
 
@@ -155,8 +158,7 @@ public final class FXUtils
      * @param controller {@link IController}
      * @param controllerMap {@link Map}
      */
-    public static void copyFields(final IView view, final Map<String, Field> viewMap, final IController controller,
-            final Map<String, Field> controllerMap)
+    public static void copyFields(final IView view, final Map<String, Field> viewMap, final IController controller, final Map<String, Field> controllerMap)
     {
         for (Field viewField : new HashSet<>(viewMap.values()))
         {
@@ -274,7 +276,7 @@ public final class FXUtils
      * @param colors {@link Color}[]; min. 2 Farben
      * @return int[], RGB
      */
-    public static int[] getProgressRGB(final double progress, final Color... colors)
+    public static int[] getProgressRGB(final double progress, final Color...colors)
     {
         if ((progress < 0D) || (progress > 1D) || (colors.length < 2))
         {
@@ -326,8 +328,7 @@ public final class FXUtils
      */
     public static void installCopyHandler(final Node node)
     {
-        node.setOnKeyPressed(event ->
-        {
+        node.setOnKeyPressed(event -> {
             if (KEYCODE_COPY.match(event))
             {
                 if (event.getSource() instanceof TableView)
@@ -336,8 +337,7 @@ public final class FXUtils
                 }
                 else
                 {
-                    LOGGER.warn("No implementation for #copySelectionToClipboard found for {}",
-                            event.getSource().getClass().getSimpleName());
+                    LOGGER.warn("No implementation for #copySelectionToClipboard found for {}", event.getSource().getClass().getSimpleName());
                 }
 
                 event.consume();
@@ -352,8 +352,7 @@ public final class FXUtils
      */
     public static void installPasteHandler(final Node node)
     {
-        node.setOnKeyPressed(event ->
-        {
+        node.setOnKeyPressed(event -> {
             if (KEYCODE_PASTE.match(event))
             {
                 if (event.getSource() instanceof TableView)
@@ -559,6 +558,15 @@ public final class FXUtils
             }
 
             /**
+             * @see javafx.beans.binding.StringBinding#computeValue()
+             */
+            @Override
+            protected String computeValue()
+            {
+                return formatter.apply(ov.getValue());
+            }
+
+            /**
              * @see javafx.beans.binding.StringBinding#dispose()
              */
             @Override
@@ -577,15 +585,6 @@ public final class FXUtils
                 ol.add(ov);
 
                 return FXCollections.unmodifiableObservableList(ol);
-            }
-
-            /**
-             * @see javafx.beans.binding.StringBinding#computeValue()
-             */
-            @Override
-            protected String computeValue()
-            {
-                return formatter.apply(ov.getValue());
             }
         };
 
@@ -757,11 +756,16 @@ public final class FXUtils
 
     /**
      * Gibt die GUI Blockade wieder frei.
-     * 
+     *
      * @param window {@link Window}
      */
     public static void unblockGUI(final Window window)
     {
+        if (window == null)
+        {
+            return;
+        }
+
         window.removeEventFilter(InputEvent.ANY, EVENT_HANDLER_CONSUME_ALL);
     }
 

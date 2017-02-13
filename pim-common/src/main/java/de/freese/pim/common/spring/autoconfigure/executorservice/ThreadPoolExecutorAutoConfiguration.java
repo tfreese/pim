@@ -1,12 +1,18 @@
 // Erzeugt: 02.03.2016
 package de.freese.pim.common.spring.autoconfigure.executorservice;
 
+import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.RejectedExecutionHandler;
 import javax.annotation.Resource;
+import javax.sql.DataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
+import org.springframework.boot.autoconfigure.jdbc.metadata.DataSourcePoolMetadata;
+import org.springframework.boot.autoconfigure.jdbc.metadata.DataSourcePoolMetadataProvider;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -36,14 +42,27 @@ import de.freese.pim.common.spring.TunedThreadPoolExecutorFactoryBean;
  * @author Thomas Freese
  */
 @Configuration
-@ConditionalOnMissingBean(ExecutorService.class)
+@ConditionalOnMissingBean(ExecutorService.class) // Nur wenn ExecutorService noch nicht im SpringContext ist.
 @EnableConfigurationProperties(ThreadPoolExecutorProperties.class)
+@AutoConfigureAfter(DataSourceAutoConfiguration.class)
 public class ThreadPoolExecutorAutoConfiguration
 {
     /**
      *
      */
     private static final Logger LOGGER = LoggerFactory.getLogger(ThreadPoolExecutorAutoConfiguration.class);
+
+    /**
+    *
+    */
+    @Resource
+    private DataSource dataSource = null;
+
+    /**
+    *
+    */
+    @Resource
+    private DataSourcePoolMetadataProvider dataSourcePoolMetadataProvider = null;
 
     /**
      *
@@ -73,6 +92,27 @@ public class ThreadPoolExecutorAutoConfiguration
         int keepAliveSeconds = this.executorProperties.getKeepAliveSeconds();
         RejectedExecutionHandler reh = this.executorProperties.getRejectedExecutionHandler();
         boolean allowCoreThreadTimeOut = this.executorProperties.isAllowCoreThreadTimeOut();
+
+        if (this.executorProperties.isPoolSizeNotGreaterAsDataSourceMaxActive())
+        {
+            // PoolSize orientiert sich an DataSource.
+            DataSourcePoolMetadata metaData = this.dataSourcePoolMetadataProvider.getDataSourcePoolMetadata(this.dataSource);
+            int dsMax = Optional.ofNullable(metaData.getMax()).orElse(Integer.MAX_VALUE);
+
+            if ((dsMax > 0) && (maxSize > dsMax))
+            {
+                int oldCore = coreSize;
+                int oldMax = maxSize;
+
+                maxSize = dsMax;
+
+                // Annahme, einfach 1/4 von maxSize.
+                coreSize = Math.max(maxSize / 4, 1);
+
+                LOGGER.info("Resize ThreadPool because DataSource dependency: old coreSize/maxSize={}/{}, new coreSize/maxSize={}/{}", oldCore, oldMax,
+                        coreSize, maxSize);
+            }
+        }
 
         StringBuilder sb = new StringBuilder();
         sb.append("Create ExecutorService with:");

@@ -34,6 +34,11 @@ public class ThreadPoolExecutorProperties
     private int maxPoolSize = 10;
 
     /**
+    *
+    */
+    private boolean poolSizeNotGreaterAsDataSourceMaxActive = false;
+
+    /**
      *
      */
     private int queueCapacity = 0;
@@ -126,6 +131,14 @@ public class ThreadPoolExecutorProperties
     }
 
     /**
+     * @return boolean
+     */
+    public boolean isPoolSizeNotGreaterAsDataSourceMaxActive()
+    {
+        return this.poolSizeNotGreaterAsDataSourceMaxActive;
+    }
+
+    /**
      * @param allowCoreThreadTimeOut boolean
      */
     public void setAllowCoreThreadTimeOut(final boolean allowCoreThreadTimeOut)
@@ -155,6 +168,14 @@ public class ThreadPoolExecutorProperties
     public void setMaxPoolSize(final int maxPoolSize)
     {
         this.maxPoolSize = maxPoolSize;
+    }
+
+    /**
+     * @param poolSizeNotGreaterAsDataSourceMaxActive boolean
+     */
+    public void setPoolSizeNotGreaterAsDataSourceMaxActive(final boolean poolSizeNotGreaterAsDataSourceMaxActive)
+    {
+        this.poolSizeNotGreaterAsDataSourceMaxActive = poolSizeNotGreaterAsDataSourceMaxActive;
     }
 
     /**

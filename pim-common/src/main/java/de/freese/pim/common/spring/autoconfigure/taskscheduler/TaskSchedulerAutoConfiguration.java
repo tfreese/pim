@@ -25,7 +25,7 @@ import de.freese.pim.common.spring.autoconfigure.scheduledexecutorservice.Schedu
  * @author Thomas Freese
  */
 @Configuration
-@ConditionalOnMissingBean(TaskScheduler.class)
+@ConditionalOnMissingBean(TaskScheduler.class) // Nur wenn TaskScheduler noch nicht im SpringContext ist.
 @AutoConfigureAfter(
 {
         ThreadPoolExecutorAutoConfiguration.class, ScheduledThreadPoolExecutorAutoConfiguration.class

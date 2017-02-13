@@ -11,7 +11,6 @@ import java.nio.file.Paths;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.ArrayList;
 import java.util.List;
-import javax.sql.DataSource;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
@@ -22,6 +21,7 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.jdbc.datasource.SingleConnectionDataSource;
 import de.freese.pim.common.jdbc.tx.TransactionalInvocationHandler;
 import de.freese.pim.common.utils.PreserveOrderOptionGroup;
 import de.freese.pim.common.utils.Utils;
@@ -30,7 +30,6 @@ import de.freese.pim.core.addressbook.dao.IAddressBookDAO;
 import de.freese.pim.core.addressbook.model.Kontakt;
 import de.freese.pim.core.addressbook.model.KontaktAttribut;
 import de.freese.pim.core.addressbook.service.DefaultAddressBookService;
-import de.freese.pim.core.spring.HsqldbLocalFileConfig;
 
 /**
  * Console-Client für das Addressbuch.<br>
@@ -143,12 +142,14 @@ public class PIMAddressbookConsole
             Files.createDirectories(home);
         }
 
-        HsqldbLocalFileConfig config = new HsqldbLocalFileConfig();
+        SingleConnectionDataSource dataSource = new SingleConnectionDataSource();
+        dataSource.setDriverClassName("org.hsqldb.jdbc.JDBCDriver");
+        dataSource.setUrl("jdbc:hsqldb:file:" + System.getProperty("user.home") + "/.pim/pimdb;shutdown=true");
+        dataSource.setAutoCommit(true);
+        dataSource.setSuppressClose(true);
 
         try
         {
-            DataSource dataSource = config.dataSource(home);
-
             IAddressBookDAO defaultDAO = new DefaultAddressBookDAO().dataSource(dataSource);
 
             DefaultAddressBookService defaultAddressBookService = new DefaultAddressBookService();
@@ -216,7 +217,7 @@ public class PIMAddressbookConsole
         }
         finally
         {
-            config.preDestroy();
+            dataSource.destroy();
         }
     }
 

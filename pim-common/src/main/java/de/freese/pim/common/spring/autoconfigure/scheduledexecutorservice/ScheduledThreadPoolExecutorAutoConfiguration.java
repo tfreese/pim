@@ -25,7 +25,7 @@ import org.springframework.scheduling.concurrent.ScheduledExecutorFactoryBean;
  * @author Thomas Freese
  */
 @Configuration
-@ConditionalOnMissingBean(ScheduledExecutorService.class)
+@ConditionalOnMissingBean(ScheduledExecutorService.class) // Nur wenn ScheduledExecutorService noch nicht im SpringContext ist.
 @EnableConfigurationProperties(ScheduledThreadPoolExecutorProperties.class)
 public class ScheduledThreadPoolExecutorAutoConfiguration
 {

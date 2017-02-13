@@ -18,6 +18,7 @@ import java.util.concurrent.locks.ReentrantLock;
 import java.util.logging.Logger;
 import javax.sql.DataSource;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.DisposableBean;
 import de.freese.pim.common.utils.Utils;
 
 /**
@@ -27,7 +28,7 @@ import de.freese.pim.common.utils.Utils;
  *
  * @author Thomas Freese
  */
-public class SimpleDataSource implements DataSource
+public class SimpleDataSource implements DataSource, DisposableBean
 {
     /**
      * {@link InvocationHandler} der die close-Methode nicht ausführt.
@@ -177,8 +178,9 @@ public class SimpleDataSource implements DataSource
     }
 
     /**
-     * Schliessen der {@link DataSource}.
+     * @see org.springframework.beans.factory.DisposableBean#destroy()
      */
+    @Override
     public void destroy()
     {
         this.reentrantLock.lock();

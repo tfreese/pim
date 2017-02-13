@@ -19,7 +19,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -52,13 +51,14 @@ import javafx.stage.Window;
  * @author Thomas Freese
  */
 @SuppressWarnings("restriction")
-@SpringBootApplication(exclude =
-{
-        DataSourceAutoConfiguration.class
-})
+// @SpringBootApplication(exclude =
+// {
+// DataSourceAutoConfiguration.class
+// })
+// @EnableTransactionManagement // Wird durch Spring-Boot automatisch konfiguriert, wenn DataSource-Bean vorhanden.
+@SpringBootApplication
 @EnableAsync // @Async("executorService")
 @EnableScheduling
-// @EnableTransactionManagement // Wird durch Spring-Boot automatisch konfiguriert, wenn DataSource-Bean vorhanden.
 public class PIMApplication extends Application implements ApplicationContextAware
 {
     /**
