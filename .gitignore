@@ -1,11 +1,17 @@
 /target/
 /.settings/
 
-/pim-core/target/
-/pim-core/test/
-/pim-core/.settings/
+/pim-clientfx/target/
+/pim-clientfx/test/
+/pim-clientfx/.settings/
+/pim-clientfx/log/
 
-/pim-gui/target/
-/pim-gui/test/
-/pim-gui/.settings/
-/pim-gui/log/
+/pim-common/target/
+/pim-common/test/
+/pim-common/.settings/
+/pim-common/log/
+
+/pim-clientfx/target/
+/pim-clientfx/test/
+/pim-clientfx/.settings/
+/pim-clientfx/log/

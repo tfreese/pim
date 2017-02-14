@@ -4,32 +4,36 @@ package de.freese.pim.common.spring.autoconfigure.taskscheduler;
 import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ScheduledExecutorService;
+
 import javax.annotation.Resource;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.autoconfigure.AutoConfigureAfter;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.concurrent.ConcurrentTaskScheduler;
-import de.freese.pim.common.spring.autoconfigure.executorservice.ThreadPoolExecutorAutoConfiguration;
-import de.freese.pim.common.spring.autoconfigure.scheduledexecutorservice.ScheduledThreadPoolExecutorAutoConfiguration;
 
 /**
  * AutoConfiguration für einen {@link TaskScheduler}.<br>
  * Nur wenn ein {@link ExecutorService} und ein {@link ScheduledExecutorService} vorhanden ist, wird ein {@link TaskScheduler} erzeugt.<br>
- * Dieser wird für die annotation {@link Async} benötigt, wenn kein {@link Executor} angegeben wurde.
+ * Dieser wird für die Annotation {@link Async} benötigt, wenn kein {@link Executor} angegeben wurde.
  *
  * @author Thomas Freese
  */
 @Configuration
 @ConditionalOnMissingBean(TaskScheduler.class) // Nur wenn TaskScheduler noch nicht im SpringContext ist.
-@AutoConfigureAfter(
+@ConditionalOnBean(
 {
-        ThreadPoolExecutorAutoConfiguration.class, ScheduledThreadPoolExecutorAutoConfiguration.class
-})
+        ExecutorService.class, ScheduledExecutorService.class
+}) // Nur wenn ExecutorService und ScheduledExecutorService im SpringContext ist.
+// @AutoConfigureAfter(
+// {
+// ThreadPoolExecutorAutoConfiguration.class, ScheduledThreadPoolExecutorAutoConfiguration.class
+// })
 public class TaskSchedulerAutoConfiguration
 {
     /**

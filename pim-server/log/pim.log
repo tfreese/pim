@@ -1,0 +1,384 @@
+10:46:19.154 - I[main        ] - PIMServerApplication - Starting PIMServerApplication on VWAGWOCOM0MI with PID 8456 (D:\efreest\git\pim\pim-server\target\classes started by efreest in D:\efreest\git\pim\pim-server)
+10:46:19.159 - I[main        ] - PIMServerApplication - No active profile set, falling back to default profiles: default
+10:46:19.200 - I[main        ] - AnnotationConfigEmbeddedWebApplicationContext - Refreshing org.springframework.boot.context.embedded.AnnotationConfigEmbeddedWebApplicationContext@5bfa9431: startup date [Tue Feb 14 10:46:19 CET 2017]; root of context hierarchy
+10:46:19.288 - I[background-preinit] - Version - HV000001: Hibernate Validator 5.3.4.Final
+10:46:19.844 - I[main        ] - AnnotationConfigEmbeddedWebApplicationContext - Closing org.springframework.boot.context.embedded.AnnotationConfigEmbeddedWebApplicationContext@5bfa9431: startup date [Tue Feb 14 10:46:19 CET 2017]; root of context hierarchy
+10:46:19.845 - W[main        ] - AnnotationConfigEmbeddedWebApplicationContext - Exception thrown from LifecycleProcessor on context close
+java.lang.IllegalStateException: LifecycleProcessor not initialized - call 'refresh' before invoking lifecycle methods via the context: org.springframework.boot.context.embedded.AnnotationConfigEmbeddedWebApplicationContext@5bfa9431: startup date [Tue Feb 14 10:46:19 CET 2017]; root of context hierarchy
+	at org.springframework.context.support.AbstractApplicationContext.getLifecycleProcessor(AbstractApplicationContext.java:417)
+	at org.springframework.context.support.AbstractApplicationContext.doClose(AbstractApplicationContext.java:1002)
+	at org.springframework.context.support.AbstractApplicationContext.close(AbstractApplicationContext.java:961)
+	at org.springframework.boot.SpringApplication.handleRunFailure(SpringApplication.java:794)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:325)
+	at de.freese.pim.server.PIMServerApplication.main(PIMServerApplication.java:42)
+10:46:52.486 - I[main        ] - PIMServerApplication - Starting PIMServerApplication on VWAGWOCOM0MI with PID 8240 (D:\efreest\git\pim\pim-server\target\classes started by efreest in D:\efreest\git\pim\pim-server)
+10:46:52.489 - I[main        ] - PIMServerApplication - No active profile set, falling back to default profiles: default
+10:46:52.525 - I[main        ] - AnnotationConfigEmbeddedWebApplicationContext - Refreshing org.springframework.boot.context.embedded.AnnotationConfigEmbeddedWebApplicationContext@5bfa9431: startup date [Tue Feb 14 10:46:52 CET 2017]; root of context hierarchy
+10:46:52.623 - I[background-preinit] - Version - HV000001: Hibernate Validator 5.3.4.Final
+10:46:53.433 - I[main        ] - PostProcessorRegistrationDelegate$BeanPostProcessorChecker - Bean 'org.springframework.boot.autoconfigure.validation.ValidationAutoConfiguration' of type [class org.springframework.boot.autoconfigure.validation.ValidationAutoConfiguration] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+10:46:53.505 - I[main        ] - PostProcessorRegistrationDelegate$BeanPostProcessorChecker - Bean 'validator' of type [class org.springframework.validation.beanvalidation.LocalValidatorFactoryBean] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+10:46:53.560 - I[main        ] - PostProcessorRegistrationDelegate$BeanPostProcessorChecker - Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [class org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$a47bf716] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+10:46:53.721 - I[main        ] - log - Logging initialized @2117ms to org.eclipse.jetty.util.log.Slf4jLog
+10:46:53.879 - I[main        ] - JettyEmbeddedServletContainerFactory - Server initialized with port: 0
+10:46:53.880 - I[main        ] - Server - jetty-9.4.1.v20170120
+10:46:53.987 - I[main        ] - session - DefaultSessionIdManager workerName=node0
+10:46:53.987 - I[main        ] - session - No SessionScavenger set, using defaults
+10:46:53.989 - I[main        ] - session - Scavenging every 600000ms
+10:46:53.994 - I[main        ] - application - Initializing Spring embedded WebApplicationContext
+10:46:53.994 - I[main        ] - ContextLoader - Root WebApplicationContext: initialization completed in 1469 ms
+10:46:54.175 - I[main        ] - ServletRegistrationBean - Mapping servlet: 'dispatcherServlet' to [/]
+10:46:54.177 - I[main        ] - FilterRegistrationBean - Mapping filter: 'metricsFilter' to: [/*]
+10:46:54.178 - I[main        ] - FilterRegistrationBean - Mapping filter: 'characterEncodingFilter' to: [/*]
+10:46:54.178 - I[main        ] - FilterRegistrationBean - Mapping filter: 'hiddenHttpMethodFilter' to: [/*]
+10:46:54.178 - I[main        ] - FilterRegistrationBean - Mapping filter: 'httpPutFormContentFilter' to: [/*]
+10:46:54.178 - I[main        ] - FilterRegistrationBean - Mapping filter: 'requestContextFilter' to: [/*]
+10:46:54.178 - I[main        ] - FilterRegistrationBean - Mapping filter: 'webRequestLoggingFilter' to: [/*]
+10:46:54.178 - I[main        ] - FilterRegistrationBean - Mapping filter: 'applicationContextIdFilter' to: [/*]
+10:46:54.390 - I[main        ] - ContextHandler - Started o.s.b.c.e.j.JettyEmbeddedWebAppContext@5fb7183b{/,file:///C:/Users/efreest/AppData/Local/Temp/jetty-docbase.2032160304817484580.0/,AVAILABLE}
+10:46:54.390 - I[main        ] - Server - Started @2786ms
+10:46:54.579 - I[main        ] - RequestMappingHandlerAdapter - Looking for @ControllerAdvice: org.springframework.boot.context.embedded.AnnotationConfigEmbeddedWebApplicationContext@5bfa9431: startup date [Tue Feb 14 10:46:52 CET 2017]; root of context hierarchy
+10:46:54.636 - I[main        ] - RequestMappingHandlerMapping - Mapped "{[/error]}" onto public org.springframework.http.ResponseEntity<java.util.Map<java.lang.String, java.lang.Object>> org.springframework.boot.autoconfigure.web.BasicErrorController.error(javax.servlet.http.HttpServletRequest)
+10:46:54.637 - I[main        ] - RequestMappingHandlerMapping - Mapped "{[/error],produces=[text/html]}" onto public org.springframework.web.servlet.ModelAndView org.springframework.boot.autoconfigure.web.BasicErrorController.errorHtml(javax.servlet.http.HttpServletRequest,javax.servlet.http.HttpServletResponse)
+10:46:54.663 - I[main        ] - SimpleUrlHandlerMapping - Mapped URL path [/webjars/**] onto handler of type [class org.springframework.web.servlet.resource.ResourceHttpRequestHandler]
+10:46:54.663 - I[main        ] - SimpleUrlHandlerMapping - Mapped URL path [/**] onto handler of type [class org.springframework.web.servlet.resource.ResourceHttpRequestHandler]
+10:46:54.703 - I[main        ] - SimpleUrlHandlerMapping - Mapped URL path [/**/favicon.ico] onto handler of type [class org.springframework.web.servlet.resource.ResourceHttpRequestHandler]
+10:46:55.078 - I[main        ] - EndpointHandlerMapping - Mapped "{[/health || /health.json],methods=[GET],produces=[application/vnd.spring-boot.actuator.v1+json || application/json]}" onto public java.lang.Object org.springframework.boot.actuate.endpoint.mvc.HealthMvcEndpoint.invoke(javax.servlet.http.HttpServletRequest)
+10:46:55.081 - I[main        ] - EndpointHandlerMapping - Mapped "{[/shutdown || /shutdown.json],methods=[POST],produces=[application/vnd.spring-boot.actuator.v1+json || application/json]}" onto public java.lang.Object org.springframework.boot.actuate.endpoint.mvc.ShutdownMvcEndpoint.invoke()
+10:46:55.082 - I[main        ] - EndpointHandlerMapping - Mapped "{[/metrics/{name:.*}],methods=[GET],produces=[application/vnd.spring-boot.actuator.v1+json || application/json]}" onto public java.lang.Object org.springframework.boot.actuate.endpoint.mvc.MetricsMvcEndpoint.value(java.lang.String)
+10:46:55.082 - I[main        ] - EndpointHandlerMapping - Mapped "{[/metrics || /metrics.json],methods=[GET],produces=[application/vnd.spring-boot.actuator.v1+json || application/json]}" onto public java.lang.Object org.springframework.boot.actuate.endpoint.mvc.EndpointMvcAdapter.invoke()
+10:46:55.083 - I[main        ] - EndpointHandlerMapping - Mapped "{[/info || /info.json],methods=[GET],produces=[application/vnd.spring-boot.actuator.v1+json || application/json]}" onto public java.lang.Object org.springframework.boot.actuate.endpoint.mvc.EndpointMvcAdapter.invoke()
+10:46:55.223 - I[main        ] - application - Initializing Spring FrameworkServlet 'dispatcherServlet'
+10:46:55.223 - I[main        ] - DispatcherServlet - FrameworkServlet 'dispatcherServlet': initialization started
+10:46:55.234 - I[main        ] - DispatcherServlet - FrameworkServlet 'dispatcherServlet': initialization completed in 11 ms
+10:46:55.245 - I[main        ] - AbstractConnector - Started ServerConnector@72cea390{HTTP/1.1,[http/1.1]}{0.0.0.0:60933}
+10:46:55.246 - I[main        ] - JettyEmbeddedServletContainer - Jetty started on port(s) 60933 (http/1.1)
+10:46:55.249 - I[main        ] - PIMServerApplication - Started PIMServerApplication in 3.113 seconds (JVM running for 3.645)
+10:49:41.739 - I[main        ] - PIMServerApplication - Starting PIMServerApplication on VWAGWOCOM0MI with PID 8388 (D:\efreest\git\pim\pim-server\target\classes started by efreest in D:\efreest\git\pim\pim-server)
+10:49:41.741 - I[main        ] - PIMServerApplication - No active profile set, falling back to default profiles: default
+10:49:41.774 - I[main        ] - AnnotationConfigEmbeddedWebApplicationContext - Refreshing org.springframework.boot.context.embedded.AnnotationConfigEmbeddedWebApplicationContext@5bfa9431: startup date [Tue Feb 14 10:49:41 CET 2017]; root of context hierarchy
+10:49:41.881 - I[background-preinit] - Version - HV000001: Hibernate Validator 5.3.4.Final
+10:49:42.644 - I[main        ] - PostProcessorRegistrationDelegate$BeanPostProcessorChecker - Bean 'org.springframework.boot.autoconfigure.validation.ValidationAutoConfiguration' of type [class org.springframework.boot.autoconfigure.validation.ValidationAutoConfiguration] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+10:49:42.720 - I[main        ] - PostProcessorRegistrationDelegate$BeanPostProcessorChecker - Bean 'validator' of type [class org.springframework.validation.beanvalidation.LocalValidatorFactoryBean] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+10:49:42.773 - I[main        ] - PostProcessorRegistrationDelegate$BeanPostProcessorChecker - Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [class org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$c63cf3c9] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+10:49:42.947 - I[main        ] - log - Logging initialized @1988ms to org.eclipse.jetty.util.log.Slf4jLog
+10:49:43.081 - I[main        ] - JettyEmbeddedServletContainerFactory - Server initialized with port: 0
+10:49:43.082 - I[main        ] - Server - jetty-9.4.1.v20170120
+10:49:43.194 - I[main        ] - session - DefaultSessionIdManager workerName=node0
+10:49:43.194 - I[main        ] - session - No SessionScavenger set, using defaults
+10:49:43.196 - I[main        ] - session - Scavenging every 660000ms
+10:49:43.201 - I[main        ] - application - Initializing Spring embedded WebApplicationContext
+10:49:43.201 - I[main        ] - ContextLoader - Root WebApplicationContext: initialization completed in 1427 ms
+10:49:43.370 - I[main        ] - ServletRegistrationBean - Mapping servlet: 'dispatcherServlet' to [/]
+10:49:43.372 - I[main        ] - FilterRegistrationBean - Mapping filter: 'metricsFilter' to: [/*]
+10:49:43.372 - I[main        ] - FilterRegistrationBean - Mapping filter: 'characterEncodingFilter' to: [/*]
+10:49:43.372 - I[main        ] - FilterRegistrationBean - Mapping filter: 'hiddenHttpMethodFilter' to: [/*]
+10:49:43.372 - I[main        ] - FilterRegistrationBean - Mapping filter: 'httpPutFormContentFilter' to: [/*]
+10:49:43.372 - I[main        ] - FilterRegistrationBean - Mapping filter: 'requestContextFilter' to: [/*]
+10:49:43.372 - I[main        ] - FilterRegistrationBean - Mapping filter: 'webRequestLoggingFilter' to: [/*]
+10:49:43.373 - I[main        ] - FilterRegistrationBean - Mapping filter: 'applicationContextIdFilter' to: [/*]
+10:49:43.550 - I[main        ] - ContextHandler - Started o.s.b.c.e.j.JettyEmbeddedWebAppContext@5fb7183b{/,file:///C:/Users/efreest/AppData/Local/Temp/jetty-docbase.1862047493104866431.0/,AVAILABLE}
+10:49:43.550 - I[main        ] - Server - Started @2591ms
+10:49:43.788 - I[main        ] - RequestMappingHandlerAdapter - Looking for @ControllerAdvice: org.springframework.boot.context.embedded.AnnotationConfigEmbeddedWebApplicationContext@5bfa9431: startup date [Tue Feb 14 10:49:41 CET 2017]; root of context hierarchy
+10:49:43.852 - I[main        ] - RequestMappingHandlerMapping - Mapped "{[/error]}" onto public org.springframework.http.ResponseEntity<java.util.Map<java.lang.String, java.lang.Object>> org.springframework.boot.autoconfigure.web.BasicErrorController.error(javax.servlet.http.HttpServletRequest)
+10:49:43.853 - I[main        ] - RequestMappingHandlerMapping - Mapped "{[/error],produces=[text/html]}" onto public org.springframework.web.servlet.ModelAndView org.springframework.boot.autoconfigure.web.BasicErrorController.errorHtml(javax.servlet.http.HttpServletRequest,javax.servlet.http.HttpServletResponse)
+10:49:43.881 - I[main        ] - SimpleUrlHandlerMapping - Mapped URL path [/webjars/**] onto handler of type [class org.springframework.web.servlet.resource.ResourceHttpRequestHandler]
+10:49:43.881 - I[main        ] - SimpleUrlHandlerMapping - Mapped URL path [/**] onto handler of type [class org.springframework.web.servlet.resource.ResourceHttpRequestHandler]
+10:49:43.921 - I[main        ] - SimpleUrlHandlerMapping - Mapped URL path [/**/favicon.ico] onto handler of type [class org.springframework.web.servlet.resource.ResourceHttpRequestHandler]
+10:49:44.259 - I[main        ] - EndpointHandlerMapping - Mapped "{[/env/{name:.*}],methods=[GET],produces=[application/vnd.spring-boot.actuator.v1+json || application/json]}" onto public java.lang.Object org.springframework.boot.actuate.endpoint.mvc.EnvironmentMvcEndpoint.value(java.lang.String)
+10:49:44.259 - I[main        ] - EndpointHandlerMapping - Mapped "{[/env || /env.json],methods=[GET],produces=[application/vnd.spring-boot.actuator.v1+json || application/json]}" onto public java.lang.Object org.springframework.boot.actuate.endpoint.mvc.EndpointMvcAdapter.invoke()
+10:49:44.261 - I[main        ] - EndpointHandlerMapping - Mapped "{[/shutdown || /shutdown.json],methods=[POST],produces=[application/vnd.spring-boot.actuator.v1+json || application/json]}" onto public java.lang.Object org.springframework.boot.actuate.endpoint.mvc.ShutdownMvcEndpoint.invoke()
+10:49:44.261 - I[main        ] - EndpointHandlerMapping - Mapped "{[/heapdump || /heapdump.json],methods=[GET],produces=[application/octet-stream]}" onto public void org.springframework.boot.actuate.endpoint.mvc.HeapdumpMvcEndpoint.invoke(boolean,javax.servlet.http.HttpServletRequest,javax.servlet.http.HttpServletResponse) throws java.io.IOException,javax.servlet.ServletException
+10:49:44.262 - I[main        ] - EndpointHandlerMapping - Mapped "{[/loggers/{name:.*}],methods=[GET],produces=[application/vnd.spring-boot.actuator.v1+json || application/json]}" onto public java.lang.Object org.springframework.boot.actuate.endpoint.mvc.LoggersMvcEndpoint.get(java.lang.String)
+10:49:44.262 - I[main        ] - EndpointHandlerMapping - Mapped "{[/loggers/{name:.*}],methods=[POST],consumes=[application/vnd.spring-boot.actuator.v1+json || application/json],produces=[application/vnd.spring-boot.actuator.v1+json || application/json]}" onto public java.lang.Object org.springframework.boot.actuate.endpoint.mvc.LoggersMvcEndpoint.set(java.lang.String,java.util.Map<java.lang.String, java.lang.String>)
+10:49:44.262 - I[main        ] - EndpointHandlerMapping - Mapped "{[/loggers || /loggers.json],methods=[GET],produces=[application/vnd.spring-boot.actuator.v1+json || application/json]}" onto public java.lang.Object org.springframework.boot.actuate.endpoint.mvc.EndpointMvcAdapter.invoke()
+10:49:44.263 - I[main        ] - EndpointHandlerMapping - Mapped "{[/dump || /dump.json],methods=[GET],produces=[application/vnd.spring-boot.actuator.v1+json || application/json]}" onto public java.lang.Object org.springframework.boot.actuate.endpoint.mvc.EndpointMvcAdapter.invoke()
+10:49:44.264 - I[main        ] - EndpointHandlerMapping - Mapped "{[/mappings || /mappings.json],methods=[GET],produces=[application/vnd.spring-boot.actuator.v1+json || application/json]}" onto public java.lang.Object org.springframework.boot.actuate.endpoint.mvc.EndpointMvcAdapter.invoke()
+10:49:44.264 - I[main        ] - EndpointHandlerMapping - Mapped "{[/beans || /beans.json],methods=[GET],produces=[application/vnd.spring-boot.actuator.v1+json || application/json]}" onto public java.lang.Object org.springframework.boot.actuate.endpoint.mvc.EndpointMvcAdapter.invoke()
+10:49:44.265 - I[main        ] - EndpointHandlerMapping - Mapped "{[/autoconfig || /autoconfig.json],methods=[GET],produces=[application/vnd.spring-boot.actuator.v1+json || application/json]}" onto public java.lang.Object org.springframework.boot.actuate.endpoint.mvc.EndpointMvcAdapter.invoke()
+10:49:44.265 - I[main        ] - EndpointHandlerMapping - Mapped "{[/health || /health.json],methods=[GET],produces=[application/vnd.spring-boot.actuator.v1+json || application/json]}" onto public java.lang.Object org.springframework.boot.actuate.endpoint.mvc.HealthMvcEndpoint.invoke(javax.servlet.http.HttpServletRequest)
+10:49:44.265 - I[main        ] - EndpointHandlerMapping - Mapped "{[/info || /info.json],methods=[GET],produces=[application/vnd.spring-boot.actuator.v1+json || application/json]}" onto public java.lang.Object org.springframework.boot.actuate.endpoint.mvc.EndpointMvcAdapter.invoke()
+10:49:44.266 - I[main        ] - EndpointHandlerMapping - Mapped "{[/metrics/{name:.*}],methods=[GET],produces=[application/vnd.spring-boot.actuator.v1+json || application/json]}" onto public java.lang.Object org.springframework.boot.actuate.endpoint.mvc.MetricsMvcEndpoint.value(java.lang.String)
+10:49:44.266 - I[main        ] - EndpointHandlerMapping - Mapped "{[/metrics || /metrics.json],methods=[GET],produces=[application/vnd.spring-boot.actuator.v1+json || application/json]}" onto public java.lang.Object org.springframework.boot.actuate.endpoint.mvc.EndpointMvcAdapter.invoke()
+10:49:44.266 - I[main        ] - EndpointHandlerMapping - Mapped "{[/configprops || /configprops.json],methods=[GET],produces=[application/vnd.spring-boot.actuator.v1+json || application/json]}" onto public java.lang.Object org.springframework.boot.actuate.endpoint.mvc.EndpointMvcAdapter.invoke()
+10:49:44.267 - I[main        ] - EndpointHandlerMapping - Mapped "{[/trace || /trace.json],methods=[GET],produces=[application/vnd.spring-boot.actuator.v1+json || application/json]}" onto public java.lang.Object org.springframework.boot.actuate.endpoint.mvc.EndpointMvcAdapter.invoke()
+10:49:44.267 - I[main        ] - EndpointHandlerMapping - Mapped "{[/auditevents || /auditevents.json],methods=[GET],produces=[application/vnd.spring-boot.actuator.v1+json || application/json]}" onto public org.springframework.http.ResponseEntity<?> org.springframework.boot.actuate.endpoint.mvc.AuditEventsMvcEndpoint.findByPrincipalAndAfterAndType(java.lang.String,java.util.Date,java.lang.String)
+10:49:44.415 - I[main        ] - application - Initializing Spring FrameworkServlet 'dispatcherServlet'
+10:49:44.415 - I[main        ] - DispatcherServlet - FrameworkServlet 'dispatcherServlet': initialization started
+10:49:44.426 - I[main        ] - DispatcherServlet - FrameworkServlet 'dispatcherServlet': initialization completed in 11 ms
+10:49:44.438 - I[main        ] - AbstractConnector - Started ServerConnector@529c2a9a{HTTP/1.1,[http/1.1]}{0.0.0.0:60977}
+10:49:44.439 - I[main        ] - JettyEmbeddedServletContainer - Jetty started on port(s) 60977 (http/1.1)
+10:49:44.442 - I[main        ] - PIMServerApplication - Started PIMServerApplication in 3.046 seconds (JVM running for 3.483)
+10:51:45.094 - I[main        ] - PIMServerApplication - Starting PIMServerApplication on VWAGWOCOM0MI with PID 2844 (D:\efreest\git\pim\pim-server\target\classes started by efreest in D:\efreest\git\pim\pim-server)
+10:51:45.096 - I[main        ] - PIMServerApplication - No active profile set, falling back to default profiles: default
+10:51:45.130 - I[main        ] - AnnotationConfigEmbeddedWebApplicationContext - Refreshing org.springframework.boot.context.embedded.AnnotationConfigEmbeddedWebApplicationContext@1460a8c0: startup date [Tue Feb 14 10:51:45 CET 2017]; root of context hierarchy
+10:51:45.323 - I[background-preinit] - Version - HV000001: Hibernate Validator 5.3.4.Final
+10:51:45.964 - I[main        ] - PostProcessorRegistrationDelegate$BeanPostProcessorChecker - Bean 'org.springframework.boot.autoconfigure.validation.ValidationAutoConfiguration' of type [class org.springframework.boot.autoconfigure.validation.ValidationAutoConfiguration] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+10:51:46.029 - I[main        ] - PostProcessorRegistrationDelegate$BeanPostProcessorChecker - Bean 'validator' of type [class org.springframework.validation.beanvalidation.LocalValidatorFactoryBean] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+10:51:46.076 - I[main        ] - PostProcessorRegistrationDelegate$BeanPostProcessorChecker - Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [class org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$9edaec96] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+10:51:46.350 - I[main        ] - TomcatEmbeddedServletContainer - Tomcat initialized with port(s): 0 (http)
+10:51:46.359 - I[main        ] - StandardService - Starting service Tomcat
+10:51:46.360 - I[main        ] - StandardEngine - Starting Servlet Engine: Apache Tomcat/8.5.11
+10:51:46.453 - I[localhost-startStop-1] - [/] - Initializing Spring embedded WebApplicationContext
+10:51:46.453 - I[localhost-startStop-1] - ContextLoader - Root WebApplicationContext: initialization completed in 1323 ms
+10:51:46.727 - I[localhost-startStop-1] - ServletRegistrationBean - Mapping servlet: 'dispatcherServlet' to [/]
+10:51:46.731 - I[localhost-startStop-1] - FilterRegistrationBean - Mapping filter: 'metricsFilter' to: [/*]
+10:51:46.731 - I[localhost-startStop-1] - FilterRegistrationBean - Mapping filter: 'characterEncodingFilter' to: [/*]
+10:51:46.731 - I[localhost-startStop-1] - FilterRegistrationBean - Mapping filter: 'hiddenHttpMethodFilter' to: [/*]
+10:51:46.732 - I[localhost-startStop-1] - FilterRegistrationBean - Mapping filter: 'httpPutFormContentFilter' to: [/*]
+10:51:46.732 - I[localhost-startStop-1] - FilterRegistrationBean - Mapping filter: 'requestContextFilter' to: [/*]
+10:51:46.732 - I[localhost-startStop-1] - FilterRegistrationBean - Mapping filter: 'webRequestLoggingFilter' to: [/*]
+10:51:46.732 - I[localhost-startStop-1] - FilterRegistrationBean - Mapping filter: 'applicationContextIdFilter' to: [/*]
+10:51:46.951 - I[main        ] - ThreadPoolExecutorAutoConfiguration - Create ExecutorService with: namePrefix=pimthread-, corePoolSize=2, maxPoolSize=10, queueCapacity=100, priority=5, keepAliveSeconds=60
+10:51:46.957 - I[main        ] - TunedThreadPoolExecutorFactoryBean - Initializing ExecutorService  'executorService'
+10:51:46.966 - I[main        ] - ScheduledThreadPoolExecutorAutoConfiguration - Create ScheduledExecutorService with: namePrefix=pimscheduler-, poolSize=3, priority=5
+10:51:46.971 - I[main        ] - ScheduledExecutorFactoryBean - Initializing ExecutorService  'scheduledExecutorService'
+10:51:46.975 - I[main        ] - TaskSchedulerAutoConfiguration - Create TaskScheduler
+10:51:47.209 - I[main        ] - RequestMappingHandlerAdapter - Looking for @ControllerAdvice: org.springframework.boot.context.embedded.AnnotationConfigEmbeddedWebApplicationContext@1460a8c0: startup date [Tue Feb 14 10:51:45 CET 2017]; root of context hierarchy
+10:51:47.272 - I[main        ] - RequestMappingHandlerMapping - Mapped "{[/error]}" onto public org.springframework.http.ResponseEntity<java.util.Map<java.lang.String, java.lang.Object>> org.springframework.boot.autoconfigure.web.BasicErrorController.error(javax.servlet.http.HttpServletRequest)
+10:51:47.273 - I[main        ] - RequestMappingHandlerMapping - Mapped "{[/error],produces=[text/html]}" onto public org.springframework.web.servlet.ModelAndView org.springframework.boot.autoconfigure.web.BasicErrorController.errorHtml(javax.servlet.http.HttpServletRequest,javax.servlet.http.HttpServletResponse)
+10:51:47.297 - I[main        ] - SimpleUrlHandlerMapping - Mapped URL path [/webjars/**] onto handler of type [class org.springframework.web.servlet.resource.ResourceHttpRequestHandler]
+10:51:47.297 - I[main        ] - SimpleUrlHandlerMapping - Mapped URL path [/**] onto handler of type [class org.springframework.web.servlet.resource.ResourceHttpRequestHandler]
+10:51:47.327 - I[main        ] - SimpleUrlHandlerMapping - Mapped URL path [/**/favicon.ico] onto handler of type [class org.springframework.web.servlet.resource.ResourceHttpRequestHandler]
+10:51:47.530 - I[main        ] - EndpointHandlerMapping - Mapped "{[/beans || /beans.json],methods=[GET],produces=[application/vnd.spring-boot.actuator.v1+json || application/json]}" onto public java.lang.Object org.springframework.boot.actuate.endpoint.mvc.EndpointMvcAdapter.invoke()
+10:51:47.531 - I[main        ] - EndpointHandlerMapping - Mapped "{[/loggers/{name:.*}],methods=[GET],produces=[application/vnd.spring-boot.actuator.v1+json || application/json]}" onto public java.lang.Object org.springframework.boot.actuate.endpoint.mvc.LoggersMvcEndpoint.get(java.lang.String)
+10:51:47.532 - I[main        ] - EndpointHandlerMapping - Mapped "{[/loggers/{name:.*}],methods=[POST],consumes=[application/vnd.spring-boot.actuator.v1+json || application/json],produces=[application/vnd.spring-boot.actuator.v1+json || application/json]}" onto public java.lang.Object org.springframework.boot.actuate.endpoint.mvc.LoggersMvcEndpoint.set(java.lang.String,java.util.Map<java.lang.String, java.lang.String>)
+10:51:47.532 - I[main        ] - EndpointHandlerMapping - Mapped "{[/loggers || /loggers.json],methods=[GET],produces=[application/vnd.spring-boot.actuator.v1+json || application/json]}" onto public java.lang.Object org.springframework.boot.actuate.endpoint.mvc.EndpointMvcAdapter.invoke()
+10:51:47.533 - I[main        ] - EndpointHandlerMapping - Mapped "{[/mappings || /mappings.json],methods=[GET],produces=[application/vnd.spring-boot.actuator.v1+json || application/json]}" onto public java.lang.Object org.springframework.boot.actuate.endpoint.mvc.EndpointMvcAdapter.invoke()
+10:51:47.533 - I[main        ] - EndpointHandlerMapping - Mapped "{[/info || /info.json],methods=[GET],produces=[application/vnd.spring-boot.actuator.v1+json || application/json]}" onto public java.lang.Object org.springframework.boot.actuate.endpoint.mvc.EndpointMvcAdapter.invoke()
+10:51:47.534 - I[main        ] - EndpointHandlerMapping - Mapped "{[/health || /health.json],methods=[GET],produces=[application/vnd.spring-boot.actuator.v1+json || application/json]}" onto public java.lang.Object org.springframework.boot.actuate.endpoint.mvc.HealthMvcEndpoint.invoke(javax.servlet.http.HttpServletRequest)
+10:51:47.535 - I[main        ] - EndpointHandlerMapping - Mapped "{[/trace || /trace.json],methods=[GET],produces=[application/vnd.spring-boot.actuator.v1+json || application/json]}" onto public java.lang.Object org.springframework.boot.actuate.endpoint.mvc.EndpointMvcAdapter.invoke()
+10:51:47.536 - I[main        ] - EndpointHandlerMapping - Mapped "{[/heapdump || /heapdump.json],methods=[GET],produces=[application/octet-stream]}" onto public void org.springframework.boot.actuate.endpoint.mvc.HeapdumpMvcEndpoint.invoke(boolean,javax.servlet.http.HttpServletRequest,javax.servlet.http.HttpServletResponse) throws java.io.IOException,javax.servlet.ServletException
+10:51:47.538 - I[main        ] - EndpointHandlerMapping - Mapped "{[/dump || /dump.json],methods=[GET],produces=[application/vnd.spring-boot.actuator.v1+json || application/json]}" onto public java.lang.Object org.springframework.boot.actuate.endpoint.mvc.EndpointMvcAdapter.invoke()
+10:51:47.538 - I[main        ] - EndpointHandlerMapping - Mapped "{[/autoconfig || /autoconfig.json],methods=[GET],produces=[application/vnd.spring-boot.actuator.v1+json || application/json]}" onto public java.lang.Object org.springframework.boot.actuate.endpoint.mvc.EndpointMvcAdapter.invoke()
+10:51:47.541 - I[main        ] - EndpointHandlerMapping - Mapped "{[/shutdown || /shutdown.json],methods=[POST],produces=[application/vnd.spring-boot.actuator.v1+json || application/json]}" onto public java.lang.Object org.springframework.boot.actuate.endpoint.mvc.ShutdownMvcEndpoint.invoke()
+10:51:47.542 - I[main        ] - EndpointHandlerMapping - Mapped "{[/metrics/{name:.*}],methods=[GET],produces=[application/vnd.spring-boot.actuator.v1+json || application/json]}" onto public java.lang.Object org.springframework.boot.actuate.endpoint.mvc.MetricsMvcEndpoint.value(java.lang.String)
+10:51:47.542 - I[main        ] - EndpointHandlerMapping - Mapped "{[/metrics || /metrics.json],methods=[GET],produces=[application/vnd.spring-boot.actuator.v1+json || application/json]}" onto public java.lang.Object org.springframework.boot.actuate.endpoint.mvc.EndpointMvcAdapter.invoke()
+10:51:47.543 - I[main        ] - EndpointHandlerMapping - Mapped "{[/configprops || /configprops.json],methods=[GET],produces=[application/vnd.spring-boot.actuator.v1+json || application/json]}" onto public java.lang.Object org.springframework.boot.actuate.endpoint.mvc.EndpointMvcAdapter.invoke()
+10:51:47.544 - I[main        ] - EndpointHandlerMapping - Mapped "{[/auditevents || /auditevents.json],methods=[GET],produces=[application/vnd.spring-boot.actuator.v1+json || application/json]}" onto public org.springframework.http.ResponseEntity<?> org.springframework.boot.actuate.endpoint.mvc.AuditEventsMvcEndpoint.findByPrincipalAndAfterAndType(java.lang.String,java.util.Date,java.lang.String)
+10:51:47.544 - I[main        ] - EndpointHandlerMapping - Mapped "{[/env/{name:.*}],methods=[GET],produces=[application/vnd.spring-boot.actuator.v1+json || application/json]}" onto public java.lang.Object org.springframework.boot.actuate.endpoint.mvc.EnvironmentMvcEndpoint.value(java.lang.String)
+10:51:47.545 - I[main        ] - EndpointHandlerMapping - Mapped "{[/env || /env.json],methods=[GET],produces=[application/vnd.spring-boot.actuator.v1+json || application/json]}" onto public java.lang.Object org.springframework.boot.actuate.endpoint.mvc.EndpointMvcAdapter.invoke()
+10:51:47.701 - I[main        ] - Http11NioProtocol - Initializing ProtocolHandler ["http-nio-auto-1"]
+10:51:47.710 - I[main        ] - Http11NioProtocol - Starting ProtocolHandler [http-nio-auto-1]
+10:51:47.721 - I[main        ] - NioSelectorPool - Using a shared selector for servlet write/read
+10:51:47.734 - I[main        ] - TomcatEmbeddedServletContainer - Tomcat started on port(s): 61012 (http)
+10:51:47.738 - I[main        ] - PIMServerApplication - Started PIMServerApplication in 2.985 seconds (JVM running for 3.416)
+10:52:24.626 - I[http-nio-auto-1-exec-1] - [/] - Initializing Spring FrameworkServlet 'dispatcherServlet'
+10:52:24.626 - I[http-nio-auto-1-exec-1] - DispatcherServlet - FrameworkServlet 'dispatcherServlet': initialization started
+10:52:24.661 - I[http-nio-auto-1-exec-1] - DispatcherServlet - FrameworkServlet 'dispatcherServlet': initialization completed in 35 ms
+10:52:56.130 - W[http-nio-auto-1-exec-4] - PageNotFound - Request method 'GET' not supported
+11:01:13.856 - I[http-nio-auto-1-exec-6] - MvcEndpointSecurityInterceptor - Full authentication is required to access actuator endpoints. Consider adding Spring Security or set 'management.security.enabled' to false.
+11:06:33.333 - I[main        ] - PIMServerApplication - Starting PIMServerApplication on VWAGWOCOM0MI with PID 9284 (D:\efreest\git\pim\pim-server\target\classes started by efreest in D:\efreest\git\pim\pim-server)
+11:06:33.336 - I[main        ] - PIMServerApplication - No active profile set, falling back to default profiles: default
+11:06:33.381 - I[main        ] - AnnotationConfigEmbeddedWebApplicationContext - Refreshing org.springframework.boot.context.embedded.AnnotationConfigEmbeddedWebApplicationContext@1460a8c0: startup date [Tue Feb 14 11:06:33 CET 2017]; root of context hierarchy
+11:06:33.571 - I[background-preinit] - Version - HV000001: Hibernate Validator 5.3.4.Final
+11:06:34.242 - I[main        ] - PostProcessorRegistrationDelegate$BeanPostProcessorChecker - Bean 'org.springframework.boot.autoconfigure.validation.ValidationAutoConfiguration' of type [class org.springframework.boot.autoconfigure.validation.ValidationAutoConfiguration] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+11:06:34.306 - I[main        ] - PostProcessorRegistrationDelegate$BeanPostProcessorChecker - Bean 'validator' of type [class org.springframework.validation.beanvalidation.LocalValidatorFactoryBean] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+11:06:34.360 - I[main        ] - PostProcessorRegistrationDelegate$BeanPostProcessorChecker - Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [class org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$11d8e48f] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+11:06:34.640 - I[main        ] - TomcatEmbeddedServletContainer - Tomcat initialized with port(s): 61222 (http)
+11:06:34.650 - I[main        ] - StandardService - Starting service Tomcat
+11:06:34.651 - I[main        ] - StandardEngine - Starting Servlet Engine: Apache Tomcat/8.5.11
+11:06:34.736 - I[localhost-startStop-1] - [/pim] - Initializing Spring embedded WebApplicationContext
+11:06:34.736 - I[localhost-startStop-1] - ContextLoader - Root WebApplicationContext: initialization completed in 1355 ms
+11:06:34.990 - I[localhost-startStop-1] - ServletRegistrationBean - Mapping servlet: 'dispatcherServlet' to [/]
+11:06:34.994 - I[localhost-startStop-1] - FilterRegistrationBean - Mapping filter: 'metricsFilter' to: [/*]
+11:06:34.994 - I[localhost-startStop-1] - FilterRegistrationBean - Mapping filter: 'characterEncodingFilter' to: [/*]
+11:06:34.994 - I[localhost-startStop-1] - FilterRegistrationBean - Mapping filter: 'hiddenHttpMethodFilter' to: [/*]
+11:06:34.994 - I[localhost-startStop-1] - FilterRegistrationBean - Mapping filter: 'httpPutFormContentFilter' to: [/*]
+11:06:34.994 - I[localhost-startStop-1] - FilterRegistrationBean - Mapping filter: 'requestContextFilter' to: [/*]
+11:06:34.994 - I[localhost-startStop-1] - FilterRegistrationBean - Mapping filter: 'webRequestLoggingFilter' to: [/*]
+11:06:34.994 - I[localhost-startStop-1] - FilterRegistrationBean - Mapping filter: 'applicationContextIdFilter' to: [/*]
+11:06:35.207 - I[main        ] - ThreadPoolExecutorAutoConfiguration - Create ExecutorService with: namePrefix=pimthread-, corePoolSize=2, maxPoolSize=10, queueCapacity=100, priority=5, keepAliveSeconds=60
+11:06:35.213 - I[main        ] - TunedThreadPoolExecutorFactoryBean - Initializing ExecutorService  'executorService'
+11:06:35.224 - I[main        ] - ScheduledThreadPoolExecutorAutoConfiguration - Create ScheduledExecutorService with: namePrefix=pimscheduler-, poolSize=3, priority=5
+11:06:35.230 - I[main        ] - ScheduledExecutorFactoryBean - Initializing ExecutorService  'scheduledExecutorService'
+11:06:35.232 - I[main        ] - TaskSchedulerAutoConfiguration - Create TaskScheduler
+11:06:35.416 - I[main        ] - RequestMappingHandlerAdapter - Looking for @ControllerAdvice: org.springframework.boot.context.embedded.AnnotationConfigEmbeddedWebApplicationContext@1460a8c0: startup date [Tue Feb 14 11:06:33 CET 2017]; root of context hierarchy
+11:06:35.476 - I[main        ] - RequestMappingHandlerMapping - Mapped "{[/error]}" onto public org.springframework.http.ResponseEntity<java.util.Map<java.lang.String, java.lang.Object>> org.springframework.boot.autoconfigure.web.BasicErrorController.error(javax.servlet.http.HttpServletRequest)
+11:06:35.476 - I[main        ] - RequestMappingHandlerMapping - Mapped "{[/error],produces=[text/html]}" onto public org.springframework.web.servlet.ModelAndView org.springframework.boot.autoconfigure.web.BasicErrorController.errorHtml(javax.servlet.http.HttpServletRequest,javax.servlet.http.HttpServletResponse)
+11:06:35.500 - I[main        ] - SimpleUrlHandlerMapping - Mapped URL path [/webjars/**] onto handler of type [class org.springframework.web.servlet.resource.ResourceHttpRequestHandler]
+11:06:35.500 - I[main        ] - SimpleUrlHandlerMapping - Mapped URL path [/**] onto handler of type [class org.springframework.web.servlet.resource.ResourceHttpRequestHandler]
+11:06:35.536 - I[main        ] - SimpleUrlHandlerMapping - Mapped URL path [/**/favicon.ico] onto handler of type [class org.springframework.web.servlet.resource.ResourceHttpRequestHandler]
+11:06:35.736 - I[main        ] - EndpointHandlerMapping - Mapped "{[/metrics/{name:.*}],methods=[GET],produces=[application/vnd.spring-boot.actuator.v1+json || application/json]}" onto public java.lang.Object org.springframework.boot.actuate.endpoint.mvc.MetricsMvcEndpoint.value(java.lang.String)
+11:06:35.737 - I[main        ] - EndpointHandlerMapping - Mapped "{[/metrics || /metrics.json],methods=[GET],produces=[application/vnd.spring-boot.actuator.v1+json || application/json]}" onto public java.lang.Object org.springframework.boot.actuate.endpoint.mvc.EndpointMvcAdapter.invoke()
+11:06:35.738 - I[main        ] - EndpointHandlerMapping - Mapped "{[/info || /info.json],methods=[GET],produces=[application/vnd.spring-boot.actuator.v1+json || application/json]}" onto public java.lang.Object org.springframework.boot.actuate.endpoint.mvc.EndpointMvcAdapter.invoke()
+11:06:35.738 - I[main        ] - EndpointHandlerMapping - Mapped "{[/health || /health.json],methods=[GET],produces=[application/vnd.spring-boot.actuator.v1+json || application/json]}" onto public java.lang.Object org.springframework.boot.actuate.endpoint.mvc.HealthMvcEndpoint.invoke(javax.servlet.http.HttpServletRequest)
+11:06:35.888 - I[main        ] - Http11NioProtocol - Initializing ProtocolHandler ["http-nio-61222"]
+11:06:35.895 - I[main        ] - Http11NioProtocol - Starting ProtocolHandler [http-nio-61222]
+11:06:35.905 - I[main        ] - NioSelectorPool - Using a shared selector for servlet write/read
+11:06:35.921 - I[main        ] - TomcatEmbeddedServletContainer - Tomcat started on port(s): 61222 (http)
+11:06:35.924 - I[main        ] - PIMServerApplication - Started PIMServerApplication in 2.935 seconds (JVM running for 3.351)
+11:06:56.137 - I[http-nio-61222-exec-2] - [/pim] - Initializing Spring FrameworkServlet 'dispatcherServlet'
+11:06:56.137 - I[http-nio-61222-exec-2] - DispatcherServlet - FrameworkServlet 'dispatcherServlet': initialization started
+11:06:56.182 - I[http-nio-61222-exec-2] - DispatcherServlet - FrameworkServlet 'dispatcherServlet': initialization completed in 45 ms
+11:10:46.348 - I[main        ] - PIMServerApplication - Starting PIMServerApplication on VWAGWOCOM0MI with PID 8432 (D:\efreest\git\pim\pim-server\target\classes started by efreest in D:\efreest\git\pim\pim-server)
+11:10:46.352 - I[main        ] - PIMServerApplication - No active profile set, falling back to default profiles: default
+11:10:46.415 - I[main        ] - AnnotationConfigEmbeddedWebApplicationContext - Refreshing org.springframework.boot.context.embedded.AnnotationConfigEmbeddedWebApplicationContext@4f32a3ad: startup date [Tue Feb 14 11:10:46 CET 2017]; root of context hierarchy
+11:10:46.762 - I[background-preinit] - Version - HV000001: Hibernate Validator 5.3.4.Final
+11:10:47.993 - I[main        ] - PostProcessorRegistrationDelegate$BeanPostProcessorChecker - Bean 'org.springframework.boot.autoconfigure.validation.ValidationAutoConfiguration' of type [class org.springframework.boot.autoconfigure.validation.ValidationAutoConfiguration] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+11:10:48.220 - I[main        ] - PostProcessorRegistrationDelegate$BeanPostProcessorChecker - Bean 'validator' of type [class org.springframework.validation.beanvalidation.LocalValidatorFactoryBean] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+11:10:48.413 - I[main        ] - PostProcessorRegistrationDelegate$BeanPostProcessorChecker - Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [class org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$ced5068c] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+11:10:49.114 - I[main        ] - TomcatEmbeddedServletContainer - Tomcat initialized with port(s): 61222 (http)
+11:10:49.128 - I[main        ] - StandardService - Starting service Tomcat
+11:10:49.129 - I[main        ] - StandardEngine - Starting Servlet Engine: Apache Tomcat/8.5.11
+11:10:49.416 - I[localhost-startStop-1] - [/] - Initializing Spring embedded WebApplicationContext
+11:10:49.416 - I[localhost-startStop-1] - ContextLoader - Root WebApplicationContext: initialization completed in 3001 ms
+11:10:49.976 - I[localhost-startStop-1] - ServletRegistrationBean - Mapping servlet: 'dispatcherServlet' to [/]
+11:10:49.982 - I[localhost-startStop-1] - FilterRegistrationBean - Mapping filter: 'metricsFilter' to: [/*]
+11:10:49.982 - I[localhost-startStop-1] - FilterRegistrationBean - Mapping filter: 'characterEncodingFilter' to: [/*]
+11:10:49.982 - I[localhost-startStop-1] - FilterRegistrationBean - Mapping filter: 'hiddenHttpMethodFilter' to: [/*]
+11:10:49.982 - I[localhost-startStop-1] - FilterRegistrationBean - Mapping filter: 'httpPutFormContentFilter' to: [/*]
+11:10:49.982 - I[localhost-startStop-1] - FilterRegistrationBean - Mapping filter: 'requestContextFilter' to: [/*]
+11:10:49.982 - I[localhost-startStop-1] - FilterRegistrationBean - Mapping filter: 'webRequestLoggingFilter' to: [/*]
+11:10:49.982 - I[localhost-startStop-1] - FilterRegistrationBean - Mapping filter: 'applicationContextIdFilter' to: [/*]
+11:10:50.378 - I[main        ] - ThreadPoolExecutorAutoConfiguration - Create ExecutorService with: namePrefix=pimthread-, corePoolSize=2, maxPoolSize=10, queueCapacity=100, priority=5, keepAliveSeconds=60
+11:10:50.401 - I[main        ] - TunedThreadPoolExecutorFactoryBean - Initializing ExecutorService  'executorService'
+11:10:50.411 - I[main        ] - ScheduledThreadPoolExecutorAutoConfiguration - Create ScheduledExecutorService with: namePrefix=pimscheduler-, poolSize=3, priority=5
+11:10:50.430 - I[main        ] - ScheduledExecutorFactoryBean - Initializing ExecutorService  'scheduledExecutorService'
+11:10:50.438 - I[main        ] - TaskSchedulerAutoConfiguration - Create TaskScheduler
+11:10:50.996 - I[main        ] - RequestMappingHandlerAdapter - Looking for @ControllerAdvice: org.springframework.boot.context.embedded.AnnotationConfigEmbeddedWebApplicationContext@4f32a3ad: startup date [Tue Feb 14 11:10:46 CET 2017]; root of context hierarchy
+11:10:51.141 - I[main        ] - RequestMappingHandlerMapping - Mapped "{[/error]}" onto public org.springframework.http.ResponseEntity<java.util.Map<java.lang.String, java.lang.Object>> org.springframework.boot.autoconfigure.web.BasicErrorController.error(javax.servlet.http.HttpServletRequest)
+11:10:51.142 - I[main        ] - RequestMappingHandlerMapping - Mapped "{[/error],produces=[text/html]}" onto public org.springframework.web.servlet.ModelAndView org.springframework.boot.autoconfigure.web.BasicErrorController.errorHtml(javax.servlet.http.HttpServletRequest,javax.servlet.http.HttpServletResponse)
+11:10:51.261 - I[main        ] - SimpleUrlHandlerMapping - Mapped URL path [/webjars/**] onto handler of type [class org.springframework.web.servlet.resource.ResourceHttpRequestHandler]
+11:10:51.261 - I[main        ] - SimpleUrlHandlerMapping - Mapped URL path [/**] onto handler of type [class org.springframework.web.servlet.resource.ResourceHttpRequestHandler]
+11:10:51.387 - I[main        ] - SimpleUrlHandlerMapping - Mapped URL path [/**/favicon.ico] onto handler of type [class org.springframework.web.servlet.resource.ResourceHttpRequestHandler]
+11:10:52.000 - I[main        ] - EndpointHandlerMapping - Mapped "{[/info || /info.json],methods=[GET],produces=[application/vnd.spring-boot.actuator.v1+json || application/json]}" onto public java.lang.Object org.springframework.boot.actuate.endpoint.mvc.EndpointMvcAdapter.invoke()
+11:10:52.001 - I[main        ] - EndpointHandlerMapping - Mapped "{[/metrics/{name:.*}],methods=[GET],produces=[application/vnd.spring-boot.actuator.v1+json || application/json]}" onto public java.lang.Object org.springframework.boot.actuate.endpoint.mvc.MetricsMvcEndpoint.value(java.lang.String)
+11:10:52.001 - I[main        ] - EndpointHandlerMapping - Mapped "{[/metrics || /metrics.json],methods=[GET],produces=[application/vnd.spring-boot.actuator.v1+json || application/json]}" onto public java.lang.Object org.springframework.boot.actuate.endpoint.mvc.EndpointMvcAdapter.invoke()
+11:10:52.003 - I[main        ] - EndpointHandlerMapping - Mapped "{[/health || /health.json],methods=[GET],produces=[application/vnd.spring-boot.actuator.v1+json || application/json]}" onto public java.lang.Object org.springframework.boot.actuate.endpoint.mvc.HealthMvcEndpoint.invoke(javax.servlet.http.HttpServletRequest)
+11:10:53.071 - I[main        ] - Http11NioProtocol - Initializing ProtocolHandler ["http-nio-61222"]
+11:10:53.086 - I[main        ] - Http11NioProtocol - Starting ProtocolHandler [http-nio-61222]
+11:10:53.097 - I[main        ] - NioSelectorPool - Using a shared selector for servlet write/read
+11:10:53.125 - I[main        ] - TomcatEmbeddedServletContainer - Tomcat started on port(s): 61222 (http)
+11:10:53.130 - I[main        ] - PIMServerApplication - Started PIMServerApplication in 7.418 seconds (JVM running for 8.123)
+11:11:23.160 - I[http-nio-61222-exec-1] - [/] - Initializing Spring FrameworkServlet 'dispatcherServlet'
+11:11:23.160 - I[http-nio-61222-exec-1] - DispatcherServlet - FrameworkServlet 'dispatcherServlet': initialization started
+11:11:23.233 - I[http-nio-61222-exec-1] - DispatcherServlet - FrameworkServlet 'dispatcherServlet': initialization completed in 73 ms
+11:12:55.959 - I[main        ] - PIMServerApplication - Starting PIMServerApplication on VWAGWOCOM0MI with PID 1052 (D:\efreest\git\pim\pim-server\target\classes started by efreest in D:\efreest\git\pim\pim-server)
+11:12:55.961 - I[main        ] - PIMServerApplication - No active profile set, falling back to default profiles: default
+11:12:55.997 - I[main        ] - AnnotationConfigEmbeddedWebApplicationContext - Refreshing org.springframework.boot.context.embedded.AnnotationConfigEmbeddedWebApplicationContext@1460a8c0: startup date [Tue Feb 14 11:12:55 CET 2017]; root of context hierarchy
+11:12:56.192 - I[background-preinit] - Version - HV000001: Hibernate Validator 5.3.4.Final
+11:12:56.880 - I[main        ] - PostProcessorRegistrationDelegate$BeanPostProcessorChecker - Bean 'org.springframework.boot.autoconfigure.validation.ValidationAutoConfiguration' of type [class org.springframework.boot.autoconfigure.validation.ValidationAutoConfiguration] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+11:12:56.948 - I[main        ] - PostProcessorRegistrationDelegate$BeanPostProcessorChecker - Bean 'validator' of type [class org.springframework.validation.beanvalidation.LocalValidatorFactoryBean] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+11:12:57.005 - I[main        ] - PostProcessorRegistrationDelegate$BeanPostProcessorChecker - Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [class org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$760879b3] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+11:12:57.291 - I[main        ] - TomcatEmbeddedServletContainer - Tomcat initialized with port(s): 61222 (http)
+11:12:57.301 - I[main        ] - StandardService - Starting service Tomcat
+11:12:57.302 - I[main        ] - StandardEngine - Starting Servlet Engine: Apache Tomcat/8.5.11
+11:12:57.395 - I[localhost-startStop-1] - [/] - Initializing Spring embedded WebApplicationContext
+11:12:57.395 - I[localhost-startStop-1] - ContextLoader - Root WebApplicationContext: initialization completed in 1399 ms
+11:12:57.630 - I[localhost-startStop-1] - ServletRegistrationBean - Mapping servlet: 'dispatcherServlet' to [/]
+11:12:57.633 - I[localhost-startStop-1] - FilterRegistrationBean - Mapping filter: 'metricsFilter' to: [/*]
+11:12:57.633 - I[localhost-startStop-1] - FilterRegistrationBean - Mapping filter: 'characterEncodingFilter' to: [/*]
+11:12:57.633 - I[localhost-startStop-1] - FilterRegistrationBean - Mapping filter: 'hiddenHttpMethodFilter' to: [/*]
+11:12:57.633 - I[localhost-startStop-1] - FilterRegistrationBean - Mapping filter: 'httpPutFormContentFilter' to: [/*]
+11:12:57.633 - I[localhost-startStop-1] - FilterRegistrationBean - Mapping filter: 'requestContextFilter' to: [/*]
+11:12:57.634 - I[localhost-startStop-1] - FilterRegistrationBean - Mapping filter: 'webRequestLoggingFilter' to: [/*]
+11:12:57.634 - I[localhost-startStop-1] - FilterRegistrationBean - Mapping filter: 'applicationContextIdFilter' to: [/*]
+11:12:57.834 - I[main        ] - ThreadPoolExecutorAutoConfiguration - Create ExecutorService with: namePrefix=pimthread-, corePoolSize=2, maxPoolSize=10, queueCapacity=100, priority=5, keepAliveSeconds=60
+11:12:57.840 - I[main        ] - TunedThreadPoolExecutorFactoryBean - Initializing ExecutorService  'executorService'
+11:12:57.844 - I[main        ] - ScheduledThreadPoolExecutorAutoConfiguration - Create ScheduledExecutorService with: namePrefix=pimscheduler-, poolSize=3, priority=5
+11:12:57.849 - I[main        ] - ScheduledExecutorFactoryBean - Initializing ExecutorService  'scheduledExecutorService'
+11:12:57.851 - I[main        ] - TaskSchedulerAutoConfiguration - Create TaskScheduler
+11:12:58.028 - I[main        ] - RequestMappingHandlerAdapter - Looking for @ControllerAdvice: org.springframework.boot.context.embedded.AnnotationConfigEmbeddedWebApplicationContext@1460a8c0: startup date [Tue Feb 14 11:12:55 CET 2017]; root of context hierarchy
+11:12:58.093 - I[main        ] - RequestMappingHandlerMapping - Mapped "{[/error]}" onto public org.springframework.http.ResponseEntity<java.util.Map<java.lang.String, java.lang.Object>> org.springframework.boot.autoconfigure.web.BasicErrorController.error(javax.servlet.http.HttpServletRequest)
+11:12:58.094 - I[main        ] - RequestMappingHandlerMapping - Mapped "{[/error],produces=[text/html]}" onto public org.springframework.web.servlet.ModelAndView org.springframework.boot.autoconfigure.web.BasicErrorController.errorHtml(javax.servlet.http.HttpServletRequest,javax.servlet.http.HttpServletResponse)
+11:12:58.118 - I[main        ] - SimpleUrlHandlerMapping - Mapped URL path [/webjars/**] onto handler of type [class org.springframework.web.servlet.resource.ResourceHttpRequestHandler]
+11:12:58.118 - I[main        ] - SimpleUrlHandlerMapping - Mapped URL path [/**] onto handler of type [class org.springframework.web.servlet.resource.ResourceHttpRequestHandler]
+11:12:58.151 - I[main        ] - SimpleUrlHandlerMapping - Mapped URL path [/**/favicon.ico] onto handler of type [class org.springframework.web.servlet.resource.ResourceHttpRequestHandler]
+11:12:58.344 - I[main        ] - EndpointHandlerMapping - Mapped "{[/info || /info.json],methods=[GET],produces=[application/vnd.spring-boot.actuator.v1+json || application/json]}" onto public java.lang.Object org.springframework.boot.actuate.endpoint.mvc.EndpointMvcAdapter.invoke()
+11:12:58.344 - I[main        ] - EndpointHandlerMapping - Mapped "{[/metrics/{name:.*}],methods=[GET],produces=[application/vnd.spring-boot.actuator.v1+json || application/json]}" onto public java.lang.Object org.springframework.boot.actuate.endpoint.mvc.MetricsMvcEndpoint.value(java.lang.String)
+11:12:58.344 - I[main        ] - EndpointHandlerMapping - Mapped "{[/metrics || /metrics.json],methods=[GET],produces=[application/vnd.spring-boot.actuator.v1+json || application/json]}" onto public java.lang.Object org.springframework.boot.actuate.endpoint.mvc.EndpointMvcAdapter.invoke()
+11:12:58.346 - I[main        ] - EndpointHandlerMapping - Mapped "{[/shutdown || /shutdown.json],methods=[POST],produces=[application/vnd.spring-boot.actuator.v1+json || application/json]}" onto public java.lang.Object org.springframework.boot.actuate.endpoint.mvc.ShutdownMvcEndpoint.invoke()
+11:12:58.346 - I[main        ] - EndpointHandlerMapping - Mapped "{[/health || /health.json],methods=[GET],produces=[application/vnd.spring-boot.actuator.v1+json || application/json]}" onto public java.lang.Object org.springframework.boot.actuate.endpoint.mvc.HealthMvcEndpoint.invoke(javax.servlet.http.HttpServletRequest)
+11:12:58.476 - I[main        ] - Http11NioProtocol - Initializing ProtocolHandler ["http-nio-61222"]
+11:12:58.483 - I[main        ] - Http11NioProtocol - Starting ProtocolHandler [http-nio-61222]
+11:12:58.493 - I[main        ] - NioSelectorPool - Using a shared selector for servlet write/read
+11:12:58.505 - I[main        ] - TomcatEmbeddedServletContainer - Tomcat started on port(s): 61222 (http)
+11:12:58.509 - I[main        ] - PIMServerApplication - Started PIMServerApplication in 2.891 seconds (JVM running for 3.307)
+11:13:20.049 - I[http-nio-61222-exec-1] - [/] - Initializing Spring FrameworkServlet 'dispatcherServlet'
+11:13:20.049 - I[http-nio-61222-exec-1] - DispatcherServlet - FrameworkServlet 'dispatcherServlet': initialization started
+11:13:20.077 - I[http-nio-61222-exec-1] - DispatcherServlet - FrameworkServlet 'dispatcherServlet': initialization completed in 28 ms
+11:13:20.602 - I[Thread-4    ] - AnnotationConfigEmbeddedWebApplicationContext - Closing org.springframework.boot.context.embedded.AnnotationConfigEmbeddedWebApplicationContext@1460a8c0: startup date [Tue Feb 14 11:12:55 CET 2017]; root of context hierarchy
+11:13:20.605 - I[Thread-4    ] - ScheduledExecutorFactoryBean - Shutting down ExecutorService 'scheduledExecutorService'
+11:13:20.605 - I[Thread-4    ] - TunedThreadPoolExecutorFactoryBean - Shutting down ExecutorService 'executorService'
+11:27:13.482 - I[main        ] - PIMServerApplication - Starting PIMServerApplication on VWAGWOCOM0MI with PID 6016 (D:\efreest\git\pim\pim-server\target\classes started by efreest in D:\efreest\git\pim\pim-server)
+11:27:13.485 - I[main        ] - PIMServerApplication - No active profile set, falling back to default profiles: default
+11:27:13.522 - I[main        ] - AnnotationConfigEmbeddedWebApplicationContext - Refreshing org.springframework.boot.context.embedded.AnnotationConfigEmbeddedWebApplicationContext@1460a8c0: startup date [Tue Feb 14 11:27:13 CET 2017]; root of context hierarchy
+11:27:13.751 - I[background-preinit] - Version - HV000001: Hibernate Validator 5.3.4.Final
+11:27:14.420 - I[main        ] - PostProcessorRegistrationDelegate$BeanPostProcessorChecker - Bean 'org.springframework.boot.autoconfigure.validation.ValidationAutoConfiguration' of type [class org.springframework.boot.autoconfigure.validation.ValidationAutoConfiguration] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+11:27:14.499 - I[main        ] - PostProcessorRegistrationDelegate$BeanPostProcessorChecker - Bean 'validator' of type [class org.springframework.validation.beanvalidation.LocalValidatorFactoryBean] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+11:27:14.564 - I[main        ] - PostProcessorRegistrationDelegate$BeanPostProcessorChecker - Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [class org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$dadfbd22] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+11:27:14.847 - I[main        ] - TomcatEmbeddedServletContainer - Tomcat initialized with port(s): 61222 (http)
+11:27:14.856 - I[main        ] - StandardService - Starting service Tomcat
+11:27:14.857 - I[main        ] - StandardEngine - Starting Servlet Engine: Apache Tomcat/8.5.11
+11:27:14.966 - I[localhost-startStop-1] - [/] - Initializing Spring embedded WebApplicationContext
+11:27:14.966 - I[localhost-startStop-1] - ContextLoader - Root WebApplicationContext: initialization completed in 1444 ms
+11:27:15.223 - I[localhost-startStop-1] - ServletRegistrationBean - Mapping servlet: 'dispatcherServlet' to [/]
+11:27:15.226 - I[localhost-startStop-1] - FilterRegistrationBean - Mapping filter: 'metricsFilter' to: [/*]
+11:27:15.226 - I[localhost-startStop-1] - FilterRegistrationBean - Mapping filter: 'characterEncodingFilter' to: [/*]
+11:27:15.226 - I[localhost-startStop-1] - FilterRegistrationBean - Mapping filter: 'hiddenHttpMethodFilter' to: [/*]
+11:27:15.226 - I[localhost-startStop-1] - FilterRegistrationBean - Mapping filter: 'httpPutFormContentFilter' to: [/*]
+11:27:15.226 - I[localhost-startStop-1] - FilterRegistrationBean - Mapping filter: 'requestContextFilter' to: [/*]
+11:27:15.226 - I[localhost-startStop-1] - FilterRegistrationBean - Mapping filter: 'webRequestLoggingFilter' to: [/*]
+11:27:15.226 - I[localhost-startStop-1] - FilterRegistrationBean - Mapping filter: 'applicationContextIdFilter' to: [/*]
+11:27:15.427 - I[main        ] - ThreadPoolExecutorAutoConfiguration - Create ExecutorService with: namePrefix=pimthread-, corePoolSize=2, maxPoolSize=10, queueCapacity=100, priority=5, keepAliveSeconds=60
+11:27:15.433 - I[main        ] - TunedThreadPoolExecutorFactoryBean - Initializing ExecutorService  'executorService'
+11:27:15.437 - I[main        ] - ScheduledThreadPoolExecutorAutoConfiguration - Create ScheduledExecutorService with: namePrefix=pimscheduler-, poolSize=3, priority=5
+11:27:15.442 - I[main        ] - ScheduledExecutorFactoryBean - Initializing ExecutorService  'scheduledExecutorService'
+11:27:15.444 - I[main        ] - TaskSchedulerAutoConfiguration - Create TaskScheduler
+11:27:15.613 - I[main        ] - RequestMappingHandlerAdapter - Looking for @ControllerAdvice: org.springframework.boot.context.embedded.AnnotationConfigEmbeddedWebApplicationContext@1460a8c0: startup date [Tue Feb 14 11:27:13 CET 2017]; root of context hierarchy
+11:27:15.672 - I[main        ] - RequestMappingHandlerMapping - Mapped "{[/error]}" onto public org.springframework.http.ResponseEntity<java.util.Map<java.lang.String, java.lang.Object>> org.springframework.boot.autoconfigure.web.BasicErrorController.error(javax.servlet.http.HttpServletRequest)
+11:27:15.673 - I[main        ] - RequestMappingHandlerMapping - Mapped "{[/error],produces=[text/html]}" onto public org.springframework.web.servlet.ModelAndView org.springframework.boot.autoconfigure.web.BasicErrorController.errorHtml(javax.servlet.http.HttpServletRequest,javax.servlet.http.HttpServletResponse)
+11:27:15.697 - I[main        ] - SimpleUrlHandlerMapping - Mapped URL path [/webjars/**] onto handler of type [class org.springframework.web.servlet.resource.ResourceHttpRequestHandler]
+11:27:15.697 - I[main        ] - SimpleUrlHandlerMapping - Mapped URL path [/**] onto handler of type [class org.springframework.web.servlet.resource.ResourceHttpRequestHandler]
+11:27:15.727 - I[main        ] - SimpleUrlHandlerMapping - Mapped URL path [/**/favicon.ico] onto handler of type [class org.springframework.web.servlet.resource.ResourceHttpRequestHandler]
+11:27:15.944 - I[main        ] - EndpointHandlerMapping - Mapped "{[/info || /info.json],methods=[GET],produces=[application/vnd.spring-boot.actuator.v1+json || application/json]}" onto public java.lang.Object org.springframework.boot.actuate.endpoint.mvc.EndpointMvcAdapter.invoke()
+11:27:15.945 - I[main        ] - EndpointHandlerMapping - Mapped "{[/health || /health.json],methods=[GET],produces=[application/vnd.spring-boot.actuator.v1+json || application/json]}" onto public java.lang.Object org.springframework.boot.actuate.endpoint.mvc.HealthMvcEndpoint.invoke(javax.servlet.http.HttpServletRequest)
+11:27:15.945 - I[main        ] - EndpointHandlerMapping - Mapped "{[/metrics/{name:.*}],methods=[GET],produces=[application/vnd.spring-boot.actuator.v1+json || application/json]}" onto public java.lang.Object org.springframework.boot.actuate.endpoint.mvc.MetricsMvcEndpoint.value(java.lang.String)
+11:27:15.945 - I[main        ] - EndpointHandlerMapping - Mapped "{[/metrics || /metrics.json],methods=[GET],produces=[application/vnd.spring-boot.actuator.v1+json || application/json]}" onto public java.lang.Object org.springframework.boot.actuate.endpoint.mvc.EndpointMvcAdapter.invoke()
+11:27:15.947 - I[main        ] - EndpointHandlerMapping - Mapped "{[/shutdown || /shutdown.json],methods=[POST],produces=[application/vnd.spring-boot.actuator.v1+json || application/json]}" onto public java.lang.Object org.springframework.boot.actuate.endpoint.mvc.ShutdownMvcEndpoint.invoke()
+11:27:16.115 - I[main        ] - Http11NioProtocol - Initializing ProtocolHandler ["http-nio-61222"]
+11:27:16.123 - I[main        ] - Http11NioProtocol - Starting ProtocolHandler [http-nio-61222]
+11:27:16.134 - I[main        ] - NioSelectorPool - Using a shared selector for servlet write/read
+11:27:16.146 - I[main        ] - TomcatEmbeddedServletContainer - Tomcat started on port(s): 61222 (http)
+11:27:16.150 - I[main        ] - PIMServerApplication - Started PIMServerApplication in 3.081 seconds (JVM running for 3.501)
+11:38:32.712 - I[main        ] - PIMServerApplication - Starting PIMServerApplication on VWAGWOCOM0MI with PID 4088 (D:\efreest\git\pim\pim-server\target\classes started by efreest in D:\efreest\git\pim\pim-server)
+11:38:32.714 - I[main        ] - PIMServerApplication - No active profile set, falling back to default profiles: default
+11:38:32.750 - I[main        ] - AnnotationConfigEmbeddedWebApplicationContext - Refreshing org.springframework.boot.context.embedded.AnnotationConfigEmbeddedWebApplicationContext@1460a8c0: startup date [Tue Feb 14 11:38:32 CET 2017]; root of context hierarchy
+11:38:33.008 - I[background-preinit] - Version - HV000001: Hibernate Validator 5.3.4.Final
+11:38:33.676 - I[main        ] - PostProcessorRegistrationDelegate$BeanPostProcessorChecker - Bean 'org.springframework.boot.autoconfigure.validation.ValidationAutoConfiguration' of type [class org.springframework.boot.autoconfigure.validation.ValidationAutoConfiguration] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+11:38:33.744 - I[main        ] - PostProcessorRegistrationDelegate$BeanPostProcessorChecker - Bean 'validator' of type [class org.springframework.validation.beanvalidation.LocalValidatorFactoryBean] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+11:38:33.808 - I[main        ] - PostProcessorRegistrationDelegate$BeanPostProcessorChecker - Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [class org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$760879b3] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+11:38:34.175 - I[main        ] - TomcatEmbeddedServletContainer - Tomcat initialized with port(s): 61222 (http)
+11:38:34.191 - I[main        ] - StandardService - Starting service Tomcat
+11:38:34.193 - I[main        ] - StandardEngine - Starting Servlet Engine: Apache Tomcat/8.5.11
+11:38:34.311 - I[localhost-startStop-1] - [/] - Initializing Spring embedded WebApplicationContext
+11:38:34.311 - I[localhost-startStop-1] - ContextLoader - Root WebApplicationContext: initialization completed in 1561 ms
+11:38:34.611 - I[localhost-startStop-1] - ServletRegistrationBean - Mapping servlet: 'dispatcherServlet' to [/]
+11:38:34.615 - I[localhost-startStop-1] - FilterRegistrationBean - Mapping filter: 'metricsFilter' to: [/*]
+11:38:34.615 - I[localhost-startStop-1] - FilterRegistrationBean - Mapping filter: 'characterEncodingFilter' to: [/*]
+11:38:34.615 - I[localhost-startStop-1] - FilterRegistrationBean - Mapping filter: 'hiddenHttpMethodFilter' to: [/*]
+11:38:34.615 - I[localhost-startStop-1] - FilterRegistrationBean - Mapping filter: 'httpPutFormContentFilter' to: [/*]
+11:38:34.615 - I[localhost-startStop-1] - FilterRegistrationBean - Mapping filter: 'requestContextFilter' to: [/*]
+11:38:34.615 - I[localhost-startStop-1] - FilterRegistrationBean - Mapping filter: 'webRequestLoggingFilter' to: [/*]
+11:38:34.615 - I[localhost-startStop-1] - FilterRegistrationBean - Mapping filter: 'applicationContextIdFilter' to: [/*]
+11:38:34.804 - I[main        ] - ThreadPoolExecutorAutoConfiguration - Create ExecutorService with: namePrefix=pimthread-, corePoolSize=2, maxPoolSize=10, queueCapacity=100, priority=5, keepAliveSeconds=60
+11:38:34.810 - I[main        ] - TunedThreadPoolExecutorFactoryBean - Initializing ExecutorService  'executorService'
+11:38:34.815 - I[main        ] - ScheduledThreadPoolExecutorAutoConfiguration - Create ScheduledExecutorService with: namePrefix=pimscheduler-, poolSize=3, priority=5
+11:38:34.819 - I[main        ] - ScheduledExecutorFactoryBean - Initializing ExecutorService  'scheduledExecutorService'
+11:38:34.822 - I[main        ] - TaskSchedulerAutoConfiguration - Create TaskScheduler
+11:38:35.004 - I[main        ] - RequestMappingHandlerAdapter - Looking for @ControllerAdvice: org.springframework.boot.context.embedded.AnnotationConfigEmbeddedWebApplicationContext@1460a8c0: startup date [Tue Feb 14 11:38:32 CET 2017]; root of context hierarchy
+11:38:35.057 - I[main        ] - RequestMappingHandlerMapping - Mapped "{[/error]}" onto public org.springframework.http.ResponseEntity<java.util.Map<java.lang.String, java.lang.Object>> org.springframework.boot.autoconfigure.web.BasicErrorController.error(javax.servlet.http.HttpServletRequest)
+11:38:35.057 - I[main        ] - RequestMappingHandlerMapping - Mapped "{[/error],produces=[text/html]}" onto public org.springframework.web.servlet.ModelAndView org.springframework.boot.autoconfigure.web.BasicErrorController.errorHtml(javax.servlet.http.HttpServletRequest,javax.servlet.http.HttpServletResponse)
+11:38:35.086 - I[main        ] - SimpleUrlHandlerMapping - Mapped URL path [/webjars/**] onto handler of type [class org.springframework.web.servlet.resource.ResourceHttpRequestHandler]
+11:38:35.086 - I[main        ] - SimpleUrlHandlerMapping - Mapped URL path [/**] onto handler of type [class org.springframework.web.servlet.resource.ResourceHttpRequestHandler]
+11:38:35.118 - I[main        ] - SimpleUrlHandlerMapping - Mapped URL path [/**/favicon.ico] onto handler of type [class org.springframework.web.servlet.resource.ResourceHttpRequestHandler]
+11:38:35.381 - I[main        ] - EndpointHandlerMapping - Mapped "{[/info || /info.json],methods=[GET],produces=[application/vnd.spring-boot.actuator.v1+json || application/json]}" onto public java.lang.Object org.springframework.boot.actuate.endpoint.mvc.EndpointMvcAdapter.invoke()
+11:38:35.382 - I[main        ] - EndpointHandlerMapping - Mapped "{[/metrics/{name:.*}],methods=[GET],produces=[application/vnd.spring-boot.actuator.v1+json || application/json]}" onto public java.lang.Object org.springframework.boot.actuate.endpoint.mvc.MetricsMvcEndpoint.value(java.lang.String)
+11:38:35.382 - I[main        ] - EndpointHandlerMapping - Mapped "{[/metrics || /metrics.json],methods=[GET],produces=[application/vnd.spring-boot.actuator.v1+json || application/json]}" onto public java.lang.Object org.springframework.boot.actuate.endpoint.mvc.EndpointMvcAdapter.invoke()
+11:38:35.384 - I[main        ] - EndpointHandlerMapping - Mapped "{[/shutdown || /shutdown.json],methods=[POST],produces=[application/vnd.spring-boot.actuator.v1+json || application/json]}" onto public java.lang.Object org.springframework.boot.actuate.endpoint.mvc.ShutdownMvcEndpoint.invoke()
+11:38:35.385 - I[main        ] - EndpointHandlerMapping - Mapped "{[/health || /health.json],methods=[GET],produces=[application/vnd.spring-boot.actuator.v1+json || application/json]}" onto public java.lang.Object org.springframework.boot.actuate.endpoint.mvc.HealthMvcEndpoint.invoke(javax.servlet.http.HttpServletRequest)
+11:38:35.532 - I[main        ] - Http11NioProtocol - Initializing ProtocolHandler ["http-nio-61222"]
+11:38:35.544 - I[main        ] - Http11NioProtocol - Starting ProtocolHandler [http-nio-61222]
+11:38:35.567 - I[main        ] - NioSelectorPool - Using a shared selector for servlet write/read
+11:38:35.581 - I[main        ] - TomcatEmbeddedServletContainer - Tomcat started on port(s): 61222 (http)
+11:38:35.584 - I[main        ] - PIMServerApplication - Started PIMServerApplication in 3.294 seconds (JVM running for 3.749)
