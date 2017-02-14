@@ -1,7 +1,7 @@
 // Created: 13.12.2016
 package de.freese.pim.gui.mail;
 
-import de.freese.pim.gui.view.IView;
+import de.freese.pim.gui.view.View;
 import de.freese.pim.server.mail.model.Mail;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
@@ -26,7 +26,7 @@ import javafx.scene.web.WebView;
  * @author Thomas Freese
  */
 @SuppressWarnings("restriction")
-public class MailView implements IView
+public class MailView implements View
 {
     /**
      *

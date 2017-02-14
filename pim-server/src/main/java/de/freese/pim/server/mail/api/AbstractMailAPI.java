@@ -11,11 +11,11 @@ import org.slf4j.LoggerFactory;
 import de.freese.pim.server.mail.model.MailAccount;
 
 /**
- * Basis-Implementierung der {@link IMailAPI}.
+ * Basis-Implementierung der {@link MailAPI}.
  *
  * @author Thomas Freese
  */
-public abstract class AbstractMailAPI implements IMailAPI
+public abstract class AbstractMailAPI implements MailAPI
 {
     /**
      *
@@ -55,7 +55,7 @@ public abstract class AbstractMailAPI implements IMailAPI
     }
 
     /**
-     * @see de.freese.pim.server.mail.api.IMailAPI#getAccount()
+     * @see de.freese.pim.server.mail.api.MailAPI#getAccount()
      */
     @Override
     public MailAccount getAccount()
@@ -64,7 +64,7 @@ public abstract class AbstractMailAPI implements IMailAPI
     }
 
     /**
-     * @see de.freese.pim.server.mail.api.IMailAPI#getBasePath()
+     * @see de.freese.pim.server.mail.api.MailAPI#getBasePath()
      */
     @Override
     public Path getBasePath()
@@ -73,7 +73,7 @@ public abstract class AbstractMailAPI implements IMailAPI
     }
 
     /**
-     * @see de.freese.pim.server.mail.api.IMailAPI#setExecutorService(java.util.concurrent.ExecutorService)
+     * @see de.freese.pim.server.mail.api.MailAPI#setExecutorService(java.util.concurrent.ExecutorService)
      */
     @Override
     public void setExecutorService(final ExecutorService executor)

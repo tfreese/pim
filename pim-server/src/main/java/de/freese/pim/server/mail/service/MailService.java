@@ -4,9 +4,9 @@ package de.freese.pim.server.mail.service;
 import java.util.List;
 import java.util.concurrent.Future;
 import java.util.function.BiConsumer;
-
-import de.freese.pim.server.mail.api.IMailAPI;
-import de.freese.pim.server.mail.api.IMailContent;
+import org.springframework.web.context.request.async.DeferredResult;
+import de.freese.pim.server.mail.api.MailAPI;
+import de.freese.pim.server.mail.api.MailContent;
 import de.freese.pim.server.mail.model.Mail;
 import de.freese.pim.server.mail.model.MailAccount;
 import de.freese.pim.server.mail.model.MailFolder;
@@ -16,10 +16,10 @@ import de.freese.pim.server.mail.model.MailFolder;
  *
  * @author Thomas Freese
  */
-public interface IMailService
+public interface MailService
 {
     /**
-     * Erstellt für den Account eine Instanz von Typ {@link IMailAPI} und verbindet stellt die Verbindung her.<br>
+     * Erstellt für den Account eine Instanz von Typ {@link MailAPI} und verbindet stellt die Verbindung her.<br>
      *
      * @param account {@link MailAccount}
      * @throws Exception Falls was schief geht.
@@ -78,10 +78,10 @@ public interface IMailService
      * @param accountID long
      * @param mail {@link Mail}
      * @param loadMonitor {@link BiConsumer}
-     * @return {@link IMailContent}
+     * @return {@link MailContent}
      * @throws Exception Falls was schief geht.
      */
-    public IMailContent loadContent(long accountID, Mail mail, BiConsumer<Long, Long> loadMonitor) throws Exception;
+    public MailContent loadContent(long accountID, Mail mail, BiConsumer<Long, Long> loadMonitor) throws Exception;
 
     /**
      * Lädt die Folder des Accounts.
@@ -113,6 +113,17 @@ public interface IMailService
      * @throws Exception Falls was schief geht.
      */
     public Future<List<Mail>> loadMails2(long accountID, long folderID, String folderFullName) throws Exception;
+
+    /**
+     * Lädt die Mails des Folders vom Provider und aus der DB.
+     *
+     * @param accountID long
+     * @param folderID long
+     * @param folderFullName String
+     * @return {@link List}
+     * @throws Exception Falls was schief geht.
+     */
+    public DeferredResult<List<Mail>> loadMails3(long accountID, long folderID, String folderFullName) throws Exception;
 
     /**
      * Ändern eines {@link MailAccount}.

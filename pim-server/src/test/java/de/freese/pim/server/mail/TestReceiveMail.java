@@ -49,7 +49,7 @@ import com.sun.mail.imap.IMAPFolder;
 import com.sun.mail.util.ASCIIUtility;
 
 import de.freese.pim.common.function.FunctionStripNotLetter;
-import de.freese.pim.server.mail.api.IMailContent;
+import de.freese.pim.server.mail.api.MailContent;
 import de.freese.pim.server.mail.impl.JavaMailContent;
 
 /**
@@ -314,7 +314,7 @@ public class TestReceiveMail extends AbstractMailTest
                 {
                     MimeMessage message = new MimeMessage(null, is);
 
-                    IMailContent mailContent = new JavaMailContent(message);
+                    MailContent mailContent = new JavaMailContent(message);
 
                     String linkRegEx = "^((http[s]?|ftp|file):.*)|(^(www.).*)";
                     String mailRegEx = "^(.+)@(.+).(.+)$"; // ^[A-Za-z0-9+_.-]+@(.+)$

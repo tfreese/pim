@@ -11,7 +11,7 @@ import javax.sql.DataSource;
 import org.junit.Assert;
 import org.springframework.jdbc.datasource.SingleConnectionDataSource;
 
-import de.freese.pim.server.addressbook.dao.IAddressBookDAO;
+import de.freese.pim.server.addressbook.dao.AddressBookDAO;
 import de.freese.pim.server.addressbook.model.Kontakt;
 import de.freese.pim.server.addressbook.model.KontaktAttribut;
 
@@ -134,10 +134,10 @@ public abstract class AbstractDAOTextCase
     public abstract void test1000DeleteKontakt() throws Exception;
 
     /**
-     * @param addressBookDAO {@link IAddressBookDAO}
+     * @param addressBookDAO {@link AddressBookDAO}
      * @throws Exception Falls was schief geht.
      */
-    protected void doTest0100InsertKontakts(final IAddressBookDAO addressBookDAO) throws Exception
+    protected void doTest0100InsertKontakts(final AddressBookDAO addressBookDAO) throws Exception
     {
         long id = addressBookDAO.insertKontakt("BNachname", "BVorname");
         Assert.assertEquals(1, id);
@@ -147,20 +147,20 @@ public abstract class AbstractDAOTextCase
     }
 
     /**
-     * @param addressBookDAO {@link IAddressBookDAO}
+     * @param addressBookDAO {@link AddressBookDAO}
      * @throws Exception Falls was schief geht.
      */
-    protected void doTest0110InsertKontaktWithNullVorname(final IAddressBookDAO addressBookDAO) throws Exception
+    protected void doTest0110InsertKontaktWithNullVorname(final AddressBookDAO addressBookDAO) throws Exception
     {
         long id = addressBookDAO.insertKontakt("CNachname", null);
         Assert.assertEquals(3, id);
     }
 
     /**
-     * @param addressBookDAO {@link IAddressBookDAO}
+     * @param addressBookDAO {@link AddressBookDAO}
      * @throws Exception Falls was schief geht.
      */
-    protected void doTest0120InsertKontaktWithBlankVorname(final IAddressBookDAO addressBookDAO) throws Exception
+    protected void doTest0120InsertKontaktWithBlankVorname(final AddressBookDAO addressBookDAO) throws Exception
     {
         // Muss fehlschlagen.
         addressBookDAO.insertKontakt("DNachname", "");
@@ -169,10 +169,10 @@ public abstract class AbstractDAOTextCase
     }
 
     /**
-     * @param addressBookDAO {@link IAddressBookDAO}
+     * @param addressBookDAO {@link AddressBookDAO}
      * @throws Exception Falls was schief geht.
      */
-    protected void doTest0130InsertKontaktExisting(final IAddressBookDAO addressBookDAO) throws Exception
+    protected void doTest0130InsertKontaktExisting(final AddressBookDAO addressBookDAO) throws Exception
     {
         // Muss fehlschlagen.
         addressBookDAO.insertKontakt("ANachname", "AVorname");
@@ -181,10 +181,10 @@ public abstract class AbstractDAOTextCase
     }
 
     /**
-     * @param addressBookDAO {@link IAddressBookDAO}
+     * @param addressBookDAO {@link AddressBookDAO}
      * @throws Exception Falls was schief geht.
      */
-    protected void doTest0200UpdateKontakt(final IAddressBookDAO addressBookDAO) throws Exception
+    protected void doTest0200UpdateKontakt(final AddressBookDAO addressBookDAO) throws Exception
     {
         boolean success = addressBookDAO.updateKontakt(2, "ANachname", "A-Vorname");
 
@@ -192,10 +192,10 @@ public abstract class AbstractDAOTextCase
     }
 
     /**
-     * @param addressBookDAO {@link IAddressBookDAO}
+     * @param addressBookDAO {@link AddressBookDAO}
      * @throws Exception Falls was schief geht.
      */
-    protected void doTest0300InsertAttribut(final IAddressBookDAO addressBookDAO) throws Exception
+    protected void doTest0300InsertAttribut(final AddressBookDAO addressBookDAO) throws Exception
     {
         boolean success = addressBookDAO.insertAttribut(2, "STREET", "Street 1");
 
@@ -203,10 +203,10 @@ public abstract class AbstractDAOTextCase
     }
 
     /**
-     * @param addressBookDAO {@link IAddressBookDAO}
+     * @param addressBookDAO {@link AddressBookDAO}
      * @throws Exception Falls was schief geht.
      */
-    protected void doTest0310InsertInsertAttributWithNullValue(final IAddressBookDAO addressBookDAO) throws Exception
+    protected void doTest0310InsertInsertAttributWithNullValue(final AddressBookDAO addressBookDAO) throws Exception
     {
         // Muss fehlschlagen.
         boolean success = addressBookDAO.insertAttribut(2, "STREET", null);
@@ -215,10 +215,10 @@ public abstract class AbstractDAOTextCase
     }
 
     /**
-     * @param addressBookDAO {@link IAddressBookDAO}
+     * @param addressBookDAO {@link AddressBookDAO}
      * @throws Exception Falls was schief geht.
      */
-    protected void doTest0320InsertInsertAttributWithBlankValue(final IAddressBookDAO addressBookDAO) throws Exception
+    protected void doTest0320InsertInsertAttributWithBlankValue(final AddressBookDAO addressBookDAO) throws Exception
     {
         // Muss fehlschlagen.
         boolean success = addressBookDAO.insertAttribut(2, "STREET", "");
@@ -227,10 +227,10 @@ public abstract class AbstractDAOTextCase
     }
 
     /**
-     * @param addressBookDAO {@link IAddressBookDAO}
+     * @param addressBookDAO {@link AddressBookDAO}
      * @throws Exception Falls was schief geht.
      */
-    protected void doTest0330InsertInsertAttributWithNull(final IAddressBookDAO addressBookDAO) throws Exception
+    protected void doTest0330InsertInsertAttributWithNull(final AddressBookDAO addressBookDAO) throws Exception
     {
         // Muss fehlschlagen.
         boolean success = addressBookDAO.insertAttribut(2, null, "Street 1");
@@ -239,10 +239,10 @@ public abstract class AbstractDAOTextCase
     }
 
     /**
-     * @param addressBookDAO {@link IAddressBookDAO}
+     * @param addressBookDAO {@link AddressBookDAO}
      * @throws Exception Falls was schief geht.
      */
-    protected void doTest0340InsertInsertAttributWithBlank(final IAddressBookDAO addressBookDAO) throws Exception
+    protected void doTest0340InsertInsertAttributWithBlank(final AddressBookDAO addressBookDAO) throws Exception
     {
         // Muss fehlschlagen.
         boolean success = addressBookDAO.insertAttribut(2, "", "Street 1");
@@ -251,10 +251,10 @@ public abstract class AbstractDAOTextCase
     }
 
     /**
-     * @param addressBookDAO {@link IAddressBookDAO}
+     * @param addressBookDAO {@link AddressBookDAO}
      * @throws Exception Falls was schief geht.
      */
-    protected void doTest0350InsertAttributExisting(final IAddressBookDAO addressBookDAO) throws Exception
+    protected void doTest0350InsertAttributExisting(final AddressBookDAO addressBookDAO) throws Exception
     {
         // Muss fehlschlagen.
         boolean success = addressBookDAO.insertAttribut(2, "STREET", "Street 1");
@@ -263,10 +263,10 @@ public abstract class AbstractDAOTextCase
     }
 
     /**
-     * @param addressBookDAO {@link IAddressBookDAO}
+     * @param addressBookDAO {@link AddressBookDAO}
      * @throws Exception Falls was schief geht.
      */
-    protected void doTest0400UpdateAttribut(final IAddressBookDAO addressBookDAO) throws Exception
+    protected void doTest0400UpdateAttribut(final AddressBookDAO addressBookDAO) throws Exception
     {
         boolean success = addressBookDAO.updateAttribut(2, "STREET", "Street 2");
 
@@ -274,10 +274,10 @@ public abstract class AbstractDAOTextCase
     }
 
     /**
-     * @param addressBookDAO {@link IAddressBookDAO}
+     * @param addressBookDAO {@link AddressBookDAO}
      * @throws Exception Falls was schief geht.
      */
-    protected void doTest0500GetKontaktDetailsAll(final IAddressBookDAO addressBookDAO) throws Exception
+    protected void doTest0500GetKontaktDetailsAll(final AddressBookDAO addressBookDAO) throws Exception
     {
         List<Kontakt> kontakts = addressBookDAO.getKontaktDetails();
 
@@ -308,10 +308,10 @@ public abstract class AbstractDAOTextCase
     }
 
     /**
-     * @param addressBookDAO {@link IAddressBookDAO}
+     * @param addressBookDAO {@link AddressBookDAO}
      * @throws Exception Falls was schief geht.
      */
-    protected void doTest0510GetKontaktDetailsWithID(final IAddressBookDAO addressBookDAO) throws Exception
+    protected void doTest0510GetKontaktDetailsWithID(final AddressBookDAO addressBookDAO) throws Exception
     {
         List<Kontakt> kontakts = addressBookDAO.getKontaktDetails(2);
 
@@ -329,10 +329,10 @@ public abstract class AbstractDAOTextCase
     }
 
     /**
-     * @param addressBookDAO {@link IAddressBookDAO}
+     * @param addressBookDAO {@link AddressBookDAO}
      * @throws Exception Falls was schief geht.
      */
-    protected void doTest0520GetKontaktDetailsWithIDs(final IAddressBookDAO addressBookDAO) throws Exception
+    protected void doTest0520GetKontaktDetailsWithIDs(final AddressBookDAO addressBookDAO) throws Exception
     {
         List<Kontakt> kontakts = addressBookDAO.getKontaktDetails(2, 3);
 
@@ -356,10 +356,10 @@ public abstract class AbstractDAOTextCase
     }
 
     /**
-     * @param addressBookDAO {@link IAddressBookDAO}
+     * @param addressBookDAO {@link AddressBookDAO}
      * @throws Exception Falls was schief geht.
      */
-    protected void doTest0600GetKontakte(final IAddressBookDAO addressBookDAO) throws Exception
+    protected void doTest0600GetKontakte(final AddressBookDAO addressBookDAO) throws Exception
     {
         List<Kontakt> kontakte = addressBookDAO.getKontakte();
 
@@ -380,10 +380,10 @@ public abstract class AbstractDAOTextCase
     }
 
     /**
-     * @param addressBookDAO {@link IAddressBookDAO}
+     * @param addressBookDAO {@link AddressBookDAO}
      * @throws Exception Falls was schief geht.
      */
-    protected void doTest0700SearchKontakts(final IAddressBookDAO addressBookDAO) throws Exception
+    protected void doTest0700SearchKontakts(final AddressBookDAO addressBookDAO) throws Exception
     {
         List<Kontakt> kontakte = addressBookDAO.searchKontakte("vor");
 
@@ -407,10 +407,10 @@ public abstract class AbstractDAOTextCase
     }
 
     /**
-     * @param addressBookDAO {@link IAddressBookDAO}
+     * @param addressBookDAO {@link AddressBookDAO}
      * @throws Exception Falls was schief geht.
      */
-    protected void doTest0900DeleteAttribut(final IAddressBookDAO addressBookDAO) throws Exception
+    protected void doTest0900DeleteAttribut(final AddressBookDAO addressBookDAO) throws Exception
     {
         boolean success = addressBookDAO.deleteAttribut(2, "STREET");
 
@@ -418,10 +418,10 @@ public abstract class AbstractDAOTextCase
     }
 
     /**
-     * @param addressBookDAO {@link IAddressBookDAO}
+     * @param addressBookDAO {@link AddressBookDAO}
      * @throws Exception Falls was schief geht.
      */
-    protected void doTest1000DeleteKontakt(final IAddressBookDAO addressBookDAO) throws Exception
+    protected void doTest1000DeleteKontakt(final AddressBookDAO addressBookDAO) throws Exception
     {
         boolean success = addressBookDAO.deleteKontakt(3);
 

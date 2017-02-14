@@ -15,7 +15,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import de.freese.pim.server.mail.dao.DefaultMailDAO;
-import de.freese.pim.server.mail.dao.IMailDAO;
+import de.freese.pim.server.mail.dao.MailDAO;
 
 /**
  * @author Thomas Freese
@@ -68,10 +68,10 @@ public class TestMailConfig
 
     /**
      * @param dataSource {@link DataSource}
-     * @return {@link IMailDAO}
+     * @return {@link MailDAO}
      */
     @Bean
-    public IMailDAO mailDAO(final DataSource dataSource)
+    public MailDAO mailDAO(final DataSource dataSource)
     {
         DefaultMailDAO dao = new DefaultMailDAO();
         dao.setDataSource(dataSource);

@@ -33,13 +33,13 @@ import com.sun.mail.imap.IMAPFolder;
 import com.sun.mail.imap.IMAPStore;
 
 import de.freese.pim.server.mail.api.AbstractMailAPI;
-import de.freese.pim.server.mail.api.IMailAPI;
+import de.freese.pim.server.mail.api.MailAPI;
 import de.freese.pim.server.mail.model.Mail;
 import de.freese.pim.server.mail.model.MailAccount;
 import de.freese.pim.server.mail.model.MailFolder;
 
 /**
- * JavaMail-Implementierung des {@link IMailAPI}.
+ * JavaMail-Implementierung des {@link MailAPI}.
  *
  * @author Thomas Freese
  */
@@ -119,7 +119,7 @@ public class JavaMailAPI extends AbstractMailAPI
     }
 
     /**
-     * @see de.freese.pim.server.mail.api.IMailAPI#connect()
+     * @see de.freese.pim.server.mail.api.MailAPI#connect()
      */
     @Override
     public void connect() throws Exception
@@ -263,7 +263,7 @@ public class JavaMailAPI extends AbstractMailAPI
     }
 
     /**
-     * @see de.freese.pim.server.mail.api.IMailAPI#disconnect()
+     * @see de.freese.pim.server.mail.api.MailAPI#disconnect()
      */
     @Override
     public void disconnect() throws Exception
@@ -311,7 +311,7 @@ public class JavaMailAPI extends AbstractMailAPI
     }
 
     /**
-     * @see de.freese.pim.server.mail.api.IMailAPI#getFolder()
+     * @see de.freese.pim.server.mail.api.MailAPI#getFolder()
      */
     @Override
     public List<MailFolder> getFolder() throws Exception
@@ -375,7 +375,7 @@ public class JavaMailAPI extends AbstractMailAPI
     }
 
     /**
-     * @see de.freese.pim.server.mail.api.IMailAPI#loadCurrentMessageIDs(java.lang.String)
+     * @see de.freese.pim.server.mail.api.MailAPI#loadCurrentMessageIDs(java.lang.String)
      */
     @Override
     public Set<Long> loadCurrentMessageIDs(final String folderFullName) throws Exception
@@ -414,7 +414,7 @@ public class JavaMailAPI extends AbstractMailAPI
     }
 
     /**
-     * @see de.freese.pim.server.mail.api.IMailAPI#loadMail(java.lang.String, long, java.io.OutputStream)
+     * @see de.freese.pim.server.mail.api.MailAPI#loadMail(java.lang.String, long, java.io.OutputStream)
      */
     @Override
     public void loadMail(final String folderFullName, final long uid, final OutputStream outputStream) throws Exception
@@ -436,7 +436,7 @@ public class JavaMailAPI extends AbstractMailAPI
     }
 
     /**
-     * @see de.freese.pim.server.mail.api.IMailAPI#loadMails(java.lang.String, long)
+     * @see de.freese.pim.server.mail.api.MailAPI#loadMails(java.lang.String, long)
      */
     @Override
     public List<Mail> loadMails(final String folderFullName, final long uidFrom) throws Exception
@@ -572,7 +572,7 @@ public class JavaMailAPI extends AbstractMailAPI
     }
 
     /**
-     * @see de.freese.pim.server.mail.api.IMailAPI#setSeen(de.freese.pim.server.mail.model.Mail, boolean)
+     * @see de.freese.pim.server.mail.api.MailAPI#setSeen(de.freese.pim.server.mail.model.Mail, boolean)
      */
     @Override
     public void setSeen(final Mail mail, final boolean seen) throws Exception
@@ -599,7 +599,7 @@ public class JavaMailAPI extends AbstractMailAPI
     }
 
     /**
-     * @see de.freese.pim.server.mail.api.IMailAPI#testConnection()
+     * @see de.freese.pim.server.mail.api.MailAPI#testConnection()
      */
     @Override
     public void testConnection() throws Exception

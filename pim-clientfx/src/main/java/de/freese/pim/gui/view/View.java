@@ -6,7 +6,7 @@ package de.freese.pim.gui.view;
  * 
  * @author Thomas Freese
  */
-public interface IView
+public interface View
 {
 
 }

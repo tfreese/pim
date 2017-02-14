@@ -18,7 +18,7 @@ import javax.mail.internet.MimePart;
 
 import org.apache.commons.lang3.StringUtils;
 
-import de.freese.pim.server.mail.api.IMailContent;
+import de.freese.pim.server.mail.api.MailContent;
 import de.freese.pim.server.mail.utils.MailUtils;
 
 /**
@@ -26,7 +26,7 @@ import de.freese.pim.server.mail.utils.MailUtils;
  *
  * @author Thomas Freese
  */
-public class JavaMailContent implements IMailContent
+public class JavaMailContent implements MailContent
 {
     /**
     *
@@ -183,7 +183,7 @@ public class JavaMailContent implements IMailContent
     // }
 
     /**
-     * @see de.freese.pim.server.mail.api.IMailContent#getAttachments()
+     * @see de.freese.pim.server.mail.api.MailContent#getAttachments()
      */
     @Override
     public Map<String, DataSource> getAttachments()
@@ -192,7 +192,7 @@ public class JavaMailContent implements IMailContent
     }
 
     /**
-     * @see de.freese.pim.server.mail.api.IMailContent#getEncoding()
+     * @see de.freese.pim.server.mail.api.MailContent#getEncoding()
      */
     @Override
     public String getEncoding()
@@ -201,7 +201,7 @@ public class JavaMailContent implements IMailContent
     }
 
     /**
-     * @see de.freese.pim.server.mail.api.IMailContent#getInlineDataSource(java.lang.String)
+     * @see de.freese.pim.server.mail.api.MailContent#getInlineDataSource(java.lang.String)
      */
     @Override
     public DataSource getInlineDataSource(final String contentID) throws IOException
@@ -212,7 +212,7 @@ public class JavaMailContent implements IMailContent
     }
 
     /**
-     * @see de.freese.pim.server.mail.api.IMailContent#getMessageContent()
+     * @see de.freese.pim.server.mail.api.MailContent#getMessageContent()
      */
     @Override
     public String getMessageContent()
@@ -221,7 +221,7 @@ public class JavaMailContent implements IMailContent
     }
 
     /**
-     * @see de.freese.pim.server.mail.api.IMailContent#getMessageContentType()
+     * @see de.freese.pim.server.mail.api.MailContent#getMessageContentType()
      */
     @Override
     public String getMessageContentType()

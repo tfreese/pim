@@ -23,7 +23,7 @@ import de.freese.pim.server.jdbc.RowMapper;
  *
  * @author Thomas Freese
  */
-public abstract class AbstractAddressBookDAO extends AbstractDAO<IAddressBookDAO> implements IAddressBookDAO
+public abstract class AbstractAddressBookDAO extends AbstractDAO<AddressBookDAO> implements AddressBookDAO
 {
     /**
      * Mapped die Kontakte mit Attributen.
@@ -121,7 +121,7 @@ public abstract class AbstractAddressBookDAO extends AbstractDAO<IAddressBookDAO
     }
 
     /**
-     * @see de.freese.pim.server.addressbook.dao.IAddressBookDAO#backup(java.nio.file.Path)
+     * @see de.freese.pim.server.addressbook.dao.AddressBookDAO#backup(java.nio.file.Path)
      */
     @Override
     public boolean backup(final Path directory) throws Exception
@@ -151,7 +151,7 @@ public abstract class AbstractAddressBookDAO extends AbstractDAO<IAddressBookDAO
     }
 
     /**
-     * @see de.freese.pim.server.addressbook.dao.IAddressBookDAO#deleteAttribut(long, java.lang.String)
+     * @see de.freese.pim.server.addressbook.dao.AddressBookDAO#deleteAttribut(long, java.lang.String)
      */
     @Override
     public boolean deleteAttribut(final long kontaktID, final String attribut) throws Exception
@@ -179,7 +179,7 @@ public abstract class AbstractAddressBookDAO extends AbstractDAO<IAddressBookDAO
     }
 
     /**
-     * @see de.freese.pim.server.addressbook.dao.IAddressBookDAO#deleteKontakt(long)
+     * @see de.freese.pim.server.addressbook.dao.AddressBookDAO#deleteKontakt(long)
      */
     @Override
     public boolean deleteKontakt(final long id) throws Exception
@@ -219,7 +219,7 @@ public abstract class AbstractAddressBookDAO extends AbstractDAO<IAddressBookDAO
     }
 
     /**
-     * @see de.freese.pim.server.addressbook.dao.IAddressBookDAO#getKontaktDetails(long[])
+     * @see de.freese.pim.server.addressbook.dao.AddressBookDAO#getKontaktDetails(long[])
      */
     @Override
     public List<Kontakt> getKontaktDetails(final long... ids) throws Exception
@@ -275,7 +275,7 @@ public abstract class AbstractAddressBookDAO extends AbstractDAO<IAddressBookDAO
     }
 
     /**
-     * @see de.freese.pim.server.addressbook.dao.IAddressBookDAO#getKontakte()
+     * @see de.freese.pim.server.addressbook.dao.AddressBookDAO#getKontakte()
      */
     @Override
     public List<Kontakt> getKontakte() throws Exception
@@ -315,7 +315,7 @@ public abstract class AbstractAddressBookDAO extends AbstractDAO<IAddressBookDAO
     }
 
     /**
-     * @see de.freese.pim.server.addressbook.dao.IAddressBookDAO#insertAttribut(long, java.lang.String, java.lang.String)
+     * @see de.freese.pim.server.addressbook.dao.AddressBookDAO#insertAttribut(long, java.lang.String, java.lang.String)
      */
     @Override
     public boolean insertAttribut(final long kontaktID, final String attribut, final String wert) throws Exception
@@ -347,7 +347,7 @@ public abstract class AbstractAddressBookDAO extends AbstractDAO<IAddressBookDAO
     }
 
     /**
-     * @see de.freese.pim.server.addressbook.dao.IAddressBookDAO#insertKontakt(java.lang.String, java.lang.String)
+     * @see de.freese.pim.server.addressbook.dao.AddressBookDAO#insertKontakt(java.lang.String, java.lang.String)
      */
     @Override
     public long insertKontakt(final String nachname, final String vorname) throws Exception
@@ -389,7 +389,7 @@ public abstract class AbstractAddressBookDAO extends AbstractDAO<IAddressBookDAO
     }
 
     /**
-     * @see de.freese.pim.server.addressbook.dao.IAddressBookDAO#searchKontakte(java.lang.String)
+     * @see de.freese.pim.server.addressbook.dao.AddressBookDAO#searchKontakte(java.lang.String)
      */
     @Override
     public List<Kontakt> searchKontakte(final String name) throws Exception
@@ -429,7 +429,7 @@ public abstract class AbstractAddressBookDAO extends AbstractDAO<IAddressBookDAO
     }
 
     /**
-     * @see de.freese.pim.server.addressbook.dao.IAddressBookDAO#updateAttribut(long, java.lang.String, java.lang.String)
+     * @see de.freese.pim.server.addressbook.dao.AddressBookDAO#updateAttribut(long, java.lang.String, java.lang.String)
      */
     @Override
     public boolean updateAttribut(final long kontaktID, final String attribut, final String wert) throws Exception
@@ -460,7 +460,7 @@ public abstract class AbstractAddressBookDAO extends AbstractDAO<IAddressBookDAO
     }
 
     /**
-     * @see de.freese.pim.server.addressbook.dao.IAddressBookDAO#updateKontakt(long, java.lang.String, java.lang.String)
+     * @see de.freese.pim.server.addressbook.dao.AddressBookDAO#updateKontakt(long, java.lang.String, java.lang.String)
      */
     @Override
     public boolean updateKontakt(final long id, final String nachname, final String vorname) throws Exception

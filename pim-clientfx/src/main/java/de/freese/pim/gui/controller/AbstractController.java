@@ -6,17 +6,19 @@ import java.util.concurrent.ScheduledExecutorService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import de.freese.pim.gui.PIMApplication;
+import de.freese.pim.gui.main.MainController;
+import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.ToolBar;
 import javafx.stage.Window;
 
 /**
- * Abstract Implementierung von {@link IController}.
+ * Abstract Implementierung eines Controllers.
  *
  * @author Thomas Freese
  */
 @SuppressWarnings("restriction")
-public abstract class AbstractController implements IController
+public abstract class AbstractController implements Initializable
 {
     /**
     *
@@ -50,6 +52,11 @@ public abstract class AbstractController implements IController
     }
 
     /**
+     * Wird vom {@link MainController} aufgerufen, wenn der Controller aktiviert wird.
+     */
+    public abstract void activate();
+
+    /**
      * @return {@link ExecutorService}
      */
     public ExecutorService getExecutorService()
@@ -66,9 +73,10 @@ public abstract class AbstractController implements IController
     }
 
     /**
-     * @see de.freese.pim.gui.controller.IController#getMainNode()
+     * Liefert den {@link Node} der Ansicht.
+     *
+     * @return {@link Node}
      */
-    @Override
     public Node getMainNode()
     {
         return null;
@@ -83,9 +91,10 @@ public abstract class AbstractController implements IController
     }
 
     /**
-     * @see de.freese.pim.gui.controller.IController#getNaviNode()
+     * Liefert den {@link Node} der Ansicht.
+     *
+     * @return {@link Node}
      */
-    @Override
     public Node getNaviNode()
     {
         return null;
@@ -100,9 +109,10 @@ public abstract class AbstractController implements IController
     }
 
     /**
-     * @see de.freese.pim.gui.controller.IController#getToolBar()
+     * Liefert die {@link ToolBar} der Ansicht.
+     *
+     * @return {@link ToolBar}
      */
-    @Override
     public ToolBar getToolBar()
     {
         return null;

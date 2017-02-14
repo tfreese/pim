@@ -10,7 +10,7 @@ import de.freese.pim.gui.view.ErrorDialog;
 import de.freese.pim.server.mail.model.Mail;
 import de.freese.pim.server.mail.model.MailAccount;
 import de.freese.pim.server.mail.model.MailFolder;
-import de.freese.pim.server.mail.service.IMailService;
+import de.freese.pim.server.mail.service.MailService;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.scene.control.TreeView;
@@ -40,17 +40,17 @@ public class LoadMailsTask extends Task<Void>
     /**
     *
     */
-    private final IMailService mailService;
+    private final MailService mailService;
 
     /**
      * Erzeugt eine neue Instanz von {@link LoadMailsTask}
      *
      * @param treeView {@link TreeView}
      * @param folders {@link List}
-     * @param mailService {@link IMailService}
+     * @param mailService {@link MailService}
      * @param account {@link MailAccount}
      */
-    public LoadMailsTask(final TreeView<Object> treeView, final List<MailFolder> folders, final IMailService mailService, final MailAccount account)
+    public LoadMailsTask(final TreeView<Object> treeView, final List<MailFolder> folders, final MailService mailService, final MailAccount account)
     {
         super();
 

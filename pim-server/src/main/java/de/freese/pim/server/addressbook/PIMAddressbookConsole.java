@@ -27,7 +27,7 @@ import org.springframework.jdbc.datasource.SingleConnectionDataSource;
 import de.freese.pim.common.utils.PreserveOrderOptionGroup;
 import de.freese.pim.common.utils.Utils;
 import de.freese.pim.server.addressbook.dao.DefaultAddressBookDAO;
-import de.freese.pim.server.addressbook.dao.IAddressBookDAO;
+import de.freese.pim.server.addressbook.dao.AddressBookDAO;
 import de.freese.pim.server.addressbook.model.Kontakt;
 import de.freese.pim.server.addressbook.model.KontaktAttribut;
 import de.freese.pim.server.addressbook.service.DefaultAddressBookService;
@@ -93,15 +93,15 @@ public class PIMAddressbookConsole
 
         try
         {
-            IAddressBookDAO defaultDAO = new DefaultAddressBookDAO().dataSource(dataSource);
+            AddressBookDAO defaultDAO = new DefaultAddressBookDAO().dataSource(dataSource);
 
             DefaultAddressBookService defaultAddressBookService = new DefaultAddressBookService();
             defaultAddressBookService.setAddressBookDAO(defaultDAO);
 
-            IAddressBookDAO addressBookDAO = (IAddressBookDAO) Proxy.newProxyInstance(PIMAddressbookConsole.class.getClassLoader(),
+            AddressBookDAO addressBookDAO = (AddressBookDAO) Proxy.newProxyInstance(PIMAddressbookConsole.class.getClassLoader(),
                     new Class<?>[]
                     {
-                            IAddressBookDAO.class
+                            AddressBookDAO.class
                     }, new TransactionalInvocationHandler(dataSource, defaultAddressBookService));
 
             PIMAddressbookConsole addressbook = new PIMAddressbookConsole();
@@ -246,7 +246,7 @@ public class PIMAddressbookConsole
     /**
      *
      */
-    private IAddressBookDAO addressBookDAO = null;
+    private AddressBookDAO addressBookDAO = null;
 
     /**
      *
@@ -483,9 +483,9 @@ public class PIMAddressbookConsole
     }
 
     /**
-     * @param addressBookDAO {@link IAddressBookDAO}
+     * @param addressBookDAO {@link AddressBookDAO}
      */
-    private void setAddressBookDAO(final IAddressBookDAO addressBookDAO)
+    private void setAddressBookDAO(final AddressBookDAO addressBookDAO)
     {
         this.addressBookDAO = addressBookDAO;
     }

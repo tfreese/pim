@@ -23,7 +23,7 @@ import org.junit.runners.Parameterized.Parameters;
 
 import de.freese.pim.server.addressbook.TestAddressbookConfig;
 import de.freese.pim.server.addressbook.dao.DefaultAddressBookDAO;
-import de.freese.pim.server.addressbook.dao.IAddressBookDAO;
+import de.freese.pim.server.addressbook.dao.AddressBookDAO;
 import de.freese.pim.server.addressbook.service.DefaultAddressBookService;
 import de.freese.pim.server.jdbc.JdbcTemplate;
 import de.freese.pim.server.jdbc.transaction.ConnectionHolder;
@@ -154,9 +154,9 @@ public class TestConnectionHolder extends AbstractDAOTextCase
         {
                 {
                         DefaultAddressBookDAO.class.getSimpleName(),
-                        (IAddressBookDAO) Proxy.newProxyInstance(TestConnectionHolder.class.getClassLoader(), new Class<?>[]
+                        (AddressBookDAO) Proxy.newProxyInstance(TestConnectionHolder.class.getClassLoader(), new Class<?>[]
                         {
-                                IAddressBookDAO.class
+                                AddressBookDAO.class
                         }, new TransactionalInvocationHandler(dataSources.get(0), defaultAddressBookService))
                 },
                 {
@@ -170,7 +170,7 @@ public class TestConnectionHolder extends AbstractDAOTextCase
      *
      */
     @Parameter(value = 1)
-    public IAddressBookDAO addressBookDAO = null;
+    public AddressBookDAO addressBookDAO = null;
 
     /**
      * Wird nur für die Parameter-Injection benötigt.

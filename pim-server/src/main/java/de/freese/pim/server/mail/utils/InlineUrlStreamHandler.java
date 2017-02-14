@@ -6,7 +6,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLStreamHandler;
 
-import de.freese.pim.server.mail.api.IMailContent;
+import de.freese.pim.server.mail.api.MailContent;
 import de.freese.pim.server.mail.impl.JavaMailContent;
 
 /**
@@ -20,20 +20,20 @@ public class InlineUrlStreamHandler extends URLStreamHandler
     /**
     *
     */
-    private static IMailContent mailContent = null;
+    private static MailContent mailContent = null;
 
     /**
      * @return {@link JavaMailContent}
      */
-    public static IMailContent getMailContent()
+    public static MailContent getMailContent()
     {
         return mailContent;
     }
 
     /**
-     * @param mailContent {@link IMailContent}
+     * @param mailContent {@link MailContent}
      */
-    public static void setMailContent(final IMailContent mailContent)
+    public static void setMailContent(final MailContent mailContent)
     {
         InlineUrlStreamHandler.mailContent = mailContent;
     }

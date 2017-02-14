@@ -14,7 +14,7 @@ import de.freese.pim.server.mail.model.MailFolder;
 /**
  * @author Thomas Freese
  */
-public interface IMailDAO
+public interface MailDAO
 {
     /**
      * Löschen eines {@link MailAccount}.<br>

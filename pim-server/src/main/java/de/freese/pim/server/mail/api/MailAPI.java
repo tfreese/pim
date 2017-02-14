@@ -16,7 +16,7 @@ import de.freese.pim.server.mail.model.MailFolder;
  *
  * @author Thomas Freese
  */
-public interface IMailAPI
+public interface MailAPI
 {
     /**
      * Initialisiert den Service mit der konkreten Mail-API.

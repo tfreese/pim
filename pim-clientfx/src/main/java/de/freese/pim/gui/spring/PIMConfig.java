@@ -15,10 +15,10 @@ import org.springframework.context.annotation.Primary;
 
 import de.freese.pim.server.addressbook.dao.DefaultAddressBookDAO;
 import de.freese.pim.server.addressbook.service.DefaultAddressBookService;
-import de.freese.pim.server.addressbook.service.IAddressBookService;
+import de.freese.pim.server.addressbook.service.AddressBookService;
 import de.freese.pim.server.mail.dao.DefaultMailDAO;
 import de.freese.pim.server.mail.service.DefaultMailService;
-import de.freese.pim.server.mail.service.IMailService;
+import de.freese.pim.server.mail.service.MailService;
 
 /**
  * Spring-Konfiguration von PIM.
@@ -42,10 +42,10 @@ public class PIMConfig
 
     /**
      * @param dataSource {@link DataSource}
-     * @return {@link IAddressBookService}
+     * @return {@link AddressBookService}
      */
     @Bean
-    public IAddressBookService addressBookService(final DataSource dataSource)
+    public AddressBookService addressBookService(final DataSource dataSource)
     {
         DefaultAddressBookService defaultAddressBookService = new DefaultAddressBookService();
         defaultAddressBookService.setAddressBookDAO(new DefaultAddressBookDAO().dataSource(dataSource));
@@ -64,10 +64,10 @@ public class PIMConfig
      * @param dataSource {@link DataSource}
      * @param executorService {@link ExecutorService}
      * @param basePath {@link Path}
-     * @return {@link IMailService}
+     * @return {@link MailService}
      */
     @Bean(destroyMethod = "disconnectAccounts")
-    public IMailService mailService(final DataSource dataSource, final ExecutorService executorService, final Path basePath)
+    public MailService mailService(final DataSource dataSource, final ExecutorService executorService, final Path basePath)
     {
         DefaultMailService defaultMailService = new DefaultMailService();
         defaultMailService.setBasePath(basePath);

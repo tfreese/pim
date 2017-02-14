@@ -35,7 +35,7 @@ import de.freese.pim.server.mail.model.MailPort;
  *
  * @author Thomas Freese
  */
-public class AbstractMailDAO extends AbstractDAO<IMailDAO> implements IMailDAO
+public class AbstractMailDAO extends AbstractDAO<MailDAO> implements MailDAO
 {
     /**
      * @author Thomas Freese
@@ -251,7 +251,7 @@ public class AbstractMailDAO extends AbstractDAO<IMailDAO> implements IMailDAO
     }
 
     /**
-     * @see de.freese.pim.server.mail.dao.IMailDAO#deleteAccount(long)
+     * @see de.freese.pim.server.mail.dao.MailDAO#deleteAccount(long)
      */
     @Override
     public int deleteAccount(final long accountID) throws Exception
@@ -268,7 +268,7 @@ public class AbstractMailDAO extends AbstractDAO<IMailDAO> implements IMailDAO
     }
 
     /**
-     * @see de.freese.pim.server.mail.dao.IMailDAO#deleteFolder(long)
+     * @see de.freese.pim.server.mail.dao.MailDAO#deleteFolder(long)
      */
     @Override
     public int deleteFolder(final long folderID) throws Exception
@@ -285,7 +285,7 @@ public class AbstractMailDAO extends AbstractDAO<IMailDAO> implements IMailDAO
     }
 
     /**
-     * @see de.freese.pim.server.mail.dao.IMailDAO#deleteFolders(long)
+     * @see de.freese.pim.server.mail.dao.MailDAO#deleteFolders(long)
      */
     @Override
     public int deleteFolders(final long accountID) throws Exception
@@ -302,7 +302,7 @@ public class AbstractMailDAO extends AbstractDAO<IMailDAO> implements IMailDAO
     }
 
     /**
-     * @see de.freese.pim.server.mail.dao.IMailDAO#deleteMail(long, long)
+     * @see de.freese.pim.server.mail.dao.MailDAO#deleteMail(long, long)
      */
     @Override
     public int deleteMail(final long folderID, final long uid) throws Exception
@@ -320,7 +320,7 @@ public class AbstractMailDAO extends AbstractDAO<IMailDAO> implements IMailDAO
     }
 
     /**
-     * @see de.freese.pim.server.mail.dao.IMailDAO#deleteMails(long)
+     * @see de.freese.pim.server.mail.dao.MailDAO#deleteMails(long)
      */
     @Override
     public int deleteMails(final long folderID) throws Exception
@@ -337,7 +337,7 @@ public class AbstractMailDAO extends AbstractDAO<IMailDAO> implements IMailDAO
     }
 
     /**
-     * @see de.freese.pim.server.mail.dao.IMailDAO#getMailAccounts()
+     * @see de.freese.pim.server.mail.dao.MailDAO#getMailAccounts()
      */
     @Override
     public List<MailAccount> getMailAccounts() throws Exception
@@ -404,7 +404,7 @@ public class AbstractMailDAO extends AbstractDAO<IMailDAO> implements IMailDAO
     // }
 
     /**
-     * @see de.freese.pim.server.mail.dao.IMailDAO#getMailFolder(long)
+     * @see de.freese.pim.server.mail.dao.MailDAO#getMailFolder(long)
      */
     @Override
     public List<MailFolder> getMailFolder(final long accountID) throws Exception
@@ -418,7 +418,7 @@ public class AbstractMailDAO extends AbstractDAO<IMailDAO> implements IMailDAO
     }
 
     /**
-     * @see de.freese.pim.server.mail.dao.IMailDAO#getMails(long)
+     * @see de.freese.pim.server.mail.dao.MailDAO#getMails(long)
      */
     @Override
     public List<Mail> getMails(final long folderID) throws Exception
@@ -432,7 +432,7 @@ public class AbstractMailDAO extends AbstractDAO<IMailDAO> implements IMailDAO
     }
 
     /**
-     * @see de.freese.pim.server.mail.dao.IMailDAO#insertAccount(de.freese.pim.server.mail.model.MailAccount)
+     * @see de.freese.pim.server.mail.dao.MailDAO#insertAccount(de.freese.pim.server.mail.model.MailAccount)
      */
     @Override
     public int insertAccount(final MailAccount account) throws Exception
@@ -475,7 +475,7 @@ public class AbstractMailDAO extends AbstractDAO<IMailDAO> implements IMailDAO
     }
 
     /**
-     * @see de.freese.pim.server.mail.dao.IMailDAO#insertFolder(long, java.util.Collection)
+     * @see de.freese.pim.server.mail.dao.MailDAO#insertFolder(long, java.util.Collection)
      */
     @Override
     public int[] insertFolder(final long accountID, final Collection<MailFolder> folders) throws Exception
@@ -511,7 +511,7 @@ public class AbstractMailDAO extends AbstractDAO<IMailDAO> implements IMailDAO
     }
 
     /**
-     * @see de.freese.pim.server.mail.dao.IMailDAO#insertMail(long, java.util.Collection)
+     * @see de.freese.pim.server.mail.dao.MailDAO#insertMail(long, java.util.Collection)
      */
     @Override
     public int[] insertMail(final long folderID, final Collection<Mail> mails) throws Exception
@@ -578,7 +578,7 @@ public class AbstractMailDAO extends AbstractDAO<IMailDAO> implements IMailDAO
     }
 
     /**
-     * @see de.freese.pim.server.mail.dao.IMailDAO#updateAccount(de.freese.pim.server.mail.model.MailAccount)
+     * @see de.freese.pim.server.mail.dao.MailDAO#updateAccount(de.freese.pim.server.mail.model.MailAccount)
      */
     @Override
     public int updateAccount(final MailAccount account) throws Exception
@@ -616,7 +616,7 @@ public class AbstractMailDAO extends AbstractDAO<IMailDAO> implements IMailDAO
     }
 
     /**
-     * @see de.freese.pim.server.mail.dao.IMailDAO#updateFolder(de.freese.pim.server.mail.model.MailFolder)
+     * @see de.freese.pim.server.mail.dao.MailDAO#updateFolder(de.freese.pim.server.mail.model.MailFolder)
      */
     @Override
     public int updateFolder(final MailFolder folder) throws Exception
@@ -641,7 +641,7 @@ public class AbstractMailDAO extends AbstractDAO<IMailDAO> implements IMailDAO
     }
 
     /**
-     * @see de.freese.pim.server.mail.dao.IMailDAO#updateMail(long, de.freese.pim.server.mail.model.Mail)
+     * @see de.freese.pim.server.mail.dao.MailDAO#updateMail(long, de.freese.pim.server.mail.model.Mail)
      */
     @Override
     public int updateMail(final long folderID, final Mail mail) throws Exception

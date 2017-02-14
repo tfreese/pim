@@ -3,7 +3,7 @@ package de.freese.pim.gui.contact;
 
 import org.apache.commons.lang3.StringUtils;
 
-import de.freese.pim.gui.view.IView;
+import de.freese.pim.gui.view.View;
 import de.freese.pim.server.addressbook.model.Kontakt;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
@@ -33,7 +33,7 @@ import javafx.scene.layout.Region;
  * @author Thomas Freese
  */
 @SuppressWarnings("restriction")
-public class ContactView implements IView
+public class ContactView implements View
 {
     /**
     *

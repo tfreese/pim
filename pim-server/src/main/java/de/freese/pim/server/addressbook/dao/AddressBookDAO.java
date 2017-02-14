@@ -12,7 +12,7 @@ import de.freese.pim.server.addressbook.model.KontaktAttribut;
  *
  * @author Thomas Freese
  */
-public interface IAddressBookDAO
+public interface AddressBookDAO
 {
     /**
      * Erstellt ein Backup der DB im Verzeichnis.<br>

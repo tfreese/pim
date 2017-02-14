@@ -9,7 +9,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import de.freese.pim.gui.PIMApplication;
 import de.freese.pim.gui.utils.FXUtils;
-import de.freese.pim.server.mail.api.IMailAPI;
+import de.freese.pim.server.mail.api.MailAPI;
 import de.freese.pim.server.mail.impl.JavaMailAPI;
 import de.freese.pim.server.mail.model.MailAccount;
 import de.freese.pim.server.mail.model.MailFolder;
@@ -391,7 +391,7 @@ public class EditMailAccountDialog
 
         checkValidConfig(null, bundle);
 
-        IMailAPI mailAPI = new JavaMailAPI(bean, Paths.get("."));
+        MailAPI mailAPI = new JavaMailAPI(bean, Paths.get("."));
         // mailAPI.setExecutorService(PIMApplication.getExecutorService());
 
         try

@@ -3,7 +3,6 @@ package de.freese.pim.server.spring;
 
 import java.util.HashMap;
 import java.util.Map;
-
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -11,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
+ * https://spring.io/guides/tutorials/bookmarks/
+ * 
  * @author Thomas Freese
  */
 @RestController

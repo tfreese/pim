@@ -3,11 +3,9 @@ package de.freese.pim.gui.main;
 
 import java.net.URL;
 import java.util.ResourceBundle;
-
 import de.freese.pim.gui.contact.ContactController;
 import de.freese.pim.gui.contact.ContactView;
 import de.freese.pim.gui.controller.AbstractController;
-import de.freese.pim.gui.controller.IController;
 import de.freese.pim.gui.mail.MailController;
 import de.freese.pim.gui.mail.MailView;
 import de.freese.pim.gui.utils.FXUtils;
@@ -65,7 +63,7 @@ public class MainController extends AbstractController
     }
 
     /**
-     * @see de.freese.pim.gui.controller.IController#activate()
+     * @see de.freese.pim.gui.controller.AbstractController#activate()
      */
     @Override
     public void activate()
@@ -74,7 +72,7 @@ public class MainController extends AbstractController
     }
 
     /**
-     * @see de.freese.pim.gui.controller.IController#getMainNode()
+     * @see de.freese.pim.gui.controller.AbstractController#getMainNode()
      */
     @Override
     public Node getMainNode()
@@ -83,7 +81,7 @@ public class MainController extends AbstractController
     }
 
     /**
-     * @see de.freese.pim.gui.controller.IController#getNaviNode()
+     * @see de.freese.pim.gui.controller.AbstractController#getNaviNode()
      */
     @Override
     public Node getNaviNode()
@@ -92,7 +90,7 @@ public class MainController extends AbstractController
     }
 
     /**
-     * @see de.freese.pim.gui.controller.IController#getToolBar()
+     * @see de.freese.pim.gui.controller.AbstractController#getToolBar()
      */
     @Override
     public ToolBar getToolBar()
@@ -115,16 +113,14 @@ public class MainController extends AbstractController
         FXUtils.translate(this.buttonMailView, resources);
         FXUtils.translate(this.buttonContactView, resources);
 
-        this.buttonMailView.setOnAction(event ->
-        {
+        this.buttonMailView.setOnAction(event -> {
             this.mainView.setToolbar(this.mailController.getToolBar());
             this.mainView.setNavNode(this.mailController.getNaviNode());
             this.mainView.setMainNode(this.mailController.getMainNode());
             this.mailController.activate();
         });
 
-        this.buttonContactView.setOnAction(event ->
-        {
+        this.buttonContactView.setOnAction(event -> {
             this.mainView.setToolbar(this.contactController.getToolBar());
             this.mainView.setNavNode(this.contactController.getNaviNode());
             this.mainView.setMainNode(this.contactController.getMainNode());

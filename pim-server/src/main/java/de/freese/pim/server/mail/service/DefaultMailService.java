@@ -15,6 +15,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Future;
 import java.util.function.BiConsumer;
@@ -28,10 +29,11 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.context.request.async.DeferredResult;
 import de.freese.pim.common.utils.io.MonitorOutputStream;
-import de.freese.pim.server.mail.api.IMailAPI;
-import de.freese.pim.server.mail.api.IMailContent;
-import de.freese.pim.server.mail.dao.IMailDAO;
+import de.freese.pim.server.mail.api.MailAPI;
+import de.freese.pim.server.mail.api.MailContent;
+import de.freese.pim.server.mail.dao.MailDAO;
 import de.freese.pim.server.mail.impl.JavaMailAPI;
 import de.freese.pim.server.mail.impl.JavaMailContent;
 import de.freese.pim.server.mail.model.Mail;
@@ -44,7 +46,8 @@ import de.freese.pim.server.service.AbstractService;
  *
  * @author Thomas Freese
  */
-public class DefaultMailService extends AbstractService implements IMailService
+// @Service
+public class DefaultMailService extends AbstractService implements MailService
 {
     /**
      *
@@ -54,12 +57,12 @@ public class DefaultMailService extends AbstractService implements IMailService
     /**
      *
      */
-    private Map<Long, IMailAPI> mailApiMap = new ConcurrentHashMap<>();
+    private Map<Long, MailAPI> mailApiMap = new ConcurrentHashMap<>();
 
     /**
     *
     */
-    private IMailDAO mailDAO = null;
+    private MailDAO mailDAO = null;
 
     // /**
     // *
@@ -75,14 +78,14 @@ public class DefaultMailService extends AbstractService implements IMailService
     }
 
     /**
-     * @see de.freese.pim.server.mail.service.IMailService#connectAccount(de.freese.pim.server.mail.model.MailAccount)
+     * @see de.freese.pim.server.mail.service.MailService#connectAccount(de.freese.pim.server.mail.model.MailAccount)
      */
     @Override
     public void connectAccount(final MailAccount account) throws Exception
     {
         Path accountPath = getBasePath().resolve(account.getMail());
 
-        IMailAPI mailAPI = new JavaMailAPI(account, accountPath);
+        MailAPI mailAPI = new JavaMailAPI(account, accountPath);
         mailAPI.setExecutorService(getExecutorService());
         this.mailApiMap.put(account.getID(), mailAPI);
 
@@ -90,7 +93,7 @@ public class DefaultMailService extends AbstractService implements IMailService
     }
 
     /**
-     * @see de.freese.pim.server.mail.service.IMailService#deleteAccount(long)
+     * @see de.freese.pim.server.mail.service.MailService#deleteAccount(long)
      */
     @Override
     @Transactional
@@ -111,14 +114,14 @@ public class DefaultMailService extends AbstractService implements IMailService
     }
 
     /**
-     * @see de.freese.pim.server.mail.service.IMailService#disconnectAccounts()
+     * @see de.freese.pim.server.mail.service.MailService#disconnectAccounts()
      */
     @Override
     public void disconnectAccounts() throws Exception
     {
         getLogger().info("Disconnect Accounts");
 
-        for (IMailAPI mailAPI : this.mailApiMap.values())
+        for (MailAPI mailAPI : this.mailApiMap.values())
         {
             getLogger().info("Close " + mailAPI.getAccount().getMail());
 
@@ -146,7 +149,7 @@ public class DefaultMailService extends AbstractService implements IMailService
     }
 
     /**
-     * @see de.freese.pim.server.mail.service.IMailService#getMailAccounts()
+     * @see de.freese.pim.server.mail.service.MailService#getMailAccounts()
      */
     @Override
     @Transactional(readOnly = true)
@@ -157,23 +160,23 @@ public class DefaultMailService extends AbstractService implements IMailService
 
     /**
      * @param accountID long
-     * @return {@link IMailAPI}
+     * @return {@link MailAPI}
      */
-    protected IMailAPI getMailAPI(final long accountID)
+    protected MailAPI getMailAPI(final long accountID)
     {
         return this.mailApiMap.get(accountID);
     }
 
     /**
-     * @return {@link IMailDAO}
+     * @return {@link MailDAO}
      */
-    protected IMailDAO getMailDAO()
+    protected MailDAO getMailDAO()
     {
         return this.mailDAO;
     }
 
     /**
-     * @see de.freese.pim.server.mail.service.IMailService#insertAccount(de.freese.pim.server.mail.model.MailAccount)
+     * @see de.freese.pim.server.mail.service.MailService#insertAccount(de.freese.pim.server.mail.model.MailAccount)
      */
     @Override
     @Transactional
@@ -183,7 +186,7 @@ public class DefaultMailService extends AbstractService implements IMailService
     }
 
     /**
-     * @see de.freese.pim.server.mail.service.IMailService#insertOrUpdateFolder(long, java.util.List)
+     * @see de.freese.pim.server.mail.service.MailService#insertOrUpdateFolder(long, java.util.List)
      */
     @Override
     @Transactional
@@ -205,17 +208,17 @@ public class DefaultMailService extends AbstractService implements IMailService
     }
 
     /**
-     * @see de.freese.pim.server.mail.service.IMailService#loadContent(long, de.freese.pim.server.mail.model.Mail, java.util.function.BiConsumer)
+     * @see de.freese.pim.server.mail.service.MailService#loadContent(long, de.freese.pim.server.mail.model.Mail, java.util.function.BiConsumer)
      */
     @Override
-    public IMailContent loadContent(final long accountID, final Mail mail, final BiConsumer<Long, Long> loadMonitor) throws Exception
+    public MailContent loadContent(final long accountID, final Mail mail, final BiConsumer<Long, Long> loadMonitor) throws Exception
     {
         if (getLogger().isDebugEnabled())
         {
             getLogger().debug("load mail: msgnum={}; uid={}; size={}; subject={}", mail.getMsgNum(), mail.getUID(), mail.getSize(), mail.getSubject());
         }
 
-        IMailAPI mailAPI = getMailAPI(accountID);
+        MailAPI mailAPI = getMailAPI(accountID);
         Path folderPath = mailAPI.getBasePath().resolve(mail.getFolderFullName());
         // Path folderPath = mailAPI.getBasePath().resolve(mail.getFolderFullName().replaceAll("/", "__"));
         Path mailPath = folderPath.resolve(Long.toString(mail.getUID())).resolve(mail.getUID() + ".eml");
@@ -258,13 +261,13 @@ public class DefaultMailService extends AbstractService implements IMailService
     }
 
     /**
-     * @see de.freese.pim.server.mail.service.IMailService#loadFolder(long)
+     * @see de.freese.pim.server.mail.service.MailService#loadFolder(long)
      */
     @Override
     @Transactional
     public List<MailFolder> loadFolder(final long accountID) throws Exception
     {
-        IMailAPI mailAPI = getMailAPI(accountID);
+        MailAPI mailAPI = getMailAPI(accountID);
 
         List<MailFolder> folder = getMailDAO().getMailFolder(accountID);
 
@@ -297,7 +300,7 @@ public class DefaultMailService extends AbstractService implements IMailService
     }
 
     /**
-     * @see de.freese.pim.server.mail.service.IMailService#loadMails(long, long, java.lang.String)
+     * @see de.freese.pim.server.mail.service.MailService#loadMails(long, long, java.lang.String)
      */
     @Override
     @Transactional
@@ -305,91 +308,116 @@ public class DefaultMailService extends AbstractService implements IMailService
     {
         // this.semaphore.acquire();
 
-        try
+        // try
+        // {
+        getLogger().info("Load Mails: account={}, folder={}", accountID, folderFullName);
+
+        MailAPI mailAPI = getMailAPI(accountID);
+
+        Map<Long, Mail> mailMap = getMailDAO().getMails(folderID).stream().collect(Collectors.toMap(Mail::getUID, Function.identity()));
+
+        // Höchste UID finden.
+        long uidFrom = mailMap.values().parallelStream().mapToLong(Mail::getUID).max().orElse(1);
+
+        // Alle Mails lokal löschen, die zwischenzeitlich auch Remote gelöscht worden sind.
+        Set<Long> currentUIDs = mailAPI.loadCurrentMessageIDs(folderFullName);
+
+        Set<Long> remoteDeletedUIDs = new HashSet<>();
+        remoteDeletedUIDs.addAll(mailMap.keySet());
+        remoteDeletedUIDs.removeAll(currentUIDs);
+
+        for (Long uid : remoteDeletedUIDs)
         {
-            getLogger().info("Load Mails: account={}, folder={}", accountID, folderFullName);
-
-            IMailAPI mailAPI = getMailAPI(accountID);
-
-            Map<Long, Mail> mailMap = getMailDAO().getMails(folderID).stream().collect(Collectors.toMap(Mail::getUID, Function.identity()));
-
-            // Höchste UID finden.
-            long uidFrom = mailMap.values().parallelStream().mapToLong(Mail::getUID).max().orElse(1);
-
-            // Alle Mails lokal löschen, die zwischenzeitlich auch Remote gelöscht worden sind.
-            Set<Long> currentUIDs = mailAPI.loadCurrentMessageIDs(folderFullName);
-
-            Set<Long> remoteDeletedUIDs = new HashSet<>();
-            remoteDeletedUIDs.addAll(mailMap.keySet());
-            remoteDeletedUIDs.removeAll(currentUIDs);
-
-            for (Long uid : remoteDeletedUIDs)
+            if (getLogger().isDebugEnabled())
             {
-                if (getLogger().isDebugEnabled())
-                {
-                    getLogger().debug("delete mail: uid={}", uid);
-                }
-
-                getMailDAO().deleteMail(folderID, uid);
-                mailMap.remove(uid);
+                getLogger().debug("delete mail: uid={}", uid);
             }
 
-            if (uidFrom > 1)
-            {
-                // Neue Mails holen, ausser der aktuellsten geladenen.
-                uidFrom += 1;
-            }
-
-            List<Mail> newMails = mailAPI.loadMails(folderFullName, uidFrom);
-
-            if (newMails == null)
-            {
-                int affectedRows = getMailDAO().deleteMails(folderID);
-                affectedRows += getMailDAO().deleteFolder(folderID);
-
-                if (getLogger().isDebugEnabled())
-                {
-                    getLogger().debug("folder deleted: affected rows={}", affectedRows);
-                }
-
-                return Collections.emptyList();
-            }
-
-            if (newMails.size() > 0)
-            {
-                int[] affectedRows = getMailDAO().insertMail(folderID, newMails);
-
-                if (getLogger().isDebugEnabled())
-                {
-                    getLogger().debug("new mails saved: affected rows={}", IntStream.of(affectedRows).sum());
-                }
-            }
-
-            List<Mail> mails = new ArrayList<>();
-            mails.addAll(mailMap.values());
-            mails.addAll(newMails);
-
-            mails.stream().forEach(m -> m.setFolderFullName(folderFullName));
-
-            return mails;
+            getMailDAO().deleteMail(folderID, uid);
+            mailMap.remove(uid);
         }
-        finally
+
+        if (uidFrom > 1)
         {
-            // this.semaphore.release();
+            // Neue Mails holen, ausser der aktuellsten geladenen.
+            uidFrom += 1;
         }
+
+        List<Mail> newMails = mailAPI.loadMails(folderFullName, uidFrom);
+
+        if (newMails == null)
+        {
+            int affectedRows = getMailDAO().deleteMails(folderID);
+            affectedRows += getMailDAO().deleteFolder(folderID);
+
+            if (getLogger().isDebugEnabled())
+            {
+                getLogger().debug("folder deleted: affected rows={}", affectedRows);
+            }
+
+            return Collections.emptyList();
+        }
+
+        if (newMails.size() > 0)
+        {
+            int[] affectedRows = getMailDAO().insertMail(folderID, newMails);
+
+            if (getLogger().isDebugEnabled())
+            {
+                getLogger().debug("new mails saved: affected rows={}", IntStream.of(affectedRows).sum());
+            }
+        }
+
+        List<Mail> mails = new ArrayList<>();
+        mails.addAll(mailMap.values());
+        mails.addAll(newMails);
+
+        mails.stream().forEach(m -> m.setFolderFullName(folderFullName));
+
+        return mails;
+        // }
+        // finally
+        // {
+        // this.semaphore.release();
+        // }
     }
 
     /**
-     * @see de.freese.pim.server.mail.service.IMailService#loadMails2(long, long, java.lang.String)
+     * @see de.freese.pim.server.mail.service.MailService#loadMails2(long, long, java.lang.String)
      */
     @Override
-    @Async("executorService")
+    @Async // ("executorService")
     @Transactional
     public Future<List<Mail>> loadMails2(final long accountID, final long folderID, final String folderFullName) throws Exception
     {
         List<Mail> mails = loadMails(accountID, folderID, folderFullName);
 
         return new AsyncResult<>(mails);
+    }
+
+    /**
+     * {@link DeferredResult} entkoppelt den Server Thread von der Ausführung.
+     *
+     * @see de.freese.pim.server.mail.service.MailService#loadMails3(long, long, java.lang.String)
+     */
+    @Override
+    @Transactional
+    public DeferredResult<List<Mail>> loadMails3(final long accountID, final long folderID, final String folderFullName) throws Exception
+    {
+        DeferredResult<List<Mail>> deferredResult = new DeferredResult<>();
+
+        CompletableFuture.supplyAsync(() -> {
+            try
+            {
+                return loadMails(accountID, folderID, folderFullName);
+            }
+            catch (Exception ex)
+            {
+                throw new RuntimeException(ex);
+            }
+        }, getExecutorService()).whenCompleteAsync((result, throwable) -> deferredResult.setResult(result));
+
+        return null;
     }
 
     /**
@@ -403,15 +431,15 @@ public class DefaultMailService extends AbstractService implements IMailService
     }
 
     /**
-     * @param mailDAO {@link IMailDAO}
+     * @param mailDAO {@link MailDAO}
      */
-    public void setMailDAO(final IMailDAO mailDAO)
+    public void setMailDAO(final MailDAO mailDAO)
     {
         this.mailDAO = mailDAO;
     }
 
     /**
-     * @see de.freese.pim.server.mail.service.IMailService#updateAccount(de.freese.pim.server.mail.model.MailAccount)
+     * @see de.freese.pim.server.mail.service.MailService#updateAccount(de.freese.pim.server.mail.model.MailAccount)
      */
     @Override
     @Transactional

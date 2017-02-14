@@ -23,14 +23,14 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
-import de.freese.pim.server.mail.dao.IMailDAO;
+import de.freese.pim.server.mail.dao.MailDAO;
 import de.freese.pim.server.mail.model.Mail;
 import de.freese.pim.server.mail.model.MailAccount;
 import de.freese.pim.server.mail.model.MailFolder;
 import de.freese.pim.server.mail.model.MailPort;
 
 /**
- * TestCase für das {@link IMailDAO}.
+ * TestCase für das {@link MailDAO}.
  *
  * @author Thomas Freese
  */
@@ -48,7 +48,7 @@ public class TestMailDAO
      *
      */
     @Resource
-    private IMailDAO mailDAO = null;
+    private MailDAO mailDAO = null;
 
     /**
      * Erstellt ein neues {@link TestMailDAO} Object.

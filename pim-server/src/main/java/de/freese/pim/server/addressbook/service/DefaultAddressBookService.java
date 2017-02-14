@@ -6,7 +6,7 @@ import java.util.List;
 
 import org.springframework.transaction.annotation.Transactional;
 
-import de.freese.pim.server.addressbook.dao.IAddressBookDAO;
+import de.freese.pim.server.addressbook.dao.AddressBookDAO;
 import de.freese.pim.server.addressbook.model.Kontakt;
 import de.freese.pim.server.service.AbstractService;
 
@@ -15,12 +15,12 @@ import de.freese.pim.server.service.AbstractService;
  *
  * @author Thomas Freese
  */
-public class DefaultAddressBookService extends AbstractService implements IAddressBookService
+public class DefaultAddressBookService extends AbstractService implements AddressBookService
 {
     /**
      *
      */
-    private IAddressBookDAO addressBookDAO = null;
+    private AddressBookDAO addressBookDAO = null;
 
     /**
      * Erzeugt eine neue Instanz von {@link DefaultAddressBookService}
@@ -32,7 +32,7 @@ public class DefaultAddressBookService extends AbstractService implements IAddre
     }
 
     /**
-     * @see de.freese.pim.server.addressbook.dao.IAddressBookDAO#backup(java.nio.file.Path)
+     * @see de.freese.pim.server.addressbook.dao.AddressBookDAO#backup(java.nio.file.Path)
      */
     @Override
     public boolean backup(final Path directory) throws Exception
@@ -41,7 +41,7 @@ public class DefaultAddressBookService extends AbstractService implements IAddre
     }
 
     /**
-     * @see de.freese.pim.server.addressbook.dao.IAddressBookDAO#deleteAttribut(long, java.lang.String)
+     * @see de.freese.pim.server.addressbook.dao.AddressBookDAO#deleteAttribut(long, java.lang.String)
      */
     @Override
     @Transactional
@@ -51,7 +51,7 @@ public class DefaultAddressBookService extends AbstractService implements IAddre
     }
 
     /**
-     * @see de.freese.pim.server.addressbook.dao.IAddressBookDAO#deleteKontakt(long)
+     * @see de.freese.pim.server.addressbook.dao.AddressBookDAO#deleteKontakt(long)
      */
     @Override
     @Transactional
@@ -61,7 +61,7 @@ public class DefaultAddressBookService extends AbstractService implements IAddre
     }
 
     /**
-     * @see de.freese.pim.server.addressbook.dao.IAddressBookDAO#getKontaktDetails(long[])
+     * @see de.freese.pim.server.addressbook.dao.AddressBookDAO#getKontaktDetails(long[])
      */
     @Override
     @Transactional(readOnly = true)
@@ -71,7 +71,7 @@ public class DefaultAddressBookService extends AbstractService implements IAddre
     }
 
     /**
-     * @see de.freese.pim.server.addressbook.dao.IAddressBookDAO#getKontakte()
+     * @see de.freese.pim.server.addressbook.dao.AddressBookDAO#getKontakte()
      */
     @Override
     @Transactional(readOnly = true)
@@ -81,7 +81,7 @@ public class DefaultAddressBookService extends AbstractService implements IAddre
     }
 
     /**
-     * @see de.freese.pim.server.addressbook.dao.IAddressBookDAO#insertAttribut(long, java.lang.String, java.lang.String)
+     * @see de.freese.pim.server.addressbook.dao.AddressBookDAO#insertAttribut(long, java.lang.String, java.lang.String)
      */
     @Override
     @Transactional
@@ -91,7 +91,7 @@ public class DefaultAddressBookService extends AbstractService implements IAddre
     }
 
     /**
-     * @see de.freese.pim.server.addressbook.dao.IAddressBookDAO#insertKontakt(java.lang.String, java.lang.String)
+     * @see de.freese.pim.server.addressbook.dao.AddressBookDAO#insertKontakt(java.lang.String, java.lang.String)
      */
     @Override
     @Transactional
@@ -101,7 +101,7 @@ public class DefaultAddressBookService extends AbstractService implements IAddre
     }
 
     /**
-     * @see de.freese.pim.server.addressbook.dao.IAddressBookDAO#searchKontakte(java.lang.String)
+     * @see de.freese.pim.server.addressbook.dao.AddressBookDAO#searchKontakte(java.lang.String)
      */
     @Override
     @Transactional(readOnly = true)
@@ -111,15 +111,15 @@ public class DefaultAddressBookService extends AbstractService implements IAddre
     }
 
     /**
-     * @param addressBookDAO {@link IAddressBookDAO}
+     * @param addressBookDAO {@link AddressBookDAO}
      */
-    public void setAddressBookDAO(final IAddressBookDAO addressBookDAO)
+    public void setAddressBookDAO(final AddressBookDAO addressBookDAO)
     {
         this.addressBookDAO = addressBookDAO;
     }
 
     /**
-     * @see de.freese.pim.server.addressbook.dao.IAddressBookDAO#updateAttribut(long, java.lang.String, java.lang.String)
+     * @see de.freese.pim.server.addressbook.dao.AddressBookDAO#updateAttribut(long, java.lang.String, java.lang.String)
      */
     @Override
     @Transactional
@@ -129,7 +129,7 @@ public class DefaultAddressBookService extends AbstractService implements IAddre
     }
 
     /**
-     * @see de.freese.pim.server.addressbook.dao.IAddressBookDAO#updateKontakt(long, java.lang.String, java.lang.String)
+     * @see de.freese.pim.server.addressbook.dao.AddressBookDAO#updateKontakt(long, java.lang.String, java.lang.String)
      */
     @Override
     @Transactional
@@ -139,9 +139,9 @@ public class DefaultAddressBookService extends AbstractService implements IAddre
     }
 
     /**
-     * @return {@link IAddressBookDAO}
+     * @return {@link AddressBookDAO}
      */
-    protected IAddressBookDAO getAddressBookDAO()
+    protected AddressBookDAO getAddressBookDAO()
     {
         return this.addressBookDAO;
     }

@@ -17,7 +17,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import de.freese.pim.server.addressbook.TestAddressbookConfig;
-import de.freese.pim.server.addressbook.dao.IAddressBookDAO;
+import de.freese.pim.server.addressbook.dao.AddressBookDAO;
 
 /**
  * TestCase für die TX-Steuerung mit Spring.
@@ -38,7 +38,7 @@ public class TestSpringContextAddressbookDAO extends AbstractDAOTextCase
      *
      */
     @Resource
-    private IAddressBookDAO addressBookDAO = null;
+    private AddressBookDAO addressBookDAO = null;
 
     /**
      * Erstellt ein neues {@link TestSpringContextAddressbookDAO} Object.

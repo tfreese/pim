@@ -15,7 +15,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import de.freese.pim.server.addressbook.dao.DefaultAddressBookDAO;
-import de.freese.pim.server.addressbook.dao.IAddressBookDAO;
+import de.freese.pim.server.addressbook.dao.AddressBookDAO;
 
 /**
  * @author Thomas Freese
@@ -34,10 +34,10 @@ public class TestAddressbookConfig
 
     /**
      * @param dataSource {@link DataSource}
-     * @return {@link IAddressBookDAO}
+     * @return {@link AddressBookDAO}
      */
     @Bean
-    public IAddressBookDAO addressBookDAO(final DataSource dataSource)
+    public AddressBookDAO addressBookDAO(final DataSource dataSource)
     {
         DefaultAddressBookDAO dao = new DefaultAddressBookDAO();
         dao.setDataSource(dataSource);

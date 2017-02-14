@@ -1,17 +1,19 @@
 // Created: 25.01.2017
 package de.freese.pim.gui.mail;
 
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Objects;
-import org.apache.commons.collections4.ListUtils;
+import java.util.concurrent.Future;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import de.freese.pim.gui.PIMApplication;
 import de.freese.pim.gui.view.ErrorDialog;
+import de.freese.pim.server.mail.model.Mail;
 import de.freese.pim.server.mail.model.MailAccount;
 import de.freese.pim.server.mail.model.MailFolder;
-import de.freese.pim.server.mail.service.IMailService;
+import de.freese.pim.server.mail.service.MailService;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.scene.control.TreeItem;
@@ -37,17 +39,17 @@ public class InitMailAPITask extends Task<List<MailFolder>>
     /**
      *
      */
-    private final IMailService mailService;
+    private final MailService mailService;
 
     /**
      * Erzeugt eine neue Instanz von {@link InitMailAPITask}
      *
      * @param treeView {@link TreeView}
      * @param parent {@link TreeItem}
-     * @param mailService {@link IMailService}
+     * @param mailService {@link MailService}
      * @param account {@link MailAccount}
      */
-    public InitMailAPITask(final TreeView<Object> treeView, final TreeItem<Object> parent, final IMailService mailService, final MailAccount account)
+    public InitMailAPITask(final TreeView<Object> treeView, final TreeItem<Object> parent, final MailService mailService, final MailAccount account)
     {
         super();
 
@@ -69,39 +71,39 @@ public class InitMailAPITask extends Task<List<MailFolder>>
 
             Platform.runLater(() -> treeView.refresh());
 
-            List<List<MailFolder>> partitions = ListUtils.partition(folders, 3);
+            // List<List<MailFolder>> partitions = ListUtils.partition(folders, 3);
+            //
+            // for (List<MailFolder> partition : partitions)
+            // {
+            // // Laden der Mails.
+            // PIMApplication.getExecutorService().execute(new LoadMailsTask(treeView, partition, mailService, account));
+            // }
 
-            for (List<MailFolder> partition : partitions)
+            try
             {
-                // Laden der Mails.
-                PIMApplication.getExecutorService().execute(new LoadMailsTask(treeView, partition, mailService, account));
-            }
+                Map<MailFolder, Future<List<Mail>>> map = new LinkedHashMap<>();
 
-            // try
-            // {
-            // Map<MailFolder, Future<List<Mail>>> map = new LinkedHashMap<>();
-            //
-            // for (MailFolder mf : folders)
-            // {
-            // Future<List<Mail>> future = this.mailService.loadMails2(mf.getAccountID(), mf.getID(), mf.getFullName());
-            // map.put(mf, future);
-            // }
-            //
-            // for (Entry<MailFolder, Future<List<Mail>>> entry : map.entrySet())
-            // {
-            // MailFolder mf = entry.getKey();
-            // Future<List<Mail>> future = entry.getValue();
-            //
-            // List<Mail> mails = future.get();
-            // LOGGER.info("Load Mails finished: account={}, folder={}", this.account.getMail(), mf.getFullName());
-            //
-            // mf.getMails().addAll(mails);
-            // }
-            // }
-            // catch (Exception ex)
-            // {
-            // throw new RuntimeException(ex);
-            // }
+                for (MailFolder mf : folders)
+                {
+                    Future<List<Mail>> future = this.mailService.loadMails2(mf.getAccountID(), mf.getID(), mf.getFullName());
+                    map.put(mf, future);
+                }
+
+                for (Entry<MailFolder, Future<List<Mail>>> entry : map.entrySet())
+                {
+                    MailFolder mf = entry.getKey();
+                    Future<List<Mail>> future = entry.getValue();
+
+                    List<Mail> mails = future.get();
+                    LOGGER.info("Load Mails finished: account={}, folder={}", this.account.getMail(), mf.getFullName());
+
+                    mf.getMails().addAll(mails);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new RuntimeException(ex);
+            }
         });
         setOnFailed(event -> {
             Throwable th = getException();

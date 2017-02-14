@@ -9,16 +9,15 @@ import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import javax.mail.internet.InternetAddress;
-
 import de.freese.pim.gui.PIMApplication;
 import de.freese.pim.gui.controller.AbstractController;
 import de.freese.pim.gui.utils.FXUtils;
 import de.freese.pim.gui.view.ErrorDialog;
-import de.freese.pim.server.mail.api.IMailContent;
+import de.freese.pim.server.mail.api.MailContent;
 import de.freese.pim.server.mail.model.Mail;
 import de.freese.pim.server.mail.model.MailAccount;
 import de.freese.pim.server.mail.model.MailFolder;
-import de.freese.pim.server.mail.service.IMailService;
+import de.freese.pim.server.mail.service.MailService;
 import de.freese.pim.server.mail.utils.InlineUrlStreamHandler;
 import de.freese.pim.server.mail.utils.MailUrlStreamHandlerFactory;
 import javafx.application.Platform;
@@ -76,7 +75,7 @@ public class MailController extends AbstractController
     /**
      *
      */
-    private final IMailService mailService;
+    private final MailService mailService;
 
     /**
      *
@@ -147,11 +146,11 @@ public class MailController extends AbstractController
     {
         super();
 
-        this.mailService = PIMApplication.getApplicationContext().getBean("mailService", IMailService.class);
+        this.mailService = PIMApplication.getApplicationContext().getBean("mailService", MailService.class);
     }
 
     /**
-     * @see de.freese.pim.gui.controller.IController#activate()
+     * @see de.freese.pim.gui.controller.AbstractController#activate()
      */
     @Override
     public void activate()
@@ -215,15 +214,15 @@ public class MailController extends AbstractController
     }
 
     /**
-     * @return {@link IMailService}
+     * @return {@link MailService}
      */
-    private IMailService getMailService()
+    private MailService getMailService()
     {
         return this.mailService;
     }
 
     /**
-     * @see de.freese.pim.gui.controller.IController#getMainNode()
+     * @see de.freese.pim.gui.controller.AbstractController#getMainNode()
      */
     @Override
     public Node getMainNode()
@@ -232,7 +231,7 @@ public class MailController extends AbstractController
     }
 
     /**
-     * @see de.freese.pim.gui.controller.IController#getNaviNode()
+     * @see de.freese.pim.gui.controller.AbstractController#getNaviNode()
      */
     @Override
     public Node getNaviNode()
@@ -496,24 +495,24 @@ public class MailController extends AbstractController
         PIMApplication.blockGUI();
         MailAccount account = getAccount(this.selectedTreeItem.get());
 
-        Task<IMailContent> loadMailTask = new Task<IMailContent>()
+        Task<MailContent> loadMailTask = new Task<MailContent>()
         {
             /**
              * @see javafx.concurrent.Task#call()
              */
             @Override
-            protected IMailContent call() throws Exception
+            protected MailContent call() throws Exception
             {
                 // IMailContent mailContent = getMailService().loadContent(account.getID(), mail,
                 // (current, size) -> updateProgress(current, size));
-                IMailContent mailContent = getMailService().loadContent(account.getID(), mail, this::updateProgress);
+                MailContent mailContent = getMailService().loadContent(account.getID(), mail, this::updateProgress);
 
                 return mailContent;
             }
         };
         loadMailTask.setOnSucceeded(event -> {
             PIMApplication.unblockGUI();
-            IMailContent mailContent = loadMailTask.getValue();
+            MailContent mailContent = loadMailTask.getValue();
 
             if (mailContent == null)
             {

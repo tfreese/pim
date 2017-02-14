@@ -18,7 +18,7 @@ import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
 
 import de.freese.pim.server.addressbook.TestAddressbookConfig;
-import de.freese.pim.server.addressbook.dao.IAddressBookDAO;
+import de.freese.pim.server.addressbook.dao.AddressBookDAO;
 
 /**
  * TestCase für die manuelle TX-Steuerung mit Spring.
@@ -31,7 +31,7 @@ public class TestSpringManualTxAddressbookDAO extends AbstractDAOTextCase
     /**
      *
      */
-    private static IAddressBookDAO addressBookDAO = null;
+    private static AddressBookDAO addressBookDAO = null;
 
     /**
      *

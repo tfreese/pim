@@ -1,7 +1,7 @@
 // Created: 29.11.2016
 package de.freese.pim.gui.main;
 
-import de.freese.pim.gui.view.IView;
+import de.freese.pim.gui.view.View;
 import javafx.fxml.FXML;
 import javafx.geometry.Orientation;
 import javafx.scene.Node;
@@ -24,7 +24,7 @@ import javafx.scene.layout.VBox;
  * @author Thomas Freese
  */
 @SuppressWarnings("restriction")
-public class MainView extends BorderPane implements IView
+public class MainView extends BorderPane implements View
 {
     /**
      *

@@ -8,7 +8,7 @@ import java.net.URLConnection;
 
 import javax.activation.DataSource;
 import de.freese.pim.common.utils.io.EmptyInputStream;
-import de.freese.pim.server.mail.api.IMailContent;
+import de.freese.pim.server.mail.api.MailContent;
 
 /**
  * {@link URLConnection} für ein Inline einer HTML-Mail.
@@ -25,16 +25,16 @@ public class InlineUrlConnection extends URLConnection
     /**
      *
      */
-    private final IMailContent mailContent;
+    private final MailContent mailContent;
 
     /**
      * Erzeugt eine neue Instanz von {@link InlineUrlConnection}
      *
-     * @param mailContent {@link IMailContent}
+     * @param mailContent {@link MailContent}
      * @param url {@link URL}
      * @throws IOException Falls was schief geht.
      */
-    public InlineUrlConnection(final IMailContent mailContent, final URL url) throws IOException
+    public InlineUrlConnection(final MailContent mailContent, final URL url) throws IOException
     {
         super(url);
 

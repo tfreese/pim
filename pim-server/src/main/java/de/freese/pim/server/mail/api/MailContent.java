@@ -11,7 +11,7 @@ import javax.activation.DataSource;
  *
  * @author Thomas Freese
  */
-public interface IMailContent
+public interface MailContent
 {
     /**
      * Liefert die {@link DataSource} der Attachements.<br>

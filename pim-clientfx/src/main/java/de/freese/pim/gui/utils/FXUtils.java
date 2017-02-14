@@ -17,17 +17,14 @@ import java.util.StringTokenizer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
-
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import com.sun.javafx.binding.StringFormatter;
-
 import de.freese.pim.common.utils.Utils;
 import de.freese.pim.gui.PIMApplication;
-import de.freese.pim.gui.controller.IController;
-import de.freese.pim.gui.view.IView;
+import de.freese.pim.gui.controller.AbstractController;
+import de.freese.pim.gui.view.View;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.property.adapter.JavaBeanLongProperty;
@@ -104,11 +101,11 @@ public final class FXUtils
      * <li>Ausgabe der nicht passenden/kopierten Attribute von View und Controller
      * </ol>
      *
-     * @param view {@link IView}
-     * @param controller {@link IController}
+     * @param view {@link View}
+     * @param controller {@link AbstractController}
      * @param resources {@link ResourceBundle}
      */
-    public static void bind(final IView view, final IController controller, final ResourceBundle resources)
+    public static void bind(final View view, final AbstractController controller, final ResourceBundle resources)
     {
         Set<Field> viewSet = Utils.getAnnotatedFields(view, FXML.class);
         Set<Field> controllerSet = Utils.getAnnotatedFields(controller, FXML.class);
@@ -156,13 +153,13 @@ public final class FXUtils
      * Kopieren der mit {@link FXML} annotierten Attribute der View in den Controller.<br>
      * Die übereinstimmenden Attribute, werden aus den Maps entfernt.
      *
-     * @param view {@link IView}
+     * @param view {@link View}
      * @param viewMap {@link Map}
-     * @param controller {@link IController}
+     * @param controller {@link AbstractController}
      * @param controllerMap {@link Map}
      */
-    public static void copyFields(final IView view, final Map<String, Field> viewMap, final IController controller,
-            final Map<String, Field> controllerMap)
+    public static void copyFields(final View view, final Map<String, Field> viewMap, final AbstractController controller,
+                                  final Map<String, Field> controllerMap)
     {
         for (Field viewField : new HashSet<>(viewMap.values()))
         {
@@ -280,7 +277,7 @@ public final class FXUtils
      * @param colors {@link Color}[]; min. 2 Farben
      * @return int[], RGB
      */
-    public static int[] getProgressRGB(final double progress, final Color... colors)
+    public static int[] getProgressRGB(final double progress, final Color...colors)
     {
         if ((progress < 0D) || (progress > 1D) || (colors.length < 2))
         {
@@ -332,8 +329,7 @@ public final class FXUtils
      */
     public static void installCopyHandler(final Node node)
     {
-        node.setOnKeyPressed(event ->
-        {
+        node.setOnKeyPressed(event -> {
             if (KEYCODE_COPY.match(event))
             {
                 if (event.getSource() instanceof TableView)
@@ -342,8 +338,7 @@ public final class FXUtils
                 }
                 else
                 {
-                    LOGGER.warn("No implementation for #copySelectionToClipboard found for {}",
-                            event.getSource().getClass().getSimpleName());
+                    LOGGER.warn("No implementation for #copySelectionToClipboard found for {}", event.getSource().getClass().getSimpleName());
                 }
 
                 event.consume();
@@ -358,8 +353,7 @@ public final class FXUtils
      */
     public static void installPasteHandler(final Node node)
     {
-        node.setOnKeyPressed(event ->
-        {
+        node.setOnKeyPressed(event -> {
             if (KEYCODE_PASTE.match(event))
             {
                 if (event.getSource() instanceof TableView)
@@ -565,6 +559,15 @@ public final class FXUtils
             }
 
             /**
+             * @see javafx.beans.binding.StringBinding#computeValue()
+             */
+            @Override
+            protected String computeValue()
+            {
+                return formatter.apply(ov.getValue());
+            }
+
+            /**
              * @see javafx.beans.binding.StringBinding#dispose()
              */
             @Override
@@ -583,15 +586,6 @@ public final class FXUtils
                 ol.add(ov);
 
                 return FXCollections.unmodifiableObservableList(ol);
-            }
-
-            /**
-             * @see javafx.beans.binding.StringBinding#computeValue()
-             */
-            @Override
-            protected String computeValue()
-            {
-                return formatter.apply(ov.getValue());
             }
         };
 
@@ -623,11 +617,11 @@ public final class FXUtils
     /**
      * Übersetzen der Komponenten mit SceneBuilder-Prefix (%).
      *
-     * @param view {@link IView}
+     * @param view {@link View}
      * @param components {@link Collection}
      * @param resources {@link ResourceBundle}
      */
-    public static void translate(final IView view, final Collection<Field> components, final ResourceBundle resources)
+    public static void translate(final View view, final Collection<Field> components, final ResourceBundle resources)
     {
         // Set aus allen erreichbaren Nodes der Komponenten bauen, alles was Übersetzt werden kann.
 

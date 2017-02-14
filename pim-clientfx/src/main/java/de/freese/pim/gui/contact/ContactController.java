@@ -8,13 +8,12 @@ import java.util.ResourceBundle;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.MutablePair;
 import org.apache.commons.lang3.tuple.Pair;
-
 import de.freese.pim.gui.PIMApplication;
 import de.freese.pim.gui.controller.AbstractController;
 import de.freese.pim.gui.utils.FXUtils;
 import de.freese.pim.gui.view.ErrorDialog;
 import de.freese.pim.server.addressbook.model.Kontakt;
-import de.freese.pim.server.addressbook.service.IAddressBookService;
+import de.freese.pim.server.addressbook.service.AddressBookService;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
@@ -84,7 +83,7 @@ public class ContactController extends AbstractController
     /**
     *
     */
-    private final IAddressBookService service;
+    private final AddressBookService service;
 
     /**
     *
@@ -111,11 +110,11 @@ public class ContactController extends AbstractController
     {
         super();
 
-        this.service = PIMApplication.getApplicationContext().getBean("addressBookService", IAddressBookService.class);
+        this.service = PIMApplication.getApplicationContext().getBean("addressBookService", AddressBookService.class);
     }
 
     /**
-     * @see de.freese.pim.gui.controller.IController#activate()
+     * @see de.freese.pim.gui.controller.AbstractController#activate()
      */
     @Override
     public void activate()
@@ -227,7 +226,7 @@ public class ContactController extends AbstractController
     }
 
     /**
-     * @see de.freese.pim.gui.controller.IController#getMainNode()
+     * @see de.freese.pim.gui.controller.AbstractController#getMainNode()
      */
     @Override
     public Node getMainNode()
@@ -236,7 +235,7 @@ public class ContactController extends AbstractController
     }
 
     /**
-     * @see de.freese.pim.gui.controller.IController#getNaviNode()
+     * @see de.freese.pim.gui.controller.AbstractController#getNaviNode()
      */
     @Override
     public Node getNaviNode()
