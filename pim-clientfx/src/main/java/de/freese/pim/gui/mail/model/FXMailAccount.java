@@ -3,8 +3,8 @@
  */
 package de.freese.pim.gui.mail.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import de.freese.pim.common.model.mail.MailPort;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.LongProperty;
@@ -32,17 +32,19 @@ public class FXMailAccount
     /**
     *
     */
+    @JsonIgnore
     private final FilteredList<FXMailFolder> abonnierteFolder;
 
     /**
     *
     */
+    @JsonIgnore
     private final ObservableList<FXMailFolder> folder = FXCollections.observableArrayList();
 
     /**
      *
      */
-    private LongProperty idProperty = new SimpleLongProperty(this, "od", 0L);
+    private LongProperty idProperty = new SimpleLongProperty(this, "id", 0L);
 
     /**
      *
@@ -72,6 +74,7 @@ public class FXMailAccount
     /**
     *
     */
+    @JsonIgnore
     private final FilteredList<FXMailFolder> rootFolder;
 
     /**
@@ -92,6 +95,7 @@ public class FXMailAccount
     /**
     *
     */
+    @JsonIgnore
     private ObservableIntegerValue unreadMailsCount = null;
 
     /**

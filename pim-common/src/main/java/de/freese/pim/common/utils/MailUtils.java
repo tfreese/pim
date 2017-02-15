@@ -12,7 +12,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
-
 import javax.activation.DataSource;
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -20,10 +19,8 @@ import javax.mail.Multipart;
 import javax.mail.Part;
 import javax.mail.internet.MimePart;
 import javax.mail.internet.MimeUtility;
-
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.ArrayUtils;
-
 import de.freese.pim.common.model.mail.InternetAddress;
 
 /**
@@ -419,6 +416,11 @@ public final class MailUtils
      */
     public static InternetAddress map(final javax.mail.internet.InternetAddress address)
     {
+        if (address == null)
+        {
+            return null;
+        }
+
         return new InternetAddress(address.getAddress(), address.getPersonal());
 
     }
@@ -429,6 +431,11 @@ public final class MailUtils
      */
     public static InternetAddress[] map(final javax.mail.internet.InternetAddress[] addresses)
     {
+        if (addresses == null)
+        {
+            return null;
+        }
+
         return Stream.of(addresses).map(MailUtils::map).toArray(InternetAddress[]::new);
 
         // InternetAddress[] ia = new InternetAddress[addresses.length];

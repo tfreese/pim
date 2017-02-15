@@ -3,6 +3,7 @@ package de.freese.pim.gui.mail.model;
 
 import java.util.Comparator;
 import java.util.function.Predicate;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import javafx.beans.binding.IntegerBinding;
 import javafx.beans.property.BooleanProperty;
@@ -37,6 +38,7 @@ public class FXMailFolder
     /**
      *
      */
+    @JsonIgnore
     private final ObservableList<FXMailFolder> childs = FXCollections.observableArrayList();
 
     /**
@@ -57,11 +59,13 @@ public class FXMailFolder
     /**
       *
       */
+    @JsonIgnore
     private final ObservableList<FXMail> mails = FXCollections.observableArrayList();
 
     /**
      *
      */
+    @JsonIgnore
     private final SortedList<FXMail> mailsSorted = new SortedList<>(this.mails);
 
     /**
@@ -77,11 +81,13 @@ public class FXMailFolder
     /**
     *
     */
+    @JsonIgnore
     private IntegerBinding unreadMailsCount = null;
 
     /**
     *
     */
+    @JsonIgnore
     private IntegerBinding unreadMailsCountTotal = null;
 
     /**

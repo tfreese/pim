@@ -15,13 +15,11 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.zip.GZIPOutputStream;
-
 import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.request.async.DeferredResult;
-
 import de.freese.pim.common.utils.io.MonitorOutputStream;
 import de.freese.pim.server.mail.api.MailAPI;
 import de.freese.pim.server.mail.dao.MailDAO;
@@ -138,6 +136,23 @@ public class DefaultMailService extends AbstractService implements MailService
     }
 
     /**
+     * @param accountID long
+     * @return {@link MailAPI}
+     */
+    protected MailAPI getMailAPI(final long accountID)
+    {
+        return MAIL_API_MAP.get(accountID);
+    }
+
+    /**
+     * @return {@link MailDAO}
+     */
+    protected MailDAO getMailDAO()
+    {
+        return this.mailDAO;
+    }
+
+    /**
      * @see de.freese.pim.server.mail.service.MailService#insertAccount(de.freese.pim.server.mail.model.MailAccount)
      */
     @Override
@@ -147,46 +162,6 @@ public class DefaultMailService extends AbstractService implements MailService
         getMailDAO().insertAccount(account);
 
         return account.getID();
-    }
-
-    /**
-     * @see de.freese.pim.server.mail.service.MailService#insertFolder(long, java.util.List)
-     */
-    @Override
-    @Transactional
-    public long[] insertFolder(final long accountID, final List<MailFolder> folders) throws Exception
-    {
-        getMailDAO().insertFolder(accountID, folders);
-
-        return folders.stream().mapToLong(MailFolder::getID).toArray();
-    }
-
-    /**
-     * @see de.freese.pim.server.mail.service.MailService#loadContent(long, java.lang.String, long, int, java.util.function.BiConsumer)
-     */
-    @Override
-    public byte[] loadContent(final long accountID, final String folderFullName, final long mailUID, final int size,
-            final BiConsumer<Long, Long> loadMonitor) throws Exception
-    {
-        if (getLogger().isDebugEnabled())
-        {
-            getLogger().debug("download mail: uid={}; size={}", mailUID, size);
-        }
-
-        MailAPI mailAPI = getMailAPI(accountID);
-        byte[] rawData = null;
-
-        try (ByteArrayOutputStream baos = new ByteArrayOutputStream(size + 1);
-             GZIPOutputStream gos = new GZIPOutputStream(baos);
-             MonitorOutputStream mos = new MonitorOutputStream(gos, size, loadMonitor))
-        {
-            mailAPI.loadMail(folderFullName, mailUID, mos);
-
-            mos.flush();
-            rawData = baos.toByteArray();
-        }
-
-        return rawData;
     }
 
     // /**
@@ -243,6 +218,49 @@ public class DefaultMailService extends AbstractService implements MailService
     //
     // return mailContent;
     // }
+
+    /**
+     * @see de.freese.pim.server.mail.service.MailService#insertFolder(long, java.util.List)
+     */
+    @Override
+    @Transactional
+    public long[] insertFolder(final long accountID, final List<MailFolder> folders) throws Exception
+    {
+        getMailDAO().insertFolder(accountID, folders);
+
+        return folders.stream().mapToLong(MailFolder::getID).toArray();
+    }
+
+    /**
+     * @see de.freese.pim.server.mail.service.MailService#loadContent(long, java.lang.String, long, int, java.util.function.BiConsumer)
+     */
+    @Override
+    public byte[] loadContent(final long accountID, final String folderFullName, final long mailUID, final int size, final BiConsumer<Long, Long> loadMonitor)
+        throws Exception
+    {
+        if (getLogger().isDebugEnabled())
+        {
+            getLogger().debug("download mail: uid={}; size={}", mailUID, size);
+        }
+
+        MailAPI mailAPI = getMailAPI(accountID);
+        byte[] rawData = null;
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream(size);
+
+        // BufferedOutputStream bos = new BufferedOutputStream(gos);
+        try (GZIPOutputStream gos = new GZIPOutputStream(baos);
+             MonitorOutputStream mos = new MonitorOutputStream(gos, size, loadMonitor))
+        {
+            mailAPI.loadMail(folderFullName, mailUID, mos);
+        }
+
+        baos.close();
+
+        rawData = baos.toByteArray();
+
+        return rawData;
+    }
 
     /**
      * @see de.freese.pim.server.mail.service.MailService#loadFolder(long)
@@ -382,8 +400,7 @@ public class DefaultMailService extends AbstractService implements MailService
     {
         DeferredResult<List<Mail>> deferredResult = new DeferredResult<>();
 
-        CompletableFuture.supplyAsync(() ->
-        {
+        CompletableFuture.supplyAsync(() -> {
             try
             {
                 return loadMails(accountID, folderID, folderFullName);
@@ -464,22 +481,5 @@ public class DefaultMailService extends AbstractService implements MailService
         }
 
         return affectedRows;
-    }
-
-    /**
-     * @param accountID long
-     * @return {@link MailAPI}
-     */
-    protected MailAPI getMailAPI(final long accountID)
-    {
-        return MAIL_API_MAP.get(accountID);
-    }
-
-    /**
-     * @return {@link MailDAO}
-     */
-    protected MailDAO getMailDAO()
-    {
-        return this.mailDAO;
     }
 }
