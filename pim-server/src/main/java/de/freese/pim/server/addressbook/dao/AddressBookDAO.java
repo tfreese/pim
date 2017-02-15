@@ -29,19 +29,19 @@ public interface AddressBookDAO
      *
      * @param kontaktID long
      * @param attribut String
-     * @return boolean; true = erfolgreich, false = Datensatz nicht gefunden
+     * @return int; affectedRows
      * @throws Exception Falls was schief geht.
      */
-    public boolean deleteAttribut(long kontaktID, String attribut) throws Exception;
+    public int deleteAttribut(long kontaktID, String attribut) throws Exception;
 
     /**
      * Löscht einen {@link Kontakt}.
      *
      * @param id long
-     * @return boolean; true = erfolgreich, false = Datensatz nicht gefunden
+     * @return int; affectedRows
      * @throws Exception Falls was schief geht.
      */
-    public boolean deleteKontakt(long id) throws Exception;
+    public int deleteKontakt(long id) throws Exception;
 
     /**
      * Liefert den oder die Kontakte mit den KontaktAttributen.
@@ -66,17 +66,17 @@ public interface AddressBookDAO
      * @param kontaktID long
      * @param attribut String
      * @param wert String
-     * @return boolean; true = erfolgreich, false = Datensatz nicht eingefügt
+     * @return int; affectedRows
      * @throws Exception Falls was schief geht.
      */
-    public boolean insertAttribut(long kontaktID, String attribut, String wert) throws Exception;
+    public int insertAttribut(long kontaktID, String attribut, String wert) throws Exception;
 
     /**
      * Fügen einen neuem {@link Kontakt} hinzu und liefert dessen ID.
      *
      * @param nachname String
      * @param vorname String
-     * @return long
+     * @return long; PrimaryKey
      * @throws Exception Falls was schief geht.
      */
     public long insertKontakt(String nachname, String vorname) throws Exception;
@@ -96,10 +96,10 @@ public interface AddressBookDAO
      * @param kontaktID long
      * @param attribut String
      * @param wert String
-     * @return boolean; true = erfolgreich, false = Datensatz nicht gefunden
+     * @return int; affectedRows
      * @throws Exception Falls was schief geht.
      */
-    public boolean updateAttribut(long kontaktID, String attribut, String wert) throws Exception;
+    public int updateAttribut(long kontaktID, String attribut, String wert) throws Exception;
 
     /**
      * Aktualisiert einen {@link Kontakt}.
@@ -107,8 +107,8 @@ public interface AddressBookDAO
      * @param id long
      * @param nachname String
      * @param vorname String
-     * @return boolean; true = erfolgreich, false = Datensatz nicht gefunden
+     * @return int; affectedRows
      * @throws Exception Falls was schief geht.
      */
-    public boolean updateKontakt(long id, String nachname, String vorname) throws Exception;
+    public int updateKontakt(long id, String nachname, String vorname) throws Exception;
 }

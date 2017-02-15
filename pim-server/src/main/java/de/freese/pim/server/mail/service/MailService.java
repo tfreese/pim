@@ -4,9 +4,11 @@ package de.freese.pim.server.mail.service;
 import java.util.List;
 import java.util.concurrent.Future;
 import java.util.function.BiConsumer;
+
 import org.springframework.web.context.request.async.DeferredResult;
+
+import de.freese.pim.common.model.mail.MailContent;
 import de.freese.pim.server.mail.api.MailAPI;
-import de.freese.pim.server.mail.api.MailContent;
 import de.freese.pim.server.mail.model.Mail;
 import de.freese.pim.server.mail.model.MailAccount;
 import de.freese.pim.server.mail.model.MailFolder;
@@ -52,36 +54,49 @@ public interface MailService
 
     /**
      * Anlegen eines neuen {@link MailAccount}.<br>
-     * Die ID wird dabei in die Entity gesetzt.
      *
      * @param account {@link MailAccount}
-     * @return int; affectedRows
+     * @return long; PrimaryKey
      * @throws Exception Falls was schief geht.
      */
-    public int insertAccount(MailAccount account) throws Exception;
+    public long insertAccount(MailAccount account) throws Exception;
 
     /**
-     * Anlegen oder ändern von {@link MailFolder}.<br>
-     * Die ID wird dabei in die Entity gesetzt.
+     * Anlegen von {@link MailFolder}.<br>
      *
      * @param accountID long
      * @param folders {@link List}
-     * @return int[]; affectedRows
+     * @return long[]; PrimaryKeys
      * @throws Exception Falls was schief geht.
      */
-    public int[] insertOrUpdateFolder(long accountID, List<MailFolder> folders) throws Exception;
+    public long[] insertFolder(long accountID, List<MailFolder> folders) throws Exception;
 
     /**
      * Liefert den Inhalt der Mail.<br>
      * Der Monitor dient zur Anzeige des Lade-Fortschritts.
      *
      * @param accountID long
-     * @param mail {@link Mail}
+     * @param folderFullName String
+     * @param mailUID long
+     * @param size int
      * @param loadMonitor {@link BiConsumer}
      * @return {@link MailContent}
      * @throws Exception Falls was schief geht.
      */
-    public MailContent loadContent(long accountID, Mail mail, BiConsumer<Long, Long> loadMonitor) throws Exception;
+    public byte[] loadContent(long accountID, String folderFullName, long mailUID, int size, BiConsumer<Long, Long> loadMonitor)
+            throws Exception;
+
+    // /**
+    // * Liefert den Inhalt der Mail.<br>
+    // * Der Monitor dient zur Anzeige des Lade-Fortschritts.
+    // *
+    // * @param accountID long
+    // * @param mail {@link Mail}
+    // * @param loadMonitor {@link BiConsumer}
+    // * @return {@link MailContent}
+    // * @throws Exception Falls was schief geht.
+    // */
+    // public MailContent loadContent(long accountID, Mail mail, BiConsumer<Long, Long> loadMonitor) throws Exception;
 
     /**
      * Lädt die Folder des Accounts.
@@ -126,6 +141,15 @@ public interface MailService
     public DeferredResult<List<Mail>> loadMails3(long accountID, long folderID, String folderFullName) throws Exception;
 
     /**
+     * Testet die Verbindung zu einem MailAccount und liefert bei Erfolg dessen Ordner.
+     *
+     * @param account {@link MailAccount}
+     * @return {@link List}
+     * @throws Exception Falls was schief geht.
+     */
+    public List<MailFolder> test(MailAccount account) throws Exception;
+
+    /**
      * Ändern eines {@link MailAccount}.
      *
      * @param account {@link MailAccount}
@@ -133,4 +157,14 @@ public interface MailService
      * @throws Exception Falls was schief geht.
      */
     public int updateAccount(MailAccount account) throws Exception;
+
+    /**
+     * Ändern von {@link MailFolder}.
+     *
+     * @param accountID long
+     * @param folders {@link List}
+     * @return int[]; affectedRows
+     * @throws Exception Falls was schief geht.
+     */
+    public int[] updateFolder(long accountID, List<MailFolder> folders) throws Exception;
 }

@@ -1,5 +1,5 @@
 // Created: 06.02.2017
-package de.freese.pim.server.mail.utils;
+package de.freese.pim.gui.mail.utils;
 
 import java.net.URLStreamHandler;
 import java.net.URLStreamHandlerFactory;

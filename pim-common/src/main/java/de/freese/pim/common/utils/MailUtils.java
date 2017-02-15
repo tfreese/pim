@@ -2,7 +2,7 @@
  * Created: 28.12.2016
  */
 
-package de.freese.pim.server.mail.utils;
+package de.freese.pim.common.utils;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -11,6 +11,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Stream;
+
 import javax.activation.DataSource;
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -18,10 +20,11 @@ import javax.mail.Multipart;
 import javax.mail.Part;
 import javax.mail.internet.MimePart;
 import javax.mail.internet.MimeUtility;
+
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.ArrayUtils;
 
-import de.freese.pim.server.mail.JavaMailBuilder;
+import de.freese.pim.common.model.mail.InternetAddress;
 
 /**
  * Mail-Utils.
@@ -121,9 +124,44 @@ public final class MailUtils
     }
 
     /**
+    *
+    */
+    public static final String CONTENT_TYPE_CHARSET_SUFFIX = ";charset=";
+
+    /**
+    *
+    */
+    public static final String CONTENT_TYPE_HTML = "text/html";
+
+    /**
+    *
+    */
+    public static final String CONTENT_TYPE_PLAIN = "text/plain";
+
+    /**
+    *
+    */
+    public static final String HEADER_CONTENT_ID = "Content-ID";
+
+    /**
+    *
+    */
+    public static final String HEADER_MESSAGE_ID = "Message-ID";
+
+    /**
      * ^(.+)@(.+)\\.\\w{2,3}$
      */
     public static final String MAIL_REGEX = "^(.+)@(.+)\\.[a-zA-Z]{2,3}$";
+
+    /**
+    *
+    */
+    public static final String MULTIPART_SUBTYPE_MIXED = "mixed";
+
+    /**
+    *
+    */
+    public static final String MULTIPART_SUBTYPE_RELATED = "related";
 
     /**
      * Liefert alle vorhandenen Attachment-MimeParts einer {@link Message}.<br>
@@ -206,7 +244,7 @@ public final class MailUtils
 
         for (MimePart inline : inlines)
         {
-            String[] contentIDs = Optional.ofNullable(inline.getHeader(JavaMailBuilder.HEADER_CONTENT_ID)).orElse(null);
+            String[] contentIDs = Optional.ofNullable(inline.getHeader(HEADER_CONTENT_ID)).orElse(null);
 
             if (ArrayUtils.isEmpty(contentIDs))
             {
@@ -373,6 +411,34 @@ public final class MailUtils
         }
 
         return textParts;
+    }
+
+    /**
+     * @param address {@link javax.mail.internet.InternetAddress}
+     * @return {@link InternetAddress}
+     */
+    public static InternetAddress map(final javax.mail.internet.InternetAddress address)
+    {
+        return new InternetAddress(address.getAddress(), address.getPersonal());
+
+    }
+
+    /**
+     * @param addresses {@link javax.mail.internet.InternetAddress}[]
+     * @return {@link InternetAddress}[]
+     */
+    public static InternetAddress[] map(final javax.mail.internet.InternetAddress[] addresses)
+    {
+        return Stream.of(addresses).map(MailUtils::map).toArray(InternetAddress[]::new);
+
+        // InternetAddress[] ia = new InternetAddress[addresses.length];
+        //
+        // for (int i = 0; i < addresses.length; i++)
+        // {
+        // ia[i] = new InternetAddress(addresses[i].getAddress(), addresses[i].getPersonal());
+        // }
+        //
+        // return ia;
     }
 
     /**

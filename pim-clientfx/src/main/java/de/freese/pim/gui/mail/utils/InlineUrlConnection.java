@@ -1,5 +1,5 @@
 // Created: 06.02.2017
-package de.freese.pim.server.mail.utils;
+package de.freese.pim.gui.mail.utils;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -7,8 +7,9 @@ import java.net.URL;
 import java.net.URLConnection;
 
 import javax.activation.DataSource;
+
+import de.freese.pim.common.model.mail.MailContent;
 import de.freese.pim.common.utils.io.EmptyInputStream;
-import de.freese.pim.server.mail.api.MailContent;
 
 /**
  * {@link URLConnection} für ein Inline einer HTML-Mail.

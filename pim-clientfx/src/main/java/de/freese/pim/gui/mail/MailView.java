@@ -1,8 +1,8 @@
 // Created: 13.12.2016
 package de.freese.pim.gui.mail;
 
+import de.freese.pim.gui.mail.model.FXMail;
 import de.freese.pim.gui.view.View;
-import de.freese.pim.server.mail.model.Mail;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
@@ -68,7 +68,7 @@ public class MailView implements View
     *
     */
     @FXML
-    private TableView<Mail> tableViewMail = null;
+    private TableView<FXMail> tableViewMail = null;
 
     /**
      *

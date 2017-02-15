@@ -1,21 +1,19 @@
 // Created: 16.01.2017
 package de.freese.pim.gui.mail;
 
-import java.nio.file.Paths;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
 import org.apache.commons.lang3.StringUtils;
 
+import de.freese.pim.common.model.mail.MailPort;
+import de.freese.pim.common.model.mail.MailProvider;
+import de.freese.pim.common.utils.MailUtils;
 import de.freese.pim.gui.PIMApplication;
+import de.freese.pim.gui.mail.model.FXMailAccount;
+import de.freese.pim.gui.mail.model.FXMailFolder;
+import de.freese.pim.gui.mail.service.FXMailService;
 import de.freese.pim.gui.utils.FXUtils;
-import de.freese.pim.server.mail.api.MailAPI;
-import de.freese.pim.server.mail.impl.JavaMailAPI;
-import de.freese.pim.server.mail.model.MailAccount;
-import de.freese.pim.server.mail.model.MailFolder;
-import de.freese.pim.server.mail.model.MailPort;
-import de.freese.pim.server.mail.model.MailProvider;
-import de.freese.pim.server.mail.utils.MailUtils;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.geometry.VPos;
@@ -36,7 +34,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 /**
- * Dialog zum anlegen eines neuen {@link MailAccount}.
+ * Dialog zum anlegen eines neuen {@link FXMailAccount}.
  *
  * @author Thomas Freese
  */
@@ -45,7 +43,7 @@ public class EditMailAccountDialog
     /**
      *
      */
-    private ListView<MailFolder> aboView = new ListView<>();
+    private ListView<FXMailFolder> aboView = new ListView<>();
 
     /**
      *
@@ -106,26 +104,28 @@ public class EditMailAccountDialog
     }
 
     /**
-     * Legt einen neuen {@link MailAccount} an.
-     *
+     * Legt einen neuen MailAccount an.
+     * 
+     * @param mailService {@link FXMailService}
      * @param bundle {@link ResourceBundle}
      * @return {@link Optional}
      */
-    public Optional<MailAccount> addAccount(final ResourceBundle bundle)
+    public Optional<FXMailAccount> addAccount(final FXMailService mailService, final ResourceBundle bundle)
     {
-        return openDialog(bundle, null, "mailaccount.add", "imageview-add");
+        return openDialog(mailService, bundle, null, "mailaccount.add", "imageview-add");
     }
 
     /**
-     * Editiert einen {@link MailAccount}.
+     * Editiert einen MailAccount.
      *
+     * @param mailService {@link FXMailService}
      * @param bundle {@link ResourceBundle}
-     * @param account {@link MailAccount}
+     * @param account {@link FXMailAccount}
      * @return {@link Optional}
      */
-    public Optional<MailAccount> editAccount(final ResourceBundle bundle, final MailAccount account)
+    public Optional<FXMailAccount> editAccount(final FXMailService mailService, final ResourceBundle bundle, final FXMailAccount account)
     {
-        return openDialog(bundle, account, "mailaccount.edit", "imageview-edit");
+        return openDialog(mailService, bundle, account, "mailaccount.edit", "imageview-edit");
     }
 
     /**
@@ -157,7 +157,7 @@ public class EditMailAccountDialog
             message.append(bundle.getString("passwoerter.nicht_identisch")).append("\n");
         }
 
-        if ((this.aboView.getItems() != null) && (this.aboView.getItems().stream().filter(MailFolder::isAbonniert).count() == 0))
+        if ((this.aboView.getItems() != null) && (this.aboView.getItems().stream().filter(FXMailFolder::isAbonniert).count() == 0))
         {
             message.append(bundle.getString("mail.folder.abonniert.nicht")).append("\n");
         }
@@ -177,18 +177,19 @@ public class EditMailAccountDialog
 
     /**
      * Initialisiert und öffnet den Dialog.
-     *
+     * 
+     * @param mailService {@link FXMailService}
      * @param bundle {@link ResourceBundle}
-     * @param account {@link MailAccount}
+     * @param account {@link FXMailAccount}
      * @param titleKey String
      * @param imageStyleClass String
      * @return {@link Optional}
      */
-    private Optional<MailAccount> openDialog(final ResourceBundle bundle, final MailAccount account, final String titleKey,
-            final String imageStyleClass)
+    private Optional<FXMailAccount> openDialog(final FXMailService mailService, final ResourceBundle bundle, final FXMailAccount account,
+            final String titleKey, final String imageStyleClass)
     {
         // DialogObject
-        MailAccount bean = new MailAccount();
+        FXMailAccount bean = new FXMailAccount();
 
         // Attribute kopieren.
         if (account != null)
@@ -298,7 +299,7 @@ public class EditMailAccountDialog
         });
 
         this.aboView.setCellFactory(
-                CheckBoxListCell.forListView(MailFolder::abonniertProperty, FXUtils.toStringConverter(MailFolder::getFullName)));
+                CheckBoxListCell.forListView(FXMailFolder::abonniertProperty, FXUtils.toStringConverter(FXMailFolder::getFullName)));
         this.aboView.setItems(bean.getFolder());
 
         // Laypout
@@ -345,7 +346,7 @@ public class EditMailAccountDialog
 
         // Test
         this.buttonTest.setPrefWidth(150);
-        this.buttonTest.setOnAction(event -> test(bean, bundle));
+        this.buttonTest.setOnAction(event -> test(mailService, bean, bundle));
         gridPane.add(this.buttonTest, 0, ++row);
         gridPane.add(this.labelTestResult, 1, row);
 
@@ -379,11 +380,12 @@ public class EditMailAccountDialog
 
     /**
      * Testet die Mail-Einstellungen.
-     *
-     * @param bean {@link MailAccount}
+     * 
+     * @param mailService {@link FXMailService}
+     * @param bean {@link FXMailAccount}
      * @param bundle {@link ResourceBundle}
      */
-    private void test(final MailAccount bean, final ResourceBundle bundle)
+    private void test(final FXMailService mailService, final FXMailAccount bean, final ResourceBundle bundle)
     {
         this.labelTestResult.setText(null);
         this.labelTestResult.setStyle(null);
@@ -391,37 +393,20 @@ public class EditMailAccountDialog
 
         checkValidConfig(null, bundle);
 
-        MailAPI mailAPI = new JavaMailAPI(bean, Paths.get("."));
-        // mailAPI.setExecutorService(PIMApplication.getExecutorService());
-
         try
         {
-            mailAPI.connect();
-            mailAPI.testConnection();
+            bean.getFolder().clear();
+            bean.getFolder().addAll(mailService.test(bean));
 
             this.labelTestResult.setText("OK");
             this.labelTestResult.setStyle("-fx-text-fill: darkgreen;"); // fx-text-inner-color
 
             this.aboView.setItems(bean.getFolder());
-
-            bean.getFolder().clear();
-            bean.getFolder().addAll(mailAPI.getFolder());
         }
         catch (Exception ex)
         {
             this.labelTestResult.setText(ex.getMessage());
             this.labelTestResult.setStyle("-fx-text-fill: red;"); // fx-text-inner-color
-        }
-        finally
-        {
-            try
-            {
-                mailAPI.disconnect();
-            }
-            catch (Exception ex)
-            {
-                // Ignore
-            }
         }
     }
 }

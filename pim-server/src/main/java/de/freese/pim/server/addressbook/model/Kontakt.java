@@ -1,45 +1,30 @@
 // Created: 30.05.2016
 package de.freese.pim.server.addressbook.model;
 
-import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
-import javafx.beans.property.LongProperty;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleLongProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 
 /**
  * Entity für einen Kontakt.
  *
  * @author Thomas Freese
  */
-@SuppressWarnings("restriction")
-public class Kontakt implements Serializable, Comparable<Kontakt>
+public class Kontakt implements Comparable<Kontakt>
 {
     /**
      *
      */
-    private static final long serialVersionUID = -4373195495051336639L;
+    private final List<KontaktAttribut> attribute = new ArrayList<>();
 
     /**
      *
      */
-    private final ObjectProperty<ObservableList<KontaktAttribut>> attributeProperty =
-            new SimpleObjectProperty<>(this, "attribute", FXCollections.observableArrayList());
+    private long id = 0;
 
     /**
      *
      */
-    private final LongProperty idProperty = new SimpleLongProperty(this, "id", 0);
-
-    /**
-     *
-     */
-    private final StringProperty nachnameProperty = new SimpleStringProperty(this, "nachname", null);
+    private String nachname = null;
 
     // /**
     // *
@@ -49,7 +34,7 @@ public class Kontakt implements Serializable, Comparable<Kontakt>
     /**
      *
      */
-    private final StringProperty vornameProperty = new SimpleStringProperty(this, "vorname", null);
+    private String vorname = null;
 
     /**
      * Erzeugt eine neue Instanz von {@link Kontakt}
@@ -70,33 +55,11 @@ public class Kontakt implements Serializable, Comparable<Kontakt>
     {
         super();
 
-        this.idProperty.set(id);
-        this.nachnameProperty.set(nachname);
-        this.vornameProperty.set(vorname);
+        this.id = id;
+        this.nachname = nachname;
+        this.vorname = vorname;
 
-        // _toString.bind(format("{ %s, %s }", oneProperty(), twoProperty()));
     }
-
-    /**
-     * @param attribut {@link KontaktAttribut}
-     */
-    private void addAttribut(final KontaktAttribut attribut)
-    {
-        if (getAttribute().contains(attribut))
-        {
-            throw new RuntimeException("Attribut bereits vorhanden");
-        }
-
-        this.attributeProperty.get().add(attribut);
-    }
-
-    // /**
-    // * @param listener {@link PropertyChangeListener}
-    // */
-    // public void addPropertyChangeListener(final PropertyChangeListener listener)
-    // {
-    // this.pcs.addPropertyChangeListener(listener);
-    // }
 
     /**
      * @param attribut String
@@ -112,13 +75,13 @@ public class Kontakt implements Serializable, Comparable<Kontakt>
         addAttribut(ka);
     }
 
-    /**
-     * @return {@link ObjectProperty}
-     */
-    public ObjectProperty<ObservableList<KontaktAttribut>> attributeProperty()
-    {
-        return this.attributeProperty;
-    }
+    // /**
+    // * @param listener {@link PropertyChangeListener}
+    // */
+    // public void addPropertyChangeListener(final PropertyChangeListener listener)
+    // {
+    // this.pcs.addPropertyChangeListener(listener);
+    // }
 
     /**
      * @see java.lang.Comparable#compareTo(java.lang.Object)
@@ -208,7 +171,7 @@ public class Kontakt implements Serializable, Comparable<Kontakt>
      */
     public List<KontaktAttribut> getAttribute()
     {
-        return this.attributeProperty.get();
+        return this.attribute;
     }
 
     /**
@@ -216,7 +179,7 @@ public class Kontakt implements Serializable, Comparable<Kontakt>
      */
     public long getID()
     {
-        return this.idProperty.get();
+        return this.id;
     }
 
     /**
@@ -224,7 +187,7 @@ public class Kontakt implements Serializable, Comparable<Kontakt>
      */
     public String getNachname()
     {
-        return this.nachnameProperty.get();
+        return this.nachname;
     }
 
     /**
@@ -232,7 +195,7 @@ public class Kontakt implements Serializable, Comparable<Kontakt>
      */
     public String getVorname()
     {
-        return this.vornameProperty.get();
+        return this.vorname;
     }
 
     /**
@@ -253,11 +216,13 @@ public class Kontakt implements Serializable, Comparable<Kontakt>
     }
 
     /**
-     * @return {@link LongProperty}
+     * @param id long
      */
-    public LongProperty idProperty()
+    public void setID(final long id)
     {
-        return this.idProperty;
+        // Object old = getID();
+        this.id = id;
+        // this.pcs.firePropertyChange("id", old, getID());
     }
 
     // /**
@@ -269,30 +234,12 @@ public class Kontakt implements Serializable, Comparable<Kontakt>
     // }
 
     /**
-     * @return {@link StringProperty}
-     */
-    public StringProperty nachnameProperty()
-    {
-        return this.nachnameProperty;
-    }
-
-    /**
-     * @param id long
-     */
-    public void setID(final long id)
-    {
-        // Object old = getID();
-        this.idProperty.set(id);
-        // this.pcs.firePropertyChange("id", old, getID());
-    }
-
-    /**
      * @param nachname String
      */
     public void setNachname(final String nachname)
     {
         // Object old = getNachname();
-        this.nachnameProperty.set(nachname);
+        this.nachname = nachname;
         // this.pcs.firePropertyChange("nachname", old, getNachname());
     }
 
@@ -302,7 +249,7 @@ public class Kontakt implements Serializable, Comparable<Kontakt>
     public void setVorname(final String vorname)
     {
         // Object old = getVorname();
-        this.vornameProperty.set(vorname);
+        this.vorname = vorname;
         // this.pcs.firePropertyChange("vorname", old, getVorname());
     }
 
@@ -313,24 +260,25 @@ public class Kontakt implements Serializable, Comparable<Kontakt>
     public String toString()
     {
         StringBuilder builder = new StringBuilder();
-        builder.append("Kontakt [attribute=");
-        builder.append(getAttribute());
-        builder.append(", id=");
-        builder.append(getID());
-        builder.append(", nachname=");
-        builder.append(getNachname());
-        builder.append(", vorname=");
-        builder.append(getVorname());
+        builder.append("Kontakt [attribute=").append(getAttribute());
+        builder.append(", id=").append(getID());
+        builder.append(", nachname=").append(getNachname());
+        builder.append(", vorname=").append(getVorname());
         builder.append("]");
 
         return builder.toString();
     }
 
     /**
-     * @return {@link StringProperty}
+     * @param attribut {@link KontaktAttribut}
      */
-    public StringProperty vornameProperty()
+    private void addAttribut(final KontaktAttribut attribut)
     {
-        return this.vornameProperty;
+        if (getAttribute().contains(attribut))
+        {
+            throw new RuntimeException("Attribut bereits vorhanden");
+        }
+
+        getAttribute().add(attribut);
     }
 }

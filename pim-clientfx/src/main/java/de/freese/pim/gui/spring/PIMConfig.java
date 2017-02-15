@@ -13,12 +13,14 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 
+import de.freese.pim.gui.addressbook.service.DefaultEmbeddedFXAddressbookService;
+import de.freese.pim.gui.addressbook.service.FXAddressbookService;
+import de.freese.pim.gui.mail.service.DefaultEmbeddedFXMailService;
+import de.freese.pim.gui.mail.service.FXMailService;
 import de.freese.pim.server.addressbook.dao.DefaultAddressBookDAO;
 import de.freese.pim.server.addressbook.service.DefaultAddressBookService;
-import de.freese.pim.server.addressbook.service.AddressBookService;
 import de.freese.pim.server.mail.dao.DefaultMailDAO;
 import de.freese.pim.server.mail.service.DefaultMailService;
-import de.freese.pim.server.mail.service.MailService;
 
 /**
  * Spring-Konfiguration von PIM.
@@ -42,10 +44,10 @@ public class PIMConfig
 
     /**
      * @param dataSource {@link DataSource}
-     * @return {@link AddressBookService}
+     * @return {@link FXAddressbookService}
      */
     @Bean
-    public AddressBookService addressBookService(final DataSource dataSource)
+    public FXAddressbookService addressBookService(final DataSource dataSource)
     {
         DefaultAddressBookService defaultAddressBookService = new DefaultAddressBookService();
         defaultAddressBookService.setAddressBookDAO(new DefaultAddressBookDAO().dataSource(dataSource));
@@ -57,20 +59,22 @@ public class PIMConfig
         // }, new TransactionalInvocationHandler(dataSource, new DefaultAddressBookService(new
         // DefaultAddressBookDAO().dataSource(dataSource))));
 
-        return defaultAddressBookService;
+        DefaultEmbeddedFXAddressbookService fxAddressbookService = new DefaultEmbeddedFXAddressbookService();
+        fxAddressbookService.setAddressBookService(defaultAddressBookService);
+
+        return fxAddressbookService;
     }
 
     /**
      * @param dataSource {@link DataSource}
      * @param executorService {@link ExecutorService}
      * @param basePath {@link Path}
-     * @return {@link MailService}
+     * @return {@link FXMailService}
      */
     @Bean(destroyMethod = "disconnectAccounts")
-    public MailService mailService(final DataSource dataSource, final ExecutorService executorService, final Path basePath)
+    public FXMailService mailService(final DataSource dataSource, final ExecutorService executorService, final Path basePath)
     {
         DefaultMailService defaultMailService = new DefaultMailService();
-        defaultMailService.setBasePath(basePath);
         defaultMailService.setExecutorService(executorService);
         defaultMailService.setMailDAO(new DefaultMailDAO().dataSource(dataSource));
         //
@@ -79,7 +83,11 @@ public class PIMConfig
         // IMailService.class
         // }, new TransactionalInvocationHandler(PIMApplication.getDataSource(), defaultMailService));
 
-        return defaultMailService;
+        DefaultEmbeddedFXMailService fxMailService = new DefaultEmbeddedFXMailService();
+        fxMailService.setBasePath(basePath);
+        fxMailService.setMailService(defaultMailService);
+
+        return fxMailService;
 
     }
 

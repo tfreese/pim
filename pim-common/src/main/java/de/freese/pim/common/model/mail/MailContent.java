@@ -1,5 +1,5 @@
 // Created: 07.02.2017
-package de.freese.pim.server.mail.api;
+package de.freese.pim.common.model.mail;
 
 import java.io.IOException;
 import java.util.Map;

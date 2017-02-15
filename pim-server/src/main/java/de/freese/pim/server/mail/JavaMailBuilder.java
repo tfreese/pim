@@ -28,6 +28,8 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import javax.mail.internet.MimeUtility;
 
+import de.freese.pim.common.utils.MailUtils;
+
 /**
  * Builder für eine {@link MimeMessage}.
  *
@@ -35,41 +37,6 @@ import javax.mail.internet.MimeUtility;
  */
 public class JavaMailBuilder
 {
-    /**
-     *
-     */
-    public static final String HEADER_CONTENT_ID = "Content-ID";
-
-    /**
-     *
-     */
-    private static final String CONTENT_TYPE_CHARSET_SUFFIX = ";charset=";
-
-    /**
-     *
-     */
-    private static final String CONTENT_TYPE_HTML = "text/html";
-
-    /**
-    *
-    */
-    private static final String CONTENT_TYPE_PLAIN = "text/plain";
-
-    /**
-     *
-     */
-    private static final String HEADER_MESSAGE_ID = "Message-ID";
-
-    /**
-     *
-     */
-    private static final String MULTIPART_SUBTYPE_MIXED = "mixed";
-
-    /**
-     *
-     */
-    private static final String MULTIPART_SUBTYPE_RELATED = "related";
-
     /**
      * @param sender {@link JavaMailSender}
      * @param validateAddresses boolean
@@ -375,15 +342,15 @@ public class JavaMailBuilder
 
         if (this.messageID != null)
         {
-            mail.setHeader(HEADER_MESSAGE_ID, this.messageID);
+            mail.setHeader(MailUtils.HEADER_MESSAGE_ID, this.messageID);
         }
 
         // mixed, für Attachments und Inlines
-        MimeMultipart rootMultipart = new MimeMultipart(MULTIPART_SUBTYPE_MIXED);
+        MimeMultipart rootMultipart = new MimeMultipart(MailUtils.MULTIPART_SUBTYPE_MIXED);
         mail.setContent(rootMultipart);
 
         // related, für Text und Inlines
-        MimeMultipart relatedMultipart = new MimeMultipart(MULTIPART_SUBTYPE_RELATED);
+        MimeMultipart relatedMultipart = new MimeMultipart(MailUtils.MULTIPART_SUBTYPE_RELATED);
         MimeBodyPart relatedBodyPart = new MimeBodyPart();
         relatedBodyPart.setContent(relatedMultipart);
         rootMultipart.addBodyPart(relatedBodyPart);
@@ -394,16 +361,16 @@ public class JavaMailBuilder
             MimeBodyPart textBodyPart = new MimeBodyPart();
             relatedMultipart.addBodyPart(textBodyPart);
 
-            String contentType = CONTENT_TYPE_PLAIN;
+            String contentType = MailUtils.CONTENT_TYPE_PLAIN;
 
             if (this.isHTML)
             {
-                contentType = CONTENT_TYPE_HTML;
+                contentType = MailUtils.CONTENT_TYPE_HTML;
             }
 
             if (getEncoding() != null)
             {
-                textBodyPart.setContent(this.text, contentType + CONTENT_TYPE_CHARSET_SUFFIX + getEncoding());
+                textBodyPart.setContent(this.text, contentType + MailUtils.CONTENT_TYPE_CHARSET_SUFFIX + getEncoding());
             }
             else
             {
@@ -587,7 +554,7 @@ public class JavaMailBuilder
         mimeBodyPart.setDisposition(Part.INLINE);
         // We're using setHeader here to remain compatible with JavaMail 1.2,
         // rather than JavaMail 1.3's setContentID.
-        mimeBodyPart.setHeader(HEADER_CONTENT_ID, "<" + contentID + ">");
+        mimeBodyPart.setHeader(MailUtils.HEADER_CONTENT_ID, "<" + contentID + ">");
         mimeBodyPart.setDataHandler(new DataHandler(dataSource));
 
         this.inlines.add(mimeBodyPart);

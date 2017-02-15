@@ -3,14 +3,7 @@ package de.freese.pim.server.mail.model;
 
 import java.util.Date;
 
-import javax.mail.internet.InternetAddress;
-
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import de.freese.pim.common.model.mail.InternetAddress;
 
 /**
  * Entity für eine Mail.
@@ -22,12 +15,12 @@ public class Mail
     /**
     *
     */
-    private final ObjectProperty<InternetAddress[]> bccProperty = new SimpleObjectProperty<>(this, "to", null);
+    private InternetAddress[] bcc = null;
 
     /**
     *
     */
-    private final ObjectProperty<InternetAddress[]> ccProperty = new SimpleObjectProperty<>(this, "to", null);
+    private InternetAddress[] cc = null;
 
     /**
      *
@@ -42,7 +35,7 @@ public class Mail
     /**
      *
      */
-    private final ObjectProperty<InternetAddress> fromProperty = new SimpleObjectProperty<>(this, "from", null);
+    private InternetAddress from = null;
 
     /**
      * Ist immer größer als 0.
@@ -52,17 +45,17 @@ public class Mail
     /**
     *
     */
-    private final ObjectProperty<Date> receivedDateProperty = new SimpleObjectProperty<>(this, "receivedDate", null);
+    private Date receivedDate = null;
 
     /**
     *
     */
-    private final BooleanProperty seenProperty = new SimpleBooleanProperty(this, "seen", false);
+    private boolean seen = false;
 
     /**
     *
     */
-    private final ObjectProperty<Date> sendDateProperty = new SimpleObjectProperty<>(this, "sendDate", null);
+    private Date sendDate = null;
 
     /**
      *
@@ -72,12 +65,12 @@ public class Mail
     /**
     *
     */
-    private final StringProperty subjectProperty = new SimpleStringProperty(this, "subject", null);
+    private String subject = null;
 
     /**
     *
     */
-    private final ObjectProperty<InternetAddress[]> toProperty = new SimpleObjectProperty<>(this, "to", null);
+    private InternetAddress[] to = null;
 
     /**
      *
@@ -93,37 +86,13 @@ public class Mail
     }
 
     /**
-     * @return {@link ObjectProperty}
-     */
-    public ObjectProperty<InternetAddress[]> bccProperty()
-    {
-        return this.bccProperty;
-    }
-
-    /**
-     * @return {@link ObjectProperty}
-     */
-    public ObjectProperty<InternetAddress[]> ccProperty()
-    {
-        return this.ccProperty;
-    }
-
-    /**
-     * @return {@link ObjectProperty}
-     */
-    public ObjectProperty<InternetAddress> fromProperty()
-    {
-        return this.fromProperty;
-    }
-
-    /**
      * Liefert den Empfänger, blind Copy.
      *
      * @return {@link InternetAddress}
      */
     public InternetAddress[] getBcc()
     {
-        return bccProperty().get();
+        return this.bcc;
     }
 
     /**
@@ -133,7 +102,7 @@ public class Mail
      */
     public InternetAddress[] getCc()
     {
-        return ccProperty().get();
+        return this.cc;
     }
 
     /**
@@ -161,7 +130,7 @@ public class Mail
      */
     public InternetAddress getFrom()
     {
-        return fromProperty().get();
+        return this.from;
     }
 
     /**
@@ -181,7 +150,7 @@ public class Mail
      */
     public Date getReceivedDate()
     {
-        return receivedDateProperty().get();
+        return this.receivedDate;
     }
 
     /**
@@ -191,7 +160,7 @@ public class Mail
      */
     public Date getSendDate()
     {
-        return this.sendDateProperty.get();
+        return this.sendDate;
     }
 
     /**
@@ -211,7 +180,7 @@ public class Mail
      */
     public String getSubject()
     {
-        return subjectProperty().get();
+        return this.subject;
     }
 
     /**
@@ -221,7 +190,7 @@ public class Mail
      */
     public InternetAddress[] getTo()
     {
-        return toProperty().get();
+        return this.to;
     }
 
     /**
@@ -242,31 +211,7 @@ public class Mail
      */
     public boolean isSeen()
     {
-        return seenProperty().get();
-    }
-
-    /**
-     * @return {@link ObjectProperty}
-     */
-    public ObjectProperty<Date> receivedDateProperty()
-    {
-        return this.receivedDateProperty;
-    }
-
-    /**
-     * @return {@link BooleanProperty}
-     */
-    public BooleanProperty seenProperty()
-    {
-        return this.seenProperty;
-    }
-
-    /**
-     * @return {@link ObjectProperty}
-     */
-    public ObjectProperty<Date> sendDateProperty()
-    {
-        return this.sendDateProperty;
+        return this.seen;
     }
 
     /**
@@ -276,7 +221,7 @@ public class Mail
      */
     public void setBcc(final InternetAddress[] bcc)
     {
-        bccProperty().set(bcc);
+        this.bcc = bcc;
     }
 
     /**
@@ -286,7 +231,7 @@ public class Mail
      */
     public void setCc(final InternetAddress[] cc)
     {
-        ccProperty().set(cc);
+        this.cc = cc;
     }
 
     /**
@@ -314,7 +259,7 @@ public class Mail
      */
     public void setFrom(final InternetAddress from)
     {
-        fromProperty().set(from);
+        this.from = from;
     }
 
     /**
@@ -334,7 +279,7 @@ public class Mail
      */
     public void setReceivedDate(final Date date)
     {
-        receivedDateProperty().set(date);
+        this.receivedDate = date;
     }
 
     /**
@@ -344,7 +289,7 @@ public class Mail
      */
     public void setSeen(final boolean seen)
     {
-        seenProperty().set(seen);
+        this.seen = seen;
     }
 
     /**
@@ -354,7 +299,7 @@ public class Mail
      */
     public void setSendDate(final Date date)
     {
-        sendDateProperty().set(date);
+        this.sendDate = date;
     }
 
     /**
@@ -374,7 +319,7 @@ public class Mail
      */
     public void setSubject(final String subject)
     {
-        subjectProperty().set(subject);
+        this.subject = subject;
     }
 
     /**
@@ -384,7 +329,7 @@ public class Mail
      */
     public void setTo(final InternetAddress[] to)
     {
-        toProperty().set(to);
+        this.to = to;
     }
 
     /**
@@ -396,21 +341,5 @@ public class Mail
     public void setUID(final long uid)
     {
         this.uid = uid;
-    }
-
-    /**
-     * @return {@link StringProperty}
-     */
-    public StringProperty subjectProperty()
-    {
-        return this.subjectProperty;
-    }
-
-    /**
-     * @return {@link ObjectProperty}
-     */
-    public ObjectProperty<InternetAddress[]> toProperty()
-    {
-        return this.toProperty;
     }
 }

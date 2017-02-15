@@ -1,10 +1,10 @@
 // Created: 13.12.2016
-package de.freese.pim.gui.contact;
+package de.freese.pim.gui.addressbook;
 
 import org.apache.commons.lang3.StringUtils;
 
+import de.freese.pim.gui.addressbook.model.FXKontakt;
 import de.freese.pim.gui.view.View;
-import de.freese.pim.server.addressbook.model.Kontakt;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.transformation.FilteredList;
@@ -87,7 +87,7 @@ public class ContactView implements View
     *
     */
     @FXML
-    private TableView<Kontakt> tableViewKontakt = null;
+    private TableView<FXKontakt> tableViewKontakt = null;
 
     /**
      *
@@ -214,9 +214,9 @@ public class ContactView implements View
      * @param propertyKontaktFilter {@link StringProperty}
      * @return {@link TableView}
      */
-    private TableView<Kontakt> createTableViewKontakt(final StringProperty propertyKontaktFilter)
+    private TableView<FXKontakt> createTableViewKontakt(final StringProperty propertyKontaktFilter)
     {
-        TableView<Kontakt> tableView = new TableView<>();
+        TableView<FXKontakt> tableView = new TableView<>();
         tableView.setEditable(false);
         tableView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
         tableView.setTableMenuButtonVisible(true);
@@ -229,9 +229,9 @@ public class ContactView implements View
 
         // tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
-        TableColumn<Kontakt, Number> columnID = new TableColumn<>("%id");
-        TableColumn<Kontakt, String> columnNachname = new TableColumn<>("%nachname");
-        TableColumn<Kontakt, String> columnVorname = new TableColumn<>("%vorname");
+        TableColumn<FXKontakt, Number> columnID = new TableColumn<>("%id");
+        TableColumn<FXKontakt, String> columnNachname = new TableColumn<>("%nachname");
+        TableColumn<FXKontakt, String> columnVorname = new TableColumn<>("%vorname");
 
         columnID.prefWidthProperty().bind(tableView.widthProperty().multiply(0.1D)); // 10% Breite
 
@@ -248,7 +248,7 @@ public class ContactView implements View
         tableView.getColumns().add(columnVorname);
 
         // Für Filter
-        FilteredList<Kontakt> filteredData = new FilteredList<>(FXCollections.observableArrayList());
+        FilteredList<FXKontakt> filteredData = new FilteredList<>(FXCollections.observableArrayList());
 
         // Filter-Textfeld mit FilteredList verbinden.
         propertyKontaktFilter.addListener((observable, oldValue, newValue) ->
@@ -272,7 +272,7 @@ public class ContactView implements View
         });
 
         // Da die ObservableList der TableItems neu gesetzt wird, muss auch die Sortierung neu gemacht werden.
-        SortedList<Kontakt> sortedData = new SortedList<>(filteredData);
+        SortedList<FXKontakt> sortedData = new SortedList<>(filteredData);
         sortedData.comparatorProperty().bind(tableView.comparatorProperty());
 
         tableView.setItems(sortedData);

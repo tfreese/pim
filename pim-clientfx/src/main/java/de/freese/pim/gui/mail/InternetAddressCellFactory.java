@@ -3,7 +3,7 @@
  */
 package de.freese.pim.gui.mail;
 
-import javax.mail.internet.InternetAddress;
+import de.freese.pim.common.model.mail.InternetAddress;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.util.Callback;

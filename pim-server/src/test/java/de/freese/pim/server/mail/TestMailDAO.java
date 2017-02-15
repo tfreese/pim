@@ -9,8 +9,9 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Arrays;
 import java.util.List;
+
 import javax.annotation.Resource;
-import javax.mail.internet.InternetAddress;
+
 import org.junit.Assert;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
@@ -23,11 +24,12 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
+import de.freese.pim.common.model.mail.InternetAddress;
+import de.freese.pim.common.model.mail.MailPort;
 import de.freese.pim.server.mail.dao.MailDAO;
 import de.freese.pim.server.mail.model.Mail;
 import de.freese.pim.server.mail.model.MailAccount;
 import de.freese.pim.server.mail.model.MailFolder;
-import de.freese.pim.server.mail.model.MailPort;
 
 /**
  * TestCase für das {@link MailDAO}.
@@ -278,16 +280,25 @@ public class TestMailDAO
     public void test031InsertMail() throws Exception
     {
         Mail mail = new Mail();
-        mail.setFrom(InternetAddress.parse("a@a.aa")[0]);
+        mail.setFrom(new InternetAddress("a@a.aa"));
         mail.setMsgNum(1);
         mail.setReceivedDate(java.util.Date.from(LocalDateTime.of(2017, 02, 03, 15, 00).atZone(ZoneId.systemDefault()).toInstant()));
         mail.setSeen(false);
         mail.setSendDate(java.util.Date.from(LocalDateTime.of(2017, 02, 03, 15, 01).atZone(ZoneId.systemDefault()).toInstant()));
         mail.setSize(13);
         mail.setSubject("-TEST-");
-        mail.setTo(InternetAddress.parse("b@b.bb"));
-        mail.setCc(InternetAddress.parse("c@c.cc"));
-        mail.setBcc(InternetAddress.parse("d@d.dd"));
+        mail.setTo(new InternetAddress[]
+        {
+                new InternetAddress("b@b.bb")
+        });
+        mail.setCc(new InternetAddress[]
+        {
+                new InternetAddress("c@c.cc")
+        });
+        mail.setBcc(new InternetAddress[]
+        {
+                new InternetAddress("d@d.dd")
+        });
         mail.setUID(2);
 
         this.mailDAO.insertMail(4, Arrays.asList(mail));
@@ -309,9 +320,11 @@ public class TestMailDAO
         Mail mail = mails.get(0);
         Assert.assertEquals("a@a.aa", mail.getFrom().getAddress());
         Assert.assertEquals(1, mail.getMsgNum());
-        Assert.assertEquals(java.util.Date.from(LocalDateTime.of(2017, 02, 03, 15, 00).atZone(ZoneId.systemDefault()).toInstant()), mail.getReceivedDate());
+        Assert.assertEquals(java.util.Date.from(LocalDateTime.of(2017, 02, 03, 15, 00).atZone(ZoneId.systemDefault()).toInstant()),
+                mail.getReceivedDate());
         Assert.assertFalse(mail.isSeen());
-        Assert.assertEquals(java.util.Date.from(LocalDateTime.of(2017, 02, 03, 15, 01).atZone(ZoneId.systemDefault()).toInstant()), mail.getSendDate());
+        Assert.assertEquals(java.util.Date.from(LocalDateTime.of(2017, 02, 03, 15, 01).atZone(ZoneId.systemDefault()).toInstant()),
+                mail.getSendDate());
         Assert.assertEquals(13, mail.getSize());
         Assert.assertEquals("-TEST-", mail.getSubject());
         Assert.assertEquals("b@b.bb", mail.getTo()[0].getAddress());
@@ -356,9 +369,11 @@ public class TestMailDAO
         Mail mail = mails.get(0);
         Assert.assertEquals("a@a.aa", mail.getFrom().getAddress());
         Assert.assertEquals(1, mail.getMsgNum());
-        Assert.assertEquals(java.util.Date.from(LocalDateTime.of(2017, 02, 03, 15, 00).atZone(ZoneId.systemDefault()).toInstant()), mail.getReceivedDate());
+        Assert.assertEquals(java.util.Date.from(LocalDateTime.of(2017, 02, 03, 15, 00).atZone(ZoneId.systemDefault()).toInstant()),
+                mail.getReceivedDate());
         Assert.assertTrue(mail.isSeen());
-        Assert.assertEquals(java.util.Date.from(LocalDateTime.of(2017, 02, 03, 15, 01).atZone(ZoneId.systemDefault()).toInstant()), mail.getSendDate());
+        Assert.assertEquals(java.util.Date.from(LocalDateTime.of(2017, 02, 03, 15, 01).atZone(ZoneId.systemDefault()).toInstant()),
+                mail.getSendDate());
         Assert.assertEquals(13, mail.getSize());
         Assert.assertEquals("-TEST-", mail.getSubject());
         Assert.assertEquals("b@b.bb", mail.getTo()[0].getAddress());

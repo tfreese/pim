@@ -3,36 +3,15 @@
  */
 package de.freese.pim.server.mail.model;
 
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
-import javafx.beans.value.ObservableIntegerValue;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.collections.transformation.FilteredList;
+import de.freese.pim.common.model.mail.MailPort;
 
 /**
  * Entity für einen Mail-Account.
  *
  * @author Thomas Freese
  */
-// @SuppressWarnings("restriction")
-// @JsonRootName("mailAccount")
 public class MailAccount
 {
-    /**
-    *
-    */
-    private final FilteredList<MailFolder> abonnierteFolder;
-
-    /**
-    *
-    */
-    private final ObservableList<MailFolder> folder = FXCollections.observableArrayList();
-
     /**
      *
      */
@@ -41,52 +20,42 @@ public class MailAccount
     /**
      *
      */
-    private final StringProperty imapHostProperty = new SimpleStringProperty(this, "imapHost", null);
+    private String imapHost = null;
 
     /**
      *
      */
-    private final BooleanProperty imapLegitimationProperty = new SimpleBooleanProperty(this, "imapLegitimation", true);
+    private boolean imapLegitimation = true;
 
     /**
      *
      */
-    private final ObjectProperty<MailPort> imapPortProperty = new SimpleObjectProperty<>(this, "imapPort", MailPort.IMAPS);
+    private MailPort imapPort = MailPort.IMAPS;
 
     /**
      *
      */
-    private final StringProperty mailProperty = new SimpleStringProperty(this, "mail", null);
+    private String mail = null;
 
     /**
      *
      */
-    private final StringProperty passwordProperty = new SimpleStringProperty(this, "password", null);
-
-    /**
-    *
-    */
-    private final FilteredList<MailFolder> rootFolder;
+    private String password = null;
 
     /**
      *
      */
-    private final StringProperty smtpHostProperty = new SimpleStringProperty(this, "smtpHost", null);
+    private String smtpHost = null;
 
     /**
      *
      */
-    private final BooleanProperty smtpLegitimationProperty = new SimpleBooleanProperty(this, "smtpLegitimation", true);
+    private boolean smtpLegitimation = true;
 
     /**
      *
      */
-    private final ObjectProperty<MailPort> smtpPortProperty = new SimpleObjectProperty<>(this, "smtpPort", MailPort.SMTPS);
-
-    /**
-    *
-    */
-    private ObservableIntegerValue unreadMailsCount = null;
+    private MailPort smtpPort = MailPort.SMTPS;
 
     /**
      * Erstellt ein neues {@link MailAccount} Object.
@@ -94,12 +63,6 @@ public class MailAccount
     public MailAccount()
     {
         super();
-
-        this.abonnierteFolder = new FilteredList<>(getFolder(), MailFolder::isAbonniert);
-        this.rootFolder = new FilteredList<>(this.abonnierteFolder, MailFolder::isParent);
-
-        // Zähler mit der Folder-List verbinden.
-        this.unreadMailsCount = new SumUnreadMailsInChildFolderBinding(this.rootFolder);
     }
 
     /**
@@ -130,27 +93,6 @@ public class MailAccount
         setSmtpHost(src.getSmtpHost());
         setSmtpLegitimation(src.isSmtpLegitimation());
         setSmtpPort(src.getSmtpPort());
-
-        getFolder().clear();
-        getFolder().addAll(src.getFolder());
-    }
-
-    /**
-     * @return {@link ObservableList}
-     */
-    public ObservableList<MailFolder> getFolder()
-    {
-        return this.folder;
-    }
-
-    /**
-     * Liefert alle abonnierte Folder des Accounts.
-     *
-     * @return {@link FilteredList}
-     */
-    public FilteredList<MailFolder> getFolderSubscribed()
-    {
-        return this.abonnierteFolder;
     }
 
     /**
@@ -166,7 +108,7 @@ public class MailAccount
      */
     public String getImapHost()
     {
-        return imapHostProperty().get();
+        return this.imapHost;
     }
 
     /**
@@ -174,7 +116,7 @@ public class MailAccount
      */
     public MailPort getImapPort()
     {
-        return imapPortProperty().get();
+        return this.imapPort;
     }
 
     /**
@@ -182,7 +124,7 @@ public class MailAccount
      */
     public String getMail()
     {
-        return mailProperty().get();
+        return this.mail;
     }
 
     /**
@@ -190,7 +132,7 @@ public class MailAccount
      */
     public String getPassword()
     {
-        return passwordProperty().get();
+        return this.password;
     }
 
     /**
@@ -198,7 +140,7 @@ public class MailAccount
      */
     public String getSmtpHost()
     {
-        return smtpHostProperty().get();
+        return this.smtpHost;
     }
 
     /**
@@ -206,41 +148,7 @@ public class MailAccount
      */
     public MailPort getSmtpPort()
     {
-        return smtpPortProperty().get();
-    }
-
-    /**
-     * Liefert die Anzahl ungelesener Mails des Accounts.
-     *
-     * @return int
-     */
-    public int getUnreadMailsCount()
-    {
-        return this.unreadMailsCount.intValue();
-    }
-
-    /**
-     * @return {@link StringProperty}
-     */
-    public StringProperty imapHostProperty()
-    {
-        return this.imapHostProperty;
-    }
-
-    /**
-     * @return {@link BooleanProperty}
-     */
-    public BooleanProperty imapLegitimationProperty()
-    {
-        return this.imapLegitimationProperty;
-    }
-
-    /**
-     * @return {@link ObjectProperty}
-     */
-    public ObjectProperty<MailPort> imapPortProperty()
-    {
-        return this.imapPortProperty;
+        return this.smtpPort;
     }
 
     /**
@@ -248,7 +156,7 @@ public class MailAccount
      */
     public boolean isImapLegitimation()
     {
-        return imapLegitimationProperty().get();
+        return this.imapLegitimation;
     }
 
     /**
@@ -256,23 +164,7 @@ public class MailAccount
      */
     public boolean isSmtpLegitimation()
     {
-        return smtpLegitimationProperty().get();
-    }
-
-    /**
-     * @return {@link StringProperty}
-     */
-    public StringProperty mailProperty()
-    {
-        return this.mailProperty;
-    }
-
-    /**
-     * @return {@link StringProperty}
-     */
-    public StringProperty passwordProperty()
-    {
-        return this.passwordProperty;
+        return this.smtpLegitimation;
     }
 
     /**
@@ -288,7 +180,7 @@ public class MailAccount
      */
     public void setImapHost(final String host)
     {
-        imapHostProperty().set(host);
+        this.imapHost = host;
     }
 
     /**
@@ -296,7 +188,7 @@ public class MailAccount
      */
     public void setImapLegitimation(final boolean legitimation)
     {
-        imapLegitimationProperty().set(legitimation);
+        this.imapLegitimation = legitimation;
     }
 
     /**
@@ -304,7 +196,7 @@ public class MailAccount
      */
     public void setImapPort(final MailPort port)
     {
-        imapPortProperty().set(port);
+        this.imapPort = port;
     }
 
     /**
@@ -312,7 +204,7 @@ public class MailAccount
      */
     public void setMail(final String mail)
     {
-        mailProperty().set(mail);
+        this.mail = mail;
     }
 
     /**
@@ -320,7 +212,7 @@ public class MailAccount
      */
     public void setPassword(final String password)
     {
-        passwordProperty().set(password);
+        this.password = password;
     }
 
     /**
@@ -328,7 +220,7 @@ public class MailAccount
      */
     public void setSmtpHost(final String host)
     {
-        smtpHostProperty().set(host);
+        this.smtpHost = host;
     }
 
     /**
@@ -336,7 +228,7 @@ public class MailAccount
      */
     public void setSmtpLegitimation(final boolean legitimation)
     {
-        smtpLegitimationProperty().set(legitimation);
+        this.smtpLegitimation = legitimation;
     }
 
     /**
@@ -344,31 +236,7 @@ public class MailAccount
      */
     public void setSmtpPort(final MailPort port)
     {
-        smtpPortProperty().set(port);
-    }
-
-    /**
-     * @return {@link StringProperty}
-     */
-    public StringProperty smtpHostProperty()
-    {
-        return this.smtpHostProperty;
-    }
-
-    /**
-     * @return {@link BooleanProperty}
-     */
-    public BooleanProperty smtpLegitimationProperty()
-    {
-        return this.smtpLegitimationProperty;
-    }
-
-    /**
-     * @return {@link ObjectProperty}
-     */
-    public ObjectProperty<MailPort> smtpPortProperty()
-    {
-        return this.smtpPortProperty;
+        this.smtpPort = port;
     }
 
     /**
@@ -378,7 +246,7 @@ public class MailAccount
     public String toString()
     {
         StringBuilder builder = new StringBuilder();
-        builder.append("MailAccount [id=").append(this.id);
+        builder.append("MailAccount [id=").append(getID());
         builder.append(", mail=").append(getMail());
         builder.append("]");
 

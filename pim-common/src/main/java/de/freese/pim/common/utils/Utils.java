@@ -4,6 +4,7 @@ package de.freese.pim.common.utils;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import static org.apache.commons.lang3.StringUtils.rightPad;
+
 import java.io.IOException;
 import java.io.PrintStream;
 import java.lang.annotation.Annotation;
@@ -29,6 +30,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,21 +44,18 @@ public final class Utils
     /**
      *
      */
-    private static final Logger LOGGER = LoggerFactory.getLogger(Utils.class);
-
-    /**
-     *
-     */
     public static final Predicate<Path> PREDICATE_IS_DIR = Files::isDirectory;
 
     /**
      *
      */
     public static final Predicate<Path> PREDICATE_IS_DIR_NOT = PREDICATE_IS_DIR.negate();
+
     /**
      * p -> p.getFileName().toString().startsWith(".");
      */
-    public static final Predicate<Path> PREDICATE_IS_HIDDEN = p -> {
+    public static final Predicate<Path> PREDICATE_IS_HIDDEN = p ->
+    {
         try
         {
             return Files.isHidden(p);
@@ -66,7 +65,6 @@ public final class Utils
             return false;
         }
     };
-
     /**
      *
      */
@@ -86,6 +84,11 @@ public final class Utils
     *
     */
     public static final Predicate<Path> PREDICATE_MAIL_FOLDER_LEAF_NOT = PREDICATE_MAIL_FOLDER_LEAF.negate();
+
+    /**
+     *
+     */
+    private static final Logger LOGGER = LoggerFactory.getLogger(Utils.class);
 
     /**
     *
@@ -250,7 +253,7 @@ public final class Utils
      * @return {@link Method}
      * @throws RuntimeException Falls was schief geht.
      */
-    public static Method getMethod(final Object bean, final String name, final Class<?>...parameterTypes) throws RuntimeException
+    public static Method getMethod(final Object bean, final String name, final Class<?>... parameterTypes) throws RuntimeException
     {
         try
         {
@@ -329,7 +332,7 @@ public final class Utils
      * @param args Object[]
      * @return Object
      */
-    public static Object invokeMethod(final Method method, final Object bean, final Object...args)
+    public static Object invokeMethod(final Method method, final Object bean, final Object... args)
     {
         try
         {
@@ -379,7 +382,8 @@ public final class Utils
         // @formatter:on
 
         // Strings pro Spalte formatieren und schreiben.
-        rows.stream().parallel().forEach(r -> {
+        rows.stream().parallel().forEach(r ->
+        {
             for (int column = 0; column < columnCount; column++)
             {
                 String value = rightPad(r[column].toString(), columnWidth[column], padding);
@@ -447,7 +451,8 @@ public final class Utils
 
     /**
      * Erzeugt aus dem {@link ResultSet} eine Liste mit den Column-Namen in der ersten Zeile und den Daten.<br>
-     * Wenn das ResultSet einen Typ != ResultSet.TYPE_FORWARD_ONLY besitzt, wird {@link ResultSet#first()} aufgerufen und kann weiter verwendet werden.
+     * Wenn das ResultSet einen Typ != ResultSet.TYPE_FORWARD_ONLY besitzt, wird {@link ResultSet#first()} aufgerufen und kann weiter
+     * verwendet werden.
      *
      * @param resultSet {@link ResultSet}
      * @return {@link List}
@@ -515,7 +520,8 @@ public final class Utils
         int columnCount = rows.get(0).length;
 
         // Strings pro Spalte schreiben, parallel() verfälscht die Reihenfolge.
-        rows.forEach(r -> {
+        rows.forEach(r ->
+        {
             for (int column = 0; column < columnCount; column++)
             {
                 ps.print(r[column]);
@@ -536,7 +542,8 @@ public final class Utils
      * Schreibt das ResultSet in den PrintStream.<br>
      * Dabei wird die Spaltenbreite auf den breitesten Wert angepasst.<br>
      * Der Stream wird nicht geschlossen.<br>
-     * Wenn das ResultSet einen Typ != ResultSet.TYPE_FORWARD_ONLY besitzt, wird {@link ResultSet#first()} aufgerufen und kann weiter verwendet werden.
+     * Wenn das ResultSet einen Typ != ResultSet.TYPE_FORWARD_ONLY besitzt, wird {@link ResultSet#first()} aufgerufen und kann weiter
+     * verwendet werden.
      *
      * @param resultSet {@link ResultSet}
      * @param ps {@link PrintStream}

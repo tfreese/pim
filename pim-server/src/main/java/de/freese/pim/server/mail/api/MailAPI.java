@@ -2,7 +2,6 @@
 package de.freese.pim.server.mail.api;
 
 import java.io.OutputStream;
-import java.nio.file.Path;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
@@ -38,13 +37,6 @@ public interface MailAPI
      * @return {@link MailAccount}
      */
     public MailAccount getAccount();
-
-    /**
-     * Liefert den lokalen Temp-{@link Path} des Accounts.
-     *
-     * @return {@link Path}
-     */
-    public Path getBasePath();
 
     /**
      * Liefert alle Folder des Accounts.

@@ -1,5 +1,5 @@
 // Created: 04.01.2017
-package de.freese.pim.server.mail.model;
+package de.freese.pim.common.model.mail;
 
 /**
  * Enums für die verschiedenen Konfigurationen der MailProvider.

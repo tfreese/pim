@@ -1,7 +1,6 @@
 // Created: 23.01.2017
 package de.freese.pim.server.mail.api;
 
-import java.nio.file.Path;
 import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 
@@ -25,11 +24,6 @@ public abstract class AbstractMailAPI implements MailAPI
     /**
     *
     */
-    private final Path basePath;
-
-    /**
-    *
-    */
     private ExecutorService executor = null;
 
     /**
@@ -41,17 +35,14 @@ public abstract class AbstractMailAPI implements MailAPI
      * Erzeugt eine neue Instanz von {@link AbstractMailAPI}
      *
      * @param account {@link MailAccount}
-     * @param basePath {@link Path}
      */
-    public AbstractMailAPI(final MailAccount account, final Path basePath)
+    public AbstractMailAPI(final MailAccount account)
     {
         super();
 
         Objects.requireNonNull(account, "account required");
-        Objects.requireNonNull(basePath, "basePath required");
 
         this.account = account;
-        this.basePath = basePath;
     }
 
     /**
@@ -61,15 +52,6 @@ public abstract class AbstractMailAPI implements MailAPI
     public MailAccount getAccount()
     {
         return this.account;
-    }
-
-    /**
-     * @see de.freese.pim.server.mail.api.MailAPI#getBasePath()
-     */
-    @Override
-    public Path getBasePath()
-    {
-        return this.basePath;
     }
 
     /**

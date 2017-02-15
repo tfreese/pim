@@ -7,24 +7,26 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.concurrent.Future;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import de.freese.pim.gui.mail.model.FXMail;
+import de.freese.pim.gui.mail.model.FXMailAccount;
+import de.freese.pim.gui.mail.model.FXMailFolder;
+import de.freese.pim.gui.mail.service.FXMailService;
 import de.freese.pim.gui.view.ErrorDialog;
-import de.freese.pim.server.mail.model.Mail;
-import de.freese.pim.server.mail.model.MailAccount;
-import de.freese.pim.server.mail.model.MailFolder;
-import de.freese.pim.server.mail.service.MailService;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 
 /**
- * Initialisierung der MailAPI pro {@link MailAccount}.
+ * Initialisierung der MailAPI pro MailAccount.
  *
  * @author Thomas Freese
  */
-public class InitMailAPITask extends Task<List<MailFolder>>
+public class InitMailAPITask extends Task<List<FXMailFolder>>
 {
     /**
     *
@@ -34,22 +36,23 @@ public class InitMailAPITask extends Task<List<MailFolder>>
     /**
      *
      */
-    private final MailAccount account;
+    private final FXMailAccount account;
 
     /**
      *
      */
-    private final MailService mailService;
+    private final FXMailService mailService;
 
     /**
      * Erzeugt eine neue Instanz von {@link InitMailAPITask}
      *
      * @param treeView {@link TreeView}
      * @param parent {@link TreeItem}
-     * @param mailService {@link MailService}
-     * @param account {@link MailAccount}
+     * @param mailService {@link FXMailService}
+     * @param account {@link FXMailAccount}
      */
-    public InitMailAPITask(final TreeView<Object> treeView, final TreeItem<Object> parent, final MailService mailService, final MailAccount account)
+    public InitMailAPITask(final TreeView<Object> treeView, final TreeItem<Object> parent, final FXMailService mailService,
+            final FXMailAccount account)
     {
         super();
 
@@ -61,8 +64,9 @@ public class InitMailAPITask extends Task<List<MailFolder>>
         this.mailService = mailService;
         this.account = account;
 
-        setOnSucceeded(event -> {
-            List<MailFolder> folders = getValue();
+        setOnSucceeded(event ->
+        {
+            List<FXMailFolder> folders = getValue();
 
             account.getFolderSubscribed().addListener(new TreeFolderListChangeListener(parent));
             account.getFolder().addAll(folders);
@@ -81,20 +85,20 @@ public class InitMailAPITask extends Task<List<MailFolder>>
 
             try
             {
-                Map<MailFolder, Future<List<Mail>>> map = new LinkedHashMap<>();
+                Map<FXMailFolder, Future<List<FXMail>>> map = new LinkedHashMap<>();
 
-                for (MailFolder mf : folders)
+                for (FXMailFolder mf : folders)
                 {
-                    Future<List<Mail>> future = this.mailService.loadMails2(mf.getAccountID(), mf.getID(), mf.getFullName());
+                    Future<List<FXMail>> future = this.mailService.loadMails2(mf.getAccountID(), mf.getID(), mf.getFullName());
                     map.put(mf, future);
                 }
 
-                for (Entry<MailFolder, Future<List<Mail>>> entry : map.entrySet())
+                for (Entry<FXMailFolder, Future<List<FXMail>>> entry : map.entrySet())
                 {
-                    MailFolder mf = entry.getKey();
-                    Future<List<Mail>> future = entry.getValue();
+                    FXMailFolder mf = entry.getKey();
+                    Future<List<FXMail>> future = entry.getValue();
 
-                    List<Mail> mails = future.get();
+                    List<FXMail> mails = future.get();
                     LOGGER.info("Load Mails finished: account={}, folder={}", this.account.getMail(), mf.getFullName());
 
                     mf.getMails().addAll(mails);
@@ -105,7 +109,8 @@ public class InitMailAPITask extends Task<List<MailFolder>>
                 throw new RuntimeException(ex);
             }
         });
-        setOnFailed(event -> {
+        setOnFailed(event ->
+        {
             Throwable th = getException();
 
             LOGGER.error(null, th);
@@ -118,13 +123,13 @@ public class InitMailAPITask extends Task<List<MailFolder>>
      * @see javafx.concurrent.Task#call()
      */
     @Override
-    protected List<MailFolder> call() throws Exception
+    protected List<FXMailFolder> call() throws Exception
     {
         LOGGER.info("Init MailAccount {}", this.account.getMail());
 
         this.mailService.connectAccount(this.account);
 
-        List<MailFolder> folders = this.mailService.loadFolder(this.account.getID());
+        List<FXMailFolder> folders = this.mailService.loadFolder(this.account.getID());
 
         return folders;
     }

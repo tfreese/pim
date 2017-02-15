@@ -8,7 +8,7 @@ import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
-import de.freese.pim.server.mail.utils.MailUtils;
+import de.freese.pim.common.utils.MailUtils;
 
 /**
  * Testklasse für RegEx-ausdruck für das MailFormat.

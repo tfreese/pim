@@ -45,7 +45,7 @@ public class DefaultAddressBookService extends AbstractService implements Addres
      */
     @Override
     @Transactional
-    public boolean deleteAttribut(final long kontaktID, final String attribut) throws Exception
+    public int deleteAttribut(final long kontaktID, final String attribut) throws Exception
     {
         return this.addressBookDAO.deleteAttribut(kontaktID, attribut);
     }
@@ -55,7 +55,7 @@ public class DefaultAddressBookService extends AbstractService implements Addres
      */
     @Override
     @Transactional
-    public boolean deleteKontakt(final long id) throws Exception
+    public int deleteKontakt(final long id) throws Exception
     {
         return this.addressBookDAO.deleteKontakt(id);
     }
@@ -85,7 +85,7 @@ public class DefaultAddressBookService extends AbstractService implements Addres
      */
     @Override
     @Transactional
-    public boolean insertAttribut(final long kontaktID, final String attribut, final String wert) throws Exception
+    public int insertAttribut(final long kontaktID, final String attribut, final String wert) throws Exception
     {
         return this.addressBookDAO.insertAttribut(kontaktID, attribut, wert);
     }
@@ -123,7 +123,7 @@ public class DefaultAddressBookService extends AbstractService implements Addres
      */
     @Override
     @Transactional
-    public boolean updateAttribut(final long kontaktID, final String attribut, final String wert) throws Exception
+    public int updateAttribut(final long kontaktID, final String attribut, final String wert) throws Exception
     {
         return this.addressBookDAO.updateAttribut(kontaktID, attribut, wert);
     }
@@ -133,7 +133,7 @@ public class DefaultAddressBookService extends AbstractService implements Addres
      */
     @Override
     @Transactional
-    public boolean updateKontakt(final long id, final String nachname, final String vorname) throws Exception
+    public int updateKontakt(final long id, final String nachname, final String vorname) throws Exception
     {
         return this.addressBookDAO.updateKontakt(id, nachname, vorname);
     }

@@ -1,54 +1,34 @@
 // Created: 30.05.2016
 package de.freese.pim.server.addressbook.model;
 
-import java.io.Serializable;
-import javafx.beans.property.LongProperty;
-import javafx.beans.property.SimpleLongProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
-
 /**
  * Entity für einen Kontakt.
  *
  * @author Thomas Freese
  */
-@SuppressWarnings("restriction")
-public class KontaktAttribut implements Serializable, Comparable<KontaktAttribut>
+public class KontaktAttribut implements Comparable<KontaktAttribut>
 {
     /**
-     *
-     */
-    private static final long serialVersionUID = 1030551267798759976L;
+    *
+    */
+    private String attribut = null;
 
     /**
     *
     */
-    private final StringProperty attributProperty = new SimpleStringProperty(this, "attribut", null);
+    private long kontaktID = 0;
 
     /**
     *
     */
-    private final LongProperty kontaktIDProperty = new SimpleLongProperty(this, "kontaktID", 0);
-
-    /**
-    *
-    */
-    private final StringProperty wertProperty = new SimpleStringProperty(this, "wert", null);
+    private String wert = null;
 
     /**
      * Erzeugt eine neue Instanz von {@link KontaktAttribut}
      */
-    KontaktAttribut()
+    public KontaktAttribut()
     {
         super();
-    }
-
-    /**
-     * @return {@link StringProperty}
-     */
-    public StringProperty attributProperty()
-    {
-        return this.attributProperty;
     }
 
     /**
@@ -82,7 +62,7 @@ public class KontaktAttribut implements Serializable, Comparable<KontaktAttribut
      */
     public String getAttribut()
     {
-        return this.attributProperty.get();
+        return this.attribut;
     }
 
     /**
@@ -90,7 +70,7 @@ public class KontaktAttribut implements Serializable, Comparable<KontaktAttribut
      */
     public long getKontaktID()
     {
-        return this.kontaktIDProperty.get();
+        return this.kontaktID;
     }
 
     /**
@@ -98,39 +78,31 @@ public class KontaktAttribut implements Serializable, Comparable<KontaktAttribut
      */
     public String getWert()
     {
-        return this.wertProperty.get();
-    }
-
-    /**
-     * @return {@link LongProperty}
-     */
-    public LongProperty kontaktIDProperty()
-    {
-        return this.kontaktIDProperty;
+        return this.wert;
     }
 
     /**
      * @param attribut String
      */
-    void setAttribut(final String attribut)
+    public void setAttribut(final String attribut)
     {
-        this.attributProperty.set(attribut);
+        this.attribut = attribut;
     }
 
     /**
      * @param kontaktID long
      */
-    void setKontaktID(final long kontaktID)
+    public void setKontaktID(final long kontaktID)
     {
-        this.kontaktIDProperty.set(kontaktID);
+        this.kontaktID = kontaktID;
     }
 
     /**
      * @param wert String
      */
-    void setWert(final String wert)
+    public void setWert(final String wert)
     {
-        this.wertProperty.set(wert);
+        this.wert = wert;
     }
 
     /**
@@ -140,22 +112,11 @@ public class KontaktAttribut implements Serializable, Comparable<KontaktAttribut
     public String toString()
     {
         StringBuilder builder = new StringBuilder();
-        builder.append("KontaktAttribut [kontaktID=");
-        builder.append(getKontaktID());
-        builder.append(", attribut=");
-        builder.append(getAttribut());
-        builder.append(", wert=");
-        builder.append(getWert());
+        builder.append("KontaktAttribut [kontaktID=").append(getKontaktID());
+        builder.append(", attribut=").append(getAttribut());
+        builder.append(", wert=").append(getWert());
         builder.append("]");
 
         return builder.toString();
-    }
-
-    /**
-     * @return {@link StringProperty}
-     */
-    public StringProperty wertProperty()
-    {
-        return this.wertProperty;
     }
 }

@@ -49,8 +49,8 @@ import com.sun.mail.imap.IMAPFolder;
 import com.sun.mail.util.ASCIIUtility;
 
 import de.freese.pim.common.function.FunctionStripNotLetter;
-import de.freese.pim.server.mail.api.MailContent;
-import de.freese.pim.server.mail.impl.JavaMailContent;
+import de.freese.pim.common.model.mail.JavaMailContent;
+import de.freese.pim.common.model.mail.MailContent;
 
 /**
  * @author Thomas Freese

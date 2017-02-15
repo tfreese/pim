@@ -154,7 +154,7 @@ public abstract class AbstractAddressBookDAO extends AbstractDAO<AddressBookDAO>
      * @see de.freese.pim.server.addressbook.dao.AddressBookDAO#deleteAttribut(long, java.lang.String)
      */
     @Override
-    public boolean deleteAttribut(final long kontaktID, final String attribut) throws Exception
+    public int deleteAttribut(final long kontaktID, final String attribut) throws Exception
     {
         String sql = "delete from KONTAKT_ATTRIBUT where kontakt_id = ? and attribut = ?";
         // int affectedRows = 0;
@@ -175,14 +175,14 @@ public abstract class AbstractAddressBookDAO extends AbstractDAO<AddressBookDAO>
             ps.setString(2, attribut.toUpperCase());
         });
 
-        return affectedRows > 0;
+        return affectedRows;
     }
 
     /**
      * @see de.freese.pim.server.addressbook.dao.AddressBookDAO#deleteKontakt(long)
      */
     @Override
-    public boolean deleteKontakt(final long id) throws Exception
+    public int deleteKontakt(final long id) throws Exception
     {
         String userID = getUserID();
 
@@ -215,7 +215,7 @@ public abstract class AbstractAddressBookDAO extends AbstractDAO<AddressBookDAO>
             ps.setLong(2, id);
         });
 
-        return affectedRows > 0;
+        return affectedRows;
     }
 
     /**
@@ -318,7 +318,7 @@ public abstract class AbstractAddressBookDAO extends AbstractDAO<AddressBookDAO>
      * @see de.freese.pim.server.addressbook.dao.AddressBookDAO#insertAttribut(long, java.lang.String, java.lang.String)
      */
     @Override
-    public boolean insertAttribut(final long kontaktID, final String attribut, final String wert) throws Exception
+    public int insertAttribut(final long kontaktID, final String attribut, final String wert) throws Exception
     {
         String sql = "insert into KONTAKT_ATTRIBUT (kontakt_id, attribut, wert) values (?, ?, ?)";
 
@@ -343,7 +343,7 @@ public abstract class AbstractAddressBookDAO extends AbstractDAO<AddressBookDAO>
             ps.setString(3, wert);
         });
 
-        return affectedRows > 0;
+        return affectedRows;
     }
 
     /**
@@ -432,7 +432,7 @@ public abstract class AbstractAddressBookDAO extends AbstractDAO<AddressBookDAO>
      * @see de.freese.pim.server.addressbook.dao.AddressBookDAO#updateAttribut(long, java.lang.String, java.lang.String)
      */
     @Override
-    public boolean updateAttribut(final long kontaktID, final String attribut, final String wert) throws Exception
+    public int updateAttribut(final long kontaktID, final String attribut, final String wert) throws Exception
     {
         String sql = "update KONTAKT_ATTRIBUT set wert = ? where kontakt_id = ? and attribut = ?";
         // int affectedRows = 0;
@@ -456,14 +456,14 @@ public abstract class AbstractAddressBookDAO extends AbstractDAO<AddressBookDAO>
             ps.setString(3, attribut.toUpperCase());
         });
 
-        return affectedRows > 0;
+        return affectedRows;
     }
 
     /**
      * @see de.freese.pim.server.addressbook.dao.AddressBookDAO#updateKontakt(long, java.lang.String, java.lang.String)
      */
     @Override
-    public boolean updateKontakt(final long id, final String nachname, final String vorname) throws Exception
+    public int updateKontakt(final long id, final String nachname, final String vorname) throws Exception
     {
         String userID = getUserID();
 
@@ -490,7 +490,7 @@ public abstract class AbstractAddressBookDAO extends AbstractDAO<AddressBookDAO>
             ps.setLong(4, id);
         });
 
-        return affectedRows > 0;
+        return affectedRows;
     }
 
     /**

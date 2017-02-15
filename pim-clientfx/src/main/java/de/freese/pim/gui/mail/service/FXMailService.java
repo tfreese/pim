@@ -7,11 +7,12 @@ package de.freese.pim.gui.mail.service;
 import java.util.List;
 import java.util.concurrent.Future;
 import java.util.function.BiConsumer;
+
+import de.freese.pim.common.model.mail.MailContent;
 import de.freese.pim.gui.mail.model.FXMail;
 import de.freese.pim.gui.mail.model.FXMailAccount;
 import de.freese.pim.gui.mail.model.FXMailFolder;
-import de.freese.pim.server.mail.api.MailAPI;
-import de.freese.pim.server.mail.api.MailContent;
+import de.freese.pim.server.mail.model.MailAccount;
 
 /**
  * Interface für einen JavaFX-MailService.
@@ -21,7 +22,7 @@ import de.freese.pim.server.mail.api.MailContent;
 public interface FXMailService
 {
     /**
-     * Erstellt für den Account eine Instanz von Typ {@link MailAPI} und verbindet stellt die Verbindung her.<br>
+     * Erstellt für den Account eine Instanz von Typ der MailAPI und stellt die Verbindung her.<br>
      *
      * @param account {@link FXMailAccount}
      * @throws Exception Falls was schief geht.
@@ -57,10 +58,9 @@ public interface FXMailService
      * Die ID wird dabei in die Entity gesetzt.
      *
      * @param account {@link FXMailAccount}
-     * @return int; affectedRows
      * @throws Exception Falls was schief geht.
      */
-    public int insertAccount(FXMailAccount account) throws Exception;
+    public void insertAccount(FXMailAccount account) throws Exception;
 
     /**
      * Anlegen oder ändern von MailFoldern.<br>
@@ -68,10 +68,10 @@ public interface FXMailService
      *
      * @param accountID long
      * @param folders {@link List}
-     * @return int[]; affectedRows
+     * @return int; affectedRows
      * @throws Exception Falls was schief geht.
      */
-    public int[] insertOrUpdateFolder(long accountID, List<FXMailFolder> folders) throws Exception;
+    public int insertOrUpdateFolder(long accountID, List<FXMailFolder> folders) throws Exception;
 
     /**
      * Liefert den Inhalt der Mail.<br>
@@ -115,6 +115,15 @@ public interface FXMailService
      * @throws Exception Falls was schief geht.
      */
     public Future<List<FXMail>> loadMails2(long accountID, long folderID, String folderFullName) throws Exception;
+
+    /**
+     * Testet die Verbindung zu einem MailAccount und liefert bei Erfolg dessen Ordner.
+     *
+     * @param account {@link MailAccount}
+     * @return {@link List}
+     * @throws Exception Falls was schief geht.
+     */
+    public List<FXMailFolder> test(FXMailAccount account) throws Exception;
 
     /**
      * Ändern eines MailAccounts.

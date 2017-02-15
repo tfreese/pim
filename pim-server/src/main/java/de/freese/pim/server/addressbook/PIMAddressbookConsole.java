@@ -26,8 +26,8 @@ import org.springframework.jdbc.datasource.SingleConnectionDataSource;
 
 import de.freese.pim.common.utils.PreserveOrderOptionGroup;
 import de.freese.pim.common.utils.Utils;
-import de.freese.pim.server.addressbook.dao.DefaultAddressBookDAO;
 import de.freese.pim.server.addressbook.dao.AddressBookDAO;
+import de.freese.pim.server.addressbook.dao.DefaultAddressBookDAO;
 import de.freese.pim.server.addressbook.model.Kontakt;
 import de.freese.pim.server.addressbook.model.KontaktAttribut;
 import de.freese.pim.server.addressbook.service.DefaultAddressBookService;
@@ -269,9 +269,9 @@ public class PIMAddressbookConsole
     {
         try
         {
-            boolean success = this.addressBookDAO.deleteAttribut(kontakt_id, attribut);
+            int affectedRows = this.addressBookDAO.deleteAttribut(kontakt_id, attribut);
 
-            if (success)
+            if (affectedRows > 0)
             {
                 this.printStream.printf("%nAttribut gelöscht%n");
             }
@@ -295,9 +295,9 @@ public class PIMAddressbookConsole
     {
         try
         {
-            boolean success = this.addressBookDAO.deleteKontakt(id);
+            int affectedRows = this.addressBookDAO.deleteKontakt(id);
 
-            if (success)
+            if (affectedRows > 0)
             {
                 this.printStream.printf("%nKontakt gelöscht%n");
             }
@@ -507,9 +507,9 @@ public class PIMAddressbookConsole
     {
         try
         {
-            boolean success = this.addressBookDAO.updateAttribut(kontakt_id, attribut, wert);
+            int affectedRows = this.addressBookDAO.updateAttribut(kontakt_id, attribut, wert);
 
-            if (success)
+            if (affectedRows > 0)
             {
                 this.printStream.printf("%nAttribut aktualisiert%n");
             }
@@ -535,9 +535,9 @@ public class PIMAddressbookConsole
     {
         try
         {
-            boolean success = this.addressBookDAO.updateKontakt(id, nachname, vorname);
+            int affectedRows = this.addressBookDAO.updateKontakt(id, nachname, vorname);
 
-            if (success)
+            if (affectedRows > 0)
             {
                 this.printStream.printf("%nKontakt aktualisiert%n");
             }

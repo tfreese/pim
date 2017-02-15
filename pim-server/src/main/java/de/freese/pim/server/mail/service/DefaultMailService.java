@@ -1,19 +1,11 @@
 // Created: 20.01.2017
 package de.freese.pim.server.mail.service;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
@@ -22,20 +14,18 @@ import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
-import javax.mail.internet.MimeMessage;
-import org.apache.commons.lang3.ArrayUtils;
+
+import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.request.async.DeferredResult;
+
 import de.freese.pim.common.utils.io.MonitorOutputStream;
 import de.freese.pim.server.mail.api.MailAPI;
-import de.freese.pim.server.mail.api.MailContent;
 import de.freese.pim.server.mail.dao.MailDAO;
 import de.freese.pim.server.mail.impl.JavaMailAPI;
-import de.freese.pim.server.mail.impl.JavaMailContent;
 import de.freese.pim.server.mail.model.Mail;
 import de.freese.pim.server.mail.model.MailAccount;
 import de.freese.pim.server.mail.model.MailFolder;
@@ -52,12 +42,7 @@ public class DefaultMailService extends AbstractService implements MailService
     /**
      *
      */
-    private Path basePath = null;
-
-    /**
-     *
-     */
-    private Map<Long, MailAPI> mailApiMap = new ConcurrentHashMap<>();
+    private static final Map<Long, MailAPI> MAIL_API_MAP = new ConcurrentHashMap<>();
 
     /**
     *
@@ -83,11 +68,9 @@ public class DefaultMailService extends AbstractService implements MailService
     @Override
     public void connectAccount(final MailAccount account) throws Exception
     {
-        Path accountPath = getBasePath().resolve(account.getMail());
-
-        MailAPI mailAPI = new JavaMailAPI(account, accountPath);
+        MailAPI mailAPI = new JavaMailAPI(account);
         mailAPI.setExecutorService(getExecutorService());
-        this.mailApiMap.put(account.getID(), mailAPI);
+        MAIL_API_MAP.put(account.getID(), mailAPI);
 
         mailAPI.connect();
     }
@@ -121,8 +104,12 @@ public class DefaultMailService extends AbstractService implements MailService
     {
         getLogger().info("Disconnect Accounts");
 
-        for (MailAPI mailAPI : this.mailApiMap.values())
+        List<Long> accountsIDs = new ArrayList<>(MAIL_API_MAP.keySet());
+
+        for (Long accountsID : accountsIDs)
         {
+            MailAPI mailAPI = MAIL_API_MAP.get(accountsID);
+
             getLogger().info("Close " + mailAPI.getAccount().getMail());
 
             try
@@ -133,19 +120,11 @@ public class DefaultMailService extends AbstractService implements MailService
             {
                 getLogger().warn(ex.getMessage());
             }
+
+            MAIL_API_MAP.remove(accountsID);
         }
 
-        this.mailApiMap.clear();
-    }
-
-    /**
-     * Pfad zum lokalen Speicherort.
-     *
-     * @return {@link Path}
-     */
-    protected Path getBasePath()
-    {
-        return this.basePath;
+        MAIL_API_MAP.clear();
     }
 
     /**
@@ -159,106 +138,111 @@ public class DefaultMailService extends AbstractService implements MailService
     }
 
     /**
-     * @param accountID long
-     * @return {@link MailAPI}
-     */
-    protected MailAPI getMailAPI(final long accountID)
-    {
-        return this.mailApiMap.get(accountID);
-    }
-
-    /**
-     * @return {@link MailDAO}
-     */
-    protected MailDAO getMailDAO()
-    {
-        return this.mailDAO;
-    }
-
-    /**
      * @see de.freese.pim.server.mail.service.MailService#insertAccount(de.freese.pim.server.mail.model.MailAccount)
      */
     @Override
     @Transactional
-    public int insertAccount(final MailAccount account) throws Exception
+    public long insertAccount(final MailAccount account) throws Exception
     {
-        return getMailDAO().insertAccount(account);
+        getMailDAO().insertAccount(account);
+
+        return account.getID();
     }
 
     /**
-     * @see de.freese.pim.server.mail.service.MailService#insertOrUpdateFolder(long, java.util.List)
+     * @see de.freese.pim.server.mail.service.MailService#insertFolder(long, java.util.List)
      */
     @Override
     @Transactional
-    public int[] insertOrUpdateFolder(final long accountID, final List<MailFolder> folders) throws Exception
+    public long[] insertFolder(final long accountID, final List<MailFolder> folders) throws Exception
     {
-        // ID = 0 -> insert
-        List<MailFolder> toInsert = folders.stream().filter(mf -> mf.getID() == 0).collect(Collectors.toList());
-        int[] affectedRows = getMailDAO().insertFolder(accountID, toInsert);
+        getMailDAO().insertFolder(accountID, folders);
 
-        // ID != 0 -> update
-        List<MailFolder> toUpdate = folders.stream().filter(mf -> mf.getID() > 0).collect(Collectors.toList());
-
-        for (MailFolder mf : toUpdate)
-        {
-            ArrayUtils.add(affectedRows, getMailDAO().updateFolder(mf));
-        }
-
-        return affectedRows;
+        return folders.stream().mapToLong(MailFolder::getID).toArray();
     }
 
     /**
-     * @see de.freese.pim.server.mail.service.MailService#loadContent(long, de.freese.pim.server.mail.model.Mail, java.util.function.BiConsumer)
+     * @see de.freese.pim.server.mail.service.MailService#loadContent(long, java.lang.String, long, int, java.util.function.BiConsumer)
      */
     @Override
-    public MailContent loadContent(final long accountID, final Mail mail, final BiConsumer<Long, Long> loadMonitor) throws Exception
+    public byte[] loadContent(final long accountID, final String folderFullName, final long mailUID, final int size,
+            final BiConsumer<Long, Long> loadMonitor) throws Exception
     {
         if (getLogger().isDebugEnabled())
         {
-            getLogger().debug("load mail: msgnum={}; uid={}; size={}; subject={}", mail.getMsgNum(), mail.getUID(), mail.getSize(), mail.getSubject());
+            getLogger().debug("download mail: uid={}; size={}", mailUID, size);
         }
 
         MailAPI mailAPI = getMailAPI(accountID);
-        Path folderPath = mailAPI.getBasePath().resolve(mail.getFolderFullName());
-        // Path folderPath = mailAPI.getBasePath().resolve(mail.getFolderFullName().replaceAll("/", "__"));
-        Path mailPath = folderPath.resolve(Long.toString(mail.getUID())).resolve(mail.getUID() + ".eml");
+        byte[] rawData = null;
 
-        JavaMailContent mailContent = null;
-
-        if (!Files.exists(mailPath))
+        try (ByteArrayOutputStream baos = new ByteArrayOutputStream(size + 1);
+             GZIPOutputStream gos = new GZIPOutputStream(baos);
+             MonitorOutputStream mos = new MonitorOutputStream(gos, size, loadMonitor))
         {
-            if (getLogger().isDebugEnabled())
-            {
-                getLogger().debug("download mail: msgnum={}; uid={}", mail.getMsgNum(), mail.getUID());
-            }
+            mailAPI.loadMail(folderFullName, mailUID, mos);
 
-            // Mail download.
-            Files.createDirectories(mailPath.getParent());
-
-            try (OutputStream os = Files.newOutputStream(mailPath);
-                 GZIPOutputStream gos = new GZIPOutputStream(os);
-                 BufferedOutputStream bos = new BufferedOutputStream(gos);
-                 MonitorOutputStream mos = new MonitorOutputStream(bos, mail.getSize(), loadMonitor))
-            {
-                mailAPI.loadMail(mail.getFolderFullName(), mail.getUID(), mos);
-            }
-            catch (Exception ex)
-            {
-                Files.deleteIfExists(mailPath);
-                Files.deleteIfExists(mailPath.getParent());
-                throw ex;
-            }
+            mos.flush();
+            rawData = baos.toByteArray();
         }
 
-        // Lokal gespeicherte Mail laden.
-        try (InputStream is = new GZIPInputStream(new BufferedInputStream(Files.newInputStream(mailPath))))
-        {
-            MimeMessage message = new MimeMessage(null, is);
-            mailContent = new JavaMailContent(message);
-        }
-
-        return mailContent;
+        return rawData;
     }
+
+    // /**
+    // * @see de.freese.pim.server.mail.service.MailService#loadContent(long, de.freese.pim.server.mail.model.Mail,
+    // * java.util.function.BiConsumer)
+    // */
+    // @Override
+    // public MailContent loadContent(final long accountID, final Mail mail, final BiConsumer<Long, Long> loadMonitor) throws Exception
+    // {
+    // if (getLogger().isDebugEnabled())
+    // {
+    // getLogger().debug("load mail: msgnum={}; uid={}; size={}; subject={}", mail.getMsgNum(), mail.getUID(), mail.getSize(),
+    // mail.getSubject());
+    // }
+    //
+    // MailAPI mailAPI = getMailAPI(accountID);
+    // Path folderPath = mailAPI.getBasePath().resolve(mail.getFolderFullName());
+    // // Path folderPath = mailAPI.getBasePath().resolve(mail.getFolderFullName().replaceAll("/", "__"));
+    // Path mailPath = folderPath.resolve(Long.toString(mail.getUID())).resolve(mail.getUID() + ".eml");
+    //
+    // JavaMailContent mailContent = null;
+    //
+    // if (!Files.exists(mailPath))
+    // {
+    // if (getLogger().isDebugEnabled())
+    // {
+    // getLogger().debug("download mail: msgnum={}; uid={}", mail.getMsgNum(), mail.getUID());
+    // }
+    //
+    // // Mail download.
+    // Files.createDirectories(mailPath.getParent());
+    //
+    // try (OutputStream os = Files.newOutputStream(mailPath);
+    // GZIPOutputStream gos = new GZIPOutputStream(os);
+    // BufferedOutputStream bos = new BufferedOutputStream(gos);
+    // MonitorOutputStream mos = new MonitorOutputStream(bos, mail.getSize(), loadMonitor))
+    // {
+    // mailAPI.loadMail(mail.getFolderFullName(), mail.getUID(), mos);
+    // }
+    // catch (Exception ex)
+    // {
+    // Files.deleteIfExists(mailPath);
+    // Files.deleteIfExists(mailPath.getParent());
+    // throw ex;
+    // }
+    // }
+    //
+    // // Lokal gespeicherte Mail laden.
+    // try (InputStream is = new GZIPInputStream(new BufferedInputStream(Files.newInputStream(mailPath))))
+    // {
+    // MimeMessage message = new MimeMessage(null, is);
+    // mailContent = new JavaMailContent(message);
+    // }
+    //
+    // return mailContent;
+    // }
 
     /**
      * @see de.freese.pim.server.mail.service.MailService#loadFolder(long)
@@ -275,25 +259,17 @@ public class DefaultMailService extends AbstractService implements MailService
         {
             folder = mailAPI.getFolder();
 
-            int[] affectedRows = insertOrUpdateFolder(accountID, folder);
+            long[] primaryKeys = insertFolder(accountID, folder);
+
+            for (int i = 0; i < primaryKeys.length; i++)
+            {
+                folder.get(i).setID(primaryKeys[i]);
+            }
 
             if (getLogger().isDebugEnabled())
             {
-                getLogger().debug("new folder saved: affected rows={}", IntStream.of(affectedRows).sum());
+                getLogger().debug("new folder saved: affected rows={}", primaryKeys.length);
             }
-        }
-
-        // Hierarchie aufbauen basierend auf Namen.
-        for (MailFolder mailFolder : folder)
-        {
-            // @formatter:off
-            Optional<MailFolder> parent = folder.stream()
-                    .filter(mf -> !Objects.equals(mf, mailFolder))
-                    .filter(mf -> mailFolder.getFullName().startsWith(mf.getFullName()))
-                    .findFirst();
-            // @formatter:on
-
-            parent.ifPresent(p -> p.addChild(mailFolder));
         }
 
         return folder;
@@ -406,7 +382,8 @@ public class DefaultMailService extends AbstractService implements MailService
     {
         DeferredResult<List<Mail>> deferredResult = new DeferredResult<>();
 
-        CompletableFuture.supplyAsync(() -> {
+        CompletableFuture.supplyAsync(() ->
+        {
             try
             {
                 return loadMails(accountID, folderID, folderFullName);
@@ -421,21 +398,43 @@ public class DefaultMailService extends AbstractService implements MailService
     }
 
     /**
-     * Pfad zum lokalen Speicherort.
-     *
-     * @param basePath {@link Path}
-     */
-    public void setBasePath(final Path basePath)
-    {
-        this.basePath = basePath;
-    }
-
-    /**
      * @param mailDAO {@link MailDAO}
      */
     public void setMailDAO(final MailDAO mailDAO)
     {
         this.mailDAO = mailDAO;
+    }
+
+    /**
+     * @see de.freese.pim.server.mail.service.MailService#test(de.freese.pim.server.mail.model.MailAccount)
+     */
+    @Override
+    public List<MailFolder> test(final MailAccount account) throws Exception
+    {
+        List<MailFolder> folder = null;
+
+        MailAPI mailAPI = new JavaMailAPI(account);
+
+        try
+        {
+            mailAPI.connect();
+            mailAPI.testConnection();
+
+            folder = mailAPI.getFolder();
+        }
+        finally
+        {
+            try
+            {
+                mailAPI.disconnect();
+            }
+            catch (Exception ex)
+            {
+                // Ignore
+            }
+        }
+
+        return folder;
     }
 
     /**
@@ -446,5 +445,41 @@ public class DefaultMailService extends AbstractService implements MailService
     public int updateAccount(final MailAccount account) throws Exception
     {
         return getMailDAO().updateAccount(account);
+    }
+
+    /**
+     * @see de.freese.pim.server.mail.service.MailService#updateFolder(long, java.util.List)
+     */
+    @Override
+    @Transactional
+    public int[] updateFolder(final long accountID, final List<MailFolder> folders) throws Exception
+    {
+        int[] affectedRows = new int[folders.size()];
+
+        for (int i = 0; i < folders.size(); i++)
+        {
+            MailFolder mf = folders.get(i);
+
+            affectedRows[i] = getMailDAO().updateFolder(mf);
+        }
+
+        return affectedRows;
+    }
+
+    /**
+     * @param accountID long
+     * @return {@link MailAPI}
+     */
+    protected MailAPI getMailAPI(final long accountID)
+    {
+        return MAIL_API_MAP.get(accountID);
+    }
+
+    /**
+     * @return {@link MailDAO}
+     */
+    protected MailDAO getMailDAO()
+    {
+        return this.mailDAO;
     }
 }

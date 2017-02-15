@@ -8,23 +8,25 @@ import java.util.List;
 import java.util.concurrent.Future;
 import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
 import org.springframework.scheduling.annotation.AsyncResult;
+
 import de.freese.pim.gui.mail.model.FXMail;
 import de.freese.pim.gui.mail.model.FXMailAccount;
 import de.freese.pim.gui.mail.model.FXMailFolder;
-import de.freese.pim.server.mail.api.MailContent;
 import de.freese.pim.server.mail.model.Mail;
 import de.freese.pim.server.mail.model.MailAccount;
 import de.freese.pim.server.mail.model.MailFolder;
 import de.freese.pim.server.mail.service.MailService;
 
 /**
- * MailService für JavaFX, wenn der Server Embedded läuft..
+ * MailService für JavaFX, wenn es keinen Server gibt.
  *
  * @author Thomas Freese
  */
 // @Service
-public class DefaultEmbeddedFXMailService implements FXMailService
+public class DefaultEmbeddedFXMailService extends AbstractFXMailService
 {
     /**
      *
@@ -78,48 +80,54 @@ public class DefaultEmbeddedFXMailService implements FXMailService
 
         List<FXMailAccount> fxBeans = pojos.stream().map(this::toFXBean).collect(Collectors.toList());
 
-        return fxBeans;
-    }
+        // ObjectMapper jsonMapper = new ObjectMapper();
+        // jsonMapper.enable(SerializationFeature.INDENT_OUTPUT);
+        // jsonMapper.enable(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT);
 
-    /**
-     * @return {@link MailService}
-     */
-    protected MailService getMailService()
-    {
-        return this.mailService;
+        // jsonMapper.readValue(is, FXMailAccount.class);
+
+        // JavaType type = jsonMapper.getTypeFactory().constructCollectionType(ArrayList.class, MailAccount.class);
+        // accountList.addAll(jsonMapper.readValue(is, type));
+
+        return fxBeans;
     }
 
     /**
      * @see de.freese.pim.gui.mail.service.FXMailService#insertAccount(de.freese.pim.gui.mail.model.FXMailAccount)
      */
     @Override
-    public int insertAccount(final FXMailAccount account) throws Exception
+    public void insertAccount(final FXMailAccount account) throws Exception
     {
         MailAccount pojo = toPOJO(account);
 
-        return getMailService().insertAccount(pojo);
+        long id = getMailService().insertAccount(pojo);
+        account.setID(id);
     }
 
     /**
      * @see de.freese.pim.gui.mail.service.FXMailService#insertOrUpdateFolder(long, java.util.List)
      */
     @Override
-    public int[] insertOrUpdateFolder(final long accountID, final List<FXMailFolder> folders) throws Exception
+    public int insertOrUpdateFolder(final long accountID, final List<FXMailFolder> folders) throws Exception
     {
-        List<MailFolder> pojos = folders.stream().map(this::toPOJO).collect(Collectors.toList());
+        int affectedRows = 0;
 
-        return getMailService().insertOrUpdateFolder(accountID, pojos);
-    }
+        // ID = 0 -> insert
+        List<MailFolder> toInsert = folders.stream().filter(mf -> mf.getID() == 0).map(this::toPOJO).collect(Collectors.toList());
 
-    /**
-     * @see de.freese.pim.gui.mail.service.FXMailService#loadContent(long, de.freese.pim.gui.mail.model.FXMail, java.util.function.BiConsumer)
-     */
-    @Override
-    public MailContent loadContent(final long accountID, final FXMail mail, final BiConsumer<Long, Long> loadMonitor) throws Exception
-    {
-        Mail pojo = toPOJO(mail);
+        long[] primaryKeys = getMailService().insertFolder(accountID, toInsert);
+        affectedRows += primaryKeys.length;
 
-        return getMailService().loadContent(accountID, pojo, loadMonitor);
+        for (int i = 0; i < primaryKeys.length; i++)
+        {
+            toInsert.get(i).setID(primaryKeys[i]);
+        }
+
+        // ID != 0 -> update
+        List<MailFolder> toUpdate = folders.stream().filter(mf -> mf.getID() > 0).map(this::toPOJO).collect(Collectors.toList());
+        affectedRows += IntStream.of(getMailService().updateFolder(accountID, toUpdate)).sum();
+
+        return affectedRows;
     }
 
     /**
@@ -131,6 +139,8 @@ public class DefaultEmbeddedFXMailService implements FXMailService
         List<MailFolder> pojos = getMailService().loadFolder(accountID);
 
         List<FXMailFolder> fxBeans = pojos.stream().map(this::toFXBean).collect(Collectors.toList());
+
+        buildHierarchie(fxBeans);
 
         return fxBeans;
     }
@@ -167,6 +177,30 @@ public class DefaultEmbeddedFXMailService implements FXMailService
     public void setMailService(final MailService mailService)
     {
         this.mailService = mailService;
+    }
+
+    /**
+     * @see de.freese.pim.gui.mail.service.FXMailService#test(de.freese.pim.gui.mail.model.FXMailAccount)
+     */
+    @Override
+    public List<FXMailFolder> test(final FXMailAccount account) throws Exception
+    {
+        MailAccount pojo = toPOJO(account);
+
+        List<FXMailFolder> folder = getMailService().test(pojo).stream().map(this::toFXBean).collect(Collectors.toList());
+
+        return folder;
+    }
+
+    /**
+     * @see de.freese.pim.gui.mail.service.FXMailService#updateAccount(de.freese.pim.gui.mail.model.FXMailAccount)
+     */
+    @Override
+    public int updateAccount(final FXMailAccount account) throws Exception
+    {
+        MailAccount pojo = toPOJO(account);
+
+        return getMailService().updateAccount(pojo);
     }
 
     /**
@@ -302,13 +336,23 @@ public class DefaultEmbeddedFXMailService implements FXMailService
     }
 
     /**
-     * @see de.freese.pim.gui.mail.service.FXMailService#updateAccount(de.freese.pim.gui.mail.model.FXMailAccount)
+     * @return {@link MailService}
+     */
+    protected MailService getMailService()
+    {
+        return this.mailService;
+    }
+
+    /**
+     * @see de.freese.pim.gui.mail.service.AbstractFXMailService#loadContent(long, java.lang.String, long, int,
+     *      java.util.function.BiConsumer)
      */
     @Override
-    public int updateAccount(final FXMailAccount account) throws Exception
+    protected byte[] loadContent(final long accountID, final String folderFullName, final long mailUID, final int size,
+            final BiConsumer<Long, Long> loadMonitor) throws Exception
     {
-        MailAccount pojo = toPOJO(account);
+        byte[] rawData = getMailService().loadContent(accountID, folderFullName, mailUID, size, loadMonitor);
 
-        return getMailService().updateAccount(pojo);
+        return rawData;
     }
 }

@@ -11,7 +11,6 @@ import javax.sql.DataSource;
 import org.junit.Assert;
 import org.springframework.jdbc.datasource.SingleConnectionDataSource;
 
-import de.freese.pim.server.addressbook.dao.AddressBookDAO;
 import de.freese.pim.server.addressbook.model.Kontakt;
 import de.freese.pim.server.addressbook.model.KontaktAttribut;
 
@@ -186,9 +185,9 @@ public abstract class AbstractDAOTextCase
      */
     protected void doTest0200UpdateKontakt(final AddressBookDAO addressBookDAO) throws Exception
     {
-        boolean success = addressBookDAO.updateKontakt(2, "ANachname", "A-Vorname");
+        int affectedRows = addressBookDAO.updateKontakt(2, "ANachname", "A-Vorname");
 
-        Assert.assertTrue(success);
+        Assert.assertEquals(1, affectedRows);
     }
 
     /**
@@ -197,9 +196,9 @@ public abstract class AbstractDAOTextCase
      */
     protected void doTest0300InsertAttribut(final AddressBookDAO addressBookDAO) throws Exception
     {
-        boolean success = addressBookDAO.insertAttribut(2, "STREET", "Street 1");
+        int affectedRows = addressBookDAO.insertAttribut(2, "STREET", "Street 1");
 
-        Assert.assertTrue(success);
+        Assert.assertEquals(1, affectedRows);
     }
 
     /**
@@ -209,9 +208,9 @@ public abstract class AbstractDAOTextCase
     protected void doTest0310InsertInsertAttributWithNullValue(final AddressBookDAO addressBookDAO) throws Exception
     {
         // Muss fehlschlagen.
-        boolean success = addressBookDAO.insertAttribut(2, "STREET", null);
+        int affectedRows = addressBookDAO.insertAttribut(2, "STREET", null);
 
-        Assert.assertEquals(false, success);
+        Assert.assertEquals(0, affectedRows);
     }
 
     /**
@@ -221,9 +220,9 @@ public abstract class AbstractDAOTextCase
     protected void doTest0320InsertInsertAttributWithBlankValue(final AddressBookDAO addressBookDAO) throws Exception
     {
         // Muss fehlschlagen.
-        boolean success = addressBookDAO.insertAttribut(2, "STREET", "");
+        int affectedRows = addressBookDAO.insertAttribut(2, "STREET", "");
 
-        Assert.assertEquals(false, success);
+        Assert.assertEquals(0, affectedRows);
     }
 
     /**
@@ -233,9 +232,9 @@ public abstract class AbstractDAOTextCase
     protected void doTest0330InsertInsertAttributWithNull(final AddressBookDAO addressBookDAO) throws Exception
     {
         // Muss fehlschlagen.
-        boolean success = addressBookDAO.insertAttribut(2, null, "Street 1");
+        int affectedRows = addressBookDAO.insertAttribut(2, null, "Street 1");
 
-        Assert.assertEquals(false, success);
+        Assert.assertEquals(0, affectedRows);
     }
 
     /**
@@ -245,9 +244,9 @@ public abstract class AbstractDAOTextCase
     protected void doTest0340InsertInsertAttributWithBlank(final AddressBookDAO addressBookDAO) throws Exception
     {
         // Muss fehlschlagen.
-        boolean success = addressBookDAO.insertAttribut(2, "", "Street 1");
+        int affectedRows = addressBookDAO.insertAttribut(2, "", "Street 1");
 
-        Assert.assertEquals(false, success);
+        Assert.assertEquals(0, affectedRows);
     }
 
     /**
@@ -257,9 +256,9 @@ public abstract class AbstractDAOTextCase
     protected void doTest0350InsertAttributExisting(final AddressBookDAO addressBookDAO) throws Exception
     {
         // Muss fehlschlagen.
-        boolean success = addressBookDAO.insertAttribut(2, "STREET", "Street 1");
+        int affectedRows = addressBookDAO.insertAttribut(2, "STREET", "Street 1");
 
-        Assert.assertEquals(false, success);
+        Assert.assertEquals(0, affectedRows);
     }
 
     /**
@@ -268,9 +267,9 @@ public abstract class AbstractDAOTextCase
      */
     protected void doTest0400UpdateAttribut(final AddressBookDAO addressBookDAO) throws Exception
     {
-        boolean success = addressBookDAO.updateAttribut(2, "STREET", "Street 2");
+        int affectedRows = addressBookDAO.updateAttribut(2, "STREET", "Street 2");
 
-        Assert.assertTrue(success);
+        Assert.assertEquals(1, affectedRows);
     }
 
     /**
@@ -412,9 +411,9 @@ public abstract class AbstractDAOTextCase
      */
     protected void doTest0900DeleteAttribut(final AddressBookDAO addressBookDAO) throws Exception
     {
-        boolean success = addressBookDAO.deleteAttribut(2, "STREET");
+        int affectedRows = addressBookDAO.deleteAttribut(2, "STREET");
 
-        Assert.assertTrue(success);
+        Assert.assertEquals(1, affectedRows);
     }
 
     /**
@@ -423,8 +422,8 @@ public abstract class AbstractDAOTextCase
      */
     protected void doTest1000DeleteKontakt(final AddressBookDAO addressBookDAO) throws Exception
     {
-        boolean success = addressBookDAO.deleteKontakt(3);
+        int affectedRows = addressBookDAO.deleteKontakt(3);
 
-        Assert.assertTrue(success);
+        Assert.assertEquals(1, affectedRows);
     }
 }

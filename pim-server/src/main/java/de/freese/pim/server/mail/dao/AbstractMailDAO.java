@@ -6,6 +6,7 @@ package de.freese.pim.server.mail.dao;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.sql.Clob;
 import java.sql.Date;
 import java.sql.ResultSet;
@@ -16,18 +17,19 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.mail.internet.AddressException;
-import javax.mail.internet.InternetAddress;
 
 import org.apache.commons.lang3.StringUtils;
 
+import de.freese.pim.common.model.mail.InternetAddress;
+import de.freese.pim.common.model.mail.MailPort;
 import de.freese.pim.common.utils.Crypt;
+import de.freese.pim.common.utils.MailUtils;
 import de.freese.pim.common.utils.Utils;
 import de.freese.pim.server.dao.AbstractDAO;
 import de.freese.pim.server.jdbc.RowMapper;
 import de.freese.pim.server.mail.model.Mail;
 import de.freese.pim.server.mail.model.MailAccount;
 import de.freese.pim.server.mail.model.MailFolder;
-import de.freese.pim.server.mail.model.MailPort;
 
 /**
  * Basis DAO-Implementierung für die Mailverwaltung.<br>
@@ -234,7 +236,7 @@ public class AbstractMailDAO extends AbstractDAO<MailDAO> implements MailDAO
 
             if (StringUtils.isNotBlank(value))
             {
-                recipients = InternetAddress.parse(value);
+                recipients = MailUtils.map(javax.mail.internet.InternetAddress.parse(value));
             }
 
             return recipients;
@@ -533,7 +535,21 @@ public class AbstractMailDAO extends AbstractDAO<MailDAO> implements MailDAO
 
         int[] affectedRows = getJdbcTemplate().updateBatch(sql, mails, (ps, mail, sequenceProvider) ->
         {
-            String from = Optional.ofNullable(mail.getFrom()).map(InternetAddress::toUnicodeString).orElse(null);
+            String from = null;
+
+            if (mail.getFrom() != null)
+            {
+                try
+                {
+                    from = new javax.mail.internet.InternetAddress(mail.getFrom().getAddress(), mail.getFrom().getPersonal())
+                            .toUnicodeString();
+                }
+                catch (UnsupportedEncodingException ueex)
+                {
+                    throw new SQLException(ueex);
+                }
+            }
+
             String to = Optional.ofNullable(mail.getTo()).map(InternetAddress::toString).orElse(null);
             String cc = Optional.ofNullable(mail.getCc()).map(InternetAddress::toString).orElse(null);
             String bcc = Optional.ofNullable(mail.getBcc()).map(InternetAddress::toString).orElse(null);

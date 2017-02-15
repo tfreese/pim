@@ -3,20 +3,21 @@ package de.freese.pim.gui.mail;
 
 import java.util.List;
 import java.util.Objects;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import de.freese.pim.gui.mail.model.FXMail;
+import de.freese.pim.gui.mail.model.FXMailAccount;
+import de.freese.pim.gui.mail.model.FXMailFolder;
+import de.freese.pim.gui.mail.service.FXMailService;
 import de.freese.pim.gui.view.ErrorDialog;
-import de.freese.pim.server.mail.model.Mail;
-import de.freese.pim.server.mail.model.MailAccount;
-import de.freese.pim.server.mail.model.MailFolder;
-import de.freese.pim.server.mail.service.MailService;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.scene.control.TreeView;
 
 /**
- * Laden der Mails pro {@link MailFolder}.
+ * Laden der Mails pro MailFolder.
  *
  * @author Thomas Freese
  */
@@ -30,27 +31,28 @@ public class LoadMailsTask extends Task<Void>
     /**
     *
     */
-    private final MailAccount account;
+    private final FXMailAccount account;
 
     /**
      *
      */
-    private final List<MailFolder> folders;
+    private final List<FXMailFolder> folders;
 
     /**
     *
     */
-    private final MailService mailService;
+    private final FXMailService mailService;
 
     /**
      * Erzeugt eine neue Instanz von {@link LoadMailsTask}
      *
      * @param treeView {@link TreeView}
      * @param folders {@link List}
-     * @param mailService {@link MailService}
-     * @param account {@link MailAccount}
+     * @param mailService {@link FXMailService}
+     * @param account {@link FXMailAccount}
      */
-    public LoadMailsTask(final TreeView<Object> treeView, final List<MailFolder> folders, final MailService mailService, final MailAccount account)
+    public LoadMailsTask(final TreeView<Object> treeView, final List<FXMailFolder> folders, final FXMailService mailService,
+            final FXMailAccount account)
     {
         super();
 
@@ -63,10 +65,12 @@ public class LoadMailsTask extends Task<Void>
         this.mailService = mailService;
         this.account = account;
 
-        setOnSucceeded(event -> {
+        setOnSucceeded(event ->
+        {
             treeView.refresh();
         });
-        setOnFailed(event -> {
+        setOnFailed(event ->
+        {
             Throwable th = getException();
 
             LOGGER.error(null, th);
@@ -81,9 +85,9 @@ public class LoadMailsTask extends Task<Void>
     @Override
     protected Void call() throws Exception
     {
-        for (MailFolder mf : this.folders)
+        for (FXMailFolder mf : this.folders)
         {
-            List<Mail> mails = this.mailService.loadMails(mf.getAccountID(), mf.getID(), mf.getFullName());
+            List<FXMail> mails = this.mailService.loadMails(mf.getAccountID(), mf.getID(), mf.getFullName());
 
             LOGGER.info("Load Mails finished: account={}, folder={}", this.account.getMail(), mf.getFullName());
 
