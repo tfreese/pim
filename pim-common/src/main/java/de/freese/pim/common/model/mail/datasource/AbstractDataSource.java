@@ -5,10 +5,12 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-
 import javax.activation.DataSource;
-
+import org.springframework.util.FastByteArrayOutputStream;
 import org.springframework.util.StreamUtils;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import de.freese.pim.common.utils.io.IOMonitor;
+import de.freese.pim.common.utils.io.MonitorOutputStream;
 
 /**
  * Basis-Implementierung einer {@link DataSource}.
@@ -40,11 +42,37 @@ public class AbstractDataSource implements DataSource
      */
     public AbstractDataSource(final DataSource source) throws IOException
     {
+        this(source, null);
+    }
+
+    /**
+     * Erzeugt eine neue Instanz von {@link AbstractDataSource}
+     *
+     * @param source {@link DataSource}
+     * @param monitor {@link IOMonitor}; Optional
+     * @throws IOException Falls was schief geht.
+     */
+    public AbstractDataSource(final DataSource source, final IOMonitor monitor) throws IOException
+    {
         super();
 
         this.name = source.getName();
         this.contentType = source.getContentType();
-        this.data = StreamUtils.copyToByteArray(source.getInputStream());
+
+        if (monitor == null)
+        {
+            this.data = StreamUtils.copyToByteArray(source.getInputStream());
+        }
+        else
+        {
+            try (FastByteArrayOutputStream baos = new FastByteArrayOutputStream(1024);
+                 MonitorOutputStream mos = new MonitorOutputStream(baos, 0, monitor))
+            {
+                StreamUtils.copy(source.getInputStream(), mos);
+                mos.flush();
+                this.data = baos.toByteArray();
+            }
+        }
     }
 
     /**
@@ -73,9 +101,18 @@ public class AbstractDataSource implements DataSource
     }
 
     /**
+     * @return byte[]
+     */
+    public byte[] getData()
+    {
+        return this.data;
+    }
+
+    /**
      * @see javax.activation.DataSource#getInputStream()
      */
     @Override
+    @JsonIgnore
     public InputStream getInputStream() throws IOException
     {
         if (this.data == null)
@@ -99,6 +136,7 @@ public class AbstractDataSource implements DataSource
      * @see javax.activation.DataSource#getOutputStream()
      */
     @Override
+    @JsonIgnore
     public OutputStream getOutputStream() throws IOException
     {
         throw new UnsupportedOperationException("not implemented");

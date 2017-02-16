@@ -3,11 +3,9 @@ package de.freese.pim.server.mail.service;
 
 import java.util.List;
 import java.util.concurrent.Future;
-import java.util.function.BiConsumer;
-
 import org.springframework.web.context.request.async.DeferredResult;
-
 import de.freese.pim.common.model.mail.MailContent;
+import de.freese.pim.common.utils.io.IOMonitor;
 import de.freese.pim.server.mail.api.MailAPI;
 import de.freese.pim.server.mail.model.Mail;
 import de.freese.pim.server.mail.model.MailAccount;
@@ -87,28 +85,11 @@ public interface MailService
      * @param accountID long
      * @param folderFullName String
      * @param mailUID long
-     * @param loadMonitor {@link BiConsumer}, optional
-     * @param size int, optional - wird nur für loadMonitor benötigt
-     * @return byte[]
-     * @throws Exception Falls was schief geht.
-     */
-    public byte[] loadMailContent(long accountID, String folderFullName, long mailUID, BiConsumer<Long, Long> loadMonitor, int size)
-            throws Exception;
-
-    /**
-     * Liefert den Inhalt der Mail.<br>
-     * Der Monitor dient zur Anzeige des Lade-Fortschritts.
-     *
-     * @param accountID long
-     * @param folderFullName String
-     * @param mailUID long
-     * @param loadMonitor {@link BiConsumer}, optional
-     * @param size int, optional - wird nur für loadMonitor benötigt
+     * @param monitor {@link IOMonitor}, optional
      * @return {@link MailContent}
      * @throws Exception Falls was schief geht.
      */
-    public MailContent loadMailContent2(long accountID, String folderFullName, long mailUID, BiConsumer<Long, Long> loadMonitor, int size)
-            throws Exception;
+    public MailContent loadMailContent(long accountID, String folderFullName, long mailUID, IOMonitor monitor) throws Exception;
 
     /**
      * Lädt die Mails des Folders vom Provider und aus der DB.

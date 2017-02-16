@@ -3,11 +3,9 @@ package de.freese.pim.gui.mail;
 
 import java.util.List;
 import java.util.Objects;
-
 import org.apache.commons.collections4.ListUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import de.freese.pim.gui.PIMApplication;
 import de.freese.pim.gui.mail.model.FXMailAccount;
 import de.freese.pim.gui.mail.model.FXMailFolder;
@@ -48,8 +46,7 @@ public class InitMailAPITask extends Task<List<FXMailFolder>>
      * @param mailService {@link FXMailService}
      * @param account {@link FXMailAccount}
      */
-    public InitMailAPITask(final TreeView<Object> treeView, final TreeItem<Object> parent, final FXMailService mailService,
-            final FXMailAccount account)
+    public InitMailAPITask(final TreeView<Object> treeView, final TreeItem<Object> parent, final FXMailService mailService, final FXMailAccount account)
     {
         super();
 
@@ -61,8 +58,7 @@ public class InitMailAPITask extends Task<List<FXMailFolder>>
         this.mailService = mailService;
         this.account = account;
 
-        setOnSucceeded(event ->
-        {
+        setOnSucceeded(event -> {
             List<FXMailFolder> folders = getValue();
 
             account.getFolderSubscribed().addListener(new TreeFolderListChangeListener(parent));
@@ -113,8 +109,8 @@ public class InitMailAPITask extends Task<List<FXMailFolder>>
             // throw new RuntimeException(ex);
             // }
         });
-        setOnFailed(event ->
-        {
+
+        setOnFailed(event -> {
             Throwable th = getException();
 
             LOGGER.error(null, th);

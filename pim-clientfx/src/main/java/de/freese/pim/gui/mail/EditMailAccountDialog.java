@@ -8,12 +8,12 @@ import org.apache.commons.lang3.StringUtils;
 
 import de.freese.pim.common.model.mail.MailPort;
 import de.freese.pim.common.model.mail.MailProvider;
-import de.freese.pim.common.utils.MailUtils;
 import de.freese.pim.gui.PIMApplication;
 import de.freese.pim.gui.mail.model.FXMailAccount;
 import de.freese.pim.gui.mail.model.FXMailFolder;
 import de.freese.pim.gui.mail.service.FXMailService;
 import de.freese.pim.gui.utils.FXUtils;
+import de.freese.pim.server.mail.MailUtils;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.geometry.VPos;

@@ -7,16 +7,10 @@ import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.channels.Channels;
 import java.util.Optional;
-import java.util.function.BiConsumer;
-
 import org.junit.Assert;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
-import de.freese.pim.common.utils.io.MonitorInputStream;
-import de.freese.pim.common.utils.io.MonitorOutputStream;
-import de.freese.pim.common.utils.io.MonitoringReadableByteChannel;
-import de.freese.pim.common.utils.io.MonitoringWritableByteChannel;
 
 /**
  * @author Thomas Freese
@@ -29,7 +23,7 @@ public class TestMonitorIO
      *
      * @author Thomas Freese
      */
-    private static class Monitor implements BiConsumer<Long, Long>
+    private static class Monitor implements IOMonitor
     {
         /**
          *
@@ -45,20 +39,20 @@ public class TestMonitorIO
         }
 
         /**
-         * @see java.util.function.BiConsumer#accept(java.lang.Object, java.lang.Object)
-         */
-        @Override
-        public void accept(final Long current, final Long size)
-        {
-            this.current = current;
-        }
-
-        /**
          * @return long
          */
         public long getCurrent()
         {
             return Optional.ofNullable(this.current).orElse(0L);
+        }
+
+        /**
+         * @see de.freese.pim.common.utils.io.IOMonitor#monitor(long, long)
+         */
+        @Override
+        public void monitor(final long current, final long size)
+        {
+            this.current = current;
         }
     }
 
@@ -174,8 +168,7 @@ public class TestMonitorIO
         Monitor monitor = new Monitor();
 
         // Pro Byte
-        try (MonitoringReadableByteChannel mrc = new MonitoringReadableByteChannel(Channels.newChannel(new ByteArrayInputStream(BYTES)),
-                BYTES.length, monitor))
+        try (MonitoringReadableByteChannel mrc = new MonitoringReadableByteChannel(Channels.newChannel(new ByteArrayInputStream(BYTES)), BYTES.length, monitor))
         {
             ByteBuffer buffer = ByteBuffer.allocateDirect(1);
 
@@ -190,8 +183,7 @@ public class TestMonitorIO
         }
 
         // Pro Byte[]
-        try (MonitoringReadableByteChannel mrc = new MonitoringReadableByteChannel(Channels.newChannel(new ByteArrayInputStream(BYTES)),
-                BYTES.length, monitor))
+        try (MonitoringReadableByteChannel mrc = new MonitoringReadableByteChannel(Channels.newChannel(new ByteArrayInputStream(BYTES)), BYTES.length, monitor))
         {
             mrc.read(ByteBuffer.allocateDirect(2));
             Assert.assertEquals(2, monitor.getCurrent());
@@ -213,8 +205,7 @@ public class TestMonitorIO
         Monitor monitor = new Monitor();
 
         // Pro Byte
-        try (MonitoringWritableByteChannel mwc = new MonitoringWritableByteChannel(Channels.newChannel(new ByteArrayOutputStream()),
-                BYTES.length, monitor))
+        try (MonitoringWritableByteChannel mwc = new MonitoringWritableByteChannel(Channels.newChannel(new ByteArrayOutputStream()), BYTES.length, monitor))
         {
             ByteBuffer buffer = ByteBuffer.allocateDirect(1);
 
@@ -229,8 +220,7 @@ public class TestMonitorIO
         }
 
         // Pro Byte[]
-        try (MonitoringWritableByteChannel mwc = new MonitoringWritableByteChannel(Channels.newChannel(new ByteArrayOutputStream()),
-                BYTES.length, monitor))
+        try (MonitoringWritableByteChannel mwc = new MonitoringWritableByteChannel(Channels.newChannel(new ByteArrayOutputStream()), BYTES.length, monitor))
         {
             mwc.write(ByteBuffer.wrap(new byte[2]));
             Assert.assertEquals(2, monitor.getCurrent());

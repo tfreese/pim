@@ -3,13 +3,14 @@ package de.freese.pim.common.model.mail;
 
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * Enthält die Addressen einer Mail von: FROM, TO, CC, BCC.<br>
  * Siehe javax.mail.internet.InternetAddress
- * 
+ *
  * @author Thomas Freese
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -49,7 +50,7 @@ public class InternetAddress
      *
      * @param address String
      */
-    public InternetAddress(final String address)
+    public InternetAddress(@JsonProperty("address") final String address)
     {
         this(address, null);
     }
@@ -60,7 +61,8 @@ public class InternetAddress
      * @param address String
      * @param personal String
      */
-    public InternetAddress(final String address, final String personal)
+    @JsonCreator
+    public InternetAddress(@JsonProperty("address") final String address, @JsonProperty("personal") final String personal)
     {
         super();
 

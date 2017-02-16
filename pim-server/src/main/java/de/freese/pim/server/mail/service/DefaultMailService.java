@@ -10,20 +10,15 @@ import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Future;
-import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-import java.util.zip.GZIPOutputStream;
-
-import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.request.async.DeferredResult;
-
 import de.freese.pim.common.model.mail.MailContent;
-import de.freese.pim.common.utils.io.MonitorOutputStream;
+import de.freese.pim.common.utils.io.IOMonitor;
 import de.freese.pim.server.mail.api.JavaMailAPI;
 import de.freese.pim.server.mail.api.MailAPI;
 import de.freese.pim.server.mail.dao.MailDAO;
@@ -158,6 +153,23 @@ public class DefaultMailService extends AbstractService implements MailService
     }
 
     /**
+     * @param accountID long
+     * @return {@link MailAPI}
+     */
+    protected MailAPI getMailAPI(final long accountID)
+    {
+        return MAIL_API_MAP.get(accountID);
+    }
+
+    /**
+     * @return {@link MailDAO}
+     */
+    protected MailDAO getMailDAO()
+    {
+        return this.mailDAO;
+    }
+
+    /**
      * @see de.freese.pim.server.mail.service.MailService#insertAccount(de.freese.pim.server.mail.model.MailAccount)
      */
     @Override
@@ -213,52 +225,19 @@ public class DefaultMailService extends AbstractService implements MailService
     }
 
     /**
-     * @see de.freese.pim.server.mail.service.MailService#loadMailContent(long, java.lang.String, long, java.util.function.BiConsumer, int)
+     * @see de.freese.pim.server.mail.service.MailService#loadMailContent(long, java.lang.String, long, de.freese.pim.common.utils.io.IOMonitor)
      */
     @Override
-    public byte[] loadMailContent(final long accountID, final String folderFullName, final long mailUID,
-            final BiConsumer<Long, Long> loadMonitor, final int size) throws Exception
+    public MailContent loadMailContent(final long accountID, final String folderFullName, final long mailUID, final IOMonitor monitor) throws Exception
     {
         if (getLogger().isDebugEnabled())
         {
-            getLogger().debug("download mail: uid={}; size={}", mailUID, size);
-        }
-
-        MailAPI mailAPI = getMailAPI(accountID);
-        byte[] rawData = null;
-
-        // FastByteArrayOutputStream baos = new FastByteArrayOutputStream(4*1024);
-        ByteArrayOutputStream baos = new ByteArrayOutputStream(size);
-
-        // BufferedOutputStream bos = new BufferedOutputStream(gos);
-        try (GZIPOutputStream gos = new GZIPOutputStream(baos);
-             MonitorOutputStream mos = new MonitorOutputStream(gos, size, loadMonitor))
-        {
-            mailAPI.loadMail(folderFullName, mailUID, mos);
-        }
-
-        baos.close();
-
-        rawData = baos.toByteArray();
-
-        return rawData;
-    }
-
-    /**
-     * @see de.freese.pim.server.mail.service.MailService#loadMailContent2(long, java.lang.String, long, java.util.function.BiConsumer, int)
-     */
-    @Override
-    public MailContent loadMailContent2(final long accountID, final String folderFullName, final long mailUID,
-            final BiConsumer<Long, Long> loadMonitor, final int size) throws Exception
-    {
-        if (getLogger().isDebugEnabled())
-        {
-            getLogger().debug("download mail: uid={}; size={}", mailUID, size);
+            getLogger().debug("download mail: accountID={}, folderFullName={}, uid={}", accountID, folderFullName, mailUID);
         }
 
         MailAPI mailAPI = getMailAPI(accountID);
 
-        MailContent mailContent = mailAPI.loadMail(folderFullName, mailUID, loadMonitor, size);
+        MailContent mailContent = mailAPI.loadMail(folderFullName, mailUID, monitor);
 
         return mailContent;
     }
@@ -370,8 +349,7 @@ public class DefaultMailService extends AbstractService implements MailService
     {
         DeferredResult<List<Mail>> deferredResult = new DeferredResult<>();
 
-        CompletableFuture.supplyAsync(() ->
-        {
+        CompletableFuture.supplyAsync(() -> {
             try
             {
                 return loadMails(accountID, folderID, folderFullName);
@@ -452,22 +430,5 @@ public class DefaultMailService extends AbstractService implements MailService
         }
 
         return affectedRows;
-    }
-
-    /**
-     * @param accountID long
-     * @return {@link MailAPI}
-     */
-    protected MailAPI getMailAPI(final long accountID)
-    {
-        return MAIL_API_MAP.get(accountID);
-    }
-
-    /**
-     * @return {@link MailDAO}
-     */
-    protected MailDAO getMailDAO()
-    {
-        return this.mailDAO;
     }
 }

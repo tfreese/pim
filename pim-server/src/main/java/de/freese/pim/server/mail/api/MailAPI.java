@@ -5,10 +5,10 @@ import java.io.OutputStream;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
-import java.util.function.BiConsumer;
-
 import de.freese.pim.common.function.ExceptionalConsumer;
+import de.freese.pim.common.function.ExceptionalFunction;
 import de.freese.pim.common.model.mail.MailContent;
+import de.freese.pim.common.utils.io.IOMonitor;
 import de.freese.pim.server.mail.model.Mail;
 import de.freese.pim.server.mail.model.MailAccount;
 import de.freese.pim.server.mail.model.MailFolder;
@@ -61,24 +61,25 @@ public interface MailAPI
     /**
      * Holt die Mail vom Provider und übergibt sie in dem {@link ExceptionalConsumer}.<br>
      *
+     * @param <T> Konkreter Return-Typ
      * @param folderFullName String
      * @param uid long
-     * @param loadMonitor {@link BiConsumer}, optional
-     * @param size int, optional - wird nur für loadMonitor benötigt
-     * @return {@link MailContent}
+     * @param function {@link ExceptionalFunction}
+     * @return Object
      * @throws Exception Falls was schief geht.
      */
-    public MailContent loadMail(String folderFullName, long uid, BiConsumer<Long, Long> loadMonitor, int size) throws Exception;
+    public <T> T loadMail(String folderFullName, long uid, ExceptionalFunction<Object, T, Exception> function) throws Exception;
 
     /**
      * Holt die Mail vom Provider und übergibt sie in dem {@link ExceptionalConsumer}.<br>
      *
      * @param folderFullName String
      * @param uid long
-     * @param consumer {@link ExceptionalConsumer}
+     * @param monitor {@link IOMonitor}, optional
+     * @return {@link MailContent}
      * @throws Exception Falls was schief geht.
      */
-    public void loadMail(String folderFullName, long uid, ExceptionalConsumer<Object, Exception> consumer) throws Exception;
+    public MailContent loadMail(String folderFullName, long uid, IOMonitor monitor) throws Exception;
 
     /**
      * Holt die Mail vom Provider und schreibt sie in den {@link OutputStream}.<br>

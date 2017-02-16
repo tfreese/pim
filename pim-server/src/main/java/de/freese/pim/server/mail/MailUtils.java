@@ -2,7 +2,7 @@
  * Created: 28.12.2016
  */
 
-package de.freese.pim.common.utils;
+package de.freese.pim.server.mail;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -203,7 +203,7 @@ public final class MailUtils
         {
             bodyParts.add((MimePart) part);
         }
-        else if (part.isMimeType("multipart/*"))
+        else if (part.isMimeType("multipart/*") || part.isMimeType("MULTIPART/*"))
         {
             Multipart mp = (Multipart) part.getContent();
 
@@ -275,7 +275,7 @@ public final class MailUtils
         {
             bodyParts.add((MimePart) part);
         }
-        else if (part.isMimeType("multipart/*"))
+        else if (part.isMimeType("multipart/*") || part.isMimeType("MULTIPART/*"))
         {
             Multipart mp = (Multipart) part.getContent();
 
@@ -308,12 +308,12 @@ public final class MailUtils
     {
         List<DataSource> dataSources = getTextDataSources(part);
 
-        Optional<DataSource> dataSource = dataSources.stream().filter(ds -> ds.getContentType().startsWith("text/html")).findFirst();
+        Optional<DataSource> dataSource = dataSources.stream().filter(ds -> ds.getContentType().toLowerCase().startsWith("text/html")).findFirst();
 
         if (!dataSource.isPresent())
         {
             // Kein HTML gefunden -> nach Plain-Text suchen.
-            dataSource = dataSources.stream().filter(ds -> ds.getContentType().startsWith("text/plain")).findFirst();
+            dataSource = dataSources.stream().filter(ds -> ds.getContentType().toLowerCase().startsWith("text/plain")).findFirst();
         }
 
         return dataSource.orElse(null);
@@ -331,16 +331,13 @@ public final class MailUtils
     {
         List<DataSource> dataSources = new ArrayList<>();
 
-        // if(part instanceof MimePart)
-        // {
-        // String encoding = ((MimePart) part).getEncoding();
-        // }
+        // part.getContentType();
 
-        if (part.isMimeType("text/plain") || part.isMimeType("text/html"))
+        if (part.isMimeType("text/plain") || part.isMimeType("TEXT/plain") || part.isMimeType("text/html") || part.isMimeType("TEXT/html"))
         {
             dataSources.add(part.getDataHandler().getDataSource());
         }
-        else if (part.isMimeType("multipart/*"))
+        else if (part.isMimeType("multipart/*") || part.isMimeType("MULTIPART/*"))
         {
             Multipart mp = (Multipart) part.getContent();
 
@@ -372,7 +369,7 @@ public final class MailUtils
     {
         List<AbstractTextPart> textParts = new ArrayList<>();
 
-        if (part.isMimeType("text/*"))
+        if (part.isMimeType("text/*") || part.isMimeType("TEXT/*"))
         {
             if (!(part.getContent() instanceof String))
             {
@@ -381,11 +378,11 @@ public final class MailUtils
 
             String text = (String) part.getContent();
 
-            if (part.isMimeType("text/plain"))
+            if (part.isMimeType("text/plain") || part.isMimeType("TEXT/plain"))
             {
                 textParts.add(new PlainTextPart(text));
             }
-            else if (part.isMimeType("text/html"))
+            else if (part.isMimeType("text/html") || part.isMimeType("TEXT/html"))
             {
                 textParts.add(new HTMLTextPart(text));
             }

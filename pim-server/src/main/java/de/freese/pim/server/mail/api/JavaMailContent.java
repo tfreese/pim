@@ -1,25 +1,22 @@
 // Created: 26.01.2017
-package de.freese.pim.common.model.mail;
+package de.freese.pim.server.mail.api;
 
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.TreeMap;
-
 import javax.activation.DataSource;
 import javax.mail.internet.ContentType;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimePart;
 import javax.mail.internet.MimeUtility;
-
 import org.apache.commons.lang3.StringUtils;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
+import de.freese.pim.common.model.mail.DefaultMailContent;
 import de.freese.pim.common.model.mail.datasource.AttachmentDataSource;
 import de.freese.pim.common.model.mail.datasource.InlineDataSource;
 import de.freese.pim.common.model.mail.datasource.MessageDataSource;
-import de.freese.pim.common.utils.MailUtils;
+import de.freese.pim.server.mail.MailUtils;
 
 /**
  * JavaMail-Container für den Inhalt einer Mail.
@@ -82,11 +79,11 @@ public class JavaMailContent extends DefaultMailContent
         setMessage(new MessageDataSource(messageDataSource));
 
         String encoding = null;
-        encoding = message.getEncoding();
+        // encoding = message.getEncoding(); // Kann QUOTED-PRINTABLE liefern -> Kein Encoding !
 
         // "text/plain; charset=UTF-8", "text/html; charset=UTF-8"
         ContentType ct = new ContentType(messageDataSource.getContentType());
-        setMessageContentType(ct.getBaseType());
+        setMessageContentType(ct.getBaseType().toLowerCase());
 
         if (StringUtils.isBlank(encoding))
         {

@@ -6,9 +6,8 @@ package de.freese.pim.gui.mail.service;
 
 import java.util.List;
 import java.util.concurrent.Future;
-import java.util.function.BiConsumer;
-
 import de.freese.pim.common.model.mail.MailContent;
+import de.freese.pim.common.utils.io.IOMonitor;
 import de.freese.pim.gui.mail.model.FXMail;
 import de.freese.pim.gui.mail.model.FXMailAccount;
 import de.freese.pim.gui.mail.model.FXMailFolder;
@@ -87,23 +86,11 @@ public interface FXMailService
      *
      * @param accountID long
      * @param mail {@link FXMail}
-     * @param loadMonitor {@link BiConsumer}
+     * @param monitor {@link IOMonitor}
      * @return {@link MailContent}
      * @throws Exception Falls was schief geht.
      */
-    public MailContent loadMailContent(long accountID, FXMail mail, BiConsumer<Long, Long> loadMonitor) throws Exception;
-
-    /**
-     * Liefert den Inhalt der Mail.<br>
-     * Der Monitor dient zur Anzeige des Lade-Fortschritts.
-     *
-     * @param accountID long
-     * @param mail {@link FXMail}
-     * @param loadMonitor {@link BiConsumer}
-     * @return {@link MailContent}
-     * @throws Exception Falls was schief geht.
-     */
-    public MailContent loadMailContent2(long accountID, FXMail mail, BiConsumer<Long, Long> loadMonitor) throws Exception;
+    public MailContent loadMailContent(long accountID, FXMail mail, IOMonitor monitor) throws Exception;
 
     /**
      * Lädt die Mails des Folders vom Provider und aus der DB.

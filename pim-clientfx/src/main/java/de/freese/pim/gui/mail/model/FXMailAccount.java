@@ -158,6 +158,7 @@ public class FXMailAccount
      *
      * @return {@link FilteredList}
      */
+    @JsonIgnore
     public FilteredList<FXMailFolder> getFolderSubscribed()
     {
         return this.abonnierteFolder;
