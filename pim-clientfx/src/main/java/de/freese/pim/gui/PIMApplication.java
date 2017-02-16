@@ -301,6 +301,27 @@ public class PIMApplication extends Application implements ApplicationContextAwa
                 //.listeners(new ApplicationPidFileWriter("eps-monitor.pid"))
                 //.run(args)
                 .build();
+//        SpringApplicationBuilder()
+//        .parent(RootContext.class)
+//        .child(ChildContext1.class)
+//        .sibling(ChildContext2.class);
+//        SpringApplicationBuilder()
+//        .bannerMode(Banner.Mode.OFF)
+//        .sources(Parent.class)
+//        .child(Application.class)
+//        .run(args);
+//        SpringApplication application = new SpringApplicationBuilder(PIMCommonConfig.class)
+//                .headless(false) // Default true, hier false wegen Swing
+//                .web(false) // Wird eigentlich automatisch ermittelt.
+//                .profiles(profile)
+//                .registerShutdownHook(true) // Default true
+//                //.banner(new MyBanner())
+//                //.listeners(new ApplicationPidFileWriter("eps-monitor.pid"))
+//                //.run(args)
+////                .parent(PIMCommonConfig.class)
+//                .child(PIMClientConfig.class)
+//                .child(PIMServerApplication.class)
+//                .build();
         // @formatter:on
         //
         // try (ConfigurableApplicationContext ctx = application.run(args))

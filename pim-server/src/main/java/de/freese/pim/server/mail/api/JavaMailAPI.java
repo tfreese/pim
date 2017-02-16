@@ -1,6 +1,7 @@
 // Created: 23.01.2017
-package de.freese.pim.server.mail.impl;
+package de.freese.pim.server.mail.api;
 
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -10,8 +11,11 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Properties;
 import java.util.Set;
+import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
 
 import javax.mail.Authenticator;
 import javax.mail.FetchProfile;
@@ -30,13 +34,16 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
 import org.slf4j.LoggerFactory;
+import org.springframework.util.FastByteArrayOutputStream;
 
 import com.sun.mail.imap.IMAPFolder;
 import com.sun.mail.imap.IMAPStore;
 
+import de.freese.pim.common.function.ExceptionalConsumer;
+import de.freese.pim.common.model.mail.JavaMailContent;
+import de.freese.pim.common.model.mail.MailContent;
 import de.freese.pim.common.utils.MailUtils;
-import de.freese.pim.server.mail.api.AbstractMailAPI;
-import de.freese.pim.server.mail.api.MailAPI;
+import de.freese.pim.common.utils.io.MonitorOutputStream;
 import de.freese.pim.server.mail.model.Mail;
 import de.freese.pim.server.mail.model.MailAccount;
 import de.freese.pim.server.mail.model.MailFolder;
@@ -182,10 +189,52 @@ public class JavaMailAPI extends AbstractMailAPI
     }
 
     /**
-     * @see de.freese.pim.server.mail.api.MailAPI#loadMail(java.lang.String, long, java.io.OutputStream)
+     * @see de.freese.pim.server.mail.api.MailAPI#loadMail(java.lang.String, long, java.util.function.BiConsumer, int)
      */
     @Override
-    public void loadMail(final String folderFullName, final long uid, final OutputStream outputStream) throws Exception
+    public MailContent loadMail(final String folderFullName, final long uid, final BiConsumer<Long, Long> loadMonitor, final int size)
+            throws Exception
+    {
+        final MailContent[] mailContent = new MailContent[1];
+
+        loadMail(folderFullName, uid, message ->
+        {
+            MimeMessage mimeMessage = (MimeMessage) message;
+
+            if (loadMonitor == null)
+            {
+                mailContent[0] = new JavaMailContent(mimeMessage);
+            }
+            else
+            {
+                FastByteArrayOutputStream baos = new FastByteArrayOutputStream(1024);
+
+                try (GZIPOutputStream gos = new GZIPOutputStream(baos);
+                     MonitorOutputStream mos = new MonitorOutputStream(gos, size, loadMonitor))
+                {
+                    mimeMessage.writeTo(mos);
+                }
+
+                baos.close();
+
+                try (InputStream is = baos.getInputStream();
+                     GZIPInputStream gis = new GZIPInputStream(is))
+                {
+                    message = new MimeMessage(null, gis);
+                    mailContent[0] = new JavaMailContent(mimeMessage);
+                }
+            }
+        });
+
+        return mailContent[0];
+    }
+
+    /**
+     * @see de.freese.pim.server.mail.api.MailAPI#loadMail(java.lang.String, long, de.freese.pim.common.function.ExceptionalConsumer)
+     */
+    @Override
+    public void loadMail(final String folderFullName, final long uid, final ExceptionalConsumer<Object, Exception> consumer)
+            throws Exception
     {
         IMAPFolder f = (IMAPFolder) getStore().getFolder(folderFullName);
         checkRead(f);
@@ -195,12 +244,21 @@ public class JavaMailAPI extends AbstractMailAPI
             MimeMessage message = (MimeMessage) f.getMessageByUID(uid);
             preFetch(f, message);
 
-            message.writeTo(outputStream);
+            consumer.accept(message);
         }
         finally
         {
             closeFolder(f);
         }
+    }
+
+    /**
+     * @see de.freese.pim.server.mail.api.MailAPI#loadMail(java.lang.String, long, java.io.OutputStream)
+     */
+    @Override
+    public void loadMail(final String folderFullName, final long uid, final OutputStream outputStream) throws Exception
+    {
+        loadMail(folderFullName, uid, message -> ((MimeMessage) message).writeTo(outputStream));
     }
 
     /**

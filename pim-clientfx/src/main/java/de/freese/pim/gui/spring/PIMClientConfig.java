@@ -13,6 +13,8 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import de.freese.pim.gui.addressbook.service.DefaultEmbeddedFXAddressbookService;
 import de.freese.pim.gui.addressbook.service.FXAddressbookService;
 import de.freese.pim.gui.mail.service.DefaultEmbeddedFXMailService;
@@ -23,7 +25,7 @@ import de.freese.pim.server.mail.dao.DefaultMailDAO;
 import de.freese.pim.server.mail.service.DefaultMailService;
 
 /**
- * Spring-Konfiguration von PIM.
+ * Client Spring-Konfiguration von PIM.
  *
  * @author Thomas Freese
  */
@@ -32,22 +34,23 @@ import de.freese.pim.server.mail.service.DefaultMailService;
 {
         "de.freese.pim.common.spring", "de.freese.pim.server.spring"
 })
-public class PIMConfig
+public class PIMClientConfig
 {
     /**
-     * Erzeugt eine neue Instanz von {@link PIMConfig}
+     * Erzeugt eine neue Instanz von {@link PIMClientConfig}
      */
-    public PIMConfig()
+    public PIMClientConfig()
     {
         super();
     }
 
     /**
      * @param dataSource {@link DataSource}
+     * @param jsonMapper {@link ObjectMapper}
      * @return {@link FXAddressbookService}
      */
     @Bean
-    public FXAddressbookService addressBookService(final DataSource dataSource)
+    public FXAddressbookService addressBookService(final DataSource dataSource, final ObjectMapper jsonMapper)
     {
         DefaultAddressBookService defaultAddressBookService = new DefaultAddressBookService();
         defaultAddressBookService.setAddressBookDAO(new DefaultAddressBookDAO().dataSource(dataSource));
@@ -60,6 +63,7 @@ public class PIMConfig
         // DefaultAddressBookDAO().dataSource(dataSource))));
 
         DefaultEmbeddedFXAddressbookService fxAddressbookService = new DefaultEmbeddedFXAddressbookService();
+        fxAddressbookService.setJsonMapper(jsonMapper);
         fxAddressbookService.setAddressBookService(defaultAddressBookService);
 
         return fxAddressbookService;
@@ -68,11 +72,13 @@ public class PIMConfig
     /**
      * @param dataSource {@link DataSource}
      * @param executorService {@link ExecutorService}
-     * @param basePath {@link Path}
+     * @param pimHomePath {@link Path}
+     * @param jsonMapper {@link ObjectMapper}
      * @return {@link FXMailService}
      */
     @Bean(destroyMethod = "disconnectAccounts")
-    public FXMailService mailService(final DataSource dataSource, final ExecutorService executorService, final Path basePath)
+    public FXMailService mailService(final DataSource dataSource, final ExecutorService executorService, final Path pimHomePath,
+            final ObjectMapper jsonMapper)
     {
         DefaultMailService defaultMailService = new DefaultMailService();
         defaultMailService.setExecutorService(executorService);
@@ -84,7 +90,8 @@ public class PIMConfig
         // }, new TransactionalInvocationHandler(PIMApplication.getDataSource(), defaultMailService));
 
         DefaultEmbeddedFXMailService fxMailService = new DefaultEmbeddedFXMailService();
-        fxMailService.setBasePath(basePath);
+        fxMailService.setBasePath(pimHomePath);
+        fxMailService.setJsonMapper(jsonMapper);
         fxMailService.setMailService(defaultMailService);
 
         return fxMailService;

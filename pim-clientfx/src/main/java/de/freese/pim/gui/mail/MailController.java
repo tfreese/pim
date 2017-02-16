@@ -5,6 +5,7 @@ import java.awt.Desktop;
 import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -503,7 +504,7 @@ public class MailController extends AbstractController
         PIMApplication.blockGUI();
         FXMailAccount account = getAccount(this.selectedTreeItem.get());
 
-        Task<MailContent> loadMailTask = new Task<MailContent>()
+        Task<MailContent> loadMailContentTask = new Task<MailContent>()
         {
             /**
              * @see javafx.concurrent.Task#call()
@@ -511,17 +512,17 @@ public class MailController extends AbstractController
             @Override
             protected MailContent call() throws Exception
             {
-                // IMailContent mailContent = getMailService().loadContent(account.getID(), mail,
+                // MailContent mailContent = getMailService().loadMailContent(account.getID(), mail,
                 // (current, size) -> updateProgress(current, size));
-                MailContent mailContent = getMailService().loadContent(account.getID(), mail, this::updateProgress);
+                MailContent mailContent = getMailService().loadMailContent2(account.getID(), mail, this::updateProgress);
 
                 return mailContent;
             }
         };
-        loadMailTask.setOnSucceeded(event ->
+        loadMailContentTask.setOnSucceeded(event ->
         {
             PIMApplication.unblockGUI();
-            MailContent mailContent = loadMailTask.getValue();
+            MailContent mailContent = loadMailContentTask.getValue();
 
             if (mailContent == null)
             {
@@ -541,10 +542,10 @@ public class MailController extends AbstractController
             // this.webView.getEngine().load(mailContent.getUrl().toExternalForm());
             this.webView.getEngine().loadContent(mailContent.getMessageContent(), mailContent.getMessageContentType());
         });
-        loadMailTask.setOnFailed(event ->
+        loadMailContentTask.setOnFailed(event ->
         {
             PIMApplication.unblockGUI();
-            Throwable th = loadMailTask.getException();
+            Throwable th = loadMailContentTask.getException();
 
             getLogger().error(null, th);
 
@@ -553,14 +554,14 @@ public class MailController extends AbstractController
 
         // loadMailTask.progressProperty().addListener((obs, old, progress) -> getLogger().debug("{} %", progress.doubleValue() * 100));
         // Sichtbarkeit des ProgressIndikators und Cursors mit dem Laufstatus des Service/Task verknüpfen.
-        getProgressIndicator().progressProperty().bind(loadMailTask.progressProperty());
+        getProgressIndicator().progressProperty().bind(loadMailContentTask.progressProperty());
 
-        ReadOnlyBooleanProperty runningProperty = loadMailTask.runningProperty();
+        ReadOnlyBooleanProperty runningProperty = loadMailContentTask.runningProperty();
         getProgressIndicator().visibleProperty().bind(runningProperty);
         PIMApplication.getMainWindow().getScene().cursorProperty()
                 .bind(Bindings.when(runningProperty).then(Cursor.WAIT).otherwise(Cursor.DEFAULT));
 
-        getExecutorService().execute(loadMailTask);
+        getExecutorService().execute(loadMailContentTask);
     }
 
     /**
@@ -606,32 +607,8 @@ public class MailController extends AbstractController
             return;
         }
 
-        Task<List<FXMail>> loadMailsTask = new Task<List<FXMail>>()
-        {
-            /**
-             * @see javafx.concurrent.Task#call()
-             */
-            @Override
-            protected List<FXMail> call() throws Exception
-            {
-                List<FXMail> mails = getMailService().loadMails(folder.getAccountID(), folder.getID(), folder.getFullName());
-
-                return mails;
-            }
-        };
-        loadMailsTask.setOnSucceeded(event ->
-        {
-            folder.getMails().addAll(loadMailsTask.getValue());
-            this.treeViewMail.refresh();
-        });
-        loadMailsTask.setOnFailed(event ->
-        {
-            Throwable th = loadMailsTask.getException();
-
-            getLogger().error(null, th);
-
-            new ErrorDialog().forThrowable(th).showAndWait();
-        });
+        LoadMailsTask loadMailsTask = new LoadMailsTask(this.treeViewMail, Collections.singletonList(folder), getMailService(),
+                getAccount(treeItem));
 
         // Sichtbarkeit des ProgressIndikators und Cursors mit dem Laufstatus des Service/Task verknüpfen.
         ReadOnlyBooleanProperty runningProperty = loadMailsTask.runningProperty();

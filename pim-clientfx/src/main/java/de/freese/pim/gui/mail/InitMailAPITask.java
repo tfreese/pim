@@ -1,17 +1,14 @@
 // Created: 25.01.2017
 package de.freese.pim.gui.mail;
 
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Objects;
-import java.util.concurrent.Future;
 
+import org.apache.commons.collections4.ListUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.freese.pim.gui.mail.model.FXMail;
+import de.freese.pim.gui.PIMApplication;
 import de.freese.pim.gui.mail.model.FXMailAccount;
 import de.freese.pim.gui.mail.model.FXMailFolder;
 import de.freese.pim.gui.mail.service.FXMailService;
@@ -75,39 +72,46 @@ public class InitMailAPITask extends Task<List<FXMailFolder>>
 
             Platform.runLater(() -> treeView.refresh());
 
-            // List<List<MailFolder>> partitions = ListUtils.partition(folders, 3);
-            //
-            // for (List<MailFolder> partition : partitions)
+            // for (FXMailFolder mf : folders)
             // {
             // // Laden der Mails.
-            // PIMApplication.getExecutorService().execute(new LoadMailsTask(treeView, partition, mailService, account));
+            // PIMApplication.getExecutorService()
+            // .execute(new LoadMailsTask(treeView, Collections.singletonList(mf), mailService, account));
             // }
 
-            try
+            List<List<FXMailFolder>> partitions = ListUtils.partition(folders, folders.size());
+
+            for (List<FXMailFolder> partition : partitions)
             {
-                Map<FXMailFolder, Future<List<FXMail>>> map = new LinkedHashMap<>();
-
-                for (FXMailFolder mf : folders)
-                {
-                    Future<List<FXMail>> future = this.mailService.loadMails2(mf.getAccountID(), mf.getID(), mf.getFullName());
-                    map.put(mf, future);
-                }
-
-                for (Entry<FXMailFolder, Future<List<FXMail>>> entry : map.entrySet())
-                {
-                    FXMailFolder mf = entry.getKey();
-                    Future<List<FXMail>> future = entry.getValue();
-
-                    List<FXMail> mails = future.get();
-                    LOGGER.info("Load Mails finished: account={}, folder={}", this.account.getMail(), mf.getFullName());
-
-                    mf.getMails().addAll(mails);
-                }
+                // Laden der Mails.
+                PIMApplication.getExecutorService().execute(new LoadMailsTask(treeView, partition, mailService, account));
             }
-            catch (Exception ex)
-            {
-                throw new RuntimeException(ex);
-            }
+
+            // try
+            // {
+            // Map<FXMailFolder, Future<List<FXMail>>> map = new LinkedHashMap<>();
+            //
+            // for (FXMailFolder mf : folders)
+            // {
+            // Future<List<FXMail>> future = this.mailService.loadMails2(mf.getAccountID(), mf.getID(), mf.getFullName());
+            // map.put(mf, future);
+            // }
+            //
+            // for (Entry<FXMailFolder, Future<List<FXMail>>> entry : map.entrySet())
+            // {
+            // FXMailFolder mf = entry.getKey();
+            // Future<List<FXMail>> future = entry.getValue();
+            //
+            // List<FXMail> mails = future.get();
+            // LOGGER.info("Load Mails finished: account={}, folder={}", this.account.getMail(), mf.getFullName());
+            //
+            // mf.getMails().addAll(mails);
+            // }
+            // }
+            // catch (Exception ex)
+            // {
+            // throw new RuntimeException(ex);
+            // }
         });
         setOnFailed(event ->
         {

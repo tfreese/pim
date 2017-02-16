@@ -1,8 +1,11 @@
 // Created: 23.01.2017
 package de.freese.pim.server.mail.api;
 
+import java.io.OutputStream;
 import java.util.Objects;
 import java.util.concurrent.ExecutorService;
+
+import javax.mail.internet.MimeMessage;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -74,7 +77,14 @@ public abstract class AbstractMailAPI implements MailAPI
 
         return builder.toString();
     }
-
+    /**
+     * @see de.freese.pim.server.mail.api.MailAPI#loadMail(java.lang.String, long, java.io.OutputStream)
+     */
+    @Override
+    public void loadMail(final String folderFullName, final long uid, final OutputStream outputStream) throws Exception
+    {
+        loadMail(folderFullName, uid, message -> ((MimeMessage) message).writeTo(outputStream));
+    }
     /**
      * Optionaler {@link ExecutorService} für die Mail-API.
      *

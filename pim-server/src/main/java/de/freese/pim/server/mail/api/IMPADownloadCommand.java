@@ -1,5 +1,5 @@
 // Created: 31.01.2017
-package de.freese.pim.server.mail.impl;
+package de.freese.pim.server.mail.api;
 
 import java.io.IOException;
 import java.io.InputStream;

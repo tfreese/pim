@@ -1,10 +1,13 @@
 // Created: 07.02.2017
 package de.freese.pim.common.model.mail;
 
-import java.io.IOException;
 import java.util.Map;
 
 import javax.activation.DataSource;
+
+import de.freese.pim.common.model.mail.datasource.AttachmentDataSource;
+import de.freese.pim.common.model.mail.datasource.InlineDataSource;
+import de.freese.pim.common.model.mail.datasource.MessageDataSource;
 
 /**
  * Interface für den Inhalt einer Mail.
@@ -16,11 +19,11 @@ public interface MailContent
     /**
      * Liefert die {@link DataSource} der Attachements.<br>
      * Key = Filename<br>
-     * Value = {@link DataSource}<br>
+     * Value = {@link AttachmentDataSource}<br>
      *
      * @return {@link Map}
      */
-    public Map<String, DataSource> getAttachments();
+    public Map<String, AttachmentDataSource> getAttachments();
 
     /**
      * Liefert das Encoding.
@@ -30,13 +33,20 @@ public interface MailContent
     public String getEncoding();
 
     /**
-     * Liefert die {@link DataSource} des Inlines.
+     * Liefert die {@link DataSource} der Inlines.<br>
+     * Key = contentID<br>
+     * Value = {@link InlineDataSource}<br>
      *
-     * @param contentID String
-     * @return {@link DataSource} oder null
-     * @throws IOException Falls was schief geht.
+     * @return {@link Map}
      */
-    public DataSource getInlineDataSource(String contentID) throws IOException;
+    public Map<String, InlineDataSource> getInlines();
+
+    /**
+     * Liefert die {@link DataSource} des Textes der Mail.
+     *
+     * @return {@link MessageDataSource}
+     */
+    public MessageDataSource getMessage();
 
     /**
      * Liefert den Text der Mail.

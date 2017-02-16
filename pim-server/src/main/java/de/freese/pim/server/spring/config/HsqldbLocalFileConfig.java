@@ -4,9 +4,11 @@ package de.freese.pim.server.spring.config;
 import javax.annotation.PreDestroy;
 import javax.annotation.Resource;
 import javax.sql.DataSource;
+
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.annotation.PropertySources;
 
 /**
  * Spring-Konfiguration der Datenbank.
@@ -15,7 +17,10 @@ import org.springframework.context.annotation.PropertySource;
  */
 @Configuration
 @Profile("HsqldbLocalFile")
-@PropertySource("classpath:tomcat-pool.properties")
+@PropertySources(
+{
+        @PropertySource("classpath:tomcat-pool.properties"), @PropertySource("classpath:database.properties")
+})
 public class HsqldbLocalFileConfig extends AbstractHSQLDBConfig
 {
     /**

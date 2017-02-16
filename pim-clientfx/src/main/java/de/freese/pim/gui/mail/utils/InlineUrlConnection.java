@@ -40,7 +40,7 @@ public class InlineUrlConnection extends URLConnection
         super(url);
 
         this.mailContent = mailContent;
-        this.dataSource = mailContent.getInlineDataSource(url.getPath());
+        this.dataSource = mailContent.getInlines().get(url.getPath());
     }
 
     /**

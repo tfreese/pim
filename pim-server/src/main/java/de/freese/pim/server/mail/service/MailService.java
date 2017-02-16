@@ -72,33 +72,6 @@ public interface MailService
     public long[] insertFolder(long accountID, List<MailFolder> folders) throws Exception;
 
     /**
-     * Liefert den Inhalt der Mail.<br>
-     * Der Monitor dient zur Anzeige des Lade-Fortschritts.
-     *
-     * @param accountID long
-     * @param folderFullName String
-     * @param mailUID long
-     * @param size int
-     * @param loadMonitor {@link BiConsumer}
-     * @return {@link MailContent}
-     * @throws Exception Falls was schief geht.
-     */
-    public byte[] loadContent(long accountID, String folderFullName, long mailUID, int size, BiConsumer<Long, Long> loadMonitor)
-            throws Exception;
-
-    // /**
-    // * Liefert den Inhalt der Mail.<br>
-    // * Der Monitor dient zur Anzeige des Lade-Fortschritts.
-    // *
-    // * @param accountID long
-    // * @param mail {@link Mail}
-    // * @param loadMonitor {@link BiConsumer}
-    // * @return {@link MailContent}
-    // * @throws Exception Falls was schief geht.
-    // */
-    // public MailContent loadContent(long accountID, Mail mail, BiConsumer<Long, Long> loadMonitor) throws Exception;
-
-    /**
      * Lädt die Folder des Accounts.
      *
      * @param accountID long
@@ -106,6 +79,36 @@ public interface MailService
      * @throws Exception Falls was schief geht.
      */
     public List<MailFolder> loadFolder(long accountID) throws Exception;
+
+    /**
+     * Liefert den Inhalt der Mail.<br>
+     * Der Monitor dient zur Anzeige des Lade-Fortschritts.
+     *
+     * @param accountID long
+     * @param folderFullName String
+     * @param mailUID long
+     * @param loadMonitor {@link BiConsumer}, optional
+     * @param size int, optional - wird nur für loadMonitor benötigt
+     * @return byte[]
+     * @throws Exception Falls was schief geht.
+     */
+    public byte[] loadMailContent(long accountID, String folderFullName, long mailUID, BiConsumer<Long, Long> loadMonitor, int size)
+            throws Exception;
+
+    /**
+     * Liefert den Inhalt der Mail.<br>
+     * Der Monitor dient zur Anzeige des Lade-Fortschritts.
+     *
+     * @param accountID long
+     * @param folderFullName String
+     * @param mailUID long
+     * @param loadMonitor {@link BiConsumer}, optional
+     * @param size int, optional - wird nur für loadMonitor benötigt
+     * @return {@link MailContent}
+     * @throws Exception Falls was schief geht.
+     */
+    public MailContent loadMailContent2(long accountID, String folderFullName, long mailUID, BiConsumer<Long, Long> loadMonitor, int size)
+            throws Exception;
 
     /**
      * Lädt die Mails des Folders vom Provider und aus der DB.

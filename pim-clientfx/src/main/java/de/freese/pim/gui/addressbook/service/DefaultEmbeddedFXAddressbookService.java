@@ -1,13 +1,13 @@
 // Created: 15.02.2017
 package de.freese.pim.gui.addressbook.service;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
+
+import com.fasterxml.jackson.databind.JavaType;
 
 import de.freese.pim.gui.addressbook.model.FXKontakt;
-import de.freese.pim.gui.addressbook.model.FXKontaktAttribut;
 import de.freese.pim.server.addressbook.model.Kontakt;
-import de.freese.pim.server.addressbook.model.KontaktAttribut;
 import de.freese.pim.server.addressbook.service.AddressBookService;
 
 /**
@@ -45,9 +45,9 @@ public class DefaultEmbeddedFXAddressbookService extends AbstractFXAddressbookSe
     @Override
     public List<FXKontakt> getKontaktDetails(final long... ids) throws Exception
     {
-        List<Kontakt> pojos = getAddressBookService().getKontaktDetails(ids);
+        List<Kontakt> contacts = getAddressBookService().getKontaktDetails(ids);
 
-        List<FXKontakt> fxBeans = pojos.stream().map(this::toFXBean).collect(Collectors.toList());
+        List<FXKontakt> fxBeans = toFXContacts(contacts);
 
         return fxBeans;
     }
@@ -81,37 +81,20 @@ public class DefaultEmbeddedFXAddressbookService extends AbstractFXAddressbookSe
     }
 
     /**
-     * Konvertiert das POJO in die FX-Bean.
+     * Konvertiert die POJOs in die FX-Beans.
      *
-     * @param kontakt {@link Kontakt}
-     * @return {@link FXKontakt}
+     * @param contacts {@link List}
+     * @return {@link List}
+     * @throws Exception Falls was schief geht.
      */
-    private FXKontakt toFXBean(final Kontakt kontakt)
+    private List<FXKontakt> toFXContacts(final List<Kontakt> contacts) throws Exception
     {
-        FXKontakt k = new FXKontakt();
-        k.setID(kontakt.getID());
-        k.setNachname(kontakt.getNachname());
-        k.setVorname(kontakt.getVorname());
+        JavaType type = getJsonMapper().getTypeFactory().constructCollectionType(ArrayList.class, FXKontakt.class);
 
-        k.getAttribute().addAll(kontakt.getAttribute().stream().map(this::toFXBean).collect(Collectors.toList()));
+        byte[] jsonBytes = getJsonMapper().writer().writeValueAsBytes(contacts);
+        List<FXKontakt> fxBeans = getJsonMapper().readValue(jsonBytes, type);
 
-        return k;
-    }
-
-    /**
-     * Konvertiert das POJO in die FX-Bean.
-     *
-     * @param attribut {@link KontaktAttribut}
-     * @return {@link FXKontaktAttribut}
-     */
-    private FXKontaktAttribut toFXBean(final KontaktAttribut attribut)
-    {
-        FXKontaktAttribut a = new FXKontaktAttribut();
-        a.setAttribut(attribut.getAttribut());
-        a.setKontaktID(attribut.getKontaktID());
-        a.setWert(attribut.getWert());
-
-        return a;
+        return fxBeans;
     }
 
     /**

@@ -5,7 +5,10 @@ import java.io.OutputStream;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
+import java.util.function.BiConsumer;
 
+import de.freese.pim.common.function.ExceptionalConsumer;
+import de.freese.pim.common.model.mail.MailContent;
 import de.freese.pim.server.mail.model.Mail;
 import de.freese.pim.server.mail.model.MailAccount;
 import de.freese.pim.server.mail.model.MailFolder;
@@ -56,7 +59,29 @@ public interface MailAPI
     public Set<Long> loadCurrentMessageIDs(String folderFullName) throws Exception;
 
     /**
-     * Holt die Mailvom Provider und schreibt sie in den {@link OutputStream}.<br>
+     * Holt die Mail vom Provider und übergibt sie in dem {@link ExceptionalConsumer}.<br>
+     *
+     * @param folderFullName String
+     * @param uid long
+     * @param loadMonitor {@link BiConsumer}, optional
+     * @param size int, optional - wird nur für loadMonitor benötigt
+     * @return {@link MailContent}
+     * @throws Exception Falls was schief geht.
+     */
+    public MailContent loadMail(String folderFullName, long uid, BiConsumer<Long, Long> loadMonitor, int size) throws Exception;
+
+    /**
+     * Holt die Mail vom Provider und übergibt sie in dem {@link ExceptionalConsumer}.<br>
+     *
+     * @param folderFullName String
+     * @param uid long
+     * @param consumer {@link ExceptionalConsumer}
+     * @throws Exception Falls was schief geht.
+     */
+    public void loadMail(String folderFullName, long uid, ExceptionalConsumer<Object, Exception> consumer) throws Exception;
+
+    /**
+     * Holt die Mail vom Provider und schreibt sie in den {@link OutputStream}.<br>
      *
      * @param folderFullName String
      * @param uid long

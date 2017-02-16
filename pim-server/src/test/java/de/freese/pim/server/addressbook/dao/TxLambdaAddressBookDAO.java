@@ -5,8 +5,8 @@ import java.nio.file.Path;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.function.Supplier;
 
+import de.freese.pim.common.function.ExceptionalSupplier;
 import de.freese.pim.common.utils.Utils;
 import de.freese.pim.server.addressbook.model.Kontakt;
 import de.freese.pim.server.jdbc.transaction.ConnectionHolder;
@@ -18,22 +18,6 @@ import de.freese.pim.server.jdbc.transaction.ConnectionHolder;
  */
 public class TxLambdaAddressBookDAO extends AbstractAddressBookDAO
 {
-    /**
-     * Interface eines {@link Supplier} mit einer Exception.<br>
-     *
-     * @author Thomas Freese
-     * @param <R> Konkreter Ergebnistyp
-     * @param <E> Konkreter @param <R> Konkreter Ergebnistyptyp
-     */
-    private interface ExceptionalSupplier<R, E extends Exception>
-    {
-        /**
-         * @return Object
-         * @throws Exception Falls was schief geht.
-         */
-        public R get() throws E;
-    }
-
     /**
      * Erzeugt eine neue Instanz von {@link TxLambdaAddressBookDAO}
      */

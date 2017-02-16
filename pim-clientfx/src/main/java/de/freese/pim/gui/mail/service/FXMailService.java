@@ -12,7 +12,6 @@ import de.freese.pim.common.model.mail.MailContent;
 import de.freese.pim.gui.mail.model.FXMail;
 import de.freese.pim.gui.mail.model.FXMailAccount;
 import de.freese.pim.gui.mail.model.FXMailFolder;
-import de.freese.pim.server.mail.model.MailAccount;
 
 /**
  * Interface für einen JavaFX-MailService.
@@ -74,6 +73,15 @@ public interface FXMailService
     public int insertOrUpdateFolder(long accountID, List<FXMailFolder> folders) throws Exception;
 
     /**
+     * Lädt die Folder des Accounts.
+     *
+     * @param accountID long
+     * @return {@link List}
+     * @throws Exception Falls was schief geht.
+     */
+    public List<FXMailFolder> loadFolder(long accountID) throws Exception;
+
+    /**
      * Liefert den Inhalt der Mail.<br>
      * Der Monitor dient zur Anzeige des Lade-Fortschritts.
      *
@@ -83,16 +91,19 @@ public interface FXMailService
      * @return {@link MailContent}
      * @throws Exception Falls was schief geht.
      */
-    public MailContent loadContent(long accountID, FXMail mail, BiConsumer<Long, Long> loadMonitor) throws Exception;
+    public MailContent loadMailContent(long accountID, FXMail mail, BiConsumer<Long, Long> loadMonitor) throws Exception;
 
     /**
-     * Lädt die Folder des Accounts.
+     * Liefert den Inhalt der Mail.<br>
+     * Der Monitor dient zur Anzeige des Lade-Fortschritts.
      *
      * @param accountID long
-     * @return {@link List}
+     * @param mail {@link FXMail}
+     * @param loadMonitor {@link BiConsumer}
+     * @return {@link MailContent}
      * @throws Exception Falls was schief geht.
      */
-    public List<FXMailFolder> loadFolder(long accountID) throws Exception;
+    public MailContent loadMailContent2(long accountID, FXMail mail, BiConsumer<Long, Long> loadMonitor) throws Exception;
 
     /**
      * Lädt die Mails des Folders vom Provider und aus der DB.
@@ -119,7 +130,7 @@ public interface FXMailService
     /**
      * Testet die Verbindung zu einem MailAccount und liefert bei Erfolg dessen Ordner.
      *
-     * @param account {@link MailAccount}
+     * @param account {@link FXMailAccount}
      * @return {@link List}
      * @throws Exception Falls was schief geht.
      */

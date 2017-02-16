@@ -8,18 +8,24 @@ import javax.sql.DataSource;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.annotation.PropertySources;
 import org.springframework.util.SocketUtils;
 
 import de.freese.pim.common.utils.Utils;
+import de.freese.pim.server.spring.autoconfigure.hsqldbserver.HsqldbServerAutoConfiguration;
 
 /**
- * Spring-Konfiguration der Datenbank.
+ * Spring-Konfiguration der Datenbank.<br>
  *
+ * @see HsqldbServerAutoConfiguration
  * @author Thomas Freese
  */
 @Configuration
 @Profile("HsqldbEmbeddedServer")
-@PropertySource("classpath:tomcat-pool.properties")
+@PropertySources(
+{
+        @PropertySource("classpath:tomcat-pool.properties"), @PropertySource("classpath:database.properties")
+})
 public class HsqldbEmbeddedServerConfig extends AbstractHSQLDBConfig
 {
     static

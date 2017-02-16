@@ -15,15 +15,18 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.zip.GZIPOutputStream;
+
 import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.request.async.DeferredResult;
+
+import de.freese.pim.common.model.mail.MailContent;
 import de.freese.pim.common.utils.io.MonitorOutputStream;
+import de.freese.pim.server.mail.api.JavaMailAPI;
 import de.freese.pim.server.mail.api.MailAPI;
 import de.freese.pim.server.mail.dao.MailDAO;
-import de.freese.pim.server.mail.impl.JavaMailAPI;
 import de.freese.pim.server.mail.model.Mail;
 import de.freese.pim.server.mail.model.MailAccount;
 import de.freese.pim.server.mail.model.MailFolder;
@@ -66,6 +69,25 @@ public class DefaultMailService extends AbstractService implements MailService
     @Override
     public void connectAccount(final MailAccount account) throws Exception
     {
+        // BeanDefinitionBuilder builder = BeanDefinitionBuilder.rootBeanDefinition(SomeClass.class);
+        // builder.addPropertyReference("propertyName", "someBean"); // add dependency to other bean
+        // builder.addPropertyValue("propertyName", someValue); // set property value
+        // DefaultListableBeanFactory factory = (DefaultListableBeanFactory) context.getBeanFactory();
+        // factory.registerBeanDefinition("beanName", builder.getBeanDefinition());
+
+        // BeanDefinitionBuilder.genericBeanDefinition(String.class).addConstructorArgValue("test").getBeanDefinition()
+        // BeanDefinitionBuilder.genericBeanDefinition(TestBean.class).addConstructorArgReference("myTestStringBean").getBeanDefinition()
+
+        // GenericBeanDefinition beanDefinition = new GenericBeanDefinition();
+        // beanDefinition.setBeanClassName(className);
+        // beanDefinition.setFactoryMethodName("getService");
+        // beanDefinition.setLazyInit(true);
+        // factory.registerBeanDefinition("beanName", beanDefinition);
+
+        // Is possible also to register a singleton bean instance (already configured) with
+        //
+        // context.getBeanFactory().registerSingleton(beanName, singletonObject)
+
         MailAPI mailAPI = new JavaMailAPI(account);
         mailAPI.setExecutorService(getExecutorService());
         MAIL_API_MAP.put(account.getID(), mailAPI);
@@ -136,23 +158,6 @@ public class DefaultMailService extends AbstractService implements MailService
     }
 
     /**
-     * @param accountID long
-     * @return {@link MailAPI}
-     */
-    protected MailAPI getMailAPI(final long accountID)
-    {
-        return MAIL_API_MAP.get(accountID);
-    }
-
-    /**
-     * @return {@link MailDAO}
-     */
-    protected MailDAO getMailDAO()
-    {
-        return this.mailDAO;
-    }
-
-    /**
      * @see de.freese.pim.server.mail.service.MailService#insertAccount(de.freese.pim.server.mail.model.MailAccount)
      */
     @Override
@@ -164,61 +169,6 @@ public class DefaultMailService extends AbstractService implements MailService
         return account.getID();
     }
 
-    // /**
-    // * @see de.freese.pim.server.mail.service.MailService#loadContent(long, de.freese.pim.server.mail.model.Mail,
-    // * java.util.function.BiConsumer)
-    // */
-    // @Override
-    // public MailContent loadContent(final long accountID, final Mail mail, final BiConsumer<Long, Long> loadMonitor) throws Exception
-    // {
-    // if (getLogger().isDebugEnabled())
-    // {
-    // getLogger().debug("load mail: msgnum={}; uid={}; size={}; subject={}", mail.getMsgNum(), mail.getUID(), mail.getSize(),
-    // mail.getSubject());
-    // }
-    //
-    // MailAPI mailAPI = getMailAPI(accountID);
-    // Path folderPath = mailAPI.getBasePath().resolve(mail.getFolderFullName());
-    // // Path folderPath = mailAPI.getBasePath().resolve(mail.getFolderFullName().replaceAll("/", "__"));
-    // Path mailPath = folderPath.resolve(Long.toString(mail.getUID())).resolve(mail.getUID() + ".eml");
-    //
-    // JavaMailContent mailContent = null;
-    //
-    // if (!Files.exists(mailPath))
-    // {
-    // if (getLogger().isDebugEnabled())
-    // {
-    // getLogger().debug("download mail: msgnum={}; uid={}", mail.getMsgNum(), mail.getUID());
-    // }
-    //
-    // // Mail download.
-    // Files.createDirectories(mailPath.getParent());
-    //
-    // try (OutputStream os = Files.newOutputStream(mailPath);
-    // GZIPOutputStream gos = new GZIPOutputStream(os);
-    // BufferedOutputStream bos = new BufferedOutputStream(gos);
-    // MonitorOutputStream mos = new MonitorOutputStream(bos, mail.getSize(), loadMonitor))
-    // {
-    // mailAPI.loadMail(mail.getFolderFullName(), mail.getUID(), mos);
-    // }
-    // catch (Exception ex)
-    // {
-    // Files.deleteIfExists(mailPath);
-    // Files.deleteIfExists(mailPath.getParent());
-    // throw ex;
-    // }
-    // }
-    //
-    // // Lokal gespeicherte Mail laden.
-    // try (InputStream is = new GZIPInputStream(new BufferedInputStream(Files.newInputStream(mailPath))))
-    // {
-    // MimeMessage message = new MimeMessage(null, is);
-    // mailContent = new JavaMailContent(message);
-    // }
-    //
-    // return mailContent;
-    // }
-
     /**
      * @see de.freese.pim.server.mail.service.MailService#insertFolder(long, java.util.List)
      */
@@ -229,37 +179,6 @@ public class DefaultMailService extends AbstractService implements MailService
         getMailDAO().insertFolder(accountID, folders);
 
         return folders.stream().mapToLong(MailFolder::getID).toArray();
-    }
-
-    /**
-     * @see de.freese.pim.server.mail.service.MailService#loadContent(long, java.lang.String, long, int, java.util.function.BiConsumer)
-     */
-    @Override
-    public byte[] loadContent(final long accountID, final String folderFullName, final long mailUID, final int size, final BiConsumer<Long, Long> loadMonitor)
-        throws Exception
-    {
-        if (getLogger().isDebugEnabled())
-        {
-            getLogger().debug("download mail: uid={}; size={}", mailUID, size);
-        }
-
-        MailAPI mailAPI = getMailAPI(accountID);
-        byte[] rawData = null;
-
-        ByteArrayOutputStream baos = new ByteArrayOutputStream(size);
-
-        // BufferedOutputStream bos = new BufferedOutputStream(gos);
-        try (GZIPOutputStream gos = new GZIPOutputStream(baos);
-             MonitorOutputStream mos = new MonitorOutputStream(gos, size, loadMonitor))
-        {
-            mailAPI.loadMail(folderFullName, mailUID, mos);
-        }
-
-        baos.close();
-
-        rawData = baos.toByteArray();
-
-        return rawData;
     }
 
     /**
@@ -291,6 +210,57 @@ public class DefaultMailService extends AbstractService implements MailService
         }
 
         return folder;
+    }
+
+    /**
+     * @see de.freese.pim.server.mail.service.MailService#loadMailContent(long, java.lang.String, long, java.util.function.BiConsumer, int)
+     */
+    @Override
+    public byte[] loadMailContent(final long accountID, final String folderFullName, final long mailUID,
+            final BiConsumer<Long, Long> loadMonitor, final int size) throws Exception
+    {
+        if (getLogger().isDebugEnabled())
+        {
+            getLogger().debug("download mail: uid={}; size={}", mailUID, size);
+        }
+
+        MailAPI mailAPI = getMailAPI(accountID);
+        byte[] rawData = null;
+
+        // FastByteArrayOutputStream baos = new FastByteArrayOutputStream(4*1024);
+        ByteArrayOutputStream baos = new ByteArrayOutputStream(size);
+
+        // BufferedOutputStream bos = new BufferedOutputStream(gos);
+        try (GZIPOutputStream gos = new GZIPOutputStream(baos);
+             MonitorOutputStream mos = new MonitorOutputStream(gos, size, loadMonitor))
+        {
+            mailAPI.loadMail(folderFullName, mailUID, mos);
+        }
+
+        baos.close();
+
+        rawData = baos.toByteArray();
+
+        return rawData;
+    }
+
+    /**
+     * @see de.freese.pim.server.mail.service.MailService#loadMailContent2(long, java.lang.String, long, java.util.function.BiConsumer, int)
+     */
+    @Override
+    public MailContent loadMailContent2(final long accountID, final String folderFullName, final long mailUID,
+            final BiConsumer<Long, Long> loadMonitor, final int size) throws Exception
+    {
+        if (getLogger().isDebugEnabled())
+        {
+            getLogger().debug("download mail: uid={}; size={}", mailUID, size);
+        }
+
+        MailAPI mailAPI = getMailAPI(accountID);
+
+        MailContent mailContent = mailAPI.loadMail(folderFullName, mailUID, loadMonitor, size);
+
+        return mailContent;
     }
 
     /**
@@ -400,7 +370,8 @@ public class DefaultMailService extends AbstractService implements MailService
     {
         DeferredResult<List<Mail>> deferredResult = new DeferredResult<>();
 
-        CompletableFuture.supplyAsync(() -> {
+        CompletableFuture.supplyAsync(() ->
+        {
             try
             {
                 return loadMails(accountID, folderID, folderFullName);
@@ -481,5 +452,22 @@ public class DefaultMailService extends AbstractService implements MailService
         }
 
         return affectedRows;
+    }
+
+    /**
+     * @param accountID long
+     * @return {@link MailAPI}
+     */
+    protected MailAPI getMailAPI(final long accountID)
+    {
+        return MAIL_API_MAP.get(accountID);
+    }
+
+    /**
+     * @return {@link MailDAO}
+     */
+    protected MailDAO getMailDAO()
+    {
+        return this.mailDAO;
     }
 }

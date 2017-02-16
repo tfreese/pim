@@ -5,7 +5,9 @@
 package de.freese.pim.server.spring.autoconfigure.hsqldbserver;
 
 import java.util.List;
+
 import javax.annotation.Resource;
+
 import org.hsqldb.server.Server;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +25,19 @@ import de.freese.pim.server.spring.autoconfigure.hsqldbserver.HsqldbServerProper
 /**
  * AutoConfiguration für ein HSQLDB-{@link Server}.<br>
  * Nur wenn noch kein {@link Server} vorhanden ist, wird ein {@link Server} erzeugt.<br>
- * Wird VOR der {@link DataSourceAutoConfiguration} ausgeführt.
+ * Wird VOR der {@link DataSourceAutoConfiguration} ausgeführt.<br>
+ * <br>
+ * Beispiel:
+ *
+ * <pre>
+ * hsqldb.server.enabled = true
+ * hsqldb.server.port = ${hsqldbPort}
+ * hsqldb.server.noSystemExit = true
+ * hsqldb.server.silent = true
+ * hsqldb.server.trace = false
+ * hsqldb.server.db[0].name=${pim.db-name}
+ * hsqldb.server.db[0].path=file:/${pim.home}/${pim.db-name}
+ * </pre>
  *
  * @author Thomas Freese
  */
