@@ -5,17 +5,22 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.TreeMap;
+
 import javax.activation.DataSource;
 import javax.mail.internet.ContentType;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimePart;
 import javax.mail.internet.MimeUtility;
+
 import org.apache.commons.lang3.StringUtils;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import de.freese.pim.common.model.mail.DefaultMailContent;
 import de.freese.pim.common.model.mail.datasource.AttachmentDataSource;
 import de.freese.pim.common.model.mail.datasource.InlineDataSource;
 import de.freese.pim.common.model.mail.datasource.MessageDataSource;
+import de.freese.pim.common.utils.io.IOMonitor;
 import de.freese.pim.server.mail.MailUtils;
 
 /**
@@ -71,12 +76,25 @@ public class JavaMailContent extends DefaultMailContent
      */
     public JavaMailContent(final MimeMessage message) throws Exception
     {
+        this(message, null);
+    }
+
+    /**
+     * Erzeugt eine neue Instanz von {@link JavaMailContent}
+     *
+     * @param message {@link MimeMessage}
+     * @param monitor {@link IOMonitor}
+     * @throws Exception Falls was schief geht.
+     */
+    public JavaMailContent(final MimeMessage message, final IOMonitor monitor) throws Exception
+    {
         super();
 
         Objects.requireNonNull(message, "message required");
 
+        // DataSource für die Text-Nachicht.
         DataSource messageDataSource = MailUtils.getTextDataSource(message);
-        setMessage(new MessageDataSource(messageDataSource));
+        setMessage(new MessageDataSource(messageDataSource, monitor));
 
         String encoding = null;
         // encoding = message.getEncoding(); // Kann QUOTED-PRINTABLE liefern -> Kein Encoding !
@@ -97,34 +115,22 @@ public class JavaMailContent extends DefaultMailContent
 
         setEncoding(encoding);
 
-        // String contentType = messageDataSource.getContentType();
-        // contentType = Optional.ofNullable(contentType).map(ct -> ct.split("[;]")[0]).orElse("text/plain");
-        // contentType = contentType.replaceAll(System.getProperty("line.separator"), "");
-        // contentType = contentType.replaceAll("\\r\\n|\\r|\\n", "");
-
-        // Text-Nachricht: text/plain, text/html
-        // try (BufferedReader buffer = new BufferedReader(new InputStreamReader(messageDataSource.getInputStream(), encoding)))
-        // {
-        // String messageContent = buffer.lines().collect(Collectors.joining("\n"));
-        // setMessageContent(messageContent);
-        // }
-
-        // Inlines
+        // Inline-DataSources
         Map<String, InlineDataSource> mapInlines = new TreeMap<>();
 
         for (Entry<String, MimePart> entry : MailUtils.getInlineMap(message).entrySet())
         {
-            mapInlines.put(entry.getKey(), new InlineDataSource(entry.getValue().getDataHandler().getDataSource()));
+            mapInlines.put(entry.getKey(), new InlineDataSource(entry.getValue().getDataHandler().getDataSource(), monitor));
         }
 
         setInlines(mapInlines);
 
-        // Attachments
+        // Attachment-DataSources
         Map<String, AttachmentDataSource> mapAttachments = new TreeMap<>();
 
         for (Entry<String, MimePart> entry : MailUtils.getAttachmentMap(message).entrySet())
         {
-            mapAttachments.put(entry.getKey(), new AttachmentDataSource(entry.getValue().getDataHandler().getDataSource()));
+            mapAttachments.put(entry.getKey(), new AttachmentDataSource(entry.getValue().getDataHandler().getDataSource(), monitor));
 
             // Test
             // String fileName = entry.getValue().getFileName();

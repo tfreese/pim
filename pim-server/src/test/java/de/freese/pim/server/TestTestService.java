@@ -10,25 +10,27 @@ import javax.annotation.Resource;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+
+import de.freese.pim.server.spring.TestService;
 
 /**
  * @author Thomas Freese
  */
 @RunWith(SpringRunner.class)
-@SpringBootTest(properties =
-{
-        "spring.config.name=application-server", "spring.main.banner-mode=OFF", "logging.config=classpath:logback-test.xml"
-}, webEnvironment = WebEnvironment.RANDOM_PORT)
-// @SpringBootTest(classes = PIMServerApplication.class, webEnvironment = WebEnvironment.RANDOM_PORT, properties =
+// @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT, properties =
 // {
-// "spring.config.name=application-server"
+// "spring.config.name=application-PIMServer", "spring.main.banner-mode=OFF", "logging.config=classpath:logback-test.xml"
 // })
+// @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT, properties =
+// {
+// "spring.config.name=application-PIMServer", "spring.main.banner-mode=OFF", "logging.config=classpath:logback-test.xml"
+// }, classes = PIMServerApplication.class)
 @AutoConfigureMockMvc
+@WebMvcTest(TestService.class)
 public class TestTestService
 {
     /**
@@ -55,7 +57,7 @@ public class TestTestService
         // .andExpect(jsonPath("$.content").value("Hello, World!"));
 
         // @formatter:off
-        this.mockMvc.perform(get("/greeter/test"))
+        this.mockMvc.perform(get("/test/greeting"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(content().json("{\"hello\":\"World\"}"));
@@ -72,7 +74,7 @@ public class TestTestService
         // .andExpect(jsonPath("$.content").value("Hello, Spring Community!"));
 
         // @formatter:off
-        this.mockMvc.perform(get("/greeter/test")
+        this.mockMvc.perform(get("/test/greeting")
                 .param("name", "Spring Community"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))

@@ -8,8 +8,6 @@ import java.util.ResourceBundle;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ScheduledExecutorService;
 
-import javax.sql.DataSource;
-
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
@@ -25,7 +23,6 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.core.io.Resource;
-import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 import com.sun.javafx.application.LauncherImpl;
@@ -61,8 +58,8 @@ import javafx.stage.Window;
 // })
 // @EnableTransactionManagement // Wird durch Spring-Boot automatisch konfiguriert, wenn DataSource-Bean vorhanden.
 @SpringBootApplication
-@EnableAsync // @Async("executorService")
 @EnableScheduling
+// @EnableAsync // @Async("executorService")
 public class PIMApplication extends Application implements ApplicationContextAware
 {
     /**
@@ -99,14 +96,6 @@ public class PIMApplication extends Application implements ApplicationContextAwa
     public static ApplicationContext getApplicationContext()
     {
         return applicationContext;
-    }
-
-    /**
-     * @return {@link DataSource}
-     */
-    public static DataSource getDataSource()
-    {
-        return getApplicationContext().getBean("dataSource", DataSource.class);
     }
 
     /**
@@ -323,11 +312,6 @@ public class PIMApplication extends Application implements ApplicationContextAwa
 //                .child(PIMServerApplication.class)
 //                .build();
         // @formatter:on
-        //
-        // try (ConfigurableApplicationContext ctx = application.run(args))
-        // {
-        // ctx.registerShutdownHook();
-        // }
 
         application.run(args);
 

@@ -112,7 +112,7 @@ public class ContactController extends AbstractController
     {
         super();
 
-        this.addressbookService = PIMApplication.getApplicationContext().getBean("addressBookService", FXAddressbookService.class);
+        this.addressbookService = PIMApplication.getApplicationContext().getBean("clientAddressBookService", FXAddressbookService.class);
     }
 
     /**

@@ -15,12 +15,14 @@ import org.springframework.web.bind.annotation.RestController;
  * <br>
  * https://twilblog.github.io/java/spring/rest/file/stream/2015/08/14/return-a-file-stream-from-spring-rest.html<br>
  * http://stackoverflow.com/questions/5673260/downloading-a-file-from-spring-controllers<br>
- * http://stackoverflow.com/questions/15781885/how-to-forward-large-files-with-resttemplate
+ * http://stackoverflow.com/questions/15781885/how-to-forward-large-files-with-resttemplate<br>
+ * <br>
+ * view-source:http://localhost:61222/pim/info
  *
  * @author Thomas Freese
  */
 @RestController
-@RequestMapping(path = "/greeter", produces =
+@RequestMapping(path = "/test", produces =
 {
         MediaType.APPLICATION_JSON_UTF8_VALUE
 }, headers = "Accept=application/json")
@@ -41,9 +43,9 @@ public class TestService
      * @param name String
      * @return {@link Map}
      */
-    @GetMapping(path = "/test")
-    // @RequestMapping(path = "/test/{name}", method = RequestMethod.GET);
-    // @PathVariable(value = "name")
+    @GetMapping("/greeting")
+    // @RequestMapping(path = "/greeting/{name}", method = RequestMethod.GET);
+    // @PathVariable("name")
     public Map<String, String> greeting(@RequestParam(value = "name", defaultValue = "World") final String name)
     {
         Map<String, String> map = new HashMap<>();

@@ -5,7 +5,7 @@
 package de.freese.pim.gui.mail.service;
 
 import java.util.List;
-import java.util.concurrent.Future;
+
 import de.freese.pim.common.model.mail.MailContent;
 import de.freese.pim.common.utils.io.IOMonitor;
 import de.freese.pim.gui.mail.model.FXMail;
@@ -37,11 +37,12 @@ public interface FXMailService
     public int deleteAccount(long accountID) throws Exception;
 
     /**
-     * Schliessen der MailApi-Verbindungen aller MailAccounts.
+     * Schliessen der MailApi-Verbindungen der MailAccounts.
      *
+     * @param accountIDs long[]
      * @throws Exception Falls was schief geht.
      */
-    public void disconnectAccounts() throws Exception;
+    public void disconnectAccounts(long... accountIDs) throws Exception;
 
     /**
      * Liefert alle MailAccounts, sortiert nach MAIL.
@@ -103,16 +104,16 @@ public interface FXMailService
      */
     public List<FXMail> loadMails(long accountID, long folderID, String folderFullName) throws Exception;
 
-    /**
-     * Lädt die Mails des Folders vom Provider und aus der DB.
-     *
-     * @param accountID long
-     * @param folderID long
-     * @param folderFullName String
-     * @return {@link List}
-     * @throws Exception Falls was schief geht.
-     */
-    public Future<List<FXMail>> loadMails2(long accountID, long folderID, String folderFullName) throws Exception;
+    // /**
+    // * Lädt die Mails des Folders vom Provider und aus der DB.
+    // *
+    // * @param accountID long
+    // * @param folderID long
+    // * @param folderFullName String
+    // * @return {@link List}
+    // * @throws Exception Falls was schief geht.
+    // */
+    // public Future<List<FXMail>> loadMails2(long accountID, long folderID, String folderFullName) throws Exception;
 
     /**
      * Testet die Verbindung zu einem MailAccount und liefert bei Erfolg dessen Ordner.

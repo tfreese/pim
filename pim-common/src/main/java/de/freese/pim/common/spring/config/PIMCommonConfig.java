@@ -1,5 +1,5 @@
 // Created: 16.02.2017
-package de.freese.pim.common.spring;
+package de.freese.pim.common.spring.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

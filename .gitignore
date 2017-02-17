@@ -11,7 +11,7 @@
 /pim-common/.settings/
 /pim-common/log/
 
-/pim-clientfx/target/
-/pim-clientfx/test/
-/pim-clientfx/.settings/
-/pim-clientfx/log/
+/pim-server/target/
+/pim-server/test/
+/pim-server/.settings/
+/pim-server/log/

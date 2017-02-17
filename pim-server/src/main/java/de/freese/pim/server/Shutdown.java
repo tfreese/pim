@@ -16,8 +16,8 @@ public class Shutdown
     public static void main(final String[] args)
     {
         RestTemplate restTemplate = new RestTemplate();
-        // restTemplate.exchange("http://localhost:61222/shutdown", HttpMethod.POST, null, Void.class);
-        restTemplate.postForLocation("http://localhost:61222/shutdown", null);
+        // restTemplate.exchange("http://localhost:61222/pim/shutdown", HttpMethod.POST, null, Void.class);
+        restTemplate.postForLocation("http://localhost:61222/pim/shutdown", null);
 
         // URL url = new URL("http://localhost:9000/shutdown");
         // HttpURLConnection connection = (HttpURLConnection) url.openConnection();

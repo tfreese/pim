@@ -5,6 +5,7 @@
 package de.freese.pim.server.addressbook;
 
 import javax.sql.DataSource;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
@@ -14,8 +15,8 @@ import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-import de.freese.pim.server.addressbook.dao.DefaultAddressBookDAO;
 import de.freese.pim.server.addressbook.dao.AddressBookDAO;
+import de.freese.pim.server.addressbook.dao.DefaultAddressBookDAO;
 
 /**
  * @author Thomas Freese

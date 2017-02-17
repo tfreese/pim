@@ -1,6 +1,7 @@
 // Created: 30.05.2016
 package de.freese.pim.gui.addressbook.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javafx.beans.binding.Bindings;
@@ -23,6 +24,7 @@ public class FXKontakt implements Comparable<FXKontakt>
     /**
      *
      */
+    @JsonIgnore
     private final ObservableList<FXKontaktAttribut> attribute = FXCollections.observableArrayList();
 
     /**

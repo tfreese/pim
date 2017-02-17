@@ -8,6 +8,8 @@ import javax.activation.DataSource;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import de.freese.pim.common.utils.io.IOMonitor;
+
 /**
  * {@link DataSource} für ein Mail-Inline.
  *
@@ -24,6 +26,18 @@ public class InlineDataSource extends AbstractDataSource
     public InlineDataSource(final DataSource source) throws IOException
     {
         super(source);
+    }
+
+    /**
+     * Erzeugt eine neue Instanz von {@link InlineDataSource}
+     *
+     * @param source {@link DataSource}
+     * @param monitor {@link IOMonitor}
+     * @throws IOException Falls was schief geht.
+     */
+    public InlineDataSource(final DataSource source, final IOMonitor monitor) throws IOException
+    {
+        super(source, monitor);
     }
 
     /**

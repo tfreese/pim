@@ -58,7 +58,7 @@ public class HsqldbServerAutoConfiguration
     *
     */
     @Resource
-    private HsqldbServerProperties serverProperties = null;
+    private HsqldbServerProperties hsqldbServerProperties = null;
 
     /**
      * Erstellt ein neues {@link HsqldbServerAutoConfiguration} Object.
@@ -76,11 +76,11 @@ public class HsqldbServerAutoConfiguration
     // @Scope(ConfigurableBeanFactory#SCOPE_SINGLETON)
     public Server hsqldbServer() throws Exception
     {
-        int port = this.serverProperties.getPort();
-        boolean noSystemExit = this.serverProperties.isNoSystemExit();
-        boolean silent = this.serverProperties.isSilent();
-        boolean trace = this.serverProperties.isTrace();
-        List<DB> dbs = this.serverProperties.getDb();
+        int port = this.hsqldbServerProperties.getPort();
+        boolean noSystemExit = this.hsqldbServerProperties.isNoSystemExit();
+        boolean silent = this.hsqldbServerProperties.isSilent();
+        boolean trace = this.hsqldbServerProperties.isTrace();
+        List<DB> dbs = this.hsqldbServerProperties.getDb();
 
         StringBuilder sb = new StringBuilder();
         sb.append("Create HsqldbServer with:");

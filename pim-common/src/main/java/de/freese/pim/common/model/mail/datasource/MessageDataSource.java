@@ -8,6 +8,8 @@ import javax.activation.DataSource;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import de.freese.pim.common.utils.io.IOMonitor;
+
 /**
  * {@link DataSource} für den Mail-Text.
  *
@@ -24,6 +26,18 @@ public class MessageDataSource extends AbstractDataSource
     public MessageDataSource(final DataSource source) throws IOException
     {
         super(source);
+    }
+
+    /**
+     * Erzeugt eine neue Instanz von {@link MessageDataSource}
+     *
+     * @param source {@link DataSource}
+     * @param monitor {@link IOMonitor}
+     * @throws IOException Falls was schief geht.
+     */
+    public MessageDataSource(final DataSource source, final IOMonitor monitor) throws IOException
+    {
+        super(source, monitor);
     }
 
     /**

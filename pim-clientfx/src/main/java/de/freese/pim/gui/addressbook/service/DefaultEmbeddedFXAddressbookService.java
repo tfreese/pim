@@ -4,6 +4,10 @@ package de.freese.pim.gui.addressbook.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
 import com.fasterxml.jackson.databind.JavaType;
 
 import de.freese.pim.gui.addressbook.model.FXKontakt;
@@ -15,6 +19,7 @@ import de.freese.pim.server.addressbook.service.AddressBookService;
  *
  * @author Thomas Freese
  */
+@Service("clientAddressBookService")
 public class DefaultEmbeddedFXAddressbookService extends AbstractFXAddressbookService
 {
     /**
@@ -66,6 +71,7 @@ public class DefaultEmbeddedFXAddressbookService extends AbstractFXAddressbookSe
     /**
      * @param addressBookService {@link AddressBookService}
      */
+    @Resource
     public void setAddressBookService(final AddressBookService addressBookService)
     {
         this.addressBookService = addressBookService;

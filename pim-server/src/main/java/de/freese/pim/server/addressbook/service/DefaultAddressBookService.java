@@ -4,7 +4,18 @@ package de.freese.pim.server.addressbook.service;
 import java.nio.file.Path;
 import java.util.List;
 
+import javax.annotation.Resource;
+
+import org.springframework.http.MediaType;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import de.freese.pim.server.addressbook.dao.AddressBookDAO;
 import de.freese.pim.server.addressbook.model.Kontakt;
@@ -15,6 +26,9 @@ import de.freese.pim.server.service.AbstractService;
  *
  * @author Thomas Freese
  */
+// @Service("addressBookService")
+@RestController("addressBookService")
+@RequestMapping(path = "/addressBook", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 public class DefaultAddressBookService extends AbstractService implements AddressBookService
 {
     /**
@@ -28,13 +42,13 @@ public class DefaultAddressBookService extends AbstractService implements Addres
     public DefaultAddressBookService()
     {
         super();
-
     }
 
     /**
      * @see de.freese.pim.server.addressbook.dao.AddressBookDAO#backup(java.nio.file.Path)
      */
     @Override
+    @PostMapping("/backup")
     public boolean backup(final Path directory) throws Exception
     {
         return this.addressBookDAO.backup(directory);
@@ -45,7 +59,9 @@ public class DefaultAddressBookService extends AbstractService implements Addres
      */
     @Override
     @Transactional
-    public int deleteAttribut(final long kontaktID, final String attribut) throws Exception
+    @DeleteMapping("/attribute/{contactID}/{attribute}")
+    public int deleteAttribut(@PathVariable("contactID") final long kontaktID, @PathVariable("attribute") final String attribut)
+            throws Exception
     {
         return this.addressBookDAO.deleteAttribut(kontaktID, attribut);
     }
@@ -55,7 +71,8 @@ public class DefaultAddressBookService extends AbstractService implements Addres
      */
     @Override
     @Transactional
-    public int deleteKontakt(final long id) throws Exception
+    @DeleteMapping("/contact/{contactID}")
+    public int deleteKontakt(@PathVariable("contactID") final long id) throws Exception
     {
         return this.addressBookDAO.deleteKontakt(id);
     }
@@ -65,7 +82,8 @@ public class DefaultAddressBookService extends AbstractService implements Addres
      */
     @Override
     @Transactional(readOnly = true)
-    public List<Kontakt> getKontaktDetails(final long... ids) throws Exception
+    @GetMapping("details")
+    public List<Kontakt> getKontaktDetails(@RequestParam("ids") final long... ids) throws Exception
     {
         return this.addressBookDAO.getKontaktDetails(ids);
     }
@@ -75,6 +93,7 @@ public class DefaultAddressBookService extends AbstractService implements Addres
      */
     @Override
     @Transactional(readOnly = true)
+    @GetMapping("/contacts")
     public List<Kontakt> getKontakte() throws Exception
     {
         return this.addressBookDAO.getKontakte();
@@ -85,7 +104,9 @@ public class DefaultAddressBookService extends AbstractService implements Addres
      */
     @Override
     @Transactional
-    public int insertAttribut(final long kontaktID, final String attribut, final String wert) throws Exception
+    @PutMapping("/attribute/{contactID}/{attribute}/{value}")
+    public int insertAttribut(@PathVariable("contactID") final long kontaktID, @PathVariable("attribute") final String attribut,
+            @PathVariable("value") final String wert) throws Exception
     {
         return this.addressBookDAO.insertAttribut(kontaktID, attribut, wert);
     }
@@ -95,7 +116,9 @@ public class DefaultAddressBookService extends AbstractService implements Addres
      */
     @Override
     @Transactional
-    public long insertKontakt(final String nachname, final String vorname) throws Exception
+    @PutMapping("/contact")
+    public long insertKontakt(@RequestParam("surname") final String nachname, @RequestParam("forename") final String vorname)
+            throws Exception
     {
         return this.addressBookDAO.insertKontakt(nachname, vorname);
     }
@@ -105,7 +128,8 @@ public class DefaultAddressBookService extends AbstractService implements Addres
      */
     @Override
     @Transactional(readOnly = true)
-    public List<Kontakt> searchKontakte(final String name) throws Exception
+    @GetMapping("/contact/search/{name}")
+    public List<Kontakt> searchKontakte(@PathVariable("name") final String name) throws Exception
     {
         return this.addressBookDAO.searchKontakte(name);
     }
@@ -113,6 +137,7 @@ public class DefaultAddressBookService extends AbstractService implements Addres
     /**
      * @param addressBookDAO {@link AddressBookDAO}
      */
+    @Resource
     public void setAddressBookDAO(final AddressBookDAO addressBookDAO)
     {
         this.addressBookDAO = addressBookDAO;
@@ -123,7 +148,9 @@ public class DefaultAddressBookService extends AbstractService implements Addres
      */
     @Override
     @Transactional
-    public int updateAttribut(final long kontaktID, final String attribut, final String wert) throws Exception
+    @PostMapping("/attribute/{contactID}/{attribute}/{value}")
+    public int updateAttribut(@PathVariable("contactID") final long kontaktID, @PathVariable("attribute") final String attribut,
+            @PathVariable("value") final String wert) throws Exception
     {
         return this.addressBookDAO.updateAttribut(kontaktID, attribut, wert);
     }
@@ -133,7 +160,9 @@ public class DefaultAddressBookService extends AbstractService implements Addres
      */
     @Override
     @Transactional
-    public int updateKontakt(final long id, final String nachname, final String vorname) throws Exception
+    @PostMapping("/contact/{contactID}")
+    public int updateKontakt(@PathVariable("contactID") final long id, @RequestParam("surname") final String nachname,
+            @RequestParam("forename") final String vorname) throws Exception
     {
         return this.addressBookDAO.updateKontakt(id, nachname, vorname);
     }
