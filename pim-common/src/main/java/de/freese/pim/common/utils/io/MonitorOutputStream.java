@@ -4,11 +4,9 @@ package de.freese.pim.common.utils.io;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Objects;
-import java.util.function.BiConsumer;
 
 /**
  * {@link OutputStream} mit der Möglichkeit zur Überwachung durch einen Monitor.<br>
- * Der Monitor empfängt die Anzahl geschriebener Bytes (Parameter 1) und die Gesamtgröße (Parameter 2).<br>
  *
  * @author Thomas Freese
  */
@@ -22,7 +20,7 @@ public class MonitorOutputStream extends OutputStream
     /**
     *
     */
-    private final BiConsumer<Long, Long> monitor;
+    private final IOMonitor monitor;
 
     /**
      * Anzahl Bytes (Größe) des gesamten Channels.
@@ -39,9 +37,9 @@ public class MonitorOutputStream extends OutputStream
      *
      * @param delegate {@link OutputStream}
      * @param size long; Anzahl Bytes (Größe) des gesamten Channels
-     * @param monitor {@link BiConsumer}; Erster Parameter = Anzahl geschriebener Bytes, zweiter Parameter = Gesamtgröße
+     * @param monitor {@link IOMonitor}
      */
-    public MonitorOutputStream(final OutputStream delegate, final long size, final BiConsumer<Long, Long> monitor)
+    public MonitorOutputStream(final OutputStream delegate, final long size, final IOMonitor monitor)
     {
         super();
 
@@ -81,7 +79,7 @@ public class MonitorOutputStream extends OutputStream
 
         this.sizeWritten += b.length;
 
-        this.monitor.accept(this.sizeWritten, this.size);
+        this.monitor.monitor(this.sizeWritten, this.size);
     }
 
     /**
@@ -94,7 +92,7 @@ public class MonitorOutputStream extends OutputStream
 
         this.sizeWritten += len;
 
-        this.monitor.accept(this.sizeWritten, this.size);
+        this.monitor.monitor(this.sizeWritten, this.size);
     }
 
     /**
@@ -107,6 +105,6 @@ public class MonitorOutputStream extends OutputStream
 
         this.sizeWritten++;
 
-        this.monitor.accept(this.sizeWritten, this.size);
+        this.monitor.monitor(this.sizeWritten, this.size);
     }
 }

@@ -29,6 +29,8 @@ public interface IOMonitor extends BiConsumer<Long, Long>
     }
 
     /**
+     * Monitor benachrichtigen.
+     * 
      * @param current long; Anzahl geschriebener/gelesener Bytes
      * @param size long; Gesamtgröße
      */

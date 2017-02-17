@@ -296,6 +296,38 @@ public final class MailUtils
     }
 
     /**
+     * Liefert die Gesamtgröße aller einzelnen Parts.
+     *
+     * @param part {@link Part}, @see {@link Message}
+     * @return long
+     * @throws IOException Falls was schief geht.
+     * @throws MessagingException Falls was schief geht.
+     */
+    public static long getSizeOfAllParts(final Part part) throws MessagingException, IOException
+    {
+        long size = part.getSize();
+
+        if (size < 0)
+        {
+            size = 0;
+        }
+
+        if (part.getContent() instanceof Multipart)
+        {
+            Multipart mp = (Multipart) part.getContent();
+
+            for (int i = 0; i < mp.getCount(); i++)
+            {
+                Part bp = mp.getBodyPart(i);
+
+                size += getSizeOfAllParts(bp);
+            }
+        }
+
+        return size;
+    }
+
+    /**
      * Liefert die {@link DataSource} für den Text (text/plain, text/html) einer {@link Message}.<br>
      * Dabei wird zuerst nach HTML gesucht, dann nach Plain-Text.
      *

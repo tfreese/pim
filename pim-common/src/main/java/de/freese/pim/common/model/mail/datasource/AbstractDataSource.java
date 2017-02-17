@@ -66,7 +66,8 @@ public class AbstractDataSource implements DataSource
         else
         {
             try (FastByteArrayOutputStream baos = new FastByteArrayOutputStream(1024);
-                 MonitorOutputStream mos = new MonitorOutputStream(baos, 0, monitor))
+                 // try (ByteArrayOutputStream baos = new ByteArrayOutputStream(1024);
+                 OutputStream mos = new MonitorOutputStream(baos, 0, monitor))
             {
                 StreamUtils.copy(source.getInputStream(), mos);
                 mos.flush();

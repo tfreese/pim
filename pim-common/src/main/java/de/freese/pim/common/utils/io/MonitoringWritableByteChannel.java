@@ -5,11 +5,9 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.WritableByteChannel;
 import java.util.Objects;
-import java.util.function.BiConsumer;
 
 /**
  * {@link WritableByteChannel} mit der Möglichkeit zur Überwachung durch einen Monitor.<br>
- * Der Monitor empfängt die Anzahl geschriebener Bytes (Parameter 1) und die Gesamtgröße (Parameter 2).<br>
  *
  * @author Thomas Freese
  */
@@ -23,7 +21,7 @@ public class MonitoringWritableByteChannel implements WritableByteChannel
     /**
      *
      */
-    private final BiConsumer<Long, Long> monitor;
+    private final IOMonitor monitor;
 
     /**
      * Anzahl Bytes (Größe) des gesamten Channels.
@@ -40,9 +38,9 @@ public class MonitoringWritableByteChannel implements WritableByteChannel
      *
      * @param delegate {@link WritableByteChannel}
      * @param size long; Anzahl Bytes (Größe) des gesamten Channels
-     * @param monitor {@link BiConsumer}; Erster Parameter = Anzahl geschriebener Bytes, zweiter Parameter = Gesamtgröße
+     * @param monitor {@link IOMonitor}
      */
-    public MonitoringWritableByteChannel(final WritableByteChannel delegate, final long size, final BiConsumer<Long, Long> monitor)
+    public MonitoringWritableByteChannel(final WritableByteChannel delegate, final long size, final IOMonitor monitor)
     {
         super();
 
@@ -84,7 +82,7 @@ public class MonitoringWritableByteChannel implements WritableByteChannel
         {
             this.sizeWritten += writeCount;
 
-            this.monitor.accept(this.sizeWritten, this.size);
+            this.monitor.monitor(this.sizeWritten, this.size);
         }
 
         return writeCount;

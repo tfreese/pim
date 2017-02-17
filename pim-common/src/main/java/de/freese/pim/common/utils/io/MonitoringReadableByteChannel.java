@@ -5,11 +5,9 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.ReadableByteChannel;
 import java.util.Objects;
-import java.util.function.BiConsumer;
 
 /**
  * {@link ReadableByteChannel} mit der Möglichkeit zur Überwachung durch einen Monitor.<br>
- * Der Monitor empfängt die Anzahl gelesener Bytes (Parameter 1) und die Gesamtgröße (Parameter 2).<br>
  *
  * @author Thomas Freese
  */
@@ -23,7 +21,7 @@ public class MonitoringReadableByteChannel implements ReadableByteChannel
     /**
     *
     */
-    private final BiConsumer<Long, Long> monitor;
+    private final IOMonitor monitor;
 
     /**
      * Anzahl Bytes (Größe) des gesamten Channels.
@@ -40,9 +38,9 @@ public class MonitoringReadableByteChannel implements ReadableByteChannel
      *
      * @param delegate {@link ReadableByteChannel}
      * @param size long; Anzahl Bytes (Größe) des gesamten Channels
-     * @param monitor {@link BiConsumer}; Erster Parameter = Anzahl gelesener Bytes, zweiter Parameter = Gesamtgröße
+     * @param monitor {@link IOMonitor}
      */
-    public MonitoringReadableByteChannel(final ReadableByteChannel delegate, final long size, final BiConsumer<Long, Long> monitor)
+    public MonitoringReadableByteChannel(final ReadableByteChannel delegate, final long size, final IOMonitor monitor)
     {
         super();
 
@@ -84,7 +82,7 @@ public class MonitoringReadableByteChannel implements ReadableByteChannel
         {
             this.sizeRead += readCount;
 
-            this.monitor.accept(this.sizeRead, this.size);
+            this.monitor.monitor(this.sizeRead, this.size);
         }
 
         return readCount;

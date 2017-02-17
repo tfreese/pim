@@ -51,7 +51,8 @@ public class NestendIOMonitor implements IOMonitor
     public void monitor(final long current, final long size)
     {
         this.currentyAccepted += current;
+        // System.out.printf("%d / %d%n", current, this.size);
 
-        this.delegate.accept(this.currentyAccepted, this.size);
+        this.delegate.monitor(this.currentyAccepted, this.size);
     }
 }

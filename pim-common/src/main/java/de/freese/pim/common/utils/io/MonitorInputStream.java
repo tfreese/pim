@@ -4,13 +4,10 @@ package de.freese.pim.common.utils.io;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Objects;
-import java.util.function.BiConsumer;
-
 import javax.swing.ProgressMonitorInputStream;
 
 /**
  * {@link InputStream} mit der Möglichkeit zur Überwachung durch einen Monitor.<br>
- * Der Monitor empfängt die Anzahl gelesener Bytes (Parameter 1) und die Gesamtgröße (Parameter 2).<br>
  *
  * @see ProgressMonitorInputStream
  * @author Thomas Freese
@@ -25,7 +22,7 @@ public class MonitorInputStream extends InputStream
     /**
     *
     */
-    private final BiConsumer<Long, Long> monitor;
+    private final IOMonitor monitor;
 
     /**
      * Anzahl Bytes (Größe) des gesamten Channels.
@@ -42,9 +39,9 @@ public class MonitorInputStream extends InputStream
      *
      * @param delegate {@link InputStream}
      * @param size long; Anzahl Bytes (Größe) des gesamten Channels
-     * @param monitor {@link BiConsumer}; Erster Parameter = Anzahl gelesener Bytes, zweiter Parameter = Gesamtgröße
+     * @param monitor {@link IOMonitor};
      */
-    public MonitorInputStream(final InputStream delegate, final long size, final BiConsumer<Long, Long> monitor)
+    public MonitorInputStream(final InputStream delegate, final long size, final IOMonitor monitor)
     {
         super();
 
@@ -102,7 +99,7 @@ public class MonitorInputStream extends InputStream
 
         this.sizeRead++;
 
-        this.monitor.accept(this.sizeRead, this.size);
+        this.monitor.monitor(this.sizeRead, this.size);
 
         return read;
     }
@@ -119,7 +116,7 @@ public class MonitorInputStream extends InputStream
         {
             this.sizeRead += readCount;
 
-            this.monitor.accept(this.sizeRead, this.size);
+            this.monitor.monitor(this.sizeRead, this.size);
         }
 
         return readCount;
@@ -137,7 +134,7 @@ public class MonitorInputStream extends InputStream
         {
             this.sizeRead += readCount;
 
-            this.monitor.accept(this.sizeRead, this.size);
+            this.monitor.monitor(this.sizeRead, this.size);
         }
 
         return readCount;
@@ -153,7 +150,7 @@ public class MonitorInputStream extends InputStream
 
         this.sizeRead = this.size - this.delegate.available();
 
-        this.monitor.accept(this.sizeRead, this.size);
+        this.monitor.monitor(this.sizeRead, this.size);
     }
 
     /**
@@ -168,7 +165,7 @@ public class MonitorInputStream extends InputStream
         {
             this.sizeRead += readCount;
 
-            this.monitor.accept(this.sizeRead, this.size);
+            this.monitor.monitor(this.sizeRead, this.size);
         }
 
         return readCount;
