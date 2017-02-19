@@ -26,7 +26,7 @@ public class PIMServerApplication
         //
         // @formatter:off
         SpringApplication application = new SpringApplicationBuilder(PIMServerApplication.class)
-//                .properties("spring.config.name:application-server")
+//                .properties("spring.config.name:application-serverstandalone")
                 .headless(true) // Default true
                 .registerShutdownHook(true) // Default true
                 .profiles("PIMServer", "HsqldbEmbeddedServer") // "HsqldbEmbeddedServer", "HsqldbLocalFile"

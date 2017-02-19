@@ -4,10 +4,8 @@ package de.freese.pim.common.spring.autoconfigure.executorservice;
 import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.RejectedExecutionHandler;
-
 import javax.annotation.Resource;
 import javax.sql.DataSource;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -17,15 +15,13 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.concurrent.ThreadPoolExecutorFactoryBean;
-
 import de.freese.pim.common.spring.concurrent.TunedThreadPoolExecutorFactoryBean;
 
 /**
  * AutoConfiguration für ein {@link ExecutorService}.<br>
  * Nur wenn noch kein {@link ExecutorService} vorhanden ist, wird ein {@link ExecutorService} erzeugt.
  * <p>
- * Beispiel ExecutorService: Threads leben max. 60 Sekunden, wenn es nix zu tun gibt; min. 2, max. 10 Threads, max. 100 Tasks in der
- * Queue.<br>
+ * Beispiel ExecutorService: Threads leben max. 60 Sekunden, wenn es nix zu tun gibt; min. 2, max. 10 Threads, max. 100 Tasks in der Queue.<br>
  * threadpool.thread-name-prefix=thread<br>
  * threadpool.thread-priority=5<br>
  * threadpool.core-pool-size=2<br>
@@ -85,6 +81,8 @@ public class ThreadPoolExecutorAutoConfiguration
     @Bean
     public ThreadPoolExecutorFactoryBean executorService()
     {
+        // http://www.nurkiewicz.com/2014/11/executorservice-10-tips-and-tricks.html
+
         String threadNamePrefix = this.executorProperties.getThreadNamePrefix();
         int coreSize = this.executorProperties.getCorePoolSize();
         int maxSize = this.executorProperties.getMaxPoolSize();
@@ -110,8 +108,8 @@ public class ThreadPoolExecutorAutoConfiguration
                 // Annahme, einfach 1/4 von maxSize.
                 coreSize = Math.max(maxSize / 4, 1);
 
-                LOGGER.info("Resize ThreadPool because DataSource dependency: old coreSize/maxSize={}/{}, new coreSize/maxSize={}/{}",
-                        oldCore, oldMax, coreSize, maxSize);
+                LOGGER.info("Resize ThreadPool because DataSource dependency: old coreSize/maxSize={}/{}, new coreSize/maxSize={}/{}", oldCore, oldMax,
+                        coreSize, maxSize);
             }
         }
 
@@ -167,29 +165,9 @@ public class ThreadPoolExecutorAutoConfiguration
     //
     // LOGGER.info(sb.toString(), threadNamePrefix, coreSize, maxSize, queueCapacity, threadPriority, keepAliveSeconds);
     //
-    // BlockingQueue<Runnable> queue = null;
+    // SimpleExecutorService executor = new SimpleExecutorService(coreSize, maxSize, queueCapacity, keepAliveSeconds, TimeUnit.SECONDS);
     //
-    // if (queueCapacity > 0)
-    // {
-    // queue = new TunedLinkedBlockingQueue<>(queueCapacity);
-    // }
-    // else
-    // {
-    // queue = new SynchronousQueue<>();
-    // }
-    //
-    // ThreadFactory tf = new PIMThreadFactory(threadNamePrefix, threadPriority);
-    // ThreadPoolExecutor tpe = new ThreadPoolExecutor(coreSize, maxSize, keepAliveSeconds, TimeUnit.SECONDS, queue, tf, reh);
-    //
-    // if (queue instanceof TunedLinkedBlockingQueue)
-    // {
-    // TunedLinkedBlockingQueue<Runnable> tlbq = (TunedLinkedBlockingQueue<Runnable>) queue;
-    //
-    // tlbq.setCurrentSize(tpe::getPoolSize);
-    // tlbq.setMaxSize(tpe::getMaximumPoolSize);
-    // }
-    //
-    // ExecutorService executorService = Executors.unconfigurableExecutorService(tpe);
+    // ExecutorService executorService = Executors.unconfigurableExecutorService(executor);
     //
     // return executorService;
     // }

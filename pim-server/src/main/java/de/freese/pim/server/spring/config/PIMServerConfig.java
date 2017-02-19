@@ -86,4 +86,32 @@ public class PIMServerConfig
     //
     // return flyway;
     // }
+
+    // /**
+    // * @return {@link EmbeddedServletContainerCustomizer}
+    // */
+    // @Bean
+    // public EmbeddedServletContainerCustomizer tomcatCustomizer()
+    // {
+    // return container -> {
+    // if (container instanceof TomcatEmbeddedServletContainerFactory)
+    // {
+    // ((TomcatEmbeddedServletContainerFactory) container).addConnectorCustomizers(gracefulShutdown());
+    // }
+    // };
+    // }
+
+    // /**
+    // * @return {@link EmbeddedServletContainerCustomizer}
+    // */
+    // @Bean
+    // public EmbeddedServletContainerCustomizer jettyCustomizer()
+    // {
+    // return container -> {
+    // if (container instanceof JettyEmbeddedServletContainerFactory)
+    // {
+    // ((JettyEmbeddedServletContainerFactory) container).setThreadPool(threadPool);
+    // }
+    // };
+    // }
 }
