@@ -7,13 +7,15 @@ package de.freese.pim.common.utils.io;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
+
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
-import de.freese.pim.common.concurrent.SimpleExecutorService;
+
+import de.freese.pim.common.concurrent.SimpleExecutorService2;
 
 /**
  * @author Thomas Freese
@@ -57,7 +59,7 @@ public class TestSimpleThreadPool
         @Override
         public Void call() throws Exception
         {
-            // System.out.println("TestSimpleThreadPool.SleepingCallable.call(): " + this.number);
+            System.out.println("TestSimpleThreadPool.SleepingCallable.call(): " + this.number);
             Thread.sleep(this.sleepTimeInMillis);
 
             return null;
@@ -67,7 +69,7 @@ public class TestSimpleThreadPool
     /**
      *
      */
-    private static SimpleExecutorService executorService = null;
+    private static SimpleExecutorService2 executorService = null;
 
     /**
     *
@@ -86,7 +88,7 @@ public class TestSimpleThreadPool
     @BeforeClass
     public static void beforeClass()
     {
-        executorService = new SimpleExecutorService(3, 6, 10, 2, TimeUnit.SECONDS);
+        executorService = new SimpleExecutorService2(3, 6, 10, 2, TimeUnit.SECONDS, "test-", Thread.MIN_PRIORITY);
     }
 
     /**
@@ -101,33 +103,34 @@ public class TestSimpleThreadPool
      * @throws Exception Falls was schief geht.
      */
     @Test
-    public void test010StartSize() throws Exception
+    public void test010() throws Exception
     {
         Assert.assertEquals(3, executorService.getCoreSize());
-        Assert.assertEquals(3, executorService.getSize());
+        Assert.assertEquals(3, executorService.getPoolSize());
         Assert.assertEquals(6, executorService.getMaxSize());
+        Assert.assertEquals(0, executorService.getWorkingSize());
+        Assert.assertEquals(3, executorService.getIdleSize());
     }
 
     /**
      * @throws Exception Falls was schief geht.
      */
     @Test
-    public void test020Size() throws Exception
+    public void test020() throws Exception
     {
-        Assert.assertEquals(0, executorService.getSizeThreadsWorking());
-        Assert.assertEquals(3, executorService.getSizeThreadsIdle());
-
         Future<Void> future1 = executorService.submit(new SleepingCallable(1, 200, TimeUnit.MILLISECONDS));
         Thread.sleep(100);
-        Assert.assertEquals(1, executorService.getSizeThreadsWorking());
-        Assert.assertEquals(2, executorService.getSizeThreadsIdle());
+        Assert.assertEquals(3, executorService.getPoolSize());
+        Assert.assertEquals(1, executorService.getWorkingSize());
+        Assert.assertEquals(2, executorService.getIdleSize());
         future1.get();
 
         Future<Void> future2 = executorService.submit(new SleepingCallable(2, 200, TimeUnit.MILLISECONDS));
         Future<Void> future3 = executorService.submit(new SleepingCallable(3, 200, TimeUnit.MILLISECONDS));
         Thread.sleep(100);
-        Assert.assertEquals(2, executorService.getSizeThreadsWorking());
-        Assert.assertEquals(1, executorService.getSizeThreadsIdle());
+        Assert.assertEquals(3, executorService.getPoolSize());
+        Assert.assertEquals(2, executorService.getWorkingSize());
+        Assert.assertEquals(1, executorService.getIdleSize());
         future2.get();
         future3.get();
     }
@@ -136,10 +139,11 @@ public class TestSimpleThreadPool
      * @throws Exception Falls was schief geht.
      */
     @Test
-    public void test030Size() throws Exception
+    public void test030() throws Exception
     {
-        Assert.assertEquals(0, executorService.getSizeThreadsWorking());
-        Assert.assertEquals(3, executorService.getSizeThreadsIdle());
+        Assert.assertEquals(3, executorService.getPoolSize());
+        Assert.assertEquals(0, executorService.getWorkingSize());
+        Assert.assertEquals(3, executorService.getIdleSize());
 
         Future<Void> future1 = executorService.submit(new SleepingCallable(1, 200, TimeUnit.MILLISECONDS));
         Future<Void> future2 = executorService.submit(new SleepingCallable(2, 200, TimeUnit.MILLISECONDS));
@@ -148,9 +152,9 @@ public class TestSimpleThreadPool
         Thread.sleep(100);
         Future<Void> future4 = executorService.submit(new SleepingCallable(4, 200, TimeUnit.MILLISECONDS));
 
-        Assert.assertEquals(3, executorService.getCoreSize());
-        Assert.assertEquals(4, executorService.getSize());
-        Assert.assertEquals(6, executorService.getMaxSize());
+        Assert.assertEquals(4, executorService.getPoolSize());
+        Assert.assertEquals(3, executorService.getWorkingSize());
+        Assert.assertEquals(1, executorService.getIdleSize());
 
         future1.get();
         future2.get();
@@ -159,6 +163,43 @@ public class TestSimpleThreadPool
 
         // keepAliveTime
         Thread.sleep(TimeUnit.SECONDS.toMillis(3));
-        Assert.assertEquals(3, executorService.getSize());
+        Assert.assertEquals(3, executorService.getPoolSize());
+        Assert.assertEquals(0, executorService.getWorkingSize());
+        Assert.assertEquals(3, executorService.getIdleSize());
+    }
+
+    /**
+     * Hier muss in der ausgabe die gleichen Logs kommen, da Thread-4 wiederverwendet wird.
+     *
+     * @throws Exception Falls was schief geht.
+     */
+    @Test
+    public void test040() throws Exception
+    {
+        Assert.assertEquals(3, executorService.getPoolSize());
+        Assert.assertEquals(0, executorService.getWorkingSize());
+        Assert.assertEquals(3, executorService.getIdleSize());
+
+        Future<Void> future1 = executorService.submit(new SleepingCallable(1, 200, TimeUnit.MILLISECONDS));
+        Future<Void> future2 = executorService.submit(new SleepingCallable(2, 200, TimeUnit.MILLISECONDS));
+        Future<Void> future3 = executorService.submit(new SleepingCallable(3, 200, TimeUnit.MILLISECONDS));
+
+        Thread.sleep(100);
+        Future<Void> future4 = executorService.submit(new SleepingCallable(4, 200, TimeUnit.MILLISECONDS));
+
+        Assert.assertEquals(4, executorService.getPoolSize());
+        Assert.assertEquals(3, executorService.getWorkingSize());
+        Assert.assertEquals(1, executorService.getIdleSize());
+
+        future1.get();
+        future2.get();
+        future3.get();
+        future4.get();
+
+        // keepAliveTime
+        Thread.sleep(TimeUnit.SECONDS.toMillis(3));
+        Assert.assertEquals(3, executorService.getPoolSize());
+        Assert.assertEquals(0, executorService.getWorkingSize());
+        Assert.assertEquals(3, executorService.getIdleSize());
     }
 }

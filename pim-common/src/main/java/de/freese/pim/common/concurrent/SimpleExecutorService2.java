@@ -40,41 +40,35 @@ import java.util.concurrent.locks.ReentrantLock;
  * @author Thomas Freese
  * @see "http://tutorials.jenkov.com/java-concurrency/thread-pools.html"
  */
-public class SimpleExecutorService extends AbstractExecutorService
+public class SimpleExecutorService2 extends AbstractExecutorService
 {
     /**
      * @author Thomas Freese
      */
-    private final class WorkerThread extends Thread
+    private final class Worker implements Runnable
     {
         /**
-         * Gehört dieser Thread zu den Core-Threads ?
+         * Erstellt ein neues {@link Worker} Object.
          */
-        boolean isCoreThread = false;
-
-        /**
-         * Erstellt ein neues {@link WorkerThread} Object.
-         *
-         * @param threadGroup {@link ThreadGroup}
-         * @param name String
-         */
-        public WorkerThread(final ThreadGroup threadGroup, final String name)
+        public Worker()
         {
-            super(threadGroup, name);
+            super();
         }
 
         /**
-         * @see java.lang.Thread#run()
+         * @see java.lang.Runnable#run()
          */
         @Override
         public void run()
         {
-            while (!isInterrupted())
+            Thread thread = Thread.currentThread();
+
+            while (!thread.isInterrupted())
             {
-                runWorker(this);
+                runWorker(thread);
             }
 
-            removeWorker(this);
+            removeWorker(thread);
         }
     }
 
@@ -118,7 +112,7 @@ public class SimpleExecutorService extends AbstractExecutorService
     /**
     *
     */
-    private Set<Thread> workers = new TreeSet<>(Comparator.comparing(Thread::getName));
+    private Set<Thread> threads = new TreeSet<>(Comparator.comparing(Thread::getName));
 
     /**
     *
@@ -131,7 +125,7 @@ public class SimpleExecutorService extends AbstractExecutorService
     private final BlockingQueue<Runnable> workQueue;
 
     /**
-     * Erstellt ein neues {@link SimpleExecutorService} Object.<br>
+     * Erstellt ein neues {@link SimpleExecutorService2} Object.<br>
      * <br>
      * Defaults:<br>
      * coreSize = {@link Runtime#availableProcessors()}<br>
@@ -145,14 +139,14 @@ public class SimpleExecutorService extends AbstractExecutorService
      * maxSize = 8<br>
      * queueSize = 80<br>
      */
-    public SimpleExecutorService()
+    public SimpleExecutorService2()
     {
         this(Runtime.getRuntime().availableProcessors(), Runtime.getRuntime().availableProcessors() * 2,
                 Runtime.getRuntime().availableProcessors() * 2 * 10, 60, TimeUnit.SECONDS);
     }
 
     /**
-     * Erstellt ein neues {@link SimpleExecutorService} Object.
+     * Erstellt ein neues {@link SimpleExecutorService2} Object.
      *
      * @param coreSize int
      * @param maxSize int
@@ -160,14 +154,14 @@ public class SimpleExecutorService extends AbstractExecutorService
      * @param keepAliveTime int
      * @param timeUnit {@link TimeUnit}
      */
-    public SimpleExecutorService(final int coreSize, final int maxSize, final int queueSize, final int keepAliveTime,
+    public SimpleExecutorService2(final int coreSize, final int maxSize, final int queueSize, final int keepAliveTime,
             final TimeUnit timeUnit)
     {
         this(coreSize, maxSize, queueSize, keepAliveTime, timeUnit, "thread-");
     }
 
     /**
-     * Erstellt ein neues {@link SimpleExecutorService} Object.
+     * Erstellt ein neues {@link SimpleExecutorService2} Object.
      *
      * @param coreSize int
      * @param maxSize int
@@ -176,14 +170,14 @@ public class SimpleExecutorService extends AbstractExecutorService
      * @param timeUnit {@link TimeUnit}
      * @param threadNamePrefix String
      */
-    public SimpleExecutorService(final int coreSize, final int maxSize, final int queueSize, final int keepAliveTime,
+    public SimpleExecutorService2(final int coreSize, final int maxSize, final int queueSize, final int keepAliveTime,
             final TimeUnit timeUnit, final String threadNamePrefix)
     {
         this(coreSize, maxSize, queueSize, keepAliveTime, timeUnit, threadNamePrefix, Thread.NORM_PRIORITY);
     }
 
     /**
-     * Erstellt ein neues {@link SimpleExecutorService} Object.
+     * Erstellt ein neues {@link SimpleExecutorService2} Object.
      *
      * @param coreSize int
      * @param maxSize int
@@ -193,7 +187,7 @@ public class SimpleExecutorService extends AbstractExecutorService
      * @param threadNamePrefix String
      * @param threadPriority int
      */
-    public SimpleExecutorService(final int coreSize, final int maxSize, final int queueSize, final int keepAliveTime,
+    public SimpleExecutorService2(final int coreSize, final int maxSize, final int queueSize, final int keepAliveTime,
             final TimeUnit timeUnit, final String threadNamePrefix, final int threadPriority)
     {
         if (coreSize <= 0)
@@ -238,8 +232,8 @@ public class SimpleExecutorService extends AbstractExecutorService
 
             String threadName = String.format("%s%02d", threadNamePrefix, this.threadNumber.incrementAndGet());
 
-            // Thread thread = new Thread(threadGroup, threadName);
-            Thread thread = new WorkerThread(threadGroup, threadName);
+            Thread thread = new Thread(threadGroup, task, threadName);
+            // Thread thread = new WorkerThread(threadGroup, threadName);
 
             if (thread.isDaemon())
             {
@@ -257,7 +251,7 @@ public class SimpleExecutorService extends AbstractExecutorService
         // CoreWorker starten
         for (int i = 0; i < coreSize; i++)
         {
-            Thread thread = addWorker(true);
+            Thread thread = addWorker();
             thread.start();
         }
     }
@@ -324,7 +318,7 @@ public class SimpleExecutorService extends AbstractExecutorService
                 // - maxSize noch nicht erreicht
                 // - und keine freien Threads zur Verfügung stehen
                 // - und Tasks in der Queue sind
-                Thread thread = addWorker(false);
+                Thread thread = addWorker();
                 thread.start();
             }
         }
@@ -426,7 +420,7 @@ public class SimpleExecutorService extends AbstractExecutorService
         try
         {
             // Interrupt Workers.
-            for (Thread thread : this.workers.toArray(new Thread[0]))
+            for (Thread thread : this.threads.toArray(new Thread[0]))
             {
                 removeWorker(thread);
             }
@@ -460,20 +454,14 @@ public class SimpleExecutorService extends AbstractExecutorService
     /**
      * Erzeugt einen neuen {@link Thread}, startet ihn aber noch nicht.
      *
-     * @param isCoreThread boolean
      * @return {@link Thread}
      */
-    protected Thread addWorker(final boolean isCoreThread)
+    protected Thread addWorker()
     {
-        Thread thread = getThreadFactory().newThread(null);
+        Thread thread = getThreadFactory().newThread(new Worker());
 
-        this.workers.add(thread);
+        this.threads.add(thread);
         this.workersIdle.incrementAndGet();
-
-        if (thread instanceof WorkerThread)
-        {
-            ((WorkerThread) thread).isCoreThread = isCoreThread;
-        }
 
         return thread;
     }
@@ -546,7 +534,7 @@ public class SimpleExecutorService extends AbstractExecutorService
     }
 
     /**
-     * Liefert true, wenn dieser Thread zu den Core-Threads gehört.<br>
+     * Liefert true, wenn der Thread zu den Core-Threads gehört.<br>
      * Diese dürfen nicht entfernt werden.
      *
      * @param thread {@link Thread}
@@ -554,14 +542,7 @@ public class SimpleExecutorService extends AbstractExecutorService
      */
     protected boolean isCoreThread(final Thread thread)
     {
-        if (thread instanceof WorkerThread)
-        {
-            WorkerThread wt = (WorkerThread) thread;
-
-            return wt.isCoreThread;
-        }
-
-        String threadName = thread.getName();
+        String threadName = Thread.currentThread().getName();
 
         // Annahme: PREFIX-N; PREFIX_N
         String[] splits = threadName.split("[-_]");
@@ -589,8 +570,8 @@ public class SimpleExecutorService extends AbstractExecutorService
      */
     protected void removeWorker(final Thread thread)
     {
-        // System.out.println("SimpleExecutorService.WorkerThread.run(): stopped " + thread.getName());
-        this.workers.remove(thread);
+        System.out.println("SimpleExecutorService2.removeWorker(): stopped " + thread.getName());
+        this.threads.remove(thread);
         this.workersIdle.decrementAndGet();
         this.threadNumber.decrementAndGet();
     }
@@ -600,9 +581,8 @@ public class SimpleExecutorService extends AbstractExecutorService
      */
     protected void runWorker(final Thread thread)
     {
-        Runnable task = null;
-
         boolean isCoreThread = isCoreThread(thread);
+        Runnable task = null;
 
         while ((task = getTask(isCoreThread)) != null)
         {
@@ -613,6 +593,7 @@ public class SimpleExecutorService extends AbstractExecutorService
             {
                 beforeExecute(thread, task);
 
+                System.out.println("SimpleExecutorService2.runWorker(): thread=" + thread.getName() + "; task=" + task.toString());
                 task.run();
             }
             catch (RuntimeException x)
