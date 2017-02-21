@@ -6,11 +6,6 @@ package de.freese.pim.common;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ForkJoinPool;
-import java.util.concurrent.ForkJoinPool.ForkJoinWorkerThreadFactory;
-import java.util.concurrent.ForkJoinWorkerThread;
-import java.util.concurrent.atomic.AtomicInteger;
-
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
@@ -26,63 +21,14 @@ import org.junit.runners.MethodSorters;
 public class TestMisc
 {
     /**
-     * @author Thomas Freese (EFREEST / AuVi)
-     */
-    public static class TestForkJoinWorkerThreadFactory implements ForkJoinWorkerThreadFactory
-    {
-        /**
-         * @author Thomas Freese (EFREEST / AuVi)
-         */
-        private static class TestForkJoinWorkerThread extends ForkJoinWorkerThread
-        {
-            /**
-             * Erzeugt eine neue Instanz von {@link TestForkJoinWorkerThread}
-             *
-             * @param pool {@link ForkJoinPool}
-             */
-            public TestForkJoinWorkerThread(final ForkJoinPool pool)
-            {
-                super(pool);
-            }
-        }
-
-        /**
-         *
-         */
-        private final AtomicInteger counter = new AtomicInteger(0);
-
-        /**
-         * Erzeugt eine neue Instanz von {@link TestForkJoinWorkerThreadFactory}
-         */
-        public TestForkJoinWorkerThreadFactory()
-        {
-            super();
-        }
-
-        /**
-         * @see java.util.concurrent.ForkJoinPool.ForkJoinWorkerThreadFactory#newThread(java.util.concurrent.ForkJoinPool)
-         */
-        @Override
-        public ForkJoinWorkerThread newThread(final ForkJoinPool pool)
-        {
-            ForkJoinWorkerThread thread = new TestForkJoinWorkerThread(pool);
-            thread.setName("fjct-" + this.counter.incrementAndGet());
-
-            return thread;
-        }
-    }
-
-    /**
      *
      */
     @BeforeClass
     public static void beforeclass()
     {
-        System.setProperty("java.util.concurrent.ForkJoinPool.common.parallelism",
-                Integer.toString(Runtime.getRuntime().availableProcessors() * 2));
+        System.setProperty("java.util.concurrent.ForkJoinPool.common.parallelism", Integer.toString(Runtime.getRuntime().availableProcessors() * 2));
 
-        System.setProperty("java.util.concurrent.ForkJoinPool.common.threadFactory",
-                "de.freese.pim.common.TestMisc$TestForkJoinWorkerThreadFactory");
+        System.setProperty("java.util.concurrent.ForkJoinPool.common.threadFactory", "de.freese.pim.common.concurrent.PIMForkJoinWorkerThreadFactory");
     }
 
     /**

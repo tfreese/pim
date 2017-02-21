@@ -4,11 +4,13 @@ package de.freese.pim.gui.mail;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
-
+import java.util.concurrent.Executor;
+import java.util.stream.Stream;
+import org.apache.commons.collections4.ListUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import de.freese.pim.gui.PIMApplication;
+import de.freese.pim.gui.mail.model.FXMail;
 import de.freese.pim.gui.mail.model.FXMailAccount;
 import de.freese.pim.gui.mail.model.FXMailFolder;
 import de.freese.pim.gui.mail.service.FXMailService;
@@ -48,8 +50,7 @@ public class InitMailAPITask extends Task<List<FXMailFolder>>
      * @param mailService {@link FXMailService}
      * @param account {@link FXMailAccount}
      */
-    public InitMailAPITask(final TreeView<Object> treeView, final TreeItem<Object> parent, final FXMailService mailService,
-            final FXMailAccount account)
+    public InitMailAPITask(final TreeView<Object> treeView, final TreeItem<Object> parent, final FXMailService mailService, final FXMailAccount account)
     {
         super();
 
@@ -61,8 +62,7 @@ public class InitMailAPITask extends Task<List<FXMailFolder>>
         this.mailService = mailService;
         this.account = account;
 
-        setOnSucceeded(event ->
-        {
+        setOnSucceeded(event -> {
             List<FXMailFolder> folders = getValue();
 
             account.getFolderSubscribed().addListener(new TreeFolderListChangeListener(parent));
@@ -70,97 +70,14 @@ public class InitMailAPITask extends Task<List<FXMailFolder>>
 
             LOGGER.info("Initialisation of {} finished", account.getMail());
 
-            Platform.runLater(() -> treeView.refresh());
-
-            // List<List<FXMailFolder>> partitions = ListUtils.partition(folders, folders.size() / 3);
-            //
-            // for (List<FXMailFolder> partition : partitions)
-            // {
-            // // Laden der Mails.
-            // PIMApplication.getExecutorService().execute(new LoadMailsTask(treeView, partition, mailService, account));
-            // }
-            CompletableFuture<Void> master = CompletableFuture.completedFuture(null);
-            // List<CompletableFuture<Void>> cfs = new ArrayList<>();
-
-            for (FXMailFolder mf : folders)
-            {
-                // @formatter:off
-                CompletableFuture<Void> cf = CompletableFuture.supplyAsync(() ->
-                {
-                    return this.mailService.loadMails(mf.getAccountID(), mf.getID(), mf.getFullName());
-                }, PIMApplication.getExecutorService())
-                        .exceptionally(ex ->
-                        {
-                            LOGGER.error(null, ex);
-                            new ErrorDialog().forThrowable(ex).showAndWait();
-                            return null;
-                        })
-                        .thenAccept(mails ->
-                        {
-                            LOGGER.info("Load Mails finished: account={}, folder={}", account.getMail(), mf.getFullName());
-
-                            if (mails != null)
-                            {
-                                mf.getMails().addAll(mails);
-                            }
-                        });
-                // @formatter:on
-
-                // Merge
-                master = CompletableFuture.allOf(master, cf);
-                // cfs.add(cf);
-            }
-
-            master.thenAccept(result -> treeView.refresh());
-            // CompletableFuture.allOf(cfs.toArray(new CompletableFuture[0])).thenAccept(result -> treeView.refresh());
-
-            // @formatter:off
-//            folders.parallelStream()
-//                .onClose(() ->{
-//                    System.out.println("InitMailAPITask.InitMailAPITask(): "+Thread.currentThread().getName());
-//                    treeView.refresh();})
-//                .forEach(mf ->
-//                {
-//                    List<FXMail> mails = this.mailService.loadMails(mf.getAccountID(), mf.getID(), mf.getFullName());
-//
-//                    LOGGER.info("Load Mails finished: account={}, folder={}", this.account.getMail(), mf.getFullName());
-//
-//                    Platform.runLater(() -> mf.getMails().addAll(mails));
-//                });
-//            // @formatter:on
-
-            //
-            // treeView.refresh();
-
-            // try
-            // {
-            // Map<FXMailFolder, Future<List<FXMail>>> map = new LinkedHashMap<>();
-            //
-            // for (FXMailFolder mf : folders)
-            // {
-            // Future<List<FXMail>> future = this.mailService.loadMails2(mf.getAccountID(), mf.getID(), mf.getFullName());
-            // map.put(mf, future);
-            // }
-            //
-            // for (Entry<FXMailFolder, Future<List<FXMail>>> entry : map.entrySet())
-            // {
-            // FXMailFolder mf = entry.getKey();
-            // Future<List<FXMail>> future = entry.getValue();
-            //
-            // List<FXMail> mails = future.get();
-            // LOGGER.info("Load Mails finished: account={}, folder={}", this.account.getMail(), mf.getFullName());
-            //
-            // mf.getMails().addAll(mails);
-            // }
-            // }
-            // catch (Exception ex)
-            // {
-            // throw new RuntimeException(ex);
-            // }
+            treeView.refresh();
+            // Platform.runLater(() -> treeView.refresh());
+            loadMailsByPartitions(folders, treeView);
+            // loadMailsByCompletableFuture(folders, treeView);
+            // loadMailsByParallelStream(folders, treeView);
         });
 
-        setOnFailed(event ->
-        {
+        setOnFailed(event -> {
             Throwable th = getException();
 
             LOGGER.error(null, th);
@@ -182,5 +99,99 @@ public class InitMailAPITask extends Task<List<FXMailFolder>>
         List<FXMailFolder> folders = this.mailService.loadFolder(this.account.getID());
 
         return folders;
+    }
+
+    /**
+     * @param folders {@link List}
+     * @param treeView {@link TreeView}
+     */
+    protected void loadMailsByCompletableFuture(final List<FXMailFolder> folders, final TreeView<Object> treeView)
+    {
+        Executor executor = PIMApplication.getExecutorService();
+        CompletableFuture<Void> master = CompletableFuture.completedFuture(null);
+
+        for (FXMailFolder mf : folders)
+        {
+            // @formatter:off
+            CompletableFuture<Void> cf = CompletableFuture.supplyAsync(() ->
+            {
+                return this.mailService.loadMails(mf.getAccountID(), mf.getID(), mf.getFullName());
+            }, executor)
+            .exceptionally(ex ->
+            {
+                LOGGER.error(null, ex);
+                new ErrorDialog().forThrowable(ex).showAndWait();
+                return null;
+            })
+            .thenAccept(mails ->
+            {
+                Runnable task = ()->
+                {
+                    LOGGER.info("Load Mails finished: account={}, folder={}", this.account.getMail(), mf.getFullName());
+
+                    if (mails != null)
+                    {
+                        mf.getMails().addAll(mails);
+                    }
+                };
+
+//                task.run();
+                Platform.runLater(task);
+            });
+            // @formatter:on
+
+            // Merge
+            master = CompletableFuture.allOf(master, cf);
+        }
+
+        master.thenAccept(result -> Platform.runLater(() -> treeView.refresh()));
+    }
+
+    /**
+     * @param folders {@link List}
+     * @param treeView {@link TreeView}
+     */
+    protected void loadMailsByParallelStream(final List<FXMailFolder> folders, final TreeView<Object> treeView)
+    {
+        // @formatter:off
+        try(Stream<FXMailFolder> stream =folders.parallelStream())
+        {
+            stream.onClose(() -> Platform.runLater(() -> treeView.refresh()))
+            .forEach(mf ->
+            {
+                List<FXMail> mails = this.mailService.loadMails(mf.getAccountID(), mf.getID(), mf.getFullName());
+
+                Runnable task = ()->
+                {
+                    LOGGER.info("Load Mails finished: account={}, folder={}", this.account.getMail(), mf.getFullName());
+
+                    if (mails != null)
+                    {
+                        mf.getMails().addAll(mails);
+                    }
+                };
+
+                Platform.runLater(task);
+            });
+        }
+        // @formatter:on
+    }
+
+    /**
+     * @param folders {@link List}
+     * @param treeView {@link TreeView}
+     */
+    protected void loadMailsByPartitions(final List<FXMailFolder> folders, final TreeView<Object> treeView)
+    {
+        Executor executor = PIMApplication.getExecutorService();
+
+        int partitionSize = Math.max(1, folders.size() / Runtime.getRuntime().availableProcessors());
+        List<List<FXMailFolder>> partitions = ListUtils.partition(folders, partitionSize);
+
+        for (List<FXMailFolder> partition : partitions)
+        {
+            // Laden der Mails.
+            executor.execute(new LoadMailsTask(treeView, partition, this.mailService, this.account));
+        }
     }
 }

@@ -2,7 +2,6 @@
 package de.freese.pim.server.mail.service;
 
 import java.util.List;
-
 import de.freese.pim.common.model.mail.MailContent;
 import de.freese.pim.common.utils.io.IOMonitor;
 import de.freese.pim.server.mail.api.MailAPI;
@@ -40,7 +39,7 @@ public interface MailService
      * @param accountIDs long[]
      * @throws Exception Falls was schief geht.
      */
-    public void disconnectAccounts(long... accountIDs) throws Exception;
+    public void disconnectAccounts(long...accountIDs) throws Exception;
 
     /**
      * Liefert alle MailAccounts, sortiert nach MAIL.
@@ -101,28 +100,6 @@ public interface MailService
      * @throws Exception Falls was schief geht.
      */
     public List<Mail> loadMails(long accountID, long folderID, String folderFullName) throws Exception;
-
-    // /**
-    // * Lädt die Mails des Folders vom Provider und aus der DB.
-    // *
-    // * @param accountID long
-    // * @param folderID long
-    // * @param folderFullName String
-    // * @return {@link List}
-    // * @throws Exception Falls was schief geht.
-    // */
-    // public Future<List<Mail>> loadMails2(long accountID, long folderID, String folderFullName) throws Exception;
-
-    // /**
-    // * Lädt die Mails des Folders vom Provider und aus der DB.
-    // *
-    // * @param accountID long
-    // * @param folderID long
-    // * @param folderFullName String
-    // * @return {@link List}
-    // * @throws Exception Falls was schief geht.
-    // */
-    // public DeferredResult<List<Mail>> loadMails3(long accountID, long folderID, String folderFullName) throws Exception;
 
     /**
      * Testet die Verbindung zu einem MailAccount und liefert bei Erfolg dessen Ordner.

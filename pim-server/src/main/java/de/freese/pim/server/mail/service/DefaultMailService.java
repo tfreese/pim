@@ -44,7 +44,6 @@ import de.freese.pim.server.service.AbstractService;
  *
  * @author Thomas Freese
  */
-// @Service("mailService")
 @RestController("mailService")
 @RequestMapping(path = "/mail", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 public class DefaultMailService extends AbstractService implements MailService, BeanFactoryAware
@@ -53,11 +52,6 @@ public class DefaultMailService extends AbstractService implements MailService, 
      *
      */
     private BeanFactory beanFactory = null;
-
-    // /**
-    // *
-    // */
-    // private final Semaphore semaphore = new Semaphore(ISettingsService.MAX_ACTIVE_CONNECTIONS.get(), true);
 
     /**
     *
@@ -99,8 +93,6 @@ public class DefaultMailService extends AbstractService implements MailService, 
 
         ConfigurableListableBeanFactory bf = (ConfigurableListableBeanFactory) getBeanFactory();
         bf.registerSingleton("mailAPI-" + account.getID(), mailAPI);
-
-        // MAIL_API_MAP.put(account.getID(), mailAPI);
 
         mailAPI.connect();
     }
@@ -323,10 +315,6 @@ public class DefaultMailService extends AbstractService implements MailService, 
                                 @PathVariable("folderFullName") final String folderFullName)
         throws Exception
     {
-        // this.semaphore.acquire();
-
-        // try
-        // {
         getLogger().info("Load Mails: account={}, folder={}", accountID, folderFullName);
 
         MailAPI mailAPI = getMailAPI(accountID);
@@ -392,11 +380,6 @@ public class DefaultMailService extends AbstractService implements MailService, 
         mails.stream().forEach(m -> m.setFolderFullName(folderFullName));
 
         return mails;
-        // }
-        // finally
-        // {
-        // this.semaphore.release();
-        // }
     }
 
     /**
@@ -416,19 +399,6 @@ public class DefaultMailService extends AbstractService implements MailService, 
     {
         this.mailDAO = mailDAO;
     }
-
-    // /**
-    // * @see de.freese.pim.server.mail.service.MailService#loadMails2(long, long, java.lang.String)
-    // */
-    // @Override
-    // @Async // ("executorService")
-    // @Transactional
-    // public Future<List<Mail>> loadMails2(final long accountID, final long folderID, final String folderFullName) throws Exception
-    // {
-    // List<Mail> mails = loadMails(accountID, folderID, folderFullName);
-    //
-    // return new AsyncResult<>(mails);
-    // }
 
     // /**
     // * {@link DeferredResult} entkoppelt den Server Thread von der Ausführung.

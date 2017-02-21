@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ScheduledExecutorService;
-
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
@@ -24,12 +23,9 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.core.io.Resource;
 import org.springframework.scheduling.annotation.EnableScheduling;
-
 import com.sun.javafx.application.LauncherImpl;
-
 import de.freese.pim.gui.main.MainController;
 import de.freese.pim.gui.utils.FXUtils;
-import de.freese.pim.gui.utils.PIMFXThreadGroup;
 import de.freese.pim.gui.view.ErrorDialog;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -65,12 +61,12 @@ public class PIMApplication extends Application implements ApplicationContextAwa
     /**
      *
      */
-    public static final Logger LOGGER = LoggerFactory.getLogger(PIMApplication.class);
+    private static ApplicationContext applicationContext = null;
 
     /**
      *
      */
-    private static ApplicationContext applicationContext = null;
+    public static final Logger LOGGER = LoggerFactory.getLogger(PIMApplication.class);
 
     /**
      *
@@ -96,6 +92,22 @@ public class PIMApplication extends Application implements ApplicationContextAwa
     public static ApplicationContext getApplicationContext()
     {
         return applicationContext;
+    }
+
+    /**
+     * Liefert die möglichen Optionen der Kommandozeile.<br>
+     * Dies sind die JRE Programm Argumente.
+     *
+     * @return {@link Options}
+     */
+    private static Options getCommandOptions()
+    {
+        // OptionGroup group = new OptionGroup();
+
+        Options options = new Options();
+        // options.addOptionGroup(group);
+
+        return options;
     }
 
     /**
@@ -144,8 +156,8 @@ public class PIMApplication extends Application implements ApplicationContextAwa
     }
 
     /**
-     * The main() method is ignored in correctly deployed JavaFX application. main() serves only as fallback in case the application can not
-     * be launched through deployment artifacts, e.g., in IDEs with limited FX support. NetBeans ignores main().
+     * The main() method is ignored in correctly deployed JavaFX application. main() serves only as fallback in case the application can not be launched through
+     * deployment artifacts, e.g., in IDEs with limited FX support. NetBeans ignores main().
      *
      * @param args the command line arguments
      */
@@ -182,27 +194,29 @@ public class PIMApplication extends Application implements ApplicationContextAwa
 
         // System.setProperty("org.slf4j.simpleLogger.log.de.freese.pim", "DEBUG");
         // SysOutOverSLF4J.sendSystemOutAndErrToSLF4J();
-        Thread.setDefaultUncaughtExceptionHandler((t, ex) ->
-        {
+        Thread.setDefaultUncaughtExceptionHandler((t, ex) -> {
             LOGGER.error("***Default exception handler***");
             LOGGER.error(null, ex);
 
             new ErrorDialog().forThrowable(ex).showAndWait();
         });
 
-        // Eigene ThreadGroup für Handling von Runtime-Exceptions.
-        PIMFXThreadGroup threadGroup = new PIMFXThreadGroup();
-
-        // Kein Thread des gesamten Clients kann eine höhere Prio haben.
-        threadGroup.setMaxPriority(Thread.NORM_PRIORITY + 1);
-
-        Thread thread = new Thread(threadGroup, () ->
-        {
+        Runnable task = () -> {
             // launch(args);
             LauncherImpl.launchApplication(PIMApplication.class, PIMPreloader.class, args);
-        }, "PIM-Startup");
-        // thread.setDaemon(false);
-        thread.start();
+        };
+
+        task.run();
+
+        // // Eigene ThreadGroup für Handling von Runtime-Exceptions.
+        // PIMFXThreadGroup threadGroup = new PIMFXThreadGroup();
+        //
+        // // Kein Thread des gesamten Clients kann eine höhere Prio haben.
+        // threadGroup.setMaxPriority(Thread.NORM_PRIORITY + 1);
+        //
+        // Thread thread = new Thread(threadGroup, task, "PIM-Startup");
+        // // thread.setDaemon(false);
+        // thread.start();
     }
 
     /**
@@ -211,22 +225,6 @@ public class PIMApplication extends Application implements ApplicationContextAwa
     public static void unblockGUI()
     {
         FXUtils.unblockGUI(getMainWindow());
-    }
-
-    /**
-     * Liefert die möglichen Optionen der Kommandozeile.<br>
-     * Dies sind die JRE Programm Argumente.
-     *
-     * @return {@link Options}
-     */
-    private static Options getCommandOptions()
-    {
-        // OptionGroup group = new OptionGroup();
-
-        Options options = new Options();
-        // options.addOptionGroup(group);
-
-        return options;
     }
 
     /**
@@ -390,12 +388,10 @@ public class PIMApplication extends Application implements ApplicationContextAwa
         primaryStage.setHeight(screenBounds.getHeight() - 200);
 
         // After the app is ready, show the stage
-        this.ready.addListener((observable, oldValue, newValue) ->
-        {
+        this.ready.addListener((observable, oldValue, newValue) -> {
             if (Boolean.TRUE.equals(newValue))
             {
-                Platform.runLater(() ->
-                {
+                Platform.runLater(() -> {
                     primaryStage.show();
 
                     // System.setOut(new PrintStream(new TextAreaOutputStream(MainView.LOG_TEXT_AREA)));

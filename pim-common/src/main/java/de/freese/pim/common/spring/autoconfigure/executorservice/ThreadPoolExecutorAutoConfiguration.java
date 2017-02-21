@@ -3,13 +3,9 @@ package de.freese.pim.common.spring.autoconfigure.executorservice;
 
 import java.util.Optional;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.RejectedExecutionHandler;
-import java.util.concurrent.TimeUnit;
-
 import javax.annotation.Resource;
 import javax.sql.DataSource;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -18,15 +14,13 @@ import org.springframework.boot.autoconfigure.jdbc.metadata.DataSourcePoolMetada
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-import de.freese.pim.common.concurrent.SimpleExecutorService;
+import org.springframework.scheduling.concurrent.ThreadPoolExecutorFactoryBean;
 
 /**
  * AutoConfiguration für ein {@link ExecutorService}.<br>
  * Nur wenn noch kein {@link ExecutorService} vorhanden ist, wird ein {@link ExecutorService} erzeugt.
  * <p>
- * Beispiel ExecutorService: Threads leben max. 60 Sekunden, wenn es nix zu tun gibt; min. 2, max. 10 Threads, max. 100 Tasks in der
- * Queue.<br>
+ * Beispiel ExecutorService: Threads leben max. 60 Sekunden, wenn es nix zu tun gibt; min. 2, max. 10 Threads, max. 100 Tasks in der Queue.<br>
  * threadpool.thread-name-prefix=thread<br>
  * threadpool.thread-priority=5<br>
  * threadpool.core-pool-size=2<br>
@@ -80,77 +74,14 @@ public class ThreadPoolExecutorAutoConfiguration
         super();
     }
 
-    // /**
-    // * @return {@link ThreadPoolExecutorFactoryBean}
-    // */
-    // @Bean
-    // public ThreadPoolExecutorFactoryBean executorService()
-    // {
-    // // http://www.nurkiewicz.com/2014/11/executorservice-10-tips-and-tricks.html
-    //
-    // String threadNamePrefix = this.executorProperties.getThreadNamePrefix();
-    // int coreSize = this.executorProperties.getCorePoolSize();
-    // int maxSize = this.executorProperties.getMaxPoolSize();
-    // int queueCapacity = this.executorProperties.getQueueCapacity();
-    // int threadPriority = this.executorProperties.getThreadPriority();
-    // int keepAliveSeconds = this.executorProperties.getKeepAliveSeconds();
-    // RejectedExecutionHandler reh = this.executorProperties.getRejectedExecutionHandler();
-    // boolean allowCoreThreadTimeOut = this.executorProperties.isAllowCoreThreadTimeOut();
-    //
-    // if (this.executorProperties.isPoolSizeNotGreaterAsDataSourceMaxActive())
-    // {
-    // // PoolSize orientiert sich an DataSource.
-    // DataSourcePoolMetadata metaData = this.dataSourcePoolMetadataProvider.getDataSourcePoolMetadata(this.dataSource);
-    // int dsMax = Optional.ofNullable(metaData.getMax()).orElse(Integer.MAX_VALUE);
-    //
-    // if ((dsMax > 0) && (maxSize > dsMax))
-    // {
-    // int oldCore = coreSize;
-    // int oldMax = maxSize;
-    //
-    // maxSize = dsMax;
-    //
-    // // Annahme, einfach 1/4 von maxSize.
-    // coreSize = Math.max(maxSize / 4, 1);
-    //
-    // LOGGER.info("Resize ThreadPool because DataSource dependency: old coreSize/maxSize={}/{}, new coreSize/maxSize={}/{}",
-    // oldCore, oldMax, coreSize, maxSize);
-    // }
-    // }
-    //
-    // StringBuilder sb = new StringBuilder();
-    // sb.append("Create ExecutorService with:");
-    // sb.append(" namePrefix={}");
-    // sb.append(", corePoolSize={}");
-    // sb.append(", maxPoolSize={}");
-    // sb.append(", queueCapacity={}");
-    // sb.append(", priority={}");
-    // sb.append(", keepAliveSeconds={}");
-    //
-    // LOGGER.info(sb.toString(), threadNamePrefix, coreSize, maxSize, queueCapacity, threadPriority, keepAliveSeconds);
-    //
-    // ThreadPoolExecutorFactoryBean bean = new ThreadPoolExecutorFactoryBean();
-    // // ThreadPoolExecutorFactoryBean bean = new TunedThreadPoolExecutorFactoryBean();
-    // bean.setCorePoolSize(coreSize);
-    // bean.setMaxPoolSize(maxSize);
-    // bean.setKeepAliveSeconds(keepAliveSeconds);
-    // bean.setQueueCapacity(queueCapacity);
-    // bean.setThreadPriority(threadPriority);
-    // bean.setThreadNamePrefix(threadNamePrefix);
-    // bean.setRejectedExecutionHandler(reh);
-    // bean.setAllowCoreThreadTimeOut(allowCoreThreadTimeOut);
-    //
-    // bean.setExposeUnconfigurableExecutor(true);
-    //
-    // return bean;
-    // }
-
     /**
-     * @return {@link ExecutorService}
+     * @return {@link ThreadPoolExecutorFactoryBean}
      */
-    @Bean(destroyMethod = "shutdownNow")
-    public ExecutorService executorService()
+    @Bean
+    public ThreadPoolExecutorFactoryBean executorService()
     {
+        // http://www.nurkiewicz.com/2014/11/executorservice-10-tips-and-tricks.html
+
         String threadNamePrefix = this.executorProperties.getThreadNamePrefix();
         int coreSize = this.executorProperties.getCorePoolSize();
         int maxSize = this.executorProperties.getMaxPoolSize();
@@ -176,8 +107,8 @@ public class ThreadPoolExecutorAutoConfiguration
                 // Annahme, einfach 1/4 von maxSize.
                 coreSize = Math.max(maxSize / 4, 1);
 
-                LOGGER.info("Resize ThreadPool because DataSource dependency: old coreSize/maxSize={}/{}, new coreSize/maxSize={}/{}",
-                        oldCore, oldMax, coreSize, maxSize);
+                LOGGER.info("Resize ThreadPool because DataSource dependency: old coreSize/maxSize={}/{}, new coreSize/maxSize={}/{}", oldCore, oldMax,
+                        coreSize, maxSize);
             }
         }
 
@@ -192,11 +123,19 @@ public class ThreadPoolExecutorAutoConfiguration
 
         LOGGER.info(sb.toString(), threadNamePrefix, coreSize, maxSize, queueCapacity, threadPriority, keepAliveSeconds);
 
-        SimpleExecutorService executor = new SimpleExecutorService(coreSize, maxSize, queueCapacity, keepAliveSeconds, TimeUnit.SECONDS,
-                threadNamePrefix, threadPriority);
+        // ThreadPoolExecutorFactoryBean bean = new TunedThreadPoolExecutorFactoryBean();
+        ThreadPoolExecutorFactoryBean bean = new ThreadPoolExecutorFactoryBean();
+        bean.setCorePoolSize(coreSize);
+        bean.setMaxPoolSize(maxSize);
+        bean.setKeepAliveSeconds(keepAliveSeconds);
+        bean.setQueueCapacity(queueCapacity);
+        bean.setThreadPriority(threadPriority);
+        bean.setThreadNamePrefix(threadNamePrefix);
+        bean.setRejectedExecutionHandler(reh);
+        bean.setAllowCoreThreadTimeOut(allowCoreThreadTimeOut);
 
-        ExecutorService executorService = Executors.unconfigurableExecutorService(executor);
+        bean.setExposeUnconfigurableExecutor(true);
 
-        return executorService;
+        return bean;
     }
 }

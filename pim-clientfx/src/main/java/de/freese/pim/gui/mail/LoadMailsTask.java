@@ -3,10 +3,8 @@ package de.freese.pim.gui.mail;
 
 import java.util.List;
 import java.util.Objects;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import de.freese.pim.gui.mail.model.FXMail;
 import de.freese.pim.gui.mail.model.FXMailAccount;
 import de.freese.pim.gui.mail.model.FXMailFolder;
@@ -51,8 +49,7 @@ public class LoadMailsTask extends Task<Void>
      * @param mailService {@link FXMailService}
      * @param account {@link FXMailAccount}
      */
-    public LoadMailsTask(final TreeView<Object> treeView, final List<FXMailFolder> folders, final FXMailService mailService,
-            final FXMailAccount account)
+    public LoadMailsTask(final TreeView<Object> treeView, final List<FXMailFolder> folders, final FXMailService mailService, final FXMailAccount account)
     {
         super();
 
@@ -65,12 +62,10 @@ public class LoadMailsTask extends Task<Void>
         this.mailService = mailService;
         this.account = account;
 
-        setOnSucceeded(event ->
-        {
+        setOnSucceeded(event -> {
             treeView.refresh();
         });
-        setOnFailed(event ->
-        {
+        setOnFailed(event -> {
             Throwable th = getException();
 
             LOGGER.error(null, th);
@@ -89,9 +84,16 @@ public class LoadMailsTask extends Task<Void>
         {
             List<FXMail> mails = this.mailService.loadMails(mf.getAccountID(), mf.getID(), mf.getFullName());
 
-            LOGGER.info("Load Mails finished: account={}, folder={}", this.account.getMail(), mf.getFullName());
+            Runnable task = () -> {
+                LOGGER.info("Load Mails finished: account={}, folder={}", this.account.getMail(), mf.getFullName());
 
-            Platform.runLater(() -> mf.getMails().addAll(mails));
+                if (mails != null)
+                {
+                    mf.getMails().addAll(mails);
+                }
+            };
+
+            Platform.runLater(task);
         }
 
         return null;

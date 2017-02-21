@@ -59,9 +59,11 @@ public class PIMThreadFactory implements ThreadFactory
      * @see java.util.concurrent.ThreadFactory#newThread(java.lang.Runnable)
      */
     @Override
-    public Thread newThread(final Runnable r)
+    public Thread newThread(final Runnable task)
     {
-        Thread thread = new Thread(this.threadGroup, r, this.namePrefix + "-" + this.threadNumber.getAndIncrement(), 0);
+        String threadName = String.format("%s%02d", this.namePrefix, this.threadNumber.getAndIncrement());
+
+        Thread thread = new Thread(this.threadGroup, task, threadName);
 
         if (thread.isDaemon())
         {
