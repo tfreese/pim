@@ -8,12 +8,12 @@ import org.apache.commons.lang3.StringUtils;
 
 import de.freese.pim.common.model.mail.MailPort;
 import de.freese.pim.common.model.mail.MailProvider;
+import de.freese.pim.common.utils.Utils;
 import de.freese.pim.gui.PIMApplication;
 import de.freese.pim.gui.mail.model.FXMailAccount;
 import de.freese.pim.gui.mail.model.FXMailFolder;
 import de.freese.pim.gui.mail.service.FXMailService;
 import de.freese.pim.gui.utils.FXUtils;
-import de.freese.pim.server.mail.MailUtils;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.geometry.VPos;
@@ -105,7 +105,7 @@ public class EditMailAccountDialog
 
     /**
      * Legt einen neuen MailAccount an.
-     * 
+     *
      * @param mailService {@link FXMailService}
      * @param bundle {@link ResourceBundle}
      * @return {@link Optional}
@@ -138,7 +138,7 @@ public class EditMailAccountDialog
     {
         StringBuilder message = new StringBuilder();
 
-        String mailRegEx = MailUtils.MAIL_REGEX;
+        String mailRegEx = Utils.MAIL_REGEX;
 
         if (!StringUtils.defaultIfBlank(this.mail.getText(), "").matches(mailRegEx))
         {
@@ -177,7 +177,7 @@ public class EditMailAccountDialog
 
     /**
      * Initialisiert und öffnet den Dialog.
-     * 
+     *
      * @param mailService {@link FXMailService}
      * @param bundle {@link ResourceBundle}
      * @param account {@link FXMailAccount}
@@ -380,7 +380,7 @@ public class EditMailAccountDialog
 
     /**
      * Testet die Mail-Einstellungen.
-     * 
+     *
      * @param mailService {@link FXMailService}
      * @param bean {@link FXMailAccount}
      * @param bundle {@link ResourceBundle}

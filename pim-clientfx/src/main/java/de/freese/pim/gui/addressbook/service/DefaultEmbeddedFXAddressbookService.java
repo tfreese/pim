@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.JavaType;
 
+import de.freese.pim.common.PIMException;
 import de.freese.pim.gui.addressbook.model.FXKontakt;
 import de.freese.pim.server.addressbook.model.Kontakt;
 import de.freese.pim.server.addressbook.service.AddressBookService;
@@ -39,33 +40,54 @@ public class DefaultEmbeddedFXAddressbookService extends AbstractFXAddressbookSe
      * @see de.freese.pim.gui.addressbook.service.FXAddressbookService#deleteKontakt(long)
      */
     @Override
-    public int deleteKontakt(final long id) throws Exception
+    public int deleteKontakt(final long id) throws PIMException
     {
-        return getAddressBookService().deleteKontakt(id);
+        try
+        {
+            return getAddressBookService().deleteKontakt(id);
+        }
+        catch (Exception ex)
+        {
+            throw new PIMException(ex);
+        }
     }
 
     /**
      * @see de.freese.pim.gui.addressbook.service.FXAddressbookService#getKontaktDetails(long[])
      */
     @Override
-    public List<FXKontakt> getKontaktDetails(final long... ids) throws Exception
+    public List<FXKontakt> getKontaktDetails(final long... ids) throws PIMException
     {
-        List<Kontakt> contacts = getAddressBookService().getKontaktDetails(ids);
+        try
+        {
+            List<Kontakt> contacts = getAddressBookService().getKontaktDetails(ids);
 
-        List<FXKontakt> fxBeans = toFXContacts(contacts);
+            List<FXKontakt> fxBeans = toFXContacts(contacts);
 
-        return fxBeans;
+            return fxBeans;
+        }
+        catch (Exception ex)
+        {
+            throw new PIMException(ex);
+        }
     }
 
     /**
      * @see de.freese.pim.gui.addressbook.service.FXAddressbookService#insertKontakt(de.freese.pim.gui.addressbook.model.FXKontakt)
      */
     @Override
-    public void insertKontakt(final FXKontakt kontakt) throws Exception
+    public void insertKontakt(final FXKontakt kontakt) throws PIMException
     {
-        long id = getAddressBookService().insertKontakt(kontakt.getNachname(), kontakt.getVorname());
+        try
+        {
+            long id = getAddressBookService().insertKontakt(kontakt.getNachname(), kontakt.getVorname());
 
-        kontakt.setID(id);
+            kontakt.setID(id);
+        }
+        catch (Exception ex)
+        {
+            throw new PIMException(ex);
+        }
     }
 
     /**
@@ -81,9 +103,16 @@ public class DefaultEmbeddedFXAddressbookService extends AbstractFXAddressbookSe
      * @see de.freese.pim.gui.addressbook.service.FXAddressbookService#updateKontakt(long, java.lang.String, java.lang.String)
      */
     @Override
-    public int updateKontakt(final long id, final String nachname, final String vorname) throws Exception
+    public int updateKontakt(final long id, final String nachname, final String vorname) throws PIMException
     {
-        return getAddressBookService().updateKontakt(id, nachname, vorname);
+        try
+        {
+            return getAddressBookService().updateKontakt(id, nachname, vorname);
+        }
+        catch (Exception ex)
+        {
+            throw new PIMException(ex);
+        }
     }
 
     /**

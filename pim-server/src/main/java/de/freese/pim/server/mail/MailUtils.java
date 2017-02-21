@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
+
 import javax.activation.DataSource;
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -19,8 +20,10 @@ import javax.mail.Multipart;
 import javax.mail.Part;
 import javax.mail.internet.MimePart;
 import javax.mail.internet.MimeUtility;
+
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.ArrayUtils;
+
 import de.freese.pim.common.model.mail.InternetAddress;
 
 /**
@@ -144,11 +147,6 @@ public final class MailUtils
     *
     */
     public static final String HEADER_MESSAGE_ID = "Message-ID";
-
-    /**
-     * ^(.+)@(.+)\\.\\w{2,3}$
-     */
-    public static final String MAIL_REGEX = "^(.+)@(.+)\\.[a-zA-Z]{2,3}$";
 
     /**
     *
@@ -340,7 +338,8 @@ public final class MailUtils
     {
         List<DataSource> dataSources = getTextDataSources(part);
 
-        Optional<DataSource> dataSource = dataSources.stream().filter(ds -> ds.getContentType().toLowerCase().startsWith("text/html")).findFirst();
+        Optional<DataSource> dataSource = dataSources.stream().filter(ds -> ds.getContentType().toLowerCase().startsWith("text/html"))
+                .findFirst();
 
         if (!dataSource.isPresent())
         {

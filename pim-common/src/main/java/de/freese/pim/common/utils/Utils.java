@@ -42,6 +42,11 @@ import org.slf4j.LoggerFactory;
 public final class Utils
 {
     /**
+     * ^(.+)@(.+)\\.\\w{2,3}$
+     */
+    public static final String MAIL_REGEX = "^(.+)@(.+)\\.[a-zA-Z]{2,3}$";
+
+    /**
      *
      */
     public static final Predicate<Path> PREDICATE_IS_DIR = Files::isDirectory;

@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.JavaType;
 
+import de.freese.pim.common.PIMException;
 import de.freese.pim.common.model.mail.MailContent;
 import de.freese.pim.common.utils.io.IOMonitor;
 import de.freese.pim.gui.mail.model.FXMail;
@@ -50,108 +51,164 @@ public class DefaultEmbeddedFXMailService extends AbstractFXMailService
      * @see de.freese.pim.gui.mail.service.FXMailService#connectAccount(de.freese.pim.gui.mail.model.FXMailAccount)
      */
     @Override
-    public void connectAccount(final FXMailAccount account) throws Exception
+    public void connectAccount(final FXMailAccount account) throws PIMException
     {
-        MailAccount pojo = toPojoMailAccount(account);
+        try
+        {
+            MailAccount pojo = toPojoMailAccount(account);
 
-        getMailService().connectAccount(pojo);
+            getMailService().connectAccount(pojo);
+        }
+        catch (Exception ex)
+        {
+            throw new PIMException(ex);
+        }
     }
 
     /**
      * @see de.freese.pim.gui.mail.service.FXMailService#deleteAccount(long)
      */
     @Override
-    public int deleteAccount(final long accountID) throws Exception
+    public int deleteAccount(final long accountID) throws PIMException
     {
-        return getMailService().deleteAccount(accountID);
+        try
+        {
+            return getMailService().deleteAccount(accountID);
+        }
+        catch (Exception ex)
+        {
+            throw new PIMException(ex);
+        }
     }
 
     /**
      * @see de.freese.pim.gui.mail.service.FXMailService#disconnectAccounts(long[])
      */
     @Override
-    public void disconnectAccounts(final long... accountIDs) throws Exception
+    public void disconnectAccounts(final long... accountIDs) throws PIMException
     {
-        getMailService().disconnectAccounts(accountIDs);
+        try
+        {
+            getMailService().disconnectAccounts(accountIDs);
+        }
+        catch (Exception ex)
+        {
+            throw new PIMException(ex);
+        }
     }
 
     /**
      * @see de.freese.pim.gui.mail.service.FXMailService#getMailAccounts()
      */
     @Override
-    public List<FXMailAccount> getMailAccounts() throws Exception
+    public List<FXMailAccount> getMailAccounts() throws PIMException
     {
-        List<MailAccount> accounts = getMailService().getMailAccounts();
+        try
+        {
+            List<MailAccount> accounts = getMailService().getMailAccounts();
 
-        List<FXMailAccount> fxBeans = toFXMailAccounts(accounts);
+            List<FXMailAccount> fxBeans = toFXMailAccounts(accounts);
 
-        return fxBeans;
+            return fxBeans;
+        }
+        catch (Exception ex)
+        {
+            throw new PIMException(ex);
+        }
     }
 
     /**
      * @see de.freese.pim.gui.mail.service.FXMailService#insertAccount(de.freese.pim.gui.mail.model.FXMailAccount)
      */
     @Override
-    public void insertAccount(final FXMailAccount account) throws Exception
+    public void insertAccount(final FXMailAccount account) throws PIMException
     {
-        MailAccount pojo = toPojoMailAccount(account);
+        try
+        {
+            MailAccount pojo = toPojoMailAccount(account);
 
-        long id = getMailService().insertAccount(pojo);
-        account.setID(id);
+            long id = getMailService().insertAccount(pojo);
+            account.setID(id);
+        }
+        catch (Exception ex)
+        {
+            throw new PIMException(ex);
+        }
     }
 
     /**
      * @see de.freese.pim.gui.mail.service.FXMailService#insertOrUpdateFolder(long, java.util.List)
      */
     @Override
-    public int insertOrUpdateFolder(final long accountID, final List<FXMailFolder> folders) throws Exception
+    public int insertOrUpdateFolder(final long accountID, final List<FXMailFolder> folders) throws PIMException
     {
-        int affectedRows = 0;
-
-        // ID = 0 -> insert
-        List<MailFolder> toInsert = toPojoMailFolders(folders.stream().filter(mf -> mf.getID() == 0).collect(Collectors.toList()));
-
-        long[] primaryKeys = getMailService().insertFolder(accountID, toInsert);
-        affectedRows += primaryKeys.length;
-
-        for (int i = 0; i < primaryKeys.length; i++)
+        try
         {
-            toInsert.get(i).setID(primaryKeys[i]);
+            int affectedRows = 0;
+
+            // ID = 0 -> insert
+            List<MailFolder> toInsert = toPojoMailFolders(folders.stream().filter(mf -> mf.getID() == 0).collect(Collectors.toList()));
+
+            long[] primaryKeys = getMailService().insertFolder(accountID, toInsert);
+            affectedRows += primaryKeys.length;
+
+            for (int i = 0; i < primaryKeys.length; i++)
+            {
+                toInsert.get(i).setID(primaryKeys[i]);
+            }
+
+            // ID != 0 -> update
+            List<MailFolder> toUpdate = toPojoMailFolders(folders.stream().filter(mf -> mf.getID() > 0).collect(Collectors.toList()));
+            affectedRows += IntStream.of(getMailService().updateFolder(accountID, toUpdate)).sum();
+
+            return affectedRows;
         }
-
-        // ID != 0 -> update
-        List<MailFolder> toUpdate = toPojoMailFolders(folders.stream().filter(mf -> mf.getID() > 0).collect(Collectors.toList()));
-        affectedRows += IntStream.of(getMailService().updateFolder(accountID, toUpdate)).sum();
-
-        return affectedRows;
+        catch (Exception ex)
+        {
+            throw new PIMException(ex);
+        }
     }
 
     /**
      * @see de.freese.pim.gui.mail.service.FXMailService#loadFolder(long)
      */
     @Override
-    public List<FXMailFolder> loadFolder(final long accountID) throws Exception
+    public List<FXMailFolder> loadFolder(final long accountID) throws PIMException
     {
-        List<MailFolder> folders = getMailService().loadFolder(accountID);
+        try
+        {
+            List<MailFolder> folders = getMailService().loadFolder(accountID);
 
-        List<FXMailFolder> fxBeans = toFXMailFolders(folders);
+            List<FXMailFolder> fxBeans = toFXMailFolders(folders);
 
-        buildHierarchie(fxBeans);
+            buildHierarchie(fxBeans);
 
-        return fxBeans;
+            return fxBeans;
+        }
+        catch (Exception ex)
+        {
+            throw new PIMException(ex);
+        }
     }
 
     /**
      * @see de.freese.pim.gui.mail.service.FXMailService#loadMails(long, long, java.lang.String)
      */
     @Override
-    public List<FXMail> loadMails(final long accountID, final long folderID, final String folderFullName) throws Exception
+    public List<FXMail> loadMails(final long accountID, final long folderID, final String folderFullName) throws PIMException
     {
-        List<Mail> mails = getMailService().loadMails(accountID, folderID, folderFullName);
+        try
+        {
+            List<Mail> mails = getMailService().loadMails(accountID, folderID, folderFullName);
 
-        List<FXMail> fxBeans = toFXMails(mails);
+            List<FXMail> fxBeans = toFXMails(mails);
 
-        return fxBeans;
+            return fxBeans;
+        }
+        catch (Exception ex)
+        {
+            throw new PIMException(ex);
+        }
     }
 
     /**
@@ -167,16 +224,23 @@ public class DefaultEmbeddedFXMailService extends AbstractFXMailService
      * @see de.freese.pim.gui.mail.service.FXMailService#test(de.freese.pim.gui.mail.model.FXMailAccount)
      */
     @Override
-    public List<FXMailFolder> test(final FXMailAccount account) throws Exception
+    public List<FXMailFolder> test(final FXMailAccount account) throws PIMException
     {
-        // MailAccount pojo = toPOJO(account);
-        //
-        // List<FXMailFolder> fxBeans = getMailService().test(pojo).stream().map(this::toFXBean).collect(Collectors.toList());
-        MailAccount pojo = toPojoMailAccount(account);
+        try
+        {
+            // MailAccount pojo = toPOJO(account);
+            //
+            // List<FXMailFolder> fxBeans = getMailService().test(pojo).stream().map(this::toFXBean).collect(Collectors.toList());
+            MailAccount pojo = toPojoMailAccount(account);
 
-        List<FXMailFolder> fxBeans = toFXMailFolders(getMailService().test(pojo));
+            List<FXMailFolder> fxBeans = toFXMailFolders(getMailService().test(pojo));
 
-        return fxBeans;
+            return fxBeans;
+        }
+        catch (Exception ex)
+        {
+            throw new PIMException(ex);
+        }
     }
 
     // /**
@@ -196,11 +260,18 @@ public class DefaultEmbeddedFXMailService extends AbstractFXMailService
      * @see de.freese.pim.gui.mail.service.FXMailService#updateAccount(de.freese.pim.gui.mail.model.FXMailAccount)
      */
     @Override
-    public int updateAccount(final FXMailAccount account) throws Exception
+    public int updateAccount(final FXMailAccount account) throws PIMException
     {
-        MailAccount pojo = toPojoMailAccount(account);
+        try
+        {
+            MailAccount pojo = toPojoMailAccount(account);
 
-        return getMailService().updateAccount(pojo);
+            return getMailService().updateAccount(pojo);
+        }
+        catch (Exception ex)
+        {
+            throw new PIMException(ex);
+        }
     }
 
     /**

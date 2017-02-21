@@ -3,6 +3,8 @@ package de.freese.pim.gui.view;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+
+import de.freese.pim.common.PIMException;
 import de.freese.pim.gui.PIMApplication;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -77,9 +79,21 @@ public class ErrorDialog
      */
     public ErrorDialog forThrowable(final Throwable throwable)
     {
-        headerText(throwable.getMessage());
+        Throwable th = throwable;
 
-        String stackTrace = toString(throwable);
+        if (th instanceof PIMException)
+        {
+            PIMException pex = (PIMException) th;
+
+            if (pex.getCause() != null)
+            {
+                th = pex.getCause();
+            }
+        }
+
+        headerText(th.getMessage());
+
+        String stackTrace = toString(th);
 
         Label label = new Label("The exception stacktrace was:");
 

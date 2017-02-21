@@ -45,31 +45,48 @@ public class SimpleExecutorService extends AbstractExecutorService
     /**
      * @author Thomas Freese
      */
-    private final class WorkerThread extends Thread
+    private final class Worker implements Runnable
     {
         /**
-         * Gehört dieser Thread zu den Core-Threads ?
+         *
          */
-        boolean isCoreThread = false;
+        private Runnable firstTask = null;
 
         /**
-         * Erstellt ein neues {@link WorkerThread} Object.
          *
-         * @param threadGroup {@link ThreadGroup}
-         * @param name String
          */
-        public WorkerThread(final ThreadGroup threadGroup, final String name)
+        private boolean isCoreWorker = false;
+
+        /**
+         *
+         */
+        private Thread thread = null;
+
+        /**
+         * Erstellt ein neues {@link Worker} Object.
+         */
+        public Worker()
         {
-            super(threadGroup, name);
+            super();
         }
 
         /**
-         * @see java.lang.Thread#run()
+         * @return String
+         */
+        public String getName()
+        {
+            return this.thread.getName();
+        }
+
+        /**
+         * @see java.lang.Runnable#run()
          */
         @Override
         public void run()
         {
-            while (!isInterrupted())
+            // Thread thread = Thread.currentThread();
+
+            while (!this.thread.isInterrupted())
             {
                 runWorker(this);
             }
@@ -118,7 +135,7 @@ public class SimpleExecutorService extends AbstractExecutorService
     /**
     *
     */
-    private Set<Thread> workers = new TreeSet<>(Comparator.comparing(Thread::getName));
+    private Set<Worker> workers = new TreeSet<>(Comparator.comparing(Worker::getName));
 
     /**
     *
@@ -238,8 +255,8 @@ public class SimpleExecutorService extends AbstractExecutorService
 
             String threadName = String.format("%s%02d", threadNamePrefix, this.threadNumber.incrementAndGet());
 
-            // Thread thread = new Thread(threadGroup, threadName);
-            Thread thread = new WorkerThread(threadGroup, threadName);
+            Thread thread = new Thread(threadGroup, task, threadName);
+            // Thread thread = new WorkerThread(threadGroup, threadName);
 
             if (thread.isDaemon())
             {
@@ -255,11 +272,7 @@ public class SimpleExecutorService extends AbstractExecutorService
         };
 
         // CoreWorker starten
-        for (int i = 0; i < coreSize; i++)
-        {
-            Thread thread = addWorker(true);
-            thread.start();
-        }
+        startCoreThreads();
     }
 
     /**
@@ -308,6 +321,25 @@ public class SimpleExecutorService extends AbstractExecutorService
 
         try
         {
+            if (getPoolSize() < getCoreSize())
+            {
+                // Core-Worker erzeugen
+                addWorker(command, true);
+
+                return;
+            }
+
+            if ((getPoolSize() < getMaxSize()) && (this.workersIdle.get() == 0))// && !getWorkQueue().isEmpty())
+            {
+                // Neue Threads starten, wenn
+                // - maxSize noch nicht erreicht
+                // - und keine freien Threads zur Verfügung stehen
+                // - und Tasks in der Queue sind
+                addWorker(command, false);
+
+                return;
+            }
+
             boolean isInQueue = getWorkQueue().offer(command);
 
             if (!isInQueue)
@@ -316,16 +348,6 @@ public class SimpleExecutorService extends AbstractExecutorService
                 reject(command);
 
                 return;
-            }
-
-            if ((getPoolSize() < getMaxSize()) && (this.workersIdle.get() == 0) && !getWorkQueue().isEmpty())
-            {
-                // Neue Threads starten, wenn
-                // - maxSize noch nicht erreicht
-                // - und keine freien Threads zur Verfügung stehen
-                // - und Tasks in der Queue sind
-                Thread thread = addWorker(false);
-                thread.start();
             }
         }
         finally
@@ -426,9 +448,9 @@ public class SimpleExecutorService extends AbstractExecutorService
         try
         {
             // Interrupt Workers.
-            for (Thread thread : this.workers.toArray(new Thread[0]))
+            for (Worker worker : this.workers.toArray(new Worker[0]))
             {
-                removeWorker(thread);
+                removeWorker(worker);
             }
 
             // Drain Queue
@@ -458,24 +480,42 @@ public class SimpleExecutorService extends AbstractExecutorService
     }
 
     /**
-     * Erzeugt einen neuen {@link Thread}, startet ihn aber noch nicht.
+     * Erzeugt einen neuen {@link Thread} und startet ihn.
      *
-     * @param isCoreThread boolean
-     * @return {@link Thread}
+     * @param firstTask {@link Runnable}
+     * @param coreWorker boolean
      */
-    protected Thread addWorker(final boolean isCoreThread)
+    protected void addWorker(final Runnable firstTask, final boolean coreWorker)
     {
-        Thread thread = getThreadFactory().newThread(null);
+        Worker worker = new Worker();
 
-        this.workers.add(thread);
+        Thread thread = getThreadFactory().newThread(worker);
+
+        worker.thread = thread;
+        worker.isCoreWorker = coreWorker;
+        worker.firstTask = firstTask;
+
+        this.workers.add(worker);
         this.workersIdle.incrementAndGet();
 
-        if (thread instanceof WorkerThread)
-        {
-            ((WorkerThread) thread).isCoreThread = isCoreThread;
-        }
+        // System.out.println("SimpleExecutorService.addWorker(): coreWorker=" + coreWorker + "; name=" + worker.getName() + "; "
+        // + (firstTask == null ? "" : firstTask.toString()));
 
-        return thread;
+        // // Annahme: PREFIX-N; PREFIX_N
+        // String threadName = thread.getName();
+        // String[] splits = threadName.split("[-_]");
+        // int index = Integer.parseInt(splits[splits.length - 1]);
+        // worker.isCoreWorker = index <= getCoreSize();
+
+        // ThreadNamen anpassen.
+        // Pattern pattern = Pattern.compile("[a-zA-Z]+");
+        // Matcher matcher = pattern.matcher(thread.getName());
+        // matcher.find();
+        //
+        // String threadName = String.format("%s%02d", matcher.group(), this.threadNumber.incrementAndGet());
+        // thread.setName(threadName);
+
+        thread.start();
     }
 
     /**
@@ -503,16 +543,16 @@ public class SimpleExecutorService extends AbstractExecutorService
     /**
      * Liefert den nächsten Task aus der Qeue.
      *
-     * @param isCoreThread boolean
+     * @param isCoreWorker boolean
      * @return {@link Runnable}
      */
-    protected Runnable getTask(final boolean isCoreThread)
+    protected Runnable getTask(final boolean isCoreWorker)
     {
         Runnable task = null;
 
         try
         {
-            if (isCoreThread)
+            if (isCoreWorker)
             {
                 task = getWorkQueue().take();
             }
@@ -546,32 +586,6 @@ public class SimpleExecutorService extends AbstractExecutorService
     }
 
     /**
-     * Liefert true, wenn dieser Thread zu den Core-Threads gehört.<br>
-     * Diese dürfen nicht entfernt werden.
-     *
-     * @param thread {@link Thread}
-     * @return boolean
-     */
-    protected boolean isCoreThread(final Thread thread)
-    {
-        if (thread instanceof WorkerThread)
-        {
-            WorkerThread wt = (WorkerThread) thread;
-
-            return wt.isCoreThread;
-        }
-
-        String threadName = thread.getName();
-
-        // Annahme: PREFIX-N; PREFIX_N
-        String[] splits = threadName.split("[-_]");
-
-        int index = Integer.parseInt(splits[splits.length - 1]);
-
-        return index <= getCoreSize();
-    }
-
-    /**
      * @param task {@link Runnable}
      */
     protected void reject(final Runnable task)
@@ -585,26 +599,29 @@ public class SimpleExecutorService extends AbstractExecutorService
     /**
      * Entfernt den Thread.
      *
-     * @param thread {@link Thread}
+     * @param worker {@link Worker}
      */
-    protected void removeWorker(final Thread thread)
+    protected void removeWorker(final Worker worker)
     {
-        // System.out.println("SimpleExecutorService.WorkerThread.run(): stopped " + thread.getName());
-        this.workers.remove(thread);
+        // System.out.println("SimpleExecutorService2.removeWorker(): stopped " + worker.getName());
+        this.workers.remove(worker);
         this.workersIdle.decrementAndGet();
         this.threadNumber.decrementAndGet();
     }
 
     /**
-     * @param thread {@link Thread}
+     * Lauf-Methode des Workers.
+     *
+     * @param worker {@link Worker}
      */
-    protected void runWorker(final Thread thread)
+    protected void runWorker(final Worker worker)
     {
-        Runnable task = null;
+        Thread thread = worker.thread;
+        boolean isCoreWorker = worker.isCoreWorker;
+        Runnable task = worker.firstTask;
+        worker.firstTask = null;
 
-        boolean isCoreThread = isCoreThread(thread);
-
-        while ((task = getTask(isCoreThread)) != null)
+        while ((task != null) || ((task = getTask(isCoreWorker)) != null))
         {
             this.workersIdle.decrementAndGet();
             Throwable thrown = null;
@@ -613,6 +630,7 @@ public class SimpleExecutorService extends AbstractExecutorService
             {
                 beforeExecute(thread, task);
 
+                // System.out.println("SimpleExecutorService2.runWorker(): thread=" + thread.getName() + "; task=" + task);
                 task.run();
             }
             catch (RuntimeException x)
@@ -632,14 +650,26 @@ public class SimpleExecutorService extends AbstractExecutorService
             }
             finally
             {
+                task = null;
                 this.workersIdle.incrementAndGet();
                 afterExecute(task, thrown);
             }
         }
 
-        if (!isCoreThread)
+        if (!isCoreWorker)
         {
             thread.interrupt();
+        }
+    }
+
+    /**
+     *
+     */
+    protected void startCoreThreads()
+    {
+        for (int i = 0; i < getCoreSize(); i++)
+        {
+            addWorker(null, true);
         }
     }
 }

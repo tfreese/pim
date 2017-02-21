@@ -13,7 +13,10 @@ import java.util.Optional;
 import java.util.concurrent.Callable;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
+
 import javax.annotation.Resource;
+
+import de.freese.pim.common.PIMException;
 import de.freese.pim.common.model.mail.DefaultMailContent;
 import de.freese.pim.common.model.mail.MailContent;
 import de.freese.pim.common.utils.io.IOMonitor;
@@ -40,6 +43,80 @@ public abstract class AbstractFXMailService extends AbstractFXService implements
     public AbstractFXMailService()
     {
         super();
+    }
+
+    /**
+     * @see de.freese.pim.gui.mail.service.FXMailService#loadMailContent(long, de.freese.pim.gui.mail.model.FXMail,
+     *      de.freese.pim.common.utils.io.IOMonitor)
+     */
+    @Override
+    public MailContent loadMailContent(final long accountID, final FXMail mail, final IOMonitor monitor) throws PIMException
+    {
+        try
+        {
+            if (getLogger().isDebugEnabled())
+            {
+                getLogger().debug("load mail: msgnum={}; uid={}; size={}; subject={}", mail.getMsgNum(), mail.getUID(), mail.getSize(),
+                        mail.getSubject());
+            }
+
+            Path folderPath = getBasePath().resolve(Long.toString(accountID)).resolve(mail.getFolderFullName());
+            Path mailPath = folderPath.resolve(Long.toString(mail.getUID())).resolve(mail.getUID() + ".json.zip");
+
+            MailContent mailContent = null;
+
+            if (!Files.exists(mailPath))
+            {
+                if (getLogger().isDebugEnabled())
+                {
+                    getLogger().debug("download mail: msgnum={}; uid={}", mail.getMsgNum(), mail.getUID());
+                }
+
+                // Mail-Download.
+                Files.createDirectories(mailPath.getParent());
+
+                try
+                {
+                    mailContent = loadMailContent(accountID, mail.getFolderFullName(), mail.getUID(), monitor);
+                }
+                catch (Exception ex)
+                {
+                    Files.deleteIfExists(mailPath);
+                    Files.deleteIfExists(mailPath.getParent());
+                    throw ex;
+                }
+
+                saveMailContent(mailPath, mailContent);
+            }
+            else
+            {
+                // Lokal gespeicherte Mail laden.
+                try (InputStream is = Files.newInputStream(mailPath);
+                     InputStream bis = new BufferedInputStream(is);
+                     InputStream gis = new GZIPInputStream(bis);
+                     InputStream mos = new MonitorInputStream(gis, mail.getSize(), monitor))
+                {
+                    mailContent = getJsonMapper().readValue(mos, DefaultMailContent.class);
+                }
+            }
+
+            return mailContent;
+        }
+        catch (Exception ex)
+        {
+            throw new PIMException(ex);
+        }
+    }
+
+    /**
+     * Pfad zum lokalen Speicherort.
+     *
+     * @param basePath {@link Path}
+     */
+    @Resource(name = "pimHomePath")
+    public void setBasePath(final Path basePath)
+    {
+        this.basePath = basePath;
     }
 
     /**
@@ -74,60 +151,6 @@ public abstract class AbstractFXMailService extends AbstractFXService implements
     }
 
     /**
-     * @see de.freese.pim.gui.mail.service.FXMailService#loadMailContent(long, de.freese.pim.gui.mail.model.FXMail, de.freese.pim.common.utils.io.IOMonitor)
-     */
-    @Override
-    public MailContent loadMailContent(final long accountID, final FXMail mail, final IOMonitor monitor) throws Exception
-    {
-        if (getLogger().isDebugEnabled())
-        {
-            getLogger().debug("load mail: msgnum={}; uid={}; size={}; subject={}", mail.getMsgNum(), mail.getUID(), mail.getSize(), mail.getSubject());
-        }
-
-        Path folderPath = getBasePath().resolve(Long.toString(accountID)).resolve(mail.getFolderFullName());
-        Path mailPath = folderPath.resolve(Long.toString(mail.getUID())).resolve(mail.getUID() + ".json.zip");
-
-        MailContent mailContent = null;
-
-        if (!Files.exists(mailPath))
-        {
-            if (getLogger().isDebugEnabled())
-            {
-                getLogger().debug("download mail: msgnum={}; uid={}", mail.getMsgNum(), mail.getUID());
-            }
-
-            // Mail-Download.
-            Files.createDirectories(mailPath.getParent());
-
-            try
-            {
-                mailContent = loadMailContent(accountID, mail.getFolderFullName(), mail.getUID(), monitor);
-            }
-            catch (Exception ex)
-            {
-                Files.deleteIfExists(mailPath);
-                Files.deleteIfExists(mailPath.getParent());
-                throw ex;
-            }
-
-            saveMailContent(mailPath, mailContent);
-        }
-        else
-        {
-            // Lokal gespeicherte Mail laden.
-            try (InputStream is = Files.newInputStream(mailPath);
-                 InputStream bis = new BufferedInputStream(is);
-                 InputStream gis = new GZIPInputStream(bis);
-                 InputStream mos = new MonitorInputStream(gis, mail.getSize(), monitor))
-            {
-                mailContent = getJsonMapper().readValue(mos, DefaultMailContent.class);
-            }
-        }
-
-        return mailContent;
-    }
-
-    /**
      * Liefert den Inhalt der Mail.<br>
      * Der Monitor dient zur Anzeige des Lade-Fortschritts.
      *
@@ -138,7 +161,8 @@ public abstract class AbstractFXMailService extends AbstractFXService implements
      * @return {@link MailContent}
      * @throws Exception Falls was schief geht.
      */
-    protected abstract MailContent loadMailContent(final long accountID, final String folderFullName, final long mailUID, IOMonitor monitor) throws Exception;
+    protected abstract MailContent loadMailContent(final long accountID, final String folderFullName, final long mailUID, IOMonitor monitor)
+            throws Exception;
 
     /**
      * Speichert in einem separatem Thread den Mail-Inhalt im lokalem Cache.
@@ -149,7 +173,8 @@ public abstract class AbstractFXMailService extends AbstractFXService implements
      */
     protected void saveMailContent(final Path mailPath, final MailContent mailContent) throws Exception
     {
-        Callable<Void> task = () -> {
+        Callable<Void> task = () ->
+        {
 
             getLogger().info("Save Mail: {}", mailPath);
 
@@ -173,16 +198,5 @@ public abstract class AbstractFXMailService extends AbstractFXService implements
         };
 
         getExecutorService().submit(task);
-    }
-
-    /**
-     * Pfad zum lokalen Speicherort.
-     *
-     * @param basePath {@link Path}
-     */
-    @Resource(name = "pimHomePath")
-    public void setBasePath(final Path basePath)
-    {
-        this.basePath = basePath;
     }
 }
