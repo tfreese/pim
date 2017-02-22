@@ -2,6 +2,7 @@
 package de.freese.pim.server.mail.service;
 
 import java.util.List;
+import org.springframework.web.context.request.async.DeferredResult;
 import de.freese.pim.common.model.mail.MailContent;
 import de.freese.pim.common.utils.io.IOMonitor;
 import de.freese.pim.server.mail.api.MailAPI;
@@ -100,6 +101,18 @@ public interface MailService
      * @throws Exception Falls was schief geht.
      */
     public List<Mail> loadMails(long accountID, long folderID, String folderFullName) throws Exception;
+
+    /**
+     * Lädt die Mails des Folders vom Provider und aus der DB.<br>
+     * Das {@link DeferredResult} entkoppelt den Server Thread von der Ausführung.
+     *
+     * @param accountID long
+     * @param folderID long
+     * @param folderFullName String
+     * @return {@link List}
+     * @throws Exception Falls was schief geht.
+     */
+    public DeferredResult<List<Mail>> loadMailsAsync(long accountID, long folderID, String folderFullName) throws Exception;
 
     /**
      * Testet die Verbindung zu einem MailAccount und liefert bei Erfolg dessen Ordner.

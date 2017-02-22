@@ -4,7 +4,7 @@ package de.freese.pim.server;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
-
+import org.springframework.scheduling.annotation.EnableAsync;
 import de.freese.pim.common.spring.config.PIMProfile;
 
 /**
@@ -13,6 +13,7 @@ import de.freese.pim.common.spring.config.PIMProfile;
  * @author Thomas Freese
  */
 @SpringBootApplication
+@EnableAsync
 public class PIMServerApplication
 {
     /**
