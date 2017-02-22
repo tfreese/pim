@@ -11,42 +11,20 @@ import org.springframework.context.annotation.Profile;
  * @author Thomas Freese
  */
 @Configuration
+@Profile("Server")
 @ComponentScan(basePackages =
 {
         "de.freese.pim"
 })
-@Profile("PIMServer")
-public class PIMServerConfig
+public class ServerConfig
 {
     /**
-     * Erzeugt eine neue Instanz von {@link PIMServerConfig}
+     * Erzeugt eine neue Instanz von {@link ServerConfig}
      */
-    public PIMServerConfig()
+    public ServerConfig()
     {
         super();
     }
-
-    // /**
-    // * @param dataSource {@link DataSource}
-    // * @param executorService {@link ExecutorService}
-    // * @return {@link AddressBookService}
-    // */
-    // @Bean
-    // public AddressBookService addressBookService(final DataSource dataSource, final ExecutorService executorService)
-    // {
-    // DefaultAddressBookService bean = new DefaultAddressBookService();
-    // bean.setAddressBookDAO(new DefaultAddressBookDAO().dataSource(dataSource));
-    // bean.setExecutorService(executorService);
-    //
-    // // IAddressBookService addressBookService = (IAddressBookService) Proxy.newProxyInstance(PIMApplication.class.getClassLoader(), new
-    // // Class<?>[]
-    // // {
-    // // IAddressBookService.class
-    // // }, new TransactionalInvocationHandler(dataSource, new DefaultAddressBookService(new
-    // // DefaultAddressBookDAO().dataSource(dataSource))));
-    //
-    // return bean;
-    // }
 
     // /**
     // * @param dataSource {@link DataSource}

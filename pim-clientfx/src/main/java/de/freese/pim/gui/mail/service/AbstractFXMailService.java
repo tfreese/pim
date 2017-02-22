@@ -5,6 +5,7 @@ import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
@@ -75,9 +76,26 @@ public abstract class AbstractFXMailService extends AbstractFXService implements
                 // Mail-Download.
                 Files.createDirectories(mailPath.getParent());
 
+                // try
+                // {
+                // mailContent = loadMailContent(accountID, mail.getFolderFullName(), mail.getUID(), monitor);
+                // }
+                // catch (Exception ex)
+                // {
+                // Files.deleteIfExists(mailPath);
+                // Files.deleteIfExists(mailPath.getParent());
+                // throw ex;
+                // }
+                //
+                // saveMailContent(mailPath, mailContent);
+
                 try
                 {
-                    mailContent = loadMailContent(accountID, mail.getFolderFullName(), mail.getUID(), monitor);
+                    String jsonContent = loadMailContentAsJSON(accountID, mail.getFolderFullName(), mail.getUID(), monitor);
+
+                    mailContent = getJsonMapper().readValue(jsonContent, DefaultMailContent.class);
+
+                    saveMailContent(mailPath, jsonContent);
                 }
                 catch (Exception ex)
                 {
@@ -85,8 +103,6 @@ public abstract class AbstractFXMailService extends AbstractFXService implements
                     Files.deleteIfExists(mailPath.getParent());
                     throw ex;
                 }
-
-                saveMailContent(mailPath, mailContent);
             }
             else
             {
@@ -151,18 +167,18 @@ public abstract class AbstractFXMailService extends AbstractFXService implements
     }
 
     /**
-     * Liefert den Inhalt der Mail.<br>
+     * Liefert den Inhalt der Mail im JSON-Format.<br>
      * Der Monitor dient zur Anzeige des Lade-Fortschritts.
      *
      * @param accountID long
      * @param folderFullName String
      * @param mailUID long
      * @param monitor {@link IOMonitor}, optional
-     * @return {@link MailContent}
+     * @return String; JSON-Format
      * @throws Exception Falls was schief geht.
      */
-    protected abstract MailContent loadMailContent(final long accountID, final String folderFullName, final long mailUID, IOMonitor monitor)
-            throws Exception;
+    protected abstract String loadMailContentAsJSON(final long accountID, final String folderFullName, final long mailUID,
+            IOMonitor monitor) throws Exception;
 
     /**
      * Speichert in einem separatem Thread den Mail-Inhalt im lokalem Cache.
@@ -175,17 +191,50 @@ public abstract class AbstractFXMailService extends AbstractFXService implements
     {
         Callable<Void> task = () ->
         {
-
             getLogger().info("Save Mail: {}", mailPath);
 
-            try
+            try (OutputStream os = Files.newOutputStream(mailPath);
+                 OutputStream bos = new BufferedOutputStream(os);
+                 OutputStream gos = new GZIPOutputStream(bos))
             {
-                try (OutputStream os = Files.newOutputStream(mailPath);
-                     OutputStream bos = new BufferedOutputStream(os);
-                     OutputStream gos = new GZIPOutputStream(bos))
-                {
-                    getJsonMapper().writeValue(gos, mailContent);
-                }
+                getJsonMapper().writeValue(gos, mailContent);
+
+                gos.flush();
+            }
+            catch (Exception ex)
+            {
+                Files.deleteIfExists(mailPath);
+                Files.deleteIfExists(mailPath.getParent());
+                throw ex;
+            }
+
+            return null;
+        };
+
+        getExecutorService().submit(task);
+    }
+
+    /**
+     * Speichert in einem separatem Thread den Mail-Inhalt im lokalem Cache.
+     *
+     * @param mailPath {@link Path}
+     * @param jsonContent String
+     * @throws Exception Falls was schief geht.
+     */
+    protected void saveMailContent(final Path mailPath, final String jsonContent) throws Exception
+    {
+        Callable<Void> task = () ->
+        {
+            getLogger().info("Save Mail: {}", mailPath);
+
+            try (OutputStream os = Files.newOutputStream(mailPath);
+                 OutputStream bos = new BufferedOutputStream(os);
+                 OutputStream gos = new GZIPOutputStream(bos);
+                 PrintWriter pw = new PrintWriter(gos))
+            {
+                pw.write(jsonContent);
+
+                pw.flush();
             }
             catch (Exception ex)
             {

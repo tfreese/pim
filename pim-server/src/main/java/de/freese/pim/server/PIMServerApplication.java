@@ -5,16 +5,14 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 
+import de.freese.pim.common.spring.config.PIMProfile;
+
 /**
  * Startklasse des PIM-Servers.<br>
  *
  * @author Thomas Freese
  */
 @SpringBootApplication
-// @ComponentScan(basePackages =
-// {
-// "de.freese.pim.common.spring", "de.freese.pim.server.spring"
-// })
 public class PIMServerApplication
 {
     /**
@@ -29,7 +27,7 @@ public class PIMServerApplication
 //                .properties("spring.config.name:application-serverstandalone")
                 .headless(true) // Default true
                 .registerShutdownHook(true) // Default true
-                .profiles("PIMServer", "HsqldbEmbeddedServer") // "HsqldbEmbeddedServer", "HsqldbLocalFile"
+                .profiles(PIMProfile.Server.toString(), PIMProfile.HsqldbEmbeddedServer.toString())
                 //.banner(new MyBanner())
                 //.listeners(new ApplicationPidFileWriter("pim-server.pid"))
                 //.run(args)

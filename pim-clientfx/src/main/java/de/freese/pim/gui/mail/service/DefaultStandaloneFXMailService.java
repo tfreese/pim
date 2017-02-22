@@ -11,6 +11,7 @@ import java.util.stream.IntStream;
 
 import javax.annotation.Resource;
 
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.JavaType;
@@ -32,7 +33,8 @@ import de.freese.pim.server.mail.service.MailService;
  * @author Thomas Freese
  */
 @Service("clientMailService")
-public class DefaultEmbeddedFXMailService extends AbstractFXMailService
+@Profile("ClientStandalone")
+public class DefaultStandaloneFXMailService extends AbstractFXMailService
 {
     /**
      *
@@ -40,9 +42,9 @@ public class DefaultEmbeddedFXMailService extends AbstractFXMailService
     private MailService mailService = null;
 
     /**
-     * Erstellt ein neues {@link DefaultEmbeddedFXMailService} Object.
+     * Erstellt ein neues {@link DefaultStandaloneFXMailService} Object.
      */
-    public DefaultEmbeddedFXMailService()
+    public DefaultStandaloneFXMailService()
     {
         super();
     }
@@ -413,15 +415,17 @@ public class DefaultEmbeddedFXMailService extends AbstractFXMailService
     }
 
     /**
-     * @see de.freese.pim.gui.mail.service.AbstractFXMailService#loadMailContent(long, java.lang.String, long,
+     * @see de.freese.pim.gui.mail.service.AbstractFXMailService#loadMailContentAsJSON(long, java.lang.String, long,
      *      de.freese.pim.common.utils.io.IOMonitor)
      */
     @Override
-    protected MailContent loadMailContent(final long accountID, final String folderFullName, final long mailUID, final IOMonitor monitor)
+    protected String loadMailContentAsJSON(final long accountID, final String folderFullName, final long mailUID, final IOMonitor monitor)
             throws Exception
     {
         MailContent mailContent = getMailService().loadMailContent(accountID, folderFullName, mailUID, monitor);
 
-        return mailContent;
+        String jsonContent = getJsonMapper().writer().writeValueAsString(mailContent);
+
+        return jsonContent;
     }
 }

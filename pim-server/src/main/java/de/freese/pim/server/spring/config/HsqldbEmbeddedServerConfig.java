@@ -30,8 +30,20 @@ public class HsqldbEmbeddedServerConfig extends AbstractHSQLDBConfig
 {
     static
     {
-        // Der Port muss feststehen BEVOR die DataSourceAutoConfiguration anspringt !
-        // Siehe application-HsqldbEmbeddedServer.properties
+        int port = getNextFreePort();
+
+        // Damit die Placeholder in Properties funktionieren: ${hsqldbPort}
+        System.setProperty("hsqldbPort", Integer.toString(port));
+    }
+
+    /**
+     * Der Port muss feststehen BEVOR die DataSourceAutoConfiguration anspringt !<br>
+     * Siehe application-HsqldbEmbeddedServer.properties
+     *
+     * @return int
+     */
+    private static int getNextFreePort()
+    {
         int port = SocketUtils.findAvailableTcpPort();
 
         if (port <= 0)
@@ -39,8 +51,7 @@ public class HsqldbEmbeddedServerConfig extends AbstractHSQLDBConfig
             port = Utils.getNextFreePort(49001);
         }
 
-        // Damit die Placeholder in Properties funktionieren: ${hsqldbPort}
-        System.setProperty("hsqldbPort", Integer.toString(port));
+        return port;
     }
 
     /**
@@ -62,14 +73,7 @@ public class HsqldbEmbeddedServerConfig extends AbstractHSQLDBConfig
     {
         super();
 
-        // // Der Port muss feststehen BEVOR die DataSourceAutoConfiguration anspringt !
-        // // Siehe application-HsqldbEmbeddedServer.properties
-        // int port = SocketUtils.findAvailableTcpPort();
-        //
-        // if (port <= 0)
-        // {
-        // port = Utils.getNextFreePort(49001);
-        // }
+        // int port = getNextFreePort();
         //
         // // Damit die Placeholder in Properties funktionieren: ${hsqldbPort}
         // System.setProperty("hsqldbPort", Integer.toString(port));

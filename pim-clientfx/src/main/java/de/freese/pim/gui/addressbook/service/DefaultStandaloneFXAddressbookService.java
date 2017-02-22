@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.JavaType;
@@ -21,7 +22,8 @@ import de.freese.pim.server.addressbook.service.AddressBookService;
  * @author Thomas Freese
  */
 @Service("clientAddressBookService")
-public class DefaultEmbeddedFXAddressbookService extends AbstractFXAddressbookService
+@Profile("ClientStandalone")
+public class DefaultStandaloneFXAddressbookService extends AbstractFXAddressbookService
 {
     /**
      *
@@ -29,9 +31,9 @@ public class DefaultEmbeddedFXAddressbookService extends AbstractFXAddressbookSe
     private AddressBookService addressBookService = null;
 
     /**
-     * Erzeugt eine neue Instanz von {@link DefaultEmbeddedFXAddressbookService}
+     * Erzeugt eine neue Instanz von {@link DefaultStandaloneFXAddressbookService}
      */
-    public DefaultEmbeddedFXAddressbookService()
+    public DefaultStandaloneFXAddressbookService()
     {
         super();
     }
