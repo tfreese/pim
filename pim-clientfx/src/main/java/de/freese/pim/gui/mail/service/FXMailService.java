@@ -105,17 +105,6 @@ public interface FXMailService
      */
     public List<FXMail> loadMails(long accountID, long folderID, String folderFullName) throws PIMException;
 
-    // /**
-    // * Lädt die Mails des Folders vom Provider und aus der DB.
-    // *
-    // * @param accountID long
-    // * @param folderID long
-    // * @param folderFullName String
-    // * @return {@link List}
-    // * @throws Exception Falls was schief geht.
-    // */
-    // public Future<List<FXMail>> loadMails2(long accountID, long folderID, String folderFullName) throws Exception;
-
     /**
      * Testet die Verbindung zu einem MailAccount und liefert bei Erfolg dessen Ordner.
      *

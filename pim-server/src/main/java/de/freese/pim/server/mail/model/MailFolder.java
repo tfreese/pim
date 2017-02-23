@@ -3,6 +3,9 @@ package de.freese.pim.server.mail.model;
 
 import java.util.function.Predicate;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
 /**
  * Entity für einen Mail-Folder.
  *
@@ -13,31 +16,39 @@ public class MailFolder
     /**
      *
      */
+    @NotNull
     private boolean abonniert = true;
 
     /**
     *
     */
+    @NotNull
     private long accountID = 0;
 
     /**
     *
     */
+    @NotNull
+    @Size(min = 0, max = 100)
     private String fullName = null;
 
     /**
     *
     */
+    @NotNull
     private long id = 0;
 
     /**
      *
      */
+    @NotNull
     private boolean isSendFolder = false;
 
     /**
     *
     */
+    @NotNull
+    @Size(min = 0, max = 100)
     private String name = null;
 
     /**

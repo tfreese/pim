@@ -4,7 +4,9 @@
 package de.freese.pim.server.addressbook.dao;
 
 import java.sql.SQLIntegrityConstraintViolationException;
+
 import javax.annotation.Resource;
+
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -12,12 +14,12 @@ import org.junit.runners.MethodSorters;
 import org.springframework.test.annotation.Commit;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.Rollback;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import de.freese.pim.server.addressbook.TestAddressbookConfig;
-import de.freese.pim.server.addressbook.dao.AddressBookDAO;
 
 /**
  * TestCase für die TX-Steuerung mit Spring.
@@ -31,6 +33,7 @@ import de.freese.pim.server.addressbook.dao.AddressBookDAO;
 })
 @Transactional(transactionManager = "transactionManager")
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
+@ActiveProfiles("test")
 @DirtiesContext
 public class TestSpringContextAddressbookDAO extends AbstractDAOTextCase
 {

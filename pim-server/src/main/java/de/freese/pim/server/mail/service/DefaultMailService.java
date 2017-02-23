@@ -11,8 +11,11 @@ import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+
 import javax.annotation.PreDestroy;
 import javax.annotation.Resource;
+import javax.validation.Valid;
+
 import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
@@ -21,16 +24,15 @@ import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.http.MediaType;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.async.DeferredResult;
+
 import de.freese.pim.common.model.mail.MailContent;
 import de.freese.pim.common.utils.io.IOMonitor;
 import de.freese.pim.server.mail.api.JavaMailAPI;
@@ -73,7 +75,7 @@ public class DefaultMailService extends AbstractService implements MailService, 
      */
     @Override
     @PostMapping("/connect")
-    public void connectAccount(@RequestBody final MailAccount account) throws Exception
+    public void connectAccount(@RequestBody @Valid final MailAccount account) throws Exception
     {
         // BeanDefinitionBuilder builder = BeanDefinitionBuilder.rootBeanDefinition(SomeClass.class);
         // builder.addPropertyReference("propertyName", "someBean"); // add dependency to other bean
@@ -112,7 +114,7 @@ public class DefaultMailService extends AbstractService implements MailService, 
      */
     @Override
     @Transactional
-    @DeleteMapping("/account/{id}")
+    @PostMapping("/account/delete/{id}")
     public int deleteAccount(@PathVariable("id") final long accountID) throws Exception
     {
         List<MailFolder> folder = getMailDAO().getMailFolder(accountID);
@@ -147,7 +149,7 @@ public class DefaultMailService extends AbstractService implements MailService, 
      */
     @Override
     @PostMapping("/account/disconnect")
-    public void disconnectAccounts(@RequestParam("accountIDs") final long...accountIDs) throws Exception
+    public void disconnectAccounts(@RequestParam("accountIDs") final long... accountIDs) throws Exception
     {
         getLogger().info("Disconnect Accounts");
 
@@ -173,40 +175,6 @@ public class DefaultMailService extends AbstractService implements MailService, 
     }
 
     /**
-     * Schliessen der MailAPI-Verbindung des MailAccounts
-     *
-     * @param accountID long
-     */
-    protected void disconnectMailAPI(final long accountID)
-    {
-        String beanName = "mailAPI-" + accountID;
-
-        DefaultListableBeanFactory bf = (DefaultListableBeanFactory) getBeanFactory();
-        MailAPI mailAPI = bf.getBean(beanName, MailAPI.class);
-
-        getLogger().info("Close " + mailAPI.getAccount().getMail());
-
-        try
-        {
-            mailAPI.disconnect();
-        }
-        catch (Exception ex)
-        {
-            getLogger().warn(ex.getMessage());
-        }
-
-        bf.destroySingleton(beanName);
-    }
-
-    /**
-     * @return {@link BeanFactory}
-     */
-    protected BeanFactory getBeanFactory()
-    {
-        return this.beanFactory;
-    }
-
-    /**
      * @see de.freese.pim.server.mail.service.MailService#getMailAccounts()
      */
     @Override
@@ -220,31 +188,12 @@ public class DefaultMailService extends AbstractService implements MailService, 
     }
 
     /**
-     * @param accountID long
-     * @return {@link MailAPI}
-     */
-    protected MailAPI getMailAPI(final long accountID)
-    {
-        MailAPI mailAPI = getApplicationContext().getBean("mailAPI-" + accountID, MailAPI.class);
-
-        return mailAPI;
-    }
-
-    /**
-     * @return {@link MailDAO}
-     */
-    protected MailDAO getMailDAO()
-    {
-        return this.mailDAO;
-    }
-
-    /**
      * @see de.freese.pim.server.mail.service.MailService#insertAccount(de.freese.pim.server.mail.model.MailAccount)
      */
     @Override
     @Transactional
-    @PutMapping("/account/")
-    public long insertAccount(@RequestBody final MailAccount account) throws Exception
+    @PostMapping("/account/insert")
+    public long insertAccount(@RequestBody @Valid final MailAccount account) throws Exception
     {
         getMailDAO().insertAccount(account);
 
@@ -256,8 +205,9 @@ public class DefaultMailService extends AbstractService implements MailService, 
      */
     @Override
     @Transactional
-    @PutMapping("/folder/{accountID}")
-    public long[] insertFolder(@PathVariable("accountID") final long accountID, @RequestBody final List<MailFolder> folders) throws Exception
+    @PostMapping("/folder/insert/{accountID}")
+    public long[] insertFolder(@PathVariable("accountID") final long accountID, @RequestBody final List<MailFolder> folders)
+            throws Exception
     {
         getMailDAO().insertFolder(accountID, folders);
 
@@ -297,13 +247,14 @@ public class DefaultMailService extends AbstractService implements MailService, 
     }
 
     /**
-     * @see de.freese.pim.server.mail.service.MailService#loadMailContent(long, java.lang.String, long, de.freese.pim.common.utils.io.IOMonitor)
+     * @see de.freese.pim.server.mail.service.MailService#loadMailContent(long, java.lang.String, long,
+     *      de.freese.pim.common.utils.io.IOMonitor)
      */
     @Override
     @GetMapping("/content/{accountID}/{folderFullName}/{mailUID}")
-    public MailContent loadMailContent(@PathVariable("accountID") final long accountID, @PathVariable("folderFullName") final String folderFullName,
-                                       @PathVariable("mailUID") final long mailUID, final @RequestBody(required = false) IOMonitor monitor)
-        throws Exception
+    public MailContent loadMailContent(@PathVariable("accountID") final long accountID,
+            @PathVariable("folderFullName") final String folderFullName, @PathVariable("mailUID") final long mailUID,
+            final @RequestBody(required = false) IOMonitor monitor) throws Exception
     {
         if (getLogger().isDebugEnabled())
         {
@@ -324,8 +275,7 @@ public class DefaultMailService extends AbstractService implements MailService, 
     @Transactional
     @GetMapping("/mails/{accountID}/{folderID}/{folderFullName}")
     public List<Mail> loadMails(@PathVariable("accountID") final long accountID, @PathVariable("folderID") final long folderID,
-                                @PathVariable("folderFullName") final String folderFullName)
-        throws Exception
+            @PathVariable("folderFullName") final String folderFullName) throws Exception
     {
         getLogger().info("Load Mails: account={}, folder={}", accountID, folderFullName);
 
@@ -400,13 +350,13 @@ public class DefaultMailService extends AbstractService implements MailService, 
     @Override
     @Transactional
     @GetMapping("/mailsAsync/{accountID}/{folderID}/{folderFullName}")
-    public DeferredResult<List<Mail>> loadMailsAsync(@PathVariable("accountID") final long accountID, @PathVariable("folderID") final long folderID,
-                                                     @PathVariable("folderFullName") final String folderFullName)
-        throws Exception
+    public DeferredResult<List<Mail>> loadMailsAsync(@PathVariable("accountID") final long accountID,
+            @PathVariable("folderID") final long folderID, @PathVariable("folderFullName") final String folderFullName) throws Exception
     {
         DeferredResult<List<Mail>> deferredResult = new DeferredResult<>();
 
-        CompletableFuture.supplyAsync(() -> {
+        CompletableFuture.supplyAsync(() ->
+        {
             try
             {
                 return loadMails(accountID, folderID, folderFullName);
@@ -415,7 +365,8 @@ public class DefaultMailService extends AbstractService implements MailService, 
             {
                 throw new RuntimeException(ex);
             }
-        }, getExecutorService()).whenCompleteAsync((result, throwable) -> {
+        }, getExecutorService()).whenCompleteAsync((result, throwable) ->
+        {
             if (throwable != null)
             {
                 deferredResult.setErrorResult(throwable);
@@ -451,8 +402,8 @@ public class DefaultMailService extends AbstractService implements MailService, 
      * @see de.freese.pim.server.mail.service.MailService#test(de.freese.pim.server.mail.model.MailAccount)
      */
     @Override
-    @GetMapping("/test")
-    public List<MailFolder> test(@RequestBody final MailAccount account) throws Exception
+    @PostMapping("/test")
+    public List<MailFolder> test(@RequestBody @Valid final MailAccount account) throws Exception
     {
         List<MailFolder> folder = null;
 
@@ -485,8 +436,8 @@ public class DefaultMailService extends AbstractService implements MailService, 
      */
     @Override
     @Transactional
-    @PostMapping("/account")
-    public int updateAccount(@RequestBody final MailAccount account) throws Exception
+    @PostMapping("/account/update")
+    public int updateAccount(@RequestBody @Valid final MailAccount account) throws Exception
     {
         return getMailDAO().updateAccount(account);
     }
@@ -496,7 +447,7 @@ public class DefaultMailService extends AbstractService implements MailService, 
      */
     @Override
     @Transactional
-    @PostMapping("/folder/{accountID}")
+    @PostMapping("/folder/update/{accountID}")
     public int[] updateFolder(final long accountID, @RequestBody final List<MailFolder> folders) throws Exception
     {
         int[] affectedRows = new int[folders.size()];
@@ -509,5 +460,58 @@ public class DefaultMailService extends AbstractService implements MailService, 
         }
 
         return affectedRows;
+    }
+
+    /**
+     * Schliessen der MailAPI-Verbindung des MailAccounts
+     *
+     * @param accountID long
+     */
+    protected void disconnectMailAPI(final long accountID)
+    {
+        String beanName = "mailAPI-" + accountID;
+
+        DefaultListableBeanFactory bf = (DefaultListableBeanFactory) getBeanFactory();
+        MailAPI mailAPI = bf.getBean(beanName, MailAPI.class);
+
+        getLogger().info("Close " + mailAPI.getAccount().getMail());
+
+        try
+        {
+            mailAPI.disconnect();
+        }
+        catch (Exception ex)
+        {
+            getLogger().warn(ex.getMessage());
+        }
+
+        bf.destroySingleton(beanName);
+    }
+
+    /**
+     * @return {@link BeanFactory}
+     */
+    protected BeanFactory getBeanFactory()
+    {
+        return this.beanFactory;
+    }
+
+    /**
+     * @param accountID long
+     * @return {@link MailAPI}
+     */
+    protected MailAPI getMailAPI(final long accountID)
+    {
+        MailAPI mailAPI = getApplicationContext().getBean("mailAPI-" + accountID, MailAPI.class);
+
+        return mailAPI;
+    }
+
+    /**
+     * @return {@link MailDAO}
+     */
+    protected MailDAO getMailDAO()
+    {
+        return this.mailDAO;
     }
 }

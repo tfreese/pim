@@ -4,8 +4,10 @@ package de.freese.pim.common.spring.autoconfigure.executorservice;
 import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.RejectedExecutionHandler;
+
 import javax.annotation.Resource;
 import javax.sql.DataSource;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -20,7 +22,8 @@ import org.springframework.scheduling.concurrent.ThreadPoolExecutorFactoryBean;
  * AutoConfiguration für ein {@link ExecutorService}.<br>
  * Nur wenn noch kein {@link ExecutorService} vorhanden ist, wird ein {@link ExecutorService} erzeugt.
  * <p>
- * Beispiel ExecutorService: Threads leben max. 60 Sekunden, wenn es nix zu tun gibt; min. 2, max. 10 Threads, max. 100 Tasks in der Queue.<br>
+ * Beispiel ExecutorService: Threads leben max. 60 Sekunden, wenn es nix zu tun gibt; min. 2, max. 10 Threads, max. 100 Tasks in der
+ * Queue.<br>
  * threadpool.thread-name-prefix=thread<br>
  * threadpool.thread-priority=5<br>
  * threadpool.core-pool-size=2<br>
@@ -95,7 +98,7 @@ public class ThreadPoolExecutorAutoConfiguration
         {
             // PoolSize orientiert sich an DataSource.
             DataSourcePoolMetadata metaData = this.dataSourcePoolMetadataProvider.getDataSourcePoolMetadata(this.dataSource);
-            int dsMax = Optional.ofNullable(metaData.getMax()).orElse(Integer.MAX_VALUE);
+            int dsMax = Optional.ofNullable(metaData).map(DataSourcePoolMetadata::getMax).orElse(Integer.MAX_VALUE);
 
             if ((dsMax > 0) && (maxSize > dsMax))
             {
@@ -107,8 +110,8 @@ public class ThreadPoolExecutorAutoConfiguration
                 // Annahme, einfach 1/4 von maxSize.
                 coreSize = Math.max(maxSize / 4, 1);
 
-                LOGGER.info("Resize ThreadPool because DataSource dependency: old coreSize/maxSize={}/{}, new coreSize/maxSize={}/{}", oldCore, oldMax,
-                        coreSize, maxSize);
+                LOGGER.info("Resize ThreadPool because DataSource dependency: old coreSize/maxSize={}/{}, new coreSize/maxSize={}/{}",
+                        oldCore, oldMax, coreSize, maxSize);
             }
         }
 

@@ -1,9 +1,17 @@
 // Created: 17.02.2017
 package de.freese.pim.server.spring.config;
 
+import javax.annotation.Resource;
+
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
+import org.springframework.core.task.AsyncTaskExecutor;
+import org.springframework.scheduling.concurrent.ConcurrentTaskExecutor;
+import org.springframework.web.servlet.config.annotation.AsyncSupportConfigurer;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
+
+import de.freese.pim.common.spring.autoconfigure.taskexcecutor.TaskExcecutorAutoConfiguration;
 
 /**
  * Server Spring-Konfiguration von PIM.
@@ -16,14 +24,32 @@ import org.springframework.context.annotation.Profile;
 {
         "de.freese.pim"
 })
-public class ServerConfig
+public class ServerConfig extends WebMvcConfigurationSupport
 {
+    /**
+     * @see ConcurrentTaskExecutor
+     * @see TaskExcecutorAutoConfiguration
+     */
+    @Resource
+    private AsyncTaskExecutor taskExecutor = null;
+
     /**
      * Erzeugt eine neue Instanz von {@link ServerConfig}
      */
     public ServerConfig()
     {
         super();
+    }
+
+    /**
+     * @see org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport#configureAsyncSupport(org.springframework.web.servlet.config.annotation.AsyncSupportConfigurer)
+     */
+    @Override
+    protected void configureAsyncSupport(final AsyncSupportConfigurer configurer)
+    {
+        // Verlagert die asynchrone Ausführung von Server-Requests (Callable, WebAsyncTask) in diesen ThreadPool.
+        // Ansonsten würde für jeden Request immer ein neuer Thread erzeugt.
+        configurer.setTaskExecutor(this.taskExecutor);
     }
 
     // /**

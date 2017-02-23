@@ -98,6 +98,11 @@ public class SimpleExecutorService extends AbstractExecutorService
     /**
      *
      */
+    private static final boolean DEBUG = false;
+
+    /**
+     *
+     */
     private final int coreSize;
 
     /**
@@ -321,16 +326,34 @@ public class SimpleExecutorService extends AbstractExecutorService
 
         try
         {
-            if (getPoolSize() < getCoreSize())
+            int poolSize = getPoolSize();
+            int idleWorkers = getIdleSize();
+            int queueSize = getWorkQueue().size();
+
+            if (DEBUG)
             {
+                System.out.printf("SimpleExecutorService.execute(): poolSize=%d; workersIdle=%d; queueSize=%d, task=%s%n", poolSize,
+                        idleWorkers, queueSize, command);
+            }
+
+            if (poolSize < getCoreSize())
+            {
+                if (DEBUG)
+                {
+                    System.out.printf("SimpleExecutorService.execute(): add core worker%n");
+                }
                 // Core-Worker erzeugen
                 addWorker(command, true);
 
                 return;
             }
 
-            if ((getPoolSize() < getMaxSize()) && (this.workersIdle.get() == 0))// && !getWorkQueue().isEmpty())
+            if ((poolSize < getMaxSize()) && (idleWorkers == 0))// && (queueSize > 0))// && !getWorkQueue().isEmpty())
             {
+                if (DEBUG)
+                {
+                    System.out.printf("SimpleExecutorService.execute(): add worker%n");
+                }
                 // Neue Threads starten, wenn
                 // - maxSize noch nicht erreicht
                 // - und keine freien Threads zur Verfügung stehen
@@ -338,6 +361,11 @@ public class SimpleExecutorService extends AbstractExecutorService
                 addWorker(command, false);
 
                 return;
+            }
+
+            if (DEBUG)
+            {
+                System.out.printf("SimpleExecutorService.execute(): offer task=%s%n", command);
             }
 
             boolean isInQueue = getWorkQueue().offer(command);
@@ -496,10 +524,12 @@ public class SimpleExecutorService extends AbstractExecutorService
         worker.firstTask = firstTask;
 
         this.workers.add(worker);
-        this.workersIdle.incrementAndGet();
 
-        // System.out.println("SimpleExecutorService.addWorker(): coreWorker=" + coreWorker + "; name=" + worker.getName() + "; "
-        // + (firstTask == null ? "" : firstTask.toString()));
+        if (DEBUG)
+        {
+            System.out.printf("SimpleExecutorService.addWorker(): coreWorker=%b; workerName=%s; task=%s%n", coreWorker, thread.getName(),
+                    (firstTask == null ? "" : firstTask.toString()));
+        }
 
         // // Annahme: PREFIX-N; PREFIX_N
         // String threadName = thread.getName();
@@ -603,10 +633,22 @@ public class SimpleExecutorService extends AbstractExecutorService
      */
     protected void removeWorker(final Worker worker)
     {
-        // System.out.println("SimpleExecutorService2.removeWorker(): stopped " + worker.getName());
-        this.workers.remove(worker);
-        this.workersIdle.decrementAndGet();
-        this.threadNumber.decrementAndGet();
+        this.mainLock.lock();
+
+        try
+        {
+            if (DEBUG)
+            {
+                System.out.printf("SimpleExecutorService2.removeWorker(): workerName=%s%n", worker.getName());
+            }
+
+            this.workers.remove(worker);
+            this.threadNumber.decrementAndGet();
+        }
+        finally
+        {
+            this.mainLock.unlock();
+        }
     }
 
     /**
@@ -621,6 +663,8 @@ public class SimpleExecutorService extends AbstractExecutorService
         Runnable task = worker.firstTask;
         worker.firstTask = null;
 
+        this.workersIdle.incrementAndGet();
+
         while ((task != null) || ((task = getTask(isCoreWorker)) != null))
         {
             this.workersIdle.decrementAndGet();
@@ -630,7 +674,6 @@ public class SimpleExecutorService extends AbstractExecutorService
             {
                 beforeExecute(thread, task);
 
-                // System.out.println("SimpleExecutorService2.runWorker(): thread=" + thread.getName() + "; task=" + task);
                 task.run();
             }
             catch (RuntimeException x)
@@ -650,14 +693,15 @@ public class SimpleExecutorService extends AbstractExecutorService
             }
             finally
             {
-                task = null;
                 this.workersIdle.incrementAndGet();
+                task = null;
                 afterExecute(task, thrown);
             }
         }
 
         if (!isCoreWorker)
         {
+            this.workersIdle.decrementAndGet();
             thread.interrupt();
         }
     }

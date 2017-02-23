@@ -23,7 +23,9 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.core.io.Resource;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import com.sun.javafx.application.LauncherImpl;
 
@@ -54,8 +56,8 @@ import javafx.stage.Window;
 @SuppressWarnings("restriction")
 @SpringBootApplication
 @EnableScheduling
-// @EnableAsync // @Async("executorService")
-// @EnableTransactionManagement // Wird durch Spring-Boot automatisch konfiguriert, wenn DataSource-Bean vorhanden.
+@EnableAsync // @Async("executorService")
+@EnableTransactionManagement // Wird durch Spring-Boot automatisch konfiguriert, wenn DataSource-Bean vorhanden.
 public class PIMApplication extends Application implements ApplicationContextAware
 {
     /**

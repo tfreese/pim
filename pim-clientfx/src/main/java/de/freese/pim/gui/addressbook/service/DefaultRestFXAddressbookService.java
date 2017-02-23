@@ -1,8 +1,10 @@
 // Created: 15.02.2017
 package de.freese.pim.gui.addressbook.service;
 
-import java.util.Collections;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -42,7 +44,9 @@ public class DefaultRestFXAddressbookService extends AbstractFXAddressbookServic
     @Override
     public int deleteKontakt(final long id) throws PIMException
     {
-        return 0;
+        int affectedRows = getRestTemplate().postForObject("/addressBook/contact/delete/{contactID}", id, Integer.class);
+
+        return affectedRows;
     }
 
     /**
@@ -51,7 +55,9 @@ public class DefaultRestFXAddressbookService extends AbstractFXAddressbookServic
     @Override
     public List<FXKontakt> getKontaktDetails(final long... ids) throws PIMException
     {
-        return Collections.emptyList();
+        FXKontakt[] details = getRestTemplate().postForObject("/addressBook/details", ids, FXKontakt[].class);
+
+        return Arrays.asList(details);
     }
 
     /**
@@ -60,7 +66,9 @@ public class DefaultRestFXAddressbookService extends AbstractFXAddressbookServic
     @Override
     public void insertKontakt(final FXKontakt kontakt) throws PIMException
     {
+        long primaryKey = getRestTemplate().postForObject("/addressBook/contact/insert", kontakt, Long.class);
 
+        kontakt.setID(primaryKey);
     }
 
     /**
@@ -78,7 +86,13 @@ public class DefaultRestFXAddressbookService extends AbstractFXAddressbookServic
     @Override
     public int updateKontakt(final long id, final String nachname, final String vorname) throws PIMException
     {
-        return 0;
+        Map<String, String> variables = new HashMap<>();
+        variables.put("surname", nachname);
+        variables.put("forename", vorname);
+
+        int affectedRows = getRestTemplate().postForObject("/addressBook/contact/update/{contactID}", id, Integer.class, variables);
+
+        return affectedRows;
     }
 
     /**

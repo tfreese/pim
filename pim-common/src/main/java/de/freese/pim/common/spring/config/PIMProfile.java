@@ -29,6 +29,11 @@ public enum PIMProfile
     HsqldbLocalFile,
 
     /**
+     * HSQLDB als Memory-DB
+     */
+    HsqldbMemory,
+
+    /**
      * Dedizierter Server
      */
     Server;

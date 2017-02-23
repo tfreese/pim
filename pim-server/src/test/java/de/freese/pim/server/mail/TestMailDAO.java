@@ -20,6 +20,7 @@ import org.junit.runners.MethodSorters;
 import org.springframework.test.annotation.Commit;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.Rollback;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
@@ -43,6 +44,7 @@ import de.freese.pim.server.mail.model.MailFolder;
 })
 @Transactional(transactionManager = "transactionManager")
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
+@ActiveProfiles("test")
 @DirtiesContext
 public class TestMailDAO
 {

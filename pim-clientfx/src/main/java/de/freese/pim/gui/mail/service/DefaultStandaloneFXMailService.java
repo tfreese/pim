@@ -9,10 +9,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+
 import javax.annotation.Resource;
+
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
+
 import com.fasterxml.jackson.databind.JavaType;
+
 import de.freese.pim.common.PIMException;
 import de.freese.pim.common.model.mail.MailContent;
 import de.freese.pim.common.utils.io.IOMonitor;
@@ -25,7 +29,7 @@ import de.freese.pim.server.mail.model.MailFolder;
 import de.freese.pim.server.mail.service.MailService;
 
 /**
- * MailService für JavaFX, wenn es keinen Server gibt.
+ * Standalone-MailService für JavaFX, wenn es keinen Server gibt.
  *
  * @author Thomas Freese
  */
@@ -84,7 +88,7 @@ public class DefaultStandaloneFXMailService extends AbstractFXMailService
      * @see de.freese.pim.gui.mail.service.FXMailService#disconnectAccounts(long[])
      */
     @Override
-    public void disconnectAccounts(final long...accountIDs) throws PIMException
+    public void disconnectAccounts(final long... accountIDs) throws PIMException
     {
         try
         {
@@ -114,14 +118,6 @@ public class DefaultStandaloneFXMailService extends AbstractFXMailService
         {
             throw new PIMException(ex);
         }
-    }
-
-    /**
-     * @return {@link MailService}
-     */
-    protected MailService getMailService()
-    {
-        return this.mailService;
     }
 
     /**
@@ -199,21 +195,6 @@ public class DefaultStandaloneFXMailService extends AbstractFXMailService
     }
 
     /**
-     * @see de.freese.pim.gui.mail.service.AbstractFXMailService#loadMailContent(java.nio.file.Path, long, java.lang.String, long,
-     *      de.freese.pim.common.utils.io.IOMonitor)
-     */
-    @Override
-    protected MailContent loadMailContent(final Path mailPath, final long accountID, final String folderFullName, final long mailUID, final IOMonitor monitor)
-        throws Exception
-    {
-        MailContent mailContent = getMailService().loadMailContent(accountID, folderFullName, mailUID, monitor);
-
-        saveMailContent(mailPath, mailContent);
-
-        return mailContent;
-    }
-
-    /**
      * @see de.freese.pim.gui.mail.service.FXMailService#loadMails(long, long, java.lang.String)
      */
     @Override
@@ -232,19 +213,6 @@ public class DefaultStandaloneFXMailService extends AbstractFXMailService
             throw new PIMException(ex);
         }
     }
-
-    // /**
-    // * @see de.freese.pim.gui.mail.service.FXMailService#loadMails2(long, long, java.lang.String)
-    // */
-    // @Override
-    // public Future<List<FXMail>> loadMails2(final long accountID, final long folderID, final String folderFullName) throws Exception
-    // {
-    // Future<List<Mail>> pojoFuture = getMailService().loadMails2(accountID, folderID, folderFullName);
-    //
-    // List<FXMail> fxBeans = toFXMails(pojoFuture.get().stream().collect(Collectors.toList()));
-    //
-    // return new AsyncResult<>(fxBeans);
-    // }
 
     /**
      * @param mailService {@link MailService}
@@ -271,6 +239,37 @@ public class DefaultStandaloneFXMailService extends AbstractFXMailService
             List<FXMailFolder> fxBeans = toFXMailFolders(getMailService().test(pojo));
 
             return fxBeans;
+        }
+        catch (Exception ex)
+        {
+            throw new PIMException(ex);
+        }
+    }
+
+    // /**
+    // * @see de.freese.pim.gui.mail.service.FXMailService#loadMails2(long, long, java.lang.String)
+    // */
+    // @Override
+    // public Future<List<FXMail>> loadMails2(final long accountID, final long folderID, final String folderFullName) throws Exception
+    // {
+    // Future<List<Mail>> pojoFuture = getMailService().loadMails2(accountID, folderID, folderFullName);
+    //
+    // List<FXMail> fxBeans = toFXMails(pojoFuture.get().stream().collect(Collectors.toList()));
+    //
+    // return new AsyncResult<>(fxBeans);
+    // }
+
+    /**
+     * @see de.freese.pim.gui.mail.service.FXMailService#updateAccount(de.freese.pim.gui.mail.model.FXMailAccount)
+     */
+    @Override
+    public int updateAccount(final FXMailAccount account) throws PIMException
+    {
+        try
+        {
+            MailAccount pojo = toPojoMailAccount(account);
+
+            return getMailService().updateAccount(pojo);
         }
         catch (Exception ex)
         {
@@ -409,20 +408,25 @@ public class DefaultStandaloneFXMailService extends AbstractFXMailService
     }
 
     /**
-     * @see de.freese.pim.gui.mail.service.FXMailService#updateAccount(de.freese.pim.gui.mail.model.FXMailAccount)
+     * @return {@link MailService}
+     */
+    protected MailService getMailService()
+    {
+        return this.mailService;
+    }
+
+    /**
+     * @see de.freese.pim.gui.mail.service.AbstractFXMailService#loadMailContent(java.nio.file.Path, long, java.lang.String, long,
+     *      de.freese.pim.common.utils.io.IOMonitor)
      */
     @Override
-    public int updateAccount(final FXMailAccount account) throws PIMException
+    protected MailContent loadMailContent(final Path mailPath, final long accountID, final String folderFullName, final long mailUID,
+            final IOMonitor monitor) throws Exception
     {
-        try
-        {
-            MailAccount pojo = toPojoMailAccount(account);
+        MailContent mailContent = getMailService().loadMailContent(accountID, folderFullName, mailUID, monitor);
 
-            return getMailService().updateAccount(pojo);
-        }
-        catch (Exception ex)
-        {
-            throw new PIMException(ex);
-        }
+        saveMailContent(mailPath, mailContent);
+
+        return mailContent;
     }
 }
