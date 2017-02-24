@@ -14,8 +14,10 @@ import java.util.Optional;
 import java.util.concurrent.Callable;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
+
 import javax.annotation.PreDestroy;
 import javax.annotation.Resource;
+
 import de.freese.pim.common.PIMException;
 import de.freese.pim.common.model.mail.DefaultMailContent;
 import de.freese.pim.common.model.mail.MailContent;
@@ -46,27 +48,6 @@ public abstract class AbstractFXMailService extends AbstractFXService implements
     }
 
     /**
-     * Folder-Hierarchie aufbauen basierend auf Namen.
-     *
-     * @param mailFolders {@link List}
-     */
-    protected void buildHierarchie(final List<FXMailFolder> mailFolders)
-    {
-        // Hierarchie aufbauen basierend auf Namen.
-        for (FXMailFolder folder : mailFolders)
-        {
-            // @formatter:off
-            Optional<FXMailFolder> parent = mailFolders.stream()
-                    .filter(mf -> !Objects.equals(mf, folder))
-                    .filter(mf -> folder.getFullName().startsWith(mf.getFullName()))
-                    .findFirst();
-            // @formatter:on
-
-            parent.ifPresent(p -> p.addChild(folder));
-        }
-    }
-
-    /**
      * Schliessen der MailAPI-Verbindung aller MailAccounts.
      *
      * @throws Exception Falls was schief geht.
@@ -78,17 +59,8 @@ public abstract class AbstractFXMailService extends AbstractFXService implements
     }
 
     /**
-     * Pfad zum lokalen Speicherort.
-     *
-     * @return {@link Path}
-     */
-    protected Path getBasePath()
-    {
-        return this.basePath;
-    }
-
-    /**
-     * @see de.freese.pim.gui.mail.service.FXMailService#loadMailContent(long, de.freese.pim.gui.mail.model.FXMail, de.freese.pim.common.utils.io.IOMonitor)
+     * @see de.freese.pim.gui.mail.service.FXMailService#loadMailContent(long, de.freese.pim.gui.mail.model.FXMail,
+     *      de.freese.pim.common.utils.io.IOMonitor)
      */
     @Override
     public MailContent loadMailContent(final long accountID, final FXMail mail, final IOMonitor monitor) throws PIMException
@@ -97,7 +69,8 @@ public abstract class AbstractFXMailService extends AbstractFXService implements
         {
             if (getLogger().isDebugEnabled())
             {
-                getLogger().debug("load mail: msgnum={}; uid={}; size={}; subject={}", mail.getMsgNum(), mail.getUID(), mail.getSize(), mail.getSubject());
+                getLogger().debug("load mail: msgnum={}; uid={}; size={}; subject={}", mail.getMsgNum(), mail.getUID(), mail.getSize(),
+                        mail.getSubject());
             }
 
             Path folderPath = getBasePath().resolve(Long.toString(accountID)).resolve(mail.getFolderFullName());
@@ -147,6 +120,48 @@ public abstract class AbstractFXMailService extends AbstractFXService implements
     }
 
     /**
+     * Pfad zum lokalen Speicherort.
+     *
+     * @param basePath {@link Path}
+     */
+    @Resource(name = "pimHomePath")
+    public void setBasePath(final Path basePath)
+    {
+        this.basePath = basePath;
+    }
+
+    /**
+     * Folder-Hierarchie aufbauen basierend auf Namen.
+     *
+     * @param mailFolders {@link List}
+     */
+    protected void buildHierarchie(final List<FXMailFolder> mailFolders)
+    {
+        // Hierarchie aufbauen basierend auf Namen.
+        for (FXMailFolder folder : mailFolders)
+        {
+            // @formatter:off
+            Optional<FXMailFolder> parent = mailFolders.stream()
+                    .filter(mf -> !Objects.equals(mf, folder))
+                    .filter(mf -> folder.getFullName().startsWith(mf.getFullName()))
+                    .findFirst();
+            // @formatter:on
+
+            parent.ifPresent(p -> p.addChild(folder));
+        }
+    }
+
+    /**
+     * Pfad zum lokalen Speicherort.
+     *
+     * @return {@link Path}
+     */
+    protected Path getBasePath()
+    {
+        return this.basePath;
+    }
+
+    /**
      * Liefert den Inhalt der Mail im JSON-Format.<br>
      * Der Monitor dient zur Anzeige des Lade-Fortschritts.
      *
@@ -158,8 +173,8 @@ public abstract class AbstractFXMailService extends AbstractFXService implements
      * @return {@link MailContent}
      * @throws Exception Falls was schief geht.
      */
-    protected abstract MailContent loadMailContent(Path mailPath, final long accountID, final String folderFullName, final long mailUID, IOMonitor monitor)
-        throws Exception;
+    protected abstract MailContent loadMailContent(Path mailPath, final long accountID, final String folderFullName, final long mailUID,
+            IOMonitor monitor) throws Exception;
 
     /**
      * Speichert in einem separatem Thread den Mail-Inhalt im lokalem Cache.
@@ -170,7 +185,8 @@ public abstract class AbstractFXMailService extends AbstractFXService implements
      */
     protected void saveMailContent(final Path mailPath, final MailContent mailContent) throws Exception
     {
-        Callable<Void> task = () -> {
+        Callable<Void> task = () ->
+        {
             getLogger().info("Save Mail: {}", mailPath);
 
             try (OutputStream os = Files.newOutputStream(mailPath);
@@ -191,7 +207,7 @@ public abstract class AbstractFXMailService extends AbstractFXService implements
             return null;
         };
 
-        getExecutorService().submit(task);
+        getTaskExecutor().submit(task);
     }
 
     /**
@@ -203,7 +219,8 @@ public abstract class AbstractFXMailService extends AbstractFXService implements
      */
     protected void saveMailContent(final Path mailPath, final String jsonContent) throws Exception
     {
-        Callable<Void> task = () -> {
+        Callable<Void> task = () ->
+        {
             getLogger().info("Save Mail: {}", mailPath);
 
             try (OutputStream os = Files.newOutputStream(mailPath);
@@ -225,17 +242,6 @@ public abstract class AbstractFXMailService extends AbstractFXService implements
             return null;
         };
 
-        getExecutorService().submit(task);
-    }
-
-    /**
-     * Pfad zum lokalen Speicherort.
-     *
-     * @param basePath {@link Path}
-     */
-    @Resource(name = "pimHomePath")
-    public void setBasePath(final Path basePath)
-    {
-        this.basePath = basePath;
+        getTaskExecutor().submit(task);
     }
 }

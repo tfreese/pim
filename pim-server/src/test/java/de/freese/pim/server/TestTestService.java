@@ -11,8 +11,10 @@ import java.util.List;
 import javax.annotation.Resource;
 
 import org.junit.Assert;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.junit.runners.MethodSorters;
 import org.springframework.boot.context.embedded.LocalServerPort;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -27,6 +29,8 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 /**
+ * Vollständiger Test der gesamten Server-Anwendung.
+ *
  * @author Thomas Freese
  */
 @RunWith(SpringRunner.class)
@@ -41,10 +45,9 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 {
         "Server", "HsqldbMemory"
 })
-
 @AutoConfigureMockMvc
-// @WebMvcTest(TestService.class) // Nur für diesen einen Service, ohne weitere Abhängigkeiten.
 @DirtiesContext
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class TestTestService
 {
     /**
@@ -73,12 +76,14 @@ public class TestTestService
     @Test
     public void test010NoParamGreetingShouldReturnDefaultMessage() throws Exception
     {
+        // .andDo(print()).andExpect(jsonPath("$.content").value("Hello, Spring Community!"));
+
         // @formatter:off
         this.mockMvc.perform(get("/test/greeting"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(content().json("{\"hello\":\"World\"}"));
-        // @formatter:off
+        // @formatter:on
     }
 
     /**
@@ -87,8 +92,7 @@ public class TestTestService
     @Test
     public void test020ParamGreetingShouldReturnTailoredMessage() throws Exception
     {
-        // this.mockMvc.perform(get("/greeter/test").param("name", "Spring Community")).andDo(print()).andExpect(status().isOk())
-        // .andExpect(jsonPath("$.content").value("Hello, Spring Community!"));
+        // .andDo(print()).andExpect(jsonPath("$.content").value("Hello, Spring Community!"));
 
         // @formatter:off
         this.mockMvc.perform(get("/test/greeting").param("name", "Spring Community"))
@@ -151,6 +155,8 @@ public class TestTestService
             // @formatter:off
             this.mockMvc.perform(MockMvcRequestBuilders.asyncDispatch(mvcResult))
                 .andExpect(status().is2xxSuccessful());
+            // @formatter:off
+
             Assert.assertTrue(mvcResult.getAsyncResult().toString().startsWith("201"));
         }
     }

@@ -21,7 +21,7 @@
 				<directory>src/main/resources</directory>
 				<filtering>true</filtering>
 				<includes>
-					<include>application-PIMserver.properties</include>
+					<include>application-Server.properties</include>
 					<include>pim-server_banner.txt</include>
 				</includes>
 			</resource>
@@ -30,7 +30,7 @@
 				<directory>src/main/resources</directory>
 				<filtering>false</filtering>
 				<excludes>
-					<exclude>application-PIMserver.properties</exclude>
+					<exclude>application-Server.properties</exclude>
 					<exclude>pim-server_banner.txt</exclude>
 				</excludes>
 			</resource>

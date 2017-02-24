@@ -414,6 +414,6 @@ public class ContactController extends AbstractController
             new ErrorDialog().forThrowable(task.getException()).showAndWait();
         });
 
-        getExecutorService().execute(task);
+        getTaskExecutor().execute(task);
     }
 }

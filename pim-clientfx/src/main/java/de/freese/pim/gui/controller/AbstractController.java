@@ -1,10 +1,11 @@
 // Created: 29.11.2016
 package de.freese.pim.gui.controller;
 
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.ScheduledExecutorService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.task.AsyncTaskExecutor;
+import org.springframework.scheduling.TaskScheduler;
+
 import de.freese.pim.gui.PIMApplication;
 import de.freese.pim.gui.main.MainController;
 import javafx.fxml.Initializable;
@@ -23,22 +24,22 @@ public abstract class AbstractController implements Initializable
     /**
     *
     */
+    public final Logger logger = LoggerFactory.getLogger(getClass());
+
+    /**
+    *
+    */
     private boolean activated = false;
 
     /**
      *
      */
-    private final ExecutorService executorService;
-
-    /**
-    *
-    */
-    public final Logger logger = LoggerFactory.getLogger(getClass());
+    private final AsyncTaskExecutor taskExecutor;
 
     /**
      *
      */
-    private final ScheduledExecutorService scheduledExecutorService;
+    private final TaskScheduler taskScheduler;
 
     /**
      * Erzeugt eine neue Instanz von {@link AbstractController}
@@ -47,22 +48,14 @@ public abstract class AbstractController implements Initializable
     {
         super();
 
-        this.executorService = PIMApplication.getExecutorService();
-        this.scheduledExecutorService = PIMApplication.getScheduledExecutorService();
+        this.taskExecutor = PIMApplication.getTaskExecutor();
+        this.taskScheduler = PIMApplication.getTaskScheduler();
     }
 
     /**
      * Wird vom {@link MainController} aufgerufen, wenn der Controller aktiviert wird.
      */
     public abstract void activate();
-
-    /**
-     * @return {@link ExecutorService}
-     */
-    public ExecutorService getExecutorService()
-    {
-        return this.executorService;
-    }
 
     /**
      * @return {@link Logger}
@@ -101,11 +94,19 @@ public abstract class AbstractController implements Initializable
     }
 
     /**
-     * @return {@link ScheduledExecutorService}
+     * @return {@link AsyncTaskExecutor}
      */
-    public ScheduledExecutorService getScheduledExecutorService()
+    public AsyncTaskExecutor getTaskExecutor()
     {
-        return this.scheduledExecutorService;
+        return this.taskExecutor;
+    }
+
+    /**
+     * @return {@link TaskScheduler}
+     */
+    public TaskScheduler getTaskScheduler()
+    {
+        return this.taskScheduler;
     }
 
     /**

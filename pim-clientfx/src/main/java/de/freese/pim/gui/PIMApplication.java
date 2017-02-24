@@ -5,8 +5,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.ScheduledExecutorService;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -23,6 +21,8 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.core.io.Resource;
+import org.springframework.core.task.AsyncTaskExecutor;
+import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
@@ -54,7 +54,7 @@ import javafx.stage.Window;
  * @author Thomas Freese
  */
 @SuppressWarnings("restriction")
-@SpringBootApplication
+@SpringBootApplication()
 @EnableScheduling
 @EnableAsync // @Async("executorService")
 @EnableTransactionManagement // Wird durch Spring-Boot automatisch konfiguriert, wenn DataSource-Bean vorhanden.
@@ -97,14 +97,6 @@ public class PIMApplication extends Application implements ApplicationContextAwa
     }
 
     /**
-     * @return {@link ExecutorService}
-     */
-    public static ExecutorService getExecutorService()
-    {
-        return getApplicationContext().getBean("executorService", ExecutorService.class);
-    }
-
-    /**
      * @return {@link Window}
      */
     public static Window getMainWindow()
@@ -124,14 +116,6 @@ public class PIMApplication extends Application implements ApplicationContextAwa
     }
 
     /**
-     * @return {@link ScheduledExecutorService}
-     */
-    public static ScheduledExecutorService getScheduledExecutorService()
-    {
-        return getApplicationContext().getBean("scheduledExecutorService", ScheduledExecutorService.class);
-    }
-
-    /**
      * Liefert den Bildschirm auf dem PIM läuft.
      *
      * @return {@link Screen}
@@ -139,6 +123,22 @@ public class PIMApplication extends Application implements ApplicationContextAwa
     public static Screen getScreen()
     {
         return screen;
+    }
+
+    /**
+     * @return {@link AsyncTaskExecutor}
+     */
+    public static AsyncTaskExecutor getTaskExecutor()
+    {
+        return getApplicationContext().getBean("taskExecutor", AsyncTaskExecutor.class);
+    }
+
+    /**
+     * @return {@link TaskScheduler}
+     */
+    public static TaskScheduler getTaskScheduler()
+    {
+        return getApplicationContext().getBean("taskScheduler", TaskScheduler.class);
     }
 
     /**

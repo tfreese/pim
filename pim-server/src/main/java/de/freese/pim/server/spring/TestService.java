@@ -6,8 +6,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
@@ -18,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.core.task.AsyncTaskExecutor;
 import org.springframework.http.MediaType;
 import org.springframework.scheduling.concurrent.ConcurrentTaskExecutor;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -54,14 +53,10 @@ public class TestService
     /**
      *
      */
-    private ExecutorService executorService = null;
-
-    /**
-     *
-     */
     private Logger logger = LoggerFactory.getLogger(TestService.class);
 
     /**
+     * @see ThreadPoolTaskExecutor
      * @see ConcurrentTaskExecutor
      * @see TaskExcecutorAutoConfiguration
      */
@@ -117,7 +112,7 @@ public class TestService
             {
                 throw new RuntimeException(ex);
             }
-        }, getExecutorService()).whenCompleteAsync((result, throwable) ->
+        }, getTaskExecutor()).whenCompleteAsync((result, throwable) ->
         {
             getLogger().info("whenCompleteAsync: thread={}", Thread.currentThread().getName());
 
@@ -129,7 +124,7 @@ public class TestService
             {
                 deferredResult.setResult(result);
             }
-        }, getExecutorService());
+        }, getTaskExecutor());
 
         return deferredResult;
     }
@@ -173,32 +168,18 @@ public class TestService
     }
 
     /**
-     * @param executorService {@link ExecutorService}
-     */
-    @Resource
-    public void setExecutorService(final ExecutorService executorService)
-    {
-        this.executorService = executorService;
-    }
-
-    /**
-     * @return {@link ExecutorService}
-     */
-    protected ExecutorService getExecutorService()
-    {
-        if (this.executorService == null)
-        {
-            this.executorService = Executors.newCachedThreadPool();
-        }
-
-        return this.executorService;
-    }
-
-    /**
      * @return {@link Logger}
      */
     protected Logger getLogger()
     {
         return this.logger;
+    }
+
+    /**
+     * @return {@link AsyncTaskExecutor}
+     */
+    protected AsyncTaskExecutor getTaskExecutor()
+    {
+        return this.taskExecutor;
     }
 }

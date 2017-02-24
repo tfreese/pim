@@ -41,6 +41,30 @@ public class ServerConfig extends WebMvcConfigurationSupport
         super();
     }
 
+    // /**
+    // * @see org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport#extendMessageConverters(java.util.List)
+    // */
+    // @Override
+    // public void extendMessageConverters(final List<HttpMessageConverter<?>> converters)
+    // {
+    // // Make sure dates are serialised in ISO-8601 format instead as timestamps
+    // for (HttpMessageConverter<?> converter : converters)
+    // {
+    // if (converter instanceof MappingJackson2HttpMessageConverter)
+    // {
+    // MappingJackson2HttpMessageConverter jsonMessageConverter = (MappingJackson2HttpMessageConverter) converter;
+    // ObjectMapper objectMapper = jsonMessageConverter.getObjectMapper();
+    // objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+    //
+    // SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    // df.setTimeZone(TimeZone.getTimeZone("Europe/Berlin"));
+    // objectMapper.setDateFormat(df);
+    //
+    // break;
+    // }
+    // }
+    // }
+
     /**
      * @see org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport#configureAsyncSupport(org.springframework.web.servlet.config.annotation.AsyncSupportConfigurer)
      */

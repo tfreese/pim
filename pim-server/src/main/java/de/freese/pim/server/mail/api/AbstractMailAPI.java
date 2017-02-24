@@ -2,9 +2,11 @@
 package de.freese.pim.server.mail.api;
 
 import java.util.Objects;
-import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executor;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import de.freese.pim.server.mail.model.MailAccount;
 
 /**
@@ -22,7 +24,7 @@ public abstract class AbstractMailAPI implements MailAPI
     /**
     *
     */
-    private ExecutorService executor = null;
+    private Executor executor = null;
 
     /**
     *
@@ -53,28 +55,10 @@ public abstract class AbstractMailAPI implements MailAPI
     }
 
     /**
-     * Optionaler {@link ExecutorService} für die Mail-API.
-     *
-     * @return {@link ExecutorService}
-     */
-    protected ExecutorService getExecutor()
-    {
-        return this.executor;
-    }
-
-    /**
-     * @return {@link Logger}
-     */
-    protected Logger getLogger()
-    {
-        return this.logger;
-    }
-
-    /**
-     * @see de.freese.pim.server.mail.api.MailAPI#setExecutorService(java.util.concurrent.ExecutorService)
+     * @see de.freese.pim.server.mail.api.MailAPI#setExecutor(java.util.concurrent.Executor)
      */
     @Override
-    public void setExecutorService(final ExecutorService executor)
+    public void setExecutor(final Executor executor)
     {
         this.executor = executor;
     }
@@ -89,5 +73,23 @@ public abstract class AbstractMailAPI implements MailAPI
         builder.append("JavaMailAPI [").append(getAccount()).append("]");
 
         return builder.toString();
+    }
+
+    /**
+     * Optionaler {@link Executor} für die Mail-API.
+     *
+     * @return {@link Executor}
+     */
+    protected Executor getExecutor()
+    {
+        return this.executor;
+    }
+
+    /**
+     * @return {@link Logger}
+     */
+    protected Logger getLogger()
+    {
+        return this.logger;
     }
 }

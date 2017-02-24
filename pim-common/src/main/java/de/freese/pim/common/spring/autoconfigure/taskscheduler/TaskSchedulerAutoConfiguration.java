@@ -28,12 +28,12 @@ import org.springframework.scheduling.concurrent.ConcurrentTaskScheduler;
 @ConditionalOnMissingBean(TaskScheduler.class) // Nur wenn TaskScheduler noch nicht im SpringContext ist.
 @ConditionalOnBean(
 {
-        ExecutorService.class, ScheduledExecutorService.class
+        Executor.class, ScheduledExecutorService.class
 }) // Nur wenn ExecutorService und ScheduledExecutorService im SpringContext ist.
-// @AutoConfigureAfter(
-// {
-// ThreadPoolExecutorAutoConfiguration.class, ScheduledThreadPoolExecutorAutoConfiguration.class
-// })
+   // @AutoConfigureAfter(
+   // {
+   // ThreadPoolExecutorAutoConfiguration.class, ScheduledThreadPoolExecutorAutoConfiguration.class
+   // })
 public class TaskSchedulerAutoConfiguration
 {
     /**
@@ -44,7 +44,7 @@ public class TaskSchedulerAutoConfiguration
      *
      */
     @Resource
-    private ExecutorService executorService = null;
+    private Executor executor = null;
 
     /**
      *
@@ -61,14 +61,19 @@ public class TaskSchedulerAutoConfiguration
     }
 
     /**
+     * , "taskExecutor"
+     *
      * @return {@link TaskScheduler}
      */
-    @Bean
+    @Bean(
+    {
+            "taskScheduler"
+    })
     public TaskScheduler taskScheduler()
     {
         LOGGER.info("Create TaskScheduler");
 
-        ConcurrentTaskScheduler bean = new ConcurrentTaskScheduler(this.executorService, this.scheduledExecutorService);
+        ConcurrentTaskScheduler bean = new ConcurrentTaskScheduler(this.executor, this.scheduledExecutorService);
 
         return bean;
     }

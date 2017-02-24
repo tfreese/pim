@@ -404,7 +404,7 @@ public class MailController extends AbstractController
         parent.setExpanded(true);
 
         InitMailAPITask service = new InitMailAPITask(this.treeViewMail, parent, getMailService(), account);
-        getExecutorService().execute(service);
+        getTaskExecutor().execute(service);
     }
 
     /**
@@ -561,7 +561,7 @@ public class MailController extends AbstractController
         PIMApplication.getMainWindow().getScene().cursorProperty()
                 .bind(Bindings.when(runningProperty).then(Cursor.WAIT).otherwise(Cursor.DEFAULT));
 
-        getExecutorService().execute(loadMailContentTask);
+        getTaskExecutor().execute(loadMailContentTask);
     }
 
     /**
@@ -617,7 +617,7 @@ public class MailController extends AbstractController
         PIMApplication.getMainWindow().getScene().cursorProperty()
                 .bind(Bindings.when(runningProperty).then(Cursor.WAIT).otherwise(Cursor.DEFAULT));
 
-        getExecutorService().execute(loadMailsTask);
+        getTaskExecutor().execute(loadMailsTask);
     }
 
     /**

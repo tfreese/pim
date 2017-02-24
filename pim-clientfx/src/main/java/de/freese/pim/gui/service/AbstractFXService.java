@@ -1,11 +1,13 @@
 // Created: 16.02.2017
 package de.freese.pim.gui.service;
 
-import java.util.concurrent.ExecutorService;
 import javax.annotation.Resource;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.task.AsyncTaskExecutor;
 import org.springframework.scheduling.TaskScheduler;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
@@ -18,17 +20,17 @@ public class AbstractFXService
     /**
     *
     */
-    private ExecutorService executorService = null;
-
-    /**
-    *
-    */
     private ObjectMapper jsonMapper = null;
 
     /**
     *
     */
     private final Logger logger = LoggerFactory.getLogger(getClass());
+
+    /**
+    *
+    */
+    private AsyncTaskExecutor taskExecutor = null;
 
     /**
      *
@@ -44,11 +46,30 @@ public class AbstractFXService
     }
 
     /**
-     * @return {@link ExecutorService}
+     * @param jsonMapper {@link ObjectMapper}
      */
-    protected ExecutorService getExecutorService()
+    @Resource
+    public void setJsonMapper(final ObjectMapper jsonMapper)
     {
-        return this.executorService;
+        this.jsonMapper = jsonMapper;
+    }
+
+    /**
+     * @param taskExecutor {@link AsyncTaskExecutor}
+     */
+    @Resource
+    public void setTaskExecutor(final AsyncTaskExecutor taskExecutor)
+    {
+        this.taskExecutor = taskExecutor;
+    }
+
+    /**
+     * @param taskScheduler {@link TaskScheduler}
+     */
+    @Resource
+    public void setTaskScheduler(final TaskScheduler taskScheduler)
+    {
+        this.taskScheduler = taskScheduler;
     }
 
     /**
@@ -68,37 +89,18 @@ public class AbstractFXService
     }
 
     /**
+     * @return {@link AsyncTaskExecutor}
+     */
+    protected AsyncTaskExecutor getTaskExecutor()
+    {
+        return this.taskExecutor;
+    }
+
+    /**
      * @return {@link TaskScheduler}
      */
     protected TaskScheduler getTaskScheduler()
     {
         return this.taskScheduler;
-    }
-
-    /**
-     * @param executorService {@link ExecutorService}
-     */
-    @Resource
-    public void setExecutorService(final ExecutorService executorService)
-    {
-        this.executorService = executorService;
-    }
-
-    /**
-     * @param jsonMapper {@link ObjectMapper}
-     */
-    @Resource
-    public void setJsonMapper(final ObjectMapper jsonMapper)
-    {
-        this.jsonMapper = jsonMapper;
-    }
-
-    /**
-     * @param taskScheduler {@link TaskScheduler}
-     */
-    @Resource
-    public void setTaskScheduler(final TaskScheduler taskScheduler)
-    {
-        this.taskScheduler = taskScheduler;
     }
 }

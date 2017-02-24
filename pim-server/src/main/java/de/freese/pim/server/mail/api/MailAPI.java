@@ -4,7 +4,8 @@ package de.freese.pim.server.mail.api;
 import java.io.OutputStream;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executor;
+
 import de.freese.pim.common.function.ExceptionalConsumer;
 import de.freese.pim.common.function.ExceptionalFunction;
 import de.freese.pim.common.model.mail.MailContent;
@@ -103,11 +104,11 @@ public interface MailAPI
     public List<Mail> loadMails(String folderFullName, long uidFrom) throws Exception;
 
     /**
-     * Optionaler {@link ExecutorService} für die Mail-API.
+     * Optionaler {@link Executor} für die Mail-API.
      *
-     * @param executor {@link ExecutorService}
+     * @param executor {@link Executor}
      */
-    public void setExecutorService(final ExecutorService executor);
+    public void setExecutor(final Executor executor);
 
     /**
      * Setzt das SEEN-Flag einer Mail.

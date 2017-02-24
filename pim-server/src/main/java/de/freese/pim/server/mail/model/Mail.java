@@ -51,6 +51,7 @@ public class Mail
     /**
     *
     */
+    // @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date receivedDate = null;
 
     /**
@@ -62,6 +63,7 @@ public class Mail
     /**
     *
     */
+    // @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date sendDate = null;
 
     /**

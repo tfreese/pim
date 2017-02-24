@@ -1,6 +1,7 @@
 // Created: 23.02.2017
 package de.freese.pim.common.spring.autoconfigure.taskexcecutor;
 
+import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 
 import javax.annotation.Resource;
@@ -27,11 +28,12 @@ public class TaskExcecutorAutoConfiguration
     *
     */
     private static final Logger LOGGER = LoggerFactory.getLogger(TaskExcecutorAutoConfiguration.class);
+
     /**
     *
     */
     @Resource
-    private ExecutorService executorService = null;
+    private Executor executor = null;
 
     /**
      * Erzeugt eine neue Instanz von {@link TaskExcecutorAutoConfiguration}
@@ -42,15 +44,14 @@ public class TaskExcecutorAutoConfiguration
     }
 
     /**
-     * @param executorService {@link ExecutorService}
      * @return {@link TaskExecutor}
      */
     @Bean
-    public TaskExecutor taskExecutor(final ExecutorService executorService)
+    public TaskExecutor taskExecutor()
     {
         LOGGER.info("Create TaskExecutor");
 
-        TaskExecutor bean = new ConcurrentTaskExecutor(executorService);
+        TaskExecutor bean = new ConcurrentTaskExecutor(this.executor);
 
         return bean;
     }

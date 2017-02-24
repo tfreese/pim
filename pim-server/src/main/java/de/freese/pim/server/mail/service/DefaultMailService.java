@@ -101,7 +101,7 @@ public class DefaultMailService extends AbstractService implements MailService, 
         }
 
         MailAPI mailAPI = new JavaMailAPI(account);
-        mailAPI.setExecutorService(getExecutorService());
+        mailAPI.setExecutor(getTaskExecutor());
 
         ConfigurableListableBeanFactory bf = (ConfigurableListableBeanFactory) getBeanFactory();
         bf.registerSingleton(beanName, mailAPI);
@@ -365,7 +365,7 @@ public class DefaultMailService extends AbstractService implements MailService, 
             {
                 throw new RuntimeException(ex);
             }
-        }, getExecutorService()).whenCompleteAsync((result, throwable) ->
+        }, getTaskExecutor()).whenCompleteAsync((result, throwable) ->
         {
             if (throwable != null)
             {
@@ -375,7 +375,7 @@ public class DefaultMailService extends AbstractService implements MailService, 
             {
                 deferredResult.setResult(result);
             }
-        }, getExecutorService());
+        }, getTaskExecutor());
 
         return deferredResult;
     }

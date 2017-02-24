@@ -58,6 +58,7 @@ public class FXMail
     /**
     *
     */
+    // @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private final ObjectProperty<Date> receivedDateProperty = new SimpleObjectProperty<>(this, "receivedDate", null);
 
     /**
@@ -68,6 +69,7 @@ public class FXMail
     /**
     *
     */
+    // @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private final ObjectProperty<Date> sendDateProperty = new SimpleObjectProperty<>(this, "sendDate", null);
 
     /**
