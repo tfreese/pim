@@ -2,7 +2,6 @@
 package de.freese.pim.server.spring.config;
 
 import javax.annotation.Resource;
-
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -10,8 +9,7 @@ import org.springframework.core.task.AsyncTaskExecutor;
 import org.springframework.scheduling.concurrent.ConcurrentTaskExecutor;
 import org.springframework.web.servlet.config.annotation.AsyncSupportConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
-
-import de.freese.pim.common.spring.autoconfigure.taskexcecutor.TaskExcecutorAutoConfiguration;
+import de.freese.pim.common.spring.autoconfigure.taskexcecutor.TaskExecutorAutoConfiguration;
 
 /**
  * Server Spring-Konfiguration von PIM.
@@ -22,13 +20,13 @@ import de.freese.pim.common.spring.autoconfigure.taskexcecutor.TaskExcecutorAuto
 @Profile("Server")
 @ComponentScan(basePackages =
 {
-        "de.freese.pim"
+        "de.freese.pim", "de.freese.pim.server.mail.service"
 })
 public class ServerConfig extends WebMvcConfigurationSupport
 {
     /**
      * @see ConcurrentTaskExecutor
-     * @see TaskExcecutorAutoConfiguration
+     * @see TaskExecutorAutoConfiguration
      */
     @Resource
     private AsyncTaskExecutor taskExecutor = null;

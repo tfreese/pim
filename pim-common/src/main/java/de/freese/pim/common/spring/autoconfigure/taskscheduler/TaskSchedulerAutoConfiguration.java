@@ -4,9 +4,7 @@ package de.freese.pim.common.spring.autoconfigure.taskscheduler;
 import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ScheduledExecutorService;
-
 import javax.annotation.Resource;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
@@ -28,8 +26,8 @@ import org.springframework.scheduling.concurrent.ConcurrentTaskScheduler;
 @ConditionalOnMissingBean(TaskScheduler.class) // Nur wenn TaskScheduler noch nicht im SpringContext ist.
 @ConditionalOnBean(
 {
-        Executor.class, ScheduledExecutorService.class
-}) // Nur wenn ExecutorService und ScheduledExecutorService im SpringContext ist.
+        ExecutorService.class, ScheduledExecutorService.class
+}) // Nur wenn Executor und ScheduledExecutorService im SpringContext ist.
    // @AutoConfigureAfter(
    // {
    // ThreadPoolExecutorAutoConfiguration.class, ScheduledThreadPoolExecutorAutoConfiguration.class
@@ -44,7 +42,7 @@ public class TaskSchedulerAutoConfiguration
      *
      */
     @Resource
-    private Executor executor = null;
+    private ExecutorService executorService = null;
 
     /**
      *
@@ -73,7 +71,7 @@ public class TaskSchedulerAutoConfiguration
     {
         LOGGER.info("Create TaskScheduler");
 
-        ConcurrentTaskScheduler bean = new ConcurrentTaskScheduler(this.executor, this.scheduledExecutorService);
+        ConcurrentTaskScheduler bean = new ConcurrentTaskScheduler(this.executorService, this.scheduledExecutorService);
 
         return bean;
     }

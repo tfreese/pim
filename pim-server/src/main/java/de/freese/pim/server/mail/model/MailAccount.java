@@ -3,12 +3,7 @@
  */
 package de.freese.pim.server.mail.model;
 
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
-
 import de.freese.pim.common.model.mail.MailPort;
-import de.freese.pim.common.utils.Utils;
 
 /**
  * Entity für einen Mail-Account.
@@ -25,8 +20,8 @@ public class MailAccount
     /**
      *
      */
-    @NotNull
-    @Size(min = 0, max = 50)
+    // @NotNull
+    // @Size(min = 0, max = 50)
     private String imapHost = null;
 
     /**
@@ -37,29 +32,29 @@ public class MailAccount
     /**
      *
      */
-    @NotNull
+    // @NotNull
     private MailPort imapPort = MailPort.IMAPS;
 
     /**
      *
      */
-    @NotNull
-    @Pattern(regexp = Utils.MAIL_REGEX)
-    @Size(min = 0, max = 50)
+    // @NotNull
+    // @Pattern(regexp = Utils.MAIL_REGEX)
+    // @Size(min = 0, max = 50)
     private String mail = null;
 
     /**
      *
      */
-    @NotNull
-    @Size(min = 0, max = 100)
+    // @NotNull
+    // @Size(min = 0, max = 100)
     private String password = null;
 
     /**
      *
      */
-    @NotNull
-    @Size(min = 0, max = 50)
+    // @NotNull
+    // @Size(min = 0, max = 50)
     private String smtpHost = null;
 
     /**
@@ -70,7 +65,7 @@ public class MailAccount
     /**
      *
      */
-    @NotNull
+    // @NotNull
     private MailPort smtpPort = MailPort.SMTPS;
 
     /**

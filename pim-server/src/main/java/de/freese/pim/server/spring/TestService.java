@@ -8,9 +8,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
-
 import javax.annotation.Resource;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.task.AsyncTaskExecutor;
@@ -26,8 +24,7 @@ import org.springframework.web.context.request.async.WebAsyncTask;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyEmitter;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
-
-import de.freese.pim.common.spring.autoconfigure.taskexcecutor.TaskExcecutorAutoConfiguration;
+import de.freese.pim.common.spring.autoconfigure.taskexcecutor.TaskExecutorAutoConfiguration;
 
 /**
  * https://spring.io/guides/tutorials/bookmarks/<br>
@@ -58,7 +55,7 @@ public class TestService
     /**
      * @see ThreadPoolTaskExecutor
      * @see ConcurrentTaskExecutor
-     * @see TaskExcecutorAutoConfiguration
+     * @see TaskExecutorAutoConfiguration
      */
     @Resource
     private AsyncTaskExecutor taskExecutor = null;
@@ -79,8 +76,7 @@ public class TestService
     @GetMapping("/asyncDateCallable")
     public Callable<String> asycDateCallable()
     {
-        Callable<String> callable = () ->
-        {
+        Callable<String> callable = () -> {
             getLogger().info("asyncDateCallable: thread={}", Thread.currentThread().getName());
             Thread.sleep(TimeUnit.SECONDS.toMillis(3));
 
@@ -99,8 +95,7 @@ public class TestService
     {
         DeferredResult<String> deferredResult = new DeferredResult<>();
 
-        CompletableFuture.supplyAsync(() ->
-        {
+        CompletableFuture.supplyAsync(() -> {
             try
             {
                 getLogger().info("supplyAsync: thread={}", Thread.currentThread().getName());
@@ -112,8 +107,7 @@ public class TestService
             {
                 throw new RuntimeException(ex);
             }
-        }, getTaskExecutor()).whenCompleteAsync((result, throwable) ->
-        {
+        }, getTaskExecutor()).whenCompleteAsync((result, throwable) -> {
             getLogger().info("whenCompleteAsync: thread={}", Thread.currentThread().getName());
 
             if (throwable != null)
@@ -137,8 +131,7 @@ public class TestService
     @GetMapping("/asyncDateWebAsyncTask")
     public WebAsyncTask<String> asycDateWebAsyncTask()
     {
-        Callable<String> callable = () ->
-        {
+        Callable<String> callable = () -> {
             getLogger().info("asycDateWebAsyncTask: thread={}", Thread.currentThread().getName());
             Thread.sleep(TimeUnit.SECONDS.toMillis(3));
 
@@ -148,6 +141,22 @@ public class TestService
 
         return new WebAsyncTask<>(callable);
         // return new WebAsyncTask<>(TimeUnit.SECONDS.toMillis(5), this.taskExecutor, callable);
+    }
+
+    /**
+     * @return {@link Logger}
+     */
+    protected Logger getLogger()
+    {
+        return this.logger;
+    }
+
+    /**
+     * @return {@link AsyncTaskExecutor}
+     */
+    protected AsyncTaskExecutor getTaskExecutor()
+    {
+        return this.taskExecutor;
     }
 
     /**
@@ -165,21 +174,5 @@ public class TestService
         map.put("hello", name);
 
         return map;
-    }
-
-    /**
-     * @return {@link Logger}
-     */
-    protected Logger getLogger()
-    {
-        return this.logger;
-    }
-
-    /**
-     * @return {@link AsyncTaskExecutor}
-     */
-    protected AsyncTaskExecutor getTaskExecutor()
-    {
-        return this.taskExecutor;
     }
 }

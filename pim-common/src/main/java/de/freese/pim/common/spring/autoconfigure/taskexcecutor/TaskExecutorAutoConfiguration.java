@@ -1,11 +1,8 @@
 // Created: 23.02.2017
 package de.freese.pim.common.spring.autoconfigure.taskexcecutor;
 
-import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
-
 import javax.annotation.Resource;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
@@ -20,25 +17,25 @@ import org.springframework.scheduling.concurrent.ConcurrentTaskExecutor;
  */
 @Configuration
 @ConditionalOnMissingBean(TaskExecutor.class) // Nur wenn TaskExecutor noch nicht im SpringContext ist.
-@ConditionalOnBean(ExecutorService.class)
+@ConditionalOnBean(ExecutorService.class) // Nur wenn ExecutorService im SpringContext ist.
 // @AutoConfigureAfter(ThreadPoolExecutorAutoConfiguration.class)
-public class TaskExcecutorAutoConfiguration
+public class TaskExecutorAutoConfiguration
 {
     /**
     *
     */
-    private static final Logger LOGGER = LoggerFactory.getLogger(TaskExcecutorAutoConfiguration.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(TaskExecutorAutoConfiguration.class);
 
     /**
     *
     */
     @Resource
-    private Executor executor = null;
+    private ExecutorService executorService = null;
 
     /**
-     * Erzeugt eine neue Instanz von {@link TaskExcecutorAutoConfiguration}
+     * Erzeugt eine neue Instanz von {@link TaskExecutorAutoConfiguration}
      */
-    public TaskExcecutorAutoConfiguration()
+    public TaskExecutorAutoConfiguration()
     {
         super();
     }
@@ -51,7 +48,7 @@ public class TaskExcecutorAutoConfiguration
     {
         LOGGER.info("Create TaskExecutor");
 
-        TaskExecutor bean = new ConcurrentTaskExecutor(this.executor);
+        TaskExecutor bean = new ConcurrentTaskExecutor(this.executorService);
 
         return bean;
     }

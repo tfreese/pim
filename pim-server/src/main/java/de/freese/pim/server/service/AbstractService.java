@@ -1,8 +1,8 @@
 // Created: 07.02.2017
 package de.freese.pim.server.service;
 
+import java.util.concurrent.ExecutorService;
 import javax.annotation.Resource;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
@@ -21,6 +21,11 @@ public abstract class AbstractService implements ApplicationContextAware
      *
      */
     private ApplicationContext applicationContext = null;
+
+    /**
+    *
+    */
+    private ExecutorService executorService = null;
 
     /**
     *
@@ -49,6 +54,23 @@ public abstract class AbstractService implements ApplicationContextAware
     }
 
     /**
+     * @return {@link Logger}
+     */
+    protected Logger getLogger()
+    {
+        return this.logger;
+    }
+
+    /**
+     * @return {@link AsyncTaskExecutor}
+     */
+    protected AsyncTaskExecutor getTaskExecutor()
+    {
+        return this.taskExecutor;
+        // return this.executorService;
+    }
+
+    /**
      * @see org.springframework.context.ApplicationContextAware#setApplicationContext(org.springframework.context.ApplicationContext)
      */
     @Override
@@ -66,19 +88,12 @@ public abstract class AbstractService implements ApplicationContextAware
         this.taskExecutor = taskExecutor;
     }
 
-    /**
-     * @return {@link Logger}
-     */
-    protected Logger getLogger()
-    {
-        return this.logger;
-    }
-
-    /**
-     * @return {@link AsyncTaskExecutor}
-     */
-    protected AsyncTaskExecutor getTaskExecutor()
-    {
-        return this.taskExecutor;
-    }
+    // /**
+    // * @param executorService {@link ExecutorService}
+    // */
+    // @Resource
+    // public void setExecutorService(final ExecutorService executorService)
+    // {
+    // this.executorService = executorService;
+    // }
 }

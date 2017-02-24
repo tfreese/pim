@@ -6,7 +6,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-
 import de.freese.pim.common.spring.config.PIMProfile;
 
 /**
@@ -28,7 +27,7 @@ public class PIMServerApplication
         //
         // @formatter:off
         SpringApplication application = new SpringApplicationBuilder(PIMServerApplication.class)
-//                .properties("spring.config.name:application-serverstandalone")
+//                .properties("spring.config.name:application-Server")
                 .headless(true) // Default true
                 .registerShutdownHook(true) // Default true
                 .profiles(PIMProfile.Server.toString(), PIMProfile.HsqldbEmbeddedServer.toString())
