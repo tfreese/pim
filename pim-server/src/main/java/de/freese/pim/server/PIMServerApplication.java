@@ -5,7 +5,6 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.scheduling.annotation.EnableAsync;
-import org.springframework.transaction.annotation.EnableTransactionManagement;
 import de.freese.pim.common.spring.config.PIMProfile;
 
 /**
@@ -15,7 +14,7 @@ import de.freese.pim.common.spring.config.PIMProfile;
  */
 @SpringBootApplication
 @EnableAsync
-@EnableTransactionManagement
+// @EnableTransactionManagement // Wird durch Spring-Boot automatisch konfiguriert, wenn DataSource-Bean vorhanden.
 public class PIMServerApplication
 {
     /**

@@ -13,17 +13,19 @@ import org.springframework.context.annotation.PropertySource;
 @PropertySource("classpath:application-common.properties")
 public class PIMCommonConfig
 {
+    static
+    {
+        // System.setProperty("java.util.concurrent.ForkJoinPool.common.parallelism",
+        // Integer.toString(Runtime.getRuntime().availableProcessors()));
+        System.setProperty("java.util.concurrent.ForkJoinPool.common.threadFactory", "de.freese.pim.common.concurrent.PIMForkJoinWorkerThreadFactory");
+    }
+
     /**
      * Erzeugt eine neue Instanz von {@link PIMCommonConfig}
      */
     public PIMCommonConfig()
     {
         super();
-
-        System.setProperty("java.util.concurrent.ForkJoinPool.common.parallelism",
-                Integer.toString(Runtime.getRuntime().availableProcessors()));
-        System.setProperty("java.util.concurrent.ForkJoinPool.common.threadFactory",
-                "de.freese.pim.common.concurrent.PIMForkJoinWorkerThreadFactory");
     }
 
     // @Bean

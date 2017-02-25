@@ -1,6 +1,8 @@
 // Created: 07.02.2017
 package de.freese.pim.server.service;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.concurrent.ExecutorService;
 import javax.annotation.Resource;
 import org.slf4j.Logger;
@@ -80,6 +82,15 @@ public abstract class AbstractService implements ApplicationContextAware
     }
 
     /**
+     * @param executorService {@link ExecutorService}
+     */
+    @Resource
+    public void setExecutorService(final ExecutorService executorService)
+    {
+        this.executorService = executorService;
+    }
+
+    /**
      * @param taskExecutor {@link AsyncTaskExecutor}
      */
     @Resource
@@ -88,12 +99,20 @@ public abstract class AbstractService implements ApplicationContextAware
         this.taskExecutor = taskExecutor;
     }
 
-    // /**
-    // * @param executorService {@link ExecutorService}
-    // */
-    // @Resource
-    // public void setExecutorService(final ExecutorService executorService)
-    // {
-    // this.executorService = executorService;
-    // }
+    /**
+     * @param value String
+     * @return String
+     * @throws UnsupportedEncodingException Falls was schief geht.
+     */
+    protected String urlDecode(final String value) throws UnsupportedEncodingException
+    {
+        if (value == null)
+        {
+            return null;
+        }
+
+        String encoded = URLDecoder.decode(value.trim(), "UTF-8");
+
+        return encoded;
+    }
 }

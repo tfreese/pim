@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import de.freese.pim.server.addressbook.dao.AddressBookDAO;
 import de.freese.pim.server.addressbook.model.Kontakt;
 import de.freese.pim.server.service.AbstractService;
@@ -20,7 +21,7 @@ import de.freese.pim.server.service.AbstractService;
  *
  * @author Thomas Freese
  */
-// @RestController("addressBookService")
+@RestController("addressBookService")
 @RequestMapping(path = "/addressBook", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 public class DefaultAddressBookService extends AbstractService implements AddressBookService
 {

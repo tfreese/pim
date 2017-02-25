@@ -2,6 +2,8 @@
 package de.freese.pim.server.mail.model;
 
 import java.util.Date;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import de.freese.pim.common.model.mail.InternetAddress;
 
 /**
@@ -24,13 +26,13 @@ public class Mail
     /**
      *
      */
-    // @NotNull
+    @NotNull
     private String folderFullName = null;
 
     /**
     *
     */
-    // @NotNull
+    @NotNull
     private long folderID = 0L;
 
     /**
@@ -41,7 +43,7 @@ public class Mail
     /**
      * Ist immer größer als 0.
      */
-    // @NotNull
+    @NotNull
     private int msgNum = 0;
 
     /**
@@ -53,7 +55,7 @@ public class Mail
     /**
     *
     */
-    // @NotNull
+    @NotNull
     private boolean seen = false;
 
     /**
@@ -65,13 +67,13 @@ public class Mail
     /**
      *
      */
-    // @NotNull
+    @NotNull
     private int size = 0;
 
     /**
     *
     */
-    // @Size(max = 300)
+    @Size(max = 300)
     private String subject = null;
 
     /**
@@ -82,7 +84,7 @@ public class Mail
     /**
      *
      */
-    // @NotNull
+    @NotNull
     private long uid = 0L;
 
     /**

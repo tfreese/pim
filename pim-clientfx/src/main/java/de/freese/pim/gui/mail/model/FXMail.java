@@ -2,9 +2,7 @@
 package de.freese.pim.gui.mail.model;
 
 import java.util.Date;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import de.freese.pim.common.model.mail.InternetAddress;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;

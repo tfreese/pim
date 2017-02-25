@@ -305,14 +305,16 @@ public class DefaultMailService extends AbstractService implements MailService, 
                                        @PathVariable("mailUID") final long mailUID, final @RequestBody(required = false) IOMonitor monitor)
         throws Exception
     {
+        String folderName = urlDecode(urlDecode(folderFullName));
+
         if (getLogger().isDebugEnabled())
         {
-            getLogger().debug("download mail: accountID={}, folderFullName={}, uid={}", accountID, folderFullName, mailUID);
+            getLogger().debug("download mail: accountID={}, folderFullName={}, uid={}", accountID, folderName, mailUID);
         }
 
         MailAPI mailAPI = getMailAPI(accountID);
 
-        MailContent mailContent = mailAPI.loadMail(folderFullName, mailUID, monitor);
+        MailContent mailContent = mailAPI.loadMail(folderName, mailUID, monitor);
 
         return mailContent;
     }
@@ -327,7 +329,9 @@ public class DefaultMailService extends AbstractService implements MailService, 
                                 @PathVariable("folderFullName") final String folderFullName)
         throws Exception
     {
-        getLogger().info("Load Mails: account={}, folder={}", accountID, folderFullName);
+        String folderName = urlDecode(urlDecode(folderFullName));
+
+        getLogger().info("Load Mails: account={}, folder={}", accountID, folderName);
 
         MailAPI mailAPI = getMailAPI(accountID);
 
@@ -337,7 +341,7 @@ public class DefaultMailService extends AbstractService implements MailService, 
         long uidFrom = mailMap.values().parallelStream().mapToLong(Mail::getUID).max().orElse(1);
 
         // Alle Mails lokal löschen, die zwischenzeitlich auch Remote gelöscht worden sind.
-        Set<Long> currentUIDs = mailAPI.loadCurrentMessageIDs(folderFullName);
+        Set<Long> currentUIDs = mailAPI.loadCurrentMessageIDs(folderName);
 
         Set<Long> remoteDeletedUIDs = new HashSet<>();
         remoteDeletedUIDs.addAll(mailMap.keySet());
@@ -360,7 +364,7 @@ public class DefaultMailService extends AbstractService implements MailService, 
             uidFrom += 1;
         }
 
-        List<Mail> newMails = mailAPI.loadMails(folderFullName, uidFrom);
+        List<Mail> newMails = mailAPI.loadMails(folderName, uidFrom);
 
         if (newMails == null)
         {
@@ -389,7 +393,7 @@ public class DefaultMailService extends AbstractService implements MailService, 
         mails.addAll(mailMap.values());
         mails.addAll(newMails);
 
-        mails.stream().forEach(m -> m.setFolderFullName(folderFullName));
+        mails.stream().forEach(m -> m.setFolderFullName(folderName));
 
         return mails;
     }

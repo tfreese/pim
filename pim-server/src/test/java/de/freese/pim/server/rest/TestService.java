@@ -1,5 +1,5 @@
 // Created: 14.02.2017
-package de.freese.pim.server.spring;
+package de.freese.pim.server.rest;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -27,14 +27,13 @@ import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBo
 import de.freese.pim.common.spring.autoconfigure.taskexcecutor.TaskExecutorAutoConfiguration;
 
 /**
- * https://spring.io/guides/tutorials/bookmarks/<br>
+ * https:// spring.io/guides/tutorials/bookmarks/<br>
+ * https:// twilblog.github.io/java/spring/rest/file/stream/2015/08/14/return-a-file-stream-from-spring-rest.html<br>
+ * http:// stackoverflow.com/questions/5673260/downloading-a-file-from-spring-controllers<br>
+ * http:// stackoverflow.com/questions/15781885/how-to-forward-large-files-with-resttemplate<br>
  * <br>
- * https://twilblog.github.io/java/spring/rest/file/stream/2015/08/14/return-a-file-stream-from-spring-rest.html<br>
- * http://stackoverflow.com/questions/5673260/downloading-a-file-from-spring-controllers<br>
- * http://stackoverflow.com/questions/15781885/how-to-forward-large-files-with-resttemplate<br>
- * <br>
- * view-source:http://localhost:61222/pim/info<br>
- *
+ * *view-source:http:// localhost:61222/pim/info<br>
+ **
  * @see ResponseBodyEmitter
  * @see StreamingResponseBody
  * @author Thomas Freese
@@ -48,8 +47,8 @@ import de.freese.pim.common.spring.autoconfigure.taskexcecutor.TaskExecutorAutoC
 public class TestService
 {
     /**
-     *
-     */
+    *
+    */
     private Logger logger = LoggerFactory.getLogger(TestService.class);
 
     /**

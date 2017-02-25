@@ -5,7 +5,6 @@
 package de.freese.pim.gui.mail.service;
 
 import java.util.List;
-
 import de.freese.pim.common.PIMException;
 import de.freese.pim.common.model.mail.MailContent;
 import de.freese.pim.common.utils.io.IOMonitor;
@@ -26,7 +25,7 @@ public interface FXMailService
      * @param account {@link FXMailAccount}
      * @throws PIMException Falls was schief geht.
      */
-    public void connectAccount(FXMailAccount account) throws PIMException;
+    public void connectAccount(FXMailAccount account);
 
     /**
      * Löschen eines MailAccounts.<br>
@@ -35,7 +34,7 @@ public interface FXMailService
      * @return int; affectedRows
      * @throws PIMException Falls was schief geht.
      */
-    public int deleteAccount(long accountID) throws PIMException;
+    public int deleteAccount(long accountID);
 
     /**
      * Schliessen der MailApi-Verbindungen der MailAccounts.
@@ -43,7 +42,7 @@ public interface FXMailService
      * @param accountIDs long[]
      * @throws PIMException Falls was schief geht.
      */
-    public void disconnectAccounts(long... accountIDs) throws PIMException;
+    public void disconnectAccounts(long...accountIDs);
 
     /**
      * Liefert alle MailAccounts, sortiert nach MAIL.
@@ -51,7 +50,7 @@ public interface FXMailService
      * @return {@link List}
      * @throws PIMException Falls was schief geht.
      */
-    public List<FXMailAccount> getMailAccounts() throws PIMException;
+    public List<FXMailAccount> getMailAccounts();
 
     /**
      * Anlegen eines neuen MailAccounts.<br>
@@ -60,7 +59,7 @@ public interface FXMailService
      * @param account {@link FXMailAccount}
      * @throws PIMException Falls was schief geht.
      */
-    public void insertAccount(FXMailAccount account) throws PIMException;
+    public void insertAccount(FXMailAccount account);
 
     /**
      * Anlegen oder ändern von MailFoldern.<br>
@@ -71,7 +70,7 @@ public interface FXMailService
      * @return int; affectedRows
      * @throws PIMException Falls was schief geht.
      */
-    public int insertOrUpdateFolder(long accountID, List<FXMailFolder> folders) throws PIMException;
+    public int insertOrUpdateFolder(long accountID, List<FXMailFolder> folders);
 
     /**
      * Lädt die Folder des Accounts.
@@ -80,7 +79,7 @@ public interface FXMailService
      * @return {@link List}
      * @throws PIMException Falls was schief geht.
      */
-    public List<FXMailFolder> loadFolder(long accountID) throws PIMException;
+    public List<FXMailFolder> loadFolder(long accountID);
 
     /**
      * Liefert den Inhalt der Mail.<br>
@@ -92,7 +91,7 @@ public interface FXMailService
      * @return {@link MailContent}
      * @throws PIMException Falls was schief geht.
      */
-    public MailContent loadMailContent(long accountID, FXMail mail, IOMonitor monitor) throws PIMException;
+    public MailContent loadMailContent(long accountID, FXMail mail, IOMonitor monitor);
 
     /**
      * Lädt die Mails des Folders vom Provider und aus der DB.
@@ -103,7 +102,7 @@ public interface FXMailService
      * @return {@link List}
      * @throws PIMException Falls was schief geht.
      */
-    public List<FXMail> loadMails(long accountID, long folderID, String folderFullName) throws PIMException;
+    public List<FXMail> loadMails(long accountID, long folderID, String folderFullName);
 
     /**
      * Testet die Verbindung zu einem MailAccount und liefert bei Erfolg dessen Ordner.
@@ -112,7 +111,7 @@ public interface FXMailService
      * @return {@link List}
      * @throws PIMException Falls was schief geht.
      */
-    public List<FXMailFolder> test(FXMailAccount account) throws PIMException;
+    public List<FXMailFolder> test(FXMailAccount account);
 
     /**
      * Ändern eines MailAccounts.
@@ -121,5 +120,5 @@ public interface FXMailService
      * @return int; affectedRows
      * @throws PIMException Falls was schief geht.
      */
-    public int updateAccount(FXMailAccount account) throws PIMException;
+    public int updateAccount(FXMailAccount account);
 }

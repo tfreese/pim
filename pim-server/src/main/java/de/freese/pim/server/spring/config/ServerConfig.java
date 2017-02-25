@@ -20,7 +20,7 @@ import de.freese.pim.common.spring.autoconfigure.taskexcecutor.TaskExecutorAutoC
 @Profile("Server")
 @ComponentScan(basePackages =
 {
-        "de.freese.pim", "de.freese.pim.server.mail.service"
+        "de.freese.pim"
 })
 public class ServerConfig extends WebMvcConfigurationSupport
 {
@@ -39,6 +39,17 @@ public class ServerConfig extends WebMvcConfigurationSupport
         super();
     }
 
+    /**
+     * @see org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport#configureAsyncSupport(org.springframework.web.servlet.config.annotation.AsyncSupportConfigurer)
+     */
+    @Override
+    protected void configureAsyncSupport(final AsyncSupportConfigurer configurer)
+    {
+        // Verlagert die asynchrone Ausführung von Server-Requests (Callable, WebAsyncTask) in diesen ThreadPool.
+        // Ansonsten würde für jeden Request immer ein neuer Thread erzeugt.
+        configurer.setTaskExecutor(this.taskExecutor);
+    }
+
     // /**
     // * @see org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport#extendMessageConverters(java.util.List)
     // */
@@ -52,27 +63,27 @@ public class ServerConfig extends WebMvcConfigurationSupport
     // {
     // MappingJackson2HttpMessageConverter jsonMessageConverter = (MappingJackson2HttpMessageConverter) converter;
     // ObjectMapper objectMapper = jsonMessageConverter.getObjectMapper();
-    // objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+    // // objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
+    // // objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
     //
-    // SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-    // df.setTimeZone(TimeZone.getTimeZone("Europe/Berlin"));
-    // objectMapper.setDateFormat(df);
+    // // SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    // // df.setTimeZone(TimeZone.getTimeZone("Europe/Berlin"));
+    // // objectMapper.setDateFormat(df);
     //
     // break;
     // }
     // }
     // }
 
-    /**
-     * @see org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport#configureAsyncSupport(org.springframework.web.servlet.config.annotation.AsyncSupportConfigurer)
-     */
-    @Override
-    protected void configureAsyncSupport(final AsyncSupportConfigurer configurer)
-    {
-        // Verlagert die asynchrone Ausführung von Server-Requests (Callable, WebAsyncTask) in diesen ThreadPool.
-        // Ansonsten würde für jeden Request immer ein neuer Thread erzeugt.
-        configurer.setTaskExecutor(this.taskExecutor);
-    }
+    // /**
+    // * @see
+    // org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport#configureDefaultServletHandling(org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer)
+    // */
+    // @Override
+    // protected void configureDefaultServletHandling(final DefaultServletHandlerConfigurer configurer)
+    // {
+    // configurer.enable();
+    // }
 
     // /**
     // * @param dataSource {@link DataSource}

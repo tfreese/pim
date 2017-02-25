@@ -38,6 +38,7 @@ public class TaskSchedulerAutoConfiguration
      *
      */
     private static final Logger LOGGER = LoggerFactory.getLogger(TaskSchedulerAutoConfiguration.class);
+
     /**
      *
      */
@@ -63,10 +64,7 @@ public class TaskSchedulerAutoConfiguration
      *
      * @return {@link TaskScheduler}
      */
-    @Bean(
-    {
-            "taskScheduler"
-    })
+    @Bean("taskScheduler")
     public TaskScheduler taskScheduler()
     {
         LOGGER.info("Create TaskScheduler");

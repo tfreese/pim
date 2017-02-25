@@ -1,5 +1,5 @@
 // Created: 14.02.2017
-package de.freese.pim.server;
+package de.freese.pim.server.rest;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -24,10 +24,11 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import de.freese.pim.server.PIMServerApplication;
 
 /**
  * Vollständiger Test der gesamten Server-Anwendung.
- *
+ * 
  * @author Thomas Freese
  */
 @RunWith(SpringRunner.class)
@@ -45,24 +46,24 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 @AutoConfigureMockMvc
 @DirtiesContext
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class TestTestService
+public class TestRestServer
 {
     /**
-     *
-     */
+    *
+    */
     @LocalServerPort
     private String localServerPort = null;
 
     /**
-     *
-     */
+    *
+    */
     @Resource
     private MockMvc mockMvc = null;
 
     /**
-     * Erzeugt eine neue Instanz von {@link TestTestService}
+     * Erzeugt eine neue Instanz von {@link TestRestServer}
      */
-    public TestTestService()
+    public TestRestServer()
     {
         super();
     }

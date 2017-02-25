@@ -1,5 +1,5 @@
 // Created: 14.02.2017
-package de.freese.pim.server;
+package de.freese.pim.server.rest;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -31,7 +31,6 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.web.servlet.config.annotation.AsyncSupportConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
-import de.freese.pim.server.spring.TestService;
 
 /**
  * @author Thomas Freese
@@ -54,7 +53,8 @@ class Config extends WebMvcConfigurationSupport
     }
 
     /**
-     * @see org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport#configureAsyncSupport(org.springframework.web.servlet.config.annotation.AsyncSupportConfigurer)
+     * @see //
+     *      org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport#configureAsyncSupport(org.springframework.web.servlet.config.annotation.AsyncSupportConfigurer)
      */
     @Override
     protected void configureAsyncSupport(final AsyncSupportConfigurer configurer)
@@ -158,8 +158,8 @@ class Config extends WebMvcConfigurationSupport
 public class TestSimpleRestService
 {
     /**
-     *
-     */
+    *
+    */
     @Resource
     private MockMvc mockMvc = null;
 
