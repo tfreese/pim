@@ -82,10 +82,9 @@ public class LoadMailsTask extends Task<Void>
     {
         for (FXMailFolder mf : this.folders)
         {
-            List<FXMail> mails = this.mailService.loadMails(mf.getAccountID(), mf.getID(), mf.getFullName());
+            List<FXMail> mails = this.mailService.loadMails(this.account, mf);
 
             Runnable task = () -> {
-                LOGGER.info("Load Mails finished: account={}, folder={}", this.account.getMail(), mf.getFullName());
 
                 if (mails != null)
                 {

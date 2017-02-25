@@ -21,43 +21,38 @@ public interface MailService
      * Erstellt für den Account eine Instanz von Typ {@link MailAPI} und verbindet stellt die Verbindung her.<br>
      *
      * @param account {@link MailAccount}
-     * @throws Exception Falls was schief geht.
      */
-    public void connectAccount(MailAccount account) throws Exception;
+    public void connectAccount(MailAccount account);
 
     /**
      * Löschen eines {@link MailAccount}.<br>
      *
      * @param accountID long
      * @return int; affectedRows
-     * @throws Exception Falls was schief geht.
      */
-    public int deleteAccount(long accountID) throws Exception;
+    public int deleteAccount(long accountID);
 
     /**
      * Schliessen der MailAPI-Verbindung der MailAccounts.
      *
      * @param accountIDs long[]
-     * @throws Exception Falls was schief geht.
      */
-    public void disconnectAccounts(long...accountIDs) throws Exception;
+    public void disconnectAccounts(long...accountIDs);
 
     /**
      * Liefert alle MailAccounts, sortiert nach MAIL.
      *
      * @return {@link List}
-     * @throws Exception Falls was schief geht.
      */
-    public List<MailAccount> getMailAccounts() throws Exception;
+    public List<MailAccount> getMailAccounts();
 
     /**
      * Anlegen eines neuen {@link MailAccount}.<br>
      *
      * @param account {@link MailAccount}
      * @return long; PrimaryKey
-     * @throws Exception Falls was schief geht.
      */
-    public long insertAccount(MailAccount account) throws Exception;
+    public long insertAccount(MailAccount account);
 
     /**
      * Anlegen von {@link MailFolder}.<br>
@@ -65,18 +60,16 @@ public interface MailService
      * @param accountID long
      * @param folders {@link List}
      * @return long[]; PrimaryKeys
-     * @throws Exception Falls was schief geht.
      */
-    public long[] insertFolder(long accountID, List<MailFolder> folders) throws Exception;
+    public long[] insertFolder(long accountID, List<MailFolder> folders);
 
     /**
      * Lädt die Folder des Accounts.
      *
      * @param accountID long
      * @return {@link List}
-     * @throws Exception Falls was schief geht.
      */
-    public List<MailFolder> loadFolder(long accountID) throws Exception;
+    public List<MailFolder> loadFolder(long accountID);
 
     /**
      * Liefert den Inhalt der Mail.<br>
@@ -87,9 +80,8 @@ public interface MailService
      * @param mailUID long
      * @param monitor {@link IOMonitor}, optional
      * @return {@link MailContent}
-     * @throws Exception Falls was schief geht.
      */
-    public MailContent loadMailContent(long accountID, String folderFullName, long mailUID, IOMonitor monitor) throws Exception;
+    public MailContent loadMailContent(long accountID, String folderFullName, long mailUID, IOMonitor monitor);
 
     /**
      * Lädt die Mails des Folders vom Provider und aus der DB.
@@ -98,9 +90,8 @@ public interface MailService
      * @param folderID long
      * @param folderFullName String
      * @return {@link List}
-     * @throws Exception Falls was schief geht.
      */
-    public List<Mail> loadMails(long accountID, long folderID, String folderFullName) throws Exception;
+    public List<Mail> loadMails(long accountID, long folderID, String folderFullName);
 
     /**
      * Lädt die Mails des Folders vom Provider und aus der DB.<br>
@@ -110,27 +101,24 @@ public interface MailService
      * @param folderID long
      * @param folderFullName String
      * @return {@link List}
-     * @throws Exception Falls was schief geht.
      */
-    public DeferredResult<List<Mail>> loadMailsAsync(long accountID, long folderID, String folderFullName) throws Exception;
+    public DeferredResult<List<Mail>> loadMailsAsync(long accountID, long folderID, String folderFullName);
 
     /**
      * Testet die Verbindung zu einem MailAccount und liefert bei Erfolg dessen Ordner.
      *
      * @param account {@link MailAccount}
      * @return {@link List}
-     * @throws Exception Falls was schief geht.
      */
-    public List<MailFolder> test(MailAccount account) throws Exception;
+    public List<MailFolder> test(MailAccount account);
 
     /**
      * Ändern eines {@link MailAccount}.
      *
      * @param account {@link MailAccount}
      * @return int; affectedRows
-     * @throws Exception Falls was schief geht.
      */
-    public int updateAccount(MailAccount account) throws Exception;
+    public int updateAccount(MailAccount account);
 
     /**
      * Ändern von {@link MailFolder}.
@@ -138,7 +126,6 @@ public interface MailService
      * @param accountID long
      * @param folders {@link List}
      * @return int[]; affectedRows
-     * @throws Exception Falls was schief geht.
      */
-    public int[] updateFolder(long accountID, List<MailFolder> folders) throws Exception;
+    public int[] updateFolder(long accountID, List<MailFolder> folders);
 }

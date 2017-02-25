@@ -85,24 +85,23 @@ public interface FXMailService
      * Liefert den Inhalt der Mail.<br>
      * Der Monitor dient zur Anzeige des Lade-Fortschritts.
      *
-     * @param accountID long
+     * @param account {@link FXMailAccount}
      * @param mail {@link FXMail}
      * @param monitor {@link IOMonitor}
      * @return {@link MailContent}
      * @throws PIMException Falls was schief geht.
      */
-    public MailContent loadMailContent(long accountID, FXMail mail, IOMonitor monitor);
+    public MailContent loadMailContent(FXMailAccount account, FXMail mail, IOMonitor monitor);
 
     /**
      * Lädt die Mails des Folders vom Provider und aus der DB.
      *
-     * @param accountID long
-     * @param folderID long
-     * @param folderFullName String
+     * @param account {@link FXMailAccount}
+     * @param folder {@link FXMailFolder}
      * @return {@link List}
      * @throws PIMException Falls was schief geht.
      */
-    public List<FXMail> loadMails(long accountID, long folderID, String folderFullName);
+    public List<FXMail> loadMails(FXMailAccount account, FXMailFolder folder);
 
     /**
      * Testet die Verbindung zu einem MailAccount und liefert bei Erfolg dessen Ordner.

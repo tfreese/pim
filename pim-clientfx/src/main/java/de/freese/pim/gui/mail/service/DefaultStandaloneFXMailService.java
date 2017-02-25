@@ -199,14 +199,13 @@ public class DefaultStandaloneFXMailService extends AbstractFXMailService
     }
 
     /**
-     * @see de.freese.pim.gui.mail.service.AbstractFXMailService#loadMailContent(java.nio.file.Path, long, java.lang.String, long,
-     *      de.freese.pim.common.utils.io.IOMonitor)
+     * @see de.freese.pim.gui.mail.service.AbstractFXMailService#loadMailContent(java.nio.file.Path, de.freese.pim.gui.mail.model.FXMailAccount,
+     *      de.freese.pim.gui.mail.model.FXMail, de.freese.pim.common.utils.io.IOMonitor)
      */
     @Override
-    protected MailContent loadMailContent(final Path mailPath, final long accountID, final String folderFullName, final long mailUID, final IOMonitor monitor)
-        throws Exception
+    protected MailContent loadMailContent(final Path mailPath, final FXMailAccount account, final FXMail mail, final IOMonitor monitor) throws Exception
     {
-        MailContent mailContent = getMailService().loadMailContent(accountID, folderFullName, mailUID, monitor);
+        MailContent mailContent = getMailService().loadMailContent(account.getID(), mail.getFolderFullName(), mail.getUID(), monitor);
 
         saveMailContent(mailPath, mailContent);
 
@@ -214,16 +213,20 @@ public class DefaultStandaloneFXMailService extends AbstractFXMailService
     }
 
     /**
-     * @see de.freese.pim.gui.mail.service.FXMailService#loadMails(long, long, java.lang.String)
+     * @see de.freese.pim.gui.mail.service.FXMailService#loadMails(de.freese.pim.gui.mail.model.FXMailAccount, de.freese.pim.gui.mail.model.FXMailFolder)
      */
     @Override
-    public List<FXMail> loadMails(final long accountID, final long folderID, final String folderFullName)
+    public List<FXMail> loadMails(final FXMailAccount account, final FXMailFolder folder)
     {
+        getLogger().info("Load Mails: account={}, folder={}", account.getMail(), folder.getFullName());
+
         try
         {
-            List<Mail> mails = getMailService().loadMails(accountID, folderID, folderFullName);
+            List<Mail> mails = getMailService().loadMails(account.getID(), folder.getID(), folder.getFullName());
 
             List<FXMail> fxBeans = toFXMails(mails);
+
+            getLogger().info("Load Mails finished: account={}, folder={}", account.getMail(), folder.getFullName());
 
             return fxBeans;
         }

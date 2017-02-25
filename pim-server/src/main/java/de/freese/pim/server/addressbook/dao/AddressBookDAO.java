@@ -3,7 +3,6 @@ package de.freese.pim.server.addressbook.dao;
 
 import java.nio.file.Path;
 import java.util.List;
-
 import de.freese.pim.server.addressbook.model.Kontakt;
 import de.freese.pim.server.addressbook.model.KontaktAttribut;
 
@@ -20,9 +19,8 @@ public interface AddressBookDAO
      *
      * @param directory {@link Path}
      * @return boolean; true = erfolgreich
-     * @throws Exception Falls was schief geht.
      */
-    public boolean backup(Path directory) throws Exception;
+    public boolean backup(Path directory);
 
     /**
      * Löscht ein {@link KontaktAttribut} von einem {@link Kontakt}.
@@ -30,35 +28,31 @@ public interface AddressBookDAO
      * @param kontaktID long
      * @param attribut String
      * @return int; affectedRows
-     * @throws Exception Falls was schief geht.
      */
-    public int deleteAttribut(long kontaktID, String attribut) throws Exception;
+    public int deleteAttribut(long kontaktID, String attribut);
 
     /**
      * Löscht einen {@link Kontakt}.
      *
      * @param id long
      * @return int; affectedRows
-     * @throws Exception Falls was schief geht.
      */
-    public int deleteKontakt(long id) throws Exception;
+    public int deleteKontakt(long id);
 
     /**
      * Liefert den oder die Kontakte mit den KontaktAttributen.
      *
      * @param ids long[]
      * @return {@link List}
-     * @throws Exception Falls was schief geht.
      */
-    public List<Kontakt> getKontaktDetails(long... ids) throws Exception;
+    public List<Kontakt> getKontaktDetails(long...ids);
 
     /**
      * Liefert alle Kontakte sortiert nach Vorname und Nachname ohne die KontaktAttribute.
      *
      * @return {@link List}
-     * @throws Exception Falls was schief geht.
      */
-    public List<Kontakt> getKontakte() throws Exception;
+    public List<Kontakt> getKontakte();
 
     /**
      * Hinzufügen eines {@link KontaktAttribut}s zu einem {@link Kontakt}.
@@ -67,9 +61,8 @@ public interface AddressBookDAO
      * @param attribut String
      * @param wert String
      * @return int; affectedRows
-     * @throws Exception Falls was schief geht.
      */
-    public int insertAttribut(long kontaktID, String attribut, String wert) throws Exception;
+    public int insertAttribut(long kontaktID, String attribut, String wert);
 
     /**
      * Fügen einen neuem {@link Kontakt} hinzu und liefert dessen ID.
@@ -77,18 +70,16 @@ public interface AddressBookDAO
      * @param nachname String
      * @param vorname String
      * @return long; PrimaryKey
-     * @throws Exception Falls was schief geht.
      */
-    public long insertKontakt(String nachname, String vorname) throws Exception;
+    public long insertKontakt(String nachname, String vorname);
 
     /**
      * Liefert alle Kontakte sortiert nach Vorname und Nachname mit den KontaktAttributen.
      *
      * @param name String
      * @return {@link List}
-     * @throws Exception Falls was schief geht.
      */
-    public List<Kontakt> searchKontakte(String name) throws Exception;
+    public List<Kontakt> searchKontakte(String name);
 
     /**
      * Aktualisiert ein {@link KontaktAttribut}.
@@ -97,9 +88,8 @@ public interface AddressBookDAO
      * @param attribut String
      * @param wert String
      * @return int; affectedRows
-     * @throws Exception Falls was schief geht.
      */
-    public int updateAttribut(long kontaktID, String attribut, String wert) throws Exception;
+    public int updateAttribut(long kontaktID, String attribut, String wert);
 
     /**
      * Aktualisiert einen {@link Kontakt}.
@@ -108,7 +98,6 @@ public interface AddressBookDAO
      * @param nachname String
      * @param vorname String
      * @return int; affectedRows
-     * @throws Exception Falls was schief geht.
      */
-    public int updateKontakt(long id, String nachname, String vorname) throws Exception;
+    public int updateKontakt(long id, String nachname, String vorname);
 }

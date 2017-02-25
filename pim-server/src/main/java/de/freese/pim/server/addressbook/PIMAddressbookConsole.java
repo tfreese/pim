@@ -11,7 +11,6 @@ import java.nio.file.Paths;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
@@ -23,7 +22,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.datasource.SingleConnectionDataSource;
-
 import de.freese.pim.common.utils.PreserveOrderOptionGroup;
 import de.freese.pim.common.utils.Utils;
 import de.freese.pim.server.addressbook.dao.AddressBookDAO;
@@ -50,6 +48,65 @@ public class PIMAddressbookConsole
      *
      */
     public static PrintStream PRINTSTREAM = System.out;
+
+    /**
+     * Liefert die möglichen Optionen der Kommandozeile.<br>
+     * Dies sind die JRE Programm Argumente.
+     *
+     * @return {@link Options}
+     */
+    private static Options getCommandOptions()
+    {
+        OptionGroup group = new PreserveOrderOptionGroup();
+
+        Option option = new Option("ik", "insert-kontakt", true, "Hinzufügen eines Kontakts");
+        option.setArgs(2);
+        option.setArgName("NACHNAME VORNAME");
+        group.addOption(option);
+
+        option = new Option("uk", "update-kontakt", true, "Aktualisieren eines Kontakts");
+        option.setArgs(3);
+        option.setArgName("ID NACHNAME VORNAME");
+        group.addOption(option);
+
+        option = new Option("dk", "delete-kontakt", true, "Löscht einen Kontakt");
+        option.setArgs(1);
+        option.setArgName("ID");
+        group.addOption(option);
+
+        option = new Option("ia", "insert-attribut", true, "Hinzufügen eines Kontaktattributs");
+        option.setArgs(3);
+        option.setArgName("ID ATTRIBUT WERT");
+        group.addOption(option);
+
+        option = new Option("ua", "update-attribut", true, "Aktualisieren eines Kontaktattributs");
+        option.setArgs(3);
+        option.setArgName("ID ATTRIBUT WERT");
+        group.addOption(option);
+
+        option = new Option("da", "delete-attribut", true, "Löschen eines Kontaktattributs");
+        option.setArgs(2);
+        option.setArgName("ID ATTRIBUT");
+        group.addOption(option);
+
+        option = new Option("lk", "list-kontakte", false, "Auflisten aller Kontakte");
+        group.addOption(option);
+
+        option = new Option("vk", "view-kontakt", true, "Liefert Details eines Kontakts");
+        option.setArgs(1);
+        option.setArgName("ID");
+        group.addOption(option);
+
+        option = new Option("s", "search", true, "Suchen nach Kontakten");
+        option.setArgs(1);
+        option.setArgName("Pattern");
+        group.addOption(option);
+
+        Options options = new Options();
+        options.addOptionGroup(group);
+
+        return options;
+    }
 
     /**
      * @param args String[]
@@ -98,11 +155,10 @@ public class PIMAddressbookConsole
             DefaultAddressBookService defaultAddressBookService = new DefaultAddressBookService();
             defaultAddressBookService.setAddressBookDAO(defaultDAO);
 
-            AddressBookDAO addressBookDAO = (AddressBookDAO) Proxy.newProxyInstance(PIMAddressbookConsole.class.getClassLoader(),
-                    new Class<?>[]
-                    {
-                            AddressBookDAO.class
-                    }, new TransactionalInvocationHandler(dataSource, defaultAddressBookService));
+            AddressBookDAO addressBookDAO = (AddressBookDAO) Proxy.newProxyInstance(PIMAddressbookConsole.class.getClassLoader(), new Class<?>[]
+            {
+                    AddressBookDAO.class
+            }, new TransactionalInvocationHandler(dataSource, defaultAddressBookService));
 
             PIMAddressbookConsole addressbook = new PIMAddressbookConsole();
             addressbook.setAddressBookDAO(addressBookDAO);
@@ -163,65 +219,6 @@ public class PIMAddressbookConsole
         {
             dataSource.destroy();
         }
-    }
-
-    /**
-     * Liefert die möglichen Optionen der Kommandozeile.<br>
-     * Dies sind die JRE Programm Argumente.
-     *
-     * @return {@link Options}
-     */
-    private static Options getCommandOptions()
-    {
-        OptionGroup group = new PreserveOrderOptionGroup();
-
-        Option option = new Option("ik", "insert-kontakt", true, "Hinzufügen eines Kontakts");
-        option.setArgs(2);
-        option.setArgName("NACHNAME VORNAME");
-        group.addOption(option);
-
-        option = new Option("uk", "update-kontakt", true, "Aktualisieren eines Kontakts");
-        option.setArgs(3);
-        option.setArgName("ID NACHNAME VORNAME");
-        group.addOption(option);
-
-        option = new Option("dk", "delete-kontakt", true, "Löscht einen Kontakt");
-        option.setArgs(1);
-        option.setArgName("ID");
-        group.addOption(option);
-
-        option = new Option("ia", "insert-attribut", true, "Hinzufügen eines Kontaktattributs");
-        option.setArgs(3);
-        option.setArgName("ID ATTRIBUT WERT");
-        group.addOption(option);
-
-        option = new Option("ua", "update-attribut", true, "Aktualisieren eines Kontaktattributs");
-        option.setArgs(3);
-        option.setArgName("ID ATTRIBUT WERT");
-        group.addOption(option);
-
-        option = new Option("da", "delete-attribut", true, "Löschen eines Kontaktattributs");
-        option.setArgs(2);
-        option.setArgName("ID ATTRIBUT");
-        group.addOption(option);
-
-        option = new Option("lk", "list-kontakte", false, "Auflisten aller Kontakte");
-        group.addOption(option);
-
-        option = new Option("vk", "view-kontakt", true, "Liefert Details eines Kontakts");
-        option.setArgs(1);
-        option.setArgName("ID");
-        group.addOption(option);
-
-        option = new Option("s", "search", true, "Suchen nach Kontakten");
-        option.setArgs(1);
-        option.setArgName("Pattern");
-        group.addOption(option);
-
-        Options options = new Options();
-        options.addOptionGroup(group);
-
-        return options;
     }
 
     /**
@@ -343,8 +340,7 @@ public class PIMAddressbookConsole
                     "ID", "VORNAME", "NACHNAME"
             });
 
-            kontakte.forEach(k ->
-            {
+            kontakte.forEach(k -> {
                 String[] row = new String[3];
                 rows.add(row);
 
@@ -375,13 +371,18 @@ public class PIMAddressbookConsole
 
             getKontaktDetails(kontakt_id);
         }
-        catch (SQLIntegrityConstraintViolationException ex)
-        {
-            this.printStream.printf("%nKontaktattribut existiert bereits%n");
-        }
         catch (Exception ex)
         {
-            LOGGER.error(null, Utils.getCause(ex));
+            Exception cause = Utils.getCause(ex);
+
+            if (cause instanceof SQLIntegrityConstraintViolationException)
+            {
+                this.printStream.printf("%nKontaktattribut existiert bereits%n");
+            }
+            else
+            {
+                LOGGER.error(null, cause);
+            }
         }
     }
 
@@ -399,13 +400,18 @@ public class PIMAddressbookConsole
 
             getKontaktDetails(id);
         }
-        catch (SQLIntegrityConstraintViolationException ex)
-        {
-            this.printStream.printf("%nKontakt existiert bereits%n");
-        }
         catch (Exception ex)
         {
-            LOGGER.error(null, Utils.getCause(ex));
+            Exception cause = Utils.getCause(ex);
+
+            if (cause instanceof SQLIntegrityConstraintViolationException)
+            {
+                this.printStream.printf("%nKontaktattribut existiert bereits%n");
+            }
+            else
+            {
+                LOGGER.error(null, cause);
+            }
         }
     }
 
@@ -431,8 +437,7 @@ public class PIMAddressbookConsole
                 "ID", "VORNAME", "NACHNAME", "ATTRIBUT", "WERT"
         });
 
-        kontakte.forEach(kontakt ->
-        {
+        kontakte.forEach(kontakt -> {
             rows.add(new String[]
             {
                     Long.toString(kontakt.getID()), kontakt.getNachname(), kontakt.getVorname(), StringUtils.EMPTY, StringUtils.EMPTY
@@ -448,8 +453,7 @@ public class PIMAddressbookConsole
 
             if (kontaktAttribute.size() > 1)
             {
-                kontaktAttribute.stream().skip(1).forEach(ka ->
-                {
+                kontaktAttribute.stream().skip(1).forEach(ka -> {
                     String[] row = new String[5];
                     rows.add(row);
 

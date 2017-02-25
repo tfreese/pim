@@ -5,7 +5,6 @@ import java.nio.file.Path;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
-
 import de.freese.pim.common.function.ExceptionalSupplier;
 import de.freese.pim.common.utils.Utils;
 import de.freese.pim.server.addressbook.model.Kontakt;
@@ -30,7 +29,7 @@ public class TxLambdaAddressBookDAO extends AbstractAddressBookDAO
      * @see de.freese.pim.server.addressbook.dao.AbstractAddressBookDAO#backup(java.nio.file.Path)
      */
     @Override
-    public boolean backup(final Path directory) throws Exception
+    public boolean backup(final Path directory)
     {
         return execute(getDataSource()::getConnection, () -> super.backup(directory), false);
     }
@@ -39,7 +38,7 @@ public class TxLambdaAddressBookDAO extends AbstractAddressBookDAO
      * @see de.freese.pim.server.addressbook.dao.AbstractAddressBookDAO#deleteAttribut(long, java.lang.String)
      */
     @Override
-    public int deleteAttribut(final long kontakt_id, final String attribut) throws Exception
+    public int deleteAttribut(final long kontakt_id, final String attribut)
     {
         return execute(getDataSource()::getConnection, () -> super.deleteAttribut(kontakt_id, attribut), true);
     }
@@ -48,7 +47,7 @@ public class TxLambdaAddressBookDAO extends AbstractAddressBookDAO
      * @see de.freese.pim.server.addressbook.dao.AbstractAddressBookDAO#deleteKontakt(long)
      */
     @Override
-    public int deleteKontakt(final long id) throws Exception
+    public int deleteKontakt(final long id)
     {
         return execute(getDataSource()::getConnection, () -> super.deleteKontakt(id), true);
 
@@ -58,10 +57,58 @@ public class TxLambdaAddressBookDAO extends AbstractAddressBookDAO
     }
 
     /**
+     * @param <R> Konkreter Return-Wert
+     * @param connectionSupplier {@link ExceptionalSupplier}
+     * @param resultSupplier {@link ExceptionalSupplier}
+     * @param transactional boolean
+     * @return Object
+     */
+    private <R> R execute(final ExceptionalSupplier<Connection, SQLException> connectionSupplier, final ExceptionalSupplier<R, Exception> resultSupplier,
+                          final boolean transactional)
+    {
+        R result = null;
+
+        try
+        {
+            try (Connection connection = connectionSupplier.get())
+            {
+                ConnectionHolder.set(connection);
+
+                if (transactional)
+                {
+                    ConnectionHolder.beginTX();
+                }
+
+                result = resultSupplier.get();
+
+                if (transactional)
+                {
+                    ConnectionHolder.commitTX();
+                }
+            }
+
+            return result;
+        }
+        catch (Exception ex) // catch (Error | RuntimeException rex)
+        {
+            if (transactional)
+            {
+                Utils.executeSafely(() -> ConnectionHolder.rollbackTX());
+            }
+
+            throw new RuntimeException(Utils.getCause(ex));
+        }
+        finally
+        {
+            Utils.executeSafely(() -> ConnectionHolder.close());
+        }
+    }
+
+    /**
      * @see de.freese.pim.server.addressbook.dao.AbstractAddressBookDAO#getKontaktDetails(long[])
      */
     @Override
-    public List<Kontakt> getKontaktDetails(final long... ids) throws Exception
+    public List<Kontakt> getKontaktDetails(final long...ids)
     {
         return execute(getDataSource()::getConnection, () -> super.getKontaktDetails(ids), false);
     }
@@ -70,7 +117,7 @@ public class TxLambdaAddressBookDAO extends AbstractAddressBookDAO
      * @see de.freese.pim.server.addressbook.dao.AbstractAddressBookDAO#getKontakte()
      */
     @Override
-    public List<Kontakt> getKontakte() throws Exception
+    public List<Kontakt> getKontakte()
     {
         return execute(getDataSource()::getConnection, () -> super.getKontakte(), false);
     }
@@ -79,7 +126,7 @@ public class TxLambdaAddressBookDAO extends AbstractAddressBookDAO
      * @see de.freese.pim.server.addressbook.dao.AbstractAddressBookDAO#insertAttribut(long, java.lang.String, java.lang.String)
      */
     @Override
-    public int insertAttribut(final long kontakt_id, final String attribut, final String wert) throws Exception
+    public int insertAttribut(final long kontakt_id, final String attribut, final String wert)
     {
         return execute(getDataSource()::getConnection, () -> super.insertAttribut(kontakt_id, attribut, wert), true);
     }
@@ -88,7 +135,7 @@ public class TxLambdaAddressBookDAO extends AbstractAddressBookDAO
      * @see de.freese.pim.server.addressbook.dao.AbstractAddressBookDAO#insertKontakt(java.lang.String, java.lang.String)
      */
     @Override
-    public long insertKontakt(final String nachname, final String vorname) throws Exception
+    public long insertKontakt(final String nachname, final String vorname)
     {
         return execute(getDataSource()::getConnection, () -> super.insertKontakt(nachname, vorname), true);
     }
@@ -97,7 +144,7 @@ public class TxLambdaAddressBookDAO extends AbstractAddressBookDAO
      * @see de.freese.pim.server.addressbook.dao.AbstractAddressBookDAO#searchKontakte(java.lang.String)
      */
     @Override
-    public List<Kontakt> searchKontakte(final String name) throws Exception
+    public List<Kontakt> searchKontakte(final String name)
     {
         return execute(getDataSource()::getConnection, () -> super.searchKontakte(name), false);
     }
@@ -106,7 +153,7 @@ public class TxLambdaAddressBookDAO extends AbstractAddressBookDAO
      * @see de.freese.pim.server.addressbook.dao.AbstractAddressBookDAO#updateAttribut(long, java.lang.String, java.lang.String)
      */
     @Override
-    public int updateAttribut(final long kontakt_id, final String attribut, final String wert) throws Exception
+    public int updateAttribut(final long kontakt_id, final String attribut, final String wert)
     {
         return execute(getDataSource()::getConnection, () -> super.updateAttribut(kontakt_id, attribut, wert), true);
     }
@@ -115,57 +162,8 @@ public class TxLambdaAddressBookDAO extends AbstractAddressBookDAO
      * @see de.freese.pim.server.addressbook.dao.AbstractAddressBookDAO#updateKontakt(long, java.lang.String, java.lang.String)
      */
     @Override
-    public int updateKontakt(final long id, final String nachname, final String vorname) throws Exception
+    public int updateKontakt(final long id, final String nachname, final String vorname)
     {
         return execute(getDataSource()::getConnection, () -> super.updateKontakt(id, nachname, vorname), true);
-    }
-
-    /**
-     * @param <R> Konkreter Return-Wert
-     * @param connectionSupplier {@link ExceptionalSupplier}
-     * @param resultSupplier {@link ExceptionalSupplier}
-     * @param transactional boolean
-     * @return Object
-     * @throws Exception Falls was schief geht.
-     */
-    private <R> R execute(final ExceptionalSupplier<Connection, SQLException> connectionSupplier,
-            final ExceptionalSupplier<R, Exception> resultSupplier, final boolean transactional) throws Exception
-    {
-        R result = null;
-
-        try (Connection connection = connectionSupplier.get())
-        {
-            ConnectionHolder.set(connection);
-
-            if (transactional)
-            {
-                ConnectionHolder.beginTX();
-            }
-
-            try
-            {
-                result = resultSupplier.get();
-
-                if (transactional)
-                {
-                    ConnectionHolder.commitTX();
-                }
-            }
-            catch (Exception ex) // catch (Error | RuntimeException rex)
-            {
-                if (transactional)
-                {
-                    ConnectionHolder.rollbackTX();
-                }
-
-                throw Utils.getCause(ex);
-            }
-            finally
-            {
-                ConnectionHolder.close();
-            }
-        }
-
-        return result;
     }
 }

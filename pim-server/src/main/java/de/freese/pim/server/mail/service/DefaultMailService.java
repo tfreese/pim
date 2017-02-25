@@ -30,6 +30,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.async.DeferredResult;
 import de.freese.pim.common.model.mail.MailContent;
+import de.freese.pim.common.service.AbstractService;
 import de.freese.pim.common.utils.io.IOMonitor;
 import de.freese.pim.server.mail.api.JavaMailAPI;
 import de.freese.pim.server.mail.api.MailAPI;
@@ -37,7 +38,6 @@ import de.freese.pim.server.mail.dao.MailDAO;
 import de.freese.pim.server.mail.model.Mail;
 import de.freese.pim.server.mail.model.MailAccount;
 import de.freese.pim.server.mail.model.MailFolder;
-import de.freese.pim.server.service.AbstractService;
 
 /**
  * Service für die Mail-API.
@@ -72,7 +72,7 @@ public class DefaultMailService extends AbstractService implements MailService, 
      */
     @Override
     @PostMapping("/connect")
-    public void connectAccount(@RequestBody final MailAccount account) throws Exception
+    public void connectAccount(@RequestBody final MailAccount account)
     {
         // BeanDefinitionBuilder builder = BeanDefinitionBuilder.rootBeanDefinition(SomeClass.class);
         // builder.addPropertyReference("propertyName", "someBean"); // add dependency to other bean
@@ -112,7 +112,7 @@ public class DefaultMailService extends AbstractService implements MailService, 
     @Override
     @Transactional
     @PostMapping("/account/delete/{id}")
-    public int deleteAccount(@PathVariable("id") final long accountID) throws Exception
+    public int deleteAccount(@PathVariable("id") final long accountID)
     {
         List<MailFolder> folder = getMailDAO().getMailFolder(accountID);
         int affectedRows = 0;
@@ -132,11 +132,9 @@ public class DefaultMailService extends AbstractService implements MailService, 
 
     /**
      * Schliessen der MailAPI-Verbindung aller MailAccounts.
-     *
-     * @throws Exception Falls was schief geht.
      */
     @PreDestroy
-    public void disconnectAccounts() throws Exception
+    public void disconnectAccounts()
     {
         disconnectAccounts(new long[0]);
     }
@@ -146,7 +144,7 @@ public class DefaultMailService extends AbstractService implements MailService, 
      */
     @Override
     @PostMapping("/account/disconnect")
-    public void disconnectAccounts(@RequestParam("accountIDs") final long...accountIDs) throws Exception
+    public void disconnectAccounts(@RequestParam("accountIDs") final long...accountIDs)
     {
         getLogger().info("Disconnect Accounts");
 
@@ -211,7 +209,7 @@ public class DefaultMailService extends AbstractService implements MailService, 
     @Override
     @Transactional(readOnly = true)
     @GetMapping("/accounts")
-    public List<MailAccount> getMailAccounts() throws Exception
+    public List<MailAccount> getMailAccounts()
     {
         List<MailAccount> accounts = getMailDAO().getMailAccounts();
 
@@ -244,7 +242,7 @@ public class DefaultMailService extends AbstractService implements MailService, 
     @Override
     @Transactional
     @PostMapping("/account/insert")
-    public long insertAccount(@RequestBody final MailAccount account) throws Exception
+    public long insertAccount(@RequestBody final MailAccount account)
     {
         getMailDAO().insertAccount(account);
 
@@ -257,7 +255,7 @@ public class DefaultMailService extends AbstractService implements MailService, 
     @Override
     @Transactional
     @PostMapping("/folder/insert/{accountID}")
-    public long[] insertFolder(@PathVariable("accountID") final long accountID, @RequestBody final List<MailFolder> folders) throws Exception
+    public long[] insertFolder(@PathVariable("accountID") final long accountID, @RequestBody final List<MailFolder> folders)
     {
         getMailDAO().insertFolder(accountID, folders);
 
@@ -270,7 +268,7 @@ public class DefaultMailService extends AbstractService implements MailService, 
     @Override
     @Transactional
     @GetMapping("/folder/{accountID}")
-    public List<MailFolder> loadFolder(@PathVariable("accountID") final long accountID) throws Exception
+    public List<MailFolder> loadFolder(@PathVariable("accountID") final long accountID)
     {
         MailAPI mailAPI = getMailAPI(accountID);
 
@@ -303,7 +301,6 @@ public class DefaultMailService extends AbstractService implements MailService, 
     @GetMapping("/content/{accountID}/{folderFullName}/{mailUID}")
     public MailContent loadMailContent(@PathVariable("accountID") final long accountID, @PathVariable("folderFullName") final String folderFullName,
                                        @PathVariable("mailUID") final long mailUID, final @RequestBody(required = false) IOMonitor monitor)
-        throws Exception
     {
         String folderName = urlDecode(urlDecode(folderFullName));
 
@@ -327,7 +324,6 @@ public class DefaultMailService extends AbstractService implements MailService, 
     @GetMapping("/mails/{accountID}/{folderID}/{folderFullName}")
     public List<Mail> loadMails(@PathVariable("accountID") final long accountID, @PathVariable("folderID") final long folderID,
                                 @PathVariable("folderFullName") final String folderFullName)
-        throws Exception
     {
         String folderName = urlDecode(urlDecode(folderFullName));
 
@@ -406,29 +402,22 @@ public class DefaultMailService extends AbstractService implements MailService, 
     @GetMapping("/mailsAsync/{accountID}/{folderID}/{folderFullName}")
     public DeferredResult<List<Mail>> loadMailsAsync(@PathVariable("accountID") final long accountID, @PathVariable("folderID") final long folderID,
                                                      @PathVariable("folderFullName") final String folderFullName)
-        throws Exception
     {
         DeferredResult<List<Mail>> deferredResult = new DeferredResult<>();
 
-        CompletableFuture.supplyAsync(() -> {
-            try
-            {
-                return loadMails(accountID, folderID, folderFullName);
-            }
-            catch (Exception ex)
-            {
-                throw new RuntimeException(ex);
-            }
-        }, getTaskExecutor()).whenCompleteAsync((result, throwable) -> {
-            if (throwable != null)
-            {
-                deferredResult.setErrorResult(throwable);
-            }
-            else
-            {
-                deferredResult.setResult(result);
-            }
-        }, getTaskExecutor());
+        // @formatter:off
+        CompletableFuture.supplyAsync(() -> loadMails(accountID, folderID, folderFullName), getTaskExecutor())
+            .whenCompleteAsync((result, throwable) -> {
+                if (throwable != null)
+                {
+                    deferredResult.setErrorResult(throwable);
+                }
+                else
+                {
+                    deferredResult.setResult(result);
+                }
+            }, getTaskExecutor());
+        // @formatter:on
 
         return deferredResult;
     }
@@ -457,7 +446,7 @@ public class DefaultMailService extends AbstractService implements MailService, 
      */
     @Override
     @PostMapping("/test")
-    public List<MailFolder> test(@RequestBody final MailAccount account) throws Exception
+    public List<MailFolder> test(@RequestBody final MailAccount account)
     {
         List<MailFolder> folder = null;
 
@@ -492,7 +481,7 @@ public class DefaultMailService extends AbstractService implements MailService, 
     @Override
     @Transactional
     @PostMapping("/account/update")
-    public int updateAccount(@RequestBody final MailAccount account) throws Exception
+    public int updateAccount(@RequestBody final MailAccount account)
     {
         return getMailDAO().updateAccount(account);
     }
@@ -503,7 +492,7 @@ public class DefaultMailService extends AbstractService implements MailService, 
     @Override
     @Transactional
     @PostMapping("/folder/update/{accountID}")
-    public int[] updateFolder(final long accountID, @RequestBody final List<MailFolder> folders) throws Exception
+    public int[] updateFolder(final long accountID, @RequestBody final List<MailFolder> folders)
     {
         int[] affectedRows = new int[folders.size()];
 

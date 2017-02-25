@@ -5,12 +5,10 @@ import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Stream;
-
 import org.apache.commons.collections4.ListUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.task.TaskExecutor;
-
 import de.freese.pim.gui.PIMApplication;
 import de.freese.pim.gui.mail.model.FXMail;
 import de.freese.pim.gui.mail.model.FXMailAccount;
@@ -52,8 +50,7 @@ public class InitMailAPITask extends Task<List<FXMailFolder>>
      * @param mailService {@link FXMailService}
      * @param account {@link FXMailAccount}
      */
-    public InitMailAPITask(final TreeView<Object> treeView, final TreeItem<Object> parent, final FXMailService mailService,
-            final FXMailAccount account)
+    public InitMailAPITask(final TreeView<Object> treeView, final TreeItem<Object> parent, final FXMailService mailService, final FXMailAccount account)
     {
         super();
 
@@ -65,8 +62,7 @@ public class InitMailAPITask extends Task<List<FXMailFolder>>
         this.mailService = mailService;
         this.account = account;
 
-        setOnSucceeded(event ->
-        {
+        setOnSucceeded(event -> {
             List<FXMailFolder> folders = getValue();
 
             account.getFolderSubscribed().addListener(new TreeFolderListChangeListener(parent));
@@ -81,8 +77,7 @@ public class InitMailAPITask extends Task<List<FXMailFolder>>
             // loadMailsByParallelStream(folders, treeView);
         });
 
-        setOnFailed(event ->
-        {
+        setOnFailed(event -> {
             Throwable th = getException();
 
             LOGGER.error(null, th);
@@ -120,7 +115,7 @@ public class InitMailAPITask extends Task<List<FXMailFolder>>
             // @formatter:off
             CompletableFuture<Void> cf = CompletableFuture.supplyAsync(() ->
             {
-                return this.mailService.loadMails(mf.getAccountID(), mf.getID(), mf.getFullName());
+                return this.mailService.loadMails(this.account, mf);
             }, taskExecutor)
             .exceptionally(ex ->
             {
@@ -132,8 +127,6 @@ public class InitMailAPITask extends Task<List<FXMailFolder>>
             {
                 Runnable task = ()->
                 {
-                    LOGGER.info("Load Mails finished: account={}, folder={}", this.account.getMail(), mf.getFullName());
-
                     if (mails != null)
                     {
                         mf.getMails().addAll(mails);
@@ -164,12 +157,10 @@ public class InitMailAPITask extends Task<List<FXMailFolder>>
             stream.onClose(() -> Platform.runLater(() -> treeView.refresh()))
             .forEach(mf ->
             {
-                List<FXMail> mails = this.mailService.loadMails(mf.getAccountID(), mf.getID(), mf.getFullName());
+                List<FXMail> mails = this.mailService.loadMails(this.account, mf);
 
                 Runnable task = ()->
                 {
-                    LOGGER.info("Load Mails finished: account={}, folder={}", this.account.getMail(), mf.getFullName());
-
                     if (mails != null)
                     {
                         mf.getMails().addAll(mails);

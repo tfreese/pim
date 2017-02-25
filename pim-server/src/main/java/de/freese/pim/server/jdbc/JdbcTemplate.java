@@ -22,7 +22,6 @@ import javax.sql.DataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.datasource.DataSourceUtils;
-
 import de.freese.pim.server.jdbc.sequence.SequenceProvider;
 import de.freese.pim.server.jdbc.sequence.SequenceQuery;
 import de.freese.pim.server.jdbc.sequence.SequenceQueryExecutor;
@@ -239,9 +238,8 @@ public class JdbcTemplate
      * Schliesst die {@link Connection}.
      *
      * @param connection {@link Connection}
-     * @throws SQLException Falls was schief geht.
      */
-    protected void closeConnection(final Connection connection) throws SQLException
+    protected void closeConnection(final Connection connection)
     {
         DataSourceUtils.releaseConnection(connection, getDataSource());
 
@@ -263,10 +261,15 @@ public class JdbcTemplate
      * Default: Bei RuntimeException und SQLException wird jeweils der Cause geliefert.
      *
      * @param ex {@link Exception}
-     * @return {@link Exception}
+     * @return {@link RuntimeException}
      */
-    protected Exception convertException(final Exception ex)
+    protected RuntimeException convertException(final Exception ex)
     {
+        // if (ex instanceof RuntimeException)
+        // {
+        // return (RuntimeException) ex;
+        // }
+
         Throwable th = ex;
 
         if (th instanceof RuntimeException)
@@ -274,12 +277,12 @@ public class JdbcTemplate
             th = th.getCause();
         }
 
-        // if (th.getCause() instanceof SQLException)
-        // {
-        // th = th.getCause();
-        // }
+        if (th.getCause() instanceof SQLException)
+        {
+            th = th.getCause();
+        }
 
-        return (Exception) th;
+        return new RuntimeException(th);
     }
 
     /**
@@ -297,10 +300,9 @@ public class JdbcTemplate
      * @param <T> Konkreter Return-Typ.
      * @param action {@link ConnectionCallback}
      * @return Object
-     * @throws SQLException Falls was schief geht.
      */
     @SuppressWarnings("resource")
-    public <T> T execute(final ConnectionCallback<T> action) throws SQLException
+    public <T> T execute(final ConnectionCallback<T> action)
     {
         Connection connection = null;
 
@@ -312,10 +314,10 @@ public class JdbcTemplate
 
             return result;
         }
-        // catch (Exception ex)
-        // {
-        // throw convertException(ex);
-        // }
+        catch (SQLException sex)
+        {
+            throw convertException(sex);
+        }
         finally
         {
             closeConnection(connection);
@@ -327,9 +329,8 @@ public class JdbcTemplate
      * @param psc {@link PreparedStatementCreator}
      * @param action {@link PreparedStatementCallback}
      * @return Object
-     * @throws SQLException Falls was schief geht.
      */
-    public <T> T execute(final PreparedStatementCreator psc, final PreparedStatementCallback<T> action) throws SQLException
+    public <T> T execute(final PreparedStatementCreator psc, final PreparedStatementCallback<T> action)
     {
         return execute((ConnectionCallback<T>) con -> {
             try (PreparedStatement ps = psc.createPreparedStatement(con))
@@ -345,9 +346,8 @@ public class JdbcTemplate
      * @param <T> Konkreter Return-Typ.
      * @param action {@link StatementCallback}
      * @return Object
-     * @throws SQLException Falls was schief geht.
      */
-    public <T> T execute(final StatementCallback<T> action) throws SQLException
+    public <T> T execute(final StatementCallback<T> action)
     {
         return execute((ConnectionCallback<T>) con -> {
             try (Statement stmt = con.createStatement())
@@ -363,18 +363,16 @@ public class JdbcTemplate
      * Führt ein einfaches {@link Statement#execute(String)} aus.
      *
      * @param sql String
-     * @throws SQLException Falls was schief geht.
      */
-    public void execute(final String sql) throws SQLException
+    public void execute(final String sql)
     {
         execute((StatementCallback<?>) stmt -> stmt.execute(sql));
     }
 
     /**
      * @return {@link Connection}
-     * @throws SQLException Falls was schief geht.
      */
-    protected Connection getConnection() throws SQLException
+    protected Connection getConnection()
     {
         Connection connection = null;
 
@@ -416,6 +414,14 @@ public class JdbcTemplate
     }
 
     /**
+     * @return {@link Logger}
+     */
+    protected Logger getLogger()
+    {
+        return LOGGER;
+    }
+
+    /**
      * Liefert die nächste ID/PK der Sequence/Tabelle.<br>
      * Unterstützte Datenbanken:<br>
      *
@@ -427,12 +433,11 @@ public class JdbcTemplate
      *
      * @param sequence String
      * @return long
-     * @throws SQLException Falls was schief geht.
      * @see SequenceQuery
      * @see SequenceProvider
      * @see SequenceQueryExecutor
      */
-    public long getNextID(final String sequence) throws SQLException
+    public long getNextID(final String sequence)
     {
         return execute((ConnectionCallback<Long>) con -> {
             try (Statement stmt = con.createStatement())
@@ -491,9 +496,8 @@ public class JdbcTemplate
      * Abfrage der {@link DatabaseMetaData}.
      *
      * @return boolean
-     * @throws SQLException Falls was schief geht.
      */
-    protected boolean isBatchSupported() throws SQLException
+    protected boolean isBatchSupported()
     {
         return execute((ConnectionCallback<Boolean>) con -> {
             try (Statement stmt = con.createStatement())
@@ -527,14 +531,13 @@ public class JdbcTemplate
      * @param setter {@link PreparedStatementSetter}
      * @param rse {@link ResultSetExtractor}
      * @return Object
-     * @throws SQLException Falls was schief geht.
      */
-    public <T> T query(final String sql, final PreparedStatementSetter setter, final ResultSetExtractor<T> rse) throws SQLException
+    public <T> T query(final String sql, final PreparedStatementSetter setter, final ResultSetExtractor<T> rse)
     {
         return execute(con -> con.prepareStatement(sql), ps -> {
-            if (LOGGER.isDebugEnabled())
+            if (getLogger().isDebugEnabled())
             {
-                LOGGER.debug("execute: {}", sql);
+                getLogger().debug("execute: {}", sql);
             }
 
             ps.clearParameters();
@@ -555,9 +558,8 @@ public class JdbcTemplate
      * @param setter {@link PreparedStatementSetter}
      * @param rowMapper {@link RowMapper}
      * @return {@link List}
-     * @throws SQLException Falls was schief geht.
      */
-    public <T> List<T> query(final String sql, final PreparedStatementSetter setter, final RowMapper<T> rowMapper) throws SQLException
+    public <T> List<T> query(final String sql, final PreparedStatementSetter setter, final RowMapper<T> rowMapper)
     {
         return query(sql, setter, new RowMapperResultSetExtractor<>(rowMapper));
     }
@@ -569,14 +571,13 @@ public class JdbcTemplate
      * @param sql String
      * @param rse {@link ResultSetExtractor}
      * @return Object
-     * @throws SQLException Falls was schief geht.
      */
-    public <T> T query(final String sql, final ResultSetExtractor<T> rse) throws SQLException
+    public <T> T query(final String sql, final ResultSetExtractor<T> rse)
     {
         return execute((StatementCallback<T>) stmt -> {
-            if (LOGGER.isDebugEnabled())
+            if (getLogger().isDebugEnabled())
             {
-                LOGGER.debug("execute: {}", sql);
+                getLogger().debug("execute: {}", sql);
             }
 
             try (ResultSet rs = stmt.executeQuery(sql))
@@ -593,9 +594,8 @@ public class JdbcTemplate
      * @param sql String
      * @param rowMapper {@link RowMapper}
      * @return {@link List}
-     * @throws SQLException Falls was schief geht.
      */
-    public <T> List<T> query(final String sql, final RowMapper<T> rowMapper) throws SQLException
+    public <T> List<T> query(final String sql, final RowMapper<T> rowMapper)
     {
         return query(sql, new RowMapperResultSetExtractor<>(rowMapper));
     }
@@ -605,9 +605,8 @@ public class JdbcTemplate
      *
      * @param sql String
      * @return {@link List}
-     * @throws SQLException Falls was schief geht.
      */
-    public List<Map<String, Object>> queryForList(final String sql) throws SQLException
+    public List<Map<String, Object>> queryForList(final String sql)
     {
         return query(sql, new ColumnMapResultSetExtractor());
     }
@@ -627,14 +626,13 @@ public class JdbcTemplate
      *
      * @param sql String
      * @return int; affectedRows
-     * @throws SQLException Falls was schief geht.
      */
-    public int update(final String sql) throws SQLException
+    public int update(final String sql)
     {
         return execute((StatementCallback<Integer>) stmt -> {
-            if (LOGGER.isDebugEnabled())
+            if (getLogger().isDebugEnabled())
             {
-                LOGGER.debug("execute: {}", sql);
+                getLogger().debug("execute: {}", sql);
             }
 
             return stmt.executeUpdate(sql);
@@ -647,14 +645,13 @@ public class JdbcTemplate
      * @param sql String
      * @param setter {@link PreparedStatementSetter}
      * @return int; affectedRows
-     * @throws SQLException Falls was schief geht.
      */
-    public int update(final String sql, final PreparedStatementSetter setter) throws SQLException
+    public int update(final String sql, final PreparedStatementSetter setter)
     {
         return execute(con -> con.prepareStatement(sql), ps -> {
-            if (LOGGER.isDebugEnabled())
+            if (getLogger().isDebugEnabled())
             {
-                LOGGER.debug("execute: {}", sql);
+                getLogger().debug("execute: {}", sql);
             }
 
             ps.clearParameters();
@@ -673,9 +670,8 @@ public class JdbcTemplate
      * @param batchArgs {@link Collection}
      * @param setter {@link ParameterizedPreparedStatementSetter}
      * @return int[]; affectedRows
-     * @throws SQLException Falls was schief geht.
      */
-    public <T> int[] updateBatch(final String sql, final Collection<T> batchArgs, final ParameterizedPreparedStatementSetter<T> setter) throws SQLException
+    public <T> int[] updateBatch(final String sql, final Collection<T> batchArgs, final ParameterizedPreparedStatementSetter<T> setter)
     {
         return updateBatch(sql, batchArgs, setter, 100);
     }
@@ -689,15 +685,13 @@ public class JdbcTemplate
      * @param setter {@link ParameterizedPreparedStatementSetter}
      * @param batchSize int
      * @return int[]; affectedRows
-     * @throws SQLException Falls was schief geht.
      */
     public <T> int[] updateBatch(final String sql, final Collection<T> batchArgs, final ParameterizedPreparedStatementSetter<T> setter, final int batchSize)
-        throws SQLException
     {
         return execute(con -> con.prepareStatement(sql), ps -> {
-            if (LOGGER.isDebugEnabled())
+            if (getLogger().isDebugEnabled())
             {
-                LOGGER.debug("execute batch: size={}; {}", batchArgs.size(), sql);
+                getLogger().debug("execute batch: size={}; {}", batchArgs.size(), sql);
             }
 
             boolean supportsBatch = isBatchSupported(ps.getConnection());
@@ -718,11 +712,11 @@ public class JdbcTemplate
 
                     if (((n % batchSize) == 0) || (n == batchArgs.size()))
                     {
-                        if (LOGGER.isDebugEnabled())
+                        if (getLogger().isDebugEnabled())
                         {
                             int batchIndex = ((n % batchSize) == 0) ? n / batchSize : (n / batchSize) + 1;
                             int items = n - ((((n % batchSize) == 0) ? (n / batchSize) - 1 : (n / batchSize)) * batchSize);
-                            LOGGER.debug("Sending SQL batch update #{} with {} items", batchIndex, items);
+                            getLogger().debug("Sending SQL batch update #{} with {} items", batchIndex, items);
                         }
 
                         affectedRows.add(ps.executeBatch());

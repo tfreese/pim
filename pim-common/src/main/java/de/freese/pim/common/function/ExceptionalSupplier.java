@@ -13,7 +13,7 @@ import java.util.function.Supplier;
 public interface ExceptionalSupplier<R, E extends Exception>
 {
     /**
-     * Applies this function to the given argument.
+     * Gets a result.
      *
      * @return Object
      * @throws Exception Falls was schief geht.

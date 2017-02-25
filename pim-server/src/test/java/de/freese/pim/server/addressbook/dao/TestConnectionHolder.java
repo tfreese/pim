@@ -9,9 +9,7 @@ import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.Arrays;
 import java.util.List;
-
 import javax.sql.DataSource;
-
 import org.junit.AfterClass;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
@@ -20,10 +18,7 @@ import org.junit.runners.MethodSorters;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameter;
 import org.junit.runners.Parameterized.Parameters;
-
 import de.freese.pim.server.addressbook.TestAddressbookConfig;
-import de.freese.pim.server.addressbook.dao.DefaultAddressBookDAO;
-import de.freese.pim.server.addressbook.dao.AddressBookDAO;
 import de.freese.pim.server.addressbook.service.DefaultAddressBookService;
 import de.freese.pim.server.jdbc.JdbcTemplate;
 import de.freese.pim.server.jdbc.transaction.ConnectionHolder;
@@ -57,18 +52,26 @@ public class TestConnectionHolder extends AbstractDAOTextCase
          * @see de.freese.pim.server.jdbc.JdbcTemplate#closeConnection(java.sql.Connection)
          */
         @Override
-        protected void closeConnection(final Connection connection) throws SQLException
+        protected void closeConnection(final Connection connection)
         {
-            if (!ConnectionHolder.isEmpty())
+            try
             {
-                // Transaction-Context, nichts tun.
-                // Wird vom TransactionalInvocationHandler erledigt.
+                if (!ConnectionHolder.isEmpty())
+                {
+                    // Transaction-Context, nichts tun.
+                    // Wird vom TransactionalInvocationHandler erledigt.
+                }
+                else
+                {
+                    // Kein Transaction-Context.
+                    // connection.setReadOnly(false);
+
+                    connection.close();
+                }
             }
-            else
+            catch (SQLException sex)
             {
-                // Kein Transaction-Context.
-                // connection.setReadOnly(false);
-                connection.close();
+                throw convertException(sex);
             }
         }
 
@@ -77,41 +80,47 @@ public class TestConnectionHolder extends AbstractDAOTextCase
          */
         @SuppressWarnings("resource")
         @Override
-        protected Connection getConnection() throws SQLException
+        protected Connection getConnection()
         {
-            Connection connection = null;
-
-            if (!ConnectionHolder.isEmpty())
+            try
             {
-                // Transaction-Context
-                connection = ConnectionHolder.get();
-            }
-            else
-            {
-                // Kein Transaction-Context -> ReadOnly Connection
-                connection = getDataSource().getConnection();
+                Connection connection = null;
 
-                // ReadOnly Flag ändern geht nur ausserhalb einer TX.
-                if (!connection.isReadOnly())
+                if (!ConnectionHolder.isEmpty())
                 {
-                    connection.setReadOnly(true);
+                    // Transaction-Context
+                    connection = ConnectionHolder.get();
+                }
+                else
+                {
+                    // Kein Transaction-Context -> ReadOnly Connection
+                    connection = getDataSource().getConnection();
+
+                    // ReadOnly Flag ändern geht nur ausserhalb einer TX.
+                    if (!connection.isReadOnly())
+                    {
+                        connection.setReadOnly(true);
+                    }
+
+                    if (!connection.getAutoCommit())
+                    {
+                        connection.setAutoCommit(true);
+                    }
                 }
 
-                if (!connection.getAutoCommit())
-                {
-                    connection.setAutoCommit(true);
-                }
+                return connection;
             }
-
-            return connection;
+            catch (SQLException sex)
+            {
+                throw convertException(sex);
+            }
         }
     }
 
     /**
      *
      */
-    public static List<DataSource> dataSources = Arrays.asList(new TestAddressbookConfig().dataSource(),
-            new TestAddressbookConfig().dataSource());
+    public static List<DataSource> dataSources = Arrays.asList(new TestAddressbookConfig().dataSource(), new TestAddressbookConfig().dataSource());
 
     // /**
     // *
@@ -147,8 +156,8 @@ public class TestConnectionHolder extends AbstractDAOTextCase
     public static Iterable<Object[]> connectionPool() throws Exception
     {
         DefaultAddressBookService defaultAddressBookService = new DefaultAddressBookService();
-        defaultAddressBookService.setAddressBookDAO(
-                new DefaultAddressBookDAO().jdbcTemplate(new ConnectionHolderJdbcTemplate().dataSource(dataSources.get(0))));
+        defaultAddressBookService
+                .setAddressBookDAO(new DefaultAddressBookDAO().jdbcTemplate(new ConnectionHolderJdbcTemplate().dataSource(dataSources.get(0))));
 
         return Arrays.asList(new Object[][]
         {

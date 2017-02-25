@@ -6,7 +6,6 @@ package de.freese.pim.server.mail.dao;
 
 import java.util.Collection;
 import java.util.List;
-
 import de.freese.pim.server.mail.model.Mail;
 import de.freese.pim.server.mail.model.MailAccount;
 import de.freese.pim.server.mail.model.MailFolder;
@@ -21,27 +20,24 @@ public interface MailDAO
      *
      * @param accountID long
      * @return int; affectedRows
-     * @throws Exception Falls was schief geht.
      */
-    public int deleteAccount(long accountID) throws Exception;
+    public int deleteAccount(long accountID);
 
     /**
      * Löschen eines {@link MailFolder}.<br>
      *
      * @param folderID long
      * @return int; affectedRows
-     * @throws Exception Falls was schief geht.
      */
-    public int deleteFolder(long folderID) throws Exception;
+    public int deleteFolder(long folderID);
 
     /**
      * Löschen aller {@link MailFolder} eines Accounts.<br>
      *
      * @param accountID long
      * @return int; affectedRows
-     * @throws Exception Falls was schief geht.
      */
-    public int deleteFolders(long accountID) throws Exception;
+    public int deleteFolders(long accountID);
 
     /**
      * Löschen einer {@link Mail}.<br>
@@ -49,44 +45,39 @@ public interface MailDAO
      * @param folderID long
      * @param uid long
      * @return int; affectedRows
-     * @throws Exception Falls was schief geht.
      */
-    public int deleteMail(long folderID, long uid) throws Exception;
+    public int deleteMail(long folderID, long uid);
 
     /**
      * Löschen aller {@link Mail}s des Folders.<br>
      *
      * @param folderID long
      * @return int; affectedRows
-     * @throws Exception Falls was schief geht.
      */
-    public int deleteMails(long folderID) throws Exception;
+    public int deleteMails(long folderID);
 
     /**
      * Liefert alle MailAccounts, sortiert nach MAIL.
      *
      * @return {@link List}
-     * @throws Exception Falls was schief geht.
      */
-    public List<MailAccount> getMailAccounts() throws Exception;
+    public List<MailAccount> getMailAccounts();
 
     /**
      * Liefert alle Folder des Mail-Accounts, sortiert nach FULLNAME.
      *
      * @param accountID long
      * @return {@link List}
-     * @throws Exception Falls was schief geht.
      */
-    public List<MailFolder> getMailFolder(long accountID) throws Exception;
+    public List<MailFolder> getMailFolder(long accountID);
 
     /**
      * Liefert alle Mails des Folders.
      *
      * @param folderID long
      * @return {@link List}
-     * @throws Exception Falls was schief geht.
      */
-    public List<Mail> getMails(long folderID) throws Exception;
+    public List<Mail> getMails(long folderID);
 
     /**
      * Anlegen eines neuen {@link MailAccount}.<br>
@@ -94,9 +85,8 @@ public interface MailDAO
      *
      * @param account {@link MailAccount}
      * @return int; affectedRows
-     * @throws Exception Falls was schief geht.
      */
-    public int insertAccount(MailAccount account) throws Exception;
+    public int insertAccount(MailAccount account);
 
     /**
      * Anlegen von neuen {@link MailFolder}.<br>
@@ -105,9 +95,8 @@ public interface MailDAO
      * @param accountID long
      * @param folders {@link Collection}
      * @return int[]; affectedRows
-     * @throws Exception Falls was schief geht.
      */
-    public int[] insertFolder(long accountID, Collection<MailFolder> folders) throws Exception;
+    public int[] insertFolder(long accountID, Collection<MailFolder> folders);
 
     /**
      * Anlegen einer neuen {@link Mail}.<br>
@@ -116,36 +105,32 @@ public interface MailDAO
      * @param folderID long
      * @param mails {@link Collection}
      * @return int[]; affectedRows
-     * @throws Exception Falls was schief geht.
      */
-    public int[] insertMail(long folderID, Collection<Mail> mails) throws Exception;
+    public int[] insertMail(long folderID, Collection<Mail> mails);
 
     /**
      * Ändern eines {@link MailAccount}.
      *
      * @param account {@link MailAccount}
      * @return int; affectedRows
-     * @throws Exception Falls was schief geht.
      */
-    public int updateAccount(MailAccount account) throws Exception;
+    public int updateAccount(MailAccount account);
 
     /**
      * Ändern eines {@link MailFolder}.
      *
      * @param folder {@link MailFolder}
      * @return int; affectedRows
-     * @throws Exception Falls was schief geht.
      */
-    public int updateFolder(MailFolder folder) throws Exception;
+    public int updateFolder(MailFolder folder);
 
     /**
      * Ändern einer {@link Mail}.<br>
      * Hier wird nur das SEEN-Flag aktualisiert.
-     * 
+     *
      * @param folderID long
      * @param mail {@link Mail}
      * @return int; affectedRows
-     * @throws Exception Falls was schief geht.
      */
-    public int updateMail(long folderID, Mail mail) throws Exception;
+    public int updateMail(long folderID, Mail mail);
 }

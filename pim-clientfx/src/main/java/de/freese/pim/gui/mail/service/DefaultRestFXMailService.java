@@ -7,6 +7,7 @@ package de.freese.pim.gui.mail.service;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import javax.annotation.Resource;
@@ -159,15 +160,14 @@ public class DefaultRestFXMailService extends AbstractFXMailService
     }
 
     /**
-     * @see de.freese.pim.gui.mail.service.AbstractFXMailService#loadMailContent(java.nio.file.Path, long, java.lang.String, long,
-     *      de.freese.pim.common.utils.io.IOMonitor)
+     * @see de.freese.pim.gui.mail.service.AbstractFXMailService#loadMailContent(java.nio.file.Path, de.freese.pim.gui.mail.model.FXMailAccount,
+     *      de.freese.pim.gui.mail.model.FXMail, de.freese.pim.common.utils.io.IOMonitor)
      */
     @Override
-    protected MailContent loadMailContent(final Path mailPath, final long accountID, final String folderFullName, final long mailUID, final IOMonitor monitor)
-        throws Exception
+    protected MailContent loadMailContent(final Path mailPath, final FXMailAccount account, final FXMail mail, final IOMonitor monitor) throws Exception
     {
-        ResponseEntity<String> jsonContent = getRestTemplate().getForEntity("/mail/content/{accountID}/{folderFullName}/{mailUID}", String.class, accountID,
-                urlEncode(urlEncode(folderFullName)), mailUID);
+        ResponseEntity<String> jsonContent = getRestTemplate().getForEntity("/mail/content/{accountID}/{folderFullName}/{mailUID}", String.class,
+                account.getID(), urlEncode(urlEncode(mail.getFolderFullName())), mail.getUID());
 
         saveMailContent(mailPath, jsonContent.getBody());
 
@@ -177,24 +177,29 @@ public class DefaultRestFXMailService extends AbstractFXMailService
     }
 
     /**
-     * @see de.freese.pim.gui.mail.service.FXMailService#loadMails(long, long, java.lang.String)
+     * @see de.freese.pim.gui.mail.service.FXMailService#loadMails(de.freese.pim.gui.mail.model.FXMailAccount, de.freese.pim.gui.mail.model.FXMailFolder)
      */
     @Override
-    public List<FXMail> loadMails(final long accountID, final long folderID, final String folderFullName)
+    public List<FXMail> loadMails(final FXMailAccount account, final FXMailFolder folder)
     {
+        getLogger().info("Load Mails: account={}, folder={}", account.getMail(), folder.getFullName());
+
         try
         {
-            // FXMail[] mails =
-            // getRestTemplate().getForObject("/mail/mails/{accountID}/{folderID}/{folderFullName}", FXMail[].class, accountID, folderID,
-            // urlEncode(urlEncode(folderFullName)));
-            ListenableFuture<ResponseEntity<FXMail[]>> mails = getAsyncRestTemplate().getForEntity("/mail/mailsAsync/{accountID}/{folderID}/{folderFullName}",
-                    FXMail[].class, accountID, folderID, urlEncode(urlEncode(folderFullName)));
+            String folderName = urlEncode(urlEncode(folder.getFullName()));
+            String restURL = "/mail/mailsAsync/{accountID}/{folderID}/{folderFullName}";
 
-            // ListenableFuture<ResponseEntity<String>> mails = getAsyncRestTemplate().getForEntity("/mail/mailsAsync/{accountID}/{folderID}/{folderFullName}",
-            // String.class, accountID, folderID, urlEncode(urlEncode(folderFullName)));
+            // FXMail[] mails = getRestTemplate().getForObject(restURL, FXMail[].class, account.getID(), folder.getID(), folderName);
+            ListenableFuture<ResponseEntity<FXMail[]>> mails =
+                    getAsyncRestTemplate().getForEntity(restURL, FXMail[].class, account.getID(), folder.getID(), folderName);
 
-            // FXMail[] array = mails.get(10, TimeUnit.SECONDS).getBody();
-            FXMail[] array = mails.get().getBody();
+            // ListenableFuture<ResponseEntity<String>> mails =
+            // getAsyncRestTemplate().getForEntity(restURL, String.class, account.getID(), folder.getID(), folderName);
+
+            FXMail[] array = mails.get(10, TimeUnit.SECONDS).getBody();
+            // FXMail[] array = mails.get().getBody();
+
+            getLogger().info("Load Mails finished: account={}, folder={}", account.getMail(), folder.getFullName());
 
             return Arrays.asList(array);
 
@@ -214,7 +219,7 @@ public class DefaultRestFXMailService extends AbstractFXMailService
     public void setRestTemplateBuilder(final RestTemplateBuilder restTemplateBuilder)
     {
         this.restTemplate = restTemplateBuilder.build();
-        this.asyncRestTemplate = new AsyncRestTemplate((AsyncListenableTaskExecutor) getTaskScheduler());
+        this.asyncRestTemplate = new AsyncRestTemplate((AsyncListenableTaskExecutor) getTaskExecutor());
         // this.asyncRestTemplate = new AsyncRestTemplate(new SimpleClientHttpRequestFactory(), this.restTemplate);
         this.asyncRestTemplate.setErrorHandler(this.restTemplate.getErrorHandler());
         this.asyncRestTemplate.setUriTemplateHandler(this.restTemplate.getUriTemplateHandler());

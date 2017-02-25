@@ -5,7 +5,6 @@ import java.io.OutputStream;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.Executor;
-
 import de.freese.pim.common.function.ExceptionalConsumer;
 import de.freese.pim.common.function.ExceptionalFunction;
 import de.freese.pim.common.model.mail.MailContent;
@@ -23,17 +22,13 @@ public interface MailAPI
 {
     /**
      * Initialisiert den Service mit der konkreten Mail-API.
-     *
-     * @throws Exception Falls was schief geht.
      */
-    public void connect() throws Exception;
+    public void connect();
 
     /**
      * Schliessen der Verbindung.
-     *
-     * @throws Exception Falls was schief geht.
      */
-    public void disconnect() throws Exception;
+    public void disconnect();
 
     /**
      * Liefert den Account des Services.
@@ -46,18 +41,16 @@ public interface MailAPI
      * Liefert alle Folder des Accounts.
      *
      * @return {@link List}
-     * @throws Exception Falls was schief geht.
      */
-    public List<MailFolder> getFolder() throws Exception;
+    public List<MailFolder> getFolder();
 
     /**
      * Liefert die aktuellen Message-UIDs im Folder.<br>
      *
      * @param folderFullName String
      * @return {@link Set}
-     * @throws Exception Falls was schief geht.
      */
-    public Set<Long> loadCurrentMessageIDs(String folderFullName) throws Exception;
+    public Set<Long> loadCurrentMessageIDs(String folderFullName);
 
     /**
      * Holt die Mail vom Provider und übergibt sie in dem {@link ExceptionalConsumer}.<br>
@@ -67,9 +60,8 @@ public interface MailAPI
      * @param uid long
      * @param function {@link ExceptionalFunction}
      * @return Object
-     * @throws Exception Falls was schief geht.
      */
-    public <T> T loadMail(String folderFullName, long uid, ExceptionalFunction<Object, T, Exception> function) throws Exception;
+    public <T> T loadMail(String folderFullName, long uid, ExceptionalFunction<Object, T, Exception> function);
 
     /**
      * Holt die Mail vom Provider und übergibt sie in dem {@link ExceptionalConsumer}.<br>
@@ -78,9 +70,8 @@ public interface MailAPI
      * @param uid long
      * @param monitor {@link IOMonitor}, optional
      * @return {@link MailContent}
-     * @throws Exception Falls was schief geht.
      */
-    public MailContent loadMail(String folderFullName, long uid, IOMonitor monitor) throws Exception;
+    public MailContent loadMail(String folderFullName, long uid, IOMonitor monitor);
 
     /**
      * Holt die Mail vom Provider und schreibt sie in den {@link OutputStream}.<br>
@@ -88,9 +79,8 @@ public interface MailAPI
      * @param folderFullName String
      * @param uid long
      * @param outputStream {@link OutputStream}
-     * @throws Exception Falls was schief geht.
      */
-    public void loadMail(String folderFullName, long uid, OutputStream outputStream) throws Exception;
+    public void loadMail(String folderFullName, long uid, OutputStream outputStream);
 
     /**
      * Lädt die Mails des Folders vom Provider ab der definierten UID.<br>
@@ -99,9 +89,8 @@ public interface MailAPI
      * @param folderFullName {@link String}
      * @param uidFrom long; Startindex der zu ladenen Mails
      * @return {@link List}
-     * @throws Exception Falls was schief geht.
      */
-    public List<Mail> loadMails(String folderFullName, long uidFrom) throws Exception;
+    public List<Mail> loadMails(String folderFullName, long uidFrom);
 
     /**
      * Optionaler {@link Executor} für die Mail-API.
@@ -115,14 +104,11 @@ public interface MailAPI
      *
      * @param mail {@link Mail}
      * @param seen boolean
-     * @throws Exception Falls was schief geht.
      */
-    public void setSeen(Mail mail, boolean seen) throws Exception;
+    public void setSeen(Mail mail, boolean seen);
 
     /**
      * Testet die Verbindung.
-     *
-     * @throws Exception Falls was schief geht.
      */
-    public void testConnection() throws Exception;
+    public void testConnection();
 }
