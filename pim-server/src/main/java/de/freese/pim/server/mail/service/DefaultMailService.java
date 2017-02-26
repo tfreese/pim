@@ -337,7 +337,7 @@ public class DefaultMailService extends AbstractService implements MailService, 
         long uidFrom = mailMap.values().parallelStream().mapToLong(Mail::getUID).max().orElse(1);
 
         // Alle Mails lokal löschen, die zwischenzeitlich auch Remote gelöscht worden sind.
-        Set<Long> currentUIDs = mailAPI.loadCurrentMessageIDs(folderName);
+        Set<Long> currentUIDs = mailAPI.loadMessageIDs(folderName);
 
         Set<Long> remoteDeletedUIDs = new HashSet<>();
         remoteDeletedUIDs.addAll(mailMap.keySet());
@@ -416,7 +416,7 @@ public class DefaultMailService extends AbstractService implements MailService, 
                 {
                     deferredResult.setResult(result);
                 }
-            }, getTaskExecutor());
+            });
         // @formatter:on
 
         return deferredResult;
@@ -492,7 +492,7 @@ public class DefaultMailService extends AbstractService implements MailService, 
     @Override
     @Transactional
     @PostMapping("/folder/update/{accountID}")
-    public int[] updateFolder(final long accountID, @RequestBody final List<MailFolder> folders)
+    public int[] updateFolder(@PathVariable("accountID") final long accountID, @RequestBody final List<MailFolder> folders)
     {
         int[] affectedRows = new int[folders.size()];
 

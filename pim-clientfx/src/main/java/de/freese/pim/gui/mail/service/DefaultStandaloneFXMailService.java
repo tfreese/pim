@@ -153,20 +153,29 @@ public class DefaultStandaloneFXMailService extends AbstractFXMailService
         {
             int affectedRows = 0;
 
+            // ID != 0 -> update
+            List<MailFolder> toUpdate = toPojoMailFolders(folders.stream().filter(mf -> mf.getID() > 0).collect(Collectors.toList()));
+
+            if (!toUpdate.isEmpty())
+            {
+                int[] result = getMailService().updateFolder(accountID, toUpdate);
+                affectedRows += IntStream.of(result).sum();
+            }
+
             // ID = 0 -> insert
             List<MailFolder> toInsert = toPojoMailFolders(folders.stream().filter(mf -> mf.getID() == 0).collect(Collectors.toList()));
 
-            long[] primaryKeys = getMailService().insertFolder(accountID, toInsert);
-            affectedRows += primaryKeys.length;
-
-            for (int i = 0; i < primaryKeys.length; i++)
+            if (!toInsert.isEmpty())
             {
-                toInsert.get(i).setID(primaryKeys[i]);
-            }
+                long[] primaryKeys = getMailService().insertFolder(accountID, toInsert);
+                affectedRows += primaryKeys.length;
 
-            // ID != 0 -> update
-            List<MailFolder> toUpdate = toPojoMailFolders(folders.stream().filter(mf -> mf.getID() > 0).collect(Collectors.toList()));
-            affectedRows += IntStream.of(getMailService().updateFolder(accountID, toUpdate)).sum();
+                for (int i = 0; i < primaryKeys.length; i++)
+                {
+                    toInsert.get(i).setAccountID(accountID);
+                    toInsert.get(i).setID(primaryKeys[i]);
+                }
+            }
 
             return affectedRows;
         }

@@ -3,6 +3,7 @@ package de.freese.pim.gui.mail;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.Callable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import de.freese.pim.gui.mail.model.FXMail;
@@ -19,7 +20,7 @@ import javafx.scene.control.TreeView;
  *
  * @author Thomas Freese
  */
-public class LoadMailsTask extends Task<Void>
+public class LoadMailsTask extends Task<Void> implements Callable<Void>
 {
     /**
     *
@@ -76,12 +77,15 @@ public class LoadMailsTask extends Task<Void>
 
     /**
      * @see javafx.concurrent.Task#call()
+     * @see Callable
      */
     @Override
-    protected Void call() throws Exception
+    public Void call() throws Exception
     {
         for (FXMailFolder mf : this.folders)
         {
+            // Thread.sleep(1000);
+
             List<FXMail> mails = this.mailService.loadMails(this.account, mf);
 
             Runnable task = () -> {

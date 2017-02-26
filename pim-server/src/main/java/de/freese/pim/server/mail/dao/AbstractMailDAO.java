@@ -504,6 +504,7 @@ public class AbstractMailDAO extends AbstractDAO<MailDAO> implements MailDAO
             ps.setString(4, mf.getName());
             ps.setBoolean(5, mf.isAbonniert());
 
+            mf.setAccountID(accountID);
             mf.setID(id);
         });
 

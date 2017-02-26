@@ -7,7 +7,6 @@ package de.freese.pim.gui.mail.service;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import javax.annotation.Resource;
@@ -129,21 +128,29 @@ public class DefaultRestFXMailService extends AbstractFXMailService
     {
         int affectedRows = 0;
 
+        // ID != 0 -> update
+        List<FXMailFolder> toUpdate = folders.stream().filter(mf -> mf.getID() > 0).collect(Collectors.toList());
+
+        if (!toUpdate.isEmpty())
+        {
+            int[] result = getRestTemplate().postForObject("/mail/folder/update/{accountID}", toUpdate, int[].class, accountID);
+            affectedRows += IntStream.of(result).sum();
+        }
+
         // ID = 0 -> insert
         List<FXMailFolder> toInsert = folders.stream().filter(mf -> mf.getID() == 0).collect(Collectors.toList());
 
-        long[] primaryKeys = getRestTemplate().postForObject("/mail/folder/insert/{accountID}", toInsert, long[].class, accountID);
-        affectedRows += primaryKeys.length;
-
-        for (int i = 0; i < primaryKeys.length; i++)
+        if (!toInsert.isEmpty())
         {
-            toInsert.get(i).setID(primaryKeys[i]);
-        }
+            long[] primaryKeys = getRestTemplate().postForObject("/mail/folder/insert/{accountID}", toInsert, long[].class, accountID);
+            affectedRows += primaryKeys.length;
 
-        // ID != 0 -> update
-        List<FXMailFolder> toUpdate = folders.stream().filter(mf -> mf.getID() > 0).collect(Collectors.toList());
-        int[] result = getRestTemplate().postForObject("/mail/folder/update/{accountID}", toUpdate, int[].class, accountID);
-        affectedRows += IntStream.of(result).sum();
+            for (int i = 0; i < primaryKeys.length; i++)
+            {
+                toInsert.get(i).setAccountID(accountID);
+                toInsert.get(i).setID(primaryKeys[i]);
+            }
+        }
 
         return affectedRows;
     }
@@ -196,8 +203,8 @@ public class DefaultRestFXMailService extends AbstractFXMailService
             // ListenableFuture<ResponseEntity<String>> mails =
             // getAsyncRestTemplate().getForEntity(restURL, String.class, account.getID(), folder.getID(), folderName);
 
-            FXMail[] array = mails.get(10, TimeUnit.SECONDS).getBody();
-            // FXMail[] array = mails.get().getBody();
+            // FXMail[] array = mails.get(10, TimeUnit.SECONDS).getBody();
+            FXMail[] array = mails.get().getBody();
 
             getLogger().info("Load Mails finished: account={}, folder={}", account.getMail(), folder.getFullName());
 

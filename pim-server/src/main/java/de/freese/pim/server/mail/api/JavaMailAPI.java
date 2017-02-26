@@ -1,7 +1,6 @@
 // Created: 23.01.2017
 package de.freese.pim.server.mail.api;
 
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -57,10 +56,11 @@ public class JavaMailAPI extends AbstractMailAPI
     private interface FolderCallback<T>
     {
         /**
-         * @param folder {@link Folder}
+         * @param folder {@link IMAPFolder}
          * @return Object
+         * @throws Exception Falls was schief geht.
          */
-        public T doInFolder(Folder folder);
+        public T doInFolder(IMAPFolder folder) throws Exception;
     }
 
     /**
@@ -294,6 +294,46 @@ public class JavaMailAPI extends AbstractMailAPI
     }
 
     /**
+     * Führt die Action in dem Folder aus.
+     *
+     * @param <T> Konkreter Return-Typ
+     * @param folderFullName String
+     * @param action {@link FolderCallback}
+     * @return Object
+     */
+    protected <T> T executeInFolder(final String folderFullName, final FolderCallback<T> action)
+    {
+        return Utils.executeSafely(() -> {
+            IMAPFolder folder = (IMAPFolder) getStore().getFolder(folderFullName);
+
+            if (folder == null)
+            {
+                getLogger().warn("Folder {} not exist", folderFullName);
+
+                return null;
+            }
+
+            if ((folder.getType() & Folder.HOLDS_MESSAGES) == 0)
+            {
+                getLogger().warn("Folder {} can not contain messges", folderFullName);
+
+                return null;
+            }
+
+            try
+            {
+                checkRead(folder);
+
+                return action.doInFolder(folder);
+            }
+            finally
+            {
+                closeFolder(folder);
+            }
+        });
+    }
+
+    /**
      * @see de.freese.pim.server.mail.api.MailAPI#getFolder()
      */
     @Override
@@ -360,76 +400,16 @@ public class JavaMailAPI extends AbstractMailAPI
     }
 
     /**
-     * @see de.freese.pim.server.mail.api.MailAPI#loadCurrentMessageIDs(java.lang.String)
-     */
-    @Override
-    public Set<Long> loadCurrentMessageIDs(final String folderFullName)
-    {
-        return Utils.executeSafely(() -> {
-            IMAPFolder f = (IMAPFolder) getStore().getFolder(folderFullName);
-
-            if (f == null)
-            {
-                getLogger().warn("Folder {} not exist", folderFullName);
-
-                return Collections.emptySet();
-            }
-
-            try
-            {
-                checkRead(f);
-
-                Message[] msgs = f.getMessages();
-
-                FetchProfile fp = new FetchProfile();
-                fp.add(UIDFolder.FetchProfileItem.UID);
-                f.fetch(msgs, fp);
-
-                Set<Long> uids = new HashSet<>();
-
-                for (Message msg : msgs)
-                {
-                    uids.add(f.getUID(msg));
-                }
-
-                return uids;
-            }
-            finally
-            {
-                closeFolder(f);
-            }
-        });
-    }
-
-    /**
      * @see de.freese.pim.server.mail.api.MailAPI#loadMail(java.lang.String, long, de.freese.pim.common.function.ExceptionalFunction)
      */
     @Override
     public <T> T loadMail(final String folderFullName, final long uid, final ExceptionalFunction<Object, T, Exception> function)
     {
-        return Utils.executeSafely(() -> {
-            IMAPFolder f = (IMAPFolder) getStore().getFolder(folderFullName);
+        return executeInFolder(folderFullName, folder -> {
+            MimeMessage message = (MimeMessage) folder.getMessageByUID(uid);
+            preFetch(folder, message);
 
-            if (f == null)
-            {
-                getLogger().warn("Folder {} not exist", folderFullName);
-
-                return null;
-            }
-
-            try
-            {
-                checkRead(f);
-
-                MimeMessage message = (MimeMessage) f.getMessageByUID(uid);
-                preFetch(f, message);
-
-                return function.apply(message);
-            }
-            finally
-            {
-                closeFolder(f);
-            }
+            return function.apply(message);
         });
     }
 
@@ -439,8 +419,10 @@ public class JavaMailAPI extends AbstractMailAPI
     @Override
     public MailContent loadMail(final String folderFullName, final long uid, final IOMonitor monitor)
     {
-        return loadMail(folderFullName, uid, message -> {
-            MimeMessage mimeMessage = (MimeMessage) message;
+        return executeInFolder(folderFullName, folder -> {
+            MimeMessage mimeMessage = (MimeMessage) folder.getMessageByUID(uid);
+            preFetch(folder, mimeMessage);
+
             MailContent mailContent = null;
 
             if (monitor == null)
@@ -484,77 +466,74 @@ public class JavaMailAPI extends AbstractMailAPI
     }
 
     /**
-     * @see de.freese.pim.server.mail.api.MailAPI#loadMail(java.lang.String, long, java.io.OutputStream)
-     */
-    @Override
-    public void loadMail(final String folderFullName, final long uid, final OutputStream outputStream)
-    {
-        loadMail(folderFullName, uid, message -> {
-            ((MimeMessage) message).writeTo(outputStream);
-            return null;
-        });
-    }
-
-    /**
      * @see de.freese.pim.server.mail.api.MailAPI#loadMails(java.lang.String, long)
      */
     @Override
     public List<Mail> loadMails(final String folderFullName, final long uidFrom)
     {
-        return Utils.executeSafely(() -> {
-            // Mails von Provider laden, die eine höhere MsgNum/UID als die bereits vorhanden haben.
-            IMAPFolder f = (IMAPFolder) getStore().getFolder(folderFullName);
+        List<Mail> mails = executeInFolder(folderFullName, folder -> {
+            long uidTo = folder.getUIDNext();
+            // SearchTerm searchTerm = new SearchTerm()
+            // {
+            // /**
+            // * @see javax.mail.search.SearchTerm#match(javax.mail.Message)
+            // */
+            // @Override
+            // public boolean match(final Message msg)
+            // {
+            // if (msg.getMessageNumber() > maxMsgNum)
+            // {
+            // return true;
+            // }
+            //
+            // return false;
+            // }
+            // };
 
-            if (f == null)
+            // Message[] msgs = folder.search(searchTerm);
+            Message[] msgs = folder.getMessagesByUID(uidFrom, uidTo);
+            preFetch(folder, msgs);
+
+            List<Mail> newMails = new ArrayList<>();
+
+            for (Message message : msgs)
             {
-                getLogger().warn("Folder {} not exist", folderFullName);
+                Mail mail = new Mail();
+                populate(mail, message);
 
-                return Collections.emptyList();
+                newMails.add(mail);
             }
 
-            try
-            {
-                checkRead(f);
-
-                long uidTo = f.getUIDNext();
-                // SearchTerm searchTerm = new SearchTerm()
-                // {
-                // /**
-                // * @see javax.mail.search.SearchTerm#match(javax.mail.Message)
-                // */
-                // @Override
-                // public boolean match(final Message msg)
-                // {
-                // if (msg.getMessageNumber() > maxMsgNum)
-                // {
-                // return true;
-                // }
-                //
-                // return false;
-                // }
-                // };
-
-                // Message[] msgs = f.search(searchTerm);
-                Message[] msgs = f.getMessagesByUID(uidFrom, uidTo);
-                preFetch(f, msgs);
-
-                List<Mail> newMails = new ArrayList<>();
-
-                for (Message message : msgs)
-                {
-                    Mail mail = new Mail();
-                    populate(mail, message);
-
-                    newMails.add(mail);
-                }
-
-                return newMails;
-            }
-            finally
-            {
-                closeFolder(f);
-            }
+            return newMails;
         });
+
+        return mails != null ? mails : Collections.emptyList();
+    }
+
+    /**
+     * @see de.freese.pim.server.mail.api.MailAPI#loadMessageIDs(java.lang.String)
+     */
+    @Override
+    public Set<Long> loadMessageIDs(final String folderFullName)
+    {
+        Set<Long> ids = executeInFolder(folderFullName, folder -> {
+            Message[] msgs = folder.getMessages();
+
+            FetchProfile fp = new FetchProfile();
+            fp.add(UIDFolder.FetchProfileItem.UID);
+            folder.fetch(msgs, fp);
+
+            Set<Long> uids = new HashSet<>();
+
+            for (Message msg : msgs)
+            {
+                uids.add(folder.getUID(msg));
+            }
+
+            return uids;
+        });
+
+        return ids != null ? ids : Collections.emptySet();
     }
 
     /**
@@ -639,34 +618,18 @@ public class JavaMailAPI extends AbstractMailAPI
     @Override
     public void setSeen(final Mail mail, final boolean seen)
     {
-        Utils.executeSafely(() -> {
-            Folder f = getStore().getFolder(mail.getFolderFullName());
-
-            if (f == null)
+        executeInFolder(mail.getFolderFullName(), folder -> {
+            // Bulk-Operation auf Server.
+            folder.setFlags(new int[]
             {
-                getLogger().warn("Folder {} not exist", mail.getFolderFullName());
+                    mail.getMsgNum()
+            }, new Flags(Flags.Flag.SEEN), seen);
 
-                return;
-            }
+            // Einzel-Operation auf Server.
+            // Message message = f.getMessage(mail.getMsgNum());
+            // message.setFlag(Flag.SEEN, seen);
 
-            try
-            {
-                checkRead(f);
-
-                // Bulk-Operation auf Server.
-                f.setFlags(new int[]
-                {
-                        mail.getMsgNum()
-                }, new Flags(Flags.Flag.SEEN), seen);
-
-                // Einzel-Operation auf Server.
-                // Message message = f.getMessage(mail.getMsgNum());
-                // message.setFlag(Flag.SEEN, seen);
-            }
-            finally
-            {
-                closeFolder(f);
-            }
+            return null;
         });
     }
 

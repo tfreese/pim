@@ -181,12 +181,14 @@ public class InitMailAPITask extends Task<List<FXMailFolder>>
     {
         TaskExecutor taskExecutor = PIMApplication.getTaskExecutor();
 
-        int partitionSize = Math.max(1, folders.size() / Runtime.getRuntime().availableProcessors());
+        int partitionSize = Math.max(1, (folders.size() / 3) + 1); // Jeweils 3 Stores pro MailAPI.
         // partitionSize = folders.size();
         List<List<FXMailFolder>> partitions = ListUtils.partition(folders, partitionSize);
 
         for (List<FXMailFolder> partition : partitions)
         {
+            // Utils.executeSafely(() -> Thread.sleep(1000));
+
             // Laden der Mails.
             taskExecutor.execute(new LoadMailsTask(treeView, partition, this.mailService, this.account));
         }
