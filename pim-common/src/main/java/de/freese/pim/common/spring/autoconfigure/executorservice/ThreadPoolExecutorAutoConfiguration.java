@@ -4,10 +4,8 @@ package de.freese.pim.common.spring.autoconfigure.executorservice;
 import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.RejectedExecutionHandler;
-
 import javax.annotation.Resource;
 import javax.sql.DataSource;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -23,8 +21,7 @@ import org.springframework.scheduling.concurrent.ThreadPoolExecutorFactoryBean;
  * AutoConfiguration für ein {@link ExecutorService}.<br>
  * Nur wenn noch kein {@link ExecutorService} vorhanden ist, wird ein {@link ExecutorService} erzeugt.
  * <p>
- * Beispiel ExecutorService: Threads leben max. 60 Sekunden, wenn es nix zu tun gibt; min. 2, max. 10 Threads, max. 100 Tasks in der
- * Queue.<br>
+ * Beispiel ExecutorService: Threads leben max. 60 Sekunden, wenn es nix zu tun gibt; min. 2, max. 10 Threads, max. 100 Tasks in der Queue.<br>
  * threadpool.thread-name-prefix=thread<br>
  * threadpool.thread-priority=5<br>
  * threadpool.core-pool-size=2<br>
@@ -91,8 +88,8 @@ public class ThreadPoolExecutorAutoConfiguration
         int coreSize = this.executorProperties.getCorePoolSize();
         int maxSize = this.executorProperties.getMaxPoolSize();
         int queueCapacity = this.executorProperties.getQueueCapacity();
-        int threadPriority = this.executorProperties.getThreadPriority();
         int keepAliveSeconds = this.executorProperties.getKeepAliveSeconds();
+        int threadPriority = this.executorProperties.getThreadPriority();
         RejectedExecutionHandler reh = this.executorProperties.getRejectedExecutionHandler();
         boolean allowCoreThreadTimeOut = this.executorProperties.isAllowCoreThreadTimeOut();
 
@@ -112,8 +109,8 @@ public class ThreadPoolExecutorAutoConfiguration
                 // Annahme, einfach 1/4 von maxSize.
                 coreSize = Math.max(maxSize / 4, 1);
 
-                LOGGER.info("Resize ThreadPool because DataSource dependency: old coreSize/maxSize={}/{}, new coreSize/maxSize={}/{}",
-                        oldCore, oldMax, coreSize, maxSize);
+                LOGGER.info("Resize ThreadPool because DataSource dependency: old coreSize/maxSize={}/{}, new coreSize/maxSize={}/{}", oldCore, oldMax,
+                        coreSize, maxSize);
             }
         }
 
@@ -123,17 +120,17 @@ public class ThreadPoolExecutorAutoConfiguration
         sb.append(", corePoolSize={}");
         sb.append(", maxPoolSize={}");
         sb.append(", queueCapacity={}");
-        sb.append(", priority={}");
         sb.append(", keepAliveSeconds={}");
+        sb.append(", priority={}");
 
-        LOGGER.info(sb.toString(), threadNamePrefix, coreSize, maxSize, queueCapacity, threadPriority, keepAliveSeconds);
+        LOGGER.info(sb.toString(), threadNamePrefix, coreSize, maxSize, queueCapacity, keepAliveSeconds, threadPriority);
 
         // ThreadPoolExecutorFactoryBean bean = new TunedThreadPoolExecutorFactoryBean();
         ThreadPoolExecutorFactoryBean bean = new ThreadPoolExecutorFactoryBean();
         bean.setCorePoolSize(coreSize);
         bean.setMaxPoolSize(maxSize);
-        bean.setKeepAliveSeconds(keepAliveSeconds);
         bean.setQueueCapacity(queueCapacity);
+        bean.setKeepAliveSeconds(keepAliveSeconds);
         bean.setThreadPriority(threadPriority);
         bean.setThreadNamePrefix(threadNamePrefix);
         bean.setRejectedExecutionHandler(reh);

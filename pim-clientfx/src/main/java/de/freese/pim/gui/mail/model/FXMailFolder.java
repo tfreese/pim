@@ -76,6 +76,7 @@ public class FXMailFolder
     /**
     *
     */
+    @JsonIgnore
     private FXMailFolder parent = null;
 
     /**

@@ -72,9 +72,9 @@ public class InitMailAPITask extends Task<List<FXMailFolder>>
 
             treeView.refresh();
             // Platform.runLater(() -> treeView.refresh());
-            loadMailsByPartitions(folders, treeView);
-            // loadMailsByCompletableFuture(folders, treeView);
-            // loadMailsByParallelStream(folders, treeView);
+            loadMailsByPartitions(account.getFolderSubscribed(), treeView);
+            // loadMailsByCompletableFuture(account.getFolderSubscribed(), treeView);
+            // loadMailsByParallelStream(account.getFolderSubscribed(), treeView);
         });
 
         setOnFailed(event -> {

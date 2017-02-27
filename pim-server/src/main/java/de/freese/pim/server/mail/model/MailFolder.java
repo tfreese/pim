@@ -36,17 +36,17 @@ public class MailFolder
     private long id = 0;
 
     /**
-     *
-     */
-    // @NotNull
-    private boolean isSendFolder = false;
-
-    /**
     *
     */
     // @NotNull
     // @Size(min = 0, max = 100)
     private String name = null;
+
+    /**
+     *
+     */
+    // @NotNull
+    private boolean sendFolder = false;
 
     /**
      * Erzeugt eine neue Instanz von {@link MailFolder}
@@ -109,7 +109,7 @@ public class MailFolder
      */
     public boolean isSendFolder()
     {
-        return this.isSendFolder;
+        return this.sendFolder;
     }
 
     /**
@@ -161,7 +161,7 @@ public class MailFolder
         predicate = predicate.or(n -> "sent".equals(n));
         predicate = predicate.or(n -> n.startsWith("gesendet"));
 
-        this.isSendFolder = predicate.test(name.toLowerCase());
+        this.sendFolder = predicate.test(name.toLowerCase());
     }
 
     /**

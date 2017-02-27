@@ -2,7 +2,10 @@
 package de.freese.pim.server.mail.service;
 
 import java.util.List;
+import java.util.concurrent.Callable;
 import org.springframework.web.context.request.async.DeferredResult;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
+import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter;
 import de.freese.pim.common.model.mail.MailContent;
 import de.freese.pim.common.utils.io.IOMonitor;
 import de.freese.pim.server.mail.api.MailAPI;
@@ -95,6 +98,18 @@ public interface MailService
 
     /**
      * Lädt die Mails des Folders vom Provider und aus der DB.<br>
+     * Das {@link Callable} entkoppelt den Server Thread von der Ausführung und verlagert<br>
+     * ihn den ThreadPool des {@link RequestMappingHandlerAdapter}, siehe {@link WebMvcConfigurationSupport#configureAsyncSupport}.
+     *
+     * @param accountID long
+     * @param folderID long
+     * @param folderFullName String
+     * @return {@link List}
+     */
+    public Callable<List<Mail>> loadMailsAsyncCallable(long accountID, long folderID, String folderFullName);
+
+    /**
+     * Lädt die Mails des Folders vom Provider und aus der DB.<br>
      * Das {@link DeferredResult} entkoppelt den Server Thread von der Ausführung.
      *
      * @param accountID long
@@ -102,7 +117,7 @@ public interface MailService
      * @param folderFullName String
      * @return {@link List}
      */
-    public DeferredResult<List<Mail>> loadMailsAsync(long accountID, long folderID, String folderFullName);
+    public DeferredResult<List<Mail>> loadMailsAsyncDeferredResult(long accountID, long folderID, String folderFullName);
 
     /**
      * Testet die Verbindung zu einem MailAccount und liefert bei Erfolg dessen Ordner.

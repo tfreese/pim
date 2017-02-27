@@ -1,14 +1,18 @@
 // Created: 16.02.2017
 package de.freese.pim.common.spring.config;
 
-import java.text.SimpleDateFormat;
 import java.util.Locale;
 import java.util.TimeZone;
-
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ThreadPoolExecutor;
+import javax.annotation.Resource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
-
+import org.springframework.scheduling.TaskScheduler;
+import org.springframework.scheduling.concurrent.ConcurrentTaskScheduler;
+import org.springframework.scheduling.concurrent.ScheduledExecutorFactoryBean;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -26,9 +30,14 @@ public class PIMCommonConfig
     {
         // System.setProperty("java.util.concurrent.ForkJoinPool.common.parallelism",
         // Integer.toString(Runtime.getRuntime().availableProcessors()));
-        System.setProperty("java.util.concurrent.ForkJoinPool.common.threadFactory",
-                "de.freese.pim.common.concurrent.PIMForkJoinWorkerThreadFactory");
+        System.setProperty("java.util.concurrent.ForkJoinPool.common.threadFactory", "de.freese.pim.common.concurrent.PIMForkJoinWorkerThreadFactory");
     }
+
+    /**
+     *
+     */
+    @Resource
+    private ExecutorService executorService = null;
 
     /**
      * Erzeugt eine neue Instanz von {@link PIMCommonConfig}
@@ -69,10 +78,41 @@ public class PIMCommonConfig
         TimeZone timeZone = TimeZone.getTimeZone("Europe/Berlin");
         jsonMapper.setTimeZone(timeZone);
 
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        df.setTimeZone(timeZone);
-        jsonMapper.setDateFormat(df);
+        // SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        // df.setTimeZone(timeZone);
+        // jsonMapper.setDateFormat(df);
 
         return jsonMapper;
+    }
+
+    /**
+     * @return {@link ScheduledExecutorFactoryBean}
+     */
+    @Bean
+    public ScheduledExecutorFactoryBean scheduledExecutorService()
+    {
+        int poolSize = Runtime.getRuntime().availableProcessors();
+
+        ScheduledExecutorFactoryBean bean = new ScheduledExecutorFactoryBean();
+        bean.setPoolSize(poolSize);
+        bean.setThreadPriority(5);
+        bean.setThreadNamePrefix("scheduler-");
+        bean.setRejectedExecutionHandler(new ThreadPoolExecutor.AbortPolicy());
+        bean.setExposeUnconfigurableExecutor(true);
+
+        return bean;
+    }
+
+    /**
+     * @param executorService {@link ExecutorService}
+     * @param scheduledExecutorService {@link ScheduledExecutorService}
+     * @return {@link TaskScheduler}
+     */
+    @Bean
+    public TaskScheduler taskScheduler(final ExecutorService executorService, final ScheduledExecutorService scheduledExecutorService)
+    {
+        ConcurrentTaskScheduler bean = new ConcurrentTaskScheduler(executorService, scheduledExecutorService);
+
+        return bean;
     }
 }
