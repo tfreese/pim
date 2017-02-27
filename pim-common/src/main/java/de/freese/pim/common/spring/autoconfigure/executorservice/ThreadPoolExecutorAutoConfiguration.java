@@ -11,6 +11,7 @@ import javax.sql.DataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.jdbc.metadata.DataSourcePoolMetadata;
 import org.springframework.boot.autoconfigure.jdbc.metadata.DataSourcePoolMetadataProvider;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -43,6 +44,7 @@ import org.springframework.scheduling.concurrent.ThreadPoolExecutorFactoryBean;
  */
 @Configuration
 @ConditionalOnMissingBean(ExecutorService.class) // Nur wenn ExecutorService noch nicht im SpringContext ist.
+@ConditionalOnProperty(prefix = "threadpool", name = "enabled", matchIfMissing = false) // Nur wenn auch enabled.
 @EnableConfigurationProperties(ThreadPoolExecutorProperties.class)
 public class ThreadPoolExecutorAutoConfiguration
 {

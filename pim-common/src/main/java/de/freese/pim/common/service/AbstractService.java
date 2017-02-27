@@ -4,7 +4,9 @@ package de.freese.pim.common.service;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+
 import javax.annotation.Resource;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
@@ -61,29 +63,29 @@ public abstract class AbstractService implements ApplicationContextAware
     }
 
     /**
-     * @return {@link Logger}
-     */
-    protected Logger getLogger()
-    {
-        return this.logger;
-    }
-
-    /**
-     * @return {@link AsyncTaskExecutor}
-     */
-    protected AsyncTaskExecutor getTaskExecutor()
-    {
-        return this.taskExecutor;
-        // return this.executorService;
-    }
-
-    /**
      * @see org.springframework.context.ApplicationContextAware#setApplicationContext(org.springframework.context.ApplicationContext)
      */
     @Override
     public void setApplicationContext(final ApplicationContext applicationContext) throws BeansException
     {
         this.applicationContext = applicationContext;
+    }
+
+    /**
+     * @param taskExecutor {@link AsyncTaskExecutor}
+     */
+    @Resource(name = "serverTaskExecutor")
+    public void setTaskExecutor(final AsyncTaskExecutor taskExecutor)
+    {
+        this.taskExecutor = taskExecutor;
+    }
+
+    /**
+     * @return {@link Logger}
+     */
+    protected Logger getLogger()
+    {
+        return this.logger;
     }
 
     // /**
@@ -96,12 +98,12 @@ public abstract class AbstractService implements ApplicationContextAware
     // }
 
     /**
-     * @param taskExecutor {@link AsyncTaskExecutor}
+     * @return {@link AsyncTaskExecutor}
      */
-    @Resource
-    public void setTaskExecutor(final AsyncTaskExecutor taskExecutor)
+    protected AsyncTaskExecutor getTaskExecutor()
     {
-        this.taskExecutor = taskExecutor;
+        return this.taskExecutor;
+        // return this.executorService;
     }
 
     /**

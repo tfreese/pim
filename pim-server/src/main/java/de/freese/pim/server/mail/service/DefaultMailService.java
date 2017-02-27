@@ -11,8 +11,10 @@ import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+
 import javax.annotation.PreDestroy;
 import javax.annotation.Resource;
+
 import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
@@ -29,6 +31,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.async.DeferredResult;
+
 import de.freese.pim.common.model.mail.MailContent;
 import de.freese.pim.common.service.AbstractService;
 import de.freese.pim.common.utils.io.IOMonitor;
@@ -144,7 +147,7 @@ public class DefaultMailService extends AbstractService implements MailService, 
      */
     @Override
     @PostMapping("/account/disconnect")
-    public void disconnectAccounts(@RequestParam("accountIDs") final long...accountIDs)
+    public void disconnectAccounts(@RequestParam("accountIDs") final long... accountIDs)
     {
         getLogger().info("Disconnect Accounts");
 
@@ -170,40 +173,6 @@ public class DefaultMailService extends AbstractService implements MailService, 
     }
 
     /**
-     * Schliessen der MailAPI-Verbindung des MailAccounts
-     *
-     * @param accountID long
-     */
-    protected void disconnectMailAPI(final long accountID)
-    {
-        String beanName = "mailAPI-" + accountID;
-
-        DefaultListableBeanFactory bf = (DefaultListableBeanFactory) getBeanFactory();
-        MailAPI mailAPI = bf.getBean(beanName, MailAPI.class);
-
-        getLogger().info("Close " + mailAPI.getAccount().getMail());
-
-        try
-        {
-            mailAPI.disconnect();
-        }
-        catch (Exception ex)
-        {
-            getLogger().warn(ex.getMessage());
-        }
-
-        bf.destroySingleton(beanName);
-    }
-
-    /**
-     * @return {@link BeanFactory}
-     */
-    protected BeanFactory getBeanFactory()
-    {
-        return this.beanFactory;
-    }
-
-    /**
      * @see de.freese.pim.server.mail.service.MailService#getMailAccounts()
      */
     @Override
@@ -214,25 +183,6 @@ public class DefaultMailService extends AbstractService implements MailService, 
         List<MailAccount> accounts = getMailDAO().getMailAccounts();
 
         return accounts;
-    }
-
-    /**
-     * @param accountID long
-     * @return {@link MailAPI}
-     */
-    protected MailAPI getMailAPI(final long accountID)
-    {
-        MailAPI mailAPI = getApplicationContext().getBean("mailAPI-" + accountID, MailAPI.class);
-
-        return mailAPI;
-    }
-
-    /**
-     * @return {@link MailDAO}
-     */
-    protected MailDAO getMailDAO()
-    {
-        return this.mailDAO;
     }
 
     /**
@@ -295,12 +245,14 @@ public class DefaultMailService extends AbstractService implements MailService, 
     }
 
     /**
-     * @see de.freese.pim.server.mail.service.MailService#loadMailContent(long, java.lang.String, long, de.freese.pim.common.utils.io.IOMonitor)
+     * @see de.freese.pim.server.mail.service.MailService#loadMailContent(long, java.lang.String, long,
+     *      de.freese.pim.common.utils.io.IOMonitor)
      */
     @Override
     @GetMapping("/content/{accountID}/{folderFullName}/{mailUID}")
-    public MailContent loadMailContent(@PathVariable("accountID") final long accountID, @PathVariable("folderFullName") final String folderFullName,
-                                       @PathVariable("mailUID") final long mailUID, final @RequestBody(required = false) IOMonitor monitor)
+    public MailContent loadMailContent(@PathVariable("accountID") final long accountID,
+            @PathVariable("folderFullName") final String folderFullName, @PathVariable("mailUID") final long mailUID,
+            final @RequestBody(required = false) IOMonitor monitor)
     {
         String folderName = urlDecode(urlDecode(folderFullName));
 
@@ -323,7 +275,7 @@ public class DefaultMailService extends AbstractService implements MailService, 
     @Transactional
     @GetMapping("/mails/{accountID}/{folderID}/{folderFullName}")
     public List<Mail> loadMails(@PathVariable("accountID") final long accountID, @PathVariable("folderID") final long folderID,
-                                @PathVariable("folderFullName") final String folderFullName)
+            @PathVariable("folderFullName") final String folderFullName)
     {
         String folderName = urlDecode(urlDecode(folderFullName));
 
@@ -400,13 +352,14 @@ public class DefaultMailService extends AbstractService implements MailService, 
     @Override
     @Transactional
     @GetMapping("/mailsAsync/{accountID}/{folderID}/{folderFullName}")
-    public DeferredResult<List<Mail>> loadMailsAsync(@PathVariable("accountID") final long accountID, @PathVariable("folderID") final long folderID,
-                                                     @PathVariable("folderFullName") final String folderFullName)
+    public DeferredResult<List<Mail>> loadMailsAsync(@PathVariable("accountID") final long accountID,
+            @PathVariable("folderID") final long folderID, @PathVariable("folderFullName") final String folderFullName)
     {
         DeferredResult<List<Mail>> deferredResult = new DeferredResult<>();
 
         // @formatter:off
-        CompletableFuture.supplyAsync(() -> loadMails(accountID, folderID, folderFullName), getTaskExecutor())
+        CompletableFuture
+            .supplyAsync(() -> loadMails(accountID, folderID, folderFullName), getTaskExecutor())
             .whenCompleteAsync((result, throwable) -> {
                 if (throwable != null)
                 {
@@ -416,7 +369,7 @@ public class DefaultMailService extends AbstractService implements MailService, 
                 {
                     deferredResult.setResult(result);
                 }
-            });
+            }, getTaskExecutor());
         // @formatter:on
 
         return deferredResult;
@@ -504,5 +457,58 @@ public class DefaultMailService extends AbstractService implements MailService, 
         }
 
         return affectedRows;
+    }
+
+    /**
+     * Schliessen der MailAPI-Verbindung des MailAccounts
+     *
+     * @param accountID long
+     */
+    protected void disconnectMailAPI(final long accountID)
+    {
+        String beanName = "mailAPI-" + accountID;
+
+        DefaultListableBeanFactory bf = (DefaultListableBeanFactory) getBeanFactory();
+        MailAPI mailAPI = bf.getBean(beanName, MailAPI.class);
+
+        getLogger().info("Close " + mailAPI.getAccount().getMail());
+
+        try
+        {
+            mailAPI.disconnect();
+        }
+        catch (Exception ex)
+        {
+            getLogger().warn(ex.getMessage());
+        }
+
+        bf.destroySingleton(beanName);
+    }
+
+    /**
+     * @return {@link BeanFactory}
+     */
+    protected BeanFactory getBeanFactory()
+    {
+        return this.beanFactory;
+    }
+
+    /**
+     * @param accountID long
+     * @return {@link MailAPI}
+     */
+    protected MailAPI getMailAPI(final long accountID)
+    {
+        MailAPI mailAPI = getApplicationContext().getBean("mailAPI-" + accountID, MailAPI.class);
+
+        return mailAPI;
+    }
+
+    /**
+     * @return {@link MailDAO}
+     */
+    protected MailDAO getMailDAO()
+    {
+        return this.mailDAO;
     }
 }

@@ -8,7 +8,9 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
+
 import javax.annotation.Resource;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.task.AsyncTaskExecutor;
@@ -24,13 +26,14 @@ import org.springframework.web.context.request.async.WebAsyncTask;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyEmitter;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
+
 import de.freese.pim.common.spring.autoconfigure.taskexcecutor.TaskExecutorAutoConfiguration;
 
 /**
- * https:// spring.io/guides/tutorials/bookmarks/<br>
- * https:// twilblog.github.io/java/spring/rest/file/stream/2015/08/14/return-a-file-stream-from-spring-rest.html<br>
- * http:// stackoverflow.com/questions/5673260/downloading-a-file-from-spring-controllers<br>
- * http:// stackoverflow.com/questions/15781885/how-to-forward-large-files-with-resttemplate<br>
+ * https://spring.io/guides/tutorials/bookmarks/<br>
+ * https://twilblog.github.io/java/spring/rest/file/stream/2015/08/14/return-a-file-stream-from-spring-rest.html<br>
+ * http://stackoverflow.com/questions/5673260/downloading-a-file-from-spring-controllers<br>
+ * http://stackoverflow.com/questions/15781885/how-to-forward-large-files-with-resttemplate<br>
  * <br>
  * *view-source:http:// localhost:61222/pim/info<br>
  **
@@ -68,18 +71,19 @@ public class TestService
     }
 
     /**
-     * Läuft im ThreadPool "MvcAsync", wenn über {@link WebMvcConfigurationSupport} nicht anders konfiguriert.
+     * Läuft im ThreadPool "MvcAsync" des RequestMappingHandlerAdapter, wenn über {@link WebMvcConfigurationSupport} nicht anders
+     * konfiguriert.
      *
      * @return {@link Future}
      */
     @GetMapping("/asyncDateCallable")
     public Callable<String> asycDateCallable()
     {
-        Callable<String> callable = () -> {
+        Callable<String> callable = () ->
+        {
             getLogger().info("asyncDateCallable: thread={}", Thread.currentThread().getName());
-            Thread.sleep(TimeUnit.SECONDS.toMillis(3));
+            Thread.sleep(TimeUnit.SECONDS.toMillis(1));
 
-            // return new Date().toString();
             return LocalDateTime.now().toString();
         };
 
@@ -87,6 +91,8 @@ public class TestService
     }
 
     /**
+     * Läuft im ForkJoin-ThreadPool, wenn kein Executor übergeben.
+     *
      * @return {@link DeferredResult}
      */
     @GetMapping("/asyncDateDeferredResult")
@@ -94,11 +100,12 @@ public class TestService
     {
         DeferredResult<String> deferredResult = new DeferredResult<>();
 
-        CompletableFuture.supplyAsync(() -> {
+        CompletableFuture.supplyAsync(() ->
+        {
             try
             {
                 getLogger().info("supplyAsync: thread={}", Thread.currentThread().getName());
-                Thread.sleep(TimeUnit.SECONDS.toMillis(3));
+                Thread.sleep(TimeUnit.SECONDS.toMillis(1));
 
                 return LocalDateTime.now().toString();
             }
@@ -106,7 +113,8 @@ public class TestService
             {
                 throw new RuntimeException(ex);
             }
-        }, getTaskExecutor()).whenCompleteAsync((result, throwable) -> {
+        }, getTaskExecutor()).whenCompleteAsync((result, throwable) ->
+        {
             getLogger().info("whenCompleteAsync: thread={}", Thread.currentThread().getName());
 
             if (throwable != null)
@@ -123,39 +131,24 @@ public class TestService
     }
 
     /**
-     * Läuft im ThreadPool "MvcAsync", wenn über {@link WebMvcConfigurationSupport} nicht anders konfiguriert.
+     * Läuft im ThreadPool "MvcAsync" des RequestMappingHandlerAdapter, wenn über {@link WebMvcConfigurationSupport} nicht anders
+     * konfiguriert.
      *
      * @return {@link WebAsyncTask}
      */
     @GetMapping("/asyncDateWebAsyncTask")
     public WebAsyncTask<String> asycDateWebAsyncTask()
     {
-        Callable<String> callable = () -> {
+        Callable<String> callable = () ->
+        {
             getLogger().info("asycDateWebAsyncTask: thread={}", Thread.currentThread().getName());
-            Thread.sleep(TimeUnit.SECONDS.toMillis(3));
+            Thread.sleep(TimeUnit.SECONDS.toMillis(1));
 
-            // return new Date().toString();
             return LocalDateTime.now().toString();
         };
 
         return new WebAsyncTask<>(callable);
-        // return new WebAsyncTask<>(TimeUnit.SECONDS.toMillis(5), this.taskExecutor, callable);
-    }
-
-    /**
-     * @return {@link Logger}
-     */
-    protected Logger getLogger()
-    {
-        return this.logger;
-    }
-
-    /**
-     * @return {@link AsyncTaskExecutor}
-     */
-    protected AsyncTaskExecutor getTaskExecutor()
-    {
-        return this.taskExecutor;
+        // return new WebAsyncTask<>(TimeUnit.SECONDS.toMillis(5), getTaskExecutor(), callable);
     }
 
     /**
@@ -173,5 +166,21 @@ public class TestService
         map.put("hello", name);
 
         return map;
+    }
+
+    /**
+     * @return {@link Logger}
+     */
+    protected Logger getLogger()
+    {
+        return this.logger;
+    }
+
+    /**
+     * @return {@link AsyncTaskExecutor}
+     */
+    protected AsyncTaskExecutor getTaskExecutor()
+    {
+        return this.taskExecutor;
     }
 }

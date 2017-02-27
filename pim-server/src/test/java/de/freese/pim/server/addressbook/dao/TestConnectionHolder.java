@@ -9,7 +9,9 @@ import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.Arrays;
 import java.util.List;
+
 import javax.sql.DataSource;
+
 import org.junit.AfterClass;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
@@ -18,6 +20,7 @@ import org.junit.runners.MethodSorters;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameter;
 import org.junit.runners.Parameterized.Parameters;
+
 import de.freese.pim.server.addressbook.TestAddressbookConfig;
 import de.freese.pim.server.addressbook.service.DefaultAddressBookService;
 import de.freese.pim.server.jdbc.JdbcTemplate;
@@ -120,7 +123,8 @@ public class TestConnectionHolder extends AbstractDAOTextCase
     /**
      *
      */
-    public static List<DataSource> dataSources = Arrays.asList(new TestAddressbookConfig().dataSource(), new TestAddressbookConfig().dataSource());
+    public static List<DataSource> dataSources = Arrays.asList(new TestAddressbookConfig().dataSource(),
+            new TestAddressbookConfig().dataSource());
 
     // /**
     // *
@@ -156,8 +160,8 @@ public class TestConnectionHolder extends AbstractDAOTextCase
     public static Iterable<Object[]> connectionPool() throws Exception
     {
         DefaultAddressBookService defaultAddressBookService = new DefaultAddressBookService();
-        defaultAddressBookService
-                .setAddressBookDAO(new DefaultAddressBookDAO().jdbcTemplate(new ConnectionHolderJdbcTemplate().dataSource(dataSources.get(0))));
+        defaultAddressBookService.setAddressBookDAO(
+                new DefaultAddressBookDAO().jdbcTemplate(new ConnectionHolderJdbcTemplate().dataSource(dataSources.get(0))));
 
         return Arrays.asList(new Object[][]
         {
@@ -200,7 +204,7 @@ public class TestConnectionHolder extends AbstractDAOTextCase
      */
     @Override
     @Test
-    public void test0100InsertKontakts() throws Exception
+    public void test0100InsertKontakts() throws Throwable
     {
         doTest0100InsertKontakts(this.addressBookDAO);
     }
@@ -210,7 +214,7 @@ public class TestConnectionHolder extends AbstractDAOTextCase
      */
     @Override
     @Test
-    public void test0110InsertKontaktWithNullVorname() throws Exception
+    public void test0110InsertKontaktWithNullVorname() throws Throwable
     {
         doTest0110InsertKontaktWithNullVorname(this.addressBookDAO);
     }
@@ -220,7 +224,7 @@ public class TestConnectionHolder extends AbstractDAOTextCase
      */
     @Override
     @Test(expected = SQLIntegrityConstraintViolationException.class)
-    public void test0120InsertKontaktWithBlankVorname() throws Exception
+    public void test0120InsertKontaktWithBlankVorname() throws Throwable
     {
         doTest0120InsertKontaktWithBlankVorname(this.addressBookDAO);
     }
@@ -230,7 +234,7 @@ public class TestConnectionHolder extends AbstractDAOTextCase
      */
     @Override
     @Test(expected = SQLIntegrityConstraintViolationException.class)
-    public void test0130InsertKontaktExisting() throws Exception
+    public void test0130InsertKontaktExisting() throws Throwable
     {
         doTest0130InsertKontaktExisting(this.addressBookDAO);
     }
@@ -240,7 +244,7 @@ public class TestConnectionHolder extends AbstractDAOTextCase
      */
     @Override
     @Test
-    public void test0200UpdateKontakt() throws Exception
+    public void test0200UpdateKontakt() throws Throwable
     {
         doTest0200UpdateKontakt(this.addressBookDAO);
     }
@@ -250,7 +254,7 @@ public class TestConnectionHolder extends AbstractDAOTextCase
      */
     @Override
     @Test
-    public void test0300InsertAttribut() throws Exception
+    public void test0300InsertAttribut() throws Throwable
     {
         doTest0300InsertAttribut(this.addressBookDAO);
     }
@@ -260,7 +264,7 @@ public class TestConnectionHolder extends AbstractDAOTextCase
      */
     @Override
     @Test(expected = SQLIntegrityConstraintViolationException.class)
-    public void test0310InsertInsertAttributWithNullValue() throws Exception
+    public void test0310InsertInsertAttributWithNullValue() throws Throwable
     {
         doTest0310InsertInsertAttributWithNullValue(this.addressBookDAO);
     }
@@ -270,7 +274,7 @@ public class TestConnectionHolder extends AbstractDAOTextCase
      */
     @Override
     @Test(expected = SQLIntegrityConstraintViolationException.class)
-    public void test0320InsertInsertAttributWithBlankValue() throws Exception
+    public void test0320InsertInsertAttributWithBlankValue() throws Throwable
     {
         doTest0320InsertInsertAttributWithBlankValue(this.addressBookDAO);
     }
@@ -280,7 +284,7 @@ public class TestConnectionHolder extends AbstractDAOTextCase
      */
     @Override
     @Test(expected = SQLIntegrityConstraintViolationException.class)
-    public void test0330InsertInsertAttributWithNull() throws Exception
+    public void test0330InsertInsertAttributWithNull() throws Throwable
     {
         doTest0330InsertInsertAttributWithNull(this.addressBookDAO);
     }
@@ -290,7 +294,7 @@ public class TestConnectionHolder extends AbstractDAOTextCase
      */
     @Override
     @Test(expected = SQLIntegrityConstraintViolationException.class)
-    public void test0340InsertInsertAttributWithBlank() throws Exception
+    public void test0340InsertInsertAttributWithBlank() throws Throwable
     {
         doTest0340InsertInsertAttributWithBlank(this.addressBookDAO);
     }
@@ -300,7 +304,7 @@ public class TestConnectionHolder extends AbstractDAOTextCase
      */
     @Override
     @Test(expected = SQLIntegrityConstraintViolationException.class)
-    public void test0350InsertAttributExisting() throws Exception
+    public void test0350InsertAttributExisting() throws Throwable
     {
         doTest0350InsertAttributExisting(this.addressBookDAO);
     }
@@ -310,7 +314,7 @@ public class TestConnectionHolder extends AbstractDAOTextCase
      */
     @Override
     @Test
-    public void test0400UpdateAttribut() throws Exception
+    public void test0400UpdateAttribut() throws Throwable
     {
         doTest0400UpdateAttribut(this.addressBookDAO);
     }
@@ -320,7 +324,7 @@ public class TestConnectionHolder extends AbstractDAOTextCase
      */
     @Override
     @Test
-    public void test0500GetKontaktDetailsAll() throws Exception
+    public void test0500GetKontaktDetailsAll() throws Throwable
     {
         doTest0500GetKontaktDetailsAll(this.addressBookDAO);
     }
@@ -330,7 +334,7 @@ public class TestConnectionHolder extends AbstractDAOTextCase
      */
     @Override
     @Test
-    public void test0510GetKontaktDetailsWithID() throws Exception
+    public void test0510GetKontaktDetailsWithID() throws Throwable
     {
         doTest0510GetKontaktDetailsWithID(this.addressBookDAO);
     }
@@ -340,7 +344,7 @@ public class TestConnectionHolder extends AbstractDAOTextCase
      */
     @Override
     @Test
-    public void test0520GetKontaktDetailsWithIDs() throws Exception
+    public void test0520GetKontaktDetailsWithIDs() throws Throwable
     {
         doTest0520GetKontaktDetailsWithIDs(this.addressBookDAO);
     }
@@ -350,7 +354,7 @@ public class TestConnectionHolder extends AbstractDAOTextCase
      */
     @Override
     @Test
-    public void test0600GetKontakte() throws Exception
+    public void test0600GetKontakte() throws Throwable
     {
         doTest0600GetKontakte(this.addressBookDAO);
     }
@@ -360,7 +364,7 @@ public class TestConnectionHolder extends AbstractDAOTextCase
      */
     @Override
     @Test
-    public void test0700SearchKontakts() throws Exception
+    public void test0700SearchKontakts() throws Throwable
     {
         doTest0700SearchKontakts(this.addressBookDAO);
     }
@@ -370,7 +374,7 @@ public class TestConnectionHolder extends AbstractDAOTextCase
      */
     @Override
     @Test
-    public void test0900DeleteAttribut() throws Exception
+    public void test0900DeleteAttribut() throws Throwable
     {
         doTest0900DeleteAttribut(this.addressBookDAO);
     }
@@ -380,7 +384,7 @@ public class TestConnectionHolder extends AbstractDAOTextCase
      */
     @Override
     @Test
-    public void test1000DeleteKontakt() throws Exception
+    public void test1000DeleteKontakt() throws Throwable
     {
         doTest1000DeleteKontakt(this.addressBookDAO);
     }

@@ -138,19 +138,26 @@ public class TestJdbcTemplate
     }
 
     /**
-     * @throws Exception Falls was schief geht.
+     * @throws Throwable Falls was schief geht.
      */
     @Test(expected = SQLException.class)
     @Transactional(readOnly = true)
     @Rollback
-    public void test010InsertReadOnly() throws Exception
+    public void test010InsertReadOnly() throws Throwable
     {
         StringBuilder sql = new StringBuilder();
         sql.append("INSERT INTO KONTAKT (user_id, id, nachname, vorname)");
         sql.append(" VALUES");
         sql.append(" ('TEST', next value for kontakt_seq, 'Freese', 'Thomas')");
 
-        this.jdbcTemplate.update(sql.toString());
+        try
+        {
+            this.jdbcTemplate.update(sql.toString());
+        }
+        catch (RuntimeException ex)
+        {
+            throw ex.getCause();
+        }
     }
 
     /**

@@ -4,11 +4,14 @@ package de.freese.pim.common.spring.autoconfigure.taskscheduler;
 import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ScheduledExecutorService;
+
 import javax.annotation.Resource;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.TaskScheduler;
@@ -28,10 +31,11 @@ import org.springframework.scheduling.concurrent.ConcurrentTaskScheduler;
 {
         ExecutorService.class, ScheduledExecutorService.class
 }) // Nur wenn Executor und ScheduledExecutorService im SpringContext ist.
-   // @AutoConfigureAfter(
-   // {
-   // ThreadPoolExecutorAutoConfiguration.class, ScheduledThreadPoolExecutorAutoConfiguration.class
-   // })
+@ConditionalOnProperty(prefix = "taskscheduler", name = "enabled", matchIfMissing = false) // Nur wenn auch enabled.
+// @AutoConfigureAfter(
+// {
+// ThreadPoolExecutorAutoConfiguration.class, ScheduledThreadPoolExecutorAutoConfiguration.class
+// })
 public class TaskSchedulerAutoConfiguration
 {
     /**

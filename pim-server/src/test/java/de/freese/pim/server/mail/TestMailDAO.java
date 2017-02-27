@@ -63,23 +63,29 @@ public class TestMailDAO
     }
 
     /**
-     * @throws Exception Falls was schief geht.
+     * @throws Throwable Falls was schief geht.
      */
     @Test(expected = SQLIntegrityConstraintViolationException.class)
     @Rollback
-    public void test010InsertAccountFail() throws Exception
+    public void test010InsertAccountFail() throws Throwable
     {
         MailAccount account = new MailAccount();
 
-        this.mailDAO.insertAccount(account);
+        try
+        {
+            this.mailDAO.insertAccount(account);
+        }
+        catch (RuntimeException ex)
+        {
+            throw ex.getCause();
+        }
     }
 
     /**
-     * @throws Exception Falls was schief geht.
      */
     @Test
     @Commit
-    public void test011InsertAccount() throws Exception
+    public void test011InsertAccount()
     {
         MailAccount account = new MailAccount();
         account.setMail("a@b.de");
@@ -97,12 +103,11 @@ public class TestMailDAO
     }
 
     /**
-     * @throws Exception Falls was schief geht.
      */
     @Test
     @Transactional(readOnly = true)
     @Rollback
-    public void test012SelectAccount() throws Exception
+    public void test012SelectAccount()
     {
         List<MailAccount> accounts = this.mailDAO.getMailAccounts();
 
@@ -122,11 +127,10 @@ public class TestMailDAO
     }
 
     /**
-     * @throws Exception Falls was schief geht.
      */
     @Test
     @Commit
-    public void test013UpdateAccount() throws Exception
+    public void test013UpdateAccount()
     {
         List<MailAccount> accounts = this.mailDAO.getMailAccounts();
 
@@ -148,12 +152,11 @@ public class TestMailDAO
     }
 
     /**
-     * @throws Exception Falls was schief geht.
      */
     @Test
     @Transactional(readOnly = true)
     @Rollback
-    public void test014UpdateAccountCheck() throws Exception
+    public void test014UpdateAccountCheck()
     {
         List<MailAccount> accounts = this.mailDAO.getMailAccounts();
 
@@ -173,23 +176,29 @@ public class TestMailDAO
     }
 
     /**
-     * @throws Exception Falls was schief geht.
+     * @throws Throwable Falls was schief geht.
      */
     @Test(expected = BatchUpdateException.class)
     @Rollback
-    public void test020InsertFolderFail() throws Exception
+    public void test020InsertFolderFail() throws Throwable
     {
         MailFolder folder = new MailFolder();
 
-        this.mailDAO.insertFolder(2, Arrays.asList(folder));
+        try
+        {
+            this.mailDAO.insertFolder(2, Arrays.asList(folder));
+        }
+        catch (RuntimeException ex)
+        {
+            throw ex.getCause();
+        }
     }
 
     /**
-     * @throws Exception Falls was schief geht.
      */
     @Test
     @Commit
-    public void test021InsertFolder() throws Exception
+    public void test021InsertFolder()
     {
         MailFolder folder = new MailFolder();
         folder.setFullName("a/b");
@@ -202,12 +211,11 @@ public class TestMailDAO
     }
 
     /**
-     * @throws Exception Falls was schief geht.
      */
     @Test
     @Transactional(readOnly = true)
     @Rollback
-    public void test022SelectFolder() throws Exception
+    public void test022SelectFolder()
     {
         List<MailFolder> folders = this.mailDAO.getMailFolder(2);
 
@@ -222,11 +230,10 @@ public class TestMailDAO
     }
 
     /**
-     * @throws Exception Falls was schief geht.
      */
     @Test
     @Commit
-    public void test023UpdateFolder() throws Exception
+    public void test023UpdateFolder()
     {
         List<MailFolder> folders = this.mailDAO.getMailFolder(2);
 
@@ -243,12 +250,11 @@ public class TestMailDAO
     }
 
     /**
-     * @throws Exception Falls was schief geht.
      */
     @Test
     @Transactional(readOnly = true)
     @Rollback
-    public void test024UpdateFolderCheck() throws Exception
+    public void test024UpdateFolderCheck()
     {
         List<MailFolder> folders = this.mailDAO.getMailFolder(2);
 
@@ -263,23 +269,29 @@ public class TestMailDAO
     }
 
     /**
-     * @throws Exception Falls was schief geht.
+     * @throws Throwable Falls was schief geht.
      */
     @Test(expected = BatchUpdateException.class)
     @Rollback
-    public void test030InsertMailFail() throws Exception
+    public void test030InsertMailFail() throws Throwable
     {
         Mail mail = new Mail();
 
-        this.mailDAO.insertMail(4, Arrays.asList(mail));
+        try
+        {
+            this.mailDAO.insertMail(4, Arrays.asList(mail));
+        }
+        catch (RuntimeException ex)
+        {
+            throw ex.getCause();
+        }
     }
 
     /**
-     * @throws Exception Falls was schief geht.
      */
     @Test
     @Commit
-    public void test031InsertMail() throws Exception
+    public void test031InsertMail()
     {
         Mail mail = new Mail();
         mail.setFrom(new InternetAddress("a@a.aa"));
@@ -307,12 +319,11 @@ public class TestMailDAO
     }
 
     /**
-     * @throws Exception Falls was schief geht.
      */
     @Test
     @Transactional(readOnly = true)
     @Rollback
-    public void test032SelectMail() throws Exception
+    public void test032SelectMail()
     {
         List<Mail> mails = this.mailDAO.getMails(4);
 
@@ -336,11 +347,10 @@ public class TestMailDAO
     }
 
     /**
-     * @throws Exception Falls was schief geht.
      */
     @Test
     @Commit
-    public void test033UpdateMail() throws Exception
+    public void test033UpdateMail()
     {
         List<Mail> mails = this.mailDAO.getMails(4);
 
@@ -356,12 +366,11 @@ public class TestMailDAO
     }
 
     /**
-     * @throws Exception Falls was schief geht.
      */
     @Test
     @Transactional(readOnly = true)
     @Rollback
-    public void test034UpdateMailCheck() throws Exception
+    public void test034UpdateMailCheck()
     {
         List<Mail> mails = this.mailDAO.getMails(4);
 
@@ -385,22 +394,20 @@ public class TestMailDAO
     }
 
     /**
-     * @throws Exception Falls was schief geht.
      */
     @Test
     @Commit
-    public void test040DeleteMail() throws Exception
+    public void test040DeleteMail()
     {
         this.mailDAO.deleteMail(4, 2);
     }
 
     /**
-     * @throws Exception Falls was schief geht.
      */
     @Test
     @Transactional(readOnly = true)
     @Rollback
-    public void test041DeleteMailCheck() throws Exception
+    public void test041DeleteMailCheck()
     {
         List<Mail> mails = this.mailDAO.getMails(4);
 
@@ -409,22 +416,20 @@ public class TestMailDAO
     }
 
     /**
-     * @throws Exception Falls was schief geht.
      */
     @Test
     @Commit
-    public void test050DeleteFolder() throws Exception
+    public void test050DeleteFolder()
     {
         this.mailDAO.deleteFolder(4);
     }
 
     /**
-     * @throws Exception Falls was schief geht.
      */
     @Test
     @Transactional(readOnly = true)
     @Rollback
-    public void test051DeleteFolderCheck() throws Exception
+    public void test051DeleteFolderCheck()
     {
         List<MailFolder> folders = this.mailDAO.getMailFolder(2);
 
@@ -433,22 +438,20 @@ public class TestMailDAO
     }
 
     /**
-     * @throws Exception Falls was schief geht.
      */
     @Test
     @Commit
-    public void test060DeleteAccount() throws Exception
+    public void test060DeleteAccount()
     {
         this.mailDAO.deleteAccount(2);
     }
 
     /**
-     * @throws Exception Falls was schief geht.
      */
     @Test
     @Transactional(readOnly = true)
     @Rollback
-    public void test061DeleteAccountCheck() throws Exception
+    public void test061DeleteAccountCheck()
     {
         List<MailFolder> folders = this.mailDAO.getMailFolder(2);
 

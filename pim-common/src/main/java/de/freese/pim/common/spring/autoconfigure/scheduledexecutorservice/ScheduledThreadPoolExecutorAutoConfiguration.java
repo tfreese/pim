@@ -3,10 +3,13 @@ package de.freese.pim.common.spring.autoconfigure.scheduledexecutorservice;
 
 import java.util.concurrent.RejectedExecutionHandler;
 import java.util.concurrent.ScheduledExecutorService;
+
 import javax.annotation.Resource;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -26,6 +29,7 @@ import org.springframework.scheduling.concurrent.ScheduledExecutorFactoryBean;
  */
 @Configuration
 @ConditionalOnMissingBean(ScheduledExecutorService.class) // Nur wenn ScheduledExecutorService noch nicht im SpringContext ist.
+@ConditionalOnProperty(prefix = "scheduledthreadpool", name = "enabled", matchIfMissing = false) // Nur wenn auch enabled.
 @EnableConfigurationProperties(ScheduledThreadPoolExecutorProperties.class)
 public class ScheduledThreadPoolExecutorAutoConfiguration
 {

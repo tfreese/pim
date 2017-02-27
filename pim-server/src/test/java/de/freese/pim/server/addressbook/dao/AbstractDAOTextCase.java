@@ -38,105 +38,105 @@ public abstract class AbstractDAOTextCase
     }
 
     /**
-     * @throws Exception Falls was schief geht.
+     * @throws Throwable Falls was schief geht.
      */
-    public abstract void test0100InsertKontakts() throws Exception;
+    public abstract void test0100InsertKontakts() throws Throwable;
 
     /**
-     * @throws Exception Falls was schief geht.
+     * @throws Throwable Falls was schief geht.
      */
-    public abstract void test0110InsertKontaktWithNullVorname() throws Exception;
+    public abstract void test0110InsertKontaktWithNullVorname() throws Throwable;
 
     /**
-     * @throws Exception Falls was schief geht.
+     * @throws Throwable Falls was schief geht.
      */
-    public abstract void test0120InsertKontaktWithBlankVorname() throws Exception;
+    public abstract void test0120InsertKontaktWithBlankVorname() throws Throwable;
 
     /**
-     * @throws Exception Falls was schief geht.
+     * @throws Throwable Falls was schief geht.
      */
-    public abstract void test0130InsertKontaktExisting() throws Exception;
+    public abstract void test0130InsertKontaktExisting() throws Throwable;
 
     /**
-     * @throws Exception Falls was schief geht.
+     * @throws Throwable Falls was schief geht.
      */
-    public abstract void test0200UpdateKontakt() throws Exception;
+    public abstract void test0200UpdateKontakt() throws Throwable;
 
     /**
-     * @throws Exception Falls was schief geht.
+     * @throws Throwable Falls was schief geht.
      */
-    public abstract void test0300InsertAttribut() throws Exception;
+    public abstract void test0300InsertAttribut() throws Throwable;
 
     /**
-     * @throws Exception Falls was schief geht.
+     * @throws Throwable Falls was schief geht.
      */
-    public abstract void test0310InsertInsertAttributWithNullValue() throws Exception;
+    public abstract void test0310InsertInsertAttributWithNullValue() throws Throwable;
 
     /**
-     * @throws Exception Falls was schief geht.
+     * @throws Throwable Falls was schief geht.
      */
-    public abstract void test0320InsertInsertAttributWithBlankValue() throws Exception;
+    public abstract void test0320InsertInsertAttributWithBlankValue() throws Throwable;
 
     /**
-     * @throws Exception Falls was schief geht.
+     * @throws Throwable Falls was schief geht.
      */
-    public abstract void test0330InsertInsertAttributWithNull() throws Exception;
+    public abstract void test0330InsertInsertAttributWithNull() throws Throwable;
 
     /**
-     * @throws Exception Falls was schief geht.
+     * @throws Throwable Falls was schief geht.
      */
-    public abstract void test0340InsertInsertAttributWithBlank() throws Exception;
+    public abstract void test0340InsertInsertAttributWithBlank() throws Throwable;
 
     /**
-     * @throws Exception Falls was schief geht.
+     * @throws Throwable Falls was schief geht.
      */
-    public abstract void test0350InsertAttributExisting() throws Exception;
+    public abstract void test0350InsertAttributExisting() throws Throwable;
 
     /**
-     * @throws Exception Falls was schief geht.
+     * @throws Throwable Falls was schief geht.
      */
-    public abstract void test0400UpdateAttribut() throws Exception;
+    public abstract void test0400UpdateAttribut() throws Throwable;
 
     /**
-     * @throws Exception Falls was schief geht.
+     * @throws Throwable Falls was schief geht.
      */
-    public abstract void test0500GetKontaktDetailsAll() throws Exception;
+    public abstract void test0500GetKontaktDetailsAll() throws Throwable;
 
     /**
-     * @throws Exception Falls was schief geht.
+     * @throws Throwable Falls was schief geht.
      */
-    public abstract void test0510GetKontaktDetailsWithID() throws Exception;
+    public abstract void test0510GetKontaktDetailsWithID() throws Throwable;
 
     /**
-     * @throws Exception Falls was schief geht.
+     * @throws Throwable Falls was schief geht.
      */
-    public abstract void test0520GetKontaktDetailsWithIDs() throws Exception;
+    public abstract void test0520GetKontaktDetailsWithIDs() throws Throwable;
 
     /**
-     * @throws Exception Falls was schief geht.
+     * @throws Throwable Falls was schief geht.
      */
-    public abstract void test0600GetKontakte() throws Exception;
+    public abstract void test0600GetKontakte() throws Throwable;
 
     /**
-     * @throws Exception Falls was schief geht.
+     * @throws Throwable Falls was schief geht.
      */
-    public abstract void test0700SearchKontakts() throws Exception;
+    public abstract void test0700SearchKontakts() throws Throwable;
 
     /**
-     * @throws Exception Falls was schief geht.
+     * @throws Throwable Falls was schief geht.
      */
-    public abstract void test0900DeleteAttribut() throws Exception;
+    public abstract void test0900DeleteAttribut() throws Throwable;
 
     /**
-     * @throws Exception Falls was schief geht.
+     * @throws Throwable Falls was schief geht.
      */
-    public abstract void test1000DeleteKontakt() throws Exception;
+    public abstract void test1000DeleteKontakt() throws Throwable;
 
     /**
      * @param addressBookDAO {@link AddressBookDAO}
-     * @throws Exception Falls was schief geht.
+     * @throws Throwable Falls was schief geht.
      */
-    protected void doTest0100InsertKontakts(final AddressBookDAO addressBookDAO) throws Exception
+    protected void doTest0100InsertKontakts(final AddressBookDAO addressBookDAO) throws Throwable
     {
         long id = addressBookDAO.insertKontakt("BNachname", "BVorname");
         Assert.assertEquals(1, id);
@@ -147,9 +147,9 @@ public abstract class AbstractDAOTextCase
 
     /**
      * @param addressBookDAO {@link AddressBookDAO}
-     * @throws Exception Falls was schief geht.
+     * @throws Throwable Falls was schief geht.
      */
-    protected void doTest0110InsertKontaktWithNullVorname(final AddressBookDAO addressBookDAO) throws Exception
+    protected void doTest0110InsertKontaktWithNullVorname(final AddressBookDAO addressBookDAO) throws Throwable
     {
         long id = addressBookDAO.insertKontakt("CNachname", null);
         Assert.assertEquals(3, id);
@@ -157,33 +157,47 @@ public abstract class AbstractDAOTextCase
 
     /**
      * @param addressBookDAO {@link AddressBookDAO}
-     * @throws Exception Falls was schief geht.
+     * @throws Throwable Falls was schief geht.
      */
-    protected void doTest0120InsertKontaktWithBlankVorname(final AddressBookDAO addressBookDAO) throws Exception
+    protected void doTest0120InsertKontaktWithBlankVorname(final AddressBookDAO addressBookDAO) throws Throwable
     {
-        // Muss fehlschlagen.
-        addressBookDAO.insertKontakt("DNachname", "");
+        try
+        {
+            // Muss fehlschlagen.
+            addressBookDAO.insertKontakt("DNachname", "");
+        }
+        catch (RuntimeException ex)
+        {
+            throw ex.getCause();
+        }
 
         Assert.assertTrue(false);
     }
 
     /**
      * @param addressBookDAO {@link AddressBookDAO}
-     * @throws Exception Falls was schief geht.
+     * @throws Throwable Falls was schief geht.
      */
-    protected void doTest0130InsertKontaktExisting(final AddressBookDAO addressBookDAO) throws Exception
+    protected void doTest0130InsertKontaktExisting(final AddressBookDAO addressBookDAO) throws Throwable
     {
-        // Muss fehlschlagen.
-        addressBookDAO.insertKontakt("ANachname", "AVorname");
+        try
+        {
+            // Muss fehlschlagen.
+            addressBookDAO.insertKontakt("ANachname", "AVorname");
+        }
+        catch (RuntimeException ex)
+        {
+            throw ex.getCause();
+        }
 
         Assert.assertTrue(false);
     }
 
     /**
      * @param addressBookDAO {@link AddressBookDAO}
-     * @throws Exception Falls was schief geht.
+     * @throws Throwable Falls was schief geht.
      */
-    protected void doTest0200UpdateKontakt(final AddressBookDAO addressBookDAO) throws Exception
+    protected void doTest0200UpdateKontakt(final AddressBookDAO addressBookDAO) throws Throwable
     {
         int affectedRows = addressBookDAO.updateKontakt(2, "ANachname", "A-Vorname");
 
@@ -192,9 +206,9 @@ public abstract class AbstractDAOTextCase
 
     /**
      * @param addressBookDAO {@link AddressBookDAO}
-     * @throws Exception Falls was schief geht.
+     * @throws Throwable Falls was schief geht.
      */
-    protected void doTest0300InsertAttribut(final AddressBookDAO addressBookDAO) throws Exception
+    protected void doTest0300InsertAttribut(final AddressBookDAO addressBookDAO) throws Throwable
     {
         int affectedRows = addressBookDAO.insertAttribut(2, "STREET", "Street 1");
 
@@ -203,69 +217,104 @@ public abstract class AbstractDAOTextCase
 
     /**
      * @param addressBookDAO {@link AddressBookDAO}
-     * @throws Exception Falls was schief geht.
+     * @throws Throwable Falls was schief geht.
      */
-    protected void doTest0310InsertInsertAttributWithNullValue(final AddressBookDAO addressBookDAO) throws Exception
+    protected void doTest0310InsertInsertAttributWithNullValue(final AddressBookDAO addressBookDAO) throws Throwable
     {
-        // Muss fehlschlagen.
-        int affectedRows = addressBookDAO.insertAttribut(2, "STREET", null);
+        try
+        {
+            // Muss fehlschlagen.
+            int affectedRows = addressBookDAO.insertAttribut(2, "STREET", null);
 
-        Assert.assertEquals(0, affectedRows);
+            Assert.assertEquals(0, affectedRows);
+        }
+        catch (RuntimeException ex)
+        {
+            throw ex.getCause();
+        }
     }
 
     /**
      * @param addressBookDAO {@link AddressBookDAO}
-     * @throws Exception Falls was schief geht.
+     * @throws Throwable Falls was schief geht.
      */
-    protected void doTest0320InsertInsertAttributWithBlankValue(final AddressBookDAO addressBookDAO) throws Exception
+    protected void doTest0320InsertInsertAttributWithBlankValue(final AddressBookDAO addressBookDAO) throws Throwable
     {
-        // Muss fehlschlagen.
-        int affectedRows = addressBookDAO.insertAttribut(2, "STREET", "");
+        try
+        {
+            // Muss fehlschlagen.
+            int affectedRows = addressBookDAO.insertAttribut(2, "STREET", "");
 
-        Assert.assertEquals(0, affectedRows);
+            Assert.assertEquals(0, affectedRows);
+        }
+        catch (RuntimeException ex)
+        {
+            throw ex.getCause();
+        }
     }
 
     /**
      * @param addressBookDAO {@link AddressBookDAO}
-     * @throws Exception Falls was schief geht.
+     * @throws Throwable Falls was schief geht.
      */
-    protected void doTest0330InsertInsertAttributWithNull(final AddressBookDAO addressBookDAO) throws Exception
+    protected void doTest0330InsertInsertAttributWithNull(final AddressBookDAO addressBookDAO) throws Throwable
     {
-        // Muss fehlschlagen.
-        int affectedRows = addressBookDAO.insertAttribut(2, null, "Street 1");
+        try
+        {
+            // Muss fehlschlagen.
+            int affectedRows = addressBookDAO.insertAttribut(2, null, "Street 1");
 
-        Assert.assertEquals(0, affectedRows);
+            Assert.assertEquals(0, affectedRows);
+        }
+        catch (RuntimeException ex)
+        {
+            throw ex.getCause();
+        }
     }
 
     /**
      * @param addressBookDAO {@link AddressBookDAO}
-     * @throws Exception Falls was schief geht.
+     * @throws Throwable Falls was schief geht.
      */
-    protected void doTest0340InsertInsertAttributWithBlank(final AddressBookDAO addressBookDAO) throws Exception
+    protected void doTest0340InsertInsertAttributWithBlank(final AddressBookDAO addressBookDAO) throws Throwable
     {
-        // Muss fehlschlagen.
-        int affectedRows = addressBookDAO.insertAttribut(2, "", "Street 1");
+        try
+        {
+            // Muss fehlschlagen.
+            int affectedRows = addressBookDAO.insertAttribut(2, "", "Street 1");
 
-        Assert.assertEquals(0, affectedRows);
+            Assert.assertEquals(0, affectedRows);
+        }
+        catch (RuntimeException ex)
+        {
+            throw ex.getCause();
+        }
     }
 
     /**
      * @param addressBookDAO {@link AddressBookDAO}
-     * @throws Exception Falls was schief geht.
+     * @throws Throwable Falls was schief geht.
      */
-    protected void doTest0350InsertAttributExisting(final AddressBookDAO addressBookDAO) throws Exception
+    protected void doTest0350InsertAttributExisting(final AddressBookDAO addressBookDAO) throws Throwable
     {
-        // Muss fehlschlagen.
-        int affectedRows = addressBookDAO.insertAttribut(2, "STREET", "Street 1");
+        try
+        {
+            // Muss fehlschlagen.
+            int affectedRows = addressBookDAO.insertAttribut(2, "STREET", "Street 1");
 
-        Assert.assertEquals(0, affectedRows);
+            Assert.assertEquals(0, affectedRows);
+        }
+        catch (RuntimeException ex)
+        {
+            throw ex.getCause();
+        }
     }
 
     /**
      * @param addressBookDAO {@link AddressBookDAO}
-     * @throws Exception Falls was schief geht.
+     * @throws Throwable Falls was schief geht.
      */
-    protected void doTest0400UpdateAttribut(final AddressBookDAO addressBookDAO) throws Exception
+    protected void doTest0400UpdateAttribut(final AddressBookDAO addressBookDAO) throws Throwable
     {
         int affectedRows = addressBookDAO.updateAttribut(2, "STREET", "Street 2");
 
@@ -274,9 +323,9 @@ public abstract class AbstractDAOTextCase
 
     /**
      * @param addressBookDAO {@link AddressBookDAO}
-     * @throws Exception Falls was schief geht.
+     * @throws Throwable Falls was schief geht.
      */
-    protected void doTest0500GetKontaktDetailsAll(final AddressBookDAO addressBookDAO) throws Exception
+    protected void doTest0500GetKontaktDetailsAll(final AddressBookDAO addressBookDAO) throws Throwable
     {
         List<Kontakt> kontakts = addressBookDAO.getKontaktDetails();
 
@@ -308,9 +357,9 @@ public abstract class AbstractDAOTextCase
 
     /**
      * @param addressBookDAO {@link AddressBookDAO}
-     * @throws Exception Falls was schief geht.
+     * @throws Throwable Falls was schief geht.
      */
-    protected void doTest0510GetKontaktDetailsWithID(final AddressBookDAO addressBookDAO) throws Exception
+    protected void doTest0510GetKontaktDetailsWithID(final AddressBookDAO addressBookDAO) throws Throwable
     {
         List<Kontakt> kontakts = addressBookDAO.getKontaktDetails(2);
 
@@ -329,9 +378,9 @@ public abstract class AbstractDAOTextCase
 
     /**
      * @param addressBookDAO {@link AddressBookDAO}
-     * @throws Exception Falls was schief geht.
+     * @throws Throwable Falls was schief geht.
      */
-    protected void doTest0520GetKontaktDetailsWithIDs(final AddressBookDAO addressBookDAO) throws Exception
+    protected void doTest0520GetKontaktDetailsWithIDs(final AddressBookDAO addressBookDAO) throws Throwable
     {
         List<Kontakt> kontakts = addressBookDAO.getKontaktDetails(2, 3);
 
@@ -356,9 +405,9 @@ public abstract class AbstractDAOTextCase
 
     /**
      * @param addressBookDAO {@link AddressBookDAO}
-     * @throws Exception Falls was schief geht.
+     * @throws Throwable Falls was schief geht.
      */
-    protected void doTest0600GetKontakte(final AddressBookDAO addressBookDAO) throws Exception
+    protected void doTest0600GetKontakte(final AddressBookDAO addressBookDAO) throws Throwable
     {
         List<Kontakt> kontakte = addressBookDAO.getKontakte();
 
@@ -380,9 +429,9 @@ public abstract class AbstractDAOTextCase
 
     /**
      * @param addressBookDAO {@link AddressBookDAO}
-     * @throws Exception Falls was schief geht.
+     * @throws Throwable Falls was schief geht.
      */
-    protected void doTest0700SearchKontakts(final AddressBookDAO addressBookDAO) throws Exception
+    protected void doTest0700SearchKontakts(final AddressBookDAO addressBookDAO) throws Throwable
     {
         List<Kontakt> kontakte = addressBookDAO.searchKontakte("vor");
 
@@ -407,9 +456,9 @@ public abstract class AbstractDAOTextCase
 
     /**
      * @param addressBookDAO {@link AddressBookDAO}
-     * @throws Exception Falls was schief geht.
+     * @throws Throwable Falls was schief geht.
      */
-    protected void doTest0900DeleteAttribut(final AddressBookDAO addressBookDAO) throws Exception
+    protected void doTest0900DeleteAttribut(final AddressBookDAO addressBookDAO) throws Throwable
     {
         int affectedRows = addressBookDAO.deleteAttribut(2, "STREET");
 
@@ -418,9 +467,9 @@ public abstract class AbstractDAOTextCase
 
     /**
      * @param addressBookDAO {@link AddressBookDAO}
-     * @throws Exception Falls was schief geht.
+     * @throws Throwable Falls was schief geht.
      */
-    protected void doTest1000DeleteKontakt(final AddressBookDAO addressBookDAO) throws Exception
+    protected void doTest1000DeleteKontakt(final AddressBookDAO addressBookDAO) throws Throwable
     {
         int affectedRows = addressBookDAO.deleteKontakt(3);
 

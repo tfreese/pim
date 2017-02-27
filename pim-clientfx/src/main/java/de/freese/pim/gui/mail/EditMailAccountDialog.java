@@ -17,6 +17,7 @@ import de.freese.pim.gui.utils.FXUtils;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.geometry.VPos;
+import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -387,14 +388,16 @@ public class EditMailAccountDialog
      */
     private void test(final FXMailService mailService, final FXMailAccount bean, final ResourceBundle bundle)
     {
+        PIMApplication.getMainWindow().getScene().setCursor(Cursor.WAIT);
+
         this.labelTestResult.setText(null);
         this.labelTestResult.setStyle(null);
         this.aboView.setItems(null);
 
-        checkValidConfig(null, bundle);
-
         try
         {
+            checkValidConfig(null, bundle);
+
             bean.getFolder().clear();
             bean.getFolder().addAll(mailService.test(bean));
 
@@ -407,6 +410,10 @@ public class EditMailAccountDialog
         {
             this.labelTestResult.setText(ex.getMessage());
             this.labelTestResult.setStyle("-fx-text-fill: red;"); // fx-text-inner-color
+        }
+        finally
+        {
+            PIMApplication.getMainWindow().getScene().setCursor(Cursor.DEFAULT);
         }
     }
 }
