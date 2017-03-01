@@ -40,8 +40,6 @@ public abstract class AbstractPIMClientConfig
     {
         int coreSize = Runtime.getRuntime().availableProcessors();
         int maxSize = coreSize * 2;
-        int coreSize = Math.min(Runtime.getRuntime().availableProcessors() * 2, 8);
-        int maxSize = coreSize;
         int queueSize = maxSize * 3;
         int keepAliveSeconds = 60;
 
