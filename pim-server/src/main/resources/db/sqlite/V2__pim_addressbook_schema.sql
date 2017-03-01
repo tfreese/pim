@@ -6,7 +6,7 @@ DROP TABLE IF EXISTS KONTAKT;
 
 CREATE TABLE KONTAKT --Tabelle für eindeutige Kontakte (Vorname, Nachname)
 (
-    ID          BIGINT NOT NULL PRIMARY KEY, --Primary Key
+    ID          BIGINT NOT NULL PRIMARY KEY, --Primary Key; AUTOINCREMENT
 	USER_ID		VARCHAR (50) NOT NULL, --Eigentümer
 	NACHNAME	VARCHAR (50) NOT NULL CHECK(LENGTH(TRIM(NACHNAME)) > 0), --Der Nachname es Kontakts
 	VORNAME		VARCHAR (50) CHECK(VORNAME IS NULL OR LENGTH(TRIM(VORNAME)) > 0) --Der Vorname es Kontakts

@@ -50,6 +50,9 @@ public interface SequenceQuery extends Function<String, String>
             case "hsql":
                 query = seq -> "call next value for " + seq;
                 break;
+            case "sqlite":
+                query = seq -> "select count(*) + 1 from " + seq;
+                break;
             // case "mysql":
             // // CREATE TABLE sequence (id INT NOT NULL);
             // // INSERT INTO sequence VALUES (0);

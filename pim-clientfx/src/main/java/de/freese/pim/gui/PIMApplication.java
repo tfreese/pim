@@ -4,7 +4,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ResourceBundle;
-
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.HelpFormatter;
@@ -21,9 +20,7 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.core.io.Resource;
 import org.springframework.core.task.AsyncTaskExecutor;
 import org.springframework.scheduling.TaskScheduler;
-
 import com.sun.javafx.application.LauncherImpl;
-
 import de.freese.pim.gui.main.MainController;
 import de.freese.pim.gui.utils.FXUtils;
 import de.freese.pim.gui.view.ErrorDialog;
@@ -57,12 +54,12 @@ public class PIMApplication extends Application implements ApplicationContextAwa
     /**
      *
      */
-    public static final Logger LOGGER = LoggerFactory.getLogger(PIMApplication.class);
+    private static ApplicationContext applicationContext = null;
 
     /**
      *
      */
-    private static ApplicationContext applicationContext = null;
+    public static final Logger LOGGER = LoggerFactory.getLogger(PIMApplication.class);
 
     /**
      *
@@ -88,6 +85,35 @@ public class PIMApplication extends Application implements ApplicationContextAwa
     public static ApplicationContext getApplicationContext()
     {
         return applicationContext;
+    }
+
+    /**
+     * Liefert die möglichen Optionen der Kommandozeile.<br>
+     * Dies sind die JRE Programm Argumente.
+     *
+     * @return {@link Options}
+     */
+    private static Options getCommandOptions()
+    {
+        Options options = new Options();
+
+        // --spring.profiles.active=ClientStandalone,HsqldbEmbeddedServer
+        // --spring.profiles.active=ClientREST --server.host=localhost --server.port=61223
+        // --spring.profiles.active=ClientEmbeddedServer,HsqldbEmbeddedServer
+        // --spring.profiles.active=ClientEmbeddedServer,SqliteLocalFile
+
+        // OptionGroup group = new PreserveOrderOptionGroup();
+        // group.addOption(Option.builder().longOpt("spring.profiles.active").required().desc("=Profile1,Profile2").build());
+        // group.addOption(Option.builder().longOpt("server.host").required().hasArg().argName("=host").desc("Server Name").build());
+        // group.addOption(Option.builder().longOpt("server.port").required().hasArg().argName("=port").desc("Server Port").build());
+        // options.addOptionGroup(group);
+
+        options.addOption(Option.builder().longOpt("spring.profiles.active").required().hasArg().argName("=Profile1,Profile2").valueSeparator('=')
+                .desc("Profiles: [ClientStandalone,HsqldbEmbeddedServer], [ClientEmbeddedServer,HsqldbEmbeddedServer], [ClientREST]").build());
+        options.addOption(Option.builder().longOpt("server.host").hasArg().argName("=host").valueSeparator('=').desc("Server Name").build());
+        options.addOption(Option.builder().longOpt("server.port").hasArg().argName("=port").valueSeparator('=').desc("Server Port").build());
+
+        return options;
     }
 
     /**
@@ -136,8 +162,8 @@ public class PIMApplication extends Application implements ApplicationContextAwa
     }
 
     /**
-     * The main() method is ignored in correctly deployed JavaFX application. main() serves only as fallback in case the application can not
-     * be launched through deployment artifacts, e.g., in IDEs with limited FX support. NetBeans ignores main().
+     * The main() method is ignored in correctly deployed JavaFX application. main() serves only as fallback in case the application can not be launched through
+     * deployment artifacts, e.g., in IDEs with limited FX support. NetBeans ignores main().
      *
      * @param args the command line arguments
      */
@@ -175,16 +201,14 @@ public class PIMApplication extends Application implements ApplicationContextAwa
 
         // System.setProperty("org.slf4j.simpleLogger.log.de.freese.pim", "DEBUG");
         // SysOutOverSLF4J.sendSystemOutAndErrToSLF4J();
-        Thread.setDefaultUncaughtExceptionHandler((t, ex) ->
-        {
+        Thread.setDefaultUncaughtExceptionHandler((t, ex) -> {
             LOGGER.error("***Default exception handler***");
             LOGGER.error(null, ex);
 
             new ErrorDialog().forThrowable(ex).showAndWait();
         });
 
-        Runnable task = () ->
-        {
+        Runnable task = () -> {
             // launch(args);
             LauncherImpl.launchApplication(PIMApplication.class, PIMPreloader.class, args);
         };
@@ -208,38 +232,6 @@ public class PIMApplication extends Application implements ApplicationContextAwa
     public static void unblockGUI()
     {
         FXUtils.unblockGUI(getMainWindow());
-    }
-
-    /**
-     * Liefert die möglichen Optionen der Kommandozeile.<br>
-     * Dies sind die JRE Programm Argumente.
-     *
-     * @return {@link Options}
-     */
-    private static Options getCommandOptions()
-    {
-        Options options = new Options();
-
-        // --spring.profiles.active=ClientStandalone,HsqldbEmbeddedServer
-        // --spring.profiles.active=ClientREST --server.host=localhost --server.port=61223
-        // --spring.profiles.active=ClientEmbeddedServer,HsqldbEmbeddedServer
-
-        // OptionGroup group = new PreserveOrderOptionGroup();
-        // group.addOption(Option.builder().longOpt("spring.profiles.active").required().desc("=Profile1,Profile2").build());
-        // group.addOption(Option.builder().longOpt("server.host").required().hasArg().argName("=host").desc("Server Name").build());
-        // group.addOption(Option.builder().longOpt("server.port").required().hasArg().argName("=port").desc("Server Port").build());
-        // options.addOptionGroup(group);
-
-        options.addOption(
-                Option.builder().longOpt("spring.profiles.active").required().hasArg().argName("=Profile1,Profile2").valueSeparator('=')
-                        .desc("Profiles: [ClientStandalone,HsqldbEmbeddedServer], [ClientEmbeddedServer,HsqldbEmbeddedServer], [ClientREST]")
-                        .build());
-        options.addOption(
-                Option.builder().longOpt("server.host").hasArg().argName("=host").valueSeparator('=').desc("Server Name").build());
-        options.addOption(
-                Option.builder().longOpt("server.port").hasArg().argName("=port").valueSeparator('=').desc("Server Port").build());
-
-        return options;
     }
 
     /**
@@ -409,12 +401,10 @@ public class PIMApplication extends Application implements ApplicationContextAwa
             primaryStage.setHeight(screenBounds.getHeight() - 200);
 
             // After the app is ready, show the stage
-            this.ready.addListener((observable, oldValue, newValue) ->
-            {
+            this.ready.addListener((observable, oldValue, newValue) -> {
                 if (Boolean.TRUE.equals(newValue))
                 {
-                    Platform.runLater(() ->
-                    {
+                    Platform.runLater(() -> {
                         primaryStage.show();
 
                         // System.setOut(new PrintStream(new TextAreaOutputStream(MainView.LOG_TEXT_AREA)));
