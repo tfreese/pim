@@ -40,9 +40,9 @@ CREATE TABLE MAIL --Tabelle für Mails
     UID             BIGINT NOT NULL CHECK(UID > 0), --UID	
 	MSG_NUM         INTEGER NOT NULL CHECK(MSG_NUM > 0), --Message-Nummer der Mail im Folder
 	SENDER			VARCHAR (200), --Absender: leer bei gesendeten Mails
-	RECIPIENT_TO	CLOB (1M), --Empfänger
-	RECIPIENT_CC    CLOB (1M), --Empfänger, Copy
-	RECIPIENT_BCC   CLOB (1M), --Empfänger, Blind Copy
+	RECIPIENT_TO	TEXT, --Empfänger
+	RECIPIENT_CC    TEXT, --Empfänger, Copy
+	RECIPIENT_BCC   TEXT, --Empfänger, Blind Copy
 	RECEIVED_DATE   TIMESTAMP, --Empfangsdatum: leer bei gesendeten Mails
 	SEND_DATE		TIMESTAMP, --Sendedatum: leer bei empfangenen Mails
 	SUBJECT         VARCHAR (400), --Betreff
