@@ -214,6 +214,8 @@ public class DefaultMailService extends AbstractService implements MailService, 
     @GetMapping("/accounts")
     public List<MailAccount> getMailAccounts()
     {
+        getLogger().info("load accounts");
+
         List<MailAccount> accounts = getMailDAO().getMailAccounts();
 
         return accounts;
@@ -394,6 +396,12 @@ public class DefaultMailService extends AbstractService implements MailService, 
 
         mails.stream().forEach(m -> m.setFolderFullName(folderName));
 
+        // https://dzone.com/articles/exception-handling-spring-rest
+        // http://stackoverflow.com/questions/28902374/spring-boot-rest-service-exception-handling
+        // https://blog.jayway.com/2014/10/19/spring-boot-error-responses/
+        // http://www.ekiras.com/2016/02/how-to-do-exception-handling-in-springboot-rest-application.html
+        // http://ahmadtechblog.blogspot.de/2015/10/spring-boot-handling-exceptions-in-rest.html
+        // return new ResponseEntity<List<Mail>>(HttpStatus.NOT_FOUND);
         return mails;
     }
 

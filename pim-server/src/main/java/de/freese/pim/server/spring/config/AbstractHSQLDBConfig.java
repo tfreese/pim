@@ -7,6 +7,7 @@ package de.freese.pim.server.spring.config;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
+
 import javax.sql.DataSource;
 
 /**
@@ -16,6 +17,11 @@ import javax.sql.DataSource;
  */
 public abstract class AbstractHSQLDBConfig extends AbstractDBConfig
 {
+    static
+    {
+        System.setProperty("flyway.locations", "classpath:db/hsqldb");
+    }
+
     /**
      * Erstellt ein neues {@link AbstractHSQLDBConfig} Object.
      */

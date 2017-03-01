@@ -5,11 +5,14 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import javax.annotation.Resource;
+
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+
 import de.freese.pim.gui.addressbook.model.FXKontakt;
 
 /**
@@ -18,7 +21,10 @@ import de.freese.pim.gui.addressbook.model.FXKontakt;
  * @author Thomas Freese
  */
 @Service("clientAddressBookService")
-@Profile("ClientREST")
+@Profile(
+{
+        "ClientREST", "ClientEmbeddedServer"
+})
 public class DefaultRestFXAddressbookService extends AbstractFXAddressbookService
 {
     /**
@@ -49,19 +55,11 @@ public class DefaultRestFXAddressbookService extends AbstractFXAddressbookServic
      * @see de.freese.pim.gui.addressbook.service.FXAddressbookService#getKontaktDetails(long[])
      */
     @Override
-    public List<FXKontakt> getKontaktDetails(final long...ids)
+    public List<FXKontakt> getKontaktDetails(final long... ids)
     {
         FXKontakt[] details = getRestTemplate().postForObject("/addressBook/details", ids, FXKontakt[].class);
 
         return Arrays.asList(details);
-    }
-
-    /**
-     * @return {@link RestTemplate}
-     */
-    protected RestTemplate getRestTemplate()
-    {
-        return this.restTemplate;
     }
 
     /**
@@ -97,5 +95,13 @@ public class DefaultRestFXAddressbookService extends AbstractFXAddressbookServic
         int affectedRows = getRestTemplate().postForObject("/addressBook/contact/update/{contactID}", id, Integer.class, variables);
 
         return affectedRows;
+    }
+
+    /**
+     * @return {@link RestTemplate}
+     */
+    protected RestTemplate getRestTemplate()
+    {
+        return this.restTemplate;
     }
 }

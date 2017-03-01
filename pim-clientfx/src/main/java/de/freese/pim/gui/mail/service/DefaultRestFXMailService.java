@@ -32,7 +32,10 @@ import de.freese.pim.gui.mail.model.FXMailFolder;
  * @author Thomas Freese
  */
 @Service("clientMailService")
-@Profile("ClientREST")
+@Profile(
+{
+        "ClientREST", "ClientEmbeddedServer"
+})
 public class DefaultRestFXMailService extends AbstractFXMailService
 {
     /**

@@ -9,6 +9,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
+
+import org.apache.catalina.webresources.TomcatURLStreamHandlerFactory;
+
 import de.freese.pim.common.model.mail.InternetAddress;
 import de.freese.pim.common.model.mail.MailContent;
 import de.freese.pim.gui.PIMApplication;
@@ -171,58 +174,6 @@ public class MailController extends AbstractController
     }
 
     /**
-     * Hinzufügen eines MailAccount in die GUI
-     *
-     * @param root {@link TreeItem}
-     * @param account {@link FXMailAccount}
-     * @throws Exception Falls was schief geht.
-     */
-    private void addMailAccountToGUI(final TreeItem<Object> root, final FXMailAccount account) throws Exception
-    {
-        // Path basePath = SettingService.getInstance().getHome();
-        // Path accountPath = basePath.resolve(account.getMail());
-
-        // IMailAPI mailAPI = new JavaMailAPI(account, accountPath);
-        // mailAPI.setMailService(this.mailService);
-        // mailAPI.setExecutorService(getExecutorService());
-
-        TreeItem<Object> parent = new TreeItem<>(account);
-        root.getChildren().add(parent);
-        parent.setExpanded(true);
-
-        InitMailAPITask service = new InitMailAPITask(this.treeViewMail, parent, getMailService(), account);
-        getTaskExecutor().execute(service);
-    }
-
-    /**
-     * Liefert den MailAccount.
-     *
-     * @param treeItem {@link TreeItem}
-     * @return {@link FXMailAccount}
-     */
-    private FXMailAccount getAccount(final TreeItem<Object> treeItem)
-    {
-        TreeItem<Object> ti = treeItem;
-
-        while (!(ti.getValue() instanceof FXMailAccount))
-        {
-            ti = ti.getParent();
-        }
-
-        FXMailAccount account = (FXMailAccount) ti.getValue();
-
-        return account;
-    }
-
-    /**
-     * @return {@link FXMailService}
-     */
-    private FXMailService getMailService()
-    {
-        return this.mailService;
-    }
-
-    /**
      * @see de.freese.pim.gui.controller.AbstractController#getMainNode()
      */
     @Override
@@ -241,14 +192,6 @@ public class MailController extends AbstractController
     }
 
     /**
-     * @return {@link ProgressIndicator}
-     */
-    private ProgressIndicator getProgressIndicator()
-    {
-        return this.progressIndicator;
-    }
-
-    /**
      * @see de.freese.pim.gui.controller.AbstractController#getToolBar()
      */
     @Override
@@ -264,10 +207,12 @@ public class MailController extends AbstractController
     public void initialize(final URL location, final ResourceBundle resources)
     {
         // Buttons
-        this.buttonAddAccount.setOnAction(event -> {
+        this.buttonAddAccount.setOnAction(event ->
+        {
             EditMailAccountDialog dialog = new EditMailAccountDialog();
             Optional<FXMailAccount> result = dialog.addAccount(getMailService(), resources);
-            result.ifPresent(account -> {
+            result.ifPresent(account ->
+            {
                 try
                 {
                     getMailService().insertAccount(account);
@@ -285,12 +230,14 @@ public class MailController extends AbstractController
         });
 
         this.buttonEditAccount.disableProperty().bind(this.selectedTreeItem.isNull());
-        this.buttonEditAccount.setOnAction(event -> {
+        this.buttonEditAccount.setOnAction(event ->
+        {
             FXMailAccount ma = getAccount(this.selectedTreeItem.get());
 
             EditMailAccountDialog dialog = new EditMailAccountDialog();
             Optional<FXMailAccount> result = dialog.editAccount(getMailService(), resources, ma);
-            result.ifPresent(account -> {
+            result.ifPresent(account ->
+            {
                 try
                 {
                     getMailService().updateAccount(account);
@@ -309,7 +256,8 @@ public class MailController extends AbstractController
         this.selectedMail.bind(this.tableViewMail.getSelectionModel().selectedItemProperty());
         this.selectedMail.addListener((observable, oldValue, newValue) -> selectedMail(newValue));
 
-        this.tableViewMail.setRowFactory(tableView -> {
+        this.tableViewMail.setRowFactory(tableView ->
+        {
             return new TableRow<FXMail>()
             {
                 /**
@@ -389,9 +337,18 @@ public class MailController extends AbstractController
             }
         });
 
-        URL.setURLStreamHandlerFactory(new MailUrlStreamHandlerFactory());
+        try
+        {
+            URL.setURLStreamHandlerFactory(new MailUrlStreamHandlerFactory());
+        }
+        catch (Error er)
+        {
+            // Beim EmbeddedServer war hier der Tomcat schneller.
+            TomcatURLStreamHandlerFactory.getInstance().addUserFactory(new MailUrlStreamHandlerFactory());
+        }
 
-        getProgressIndicator().styleProperty().bind(Bindings.createStringBinding(() -> {
+        getProgressIndicator().styleProperty().bind(Bindings.createStringBinding(() ->
+        {
             double percent = getProgressIndicator().getProgress();
 
             if (percent < 0)
@@ -407,7 +364,8 @@ public class MailController extends AbstractController
             return style;
         }, getProgressIndicator().progressProperty()));
 
-        this.webView.getEngine().locationProperty().addListener((observable, oldValue, newValue) -> {
+        this.webView.getEngine().locationProperty().addListener((observable, oldValue, newValue) ->
+        {
             try
             {
                 URI address = new URI(newValue);
@@ -433,6 +391,66 @@ public class MailController extends AbstractController
                 new ErrorDialog().forThrowable(ex).showAndWait();
             }
         });
+    }
+
+    /**
+     * Hinzufügen eines MailAccount in die GUI
+     *
+     * @param root {@link TreeItem}
+     * @param account {@link FXMailAccount}
+     * @throws Exception Falls was schief geht.
+     */
+    private void addMailAccountToGUI(final TreeItem<Object> root, final FXMailAccount account) throws Exception
+    {
+        // Path basePath = SettingService.getInstance().getHome();
+        // Path accountPath = basePath.resolve(account.getMail());
+
+        // IMailAPI mailAPI = new JavaMailAPI(account, accountPath);
+        // mailAPI.setMailService(this.mailService);
+        // mailAPI.setExecutorService(getExecutorService());
+
+        TreeItem<Object> parent = new TreeItem<>(account);
+        root.getChildren().add(parent);
+        parent.setExpanded(true);
+
+        InitMailAPITask service = new InitMailAPITask(this.treeViewMail, parent, getMailService(), account);
+        getTaskExecutor().execute(service);
+    }
+
+    /**
+     * Liefert den MailAccount.
+     *
+     * @param treeItem {@link TreeItem}
+     * @return {@link FXMailAccount}
+     */
+    private FXMailAccount getAccount(final TreeItem<Object> treeItem)
+    {
+        TreeItem<Object> ti = treeItem;
+
+        while (!(ti.getValue() instanceof FXMailAccount))
+        {
+            ti = ti.getParent();
+        }
+
+        FXMailAccount account = (FXMailAccount) ti.getValue();
+
+        return account;
+    }
+
+    /**
+     * @return {@link FXMailService}
+     */
+    private FXMailService getMailService()
+    {
+        return this.mailService;
+    }
+
+    /**
+     * @return {@link ProgressIndicator}
+     */
+    private ProgressIndicator getProgressIndicator()
+    {
+        return this.progressIndicator;
     }
 
     /**
@@ -511,7 +529,8 @@ public class MailController extends AbstractController
                 return mailContent;
             }
         };
-        loadMailContentTask.setOnSucceeded(event -> {
+        loadMailContentTask.setOnSucceeded(event ->
+        {
             PIMApplication.unblockGUI();
             MailContent mailContent = loadMailContentTask.getValue();
 
@@ -521,7 +540,8 @@ public class MailController extends AbstractController
                 // getLogger().error(msg);
                 // new ErrorDialog().headerText(msg).showAndWait();
 
-                String msg = String.format("<b>Error: no content found for</b><br>folder=%s<br>subject=%s<br>", mail.getFolderFullName(), mail.getSubject());
+                String msg = String.format("<b>Error: no content found for</b><br>folder=%s<br>subject=%s<br>", mail.getFolderFullName(),
+                        mail.getSubject());
                 this.webView.getEngine().loadContent("<h2><font color=\"red\">" + msg + "</font></h2>");
 
                 return;
@@ -532,7 +552,8 @@ public class MailController extends AbstractController
             // this.webView.getEngine().load(mailContent.getUrl().toExternalForm());
             this.webView.getEngine().loadContent(mailContent.getMessageContent(), mailContent.getMessageContentType());
         });
-        loadMailContentTask.setOnFailed(event -> {
+        loadMailContentTask.setOnFailed(event ->
+        {
             PIMApplication.unblockGUI();
             Throwable th = loadMailContentTask.getException();
 
@@ -547,7 +568,8 @@ public class MailController extends AbstractController
 
         ReadOnlyBooleanProperty runningProperty = loadMailContentTask.runningProperty();
         getProgressIndicator().visibleProperty().bind(runningProperty);
-        PIMApplication.getMainWindow().getScene().cursorProperty().bind(Bindings.when(runningProperty).then(Cursor.WAIT).otherwise(Cursor.DEFAULT));
+        PIMApplication.getMainWindow().getScene().cursorProperty()
+                .bind(Bindings.when(runningProperty).then(Cursor.WAIT).otherwise(Cursor.DEFAULT));
 
         getTaskExecutor().execute(loadMailContentTask);
     }
@@ -595,13 +617,15 @@ public class MailController extends AbstractController
             return;
         }
 
-        LoadMailsTask loadMailsTask = new LoadMailsTask(this.treeViewMail, Collections.singletonList(folder), getMailService(), getAccount(treeItem));
+        LoadMailsTask loadMailsTask = new LoadMailsTask(this.treeViewMail, Collections.singletonList(folder), getMailService(),
+                getAccount(treeItem));
 
         // Sichtbarkeit des ProgressIndikators und Cursors mit dem Laufstatus des Service/Task verknüpfen.
         ReadOnlyBooleanProperty runningProperty = loadMailsTask.runningProperty();
 
         getProgressIndicator().visibleProperty().bind(runningProperty);
-        PIMApplication.getMainWindow().getScene().cursorProperty().bind(Bindings.when(runningProperty).then(Cursor.WAIT).otherwise(Cursor.DEFAULT));
+        PIMApplication.getMainWindow().getScene().cursorProperty()
+                .bind(Bindings.when(runningProperty).then(Cursor.WAIT).otherwise(Cursor.DEFAULT));
 
         getTaskExecutor().execute(loadMailsTask);
     }
@@ -624,8 +648,8 @@ public class MailController extends AbstractController
             // columnFrom.prefWidthProperty().bind(this.tableViewMail.widthProperty().multiply(0.30D)); // 30% Breite
             columnFrom.setPrefWidth(300);
             columnReceived.setPrefWidth(180);
-            columnSubject.prefWidthProperty()
-                    .bind(this.tableViewMail.widthProperty().subtract(columnFrom.widthProperty().add(columnReceived.widthProperty()).add(2)));
+            columnSubject.prefWidthProperty().bind(
+                    this.tableViewMail.widthProperty().subtract(columnFrom.widthProperty().add(columnReceived.widthProperty()).add(2)));
 
             columnFrom.setSortable(false);
             columnFrom.setStyle("-fx-alignment: center-left;");

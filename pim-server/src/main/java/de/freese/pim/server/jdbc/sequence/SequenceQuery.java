@@ -16,7 +16,7 @@ import java.util.function.Function;
  * <pre>
  * - Oracle: select SEQUENCE.nextval from dual
  * - HSQLDB: call next value for SEQUENCE
- * - Default: select count(*) + 1 from TABLE
+ * - Default: select count(*) + 1 from TABLE; select nvl(max(id), 0) + 1 from TABLE
  * </pre>
  *
  * @author Thomas Freese

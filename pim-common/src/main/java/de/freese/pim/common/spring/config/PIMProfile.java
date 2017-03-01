@@ -9,6 +9,11 @@ package de.freese.pim.common.spring.config;
 public enum PIMProfile
 {
     /**
+     * Client mit Embedded Server
+     */
+    ClientEmbeddedServer,
+
+    /**
      * Client für REST-Server.
      */
     ClientREST,
@@ -36,5 +41,10 @@ public enum PIMProfile
     /**
      * Dedizierter Server
      */
-    Server;
+    Server,
+
+    /**
+     * SQLITE als Local-File DB
+     */
+    SqliteLocalFile;
 }

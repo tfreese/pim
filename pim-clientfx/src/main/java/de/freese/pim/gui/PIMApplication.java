@@ -3,14 +3,13 @@ package de.freese.pim.gui;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.List;
 import java.util.ResourceBundle;
-import org.apache.commons.cli.CommandLine;
+
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.HelpFormatter;
+import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
-import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
@@ -22,8 +21,9 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.core.io.Resource;
 import org.springframework.core.task.AsyncTaskExecutor;
 import org.springframework.scheduling.TaskScheduler;
+
 import com.sun.javafx.application.LauncherImpl;
-import de.freese.pim.common.spring.config.PIMProfile;
+
 import de.freese.pim.gui.main.MainController;
 import de.freese.pim.gui.utils.FXUtils;
 import de.freese.pim.gui.view.ErrorDialog;
@@ -57,12 +57,12 @@ public class PIMApplication extends Application implements ApplicationContextAwa
     /**
      *
      */
-    private static ApplicationContext applicationContext = null;
+    public static final Logger LOGGER = LoggerFactory.getLogger(PIMApplication.class);
 
     /**
      *
      */
-    public static final Logger LOGGER = LoggerFactory.getLogger(PIMApplication.class);
+    private static ApplicationContext applicationContext = null;
 
     /**
      *
@@ -88,22 +88,6 @@ public class PIMApplication extends Application implements ApplicationContextAwa
     public static ApplicationContext getApplicationContext()
     {
         return applicationContext;
-    }
-
-    /**
-     * Liefert die möglichen Optionen der Kommandozeile.<br>
-     * Dies sind die JRE Programm Argumente.
-     *
-     * @return {@link Options}
-     */
-    private static Options getCommandOptions()
-    {
-        // OptionGroup group = new OptionGroup();
-
-        Options options = new Options();
-        // options.addOptionGroup(group);
-
-        return options;
     }
 
     /**
@@ -152,24 +136,25 @@ public class PIMApplication extends Application implements ApplicationContextAwa
     }
 
     /**
-     * The main() method is ignored in correctly deployed JavaFX application. main() serves only as fallback in case the application can not be launched through
-     * deployment artifacts, e.g., in IDEs with limited FX support. NetBeans ignores main().
+     * The main() method is ignored in correctly deployed JavaFX application. main() serves only as fallback in case the application can not
+     * be launched through deployment artifacts, e.g., in IDEs with limited FX support. NetBeans ignores main().
      *
      * @param args the command line arguments
      */
     public static void main(final String[] args)
     {
-        // if (args.length == 0)
-        // {
-        // usage();
-        // }
+        if (args.length == 0)
+        {
+            usage();
+        }
 
-        CommandLine line = null;
+        // CommandLine line = null;
 
         try
         {
             CommandLineParser parser = new DefaultParser();
-            line = parser.parse(getCommandOptions(), args);
+            parser.parse(getCommandOptions(), args);
+            // line = parser.parse(getCommandOptions(), args);
         }
         catch (Exception ex)
         {
@@ -190,14 +175,16 @@ public class PIMApplication extends Application implements ApplicationContextAwa
 
         // System.setProperty("org.slf4j.simpleLogger.log.de.freese.pim", "DEBUG");
         // SysOutOverSLF4J.sendSystemOutAndErrToSLF4J();
-        Thread.setDefaultUncaughtExceptionHandler((t, ex) -> {
+        Thread.setDefaultUncaughtExceptionHandler((t, ex) ->
+        {
             LOGGER.error("***Default exception handler***");
             LOGGER.error(null, ex);
 
             new ErrorDialog().forThrowable(ex).showAndWait();
         });
 
-        Runnable task = () -> {
+        Runnable task = () ->
+        {
             // launch(args);
             LauncherImpl.launchApplication(PIMApplication.class, PIMPreloader.class, args);
         };
@@ -224,6 +211,38 @@ public class PIMApplication extends Application implements ApplicationContextAwa
     }
 
     /**
+     * Liefert die möglichen Optionen der Kommandozeile.<br>
+     * Dies sind die JRE Programm Argumente.
+     *
+     * @return {@link Options}
+     */
+    private static Options getCommandOptions()
+    {
+        Options options = new Options();
+
+        // --spring.profiles.active=ClientStandalone,HsqldbEmbeddedServer
+        // --spring.profiles.active=ClientREST --server.host=localhost --server.port=61223
+        // --spring.profiles.active=ClientEmbeddedServer,HsqldbEmbeddedServer
+
+        // OptionGroup group = new PreserveOrderOptionGroup();
+        // group.addOption(Option.builder().longOpt("spring.profiles.active").required().desc("=Profile1,Profile2").build());
+        // group.addOption(Option.builder().longOpt("server.host").required().hasArg().argName("=host").desc("Server Name").build());
+        // group.addOption(Option.builder().longOpt("server.port").required().hasArg().argName("=port").desc("Server Port").build());
+        // options.addOptionGroup(group);
+
+        options.addOption(
+                Option.builder().longOpt("spring.profiles.active").required().hasArg().argName("=Profile1,Profile2").valueSeparator('=')
+                        .desc("Profiles: [ClientStandalone,HsqldbEmbeddedServer], [ClientEmbeddedServer,HsqldbEmbeddedServer], [ClientREST]")
+                        .build());
+        options.addOption(
+                Option.builder().longOpt("server.host").hasArg().argName("=host").valueSeparator('=').desc("Server Name").build());
+        options.addOption(
+                Option.builder().longOpt("server.port").hasArg().argName("=port").valueSeparator('=').desc("Server Port").build());
+
+        return options;
+    }
+
+    /**
      *
      */
     private static void usage()
@@ -237,7 +256,7 @@ public class PIMApplication extends Application implements ApplicationContextAwa
         // footer.append("\nNamen / Werte mit Leerzeichen sind mit \"'... ...'\" anzugeben.");
         footer.append("\n@Thomas Freese");
 
-        formatter.printHelp(120, "P.I.M.\n", "\nParameter:", getCommandOptions(), footer.toString(), true);
+        formatter.printHelp(120, "P.I.M. Client\n", "\nParameter:", getCommandOptions(), footer.toString(), true);
 
         System.exit(-1);
     }
@@ -257,20 +276,20 @@ public class PIMApplication extends Application implements ApplicationContextAwa
         Thread.currentThread().setName("JavaFX-Init.");
 
         String[] args = getParameters().getRaw().toArray(new String[0]);
-        List<String> parameters = getParameters().getRaw();
-        String[] profiles = null;
-
-        if (CollectionUtils.isEmpty(parameters))
-        {
-            profiles = new String[]
-            {
-                    PIMProfile.ClientStandalone.toString(), PIMProfile.HsqldbEmbeddedServer.toString()
-            };
-        }
-        else
-        {
-            profiles = parameters.toArray(new String[0]);
-        }
+        // List<String> parameters = getParameters().getRaw();
+        // String[] profiles = null;
+        //
+        // if (CollectionUtils.isEmpty(parameters))
+        // {
+        // profiles = new String[]
+        // {
+        // PIMProfile.ClientStandalone.toString(), PIMProfile.HsqldbEmbeddedServer.toString()
+        // };
+        // }
+        // else
+        // {
+        // profiles = parameters.toArray(new String[0]);
+        // }
 
         notifyPreloader(new PIMPreloaderNotification("Init Springframework"));
 
@@ -278,12 +297,12 @@ public class PIMApplication extends Application implements ApplicationContextAwa
         //
         // @formatter:off
         SpringApplication application = new SpringApplicationBuilder(PIMApplication.class)
-                .headless(false) // Default true, hier false wegen Swing
-                .web(false) // Wird eigentlich automatisch ermittelt.
-                .profiles(profiles)
+                .headless(false) // Default true, hier false wegen JavaFX
+//                .web(false) // Wird eigentlich automatisch ermittelt.
+//                .profiles(profiles)
                 .registerShutdownHook(true) // Default true
                 //.banner(new MyBanner())
-                //.listeners(new ApplicationPidFileWriter("eps-monitor.pid"))
+                //.listeners(new ApplicationPidFileWriter("pim-client.pid"))
                 //.run(args)
                 .build();
 //        SpringApplicationBuilder()
@@ -310,6 +329,8 @@ public class PIMApplication extends Application implements ApplicationContextAwa
         // @formatter:on
 
         application.run(args);
+
+        // getApplicationContext().getAutowireCapableBeanFactory().autowireBean(this);
 
         LOGGER.info("Start P.I.M.");
         notifyPreloader(new PIMPreloaderNotification("Start P.I.M."));
@@ -342,75 +363,85 @@ public class PIMApplication extends Application implements ApplicationContextAwa
     @Override
     public void start(final Stage primaryStage) throws Exception
     {
-        // "JavaFX Application Thread" umbenennen.
-        Thread.currentThread().setName("JavaFX-Appl.");
-
-        PIMApplication.mainWindow = primaryStage;
-
-        notifyPreloader(new PIMPreloaderNotification("Init GUI"));
-        // setUserAgentStylesheet(Application.STYLESHEET_CASPIAN);
-        // setUserAgentStylesheet(Application.STYLESHEET_MODENA);
-
-        ResourceBundle resources = ResourceBundle.getBundle("bundles/pim");
-
-        MainController mainController = new MainController(resources);
-
-        Scene scene = new Scene((Parent) mainController.getMainNode());
-        // Scene scene = new Scene((Parent) mainController.getMainNode(), 1400, 900);
-        scene.getStylesheets().add("/styles/styles.css");
-
-        primaryStage.getIcons().add(new Image("images/pim.png"));
-        primaryStage.setTitle(resources.getString("titel"));
-        primaryStage.setScene(scene);
-        // primaryStage.centerOnScreen();
-        // primaryStage.setMaximized(true);
-
-        // Default: GUI auf 2. Monitor, wenn vorhanden.
-        ObservableList<Screen> screens = Screen.getScreens();
-
-        if (screens.size() > 1)
+        try
         {
-            screen = screens.get(1);
-        }
-        else
-        {
-            screen = screens.get(0);
-        }
+            // "JavaFX Application Thread" umbenennen.
+            Thread.currentThread().setName("JavaFX-Appl.");
 
-        // Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
-        Rectangle2D screenBounds = screen.getVisualBounds();
+            PIMApplication.mainWindow = primaryStage;
 
-        primaryStage.setX(screenBounds.getMinX() + 100);
-        primaryStage.setY(screenBounds.getMinY() + 100);
-        primaryStage.setWidth(screenBounds.getWidth() - 200);
-        primaryStage.setHeight(screenBounds.getHeight() - 200);
+            notifyPreloader(new PIMPreloaderNotification("Init GUI"));
+            // setUserAgentStylesheet(Application.STYLESHEET_CASPIAN);
+            // setUserAgentStylesheet(Application.STYLESHEET_MODENA);
 
-        // After the app is ready, show the stage
-        this.ready.addListener((observable, oldValue, newValue) -> {
-            if (Boolean.TRUE.equals(newValue))
+            ResourceBundle resources = ResourceBundle.getBundle("bundles/pim");
+
+            MainController mainController = new MainController(resources);
+
+            Scene scene = new Scene((Parent) mainController.getMainNode());
+            // Scene scene = new Scene((Parent) mainController.getMainNode(), 1400, 900);
+            scene.getStylesheets().add("/styles/styles.css");
+
+            primaryStage.getIcons().add(new Image("images/pim.png"));
+            primaryStage.setTitle(resources.getString("titel"));
+            primaryStage.setScene(scene);
+            // primaryStage.centerOnScreen();
+            // primaryStage.setMaximized(true);
+
+            // Default: GUI auf 2. Monitor, wenn vorhanden.
+            ObservableList<Screen> screens = Screen.getScreens();
+
+            if (screens.size() > 1)
             {
-                Platform.runLater(() -> {
-                    primaryStage.show();
-
-                    // System.setOut(new PrintStream(new TextAreaOutputStream(MainView.LOG_TEXT_AREA)));
-                    // System.setErr(new PrintStream(new TextAreaOutputStream(MainView.LOG_TEXT_AREA)));
-                    mainController.selectDefaultView();
-                });
+                screen = screens.get(1);
             }
-        });
+            else
+            {
+                screen = screens.get(0);
+            }
 
-        // After init is ready, the app is ready to be shown.
-        // Do this before hiding the preloader stage to prevent the app from exiting prematurely.
-        // notifyPreloader(new ProgressNotification(1.0D));
-        this.ready.setValue(Boolean.TRUE);
-        notifyPreloader(new StateChangeNotification(StateChangeNotification.Type.BEFORE_START));
+            // Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
+            Rectangle2D screenBounds = screen.getVisualBounds();
 
-        // // After init is ready, the app is ready to be shown.
-        // // Do this before hiding the preloader stage to prevent the app from exiting prematurely.
-        // PIMApplication.this.ready.setValue(Boolean.TRUE);
-        // notifyPreloader(new StateChangeNotification(StateChangeNotification.Type.BEFORE_START));
-        // }).start();
-        // getScheduledExecutorService().scheduleWithFixedDelay(() -> LOGGER.info(""), 1L, 3L, TimeUnit.SECONDS);
+            primaryStage.setX(screenBounds.getMinX() + 100);
+            primaryStage.setY(screenBounds.getMinY() + 100);
+            primaryStage.setWidth(screenBounds.getWidth() - 200);
+            primaryStage.setHeight(screenBounds.getHeight() - 200);
+
+            // After the app is ready, show the stage
+            this.ready.addListener((observable, oldValue, newValue) ->
+            {
+                if (Boolean.TRUE.equals(newValue))
+                {
+                    Platform.runLater(() ->
+                    {
+                        primaryStage.show();
+
+                        // System.setOut(new PrintStream(new TextAreaOutputStream(MainView.LOG_TEXT_AREA)));
+                        // System.setErr(new PrintStream(new TextAreaOutputStream(MainView.LOG_TEXT_AREA)));
+                        mainController.selectDefaultView();
+                    });
+                }
+            });
+
+            // After init is ready, the app is ready to be shown.
+            // Do this before hiding the preloader stage to prevent the app from exiting prematurely.
+            // notifyPreloader(new ProgressNotification(1.0D));
+            this.ready.setValue(Boolean.TRUE);
+            notifyPreloader(new StateChangeNotification(StateChangeNotification.Type.BEFORE_START));
+
+            // // After init is ready, the app is ready to be shown.
+            // // Do this before hiding the preloader stage to prevent the app from exiting prematurely.
+            // PIMApplication.this.ready.setValue(Boolean.TRUE);
+            // notifyPreloader(new StateChangeNotification(StateChangeNotification.Type.BEFORE_START));
+            // }).start();
+            // getScheduledExecutorService().scheduleWithFixedDelay(() -> LOGGER.info(""), 1L, 3L, TimeUnit.SECONDS);
+        }
+        catch (Throwable th)
+        {
+            LOGGER.error(null, th);
+            throw th;
+        }
     }
 
     /**

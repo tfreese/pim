@@ -20,7 +20,7 @@ import org.springframework.scheduling.concurrent.ThreadPoolExecutorFactoryBean;
  */
 @ComponentScan(basePackages =
 {
-        "de.freese.pim"
+    "de.freese.pim"
 })
 public abstract class AbstractPIMClientConfig
 {
@@ -59,6 +59,7 @@ public abstract class AbstractPIMClientConfig
 
     /**
      * @param pimHome String
+     *
      * @return {@link Path}
      */
     @Bean
@@ -72,12 +73,13 @@ public abstract class AbstractPIMClientConfig
 
     /**
      * @param executorService {@link ExecutorService}
+     *
      * @return {@link AsyncTaskExecutor}
      */
     @Bean(
-    {
-            "taskExecutor", "serverTaskExecutor"
-    })
+            {
+                "taskExecutor", "serverTaskExecutor"
+            })
     public AsyncTaskExecutor taskExecutor(final ExecutorService executorService)
     {
         AsyncTaskExecutor bean = new ConcurrentTaskExecutor(executorService);
