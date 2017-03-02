@@ -7,6 +7,7 @@ package de.freese.pim.server.jdbc.sequence;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
+import java.util.Random;
 import java.util.function.Function;
 
 /**
@@ -24,6 +25,11 @@ import java.util.function.Function;
 @FunctionalInterface
 public interface SequenceQuery extends Function<String, String>
 {
+    /**
+     *
+     */
+    static final Random RANDOM = new Random(System.currentTimeMillis());
+
     /**
      * Ermittelt anhand der {@link DatabaseMetaData} das passende SQL.
      *
@@ -51,7 +57,7 @@ public interface SequenceQuery extends Function<String, String>
                 query = seq -> "call next value for " + seq;
                 break;
             case "sqlite":
-                query = seq -> "select count(*) + 1 from " + seq;
+                query = seq -> Long.toString(RANDOM.nextLong());
                 break;
             // case "mysql":
             // // CREATE TABLE sequence (id INT NOT NULL);
