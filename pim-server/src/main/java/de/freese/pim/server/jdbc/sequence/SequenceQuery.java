@@ -57,7 +57,7 @@ public interface SequenceQuery extends Function<String, String>
                 query = seq -> "call next value for " + seq;
                 break;
             case "sqlite":
-                query = seq -> Long.toString(RANDOM.nextLong());
+                query = seq -> "select random()"; // "SELECT ABS(RANDOM() - 1)";
                 break;
             // case "mysql":
             // // CREATE TABLE sequence (id INT NOT NULL);
