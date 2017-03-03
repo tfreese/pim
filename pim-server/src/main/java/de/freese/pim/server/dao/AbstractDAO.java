@@ -6,10 +6,14 @@ package de.freese.pim.server.dao;
 
 import java.util.Objects;
 import java.util.concurrent.Semaphore;
+
 import javax.sql.DataSource;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
+
 import de.freese.pim.server.jdbc.JdbcTemplate;
 
 /**
@@ -18,7 +22,7 @@ import de.freese.pim.server.jdbc.JdbcTemplate;
  * @author Thomas Freese
  * @param <D> Konkreter DAO-Typ für Builder-Pattern
  */
-public abstract class AbstractDAO<D>
+public abstract class AbstractDAO<D> implements InitializingBean
 {
     /**
      *
@@ -49,6 +53,22 @@ public abstract class AbstractDAO<D>
     }
 
     /**
+     * @see org.springframework.beans.factory.InitializingBean#afterPropertiesSet()
+     */
+    @Override
+    public void afterPropertiesSet() throws Exception
+    {
+        Objects.requireNonNull(this.jdbcTemplate, "jdbcTemplate required");
+
+        if (this.maxConnections > 0)
+        {
+            this.jdbcTemplate.setMaxConnections(this.maxConnections);
+        }
+
+        this.jdbcTemplate.afterPropertiesSet();
+    }
+
+    /**
      * Ersetzt ggf. ein vorhandenes {@link JdbcTemplate}.
      *
      * @param dataSource {@link DataSource}
@@ -63,32 +83,6 @@ public abstract class AbstractDAO<D>
     }
 
     /**
-     * @return {@link DataSource}
-     */
-    protected DataSource getDataSource()
-    {
-        return getJdbcTemplate().getDataSource();
-    }
-
-    /**
-     * @return {@link JdbcTemplate}
-     */
-    protected JdbcTemplate getJdbcTemplate()
-    {
-        Objects.requireNonNull(this.jdbcTemplate, "jdbcTemplate required");
-
-        return this.jdbcTemplate;
-    }
-
-    /**
-     * @return {@link Logger}
-     */
-    protected Logger getLogger()
-    {
-        return this.logger;
-    }
-
-    /**
      * Setzt das {@link JdbcTemplate}.
      *
      * @param jdbcTemplate {@link JdbcTemplate}
@@ -100,6 +94,39 @@ public abstract class AbstractDAO<D>
         setJdbcTemplate(jdbcTemplate);
 
         return (D) this;
+    }
+
+    /**
+     * Ersetzt ggf. ein vorhandenes {@link JdbcTemplate}.
+     *
+     * @param dataSource {@link DataSource}
+     */
+    public void setDataSource(final DataSource dataSource)
+    {
+        Objects.requireNonNull(dataSource, "dataSource required");
+
+        setJdbcTemplate(new JdbcTemplate(dataSource));
+    }
+
+    /**
+     * Setzt das {@link JdbcTemplate}.
+     *
+     * @param jdbcTemplate {@link JdbcTemplate}
+     */
+    public void setJdbcTemplate(final JdbcTemplate jdbcTemplate)
+    {
+        this.jdbcTemplate = jdbcTemplate;
+    }
+
+    /**
+     * Erstellt einen {@link Semaphore} im {@link JdbcTemplate}, der den Zugriff auf die {@link DataSource} reguliert.
+     *
+     * @param maxConnections int
+     */
+    @Value("${spring.datasource.tomcat.maxActive:1}")
+    public void setMaxConnections(final int maxConnections)
+    {
+        this.maxConnections = maxConnections;
     }
 
     // /**
@@ -121,47 +148,26 @@ public abstract class AbstractDAO<D>
     // }
 
     /**
-     * Ersetzt ggf. ein vorhandenes {@link JdbcTemplate}.
-     *
-     * @param dataSource {@link DataSource}
+     * @return {@link DataSource}
      */
-    public void setDataSource(final DataSource dataSource)
+    protected DataSource getDataSource()
     {
-        Objects.requireNonNull(dataSource, "dataSource required");
-
-        setJdbcTemplate(new JdbcTemplate().dataSource(dataSource));
+        return getJdbcTemplate().getDataSource();
     }
 
     /**
-     * Setzt das {@link JdbcTemplate}.
-     *
-     * @param jdbcTemplate {@link JdbcTemplate}
+     * @return {@link JdbcTemplate}
      */
-    public void setJdbcTemplate(final JdbcTemplate jdbcTemplate)
+    protected JdbcTemplate getJdbcTemplate()
     {
-        Objects.requireNonNull(jdbcTemplate, "jdbcTemplate required");
-
-        this.jdbcTemplate = jdbcTemplate;
-
-        if (this.maxConnections > 0)
-        {
-            this.jdbcTemplate.setConnectionSemaphore(new Semaphore(this.maxConnections, true));
-        }
+        return this.jdbcTemplate;
     }
 
     /**
-     * Erstellt einen {@link Semaphore} im {@link JdbcTemplate}, der den Zugriff auf die {@link DataSource} reguliert.
-     *
-     * @param maxConnections int
+     * @return {@link Logger}
      */
-    @Value("${spring.datasource.tomcat.maxActive:1}")
-    public void setMaxConnections(final int maxConnections)
+    protected Logger getLogger()
     {
-        this.maxConnections = maxConnections;
-
-        if ((this.maxConnections > 0) && (this.jdbcTemplate != null))
-        {
-            this.jdbcTemplate.setConnectionSemaphore(new Semaphore(this.maxConnections, true));
-        }
+        return this.logger;
     }
 }

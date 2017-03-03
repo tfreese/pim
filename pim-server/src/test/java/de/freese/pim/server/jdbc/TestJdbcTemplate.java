@@ -133,7 +133,7 @@ public class TestJdbcTemplate
     {
         if (this.jdbcTemplate == null)
         {
-            this.jdbcTemplate = new JdbcTemplate().dataSource(this.dataSource);
+            this.jdbcTemplate = new JdbcTemplate(this.dataSource);
         }
     }
 

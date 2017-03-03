@@ -13,6 +13,7 @@ import java.util.List;
 import javax.sql.DataSource;
 
 import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -44,11 +45,13 @@ public class TestConnectionHolder extends AbstractDAOTextCase
     private static class ConnectionHolderJdbcTemplate extends JdbcTemplate
     {
         /**
-         * Erstellt ein neues {@link ConnectionHolderJdbcTemplate} Object.
+         * Erzeugt eine neue Instanz von {@link ConnectionHolderJdbcTemplate}
+         *
+         * @param dataSource {@link DataSource}
          */
-        public ConnectionHolderJdbcTemplate()
+        public ConnectionHolderJdbcTemplate(final DataSource dataSource)
         {
-            super();
+            super(dataSource);
         }
 
         /**
@@ -153,6 +156,15 @@ public class TestConnectionHolder extends AbstractDAOTextCase
     }
 
     /**
+    *
+    */
+    @BeforeClass
+    public static void beforeClass()
+    {
+        // No-Op
+    }
+
+    /**
      * @return {@link Iterable}
      * @throws Exception Falls was schief geht.
      */
@@ -160,8 +172,8 @@ public class TestConnectionHolder extends AbstractDAOTextCase
     public static Iterable<Object[]> connectionPool() throws Exception
     {
         DefaultAddressBookService defaultAddressBookService = new DefaultAddressBookService();
-        defaultAddressBookService.setAddressBookDAO(
-                new DefaultAddressBookDAO().jdbcTemplate(new ConnectionHolderJdbcTemplate().dataSource(dataSources.get(0))));
+        defaultAddressBookService
+                .setAddressBookDAO(new DefaultAddressBookDAO().jdbcTemplate(new ConnectionHolderJdbcTemplate(dataSources.get(0))));
 
         return Arrays.asList(new Object[][]
         {
@@ -174,7 +186,7 @@ public class TestConnectionHolder extends AbstractDAOTextCase
                 },
                 {
                         TxLambdaAddressBookDAO.class.getSimpleName(),
-                        new TxLambdaAddressBookDAO().jdbcTemplate(new ConnectionHolderJdbcTemplate().dataSource(dataSources.get(1)))
+                        new TxLambdaAddressBookDAO().jdbcTemplate(new ConnectionHolderJdbcTemplate(dataSources.get(1)))
                 }
         });
     }
