@@ -17,7 +17,7 @@ public class Shutdown
     {
         RestTemplate restTemplate = new RestTemplate();
         // restTemplate.exchange("http://localhost:61222/pim/shutdown", HttpMethod.POST, null, Void.class);
-        restTemplate.postForLocation("http://localhost:61223/pim/shutdown", null);
+        restTemplate.postForLocation("http://localhost:61222/pim/shutdown", null);
 
         // URL url = new URL("http://localhost:9000/shutdown");
         // HttpURLConnection connection = (HttpURLConnection) url.openConnection();

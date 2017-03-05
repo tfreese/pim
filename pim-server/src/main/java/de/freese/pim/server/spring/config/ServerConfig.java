@@ -36,12 +36,6 @@ public class ServerConfig extends WebMvcConfigurationSupport
     @Resource
     private ObjectMapper jsonMapper = null;
 
-    // /**
-    // *
-    // */
-    // @Resource(name = "serverTaskExecutor")
-    // private AsyncTaskExecutor taskExecutor = null;
-
     /**
      * Erzeugt eine neue Instanz von {@link ServerConfig}
      */

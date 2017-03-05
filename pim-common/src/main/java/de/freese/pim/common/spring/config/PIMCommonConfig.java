@@ -6,7 +6,6 @@ import java.util.TimeZone;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ThreadPoolExecutor;
-import javax.annotation.Resource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
@@ -33,11 +32,11 @@ public class PIMCommonConfig
         System.setProperty("java.util.concurrent.ForkJoinPool.common.threadFactory", "de.freese.pim.common.concurrent.PIMForkJoinWorkerThreadFactory");
     }
 
-    /**
-     *
-     */
-    @Resource
-    private ExecutorService executorService = null;
+    // /**
+    // *
+    // */
+    // @Resource
+    // private ExecutorService executorService = null;
 
     /**
      * Erzeugt eine neue Instanz von {@link PIMCommonConfig}
@@ -95,7 +94,7 @@ public class PIMCommonConfig
 
         ScheduledExecutorFactoryBean bean = new ScheduledExecutorFactoryBean();
         bean.setPoolSize(poolSize);
-        bean.setThreadPriority(5);
+        bean.setThreadPriority(Thread.NORM_PRIORITY);
         bean.setThreadNamePrefix("scheduler-");
         bean.setRejectedExecutionHandler(new ThreadPoolExecutor.AbortPolicy());
         bean.setExposeUnconfigurableExecutor(true);

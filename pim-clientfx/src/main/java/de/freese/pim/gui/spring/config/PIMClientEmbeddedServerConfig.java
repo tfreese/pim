@@ -5,11 +5,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ThreadPoolExecutor;
-
 import javax.annotation.Resource;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
@@ -20,15 +17,11 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.core.task.AsyncTaskExecutor;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.concurrent.ConcurrentTaskExecutor;
-import org.springframework.scheduling.concurrent.ConcurrentTaskScheduler;
-import org.springframework.scheduling.concurrent.ScheduledExecutorFactoryBean;
 import org.springframework.scheduling.concurrent.ThreadPoolExecutorFactoryBean;
 import org.springframework.util.SocketUtils;
 import org.springframework.web.servlet.config.annotation.AsyncSupportConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
@@ -68,12 +61,23 @@ public class PIMClientEmbeddedServerConfig extends WebMvcConfigurationSupport
     }
 
     /**
+     * @see org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport#configureAsyncSupport(org.springframework.web.servlet.config.annotation.AsyncSupportConfigurer)
+     */
+    @Override
+    protected void configureAsyncSupport(final AsyncSupportConfigurer configurer)
+    {
+        // Verlagert die asynchrone Ausführung von Server-Requests (Callable, WebAsyncTask) in diesen ThreadPool.
+        // Ansonsten würde für jeden Request immer ein neuer Thread erzeugt, siehe TaskExecutor des RequestMappingHandlerAdapter.
+        configurer.setTaskExecutor(taskExecutor(executorService().getObject()));
+    }
+
+    /**
      * @return {@link ThreadPoolExecutorFactoryBean}
      */
     @Bean
     public ThreadPoolExecutorFactoryBean executorService()
     {
-        int coreSize = Math.min(Runtime.getRuntime().availableProcessors() * 2, 8);
+        int coreSize = Runtime.getRuntime().availableProcessors() * 2;
         int maxSize = coreSize;
         int queueSize = maxSize * 5;
 
@@ -82,7 +86,7 @@ public class PIMClientEmbeddedServerConfig extends WebMvcConfigurationSupport
         bean.setMaxPoolSize(maxSize);
         bean.setKeepAliveSeconds(0);
         bean.setQueueCapacity(queueSize);
-        bean.setThreadPriority(5);
+        bean.setThreadPriority(Thread.NORM_PRIORITY);
         bean.setThreadNamePrefix("client-");
         bean.setRejectedExecutionHandler(new ThreadPoolExecutor.AbortPolicy());
         bean.setAllowCoreThreadTimeOut(false);
@@ -159,24 +163,6 @@ public class PIMClientEmbeddedServerConfig extends WebMvcConfigurationSupport
     }
 
     /**
-     * @return {@link ScheduledExecutorFactoryBean}
-     */
-    @Bean
-    public ScheduledExecutorFactoryBean scheduledExecutorService()
-    {
-        int poolSize = Math.max(Runtime.getRuntime().availableProcessors(), 4);
-
-        ScheduledExecutorFactoryBean bean = new ScheduledExecutorFactoryBean();
-        bean.setPoolSize(poolSize);
-        bean.setThreadPriority(5);
-        bean.setThreadNamePrefix("scheduler-");
-        bean.setRejectedExecutionHandler(new ThreadPoolExecutor.AbortPolicy());
-        bean.setExposeUnconfigurableExecutor(true);
-
-        return bean;
-    }
-
-    /**
      * @param executorService {@link ExecutorService}
      * @return {@link AsyncTaskExecutor}
      */
@@ -189,32 +175,6 @@ public class PIMClientEmbeddedServerConfig extends WebMvcConfigurationSupport
         AsyncTaskExecutor bean = new ConcurrentTaskExecutor(executorService);
 
         return bean;
-    }
-
-    /**
-     * @Bean({"taskScheduler", "taskExecutor"})
-     *
-     * @param executorService {@link ExecutorService}
-     * @param scheduledExecutorService {@link ScheduledExecutorService}
-     * @return {@link TaskScheduler}
-     */
-    @Bean
-    public TaskScheduler taskScheduler(final ExecutorService executorService, final ScheduledExecutorService scheduledExecutorService)
-    {
-        ConcurrentTaskScheduler bean = new ConcurrentTaskScheduler(executorService, scheduledExecutorService);
-
-        return bean;
-    }
-
-    /**
-     * @see org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport#configureAsyncSupport(org.springframework.web.servlet.config.annotation.AsyncSupportConfigurer)
-     */
-    @Override
-    protected void configureAsyncSupport(final AsyncSupportConfigurer configurer)
-    {
-        // Verlagert die asynchrone Ausführung von Server-Requests (Callable, WebAsyncTask) in diesen ThreadPool.
-        // Ansonsten würde für jeden Request immer ein neuer Thread erzeugt, siehe TaskExecutor des RequestMappingHandlerAdapter.
-        configurer.setTaskExecutor(taskExecutor(executorService().getObject()));
     }
 
     // @Component

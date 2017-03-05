@@ -3,14 +3,14 @@ package de.freese.pim.gui.service;
 
 import javax.annotation.Resource;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import de.freese.pim.common.service.AbstractService;
+import de.freese.pim.common.service.AbstractRemoteService;
 
 /**
  * Basis-Service für JavaFX.
  *
  * @author Thomas Freese
  */
-public abstract class AbstractFXService extends AbstractService
+public abstract class AbstractFXService extends AbstractRemoteService
 {
     /**
     *

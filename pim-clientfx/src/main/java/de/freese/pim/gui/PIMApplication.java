@@ -98,7 +98,7 @@ public class PIMApplication extends Application implements ApplicationContextAwa
         Options options = new Options();
 
         // --spring.profiles.active=ClientStandalone,HsqldbEmbeddedServer
-        // --spring.profiles.active=ClientREST --server.host=localhost --server.port=61223
+        // --spring.profiles.active=ClientREST --server.host=localhost --server.port=61222
         // --spring.profiles.active=ClientEmbeddedServer,HsqldbEmbeddedServer
         // --spring.profiles.active=ClientEmbeddedServer,SqliteLocalFile
 
