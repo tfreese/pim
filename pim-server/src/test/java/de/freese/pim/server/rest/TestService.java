@@ -8,9 +8,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
-
 import javax.annotation.Resource;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.task.AsyncTaskExecutor;
@@ -27,8 +25,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupp
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyEmitter;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
-import de.freese.pim.common.spring.autoconfigure.taskexcecutor.TaskExecutorAutoConfiguration;
-
 /**
  * https://spring.io/guides/tutorials/bookmarks/<br>
  * https://twilblog.github.io/java/spring/rest/file/stream/2015/08/14/return-a-file-stream-from-spring-rest.html<br>
@@ -43,15 +39,15 @@ import de.freese.pim.common.spring.autoconfigure.taskexcecutor.TaskExecutorAutoC
  */
 @RestController
 @RequestMapping(path = "/test", produces =
-{
-        MediaType.APPLICATION_JSON_UTF8_VALUE
+        {
+            MediaType.APPLICATION_JSON_UTF8_VALUE
 }, headers = "Accept=application/json")
 // @MultipartConfig(fileSizeThreshold = 20971520)
 public class TestService
 {
     /**
-    *
-    */
+     *
+     */
     private Logger logger = LoggerFactory.getLogger(TestService.class);
 
     /**
@@ -155,6 +151,7 @@ public class TestService
      * http://localhost:61222/greeter/test/?name=World
      *
      * @param name String
+     *
      * @return {@link Map}
      */
     @GetMapping("/greeting")
