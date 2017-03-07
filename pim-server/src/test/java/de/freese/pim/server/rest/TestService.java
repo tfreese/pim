@@ -39,8 +39,8 @@ import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBo
  */
 @RestController
 @RequestMapping(path = "/test", produces =
-        {
-            MediaType.APPLICATION_JSON_UTF8_VALUE
+{
+        MediaType.APPLICATION_JSON_UTF8_VALUE
 }, headers = "Accept=application/json")
 // @MultipartConfig(fileSizeThreshold = 20971520)
 public class TestService
@@ -53,7 +53,6 @@ public class TestService
     /**
      * @see ThreadPoolTaskExecutor
      * @see ConcurrentTaskExecutor
-     * @see TaskExecutorAutoConfiguration
      */
     @Resource
     private AsyncTaskExecutor taskExecutor = null;
@@ -67,16 +66,14 @@ public class TestService
     }
 
     /**
-     * Läuft im ThreadPool "MvcAsync" des RequestMappingHandlerAdapter, wenn über {@link WebMvcConfigurationSupport} nicht anders
-     * konfiguriert.
+     * Läuft im ThreadPool "MvcAsync" des RequestMappingHandlerAdapter, wenn über {@link WebMvcConfigurationSupport} nicht anders konfiguriert.
      *
      * @return {@link Future}
      */
     @GetMapping("/asyncDateCallable")
     public Callable<String> asycDateCallable()
     {
-        Callable<String> callable = () ->
-        {
+        Callable<String> callable = () -> {
             getLogger().info("asyncDateCallable: thread={}", Thread.currentThread().getName());
             Thread.sleep(TimeUnit.SECONDS.toMillis(1));
 
@@ -96,8 +93,7 @@ public class TestService
     {
         DeferredResult<String> deferredResult = new DeferredResult<>();
 
-        CompletableFuture.supplyAsync(() ->
-        {
+        CompletableFuture.supplyAsync(() -> {
             try
             {
                 getLogger().info("supplyAsync: thread={}", Thread.currentThread().getName());
@@ -109,8 +105,7 @@ public class TestService
             {
                 throw new RuntimeException(ex);
             }
-        }, getTaskExecutor()).whenCompleteAsync((result, throwable) ->
-        {
+        }, getTaskExecutor()).whenCompleteAsync((result, throwable) -> {
             getLogger().info("whenCompleteAsync: thread={}", Thread.currentThread().getName());
 
             if (throwable != null)
@@ -127,16 +122,14 @@ public class TestService
     }
 
     /**
-     * Läuft im ThreadPool "MvcAsync" des RequestMappingHandlerAdapter, wenn über {@link WebMvcConfigurationSupport} nicht anders
-     * konfiguriert.
+     * Läuft im ThreadPool "MvcAsync" des RequestMappingHandlerAdapter, wenn über {@link WebMvcConfigurationSupport} nicht anders konfiguriert.
      *
      * @return {@link WebAsyncTask}
      */
     @GetMapping("/asyncDateWebAsyncTask")
     public WebAsyncTask<String> asycDateWebAsyncTask()
     {
-        Callable<String> callable = () ->
-        {
+        Callable<String> callable = () -> {
             getLogger().info("asycDateWebAsyncTask: thread={}", Thread.currentThread().getName());
             Thread.sleep(TimeUnit.SECONDS.toMillis(1));
 
@@ -145,24 +138,6 @@ public class TestService
 
         return new WebAsyncTask<>(callable);
         // return new WebAsyncTask<>(TimeUnit.SECONDS.toMillis(5), getTaskExecutor(), callable);
-    }
-
-    /**
-     * http://localhost:61222/greeter/test/?name=World
-     *
-     * @param name String
-     *
-     * @return {@link Map}
-     */
-    @GetMapping("/greeting")
-    // @RequestMapping(path = "/greeting/{name}", method = RequestMethod.GET);
-    // @PathVariable("name")
-    public Map<String, String> greeting(@RequestParam(value = "name", defaultValue = "World") final String name)
-    {
-        Map<String, String> map = new HashMap<>();
-        map.put("hello", name);
-
-        return map;
     }
 
     /**
@@ -179,5 +154,22 @@ public class TestService
     protected AsyncTaskExecutor getTaskExecutor()
     {
         return this.taskExecutor;
+    }
+
+    /**
+     * http://localhost:61222/greeter/test/?name=World
+     *
+     * @param name String
+     * @return {@link Map}
+     */
+    @GetMapping("/greeting")
+    // @RequestMapping(path = "/greeting/{name}", method = RequestMethod.GET);
+    // @PathVariable("name")
+    public Map<String, String> greeting(@RequestParam(value = "name", defaultValue = "World") final String name)
+    {
+        Map<String, String> map = new HashMap<>();
+        map.put("hello", name);
+
+        return map;
     }
 }
