@@ -93,4 +93,13 @@ public class TestRegEx
         Assert.assertTrue("a.c@b.de".matches(MAIL_REGEX));
         Assert.assertTrue("a.c@b.com".matches(MAIL_REGEX));
     }
+
+    /**
+     * Richtige Mail-Formate.
+     */
+    @Test
+    public void test030Misc()
+    {
+        Assert.assertTrue("20040117.000000".matches(".*\\d{6}.*"));
+    }
 }
