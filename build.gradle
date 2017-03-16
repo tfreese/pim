@@ -1,25 +1,31 @@
+buildscript {
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:$version_spring_boot")
+    }
+}
+
 allprojects {
     apply plugin: "base"
-    
+
     group = "de.freese.pim"
     version = "0.0.1-SNAPSHOT"
 }
 
-description = "Parent for the Personal Information Management Application" 
+description = "Parent for the Personal Information Management Application"
 
 subprojects {
     apply plugin: "java"
 
     //    dependencies {
     //        compile("org.slf4j:slf4j-api:$version_slf4j")
-    //        
+    //
     //        testCompile("junit:junit:$version_junit")
     //    }
-} 
+}
 
 project("pim-common") {
     description = "Common Components for PIM"
-    
+
     dependencies {
         compile("com.fasterxml.jackson.core:jackson-databind:$version_jackson")
         compile("commons-cli:commons-cli:$version_commons_cli")
@@ -28,24 +34,19 @@ project("pim-common") {
         compile("org.apache.commons:commons-lang3:$version_commons_lang")
         compile("org.springframework.boot:spring-boot-autoconfigure:$version_spring_boot")
         compile("org.springframework.boot:spring-boot-starter-logging:$version_spring_boot")
-		
+
         testCompile("org.springframework.boot:spring-boot-starter-test:$version_spring_boot")
-    }    
+    }
 }
 
 project("pim-server") {
-    buildscript {
-        dependencies {
-            classpath("org.springframework.boot:spring-boot-gradle-plugin:$version_spring_boot")
-        }
-    }
     apply plugin: "org.springframework.boot"
 
     description = "Server for PIM"
 
     //Für Placeholder in *.properties
-    ext.artifactId = project.name
-	
+    //ext.artifactId = project.name
+
     // Start: gradle clean bootRun
     // Repackage: gradle clean bootRepackage
     springBoot {
@@ -53,46 +54,52 @@ project("pim-server") {
         layout = "ZIP"
 
         backupSource = false
-    }	
+    }
 
     // bootRun benutzt sonst nur die Resourcen in src/main/resources
     processResources {
-        filesMatching('**/*.properties') {
+        //filesMatching('**/*.properties')
+        filesMatching('application-Server.properties')
+        {
             expand(project.properties)
+            //            expand ('@project.artifactId': project.name,
+            //                '@project.description': project.description,
+            //                '@project.version': project.version
+            //            )
+
+            //            expand '${project.artifactId}': project.name
+            //            expand '${project.description}': project.description
+            //            expand '${project.version}': project.version
         }
     }
-    
+
     dependencies {
         compile project(":pim-common")
-		
+
         compile("com.sun.mail:javax.mail:$version_mail") {
             exclude group:'javax.activation', module:'activation'
         }
-        compile("org.flywaydb:flyway:$version_flyway")		
+        compile("org.flywaydb:flyway-core:$version_flyway")
+        compile("org.hsqldb:hsqldb:$version_hsqldb")
         compile("org.springframework.boot:spring-boot-starter-jdbc:$version_spring_boot")
         compile("org.springframework.boot:spring-boot-starter-web:$version_spring_boot")
-		
+
         runtime("org.springframework.boot:spring-boot-starter-actuator:$version_spring_boot")
         runtime("org.xerial:sqlite-jdbc:$version_sqlite")
-		
+
         testCompile("org.jsoup:jsoup:$version_jsoup")
         testCompile("org.springframework.boot:spring-boot-starter-test:$version_spring_boot")
-    }  
+    }
 }
 
 project("pim-clientfx") {
-    buildscript {
-        dependencies {
-            classpath("org.springframework.boot:spring-boot-gradle-plugin:$version_spring_boot")
-        }
-    }
     apply plugin: "org.springframework.boot"
 
     description = "GUI for PIM"
-	
+
     //Für Placeholder in *.properties
     ext.artifactId = project.name
-	
+
     // Start: gradle clean bootRun
     // Repackage: gradle clean bootRepackage
     springBoot {
@@ -100,17 +107,19 @@ project("pim-clientfx") {
         layout = "ZIP"
 
         backupSource = false
-    }	
+    }
 
     // bootRun benutzt sonst nur die Resourcen in src/main/resources
     processResources {
-        filesMatching('**/*.properties') {
+        //filesMatching('**/*.properties')
+        filesMatching('application-ClientEmbeddedServer.properties')
+        {
             expand(project.properties)
         }
-    }	
-    
+    }
+
     dependencies {
         compile project(":pim-common")
         compile project(":pim-server")
-    }    
+    }
 }
