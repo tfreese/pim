@@ -1,5 +1,5 @@
 // Created: 13.12.2016
-package de.freese.pim.gui.mail;
+package de.freese.pim.gui.mail.view;
 
 import de.freese.pim.gui.mail.model.FXMail;
 import de.freese.pim.gui.view.View;
@@ -18,7 +18,6 @@ import javafx.scene.control.TreeView;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
-import javafx.scene.web.WebView;
 
 /**
  * View des Mail-Clients.
@@ -45,6 +44,12 @@ public class MailView implements View
     // */
     // @FXML
     // private HTMLEditor editor = null;
+
+    /**
+    *
+    */
+    @FXML
+    private MailContentView mailContentView;
 
     /**
      *
@@ -81,12 +86,6 @@ public class MailView implements View
     */
     @FXML
     private TreeView<Object> treeViewMail = null;
-
-    /**
-    *
-    */
-    @FXML
-    private WebView webView;
 
     /**
      * Erzeugt eine neue Instanz von {@link MailView}
@@ -133,8 +132,8 @@ public class MailView implements View
         splitPane.setOrientation(Orientation.VERTICAL);
         splitPane.getItems().add(this.tableViewMail);
 
-        this.webView = new WebView();
-        splitPane.getItems().add(this.webView);
+        this.mailContentView = new MailContentView();
+        splitPane.getItems().add(this.mailContentView);
 
         // this.editor = new HTMLEditor();
         // splitPane.getItems().add(this.editor);
