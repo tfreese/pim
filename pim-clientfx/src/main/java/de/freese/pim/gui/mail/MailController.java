@@ -1,8 +1,6 @@
 // Created: 13.12.2016
 package de.freese.pim.gui.mail;
 
-import java.awt.Desktop;
-import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -20,11 +18,10 @@ import de.freese.pim.gui.mail.model.FXMail;
 import de.freese.pim.gui.mail.model.FXMailAccount;
 import de.freese.pim.gui.mail.model.FXMailFolder;
 import de.freese.pim.gui.mail.service.FXMailService;
-import de.freese.pim.gui.mail.utils.InlineUrlStreamHandler;
 import de.freese.pim.gui.mail.utils.MailUrlStreamHandlerFactory;
+import de.freese.pim.gui.mail.view.MailContentView;
 import de.freese.pim.gui.utils.FXUtils;
 import de.freese.pim.gui.view.ErrorDialog;
-import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyBooleanProperty;
@@ -44,7 +41,6 @@ import javafx.scene.control.TreeCell;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.paint.Color;
-import javafx.scene.web.WebView;
 
 /**
  * Controller des Mail-Clients.
@@ -75,6 +71,12 @@ public class MailController extends AbstractController
     // * DateTimeFormatter formatterDate = DateTimeFormatter.ofPattern("EE dd.MM.yy HH:mm:ss");
     // */
     // private final DateFormat formatterDate = new SimpleDateFormat("EE dd.MM.yy HH:mm:ss");
+
+    /**
+     *
+     */
+    @FXML
+    private MailContentView mailContentView = null;
 
     /**
      *
@@ -136,12 +138,6 @@ public class MailController extends AbstractController
      */
     @FXML
     private TreeView<Object> treeViewMail = null;
-
-    /**
-     *
-     */
-    @FXML
-    private WebView webView = null;
 
     /**
      * Erzeugt eine neue Instanz von {@link MailController}
@@ -363,34 +359,6 @@ public class MailController extends AbstractController
 
             return style;
         }, getProgressIndicator().progressProperty()));
-
-        this.webView.getEngine().locationProperty().addListener((observable, oldValue, newValue) ->
-        {
-            try
-            {
-                URI address = new URI(newValue);
-                getLogger().debug(address.toString());
-
-                // Desktop.getDesktop().browse(address);
-                Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
-
-                if ((desktop != null) && desktop.isSupported(Desktop.Action.BROWSE))
-                {
-                    desktop.browse(address);
-
-                    Platform.runLater(() -> this.webView.getEngine().load(oldValue));
-                }
-
-                // Ansonsten wird der Link in der WebEngine geladen.
-                // if ((address.getQuery() + "").indexOf("_openmodal=true") > -1)
-            }
-            catch (Exception ex)
-            {
-                getLogger().error(null, ex);
-
-                new ErrorDialog().forThrowable(ex).showAndWait();
-            }
-        });
     }
 
     /**
@@ -494,12 +462,7 @@ public class MailController extends AbstractController
      */
     private void selectedMail(final FXMail mail)
     {
-        // Delete cache for navigate back.
-        this.webView.getEngine().load("about:blank");
-        // this.webView.getEngine().loadContent("");
-
-        // Delete cookies.
-        java.net.CookieHandler.setDefault(new java.net.CookieManager());
+        this.mailContentView.newMailContent(null, null);
 
         if (mail == null)
         {
@@ -522,8 +485,6 @@ public class MailController extends AbstractController
             @Override
             protected MailContent call() throws Exception
             {
-                // MailContent mailContent = getMailService().loadMailContent(account.getID(), mail,
-                // (current, size) -> updateProgress(current, size));
                 MailContent mailContent = getMailService().loadMailContent(account, mail, this::updateProgress);
 
                 return mailContent;
@@ -534,23 +495,7 @@ public class MailController extends AbstractController
             PIMApplication.unblockGUI();
             MailContent mailContent = loadMailContentTask.getValue();
 
-            if (mailContent == null)
-            {
-                // String msg = String.format("no content: %s/%s%n", mail.getFolder().getFullName(), mail.getSubject());
-                // getLogger().error(msg);
-                // new ErrorDialog().headerText(msg).showAndWait();
-
-                String msg = String.format("<b>Error: no content found for</b><br>folder=%s<br>subject=%s<br>", mail.getFolderFullName(),
-                        mail.getSubject());
-                this.webView.getEngine().loadContent("<h2><font color=\"red\">" + msg + "</font></h2>");
-
-                return;
-            }
-
-            InlineUrlStreamHandler.setMailContent(mailContent);
-
-            // this.webView.getEngine().load(mailContent.getUrl().toExternalForm());
-            this.webView.getEngine().loadContent(mailContent.getMessageContent(), mailContent.getMessageContentType());
+            this.mailContentView.newMailContent(mail, mailContent);
         });
         loadMailContentTask.setOnFailed(event ->
         {
@@ -559,7 +504,7 @@ public class MailController extends AbstractController
 
             getLogger().error(null, th);
 
-            this.webView.getEngine().loadContent(ErrorDialog.toString(th), "text/plain");
+            this.mailContentView.displayThrowable(th);
         });
 
         // loadMailTask.progressProperty().addListener((obs, old, progress) -> getLogger().debug("{} %", progress.doubleValue() * 100));

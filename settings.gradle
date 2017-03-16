@@ -1,0 +1,5 @@
+rootProject.name = "pim"
+
+include "pim-common"
+include "pim-server"
+include "pim-clientfx"

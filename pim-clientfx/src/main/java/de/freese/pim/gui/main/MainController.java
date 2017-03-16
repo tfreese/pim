@@ -8,7 +8,7 @@ import de.freese.pim.gui.addressbook.ContactController;
 import de.freese.pim.gui.addressbook.ContactView;
 import de.freese.pim.gui.controller.AbstractController;
 import de.freese.pim.gui.mail.MailController;
-import de.freese.pim.gui.mail.MailView;
+import de.freese.pim.gui.mail.view.MailView;
 import de.freese.pim.gui.utils.FXUtils;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
