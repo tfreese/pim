@@ -16,11 +16,12 @@ description = "Parent for the Personal Information Management Application"
 subprojects {
     apply plugin: "java"
 
-    //    dependencies {
-    //        compile("org.slf4j:slf4j-api:$version_slf4j")
-    //
-    //        testCompile("junit:junit:$version_junit")
-    //    }
+    dependencies {
+        compile("ch.qos.logback:logback-classic:$version_logback")
+        //            compile("org.slf4j:slf4j-api:$version_slf4j")
+
+        //            testCompile("junit:junit:$version_junit")
+    }
 }
 
 project("pim-common") {
@@ -45,7 +46,7 @@ project("pim-server") {
     description = "Server for PIM"
 
     //Für Placeholder in *.properties
-    //ext.artifactId = project.name
+    ext.artifactId = project.name
 
     // Start: gradle clean bootRun
     // Repackage: gradle clean bootRepackage
@@ -55,9 +56,28 @@ project("pim-server") {
 
         backupSource = false
     }
+    //applicationDefaultJvmArgs = ["-Dfile.encoding=UTF-8", "-verbose:class"]
+    //gradle bootRun -PjvmArgs="-Dwhatever1=value1 -Dwhatever2=value2"
+    bootRun {
+        //        if ( project.hasProperty('jvmArgs') ) {
+        //            println project.jvmArgs
+        //            //jvmArgs project.jvmArgs.split('\\s+')
+        //            jvmargs (project.jvmArgs.split("\\s+") as List)
+        //            println jvmArgs
+        //        }
+
+        args = ["--spring.profiles.active=Server,HsqldbEmbeddedServer", "--server.port=65555"]
+
+        //        systemProperty 'spring.profiles.active', 'Server,HsqldbEmbeddedServer'
+        //        systemProperty 'server.port', '65555'
+    }
 
     // bootRun benutzt sonst nur die Resourcen in src/main/resources
     processResources {
+        //        inputs.property('project.artifactId', project.name)
+        //        inputs.property('project.description', project.description)
+        //        inputs.property('project.version', project.version)
+
         //filesMatching('**/*.properties')
         filesMatching('application-Server.properties')
         {
@@ -67,9 +87,9 @@ project("pim-server") {
             //                '@project.version': project.version
             //            )
 
-            //            expand '${project.artifactId}': project.name
-            //            expand '${project.description}': project.description
-            //            expand '${project.version}': project.version
+            //            expand project.artifactId: project.name
+            //            expand project.description: project.description
+            //            expand project.version: project.version
         }
     }
 
