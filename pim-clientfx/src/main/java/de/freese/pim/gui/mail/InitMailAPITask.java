@@ -8,8 +8,8 @@ import java.util.stream.Stream;
 import org.apache.commons.collections4.ListUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.task.TaskExecutor;
-import de.freese.pim.gui.PIMApplication;
+import org.springframework.core.task.AsyncTaskExecutor;
+import de.freese.pim.common.spring.SpringContext;
 import de.freese.pim.gui.mail.model.FXMail;
 import de.freese.pim.gui.mail.model.FXMailAccount;
 import de.freese.pim.gui.mail.model.FXMailFolder;
@@ -107,7 +107,7 @@ public class InitMailAPITask extends Task<List<FXMailFolder>>
      */
     protected void loadMailsByCompletableFuture(final List<FXMailFolder> folders, final TreeView<Object> treeView)
     {
-        TaskExecutor taskExecutor = PIMApplication.getTaskExecutor();
+        AsyncTaskExecutor taskExecutor = SpringContext.getAsyncTaskExecutor();
         CompletableFuture<Void> master = CompletableFuture.completedFuture(null);
 
         for (FXMailFolder mf : folders)
@@ -179,7 +179,7 @@ public class InitMailAPITask extends Task<List<FXMailFolder>>
      */
     protected void loadMailsByPartitions(final List<FXMailFolder> folders, final TreeView<Object> treeView)
     {
-        TaskExecutor taskExecutor = PIMApplication.getTaskExecutor();
+        AsyncTaskExecutor taskExecutor = SpringContext.getAsyncTaskExecutor();
 
         int partitionSize = Math.max(1, (folders.size() / 3) + 1); // Jeweils 3 Stores pro MailAPI.
         // partitionSize = folders.size();

@@ -5,7 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.task.AsyncTaskExecutor;
 import org.springframework.scheduling.TaskScheduler;
-
+import de.freese.pim.common.spring.SpringContext;
 import de.freese.pim.gui.PIMApplication;
 import de.freese.pim.gui.main.MainController;
 import javafx.fxml.Initializable;
@@ -24,12 +24,12 @@ public abstract class AbstractController implements Initializable
     /**
     *
     */
-    public final Logger logger = LoggerFactory.getLogger(getClass());
+    private boolean activated = false;
 
     /**
     *
     */
-    private boolean activated = false;
+    public final Logger logger = LoggerFactory.getLogger(getClass());
 
     /**
      *
@@ -48,8 +48,8 @@ public abstract class AbstractController implements Initializable
     {
         super();
 
-        this.taskExecutor = PIMApplication.getTaskExecutor();
-        this.taskScheduler = PIMApplication.getTaskScheduler();
+        this.taskExecutor = SpringContext.getAsyncTaskExecutor();
+        this.taskScheduler = SpringContext.getTaskScheduler();
     }
 
     /**

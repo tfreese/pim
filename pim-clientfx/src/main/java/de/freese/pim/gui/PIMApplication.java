@@ -11,16 +11,11 @@ import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeansException;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
-import org.springframework.core.io.Resource;
-import org.springframework.core.task.AsyncTaskExecutor;
-import org.springframework.scheduling.TaskScheduler;
 import com.sun.javafx.application.LauncherImpl;
+import de.freese.pim.common.spring.SpringContext;
 import de.freese.pim.gui.main.MainController;
 import de.freese.pim.gui.utils.FXUtils;
 import de.freese.pim.gui.view.ErrorDialog;
@@ -49,13 +44,8 @@ import javafx.stage.Window;
 // @EnableScheduling
 // @EnableAsync // @Async("executorService")
 // @EnableTransactionManagement // Wird durch Spring-Boot automatisch konfiguriert, wenn DataSource-Bean vorhanden.
-public class PIMApplication extends Application implements ApplicationContextAware
+public class PIMApplication extends Application
 {
-    /**
-     *
-     */
-    private static ApplicationContext applicationContext = null;
-
     /**
      *
      */
@@ -77,14 +67,6 @@ public class PIMApplication extends Application implements ApplicationContextAwa
     public static void blockGUI()
     {
         FXUtils.blockGUI(getMainWindow());
-    }
-
-    /**
-     * @return {@link ApplicationContext}
-     */
-    public static ApplicationContext getApplicationContext()
-    {
-        return applicationContext;
     }
 
     /**
@@ -125,17 +107,6 @@ public class PIMApplication extends Application implements ApplicationContextAwa
     }
 
     /**
-     * Liefert die Resource.
-     *
-     * @param location String
-     * @return {@link Resource}
-     */
-    public static Resource getResource(final String location)
-    {
-        return getApplicationContext().getResource(location);
-    }
-
-    /**
      * Liefert den Bildschirm auf dem PIM läuft.
      *
      * @return {@link Screen}
@@ -143,22 +114,6 @@ public class PIMApplication extends Application implements ApplicationContextAwa
     public static Screen getScreen()
     {
         return screen;
-    }
-
-    /**
-     * @return {@link AsyncTaskExecutor}
-     */
-    public static AsyncTaskExecutor getTaskExecutor()
-    {
-        return getApplicationContext().getBean("taskExecutor", AsyncTaskExecutor.class);
-    }
-
-    /**
-     * @return {@link TaskScheduler}
-     */
-    public static TaskScheduler getTaskScheduler()
-    {
-        return getApplicationContext().getBean("taskScheduler", TaskScheduler.class);
     }
 
     /**
@@ -328,7 +283,7 @@ public class PIMApplication extends Application implements ApplicationContextAwa
         notifyPreloader(new PIMPreloaderNotification("Start P.I.M."));
         // Utils.sleep(1, TimeUnit.SECONDS);
 
-        String pimHome = getApplicationContext().getEnvironment().getProperty("pim.home");
+        String pimHome = SpringContext.getEnvironment().getProperty("pim.home");
         Path homePath = Paths.get(pimHome);
 
         if (!Files.exists(homePath))
@@ -338,15 +293,6 @@ public class PIMApplication extends Application implements ApplicationContextAwa
 
         // getHostServices().showDocument("https://eclipse.org");
         FXUtils.tooltipBehaviorHack();
-    }
-
-    /**
-     * @see org.springframework.context.ApplicationContextAware#setApplicationContext(org.springframework.context.ApplicationContext)
-     */
-    @Override
-    public void setApplicationContext(final ApplicationContext ctx) throws BeansException
-    {
-        applicationContext = ctx;
     }
 
     /**

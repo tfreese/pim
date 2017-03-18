@@ -133,6 +133,7 @@ public class MailView implements View
         splitPane.getItems().add(this.tableViewMail);
 
         this.mailContentView = new MailContentView();
+        // this.mailContentView.setMaxWidth(Double.MAX_VALUE);
         splitPane.getItems().add(this.mailContentView);
 
         // this.editor = new HTMLEditor();
