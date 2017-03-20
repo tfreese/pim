@@ -8,6 +8,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ScheduledExecutorService;
+
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -15,6 +16,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.EnvironmentAware;
 import org.springframework.context.ResourceLoaderAware;
+import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
@@ -118,7 +120,8 @@ public class SpringContext implements ApplicationContextAware, ResourceLoaderAwa
     {
         Collection<T> beans = getBeansByTypeAndAnnotation(clazz, Qualifier.class);
 
-        return beans.stream().filter(bean -> {
+        return beans.stream().filter(bean ->
+        {
             Qualifier q = bean.getClass().getAnnotation(Qualifier.class);
 
             return qualifier.equals(q.value());
@@ -159,7 +162,7 @@ public class SpringContext implements ApplicationContextAware, ResourceLoaderAwa
      */
     public static ExecutorService getExecutorService()
     {
-        return getApplicationContext().getBean(ExecutorService.class);
+        return getApplicationContext().getBean("executorService", ExecutorService.class);
     }
 
     /**
@@ -205,7 +208,7 @@ public class SpringContext implements ApplicationContextAware, ResourceLoaderAwa
     /**
      * Erzeugt eine neue Instanz von {@link SpringContext}
      */
-    SpringContext()
+    private SpringContext()
     {
         super();
     }
@@ -218,8 +221,10 @@ public class SpringContext implements ApplicationContextAware, ResourceLoaderAwa
     {
         Assert.notNull(applicationContext,
                 "An ApplicationContext is required. Use setApplicationContext(org.springframework.context.ApplicationContext) to provide one.");
-        Assert.notNull(resourceLoader, "A ResourceLoader is required. Use setResourceLoader(org.springframework.core.io.ResourceLoader) to provide one.");
-        Assert.notNull(environment, "An Environment is required. Use setEnvironment(org.springframework.core.env.Environment) to provide one.");
+        Assert.notNull(resourceLoader,
+                "A ResourceLoader is required. Use setResourceLoader(org.springframework.core.io.ResourceLoader) to provide one.");
+        Assert.notNull(environment,
+                "An Environment is required. Use setEnvironment(org.springframework.core.env.Environment) to provide one.");
     }
 
     /**
@@ -236,6 +241,11 @@ public class SpringContext implements ApplicationContextAware, ResourceLoaderAwa
         }
 
         SpringContext.applicationContext = applicationContext;
+
+        if (SpringContext.applicationContext instanceof AbstractApplicationContext)
+        {
+            ((AbstractApplicationContext) SpringContext.applicationContext).registerShutdownHook();
+        }
     }
 
     /**
