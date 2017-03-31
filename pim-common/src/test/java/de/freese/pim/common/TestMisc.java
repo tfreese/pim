@@ -5,12 +5,18 @@ package de.freese.pim.common;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Future;
+import java.util.concurrent.ThreadPoolExecutor;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
+import org.springframework.scheduling.concurrent.ThreadPoolExecutorFactoryBean;
 
 /**
  * Testklasse für Sonstiges.
@@ -91,5 +97,56 @@ public class TestMisc
 
         Assert.assertEquals(1, results.size());
         Assert.assertEquals("Test-1-2", results.get(0));
+    }
+
+    /**
+     * @throws Exception Falls was schief geht.
+     */
+    @Test
+    @Ignore
+    public void test020ThreadPool() throws Exception
+    {
+        ThreadPoolExecutorFactoryBean bean = new ThreadPoolExecutorFactoryBean();
+        bean.setCorePoolSize(4);
+        bean.setMaxPoolSize(8);
+        bean.setQueueCapacity(16);
+        bean.setKeepAliveSeconds(60);
+        bean.setThreadPriority(Thread.NORM_PRIORITY);
+        bean.setThreadNamePrefix("test-");
+        bean.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy());
+        bean.setExposeUnconfigurableExecutor(true);
+        bean.afterPropertiesSet();
+
+        ExecutorService executorService = bean.getObject();
+
+        // BlockingQueue<Runnable> queue = new LinkedBlockingQueue<>(16);
+        // // BlockingQueue<Runnable> queue = new SynchronousQueue<>(true);
+        // ExecutorService executorService = new ThreadPoolExecutor(4, 8, 60, TimeUnit.SECONDS, queue, bean,
+        // new ThreadPoolExecutor.CallerRunsPolicy());
+
+        // CompletionService<Void> ecs = new ExecutorCompletionService<>(executorService);
+        int size = 24;
+        List<Future<Void>> futures = new ArrayList<>();
+
+        for (int i = 0; i < size; i++)
+        {
+            int n = i;
+            Callable<Void> callable = () -> {
+                System.out.printf("%s: %d%n", Thread.currentThread().getName(), n);
+                Thread.sleep(3000);
+                return null;
+            };
+
+            futures.add(executorService.submit(callable));
+
+            // ecs.submit();
+        }
+
+        // Warten bis alle fertig sind.
+        for (int i = 0; i < size; ++i)
+        {
+            futures.get(i).get();
+            // ecs.take().get();
+        }
     }
 }

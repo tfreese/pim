@@ -20,7 +20,7 @@ import org.springframework.scheduling.concurrent.ThreadPoolExecutorFactoryBean;
  */
 @ComponentScan(basePackages =
 {
-    "de.freese.pim"
+        "de.freese.pim"
 })
 public abstract class AbstractPIMClientConfig
 {
@@ -40,7 +40,7 @@ public abstract class AbstractPIMClientConfig
     {
         int coreSize = Runtime.getRuntime().availableProcessors();
         int maxSize = coreSize * 2;
-        int queueSize = maxSize * 3;
+        int queueSize = maxSize * 2;
         int keepAliveSeconds = 60;
 
         ThreadPoolExecutorFactoryBean bean = new ThreadPoolExecutorFactoryBean();
@@ -50,7 +50,7 @@ public abstract class AbstractPIMClientConfig
         bean.setKeepAliveSeconds(keepAliveSeconds);
         bean.setThreadPriority(Thread.NORM_PRIORITY);
         bean.setThreadNamePrefix("client-");
-        bean.setRejectedExecutionHandler(new ThreadPoolExecutor.AbortPolicy());
+        bean.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy());
         bean.setAllowCoreThreadTimeOut(false);
         bean.setExposeUnconfigurableExecutor(true);
 
@@ -59,7 +59,6 @@ public abstract class AbstractPIMClientConfig
 
     /**
      * @param pimHome String
-     *
      * @return {@link Path}
      */
     @Bean
@@ -73,13 +72,12 @@ public abstract class AbstractPIMClientConfig
 
     /**
      * @param executorService {@link ExecutorService}
-     *
      * @return {@link AsyncTaskExecutor}
      */
     @Bean(
-            {
-                "taskExecutor", "serverTaskExecutor"
-            })
+    {
+            "taskExecutor", "serverTaskExecutor"
+    })
     public AsyncTaskExecutor taskExecutor(final ExecutorService executorService)
     {
         AsyncTaskExecutor bean = new ConcurrentTaskExecutor(executorService);

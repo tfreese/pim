@@ -63,7 +63,7 @@ public class ServerConfig extends WebMvcConfigurationSupport
     {
         int coreSize = Runtime.getRuntime().availableProcessors() * 2;
         int maxSize = coreSize * 2;
-        int queueSize = maxSize * 3;
+        int queueSize = maxSize * 2;
         int keepAliveSeconds = 60;
 
         ThreadPoolExecutorFactoryBean bean = new ThreadPoolExecutorFactoryBean();
@@ -73,7 +73,7 @@ public class ServerConfig extends WebMvcConfigurationSupport
         bean.setKeepAliveSeconds(keepAliveSeconds);
         bean.setThreadPriority(Thread.NORM_PRIORITY);
         bean.setThreadNamePrefix("server-");
-        bean.setRejectedExecutionHandler(new ThreadPoolExecutor.AbortPolicy());
+        bean.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy());
         bean.setAllowCoreThreadTimeOut(false);
         bean.setExposeUnconfigurableExecutor(true);
 
