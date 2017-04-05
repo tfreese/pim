@@ -1,13 +1,14 @@
 // Created: 13.12.2016
 package de.freese.pim.gui.mail;
 
+import java.lang.reflect.Method;
 import java.net.URL;
+import java.net.URLStreamHandlerFactory;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
-import org.apache.catalina.webresources.TomcatURLStreamHandlerFactory;
 import de.freese.pim.common.model.mail.InternetAddress;
 import de.freese.pim.common.model.mail.MailContent;
 import de.freese.pim.common.spring.SpringContext;
@@ -393,8 +394,21 @@ public class MailController extends AbstractController
         }
         catch (Error er)
         {
-            // Beim EmbeddedServer war hier der Tomcat schneller.
-            TomcatURLStreamHandlerFactory.getInstance().addUserFactory(new MailUrlStreamHandlerFactory());
+            // Wenn Tomcat der EmbeddedServer ist, war er doe Default URLStreamHandlerFactory hier schon gesetzt.
+            // TomcatURLStreamHandlerFactory.getInstance().addUserFactory(new MailUrlStreamHandlerFactory());
+            try
+            {
+                Class<?> tomcatClazz = Class.forName("org.apache.catalina.webresources.TomcatURLStreamHandlerFactory");
+                Method method = tomcatClazz.getMethod("getInstance");
+                Object ref = method.invoke(null);
+
+                method = tomcatClazz.getMethod("addUserFactory", URLStreamHandlerFactory.class);
+                method.invoke(ref, new MailUrlStreamHandlerFactory());
+            }
+            catch (Exception ex)
+            {
+                getLogger().warn(ex.getMessage());
+            }
         }
 
         getProgressIndicator().styleProperty().bind(Bindings.createStringBinding(() -> {
