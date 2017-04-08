@@ -68,10 +68,8 @@
     <logger name="org.springframework.boot.autoconfigure" level="INFO"/>
     <logger name="org.springframework.jdbc.core.JdbcTemplate" level="INFO"/>
         
-    <logger name="de.freese.pim.core" level="INFO"/>
+    <logger name="de.freese.pim" level="INFO"/>        
     <logger name="de.freese.pim.core.jdbc" level="INFO"/>
-    <logger name="de.freese.pim.core.mail.service" level="INFO"/>
-    <logger name="de.freese.pim.gui" level="INFO"/>
 
     <root level="INFO">
         <appender-ref ref="STDOUT" />

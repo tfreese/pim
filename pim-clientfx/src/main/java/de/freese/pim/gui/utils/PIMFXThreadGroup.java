@@ -1,8 +1,5 @@
 package de.freese.pim.gui.utils;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
  * ThreadGroup für Handling von Runtime-Exceptions.
  *
@@ -10,11 +7,6 @@ import org.slf4j.LoggerFactory;
  */
 public class PIMFXThreadGroup extends ThreadGroup
 {
-    /**
-    *
-    */
-    public static final Logger LOGGER = LoggerFactory.getLogger(PIMFXThreadGroup.class);
-
     /**
      * Erzeugt eine neue Instanz von {@link PIMFXThreadGroup}
      */

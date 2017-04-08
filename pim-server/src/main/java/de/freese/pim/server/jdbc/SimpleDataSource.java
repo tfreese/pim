@@ -267,10 +267,7 @@ public class SimpleDataSource implements DataSource, DisposableBean
     {
         final String _url = getUrl();
 
-        if (LOGGER.isDebugEnabled())
-        {
-            LOGGER.debug("Creating new JDBC DriverManager Connection to [{}]", _url);
-        }
+        LOGGER.debug(() -> String.format("Creating new JDBC DriverManager Connection to [%s]", _url));
 
         return getConnectionFromDriverManager(_url, props);
     }

@@ -373,10 +373,7 @@ public class ContactController extends AbstractController
      */
     private void loadKontakte()
     {
-        if (getLogger().isDebugEnabled())
-        {
-            getLogger().debug("Load Kontakte");
-        }
+        getLogger().debug(() -> "Load Kontakte");
 
         getKontakteList().clear();
 

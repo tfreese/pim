@@ -523,12 +523,18 @@ public final class FXUtils
 
         final StringConverter<T> stringConverter = new StringConverter<T>()
         {
+            /**
+             * @see javafx.util.StringConverter#fromString(java.lang.String)
+             */
             @Override
             public T fromString(final String string)
             {
                 throw new UnsupportedOperationException("Not supported yet.");
             }
 
+            /**
+             * @see javafx.util.StringConverter#toString(java.lang.Object)
+             */
             @Override
             public String toString(final T object)
             {
@@ -611,6 +617,44 @@ public final class FXUtils
         if (StringUtils.startsWith(tooltip.getText(), "%"))
         {
             tooltip.setText(resources.getString(tooltip.getText().substring(1)));
+        }
+    }
+
+    /**
+     * @param labeled {@link Labeled}
+     * @param resources {@link ResourceBundle}
+     */
+    public static void translate(final Labeled labeled, final ResourceBundle resources)
+    {
+        if (StringUtils.startsWith(labeled.getText(), "%"))
+        {
+            labeled.setText(resources.getString(labeled.getText().substring(1)));
+        }
+
+        translate((Control) labeled, resources);
+    }
+
+    /**
+     * @param tableColumn {@link TableColumnBase}
+     * @param resources {@link ResourceBundle}
+     */
+    public static void translate(final TableColumnBase<?, ?> tableColumn, final ResourceBundle resources)
+    {
+        if (StringUtils.startsWith(tableColumn.getText(), "%"))
+        {
+            tableColumn.setText(resources.getString(tableColumn.getText().substring(1)));
+        }
+    }
+
+    /**
+     * @param text {@link Text}
+     * @param resources {@link ResourceBundle}
+     */
+    public static void translate(final Text text, final ResourceBundle resources)
+    {
+        if (StringUtils.startsWith(text.getText(), "%"))
+        {
+            text.setText(resources.getString(text.getText().substring(1)));
         }
     }
 
@@ -715,44 +759,6 @@ public final class FXUtils
                 .flatMap(tv -> tv.getColumns().stream())
                 .forEach(column -> translate(column, resources));
         // @formatter:on
-    }
-
-    /**
-     * @param labeled {@link Labeled}
-     * @param resources {@link ResourceBundle}
-     */
-    public static void translate(final Labeled labeled, final ResourceBundle resources)
-    {
-        if (StringUtils.startsWith(labeled.getText(), "%"))
-        {
-            labeled.setText(resources.getString(labeled.getText().substring(1)));
-        }
-
-        translate((Control) labeled, resources);
-    }
-
-    /**
-     * @param tableColumn {@link TableColumnBase}
-     * @param resources {@link ResourceBundle}
-     */
-    public static void translate(final TableColumnBase<?, ?> tableColumn, final ResourceBundle resources)
-    {
-        if (StringUtils.startsWith(tableColumn.getText(), "%"))
-        {
-            tableColumn.setText(resources.getString(tableColumn.getText().substring(1)));
-        }
-    }
-
-    /**
-     * @param text {@link Text}
-     * @param resources {@link ResourceBundle}
-     */
-    public static void translate(final Text text, final ResourceBundle resources)
-    {
-        if (StringUtils.startsWith(text.getText(), "%"))
-        {
-            text.setText(resources.getString(text.getText().substring(1)));
-        }
     }
 
     /**

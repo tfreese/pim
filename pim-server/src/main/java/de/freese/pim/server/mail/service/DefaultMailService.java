@@ -272,10 +272,7 @@ public class DefaultMailService extends AbstractService implements MailService, 
                 folder.get(i).setID(primaryKeys[i]);
             }
 
-            if (getLogger().isDebugEnabled())
-            {
-                getLogger().debug("new folder saved: affected rows={}", primaryKeys.length);
-            }
+            getLogger().debug(() -> String.format("new folder saved: affected rows=%d", primaryKeys.length));
         }
 
         return folder;
@@ -287,10 +284,7 @@ public class DefaultMailService extends AbstractService implements MailService, 
     @Override
     public MailContent loadMailContent(final long accountID, final String folderFullName, final long mailUID, final IOMonitor monitor)
     {
-        if (getLogger().isDebugEnabled())
-        {
-            getLogger().debug("download mail: accountID={}, folderFullName={}, uid={}", accountID, folderFullName, mailUID);
-        }
+        getLogger().debug(() -> String.format("download mail: accountID=%d, folderFullName=%s, uid=%d", accountID, folderFullName, mailUID));
 
         MailAPI mailAPI = getMailAPI(accountID);
 
@@ -324,10 +318,7 @@ public class DefaultMailService extends AbstractService implements MailService, 
 
         for (Long uid : remoteDeletedUIDs)
         {
-            if (getLogger().isDebugEnabled())
-            {
-                getLogger().debug("delete mail: uid={}", uid);
-            }
+            getLogger().debug(() -> String.format("delete mail: uid=%d", uid));
 
             getMailDAO().deleteMail(folderID, uid);
             mailMap.remove(uid);
@@ -345,11 +336,9 @@ public class DefaultMailService extends AbstractService implements MailService, 
         {
             int affectedRows = getMailDAO().deleteMails(folderID);
             affectedRows += getMailDAO().deleteFolder(folderID);
+            final int rows = affectedRows;
 
-            if (getLogger().isDebugEnabled())
-            {
-                getLogger().debug("folder deleted: affected rows={}", affectedRows);
-            }
+            getLogger().debug(() -> String.format("folder deleted: affected rows=%d", rows));
 
             return Collections.emptyList();
         }
@@ -358,10 +347,7 @@ public class DefaultMailService extends AbstractService implements MailService, 
         {
             int[] affectedRows = getMailDAO().insertMail(folderID, newMails);
 
-            if (getLogger().isDebugEnabled())
-            {
-                getLogger().debug("new mails saved: affected rows={}", IntStream.of(affectedRows).sum());
-            }
+            getLogger().debug(() -> String.format("new mails saved: affected rows=%d", IntStream.of(affectedRows).sum()));
         }
 
         List<Mail> mails = new ArrayList<>();

@@ -19,14 +19,11 @@ import java.util.Objects;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.IntStream;
-
 import javax.sql.DataSource;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.jdbc.datasource.DataSourceUtils;
-
 import de.freese.pim.server.jdbc.sequence.SequenceProvider;
 import de.freese.pim.server.jdbc.sequence.SequenceQuery;
 import de.freese.pim.server.jdbc.sequence.SequenceQueryExecutor;
@@ -275,391 +272,6 @@ public class JdbcTemplate implements InitializingBean
     }
 
     /**
-     * @param <T> Konkreter Return-Typ.
-     * @param action {@link ConnectionCallback}
-     * @return Object
-     */
-    @SuppressWarnings("resource")
-    public <T> T execute(final ConnectionCallback<T> action)
-    {
-        Connection connection = null;
-
-        try
-        {
-            connection = getConnection();
-
-            T result = action.doInConnection(connection);
-
-            return result;
-        }
-        catch (SQLException sex)
-        {
-            throw convertException(sex);
-        }
-        finally
-        {
-            closeConnection(connection);
-        }
-    }
-
-    /**
-     * @param <T> Konkreter Return-Typ.
-     * @param psc {@link PreparedStatementCreator}
-     * @param action {@link PreparedStatementCallback}
-     * @return Object
-     */
-    public <T> T execute(final PreparedStatementCreator psc, final PreparedStatementCallback<T> action)
-    {
-        return execute((ConnectionCallback<T>) con ->
-        {
-            try (PreparedStatement ps = psc.createPreparedStatement(con))
-            {
-                T result = action.doInPreparedStatement(ps);
-
-                return result;
-            }
-        });
-    }
-
-    /**
-     * @param <T> Konkreter Return-Typ.
-     * @param action {@link StatementCallback}
-     * @return Object
-     */
-    public <T> T execute(final StatementCallback<T> action)
-    {
-        return execute((ConnectionCallback<T>) con ->
-        {
-            try (Statement stmt = con.createStatement())
-            {
-                T result = action.doInStatement(stmt);
-
-                return result;
-            }
-        });
-    }
-
-    /**
-     * Führt ein einfaches {@link Statement#execute(String)} aus.
-     *
-     * @param sql String
-     */
-    public void execute(final String sql)
-    {
-        execute((StatementCallback<?>) stmt -> stmt.execute(sql));
-    }
-
-    /**
-     * @return {@link DataSource}
-     */
-    public DataSource getDataSource()
-    {
-        return this.dataSource;
-    }
-
-    /**
-     * Liefert die nächste ID/PK der Sequence/Tabelle.<br>
-     * Unterstützte Datenbanken:<br>
-     *
-     * <pre>
-     * - Oracle: select SEQ.nextval from dual
-     * - HSQLDB: call next value for SEQ
-     * - Default: select count(*) + 1 from SEQ (Tabelle)
-     * </pre>
-     *
-     * @param sequence String
-     * @return long
-     * @see SequenceQuery
-     * @see SequenceProvider
-     * @see SequenceQueryExecutor
-     */
-    public long getNextID(final String sequence)
-    {
-        return execute((ConnectionCallback<Long>) con ->
-        {
-            try (Statement stmt = con.createStatement())
-            {
-                long result = getNextID(sequence, con);
-
-                return result;
-            }
-        });
-    }
-
-    /**
-     * Liefert die nächste ID/PK der Sequence/Tabelle.<br>
-     * Unterstützte Datenbanken:<br>
-     *
-     * <pre>
-     * - Oracle: select SEQ.nextval from dual
-     * - HSQLDB: call next value for SEQ
-     * - Default: select count(*) + 1 from SEQ (Tabelle)
-     * </pre>
-     *
-     * @param sequence String
-     * @param connection {@link Connection}
-     * @return long
-     * @throws SQLException Falls was schief geht.
-     * @see SequenceQuery
-     * @see SequenceProvider
-     * @see SequenceQueryExecutor
-     */
-    public long getNextID(final String sequence, final Connection connection) throws SQLException
-    {
-        if (this.sequenceQueryExecutor == null)
-        {
-            this.reentrantLockSequence.lock();
-
-            try
-            {
-                if (this.sequenceQueryExecutor == null)
-                {
-                    SequenceQuery sequenceQuery = SequenceQuery.determineQuery(connection);
-                    this.sequenceQueryExecutor = new SequenceQueryExecutor(sequenceQuery);
-                }
-            }
-            finally
-            {
-                this.reentrantLockSequence.unlock();
-            }
-        }
-
-        long id = this.sequenceQueryExecutor.getNextID(sequence, connection);
-
-        return id;
-    }
-
-    /**
-     * Extrahiert ein Objekt aus dem {@link ResultSet}.
-     *
-     * @param <T> Konkreter Return-Typ
-     * @param sql String
-     * @param setter {@link PreparedStatementSetter}
-     * @param rse {@link ResultSetExtractor}
-     * @return Object
-     */
-    public <T> T query(final String sql, final PreparedStatementSetter setter, final ResultSetExtractor<T> rse)
-    {
-        return execute(con -> con.prepareStatement(sql), ps ->
-        {
-            if (getLogger().isDebugEnabled())
-            {
-                getLogger().debug("execute: {}", sql);
-            }
-
-            ps.clearParameters();
-            setter.setValues(ps);
-
-            try (ResultSet rs = ps.executeQuery())
-            {
-                return rse.extract(rs);
-            }
-        });
-    }
-
-    /**
-     * Erzeugt über den {@link RowMapper} eine Liste aus Entities.
-     *
-     * @param <T> Konkreter Row-Typ
-     * @param sql String
-     * @param setter {@link PreparedStatementSetter}
-     * @param rowMapper {@link RowMapper}
-     * @return {@link List}
-     */
-    public <T> List<T> query(final String sql, final PreparedStatementSetter setter, final RowMapper<T> rowMapper)
-    {
-        return query(sql, setter, new RowMapperResultSetExtractor<>(rowMapper));
-    }
-
-    /**
-     * Extrahiert ein Objekt aus dem {@link ResultSet}.
-     *
-     * @param <T> Konkreter Return-Typ
-     * @param sql String
-     * @param rse {@link ResultSetExtractor}
-     * @return Object
-     */
-    public <T> T query(final String sql, final ResultSetExtractor<T> rse)
-    {
-        return execute((StatementCallback<T>) stmt ->
-        {
-            if (getLogger().isDebugEnabled())
-            {
-                getLogger().debug("execute: {}", sql);
-            }
-
-            try (ResultSet rs = stmt.executeQuery(sql))
-            {
-                return rse.extract(rs);
-            }
-        });
-    }
-
-    /**
-     * Erzeugt über den {@link RowMapper} eine Liste aus Entities.
-     *
-     * @param <T> Konkreter Row-Typ
-     * @param sql String
-     * @param rowMapper {@link RowMapper}
-     * @return {@link List}
-     */
-    public <T> List<T> query(final String sql, final RowMapper<T> rowMapper)
-    {
-        return query(sql, new RowMapperResultSetExtractor<>(rowMapper));
-    }
-
-    /**
-     * Liefert eine Liste aus Maps.<br>
-     *
-     * @param sql String
-     * @return {@link List}
-     */
-    public List<Map<String, Object>> queryForList(final String sql)
-    {
-        return query(sql, new ColumnMapResultSetExtractor());
-    }
-
-    /**
-     * @param dataSource {@link DataSource}
-     */
-    public void setDataSource(final DataSource dataSource)
-    {
-        this.dataSource = dataSource;
-    }
-
-    /**
-     * Erstellt einen {@link Semaphore} im {@link JdbcTemplate}, der den Zugriff auf die {@link DataSource} reguliert.
-     *
-     * @param maxConnections int
-     */
-    public void setMaxConnections(final int maxConnections)
-    {
-        this.maxConnections = maxConnections;
-    }
-
-    /**
-     * Führt ein {@link Statement#executeUpdate(String)} aus (INSERT, UPDATE, DELETE).
-     *
-     * @param sql String
-     * @return int; affectedRows
-     */
-    public int update(final String sql)
-    {
-        return execute((StatementCallback<Integer>) stmt ->
-        {
-            if (getLogger().isDebugEnabled())
-            {
-                getLogger().debug("execute: {}", sql);
-            }
-
-            return stmt.executeUpdate(sql);
-        });
-    }
-
-    /**
-     * Führt ein {@link Statement#executeUpdate(String)} aus (INSERT, UPDATE, DELETE).
-     *
-     * @param sql String
-     * @param setter {@link PreparedStatementSetter}
-     * @return int; affectedRows
-     */
-    public int update(final String sql, final PreparedStatementSetter setter)
-    {
-        return execute(con -> con.prepareStatement(sql), ps ->
-        {
-            if (getLogger().isDebugEnabled())
-            {
-                getLogger().debug("execute: {}", sql);
-            }
-
-            ps.clearParameters();
-            setter.setValues(ps);
-
-            return ps.executeUpdate();
-        });
-    }
-
-    /**
-     * Führt ein {@link Statement#executeBatch()} aus (INSERT, UPDATE, DELETE).<br>
-     * Die Default Batch-Size beträgt 100.
-     *
-     * @param <T> Konkreter Row-Typ
-     * @param sql String
-     * @param batchArgs {@link Collection}
-     * @param setter {@link ParameterizedPreparedStatementSetter}
-     * @return int[]; affectedRows
-     */
-    public <T> int[] updateBatch(final String sql, final Collection<T> batchArgs, final ParameterizedPreparedStatementSetter<T> setter)
-    {
-        return updateBatch(sql, batchArgs, setter, 100);
-    }
-
-    /**
-     * Führt ein {@link Statement#executeBatch()} aus (INSERT, UPDATE, DELETE).
-     *
-     * @param <T> Konkreter Row-Typ
-     * @param sql String
-     * @param batchArgs {@link Collection}
-     * @param setter {@link ParameterizedPreparedStatementSetter}
-     * @param batchSize int
-     * @return int[]; affectedRows
-     */
-    public <T> int[] updateBatch(final String sql, final Collection<T> batchArgs, final ParameterizedPreparedStatementSetter<T> setter,
-            final int batchSize)
-    {
-        return execute(con -> con.prepareStatement(sql), ps ->
-        {
-            if (getLogger().isDebugEnabled())
-            {
-                getLogger().debug("execute batch: size={}; {}", batchArgs.size(), sql);
-            }
-
-            boolean supportsBatch = isBatchSupported(ps.getConnection());
-            SequenceProvider sequenceProvider = sequence -> getNextID(sequence, ps.getConnection());
-
-            List<int[]> affectedRows = new ArrayList<>();
-            int n = 0;
-
-            for (T arg : batchArgs)
-            {
-                ps.clearParameters();
-                setter.setValues(ps, arg, sequenceProvider);
-                n++;
-
-                if (supportsBatch)
-                {
-                    ps.addBatch();
-
-                    if (((n % batchSize) == 0) || (n == batchArgs.size()))
-                    {
-                        if (getLogger().isDebugEnabled())
-                        {
-                            int batchIndex = ((n % batchSize) == 0) ? n / batchSize : (n / batchSize) + 1;
-                            int items = n - ((((n % batchSize) == 0) ? (n / batchSize) - 1 : (n / batchSize)) * batchSize);
-                            getLogger().debug("Sending SQL batch update #{} with {} items", batchIndex, items);
-                        }
-
-                        affectedRows.add(ps.executeBatch());
-                        ps.clearBatch();
-                    }
-                }
-                else
-                {
-                    // Batch nicht möglich -> direkt ausführen.
-                    int affectedRow = ps.executeUpdate();
-
-                    affectedRows.add(new int[]
-                    {
-                            affectedRow
-                    });
-                }
-            }
-
-            return affectedRows.stream().flatMapToInt(af -> IntStream.of(af)).toArray();
-        });
-    }
-
-    /**
      * Schliesst die {@link Connection}.
      *
      * @param connection {@link Connection}
@@ -735,6 +347,79 @@ public class JdbcTemplate implements InitializingBean
     }
 
     /**
+     * @param <T> Konkreter Return-Typ.
+     * @param action {@link ConnectionCallback}
+     * @return Object
+     */
+    @SuppressWarnings("resource")
+    public <T> T execute(final ConnectionCallback<T> action)
+    {
+        Connection connection = null;
+
+        try
+        {
+            connection = getConnection();
+
+            T result = action.doInConnection(connection);
+
+            return result;
+        }
+        catch (SQLException sex)
+        {
+            throw convertException(sex);
+        }
+        finally
+        {
+            closeConnection(connection);
+        }
+    }
+
+    /**
+     * @param <T> Konkreter Return-Typ.
+     * @param psc {@link PreparedStatementCreator}
+     * @param action {@link PreparedStatementCallback}
+     * @return Object
+     */
+    public <T> T execute(final PreparedStatementCreator psc, final PreparedStatementCallback<T> action)
+    {
+        return execute((ConnectionCallback<T>) con -> {
+            try (PreparedStatement ps = psc.createPreparedStatement(con))
+            {
+                T result = action.doInPreparedStatement(ps);
+
+                return result;
+            }
+        });
+    }
+
+    /**
+     * @param <T> Konkreter Return-Typ.
+     * @param action {@link StatementCallback}
+     * @return Object
+     */
+    public <T> T execute(final StatementCallback<T> action)
+    {
+        return execute((ConnectionCallback<T>) con -> {
+            try (Statement stmt = con.createStatement())
+            {
+                T result = action.doInStatement(stmt);
+
+                return result;
+            }
+        });
+    }
+
+    /**
+     * Führt ein einfaches {@link Statement#execute(String)} aus.
+     *
+     * @param sql String
+     */
+    public void execute(final String sql)
+    {
+        execute((StatementCallback<?>) stmt -> stmt.execute(sql));
+    }
+
+    /**
      * @return {@link Connection}
      */
     protected Connection getConnection()
@@ -759,11 +444,90 @@ public class JdbcTemplate implements InitializingBean
     }
 
     /**
+     * @return {@link DataSource}
+     */
+    public DataSource getDataSource()
+    {
+        return this.dataSource;
+    }
+
+    /**
      * @return {@link Logger}
      */
     protected Logger getLogger()
     {
         return LOGGER;
+    }
+
+    /**
+     * Liefert die nächste ID/PK der Sequence/Tabelle.<br>
+     * Unterstützte Datenbanken:<br>
+     *
+     * <pre>
+     * - Oracle: select SEQ.nextval from dual
+     * - HSQLDB: call next value for SEQ
+     * - Default: select count(*) + 1 from SEQ (Tabelle)
+     * </pre>
+     *
+     * @param sequence String
+     * @return long
+     * @see SequenceQuery
+     * @see SequenceProvider
+     * @see SequenceQueryExecutor
+     */
+    public long getNextID(final String sequence)
+    {
+        return execute((ConnectionCallback<Long>) con -> {
+            try (Statement stmt = con.createStatement())
+            {
+                long result = getNextID(sequence, con);
+
+                return result;
+            }
+        });
+    }
+
+    /**
+     * Liefert die nächste ID/PK der Sequence/Tabelle.<br>
+     * Unterstützte Datenbanken:<br>
+     *
+     * <pre>
+     * - Oracle: select SEQ.nextval from dual
+     * - HSQLDB: call next value for SEQ
+     * - Default: select count(*) + 1 from SEQ (Tabelle)
+     * </pre>
+     *
+     * @param sequence String
+     * @param connection {@link Connection}
+     * @return long
+     * @throws SQLException Falls was schief geht.
+     * @see SequenceQuery
+     * @see SequenceProvider
+     * @see SequenceQueryExecutor
+     */
+    public long getNextID(final String sequence, final Connection connection) throws SQLException
+    {
+        if (this.sequenceQueryExecutor == null)
+        {
+            this.reentrantLockSequence.lock();
+
+            try
+            {
+                if (this.sequenceQueryExecutor == null)
+                {
+                    SequenceQuery sequenceQuery = SequenceQuery.determineQuery(connection);
+                    this.sequenceQueryExecutor = new SequenceQueryExecutor(sequenceQuery);
+                }
+            }
+            finally
+            {
+                this.reentrantLockSequence.unlock();
+            }
+        }
+
+        long id = this.sequenceQueryExecutor.getNextID(sequence, connection);
+
+        return id;
     }
 
     /**
@@ -773,8 +537,7 @@ public class JdbcTemplate implements InitializingBean
      */
     protected boolean isBatchSupported()
     {
-        return execute((ConnectionCallback<Boolean>) con ->
-        {
+        return execute((ConnectionCallback<Boolean>) con -> {
             try (Statement stmt = con.createStatement())
             {
                 boolean result = isBatchSupported(con);
@@ -796,5 +559,214 @@ public class JdbcTemplate implements InitializingBean
         DatabaseMetaData dbmd = connection.getMetaData();
 
         return dbmd.supportsBatchUpdates();
+    }
+
+    /**
+     * Extrahiert ein Objekt aus dem {@link ResultSet}.
+     *
+     * @param <T> Konkreter Return-Typ
+     * @param sql String
+     * @param setter {@link PreparedStatementSetter}
+     * @param rse {@link ResultSetExtractor}
+     * @return Object
+     */
+    public <T> T query(final String sql, final PreparedStatementSetter setter, final ResultSetExtractor<T> rse)
+    {
+        return execute(con -> con.prepareStatement(sql), ps -> {
+            getLogger().debug(() -> String.format("execute: %s", sql));
+
+            ps.clearParameters();
+            setter.setValues(ps);
+
+            try (ResultSet rs = ps.executeQuery())
+            {
+                return rse.extract(rs);
+            }
+        });
+    }
+
+    /**
+     * Erzeugt über den {@link RowMapper} eine Liste aus Entities.
+     *
+     * @param <T> Konkreter Row-Typ
+     * @param sql String
+     * @param setter {@link PreparedStatementSetter}
+     * @param rowMapper {@link RowMapper}
+     * @return {@link List}
+     */
+    public <T> List<T> query(final String sql, final PreparedStatementSetter setter, final RowMapper<T> rowMapper)
+    {
+        return query(sql, setter, new RowMapperResultSetExtractor<>(rowMapper));
+    }
+
+    /**
+     * Extrahiert ein Objekt aus dem {@link ResultSet}.
+     *
+     * @param <T> Konkreter Return-Typ
+     * @param sql String
+     * @param rse {@link ResultSetExtractor}
+     * @return Object
+     */
+    public <T> T query(final String sql, final ResultSetExtractor<T> rse)
+    {
+        return execute((StatementCallback<T>) stmt -> {
+            getLogger().debug(() -> String.format("execute: %s", sql));
+
+            try (ResultSet rs = stmt.executeQuery(sql))
+            {
+                return rse.extract(rs);
+            }
+        });
+    }
+
+    /**
+     * Erzeugt über den {@link RowMapper} eine Liste aus Entities.
+     *
+     * @param <T> Konkreter Row-Typ
+     * @param sql String
+     * @param rowMapper {@link RowMapper}
+     * @return {@link List}
+     */
+    public <T> List<T> query(final String sql, final RowMapper<T> rowMapper)
+    {
+        return query(sql, new RowMapperResultSetExtractor<>(rowMapper));
+    }
+
+    /**
+     * Liefert eine Liste aus Maps.<br>
+     *
+     * @param sql String
+     * @return {@link List}
+     */
+    public List<Map<String, Object>> queryForList(final String sql)
+    {
+        return query(sql, new ColumnMapResultSetExtractor());
+    }
+
+    /**
+     * @param dataSource {@link DataSource}
+     */
+    public void setDataSource(final DataSource dataSource)
+    {
+        this.dataSource = dataSource;
+    }
+
+    /**
+     * Erstellt einen {@link Semaphore} im {@link JdbcTemplate}, der den Zugriff auf die {@link DataSource} reguliert.
+     *
+     * @param maxConnections int
+     */
+    public void setMaxConnections(final int maxConnections)
+    {
+        this.maxConnections = maxConnections;
+    }
+
+    /**
+     * Führt ein {@link Statement#executeUpdate(String)} aus (INSERT, UPDATE, DELETE).
+     *
+     * @param sql String
+     * @return int; affectedRows
+     */
+    public int update(final String sql)
+    {
+        return execute((StatementCallback<Integer>) stmt -> {
+            getLogger().debug(() -> String.format("execute: %s", sql));
+
+            return stmt.executeUpdate(sql);
+        });
+    }
+
+    /**
+     * Führt ein {@link Statement#executeUpdate(String)} aus (INSERT, UPDATE, DELETE).
+     *
+     * @param sql String
+     * @param setter {@link PreparedStatementSetter}
+     * @return int; affectedRows
+     */
+    public int update(final String sql, final PreparedStatementSetter setter)
+    {
+        return execute(con -> con.prepareStatement(sql), ps -> {
+            getLogger().debug(() -> String.format("execute: %s", sql));
+
+            ps.clearParameters();
+            setter.setValues(ps);
+
+            return ps.executeUpdate();
+        });
+    }
+
+    /**
+     * Führt ein {@link Statement#executeBatch()} aus (INSERT, UPDATE, DELETE).<br>
+     * Die Default Batch-Size beträgt 100.
+     *
+     * @param <T> Konkreter Row-Typ
+     * @param sql String
+     * @param batchArgs {@link Collection}
+     * @param setter {@link ParameterizedPreparedStatementSetter}
+     * @return int[]; affectedRows
+     */
+    public <T> int[] updateBatch(final String sql, final Collection<T> batchArgs, final ParameterizedPreparedStatementSetter<T> setter)
+    {
+        return updateBatch(sql, batchArgs, setter, 100);
+    }
+
+    /**
+     * Führt ein {@link Statement#executeBatch()} aus (INSERT, UPDATE, DELETE).
+     *
+     * @param <T> Konkreter Row-Typ
+     * @param sql String
+     * @param batchArgs {@link Collection}
+     * @param setter {@link ParameterizedPreparedStatementSetter}
+     * @param batchSize int
+     * @return int[]; affectedRows
+     */
+    public <T> int[] updateBatch(final String sql, final Collection<T> batchArgs, final ParameterizedPreparedStatementSetter<T> setter, final int batchSize)
+    {
+        return execute(con -> con.prepareStatement(sql), ps -> {
+            getLogger().debug(() -> String.format("execute batch: size=%d; %s", batchArgs.size(), sql));
+
+            boolean supportsBatch = isBatchSupported(ps.getConnection());
+            SequenceProvider sequenceProvider = sequence -> getNextID(sequence, ps.getConnection());
+
+            List<int[]> affectedRows = new ArrayList<>();
+            int n = 0;
+
+            for (T arg : batchArgs)
+            {
+                ps.clearParameters();
+                setter.setValues(ps, arg, sequenceProvider);
+                n++;
+
+                if (supportsBatch)
+                {
+                    ps.addBatch();
+
+                    if (((n % batchSize) == 0) || (n == batchArgs.size()))
+                    {
+                        if (getLogger().isDebugEnabled())
+                        {
+                            int batchIndex = ((n % batchSize) == 0) ? n / batchSize : (n / batchSize) + 1;
+                            int items = n - ((((n % batchSize) == 0) ? (n / batchSize) - 1 : (n / batchSize)) * batchSize);
+                            getLogger().debug("Sending SQL batch update #{} with {} items", batchIndex, items);
+                        }
+
+                        affectedRows.add(ps.executeBatch());
+                        ps.clearBatch();
+                    }
+                }
+                else
+                {
+                    // Batch nicht möglich -> direkt ausführen.
+                    int affectedRow = ps.executeUpdate();
+
+                    affectedRows.add(new int[]
+                    {
+                            affectedRow
+                    });
+                }
+            }
+
+            return affectedRows.stream().flatMapToInt(af -> IntStream.of(af)).toArray();
+        });
     }
 }

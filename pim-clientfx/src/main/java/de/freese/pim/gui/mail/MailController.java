@@ -435,10 +435,7 @@ public class MailController extends AbstractController
      */
     private void loadMailAccounts(final TreeItem<Object> root)
     {
-        if (getLogger().isDebugEnabled())
-        {
-            getLogger().debug("Load MailAccounts");
-        }
+        getLogger().debug(() -> "Load MailAccounts");
 
         // contextMenuProperty().bind(
         // Bindings.when(Bindings.equal(itemProperty(),"TABS"))
@@ -473,10 +470,7 @@ public class MailController extends AbstractController
 
         if (mail == null)
         {
-            if (getLogger().isDebugEnabled())
-            {
-                getLogger().debug("no mail selected");
-            }
+            getLogger().debug(() -> "no mail selected");
 
             return;
         }
