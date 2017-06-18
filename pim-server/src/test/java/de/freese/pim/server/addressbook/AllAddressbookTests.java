@@ -3,35 +3,33 @@
  */
 package de.freese.pim.server.addressbook;
 
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.runner.RunWith;
-import org.junit.runners.Suite;
-import org.junit.runners.Suite.SuiteClasses;
-import org.springframework.mock.jndi.SimpleNamingContextBuilder;
-
 import de.freese.pim.server.addressbook.dao.TestConnectionHolder;
 import de.freese.pim.server.addressbook.dao.TestSpringContextAddressbookDAO;
 import de.freese.pim.server.addressbook.dao.TestSpringManualTxAddressbookDAO;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
+import org.junit.runners.Suite.SuiteClasses;
+import org.springframework.mock.jndi.SimpleNamingContextBuilder;
 
 /**
  * @author Thomas Freese
  */
-@RunWith(Suite.class)
+//@RunWith(Suite.class)
 @SuiteClasses(
-{
+    {
         TestSpringContextAddressbookDAO.class, TestSpringManualTxAddressbookDAO.class, TestConnectionHolder.class
-})
+    })
 public class AllAddressbookTests
 {
+
     /**
      *
      */
     private static SimpleNamingContextBuilder namingContext = null;
 
     /**
-    *
-    */
+     *
+     */
     @AfterClass
     public static void afterClass()
     {

@@ -3,26 +3,25 @@
  */
 package de.freese.pim.server;
 
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.runner.RunWith;
-import org.junit.runners.Suite;
-import org.junit.runners.Suite.SuiteClasses;
-import org.springframework.mock.jndi.SimpleNamingContextBuilder;
 import de.freese.pim.server.addressbook.AllAddressbookTests;
 import de.freese.pim.server.jdbc.TestJdbcTemplate;
 import de.freese.pim.server.mail.AllMailTests;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
+import org.junit.runners.Suite.SuiteClasses;
+import org.springframework.mock.jndi.SimpleNamingContextBuilder;
 
 /**
  * @author Thomas Freese
  */
-@RunWith(Suite.class)
+//@RunWith(Suite.class)
 @SuiteClasses(
-{
+    {
         TestJdbcTemplate.class, AllAddressbookTests.class, AllMailTests.class, TestCrypt.class
-})
+    })
 public class AllPIMTests
 {
+
     /**
      *
      */
