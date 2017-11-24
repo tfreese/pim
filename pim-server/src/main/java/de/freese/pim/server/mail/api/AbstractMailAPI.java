@@ -3,10 +3,8 @@ package de.freese.pim.server.mail.api;
 
 import java.util.Objects;
 import java.util.concurrent.Executor;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import de.freese.pim.server.mail.model.MailAccount;
 
 /**
@@ -40,9 +38,7 @@ public abstract class AbstractMailAPI implements MailAPI
     {
         super();
 
-        Objects.requireNonNull(account, "account required");
-
-        this.account = account;
+        this.account = Objects.requireNonNull(account, "account required");
     }
 
     /**
@@ -52,6 +48,24 @@ public abstract class AbstractMailAPI implements MailAPI
     public MailAccount getAccount()
     {
         return this.account;
+    }
+
+    /**
+     * Optionaler {@link Executor} für die Mail-API.
+     *
+     * @return {@link Executor}
+     */
+    protected Executor getExecutor()
+    {
+        return this.executor;
+    }
+
+    /**
+     * @return {@link Logger}
+     */
+    protected Logger getLogger()
+    {
+        return this.logger;
     }
 
     /**
@@ -73,23 +87,5 @@ public abstract class AbstractMailAPI implements MailAPI
         builder.append("JavaMailAPI [").append(getAccount()).append("]");
 
         return builder.toString();
-    }
-
-    /**
-     * Optionaler {@link Executor} für die Mail-API.
-     *
-     * @return {@link Executor}
-     */
-    protected Executor getExecutor()
-    {
-        return this.executor;
-    }
-
-    /**
-     * @return {@link Logger}
-     */
-    protected Logger getLogger()
-    {
-        return this.logger;
     }
 }

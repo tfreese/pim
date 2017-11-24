@@ -38,11 +38,8 @@ public class TransactionalInvocationHandler implements InvocationHandler
     {
         super();
 
-        Objects.requireNonNull(dataSource, () -> "dataSource required");
-        Objects.requireNonNull(bean, () -> "bean required");
-
-        this.dataSource = dataSource;
-        this.bean = bean;
+        this.dataSource = Objects.requireNonNull(dataSource, () -> "dataSource required");
+        this.bean = Objects.requireNonNull(bean, () -> "bean required");
     }
 
     /**

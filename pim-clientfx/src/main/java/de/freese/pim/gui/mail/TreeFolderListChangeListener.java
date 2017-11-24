@@ -4,7 +4,6 @@ package de.freese.pim.gui.mail;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
-
 import de.freese.pim.gui.mail.model.FXMailFolder;
 import javafx.collections.ListChangeListener;
 import javafx.scene.control.TreeItem;
@@ -30,9 +29,41 @@ public class TreeFolderListChangeListener implements ListChangeListener<FXMailFo
     {
         super();
 
-        Objects.requireNonNull(parent, "parent required");
+        this.parent = Objects.requireNonNull(parent, "parent required");
+    }
 
-        this.parent = parent;
+    /**
+     * Hinzufügen des Childs zum Parent.
+     *
+     * @param parent {@link TreeItem}
+     * @param child {@link FXMailFolder}
+     */
+    private void addChild(final TreeItem<Object> parent, final FXMailFolder child)
+    {
+        Runnable runnable = () -> parent.getChildren().add(new TreeItem<>(child));
+
+        runnable.run();
+        // Platform.runLater(runnable;
+    }
+
+    /**
+     * Liefert den abgeflachten Stream aller {@link TreeItem} der Hierarchie.
+     *
+     * @param treeItem {@link TreeItem}
+     * @return {@link Stream}
+     */
+    private Stream<TreeItem<Object>> getFlattenedStream(final TreeItem<Object> treeItem)
+    {
+        return Stream.concat(Stream.of(treeItem), treeItem.getChildren().stream().flatMap(this::getFlattenedStream));
+        // return treeItem.getChildren().stream().flatMap(this::getFlattenedStream);
+    }
+
+    /**
+     * @return {@link TreeItem}
+     */
+    private TreeItem<Object> getParent()
+    {
+        return this.parent;
     }
 
     /**
@@ -89,46 +120,11 @@ public class TreeFolderListChangeListener implements ListChangeListener<FXMailFo
      * Hinzufügen des Childs zum Parent.
      *
      * @param parent {@link TreeItem}
-     * @param child {@link FXMailFolder}
-     */
-    private void addChild(final TreeItem<Object> parent, final FXMailFolder child)
-    {
-        Runnable runnable = () -> parent.getChildren().add(new TreeItem<>(child));
-
-        runnable.run();
-        // Platform.runLater(runnable;
-    }
-
-    /**
-     * Liefert den abgeflachten Stream aller {@link TreeItem} der Hierarchie.
-     *
-     * @param treeItem {@link TreeItem}
-     * @return {@link Stream}
-     */
-    private Stream<TreeItem<Object>> getFlattenedStream(final TreeItem<Object> treeItem)
-    {
-        return Stream.concat(Stream.of(treeItem), treeItem.getChildren().stream().flatMap(this::getFlattenedStream));
-        // return treeItem.getChildren().stream().flatMap(this::getFlattenedStream);
-    }
-
-    /**
-     * @return {@link TreeItem}
-     */
-    private TreeItem<Object> getParent()
-    {
-        return this.parent;
-    }
-
-    /**
-     * Hinzufügen des Childs zum Parent.
-     *
-     * @param parent {@link TreeItem}
      * @param child {@link TreeItem}
      */
     private void removeChild(final TreeItem<Object> parent, final TreeItem<Object> child)
     {
-        Runnable runnable = () ->
-        {
+        Runnable runnable = () -> {
             if (parent.getValue() instanceof FXMailFolder)
             {
                 FXMailFolder mfParent = (FXMailFolder) parent.getValue();

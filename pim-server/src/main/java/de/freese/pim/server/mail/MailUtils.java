@@ -12,7 +12,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
-
 import javax.activation.DataSource;
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -20,10 +19,8 @@ import javax.mail.Multipart;
 import javax.mail.Part;
 import javax.mail.internet.MimePart;
 import javax.mail.internet.MimeUtility;
-
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.ArrayUtils;
-
 import de.freese.pim.common.model.mail.InternetAddress;
 
 /**
@@ -58,11 +55,8 @@ public final class MailUtils
         {
             super();
 
-            Objects.requireNonNull(content, "content required");
-            Objects.requireNonNull(mimeType, "mimeType required");
-
-            this.content = content;
-            this.mimeType = mimeType;
+            this.content = Objects.requireNonNull(content, "content required");
+            this.mimeType = Objects.requireNonNull(mimeType, "mimeType required");
         }
 
         /**
@@ -338,8 +332,7 @@ public final class MailUtils
     {
         List<DataSource> dataSources = getTextDataSources(part);
 
-        Optional<DataSource> dataSource = dataSources.stream().filter(ds -> ds.getContentType().toLowerCase().startsWith("text/html"))
-                .findFirst();
+        Optional<DataSource> dataSource = dataSources.stream().filter(ds -> ds.getContentType().toLowerCase().startsWith("text/html")).findFirst();
 
         if (!dataSource.isPresent())
         {

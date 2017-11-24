@@ -8,7 +8,6 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ScheduledExecutorService;
-
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -120,8 +119,7 @@ public class SpringContext implements ApplicationContextAware, ResourceLoaderAwa
     {
         Collection<T> beans = getBeansByTypeAndAnnotation(clazz, Qualifier.class);
 
-        return beans.stream().filter(bean ->
-        {
+        return beans.stream().filter(bean -> {
             Qualifier q = bean.getClass().getAnnotation(Qualifier.class);
 
             return qualifier.equals(q.value());
@@ -221,10 +219,8 @@ public class SpringContext implements ApplicationContextAware, ResourceLoaderAwa
     {
         Assert.notNull(applicationContext,
                 "An ApplicationContext is required. Use setApplicationContext(org.springframework.context.ApplicationContext) to provide one.");
-        Assert.notNull(resourceLoader,
-                "A ResourceLoader is required. Use setResourceLoader(org.springframework.core.io.ResourceLoader) to provide one.");
-        Assert.notNull(environment,
-                "An Environment is required. Use setEnvironment(org.springframework.core.env.Environment) to provide one.");
+        Assert.notNull(resourceLoader, "A ResourceLoader is required. Use setResourceLoader(org.springframework.core.io.ResourceLoader) to provide one.");
+        Assert.notNull(environment, "An Environment is required. Use setEnvironment(org.springframework.core.env.Environment) to provide one.");
     }
 
     /**
@@ -233,14 +229,12 @@ public class SpringContext implements ApplicationContextAware, ResourceLoaderAwa
     @Override
     public void setApplicationContext(final ApplicationContext applicationContext) throws BeansException
     {
-        Objects.requireNonNull(applicationContext, "applicationContext required");
-
         if (SpringContext.applicationContext != null)
         {
             throw new IllegalStateException("ApplicationContext already set !");
         }
 
-        SpringContext.applicationContext = applicationContext;
+        SpringContext.applicationContext = Objects.requireNonNull(applicationContext, "applicationContext required");
 
         if (SpringContext.applicationContext instanceof AbstractApplicationContext)
         {
@@ -254,14 +248,12 @@ public class SpringContext implements ApplicationContextAware, ResourceLoaderAwa
     @Override
     public void setEnvironment(final Environment environment)
     {
-        Objects.requireNonNull(environment, "environment required");
-
         if (SpringContext.environment != null)
         {
             throw new IllegalStateException("Environment already set !");
         }
 
-        SpringContext.environment = environment;
+        SpringContext.environment = Objects.requireNonNull(environment, "environment required");
     }
 
     /**
@@ -270,14 +262,12 @@ public class SpringContext implements ApplicationContextAware, ResourceLoaderAwa
     @Override
     public void setResourceLoader(final ResourceLoader resourceLoader)
     {
-        Objects.requireNonNull(resourceLoader, "resourceLoader required");
-
         if (SpringContext.resourceLoader != null)
         {
             throw new IllegalStateException("ResourceLoader already set !");
         }
 
-        SpringContext.resourceLoader = resourceLoader;
+        SpringContext.resourceLoader = Objects.requireNonNull(resourceLoader, "resourceLoader required");
     }
 
     // /**

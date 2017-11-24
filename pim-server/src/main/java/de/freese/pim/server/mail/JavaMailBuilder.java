@@ -11,7 +11,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
 import javax.activation.FileDataSource;
@@ -52,8 +51,7 @@ public class JavaMailBuilder
      * @param validateAddresses boolean
      * @return {@link JavaMailBuilder}
      */
-    public static JavaMailBuilder create(final Session session, final String encoding, final FileTypeMap fileTypeMap,
-            final boolean validateAddresses)
+    public static JavaMailBuilder create(final Session session, final String encoding, final FileTypeMap fileTypeMap, final boolean validateAddresses)
     {
         return new JavaMailBuilder(null, session, encoding, fileTypeMap, validateAddresses);
     }
@@ -237,7 +235,7 @@ public class JavaMailBuilder
      * @return {@link JavaMailBuilder}
      * @throws MessagingException Falls was schief geht.
      */
-    public JavaMailBuilder bcc(final InternetAddress... bcc) throws MessagingException
+    public JavaMailBuilder bcc(final InternetAddress...bcc) throws MessagingException
     {
         for (InternetAddress internetAddress : bcc)
         {
@@ -446,7 +444,7 @@ public class JavaMailBuilder
      * @return {@link JavaMailBuilder}
      * @throws MessagingException Falls was schief geht.
      */
-    public JavaMailBuilder cc(final InternetAddress... cc) throws MessagingException
+    public JavaMailBuilder cc(final InternetAddress...cc) throws MessagingException
     {
         for (InternetAddress internetAddress : cc)
         {
@@ -493,6 +491,54 @@ public class JavaMailBuilder
     }
 
     /**
+     * @param inputStream {@link InputStream}
+     * @param contentType String
+     * @param name String
+     * @return {@link DataSource}
+     */
+    protected DataSource createDataSource(final InputStream inputStream, final String contentType, final String name)
+    {
+        return new DataSource()
+        {
+            /**
+             * @see javax.activation.DataSource#getContentType()
+             */
+            @Override
+            public String getContentType()
+            {
+                return contentType;
+            }
+
+            /**
+             * @see javax.activation.DataSource#getInputStream()
+             */
+            @Override
+            public InputStream getInputStream() throws IOException
+            {
+                return inputStream;
+            }
+
+            /**
+             * @see javax.activation.DataSource#getName()
+             */
+            @Override
+            public String getName()
+            {
+                return name;
+            }
+
+            /**
+             * @see javax.activation.DataSource#getOutputStream()
+             */
+            @Override
+            public OutputStream getOutputStream()
+            {
+                throw new UnsupportedOperationException("Read-only javax.activation.DataSource");
+            }
+        };
+    }
+
+    /**
      * @param from {@link InternetAddress}
      * @return {@link JavaMailBuilder}
      * @throws MessagingException Falls was schief geht.
@@ -535,6 +581,30 @@ public class JavaMailBuilder
         from(getEncoding() != null ? new InternetAddress(from, personal, getEncoding()) : new InternetAddress(from, personal));
 
         return this;
+    }
+
+    /**
+     * @return String
+     */
+    private String getEncoding()
+    {
+        return this.encoding;
+    }
+
+    /**
+     * @return {@link FileTypeMap}
+     */
+    private FileTypeMap getFileTypeMap()
+    {
+        return this.fileTypeMap;
+    }
+
+    /**
+     * @return {@link Session}
+     */
+    private Session getSession()
+    {
+        return this.session;
     }
 
     /**
@@ -609,6 +679,32 @@ public class JavaMailBuilder
     }
 
     /**
+     * @param address String
+     * @return {@link InternetAddress}
+     * @throws MessagingException Falls was schief geht.
+     */
+    private InternetAddress parseAddress(final String address) throws MessagingException
+    {
+        InternetAddress[] parsed = InternetAddress.parse(address);
+
+        if (parsed.length != 1)
+        {
+            throw new AddressException("Illegal address", address);
+        }
+
+        InternetAddress raw = parsed[0];
+
+        try
+        {
+            return (getEncoding() != null ? new InternetAddress(raw.getAddress(), raw.getPersonal(), getEncoding()) : raw);
+        }
+        catch (UnsupportedEncodingException ex)
+        {
+            throw new MessagingException("Failed to parse embedded personal name to correct encoding", ex);
+        }
+    }
+
+    /**
      * @param subject String
      * @return {@link JavaMailBuilder}
      */
@@ -627,9 +723,8 @@ public class JavaMailBuilder
      */
     public JavaMailBuilder text(final String text, final boolean isHTML) throws MessagingException
     {
-        Objects.requireNonNull(text, "Text must not be null");
 
-        this.text = text;
+        this.text = Objects.requireNonNull(text, "Text must not be null");
         this.isHTML = isHTML;
 
         return this;
@@ -654,7 +749,7 @@ public class JavaMailBuilder
      * @return {@link JavaMailBuilder}
      * @throws MessagingException Falls was schief geht.
      */
-    public JavaMailBuilder to(final InternetAddress... to) throws MessagingException
+    public JavaMailBuilder to(final InternetAddress...to) throws MessagingException
     {
         for (InternetAddress internetAddress : to)
         {
@@ -701,111 +796,11 @@ public class JavaMailBuilder
     }
 
     /**
-     * @return String
-     */
-    private String getEncoding()
-    {
-        return this.encoding;
-    }
-
-    /**
-     * @return {@link FileTypeMap}
-     */
-    private FileTypeMap getFileTypeMap()
-    {
-        return this.fileTypeMap;
-    }
-
-    /**
-     * @return {@link Session}
-     */
-    private Session getSession()
-    {
-        return this.session;
-    }
-
-    /**
-     * @param address String
-     * @return {@link InternetAddress}
-     * @throws MessagingException Falls was schief geht.
-     */
-    private InternetAddress parseAddress(final String address) throws MessagingException
-    {
-        InternetAddress[] parsed = InternetAddress.parse(address);
-
-        if (parsed.length != 1)
-        {
-            throw new AddressException("Illegal address", address);
-        }
-
-        InternetAddress raw = parsed[0];
-
-        try
-        {
-            return (getEncoding() != null ? new InternetAddress(raw.getAddress(), raw.getPersonal(), getEncoding()) : raw);
-        }
-        catch (UnsupportedEncodingException ex)
-        {
-            throw new MessagingException("Failed to parse embedded personal name to correct encoding", ex);
-        }
-    }
-
-    /**
-     * @param inputStream {@link InputStream}
-     * @param contentType String
-     * @param name String
-     * @return {@link DataSource}
-     */
-    protected DataSource createDataSource(final InputStream inputStream, final String contentType, final String name)
-    {
-        return new DataSource()
-        {
-            /**
-             * @see javax.activation.DataSource#getContentType()
-             */
-            @Override
-            public String getContentType()
-            {
-                return contentType;
-            }
-
-            /**
-             * @see javax.activation.DataSource#getInputStream()
-             */
-            @Override
-            public InputStream getInputStream() throws IOException
-            {
-                return inputStream;
-            }
-
-            /**
-             * @see javax.activation.DataSource#getName()
-             */
-            @Override
-            public String getName()
-            {
-                return name;
-            }
-
-            /**
-             * @see javax.activation.DataSource#getOutputStream()
-             */
-            @Override
-            public OutputStream getOutputStream()
-            {
-                throw new UnsupportedOperationException("Read-only javax.activation.DataSource");
-            }
-        };
-    }
-
-    /**
      * Validate the given mail address. Called by all of MimeMessageHelper's address setters and adders.
      * <p>
-     * Default implementation invokes {@code InternetAddress.validate()}, provided that address validation is activated for the helper
-     * instance.
+     * Default implementation invokes {@code InternetAddress.validate()}, provided that address validation is activated for the helper instance.
      * <p>
-     * Note that this method will just work on JavaMail >= 1.3. You can override it for validation on older JavaMail versions or for custom
-     * validation.
+     * Note that this method will just work on JavaMail >= 1.3. You can override it for validation on older JavaMail versions or for custom validation.
      *
      * @param address the address to validate
      * @throws AddressException if validation failed

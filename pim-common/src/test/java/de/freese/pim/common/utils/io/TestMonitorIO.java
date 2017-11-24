@@ -84,7 +84,7 @@ public class TestMonitorIO
         // Pro Byte
         InputStream is = new ByteArrayInputStream(BYTES);
 
-        try (MonitorInputStream mis = new MonitorInputStream(is, is.available(), monitor))
+        try (MonitorInputStream mis = new MonitorInputStream(is, monitor, is.available()))
         {
             for (int i = 0; i < BYTES.length; i++)
             {
@@ -97,7 +97,7 @@ public class TestMonitorIO
         // Pro Byte[]
         is = new ByteArrayInputStream(BYTES);
 
-        try (MonitorInputStream mis = new MonitorInputStream(is, is.available(), monitor))
+        try (MonitorInputStream mis = new MonitorInputStream(is, monitor, is.available()))
         {
             mis.read(new byte[2]);
             Assert.assertEquals(2, monitor.getCurrent());
@@ -112,7 +112,7 @@ public class TestMonitorIO
         // Pro Byte[] Range
         is = new ByteArrayInputStream(BYTES);
 
-        try (MonitorInputStream mis = new MonitorInputStream(is, is.available(), monitor))
+        try (MonitorInputStream mis = new MonitorInputStream(is, monitor, is.available()))
         {
             mis.read(new byte[10], 2, 8);
             Assert.assertEquals(8, monitor.getCurrent());
@@ -128,7 +128,7 @@ public class TestMonitorIO
         Monitor monitor = new Monitor();
 
         // Pro Byte
-        try (MonitorOutputStream mos = new MonitorOutputStream(new ByteArrayOutputStream(), BYTES.length, monitor))
+        try (MonitorOutputStream mos = new MonitorOutputStream(new ByteArrayOutputStream(), monitor, BYTES.length))
         {
             for (int i = 0; i < BYTES.length; i++)
             {
@@ -139,7 +139,7 @@ public class TestMonitorIO
         }
 
         // Pro Byte[]
-        try (MonitorOutputStream mos = new MonitorOutputStream(new ByteArrayOutputStream(), BYTES.length, monitor))
+        try (MonitorOutputStream mos = new MonitorOutputStream(new ByteArrayOutputStream(), monitor, BYTES.length))
         {
             mos.write(new byte[2]);
             Assert.assertEquals(2, monitor.getCurrent());
@@ -152,7 +152,7 @@ public class TestMonitorIO
         }
 
         // Pro Byte[] Range
-        try (MonitorOutputStream mos = new MonitorOutputStream(new ByteArrayOutputStream(), BYTES.length, monitor))
+        try (MonitorOutputStream mos = new MonitorOutputStream(new ByteArrayOutputStream(), monitor, BYTES.length))
         {
             mos.write(BYTES, 2, 8);
             Assert.assertEquals(8, monitor.getCurrent());
@@ -168,7 +168,7 @@ public class TestMonitorIO
         Monitor monitor = new Monitor();
 
         // Pro Byte
-        try (MonitoringReadableByteChannel mrc = new MonitoringReadableByteChannel(Channels.newChannel(new ByteArrayInputStream(BYTES)), BYTES.length, monitor))
+        try (MonitoringReadableByteChannel mrc = new MonitoringReadableByteChannel(Channels.newChannel(new ByteArrayInputStream(BYTES)), monitor, BYTES.length))
         {
             ByteBuffer buffer = ByteBuffer.allocateDirect(1);
 
@@ -183,7 +183,7 @@ public class TestMonitorIO
         }
 
         // Pro Byte[]
-        try (MonitoringReadableByteChannel mrc = new MonitoringReadableByteChannel(Channels.newChannel(new ByteArrayInputStream(BYTES)), BYTES.length, monitor))
+        try (MonitoringReadableByteChannel mrc = new MonitoringReadableByteChannel(Channels.newChannel(new ByteArrayInputStream(BYTES)), monitor, BYTES.length))
         {
             mrc.read(ByteBuffer.allocateDirect(2));
             Assert.assertEquals(2, monitor.getCurrent());
@@ -205,7 +205,7 @@ public class TestMonitorIO
         Monitor monitor = new Monitor();
 
         // Pro Byte
-        try (MonitoringWritableByteChannel mwc = new MonitoringWritableByteChannel(Channels.newChannel(new ByteArrayOutputStream()), BYTES.length, monitor))
+        try (MonitoringWritableByteChannel mwc = new MonitoringWritableByteChannel(Channels.newChannel(new ByteArrayOutputStream()), monitor, BYTES.length))
         {
             ByteBuffer buffer = ByteBuffer.allocateDirect(1);
 
@@ -220,7 +220,7 @@ public class TestMonitorIO
         }
 
         // Pro Byte[]
-        try (MonitoringWritableByteChannel mwc = new MonitoringWritableByteChannel(Channels.newChannel(new ByteArrayOutputStream()), BYTES.length, monitor))
+        try (MonitoringWritableByteChannel mwc = new MonitoringWritableByteChannel(Channels.newChannel(new ByteArrayOutputStream()), monitor, BYTES.length))
         {
             mwc.write(ByteBuffer.wrap(new byte[2]));
             Assert.assertEquals(2, monitor.getCurrent());

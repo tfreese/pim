@@ -37,19 +37,16 @@ public class MonitoringWritableByteChannel implements WritableByteChannel
      * Erzeugt eine neue Instanz von {@link MonitoringWritableByteChannel}
      *
      * @param delegate {@link WritableByteChannel}
-     * @param size long; Anzahl Bytes (Größe) des gesamten Channels
      * @param monitor {@link IOMonitor}
+     * @param size long; Anzahl Bytes (Größe) des gesamten Channels
      */
-    public MonitoringWritableByteChannel(final WritableByteChannel delegate, final long size, final IOMonitor monitor)
+    public MonitoringWritableByteChannel(final WritableByteChannel delegate, final IOMonitor monitor, final long size)
     {
         super();
 
-        Objects.requireNonNull(delegate, () -> "delegate required");
-        Objects.requireNonNull(monitor, () -> "monitor required");
-
-        this.delegate = delegate;
+        this.delegate = Objects.requireNonNull(delegate, () -> "delegate required");
+        this.monitor = Objects.requireNonNull(monitor, () -> "monitor required");
         this.size = size;
-        this.monitor = monitor;
     }
 
     /**

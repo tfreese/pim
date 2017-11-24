@@ -63,7 +63,7 @@ public class TextAreaOutputStream extends OutputStream
 
     /**
      * Verhindert, das mehr als n Zeilen eingefügt werden können.
-     * 
+     *
      * @param <T> Konkreter Typ
      * @param maxLines int
      * @return {@link TextFormatter}
@@ -111,9 +111,7 @@ public class TextAreaOutputStream extends OutputStream
     {
         super();
 
-        Objects.requireNonNull(textArea, "textArea requried");
-
-        this.textArea = textArea;
+        this.textArea = Objects.requireNonNull(textArea, "textArea requried");
         // this.textArea.setTextFormatter(createTextFormatter());
     }
 

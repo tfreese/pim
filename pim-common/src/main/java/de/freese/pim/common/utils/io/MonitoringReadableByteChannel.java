@@ -37,19 +37,16 @@ public class MonitoringReadableByteChannel implements ReadableByteChannel
      * Erzeugt eine neue Instanz von {@link MonitoringReadableByteChannel}
      *
      * @param delegate {@link ReadableByteChannel}
-     * @param size long; Anzahl Bytes (Größe) des gesamten Channels
      * @param monitor {@link IOMonitor}
+     * @param size long; Anzahl Bytes (Größe) des gesamten Channels
      */
-    public MonitoringReadableByteChannel(final ReadableByteChannel delegate, final long size, final IOMonitor monitor)
+    public MonitoringReadableByteChannel(final ReadableByteChannel delegate, final IOMonitor monitor, final long size)
     {
         super();
 
-        Objects.requireNonNull(delegate, () -> "delegate required");
-        Objects.requireNonNull(monitor, () -> "monitor required");
-
-        this.delegate = delegate;
+        this.delegate = Objects.requireNonNull(delegate, () -> "delegate required");
+        this.monitor = Objects.requireNonNull(monitor, () -> "monitor required");
         this.size = size;
-        this.monitor = monitor;
     }
 
     /**

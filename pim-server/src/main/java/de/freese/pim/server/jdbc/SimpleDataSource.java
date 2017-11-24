@@ -515,9 +515,8 @@ public class SimpleDataSource implements DataSource, DisposableBean
      */
     public void setUrl(final String url)
     {
-        Objects.requireNonNull(url, "url required");
 
-        this.url = url;
+        this.url = Objects.requireNonNull(url, "url required");
     }
 
     /**
@@ -525,9 +524,8 @@ public class SimpleDataSource implements DataSource, DisposableBean
      */
     public void setUsername(final String username)
     {
-        Objects.requireNonNull(username, "username required");
 
-        this.username = username;
+        this.username = Objects.requireNonNull(username, "username required");
     }
 
     /**

@@ -38,9 +38,7 @@ public class NestendIOMonitor implements IOMonitor
     {
         super();
 
-        Objects.requireNonNull(delegate, "delegate required");
-
-        this.delegate = delegate;
+        this.delegate = Objects.requireNonNull(delegate, "delegate required");
         this.size = size;
     }
 

@@ -32,9 +32,7 @@ public class SequenceQueryExecutor
     {
         super();
 
-        Objects.requireNonNull(sequenceQuery, "sequenceQuery required");
-
-        this.sequenceQuery = sequenceQuery;
+        this.sequenceQuery = Objects.requireNonNull(sequenceQuery, "sequenceQuery required");
     }
 
     /**

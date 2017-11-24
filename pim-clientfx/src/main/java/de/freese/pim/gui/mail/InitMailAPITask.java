@@ -56,11 +56,9 @@ public class InitMailAPITask extends Task<List<FXMailFolder>>
 
         Objects.requireNonNull(treeView, "treeView required");
         Objects.requireNonNull(parent, "parent required");
-        Objects.requireNonNull(mailService, "mailService required");
-        Objects.requireNonNull(account, "account required");
 
-        this.mailService = mailService;
-        this.account = account;
+        this.mailService = Objects.requireNonNull(mailService, "mailService required");
+        this.account = Objects.requireNonNull(account, "account required");
 
         setOnSucceeded(event -> {
             List<FXMailFolder> folders = getValue();

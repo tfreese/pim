@@ -75,9 +75,7 @@ public class Crypt
     {
         super();
 
-        Objects.requireNonNull(charset, "charset required");
-
-        this.charset = charset;
+        this.charset = Objects.requireNonNull(charset, "charset required");
     }
 
     /**

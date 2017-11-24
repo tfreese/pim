@@ -91,9 +91,7 @@ public final class ConnectionHolder
     {
         Connection connection = THREAD_LOCAL.get();
 
-        Objects.requireNonNull(connection, "connection required, call #set(Connection) first");
-
-        return connection;
+        return Objects.requireNonNull(connection, "connection required, call #set(Connection) first");
     }
 
     /**

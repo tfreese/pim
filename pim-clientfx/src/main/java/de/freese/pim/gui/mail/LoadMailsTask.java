@@ -55,13 +55,10 @@ public class LoadMailsTask extends Task<Void> implements Callable<Void>
         super();
 
         Objects.requireNonNull(treeView, "treeView required");
-        Objects.requireNonNull(folders, "mailFolder required");
-        Objects.requireNonNull(mailService, "mailService required");
-        Objects.requireNonNull(account, "account required");
 
-        this.folders = folders;
-        this.mailService = mailService;
-        this.account = account;
+        this.folders = Objects.requireNonNull(folders, "mailFolder required");
+        this.mailService = Objects.requireNonNull(mailService, "mailService required");
+        this.account = Objects.requireNonNull(account, "account required");
 
         setOnSucceeded(event -> {
             treeView.refresh();

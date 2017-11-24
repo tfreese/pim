@@ -184,9 +184,7 @@ public class JdbcTemplate implements InitializingBean
         {
             super();
 
-            Objects.requireNonNull(rowMapper, "rowMapper required");
-
-            this.rowMapper = rowMapper;
+            this.rowMapper = Objects.requireNonNull(rowMapper, "rowMapper required");
         }
 
         /**

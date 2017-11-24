@@ -38,19 +38,16 @@ public class MonitorInputStream extends InputStream
      * Erzeugt eine neue Instanz von {@link MonitorInputStream}
      *
      * @param delegate {@link InputStream}
-     * @param size long; Anzahl Bytes (Größe) des gesamten Channels
      * @param monitor {@link IOMonitor};
+     * @param size long; Anzahl Bytes (Größe) des gesamten Channels
      */
-    public MonitorInputStream(final InputStream delegate, final long size, final IOMonitor monitor)
+    public MonitorInputStream(final InputStream delegate, final IOMonitor monitor, final long size)
     {
         super();
 
-        Objects.requireNonNull(delegate, () -> "delegate required");
-        Objects.requireNonNull(monitor, () -> "monitor required");
-
-        this.delegate = delegate;
+        this.delegate = Objects.requireNonNull(delegate, () -> "delegate required");
+        this.monitor = Objects.requireNonNull(monitor, () -> "monitor required");
         this.size = size;
-        this.monitor = monitor;
     }
 
     /**
