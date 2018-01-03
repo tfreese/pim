@@ -7,10 +7,11 @@ package de.freese.pim.common.function;
  * @author Thomas Freese
  * @param <E> Konkreter Exception-Typ
  */
+@FunctionalInterface
 public interface ExceptionalRunnable<E extends Exception>
 {
     /**
-     * Performs this operation..
+     * Performs this operation.
      *
      * @throws E Falls was schief geht.
      */

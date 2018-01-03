@@ -9,12 +9,13 @@ import java.util.function.Supplier;
  * @author Thomas Freese
  * @param <R> Konkreter Ergebnis-Typ
  * @param <E> Konkreter Exception-Typ
+ * @see java.util.function.Supplier
  */
+@FunctionalInterface
 public interface ExceptionalSupplier<R, E extends Exception>
 {
     /**
-     * Gets a result.
-     *
+     * @see java.util.function.Supplier#get()
      * @return Object
      * @throws Exception Falls was schief geht.
      */

@@ -191,7 +191,7 @@ public final class Utils
 
     /**
      * Führt den {@link ExceptionalSupplier} in einem try-catch aus, der im Fehlerfall eine {@link RuntimeException} wirft.
-     * 
+     *
      * @param <R> Konkreter Return-Typ
      * @param supplier {@link ExceptionalSupplier}
      * @return Object

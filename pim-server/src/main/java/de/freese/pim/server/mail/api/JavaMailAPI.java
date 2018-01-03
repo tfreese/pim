@@ -141,7 +141,7 @@ public class JavaMailAPI extends AbstractMailAPI
     @Override
     public void connect()
     {
-        Utils.executeSafely(() -> this.session = createSession());
+        this.session = Utils.executeSafely(() -> createSession());
     }
 
     /**
