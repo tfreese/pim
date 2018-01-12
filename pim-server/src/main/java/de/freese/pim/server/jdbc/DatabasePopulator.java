@@ -14,7 +14,9 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+
 import javax.sql.DataSource;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -55,6 +57,48 @@ public class DatabasePopulator
     }
 
     /**
+     * Erstellt die DB-Struktur anhand der definierten SQL-Skripte.
+     *
+     * @param connection {@link Connection}
+     * @throws Exception Falls was schief geht.
+     */
+    public void populate(final Connection connection) throws Exception
+    {
+        for (String script : this.scripts)
+        {
+            List<String> sqls = getScriptSQLs(script);
+
+            // sqls.forEach(System.out::println);
+            try (Statement statement = connection.createStatement();)
+            {
+                for (String sql : sqls)
+                {
+                    LOGGER.debug(() -> sql);
+                    statement.execute(sql);
+
+                    // int rowsAffected = statement.getUpdateCount();
+                    //
+                    // LOGGER.info("{}: Rows affected = {}", sql, rowsAffected);
+                }
+            }
+        }
+    }
+
+    /**
+     * Erstellt die DB-Struktur anhand der definierten SQL-Skripte.
+     *
+     * @param dataSource {@link DataSource}
+     * @throws Exception Falls was schief geht.
+     */
+    public void populate(final DataSource dataSource) throws Exception
+    {
+        try (Connection connection = dataSource.getConnection())
+        {
+            populate(connection);
+        }
+    }
+
+    /**
      * Liefert die Zeilen aus dem SQL-Skript.
      *
      * @param script String
@@ -69,7 +113,7 @@ public class DatabasePopulator
 
         if (url != null)
         {
-            // Funktioniert nicht, wenn die Skripte in eine anderen Archiv liegen.
+            // Funktioniert nicht, wenn die Skripte in einem anderen Archiv liegen.
             try
             {
                 Path path = Paths.get(url.toURI());
@@ -134,47 +178,5 @@ public class DatabasePopulator
         }
 
         return sqls;
-    }
-
-    /**
-     * Erstellt die DB-Struktur anhand der definierten SQL-Skripte.
-     *
-     * @param connection {@link Connection}
-     * @throws Exception Falls was schief geht.
-     */
-    public void populate(final Connection connection) throws Exception
-    {
-        for (String script : this.scripts)
-        {
-            List<String> sqls = getScriptSQLs(script);
-
-            // sqls.forEach(System.out::println);
-            try (Statement statement = connection.createStatement();)
-            {
-                for (String sql : sqls)
-                {
-                    LOGGER.debug(() -> sql);
-                    statement.execute(sql);
-
-                    // int rowsAffected = statement.getUpdateCount();
-                    //
-                    // LOGGER.info("{}: Rows affected = {}", sql, rowsAffected);
-                }
-            }
-        }
-    }
-
-    /**
-     * Erstellt die DB-Struktur anhand der definierten SQL-Skripte.
-     *
-     * @param dataSource {@link DataSource}
-     * @throws Exception Falls was schief geht.
-     */
-    public void populate(final DataSource dataSource) throws Exception
-    {
-        try (Connection connection = dataSource.getConnection())
-        {
-            populate(connection);
-        }
     }
 }

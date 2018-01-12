@@ -11,6 +11,7 @@ import java.sql.SQLException;
  * @author Thomas Freese
  * @param <R> Konkreter Row-Typ
  */
+@FunctionalInterface
 public interface RowMapper<R>
 {
     /**

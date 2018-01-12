@@ -10,6 +10,7 @@ import java.sql.SQLException;
  *
  * @author Thomas Freese
  */
+@FunctionalInterface
 public interface PreparedStatementSetter
 {
     /**

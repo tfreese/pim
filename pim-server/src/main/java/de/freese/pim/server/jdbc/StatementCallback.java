@@ -14,11 +14,12 @@ import java.sql.Statement;
  * @author Thomas Freese
  * @param <T> Konkreter Return-Typ
  */
+@FunctionalInterface
 public interface StatementCallback<T>
 {
     /**
      * Ausführung von Code für ein {@link Statement}.
-     * 
+     *
      * @param stmt {@link Statement}
      * @return Object
      * @throws SQLException Falls was schief geht.

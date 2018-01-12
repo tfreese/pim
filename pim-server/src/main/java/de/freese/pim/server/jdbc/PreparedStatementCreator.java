@@ -14,11 +14,12 @@ import java.sql.SQLException;
  *
  * @author Thomas Freese
  */
+@FunctionalInterface
 public interface PreparedStatementCreator
 {
     /**
      * Erzeugt ein {@link PreparedStatement}.
-     * 
+     *
      * @param connection {@link Connection}
      * @return {@link PreparedStatement}
      * @throws SQLException Falls was schief geht.

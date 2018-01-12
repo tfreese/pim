@@ -11,6 +11,7 @@ import java.sql.SQLException;
  * @author Thomas Freese
  * @param <T> Konkreter Return-Typ
  */
+@FunctionalInterface
 public interface ResultSetExtractor<T>
 {
     /**

@@ -13,6 +13,7 @@ import de.freese.pim.server.jdbc.sequence.SequenceProvider;
  * @author Thomas Freese
  * @param <T> Konkreter Row-Typ
  */
+@FunctionalInterface
 public interface ParameterizedPreparedStatementSetter<T>
 {
     /**
