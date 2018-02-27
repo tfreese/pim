@@ -7,12 +7,21 @@ import java.lang.reflect.Method;
 import java.sql.Connection;
 import java.util.Arrays;
 import java.util.Objects;
+
 import javax.sql.DataSource;
+
 import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Steuert eine Transaktion auf Methoden-Ebene wenn diese mit {@link Transactional} annotiert ist.<br>
- * Die {@link Connection} wird dabei im {@link ConnectionHolder} abgelegt, wenn diese noch nicht vorhanden ist.
+ * Die {@link Connection} wird dabei im {@link ConnectionHolder} abgelegt, wenn diese noch nicht vorhanden ist.<br>
+ *
+ * <pre>
+ * return (Service) Proxy.newProxyInstance(Service.class.getClassLoader(), new Class<?>[]
+ * {
+ *         Service.class
+ * }, new TransactionalInvocationHandler(dataSource, serviceBean));
+ * </pre>
  *
  * @author Thomas Freese
  */
@@ -38,8 +47,8 @@ public class TransactionalInvocationHandler implements InvocationHandler
     {
         super();
 
-        this.dataSource = Objects.requireNonNull(dataSource, () -> "dataSource required");
-        this.bean = Objects.requireNonNull(bean, () -> "bean required");
+        this.dataSource = Objects.requireNonNull(dataSource, "dataSource required");
+        this.bean = Objects.requireNonNull(bean, "bean required");
     }
 
     /**
@@ -62,7 +71,8 @@ public class TransactionalInvocationHandler implements InvocationHandler
 
         if (beanMethod == null)
         {
-            throw new RuntimeException("no bean method found: " + method.getName() + " with " + Arrays.toString(method.getParameterTypes()));
+            throw new RuntimeException(
+                    "no bean method found: " + method.getName() + " with " + Arrays.toString(method.getParameterTypes()));
         }
 
         // Transactional transactional = beanMethod.getAnnotation(Transactional.class);

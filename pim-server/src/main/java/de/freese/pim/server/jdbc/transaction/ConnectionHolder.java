@@ -87,6 +87,7 @@ public final class ConnectionHolder
      * @see #isEmpty()
      * @see #set(Connection)
      */
+    @SuppressWarnings("resource")
     public static final Connection get() throws SQLException
     {
         Connection connection = THREAD_LOCAL.get();

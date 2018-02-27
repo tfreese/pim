@@ -3,6 +3,7 @@ package de.freese.pim.server.addressbook.dao;
 
 import javax.annotation.Resource;
 import javax.sql.DataSource;
+
 import org.springframework.stereotype.Repository;
 
 /**
@@ -28,7 +29,7 @@ public class DefaultAddressBookDAO extends AbstractAddressBookDAO
     // * @param maxConnections int
     // */
     // @Resource
-    // public void setDataSource(final DataSource dataSource, @Value("${spring.datasource.tomcat.maxActive}") final int maxConnections)
+    // public void setDataSource(final DataSource dataSource, @Value("${spring.datasource.tomcat.maxActive:1}") final int maxConnections)
     // {
     // Objects.requireNonNull(dataSource, "dataSource required");
     //

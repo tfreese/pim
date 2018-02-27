@@ -16,14 +16,16 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.concurrent.Semaphore;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.IntStream;
+
 import javax.sql.DataSource;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.jdbc.datasource.DataSourceUtils;
+
 import de.freese.pim.server.jdbc.sequence.SequenceProvider;
 import de.freese.pim.server.jdbc.sequence.SequenceQuery;
 import de.freese.pim.server.jdbc.sequence.SequenceQueryExecutor;
@@ -213,17 +215,7 @@ public class JdbcTemplate implements InitializingBean
     /**
      *
      */
-    private Semaphore connectionSemaphore = null;
-
-    /**
-     *
-     */
     private DataSource dataSource = null;
-
-    /**
-    *
-    */
-    private int maxConnections = 0;
 
     /**
     *
@@ -262,86 +254,6 @@ public class JdbcTemplate implements InitializingBean
     public void afterPropertiesSet() throws Exception
     {
         Objects.requireNonNull(this.dataSource, "dataSource required");
-
-        if (this.maxConnections > 0)
-        {
-            this.connectionSemaphore = new Semaphore(this.maxConnections, true);
-        }
-    }
-
-    /**
-     * Schliesst die {@link Connection}.
-     *
-     * @param connection {@link Connection}
-     */
-    protected void closeConnection(final Connection connection)
-    {
-        try
-        {
-            DataSourceUtils.releaseConnection(connection, getDataSource());
-        }
-        finally
-        {
-            connectionSemaphoreRelease();
-        }
-    }
-
-    /**
-     * @see Semaphore#acquire()
-     */
-    protected void connectionSemaphoreAcquire()
-    {
-        if (getConnectionSemaphore() != null)
-        {
-            try
-            {
-                getConnectionSemaphore().acquire();
-            }
-            catch (Exception ex)
-            {
-                // Ignore
-            }
-        }
-    }
-
-    /**
-     * @see Semaphore#acquire()
-     */
-    protected void connectionSemaphoreRelease()
-    {
-        if (getConnectionSemaphore() != null)
-        {
-            getConnectionSemaphore().release();
-        }
-    }
-
-    /**
-     * Konvertiert bei Bedarf eine Exception.<br>
-     * Default: Bei RuntimeException und SQLException wird jeweils der Cause geliefert.
-     *
-     * @param ex {@link Exception}
-     * @return {@link RuntimeException}
-     */
-    protected RuntimeException convertException(final Exception ex)
-    {
-        // if (ex instanceof RuntimeException)
-        // {
-        // return (RuntimeException) ex;
-        // }
-
-        Throwable th = ex;
-
-        if (th instanceof RuntimeException)
-        {
-            th = th.getCause();
-        }
-
-        if (th.getCause() instanceof SQLException)
-        {
-            th = th.getCause();
-        }
-
-        return new RuntimeException(th);
     }
 
     /**
@@ -380,7 +292,8 @@ public class JdbcTemplate implements InitializingBean
      */
     public <T> T execute(final PreparedStatementCreator psc, final PreparedStatementCallback<T> action)
     {
-        return execute((ConnectionCallback<T>) con -> {
+        return execute((ConnectionCallback<T>) con ->
+        {
             try (PreparedStatement ps = psc.createPreparedStatement(con))
             {
                 T result = action.doInPreparedStatement(ps);
@@ -397,7 +310,8 @@ public class JdbcTemplate implements InitializingBean
      */
     public <T> T execute(final StatementCallback<T> action)
     {
-        return execute((ConnectionCallback<T>) con -> {
+        return execute((ConnectionCallback<T>) con ->
+        {
             try (Statement stmt = con.createStatement())
             {
                 T result = action.doInStatement(stmt);
@@ -418,43 +332,11 @@ public class JdbcTemplate implements InitializingBean
     }
 
     /**
-     * @return {@link Connection}
-     */
-    protected Connection getConnection()
-    {
-        connectionSemaphoreAcquire();
-
-        Connection connection = null;
-
-        connection = DataSourceUtils.getConnection(getDataSource());
-
-        return connection;
-    }
-
-    /**
-     * Liefert den {@link Semaphore} für die parallele Nutzung der {@link DataSource}.
-     *
-     * @return {@link Semaphore}
-     */
-    protected Semaphore getConnectionSemaphore()
-    {
-        return this.connectionSemaphore;
-    }
-
-    /**
      * @return {@link DataSource}
      */
     public DataSource getDataSource()
     {
         return this.dataSource;
-    }
-
-    /**
-     * @return {@link Logger}
-     */
-    protected Logger getLogger()
-    {
-        return LOGGER;
     }
 
     /**
@@ -475,7 +357,8 @@ public class JdbcTemplate implements InitializingBean
      */
     public long getNextID(final String sequence)
     {
-        return execute((ConnectionCallback<Long>) con -> {
+        return execute((ConnectionCallback<Long>) con ->
+        {
             try (Statement stmt = con.createStatement())
             {
                 long result = getNextID(sequence, con);
@@ -529,37 +412,6 @@ public class JdbcTemplate implements InitializingBean
     }
 
     /**
-     * Abfrage der {@link DatabaseMetaData}.
-     *
-     * @return boolean
-     */
-    protected boolean isBatchSupported()
-    {
-        return execute((ConnectionCallback<Boolean>) con -> {
-            try (Statement stmt = con.createStatement())
-            {
-                boolean result = isBatchSupported(con);
-
-                return result;
-            }
-        });
-    }
-
-    /**
-     * Abfrage der {@link DatabaseMetaData}.
-     *
-     * @param connection {@link Connection}
-     * @return boolean
-     * @throws SQLException Falls was schief geht.
-     */
-    protected boolean isBatchSupported(final Connection connection) throws SQLException
-    {
-        DatabaseMetaData dbmd = connection.getMetaData();
-
-        return dbmd.supportsBatchUpdates();
-    }
-
-    /**
      * Extrahiert ein Objekt aus dem {@link ResultSet}.
      *
      * @param <T> Konkreter Return-Typ
@@ -570,7 +422,8 @@ public class JdbcTemplate implements InitializingBean
      */
     public <T> T query(final String sql, final PreparedStatementSetter setter, final ResultSetExtractor<T> rse)
     {
-        return execute(con -> con.prepareStatement(sql), ps -> {
+        return execute(con -> con.prepareStatement(sql), ps ->
+        {
             getLogger().debug(() -> String.format("execute: %s", sql));
 
             ps.clearParameters();
@@ -607,7 +460,8 @@ public class JdbcTemplate implements InitializingBean
      */
     public <T> T query(final String sql, final ResultSetExtractor<T> rse)
     {
-        return execute((StatementCallback<T>) stmt -> {
+        return execute((StatementCallback<T>) stmt ->
+        {
             getLogger().debug(() -> String.format("execute: %s", sql));
 
             try (ResultSet rs = stmt.executeQuery(sql))
@@ -650,16 +504,6 @@ public class JdbcTemplate implements InitializingBean
     }
 
     /**
-     * Erstellt einen {@link Semaphore} im {@link JdbcTemplate}, der den Zugriff auf die {@link DataSource} reguliert.
-     *
-     * @param maxConnections int
-     */
-    public void setMaxConnections(final int maxConnections)
-    {
-        this.maxConnections = maxConnections;
-    }
-
-    /**
      * Führt ein {@link Statement#executeUpdate(String)} aus (INSERT, UPDATE, DELETE).
      *
      * @param sql String
@@ -667,7 +511,8 @@ public class JdbcTemplate implements InitializingBean
      */
     public int update(final String sql)
     {
-        return execute((StatementCallback<Integer>) stmt -> {
+        return execute((StatementCallback<Integer>) stmt ->
+        {
             getLogger().debug(() -> String.format("execute: %s", sql));
 
             return stmt.executeUpdate(sql);
@@ -683,7 +528,8 @@ public class JdbcTemplate implements InitializingBean
      */
     public int update(final String sql, final PreparedStatementSetter setter)
     {
-        return execute(con -> con.prepareStatement(sql), ps -> {
+        return execute(con -> con.prepareStatement(sql), ps ->
+        {
             getLogger().debug(() -> String.format("execute: %s", sql));
 
             ps.clearParameters();
@@ -718,9 +564,11 @@ public class JdbcTemplate implements InitializingBean
      * @param batchSize int
      * @return int[]; affectedRows
      */
-    public <T> int[] updateBatch(final String sql, final Collection<T> batchArgs, final ParameterizedPreparedStatementSetter<T> setter, final int batchSize)
+    public <T> int[] updateBatch(final String sql, final Collection<T> batchArgs, final ParameterizedPreparedStatementSetter<T> setter,
+            final int batchSize)
     {
-        return execute(con -> con.prepareStatement(sql), ps -> {
+        return execute(con -> con.prepareStatement(sql), ps ->
+        {
             getLogger().debug(() -> String.format("execute batch: size=%d; %s", batchArgs.size(), sql));
 
             boolean supportsBatch = isBatchSupported(ps.getConnection());
@@ -766,5 +614,94 @@ public class JdbcTemplate implements InitializingBean
 
             return affectedRows.stream().flatMapToInt(af -> IntStream.of(af)).toArray();
         });
+    }
+
+    /**
+     * Schliesst die {@link Connection}.
+     *
+     * @param connection {@link Connection}
+     */
+    protected void closeConnection(final Connection connection)
+    {
+        DataSourceUtils.releaseConnection(connection, getDataSource());
+    }
+
+    /**
+     * Konvertiert bei Bedarf eine Exception.<br>
+     * Default: Bei RuntimeException und SQLException wird jeweils der Cause geliefert.
+     *
+     * @param ex {@link Exception}
+     * @return {@link RuntimeException}
+     */
+    protected RuntimeException convertException(final Exception ex)
+    {
+        // if (ex instanceof RuntimeException)
+        // {
+        // return (RuntimeException) ex;
+        // }
+
+        Throwable th = ex;
+
+        if (th instanceof RuntimeException)
+        {
+            th = th.getCause();
+        }
+
+        if (th.getCause() instanceof SQLException)
+        {
+            th = th.getCause();
+        }
+
+        return new RuntimeException(th);
+    }
+
+    /**
+     * @return {@link Connection}
+     */
+    protected Connection getConnection()
+    {
+        Connection connection = DataSourceUtils.getConnection(getDataSource());
+
+        return connection;
+    }
+
+    /**
+     * @return {@link Logger}
+     */
+    protected Logger getLogger()
+    {
+        return LOGGER;
+    }
+
+    /**
+     * Abfrage der {@link DatabaseMetaData}.
+     *
+     * @return boolean
+     */
+    protected boolean isBatchSupported()
+    {
+        return execute((ConnectionCallback<Boolean>) con ->
+        {
+            try (Statement stmt = con.createStatement())
+            {
+                boolean result = isBatchSupported(con);
+
+                return result;
+            }
+        });
+    }
+
+    /**
+     * Abfrage der {@link DatabaseMetaData}.
+     *
+     * @param connection {@link Connection}
+     * @return boolean
+     * @throws SQLException Falls was schief geht.
+     */
+    protected boolean isBatchSupported(final Connection connection) throws SQLException
+    {
+        DatabaseMetaData dbmd = connection.getMetaData();
+
+        return dbmd.supportsBatchUpdates();
     }
 }

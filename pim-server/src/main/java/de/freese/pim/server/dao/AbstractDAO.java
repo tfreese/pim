@@ -5,14 +5,12 @@
 package de.freese.pim.server.dao;
 
 import java.util.Objects;
-import java.util.concurrent.Semaphore;
 
 import javax.sql.DataSource;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.annotation.Value;
 
 import de.freese.pim.server.jdbc.JdbcTemplate;
 
@@ -40,11 +38,6 @@ public abstract class AbstractDAO<D> implements InitializingBean
     // private Function<String, String> sequenceFunction = null;
 
     /**
-     *
-     */
-    private int maxConnections = 0;
-
-    /**
      * Erstellt ein neues {@link AbstractDAO} Object.
      */
     public AbstractDAO()
@@ -59,11 +52,6 @@ public abstract class AbstractDAO<D> implements InitializingBean
     public void afterPropertiesSet() throws Exception
     {
         Objects.requireNonNull(this.jdbcTemplate, "jdbcTemplate required");
-
-        if (this.maxConnections > 0)
-        {
-            this.jdbcTemplate.setMaxConnections(this.maxConnections);
-        }
 
         this.jdbcTemplate.afterPropertiesSet();
     }
@@ -118,16 +106,16 @@ public abstract class AbstractDAO<D> implements InitializingBean
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    /**
-     * Erstellt einen {@link Semaphore} im {@link JdbcTemplate}, der den Zugriff auf die {@link DataSource} reguliert.
-     *
-     * @param maxConnections int
-     */
-    @Value("${spring.datasource.tomcat.maxActive:1}")
-    public void setMaxConnections(final int maxConnections)
-    {
-        this.maxConnections = maxConnections;
-    }
+    // /**
+    // * Erstellt einen {@link Semaphore} im {@link JdbcTemplate}, der den Zugriff auf die {@link DataSource} reguliert.
+    // *
+    // * @param maxConnections int
+    // */
+    // @Value("${spring.datasource.tomcat.maxActive:1}")
+    // public void setMaxConnections(final int maxConnections)
+    // {
+    // this.maxConnections = maxConnections;
+    // }
 
     // /**
     // * Liefert die nächste ID/PK der Sequence/Tabelle.

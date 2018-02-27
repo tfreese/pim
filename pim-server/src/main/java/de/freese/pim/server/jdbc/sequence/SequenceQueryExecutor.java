@@ -9,6 +9,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Objects;
+
 import javax.sql.DataSource;
 
 /**
@@ -43,10 +44,11 @@ public class SequenceQueryExecutor
      */
     public long getNextID(final String sequence, final Connection connection) throws SQLException
     {
+        String sql = this.sequenceQuery.apply(sequence);
         long id = 0;
 
         try (Statement stmt = connection.createStatement();
-             ResultSet rs = stmt.executeQuery(this.sequenceQuery.apply(sequence)))
+             ResultSet rs = stmt.executeQuery(sql))
         {
             rs.next();
             id = rs.getLong(1);
