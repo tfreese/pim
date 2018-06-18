@@ -1,0 +1,3 @@
+INSERT INTO MAIL VALUES(114,3066,144,NULL,'thomas@freese-home.de','2017-01-02 17:10:31.000000','2017-01-02 17:10:30.000000','PKV-Vergleich: Was kostet die Private Krankenversicherung?',4528,TRUE)
+INSERT INTO MAIL VALUES(111,576,16,'Hartmut Zielke <zielke-gifhorn@arcor.de>',NULL,'2015-12-24 12:42:34.000000','2015-12-24 12:42:17.000000','',3937326,TRUE)
+INSERT INTO MAIL VALUES(134,60,60,'Blizzard Entertainment <noreply@battle.net>','"thomas@freese-home.de" <thomas@freese-home.de>','2014-06-01 09:46:22.000000',NULL,'Battle.net Account \u2013 Ihr Passwort wurde modifiziert',2969,TRUE)
