@@ -6,7 +6,6 @@ import javafx.application.Preloader.PreloaderNotification;
 /**
  * @author Thomas Freese
  */
-@SuppressWarnings("restriction")
 public class PIMPreloaderNotification implements PreloaderNotification
 {
     /**

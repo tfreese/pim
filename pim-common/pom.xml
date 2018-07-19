@@ -32,6 +32,11 @@
             <artifactId>commons-io</artifactId>
             <version>${version:commons-io:commons-io}</version>
         </dependency>
+		<dependency>
+			<groupId>javax.activation</groupId>
+			<artifactId>javax.activation-api</artifactId>
+			<version>${version:javax.activation:javax.activation-api}</version>
+		</dependency>        
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>

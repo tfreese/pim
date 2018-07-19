@@ -23,7 +23,6 @@ import javafx.scene.layout.VBox;
  *
  * @author Thomas Freese
  */
-@SuppressWarnings("restriction")
 public class MainView extends BorderPane implements View
 {
     /**

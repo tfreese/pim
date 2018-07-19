@@ -3,7 +3,6 @@ package de.freese.pim.gui.main;
 
 import java.net.URL;
 import java.util.ResourceBundle;
-
 import de.freese.pim.gui.addressbook.ContactController;
 import de.freese.pim.gui.addressbook.ContactView;
 import de.freese.pim.gui.controller.AbstractController;
@@ -20,7 +19,6 @@ import javafx.scene.control.ToolBar;
  *
  * @author Thomas Freese
  */
-@SuppressWarnings("restriction")
 public class MainController extends AbstractController
 {
     /**

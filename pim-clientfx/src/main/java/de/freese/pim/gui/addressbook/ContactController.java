@@ -42,7 +42,6 @@ import javafx.stage.Stage;
  *
  * @author Thomas Freese
  */
-@SuppressWarnings("restriction")
 public class ContactController extends AbstractController
 {
     /**
@@ -377,7 +376,7 @@ public class ContactController extends AbstractController
 
         getKontakteList().clear();
 
-        Task<List<FXKontakt>> task = new Task<List<FXKontakt>>()
+        Task<List<FXKontakt>> task = new Task<>()
         {
             /**
              * @see javafx.concurrent.Task#call()

@@ -69,7 +69,6 @@ import javafx.util.StringConverter;
  *
  * @author Thomas Freese
  */
-@SuppressWarnings("restriction")
 public final class FXUtils
 {
     /**
@@ -521,7 +520,7 @@ public final class FXUtils
     {
         Objects.requireNonNull(converter, "converter required");
 
-        final StringConverter<T> stringConverter = new StringConverter<T>()
+        final StringConverter<T> stringConverter = new StringConverter<>()
         {
             /**
              * @see javafx.util.StringConverter#fromString(java.lang.String)

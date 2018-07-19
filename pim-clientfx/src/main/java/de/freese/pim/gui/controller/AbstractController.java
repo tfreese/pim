@@ -18,7 +18,6 @@ import javafx.stage.Window;
  *
  * @author Thomas Freese
  */
-@SuppressWarnings("restriction")
 public abstract class AbstractController implements Initializable
 {
     /**

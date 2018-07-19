@@ -2,7 +2,6 @@
 package de.freese.pim.gui.addressbook;
 
 import org.apache.commons.lang3.StringUtils;
-
 import de.freese.pim.gui.addressbook.model.FXKontakt;
 import de.freese.pim.gui.view.View;
 import javafx.beans.property.StringProperty;
@@ -32,7 +31,6 @@ import javafx.scene.layout.Region;
  *
  * @author Thomas Freese
  */
-@SuppressWarnings("restriction")
 public class ContactView implements View
 {
     /**
@@ -251,10 +249,8 @@ public class ContactView implements View
         FilteredList<FXKontakt> filteredData = new FilteredList<>(FXCollections.observableArrayList());
 
         // Filter-Textfeld mit FilteredList verbinden.
-        propertyKontaktFilter.addListener((observable, oldValue, newValue) ->
-        {
-            filteredData.setPredicate(kontakt ->
-            {
+        propertyKontaktFilter.addListener((observable, oldValue, newValue) -> {
+            filteredData.setPredicate(kontakt -> {
                 if (StringUtils.isBlank(newValue))
                 {
                     return true;

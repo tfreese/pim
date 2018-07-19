@@ -24,7 +24,6 @@ import javafx.scene.layout.StackPane;
  *
  * @author Thomas Freese
  */
-@SuppressWarnings("restriction")
 public class MailView implements View
 {
     /**

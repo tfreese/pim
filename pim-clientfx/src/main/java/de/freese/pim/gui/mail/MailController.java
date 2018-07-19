@@ -47,7 +47,6 @@ import javafx.scene.paint.Color;
  *
  * @author Thomas Freese
  */
-@SuppressWarnings("restriction")
 public class MailController extends AbstractController
 {
     /**
@@ -309,7 +308,7 @@ public class MailController extends AbstractController
         this.selectedMail.addListener((observable, oldValue, newValue) -> selectedMail(newValue));
 
         this.tableViewMail.setRowFactory(tableView -> {
-            return new TableRow<FXMail>()
+            return new TableRow<>()
             {
                 /**
                  * @param item {@link FXMail}
@@ -344,7 +343,7 @@ public class MailController extends AbstractController
 
         this.treeViewMail.setShowRoot(false);
         this.treeViewMail.setRoot(null);
-        this.treeViewMail.setCellFactory(v -> new TreeCell<Object>()
+        this.treeViewMail.setCellFactory(v -> new TreeCell<>()
         {
             /**
              * @param item Object
@@ -478,7 +477,7 @@ public class MailController extends AbstractController
         PIMApplication.blockGUI();
         FXMailAccount account = getAccount(this.selectedTreeItem.get());
 
-        Task<MailContent> loadMailContentTask = new Task<MailContent>()
+        Task<MailContent> loadMailContentTask = new Task<>()
         {
             /**
              * @see javafx.concurrent.Task#call()

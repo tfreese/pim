@@ -39,7 +39,6 @@ import javafx.stage.Window;
  *
  * @author Thomas Freese
  */
-@SuppressWarnings("restriction")
 @SpringBootApplication()
 // @EnableScheduling
 // @EnableAsync // @Async("executorService")

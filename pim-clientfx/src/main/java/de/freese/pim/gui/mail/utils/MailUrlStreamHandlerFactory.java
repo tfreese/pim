@@ -54,7 +54,7 @@ public class MailUrlStreamHandlerFactory implements URLStreamHandlerFactory
         {
             Class<?> clazz = Class.forName(name);
 
-            return (URLStreamHandler) clazz.newInstance();
+            return (URLStreamHandler) clazz.getDeclaredConstructor().newInstance();
         }
         catch (Exception ex)
         {
