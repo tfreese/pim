@@ -3,12 +3,14 @@
  */
 package de.freese.pim.server.mail;
 
+import org.junit.runner.RunWith;
+import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 /**
  * @author Thomas Freese
  */
-// @RunWith(Suite.class)
+@RunWith(Suite.class)
 @SuiteClasses(
 {
         TestSendMail.class, TestReceiveMail.class, TestMailDAO.class

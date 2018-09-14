@@ -5,6 +5,8 @@ package de.freese.pim.server.addressbook;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.runner.RunWith;
+import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 import org.springframework.mock.jndi.SimpleNamingContextBuilder;
 import de.freese.pim.server.addressbook.dao.TestSpringContextAddressbookDAO;
@@ -13,7 +15,7 @@ import de.freese.pim.server.addressbook.dao.TestSpringManualTxAddressbookDAO;
 /**
  * @author Thomas Freese
  */
-// @RunWith(Suite.class)
+@RunWith(Suite.class)
 @SuiteClasses(
 {
         TestSpringContextAddressbookDAO.class, TestSpringManualTxAddressbookDAO.class
