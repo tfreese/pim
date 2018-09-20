@@ -5,9 +5,7 @@
 package de.freese.pim.server.mail;
 
 import java.util.function.Function;
-
 import javax.sql.DataSource;
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -17,7 +15,6 @@ import org.springframework.jdbc.datasource.SingleConnectionDataSource;
 import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-
 import de.freese.pim.server.mail.dao.DefaultMailDAO;
 import de.freese.pim.server.mail.dao.MailDAO;
 
@@ -42,6 +39,7 @@ public class TestMailConfig
      * @throws Exception Falls was schief geht.
      */
     @Bean(destroyMethod = "destroy")
+    // @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
     public DataSource dataSource() throws Exception
     {
         // DataSource dataSource = new JndiDataSourceLookup().getDataSource("jdbc/spring/manualTX"); // Wird in AllTests definiert.
@@ -76,6 +74,7 @@ public class TestMailConfig
      * @return {@link MailDAO}
      */
     @Bean
+    // @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
     public MailDAO mailDAO(final DataSource dataSource)
     {
         DefaultMailDAO dao = new DefaultMailDAO();

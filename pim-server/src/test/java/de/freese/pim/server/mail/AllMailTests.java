@@ -17,7 +17,6 @@ import org.junit.runners.Suite.SuiteClasses;
 })
 public class AllMailTests
 {
-
     /**
      * Erstellt ein neues {@link AllMailTests} Object.
      */
