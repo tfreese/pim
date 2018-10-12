@@ -44,7 +44,7 @@ public class TestProgressIndicator extends Application
      * @param progress 0-1
      * @return int[], RGB
      */
-    private int[] getRGB_1(final double progress)
+    int[] getRGB_1(final double progress)
     {
         int r = 0;
         int g = 0;
@@ -121,7 +121,7 @@ public class TestProgressIndicator extends Application
      * @param progress 0-1
      * @return int[], RGB
      */
-    private int[] getRGB_2(final double progress)
+    int[] getRGB_2(final double progress)
     {
         int r = 0;
         int g = 0;
@@ -142,7 +142,7 @@ public class TestProgressIndicator extends Application
      * @param progress 0-1
      * @return int[], RGB
      */
-    private int[] getRGB_3(final double progress)
+    int[] getRGB_3(final double progress)
     {
         int r = 0;
         int g = 0;
@@ -169,7 +169,7 @@ public class TestProgressIndicator extends Application
         progressIndicator.setVisible(false);
         // progressIndicator.setMaxSize(250D, 250D);
 
-        Task<Void> task = new Task<Void>()
+        Task<Void> task = new Task<>()
         {
             /**
              * @see javafx.concurrent.Task#call()

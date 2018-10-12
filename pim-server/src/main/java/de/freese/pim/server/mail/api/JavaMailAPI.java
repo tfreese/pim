@@ -240,6 +240,7 @@ public class JavaMailAPI extends AbstractMailAPI
     /**
      * @see de.freese.pim.server.mail.api.MailAPI#disconnect()
      */
+    @SuppressWarnings("resource")
     @Override
     public void disconnect()
     {
@@ -301,6 +302,7 @@ public class JavaMailAPI extends AbstractMailAPI
      * @param action {@link FolderCallback}
      * @return Object
      */
+    @SuppressWarnings("resource")
     protected <T> T executeInFolder(final String folderFullName, final FolderCallback<T> action)
     {
         return Utils.executeSafely(() -> {
@@ -336,6 +338,7 @@ public class JavaMailAPI extends AbstractMailAPI
     /**
      * @see de.freese.pim.server.mail.api.MailAPI#getFolder()
      */
+    @SuppressWarnings("resource")
     @Override
     public List<MailFolder> getFolder()
     {
@@ -375,6 +378,7 @@ public class JavaMailAPI extends AbstractMailAPI
      * @return {@link Store}
      * @throws MessagingException Falls was schief geht.
      */
+    @SuppressWarnings("resource")
     protected synchronized IMAPStore getStore() throws MessagingException
     {
         IMAPStore store = this.stores[this.storeIndex++];
@@ -543,6 +547,7 @@ public class JavaMailAPI extends AbstractMailAPI
      * @param message {@link Message}
      * @throws MessagingException Falls was schief geht.
      */
+    @SuppressWarnings("resource")
     protected void populate(final Mail mail, final Message message) throws MessagingException
     {
         InternetAddress from = Optional.ofNullable(message.getFrom()).map(f -> (InternetAddress) f[0]).orElse(null);
@@ -636,6 +641,7 @@ public class JavaMailAPI extends AbstractMailAPI
     /**
      * @see de.freese.pim.server.mail.api.MailAPI#testConnection()
      */
+    @SuppressWarnings("resource")
     @Override
     public void testConnection()
     {

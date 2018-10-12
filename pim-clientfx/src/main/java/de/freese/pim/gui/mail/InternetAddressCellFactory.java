@@ -28,7 +28,7 @@ public class InternetAddressCellFactory<S> implements Callback<TableColumn<S, In
     @Override
     public TableCell<S, InternetAddress[]> call(final TableColumn<S, InternetAddress[]> param)
     {
-        return new TableCell<S, InternetAddress[]>()
+        return new TableCell<>()
         {
             /**
              * @param item Date

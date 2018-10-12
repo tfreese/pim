@@ -29,10 +29,10 @@ public class Crypt
      */
     private static final String AES_ALGORYTHM = "AES/CBC/PKCS5Padding";
 
-    /**
-     * 32bit entspricht AES256.
-     */
-    private static final int AES_KEY_SIZE = 32;
+    // /**
+    // * 32bit entspricht AES256.
+    // */
+    // private static final int AES_KEY_SIZE = 32;
 
     /**
      *

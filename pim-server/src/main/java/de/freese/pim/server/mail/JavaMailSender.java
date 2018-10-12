@@ -169,6 +169,7 @@ public class JavaMailSender
      *            "mimeMessages" array), if any
      * @throws Exception Falls was schief geht.
      */
+    @SuppressWarnings("resource")
     protected void doSend(final MimeMessage[] mimeMessages, final Object[] originalMessages) throws Exception
     {
         Map<Object, Exception> failedMessages = new LinkedHashMap<>();

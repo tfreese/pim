@@ -31,6 +31,7 @@ import de.freese.pim.gui.mail.model.FXMailFolder;
  *
  * @author Thomas Freese
  */
+@SuppressWarnings("deprecation")
 @Service("clientMailService")
 @Profile(
 {
@@ -88,6 +89,7 @@ public class DefaultRestFXMailService extends AbstractFXMailService
     /**
      * @return {@link AsyncRestTemplate}
      */
+    @SuppressWarnings("javadoc")
     public AsyncRestTemplate getAsyncRestTemplate()
     {
         return this.asyncRestTemplate;

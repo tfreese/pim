@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.sun.javafx.binding.StringFormatter;
+// import com.sun.javafx.binding.StringFormatter;
 import de.freese.pim.common.utils.Utils;
 import de.freese.pim.gui.PIMApplication;
 import de.freese.pim.gui.controller.AbstractController;
@@ -32,8 +32,6 @@ import javafx.beans.property.adapter.JavaBeanLongPropertyBuilder;
 import javafx.beans.property.adapter.JavaBeanStringProperty;
 import javafx.beans.property.adapter.JavaBeanStringPropertyBuilder;
 import javafx.beans.value.ObservableValue;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -544,61 +542,61 @@ public final class FXUtils
         return stringConverter;
     }
 
-    /**
-     * Formattiert das Objekt als String.
-     *
-     * @param <T> Konkreter Typ des Values
-     * @param ov {@link ObservableValue}
-     * @param formatter {@link Function}
-     * @return {@link ObservableValue}<String>
-     */
-    public static <T> ObservableValue<String> toStringObservable(final ObservableValue<T> ov, final Function<T, String> formatter)
-    {
-        Objects.requireNonNull(ov, "observableValue required");
-        Objects.requireNonNull(formatter, "formatter required");
-
-        final StringFormatter stringFormatter = new StringFormatter()
-        {
-            {
-                super.bind(ov);
-            }
-
-            /**
-             * @see javafx.beans.binding.StringBinding#computeValue()
-             */
-            @Override
-            protected String computeValue()
-            {
-                return formatter.apply(ov.getValue());
-            }
-
-            /**
-             * @see javafx.beans.binding.StringBinding#dispose()
-             */
-            @Override
-            public void dispose()
-            {
-                super.unbind(ov);
-            }
-
-            /**
-             * @see javafx.beans.binding.StringBinding#getDependencies()
-             */
-            @Override
-            public ObservableList<ObservableValue<?>> getDependencies()
-            {
-                ObservableList<ObservableValue<?>> ol = FXCollections.observableArrayList();
-                ol.add(ov);
-
-                return FXCollections.unmodifiableObservableList(ol);
-            }
-        };
-
-        // Check Formatierung
-        stringFormatter.get();
-
-        return stringFormatter;
-    }
+    // /**
+    // * Formattiert das Objekt als String.
+    // *
+    // * @param <T> Konkreter Typ des Values
+    // * @param ov {@link ObservableValue}
+    // * @param formatter {@link Function}
+    // * @return {@link ObservableValue}<String>
+    // */
+    // public static <T> ObservableValue<String> toStringObservable(final ObservableValue<T> ov, final Function<T, String> formatter)
+    // {
+    // Objects.requireNonNull(ov, "observableValue required");
+    // Objects.requireNonNull(formatter, "formatter required");
+    //
+    // final StringFormatter stringFormatter = new StringFormatter()
+    // {
+    // {
+    // super.bind(ov);
+    // }
+    //
+    // /**
+    // * @see javafx.beans.binding.StringBinding#computeValue()
+    // */
+    // @Override
+    // protected String computeValue()
+    // {
+    // return formatter.apply(ov.getValue());
+    // }
+    //
+    // /**
+    // * @see javafx.beans.binding.StringBinding#dispose()
+    // */
+    // @Override
+    // public void dispose()
+    // {
+    // super.unbind(ov);
+    // }
+    //
+    // /**
+    // * @see javafx.beans.binding.StringBinding#getDependencies()
+    // */
+    // @Override
+    // public ObservableList<ObservableValue<?>> getDependencies()
+    // {
+    // ObservableList<ObservableValue<?>> ol = FXCollections.observableArrayList();
+    // ol.add(ov);
+    //
+    // return FXCollections.unmodifiableObservableList(ol);
+    // }
+    // };
+    //
+    // // Check Formatierung
+    // stringFormatter.get();
+    //
+    // return stringFormatter;
+    // }
 
     /**
      * @param control {@link Control}

@@ -16,7 +16,6 @@
 	<description>Server for PIM</description>
 	
 	<properties>
-		<skipTests>true</skipTests> 
 	</properties>
 
 	<build>

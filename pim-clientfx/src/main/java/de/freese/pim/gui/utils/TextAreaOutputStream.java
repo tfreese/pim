@@ -68,7 +68,7 @@ public class TextAreaOutputStream extends OutputStream
      * @param maxLines int
      * @return {@link TextFormatter}
      */
-    private static <T> TextFormatter<T> createLimitedTextFormatter(final int maxLines)
+    static <T> TextFormatter<T> createLimitedTextFormatter(final int maxLines)
     {
         final IntegerProperty lines = new SimpleIntegerProperty(1);
 

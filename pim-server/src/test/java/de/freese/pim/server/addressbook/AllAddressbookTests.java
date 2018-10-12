@@ -5,6 +5,7 @@ package de.freese.pim.server.addressbook;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
@@ -20,6 +21,7 @@ import de.freese.pim.server.addressbook.dao.TestSpringManualTxAddressbookDAO;
 {
         TestSpringContextAddressbookDAO.class, TestSpringManualTxAddressbookDAO.class
 })
+@Ignore
 public class AllAddressbookTests
 {
 
