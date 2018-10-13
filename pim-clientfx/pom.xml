@@ -73,7 +73,7 @@
             <groupId>de.freese.pim</groupId>
             <artifactId>pim-server</artifactId>
             <version>${project.version}</version>
-        </dependency>       
+        </dependency>
 		<dependency>
 			<groupId>org.openjfx</groupId>
 			<artifactId>javafx-controls</artifactId>
@@ -83,12 +83,12 @@
 			<groupId>org.openjfx</groupId>
 			<artifactId>javafx-fxml</artifactId>
 			<version>${version:org.openjfx:openjfx}</version>
-		</dependency>		
+		</dependency>
 		<dependency>
 			<groupId>org.openjfx</groupId>
 			<artifactId>javafx-web</artifactId>
 			<version>${version:org.openjfx:openjfx}</version>
-		</dependency>		  				      
+		</dependency>
 
         <!-- runtime scope -->
         <!--dependency>
