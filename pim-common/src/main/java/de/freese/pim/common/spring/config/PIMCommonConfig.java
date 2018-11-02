@@ -1,9 +1,6 @@
 // Created: 16.02.2017
 package de.freese.pim.common.spring.config;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import java.util.Locale;
 import java.util.TimeZone;
 import java.util.concurrent.ExecutorService;
@@ -16,6 +13,9 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.concurrent.ConcurrentTaskScheduler;
 import org.springframework.scheduling.concurrent.ScheduledExecutorFactoryBean;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 
 /**
  * Common Spring-Konfiguration von PIM.
@@ -26,7 +26,6 @@ import org.springframework.scheduling.concurrent.ScheduledExecutorFactoryBean;
 @PropertySource("classpath:application-common.properties")
 public class PIMCommonConfig
 {
-
     static
     {
         // System.setProperty("java.util.concurrent.ForkJoinPool.common.parallelism",
@@ -87,7 +86,7 @@ public class PIMCommonConfig
      * @return {@link ScheduledExecutorFactoryBean}
      */
     @Bean
-    @ConditionalOnMissingBean
+    @ConditionalOnMissingBean(ScheduledExecutorService.class)
     public ScheduledExecutorFactoryBean scheduledExecutorService()
     {
         int poolSize = Runtime.getRuntime().availableProcessors();
@@ -103,9 +102,8 @@ public class PIMCommonConfig
     }
 
     /**
-     * @param executorService          {@link ExecutorService}
+     * @param executorService {@link ExecutorService}
      * @param scheduledExecutorService {@link ScheduledExecutorService}
-     *
      * @return {@link TaskScheduler}
      */
     @Bean
@@ -117,15 +115,15 @@ public class PIMCommonConfig
         return bean;
     }
 
-//    @Bean
-//    @ConditionalOnCloudPlatform(CloudPlatform.CLOUD_FOUNDRY)
-//    public ApplicationInformation cloudFoundryApplicationInformation(Environment environment)
-//    {
-//    }
-//
-//    @Bean
-//    @ConditionalOnMissingBean(ApplicationInformation.class)
-//    public ApplicationInformation defaultApplicationInformation()
-//    {
-//    }
+    // @Bean
+    // @ConditionalOnCloudPlatform(CloudPlatform.CLOUD_FOUNDRY)
+    // public ApplicationInformation cloudFoundryApplicationInformation(Environment environment)
+    // {
+    // }
+    //
+    // @Bean
+    // @ConditionalOnMissingBean(ApplicationInformation.class)
+    // public ApplicationInformation defaultApplicationInformation()
+    // {
+    // }
 }

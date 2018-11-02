@@ -72,6 +72,7 @@ public class ServerConfig extends WebMvcConfigurationSupport // implements WebMv
      */
     @Bean
     @Primary
+    @ConditionalOnMissingBean(ExecutorService.class)
     public ThreadPoolExecutorFactoryBean executorService()
     {
         int coreSize = Runtime.getRuntime().availableProcessors() * 2;
