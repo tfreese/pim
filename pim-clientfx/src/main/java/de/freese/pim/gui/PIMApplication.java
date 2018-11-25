@@ -35,7 +35,15 @@ import javafx.stage.Window;
 
 /**
  * Startklasse der Personal Information Management Anwendung.<br>
- * https://www.iconfinder.com/
+ * https://www.iconfinder.com/<br>
+ * <br>
+ * Geht momentan nicht aus der IDE, sondern nur per Console: mvn compile exec:java<br>
+ * <br>
+ * In Eclipse:<br>
+ * <ol>
+ * <li>VM-Parameter: --add-modules javafx.controls
+ * <li>Module-Classpath: OpenJFX die jeweils 2 Jars für javafx-base, javafx-controls und javafx-graphics hinzufügen
+ * </ol>
  *
  * @author Thomas Freese
  */
@@ -211,6 +219,14 @@ public class PIMApplication extends Application
      *
      */
     private BooleanProperty ready = new SimpleBooleanProperty(false);
+
+    /**
+     * Erstellt ein neues {@link PIMApplication} Object.
+     */
+    public PIMApplication()
+    {
+        super();
+    }
 
     /**
      * @see javafx.application.Application#init()
