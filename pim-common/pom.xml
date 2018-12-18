@@ -15,6 +15,11 @@
     <name>${project.groupId} - ${project.artifactId}</name>
     <description>Common Components for PIM</description>
 
+    <!-- ${java.io.tmpdir} -->
+    <build>
+        <!--directory>${java.io.tmpdir}/maven/${project.parent.artifactId}/${project.artifactId}</directory-->
+    </build>
+
     <dependencies>
         <!-- compile scope -->
         <dependency>
@@ -32,11 +37,11 @@
             <artifactId>commons-io</artifactId>
             <version>${version:commons-io:commons-io}</version>
         </dependency>
-		<dependency>
-			<groupId>javax.activation</groupId>
-			<artifactId>javax.activation-api</artifactId>
-			<version>${version:javax.activation:javax.activation-api}</version>
-		</dependency>        
+        <dependency>
+            <groupId>javax.activation</groupId>
+            <artifactId>javax.activation-api</artifactId>
+            <version>${version:javax.activation:javax.activation-api}</version>
+        </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
@@ -50,7 +55,7 @@
 
         <!-- runtime scope -->
         <!-- provided scope -->
-        <!-- test scope -->
+        <!-- test scope -->	      
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>

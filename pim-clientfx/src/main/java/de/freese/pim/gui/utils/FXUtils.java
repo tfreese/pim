@@ -270,7 +270,7 @@ public final class FXUtils
      * Vorgegebener Farbverlauf für Progress-Wert.<br>
      * Progress muss zwischen 0-1 liegen und es werden min 2 Farben benötigt, ansonsten wird Schwarz (0,0,0) geliefert.
      *
-     * @param progress 0-1
+     * @param progress double; 0-1
      * @param colors {@link Color}[]; min. 2 Farben
      * @return int[], RGB
      */

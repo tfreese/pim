@@ -18,7 +18,9 @@
     <properties>
     </properties>
 
+    <!-- ${java.io.tmpdir} -->
     <build>
+        <!--directory>${java.io.tmpdir}/maven/${project.parent.artifactId}/${project.artifactId}</directory-->
         <resources>
             <resource>
                 <directory>src/main/resources</directory>
@@ -65,30 +67,30 @@
     <dependencies>
         <!-- compile scope -->
         <dependency>
-            <groupId>de.freese.pim</groupId>
+            <groupId>${project.parent.groupId}</groupId>
             <artifactId>pim-common</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>de.freese.pim</groupId>
+            <groupId>${project.parent.groupId}</groupId>
             <artifactId>pim-server</artifactId>
             <version>${project.version}</version>
         </dependency>
-		<dependency>
-			<groupId>org.openjfx</groupId>
-			<artifactId>javafx-controls</artifactId>
-			<version>${version:org.openjfx:openjfx}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.openjfx</groupId>
-			<artifactId>javafx-fxml</artifactId>
-			<version>${version:org.openjfx:openjfx}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.openjfx</groupId>
-			<artifactId>javafx-web</artifactId>
-			<version>${version:org.openjfx:openjfx}</version>
-		</dependency>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-controls</artifactId>
+            <version>${version:org.openjfx:openjfx}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-fxml</artifactId>
+            <version>${version:org.openjfx:openjfx}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-web</artifactId>
+            <version>${version:org.openjfx:openjfx}</version>
+        </dependency>
 
         <!-- runtime scope -->
         <!--dependency>
@@ -97,7 +99,13 @@
         </dependency -->
 
         <!-- provided scope -->
-        <!-- test scope --> 
+        <!-- test scope -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>${version:junit:junit}</version>
+			<scope>test</scope>
+		</dependency>	        
     </dependencies>
 
 </project>
