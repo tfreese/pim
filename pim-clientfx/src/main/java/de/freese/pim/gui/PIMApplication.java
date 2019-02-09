@@ -403,6 +403,8 @@ public class PIMApplication extends Application
     {
         LOGGER.info("Stop P.I.M.");
 
+        // Platform.exit();
+
         // Verhindert Fehlerdialog, wenn es Probleme beim Start gibt, z.B. fehlende Resourcen.
         System.exit(0);
     }
