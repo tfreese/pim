@@ -79,17 +79,14 @@
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-controls</artifactId>
-            <version>${version:org.openjfx:openjfx}</version>
         </dependency>
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-fxml</artifactId>
-            <version>${version:org.openjfx:openjfx}</version>
         </dependency>
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-web</artifactId>
-            <version>${version:org.openjfx:openjfx}</version>
         </dependency>
 
         <!-- runtime scope -->
@@ -103,7 +100,6 @@
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>${version:junit:junit}</version>
 			<scope>test</scope>
 		</dependency>	        
     </dependencies>

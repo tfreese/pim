@@ -85,22 +85,18 @@
 		<dependency>
 			<groupId>org.flywaydb</groupId>
 			<artifactId>flyway-core</artifactId>
-			<version>${version:org.flywaydb:flyway}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.hsqldb</groupId>
 			<artifactId>hsqldb</artifactId>
-			<version>${version:org.hsqldb:hsqldb}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-jdbc</artifactId>
-			<version>${version:org.springframework.boot:spring-boot}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-mail</artifactId>
-			<version>${version:org.springframework.boot:spring-boot}</version>
 			<exclusions>
 				<exclusion>
 					<groupId>javax.activation</groupId>
@@ -111,7 +107,6 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
-			<version>${version:org.springframework.boot:spring-boot}</version>
 			<!--exclusions>
 				<exclusion>
 				<groupId>org.springframework.boot</groupId>
@@ -125,7 +120,6 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-actuator</artifactId>
-			<version>${version:org.springframework.boot:spring-boot}</version>
 			<scope>runtime</scope>
 		</dependency>
 		<!--dependency>
@@ -141,7 +135,6 @@
 		<dependency>
 			<groupId>org.xerial</groupId>
 			<artifactId>sqlite-jdbc</artifactId>
-			<version>${version:org.xerial:sqlite-jdbc}</version>
 			<scope>runtime</scope>
 		</dependency>
 
@@ -150,13 +143,11 @@
 		<dependency>
 			<groupId>org.jsoup</groupId>
 			<artifactId>jsoup</artifactId>
-			<version>${version:org.jsoup:jsoup}</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
-			<version>${version:org.springframework.boot:spring-boot}</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
