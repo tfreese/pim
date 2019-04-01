@@ -5,8 +5,6 @@
 package de.freese.pim.gui;
 
 import java.util.concurrent.ForkJoinPool;
-import org.junit.Ignore;
-import org.junit.Test;
 import de.freese.pim.gui.utils.FXUtils;
 import javafx.application.Application;
 import javafx.beans.binding.Bindings;
@@ -22,7 +20,6 @@ import javafx.stage.Stage;
 /**
  * @author Thomas Freese
  */
-@Ignore
 public class TestProgressIndicator extends Application
 {
     /**
@@ -229,14 +226,5 @@ public class TestProgressIndicator extends Application
         primaryStage.setScene(scene);
         primaryStage.centerOnScreen();
         primaryStage.show();
-    }
-
-    /**
-     *
-     */
-    @Test
-    public void test()
-    {
-        main(null);
     }
 }

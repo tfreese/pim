@@ -96,12 +96,7 @@
         </dependency -->
 
         <!-- provided scope -->
-        <!-- test scope -->
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<scope>test</scope>
-		</dependency>	        
+        <!-- test scope -->        
     </dependencies>
 
 </project>
