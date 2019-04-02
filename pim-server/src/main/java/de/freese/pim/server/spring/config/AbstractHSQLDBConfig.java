@@ -49,7 +49,7 @@ public abstract class AbstractHSQLDBConfig extends AbstractDBConfig
      *
      * @param dataSource {@link DataSource}
      * @throws SQLException Falls was schief geht.
-     * @deprecated Siehe jsensors
+     * @deprecated Siehe misc-jsensors: HsqldbServerAutoConfiguration#hsqldbServer
      */
     @Deprecated
     protected void shutdownCompact(final DataSource dataSource) throws SQLException

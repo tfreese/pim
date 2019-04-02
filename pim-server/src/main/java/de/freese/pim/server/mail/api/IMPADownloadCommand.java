@@ -4,11 +4,9 @@ package de.freese.pim.server.mail.api;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
-
 import javax.mail.MessagingException;
 import javax.mail.Session;
 import javax.mail.internet.MimeMessage;
-
 import com.sun.mail.iap.Argument;
 import com.sun.mail.iap.ProtocolException;
 import com.sun.mail.iap.Response;

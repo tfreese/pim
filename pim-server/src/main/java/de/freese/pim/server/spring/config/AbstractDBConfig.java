@@ -26,7 +26,7 @@ public abstract class AbstractDBConfig
     /**
      * @param dataSource {@link DataSource}
      * @throws Exception Falls was schief geht.
-     * @deprecated Siehe jsensors
+     * @deprecated Siehe misc-jsensors: HsqldbServerAutoConfiguration#hsqldbServer
      */
     @Deprecated
     protected void close(final DataSource dataSource) throws Exception
