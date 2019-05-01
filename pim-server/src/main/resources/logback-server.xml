@@ -8,6 +8,7 @@
     <!--property name="pattern" value="%date{HH:mm:ss.SSS} - %clr(%.-1level){yellow}[%-12thread] - %logger{0} - %message%n" /-->
     <property name="pattern" value="%date{HH:mm:ss.SSS} - %5level - [%20.-20thread] - %replace(%-40.-40logger{0}){' ', '.'} - %message%n" />
     
+    <!--property name="log.file" value="pim-server" /-->
     <!--property name="log.dir" value="${user.dir}/log" /-->
     <property name="log.dir" value="${user.home}/.pim/logs" />
 
@@ -47,13 +48,20 @@
     </appender>
 
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${log.dir}/pim-server.log</file>        
+        <file>${log.dir}/${log.file}.log</file>        
         <append>true</append>
         <immediateFlush>true</immediateFlush>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>${log.dir}/%d{yyyy-MM,aux}/pim-server.%d{yyyy-MM-dd}.log.gz</fileNamePattern>
+            <fileNamePattern>${log.dir}/%d{yyyy-MM,aux}/${log.file}.%d{yyyy-MM-dd}.log.gz</fileNamePattern>
             <maxHistory>30</maxHistory>
+            <totalSizeCap>100MB</totalSizeCap>
         </rollingPolicy>
+        <!--rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${log.dir}/%d{yyyy-MM,aux}/${log.file}.%d{yyyy-MM-dd}_%i.log.gz</fileNamePattern>
+            <maxHistory>30</maxHistory>
+            <totalSizeCap>100MB</totalSizeCap>
+            <maxFileSize>10MB</maxFileSize>
+        </rollingPolicy-->        
         <encoder>
             <pattern>${pattern}</pattern>
             <outputPatternAsHeader>false</outputPatternAsHeader>            
