@@ -44,7 +44,7 @@
 		<surefire.useFile>false</surefire.useFile>
 
         <maven.test.skip>false</maven.test.skip>    <!-- skips compiling/packaging the tests -->
-        <skipTests>false</skipTests>                <!-- skips executing the tests -->
+        <skipTest>false</skipTest>                	<!-- skips executing the tests -->
 
         <version.java>11</version.java>
         <maven.compiler.source>${version.java}</maven.compiler.source>
@@ -71,7 +71,7 @@
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-plugin</artifactId>
                     <configuration>
-                        <skipTests>${skipTests}</skipTests>
+                        <skipTests>${skipTest}</skipTests>
                     </configuration>
                 </plugin>
                 <!--plugin>
