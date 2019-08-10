@@ -3,7 +3,7 @@
  */
 package de.freese.pim.server.addressbook;
 
-import org.junit.Ignore;
+import org.junit.jupiter.api.Disabled;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
@@ -18,7 +18,7 @@ import de.freese.pim.server.addressbook.dao.TestSpringManualTxAddressbookDAO;
 {
         TestSpringContextAddressbookDAO.class, TestSpringManualTxAddressbookDAO.class
 })
-@Ignore
+@Disabled
 public class AllAddressbookTests
 {
     /**

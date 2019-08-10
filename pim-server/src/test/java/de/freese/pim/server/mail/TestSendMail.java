@@ -3,28 +3,24 @@ package de.freese.pim.server.mail;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Properties;
-
 import org.junit.AfterClass;
 import org.junit.Assume;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
-import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
 import org.junit.runners.Parameterized;
 import org.springframework.core.io.ClassPathResource;
-
-import de.freese.pim.server.mail.JavaMailBuilder;
-import de.freese.pim.server.mail.JavaMailSender;
 
 /**
  * @author Thomas Freese
  */
 @RunWith(Parameterized.class)
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-@Ignore
+@Disabled
 public class TestSendMail extends AbstractMailTest
 {
     /**

@@ -13,7 +13,6 @@ import java.util.concurrent.ThreadPoolExecutor;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 import org.springframework.scheduling.concurrent.ThreadPoolExecutorFactoryBean;
@@ -103,7 +102,6 @@ public class TestMisc
      * @throws Exception Falls was schief geht.
      */
     @Test
-    @Ignore
     public void test020ThreadPool() throws Exception
     {
         ThreadPoolExecutorFactoryBean bean = new ThreadPoolExecutorFactoryBean();

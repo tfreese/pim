@@ -5,7 +5,7 @@ package de.freese.pim.server;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
+import org.junit.jupiter.api.Disabled;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
@@ -21,7 +21,7 @@ import de.freese.pim.server.mail.AllMailTests;
 {
         AllAddressbookTests.class, AllMailTests.class, TestCrypt.class
 })
-@Ignore
+@Disabled
 public class AllPIMTests
 {
 

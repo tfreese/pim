@@ -40,14 +40,13 @@ import org.junit.Assume;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
-import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
 import org.junit.runners.Parameterized;
 import com.sun.mail.imap.IMAPFolder;
 import com.sun.mail.util.ASCIIUtility;
-
 import de.freese.pim.common.function.FunctionStripNotLetter;
 import de.freese.pim.common.model.mail.MailContent;
 import de.freese.pim.server.mail.api.JavaMailContent;
@@ -57,7 +56,7 @@ import de.freese.pim.server.mail.api.JavaMailContent;
  */
 @RunWith(Parameterized.class)
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-@Ignore
+@Disabled
 public class TestReceiveMail extends AbstractMailTest
 {
     /**
