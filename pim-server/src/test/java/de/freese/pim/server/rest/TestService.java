@@ -40,7 +40,7 @@ import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBo
 @RestController
 @RequestMapping(path = "/test", produces =
 {
-        MediaType.APPLICATION_JSON_UTF8_VALUE
+        MediaType.APPLICATION_JSON_VALUE
 }, headers = "Accept=application/json")
 // @MultipartConfig(fileSizeThreshold = 20971520)
 public class TestService

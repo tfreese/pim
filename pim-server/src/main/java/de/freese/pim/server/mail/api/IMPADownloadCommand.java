@@ -103,6 +103,7 @@ public class IMPADownloadCommand implements ProtocolCommand
                         try (InputStream is = body.getByteArrayInputStream())
                         {
 
+                            @SuppressWarnings("unused")
                             MimeMessage mm = new MimeMessage(this.session, is);
 
                             // TODO Save Mail

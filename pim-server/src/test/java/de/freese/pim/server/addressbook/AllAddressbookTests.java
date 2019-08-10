@@ -3,13 +3,10 @@
  */
 package de.freese.pim.server.addressbook;
 
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
-import org.springframework.mock.jndi.SimpleNamingContextBuilder;
 import de.freese.pim.server.addressbook.dao.TestSpringContextAddressbookDAO;
 import de.freese.pim.server.addressbook.dao.TestSpringManualTxAddressbookDAO;
 
@@ -24,31 +21,6 @@ import de.freese.pim.server.addressbook.dao.TestSpringManualTxAddressbookDAO;
 @Ignore
 public class AllAddressbookTests
 {
-
-    /**
-     *
-     */
-    private static SimpleNamingContextBuilder namingContext = null;
-
-    /**
-     *
-     */
-    @AfterClass
-    public static void afterClass()
-    {
-        namingContext.clear();
-    }
-
-    /**
-     * @throws Exception Falls was schief geht.
-     */
-    @BeforeClass
-    public static void beforeClass() throws Exception
-    {
-        namingContext = SimpleNamingContextBuilder.emptyActivatedContextBuilder();
-        // namingContext.bind("java:comp/env/jdbc/spring/manualTX", new TestConfig().dataSource());
-    }
-
     /**
      * Erzeugt eine neue Instanz von {@link AllAddressbookTests}
      */

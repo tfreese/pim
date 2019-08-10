@@ -20,7 +20,7 @@ import de.freese.pim.server.addressbook.model.Kontakt;
  * @author Thomas Freese
  */
 @RestController
-@RequestMapping(path = "/addressBook", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+@RequestMapping(path = "/addressBook", produces = MediaType.APPLICATION_JSON_VALUE)
 public class AddressBookRestController extends AbstractRemoteService implements AddressBookService
 {
     /**

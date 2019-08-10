@@ -169,7 +169,7 @@ public class TestSimpleRestService
         // @formatter:off
         this.mockMvc.perform(get("/test/greeting"))
             .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(content().json("{\"hello\":\"World\"}"));
         // @formatter:on
     }
@@ -185,7 +185,7 @@ public class TestSimpleRestService
         // @formatter:off
         this.mockMvc.perform(get("/test/greeting").param("name", "Spring Community"))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(content().json("{\"hello\":\"Spring Community\"}"));
         // @formatter:on
     }

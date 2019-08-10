@@ -29,7 +29,7 @@ import de.freese.pim.server.mail.model.MailFolder;
  * @author Thomas Freese
  */
 @RestController()
-@RequestMapping(path = "/mail", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+@RequestMapping(path = "/mail", produces = MediaType.APPLICATION_JSON_VALUE)
 public class MailRestController extends AbstractRemoteService implements MailService
 {
     /**
