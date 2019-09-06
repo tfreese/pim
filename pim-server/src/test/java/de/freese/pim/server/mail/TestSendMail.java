@@ -1,8 +1,8 @@
 // Created: 12.12.2016
 package de.freese.pim.server.mail;
 
-import java.nio.charset.StandardCharsets;
 import java.util.Properties;
+import javax.mail.Session;
 import org.junit.AfterClass;
 import org.junit.Assume;
 import org.junit.Before;
@@ -29,6 +29,11 @@ public class TestSendMail extends AbstractMailTest
     private static JavaMailSender sender = null;
 
     /**
+    *
+    */
+    private static Session session = null;
+
+    /**
      *
      */
     @AfterClass
@@ -44,7 +49,6 @@ public class TestSendMail extends AbstractMailTest
     public static void beforeClass()
     {
         sender = new JavaMailSender();
-        sender.setEncoding(StandardCharsets.UTF_8.name());
         sender.setHost(MAIL_SMPT_HOST);
         sender.setPort(MAIL_SMPT_PORT.getPort());
         sender.setProtocol("smtp");
@@ -54,7 +58,9 @@ public class TestSendMail extends AbstractMailTest
         properties.put("mail.debug", DEBUG.toString());
         properties.put("mail.smtp.auth", "true");
         properties.put("mail.smtp.starttls.enable", "true");
+
         sender.setJavaMailProperties(properties);
+        session = sender.getSession();
     }
 
     /**
@@ -73,8 +79,7 @@ public class TestSendMail extends AbstractMailTest
     {
         Assume.assumeFalse("On Work", isWork());
 
-        sender.setUsername(this.from);
-        sender.setPassword(this.password);
+        sender.setAuthentication(this.from, this.password);
     }
 
     /**
@@ -93,12 +98,12 @@ public class TestSendMail extends AbstractMailTest
     public void test100PlainText() throws Exception
     {
         // @formatter:off
-        JavaMailBuilder.create(sender, true)
+        JavaMailBuilder.create(session)
                 .from(this.from)
                 .to(this.to)
                 .subject("test100PlainText")
                 .text("test100PlainText", false)
-                .buildAndSend();
+                .buildAndSend(sender);
         // @formatter:on
     }
 
@@ -114,13 +119,13 @@ public class TestSendMail extends AbstractMailTest
         // byte[] bytes = Files.readAllBytes(resource.getFile().toPath());
         // InputStream inputStream = new ByteArrayInputStream(bytes);
         // @formatter:off
-        JavaMailBuilder.create(sender, true)
+        JavaMailBuilder.create( session)
                 .from(this.from)
                 .to(this.to)
                 .subject("test100PlainTextWithAttachment")
                 .text("test100PlainTextWithAttachment", false)
                 .attachment("text.txt", new ClassPathResource("mail/text.txt").getFile())
-                .buildAndSend();
+                .buildAndSend(sender);
         // @formatter:on
     }
 
@@ -137,12 +142,12 @@ public class TestSendMail extends AbstractMailTest
         html.append("</body></html>");
 
         // @formatter:off
-        JavaMailBuilder.create(sender, true)
+        JavaMailBuilder.create( session)
                 .from(this.from)
                 .to(this.to)
                 .subject("test200Html")
                 .text(html.toString(), true)
-                .buildAndSend();
+                .buildAndSend(sender);
         // @formatter:on
     }
 
@@ -159,13 +164,13 @@ public class TestSendMail extends AbstractMailTest
         html.append("</body></html>");
 
         // @formatter:off
-        JavaMailBuilder.create(sender, true)
+        JavaMailBuilder.create(session)
                 .from(this.from)
                 .to(this.to)
                 .subject("test210HtmlWithAttachment")
                 .text(html.toString(), true)
                 .attachment("text.txt", new ClassPathResource("mail/text.txt").getFile())
-                .buildAndSend();
+                .buildAndSend(sender);
         // @formatter:on
     }
 
@@ -184,13 +189,13 @@ public class TestSendMail extends AbstractMailTest
         html.append("</body></html>");
 
         // @formatter:off
-        JavaMailBuilder.create(sender, true)
+        JavaMailBuilder.create(session)
                 .from(this.from)
                 .to(this.to)
                 .subject("test220HtmlWithInline")
                 .text(html.toString(), true)
                 .inline("image1", new ClassPathResource("mail/pim.png").getFile())
-                .buildAndSend();
+                .buildAndSend(sender);
         // @formatter:on
     }
 }

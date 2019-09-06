@@ -7,8 +7,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Properties;
-import javax.activation.FileTypeMap;
-import javax.activation.MimetypesFileTypeMap;
 import javax.mail.AuthenticationFailedException;
 import javax.mail.Authenticator;
 import javax.mail.MessagingException;
@@ -34,12 +32,7 @@ public class JavaMailSender
         /**
         *
         */
-        private final String password;
-
-        /**
-        *
-        */
-        private final String userName;
+        private final PasswordAuthentication authentication;
 
         /**
          * Erstellt ein neues {@link MailAuthenticator} Object.
@@ -51,24 +44,21 @@ public class JavaMailSender
         {
             super();
 
-            this.userName = userName;
-            this.password = password;
+            Objects.requireNonNull(userName, "userName required");
+            Objects.requireNonNull(password, "password required");
+
+            this.authentication = new PasswordAuthentication(userName, password);
         }
 
         /**
          * @see javax.mail.Authenticator#getPasswordAuthentication()
          */
         @Override
-        protected PasswordAuthentication getPasswordAuthentication()
+        public PasswordAuthentication getPasswordAuthentication()
         {
-            return new PasswordAuthentication(this.userName, this.password);
+            return this.authentication;
         }
     }
-
-    /**
-     *
-     */
-    public static final int DEFAULT_PORT = -1;
 
     /**
      *
@@ -83,17 +73,7 @@ public class JavaMailSender
     /**
      *
      */
-    private Authenticator authenticator = null;
-
-    /**
-     *
-     */
-    private String encoding = null;
-
-    /**
-     *
-     */
-    private FileTypeMap fileTypeMap = null;
+    private MailAuthenticator authenticator = null;
 
     /**
      *
@@ -108,27 +88,17 @@ public class JavaMailSender
     /**
      *
      */
-    private String password = null;
+    private int port = -1;
 
     /**
      *
      */
-    private int port = DEFAULT_PORT;
-
-    /**
-     *
-     */
-    private String protocol = null;
+    private String protocol = DEFAULT_PROTOCOL;
 
     /**
      *
      */
     private Session session = null;
-
-    /**
-     *
-     */
-    private String username = null;
 
     /**
      * Erzeugt eine neue Instanz von {@link JavaMailSender}
@@ -275,33 +245,11 @@ public class JavaMailSender
     }
 
     /**
-     * @return {@link Authenticator}
+     * @return {@link MailAuthenticator}
      */
-    public Authenticator getAuthenticator()
+    protected MailAuthenticator getAuthenticator()
     {
         return this.authenticator;
-    }
-
-    /**
-     * @return String
-     */
-    public String getEncoding()
-    {
-        return this.encoding;
-    }
-
-    /**
-     * @return {@link FileTypeMap}
-     */
-    public FileTypeMap getFileTypeMap()
-    {
-        if (this.fileTypeMap == null)
-        {
-            // org.springframework.mail.javamail.ConfigurableMimeFileTypeMap
-            this.fileTypeMap = new MimetypesFileTypeMap();
-        }
-
-        return this.fileTypeMap;
     }
 
     /**
@@ -323,9 +271,9 @@ public class JavaMailSender
     /**
      * @return String
      */
-    public String getPassword()
+    protected String getPassword()
     {
-        return this.password;
+        return getAuthenticator().getPasswordAuthentication().getPassword();
     }
 
     /**
@@ -387,9 +335,9 @@ public class JavaMailSender
     /**
      * @return String
      */
-    public String getUsername()
+    protected String getUsername()
     {
-        return this.username;
+        return getAuthenticator().getPasswordAuthentication().getUserName();
     }
 
     /**
@@ -417,25 +365,9 @@ public class JavaMailSender
      * @param userName String
      * @param password String
      */
-    public void setAuthenticator(final String userName, final String password)
+    public void setAuthentication(final String userName, final String password)
     {
         this.authenticator = new MailAuthenticator(userName, password);
-    }
-
-    /**
-     * @param encoding String
-     */
-    public void setEncoding(final String encoding)
-    {
-        this.encoding = encoding;
-    }
-
-    /**
-     * @param fileTypeMap {@link FileTypeMap}
-     */
-    public void setFileTypeMap(final FileTypeMap fileTypeMap)
-    {
-        this.fileTypeMap = fileTypeMap;
     }
 
     /**
@@ -443,7 +375,7 @@ public class JavaMailSender
      */
     public void setHost(final String host)
     {
-        this.host = host;
+        this.host = Objects.requireNonNull(host, "host required");
     }
 
     /**
@@ -451,15 +383,7 @@ public class JavaMailSender
      */
     public void setJavaMailProperties(final Properties javaMailProperties)
     {
-        this.javaMailProperties = javaMailProperties;
-    }
-
-    /**
-     * @param password String
-     */
-    public void setPassword(final String password)
-    {
-        this.password = password;
+        this.javaMailProperties = Objects.requireNonNull(javaMailProperties, "javaMailProperties required");
     }
 
     /**
@@ -475,7 +399,7 @@ public class JavaMailSender
      */
     public void setProtocol(final String protocol)
     {
-        this.protocol = protocol;
+        this.protocol = Objects.requireNonNull(protocol, "protocol required");
     }
 
     /**
@@ -484,14 +408,6 @@ public class JavaMailSender
     public synchronized void setSession(final Session session)
     {
         this.session = Objects.requireNonNull(session, () -> "Session must not be null");
-    }
-
-    /**
-     * @param username String
-     */
-    public void setUsername(final String username)
-    {
-        this.username = username;
     }
 
     /**

@@ -34,7 +34,7 @@ import de.freese.pim.server.addressbook.TestAddressbookConfig;
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @ActiveProfiles("test")
 // @DirtiesContext
-public class TestSpringContextAddressbookDAO extends AbstractDAOTextCase
+public class TestSpringContextAddressbookDAO extends AbstractDAOTestCase
 {
     /**
      *
@@ -51,7 +51,7 @@ public class TestSpringContextAddressbookDAO extends AbstractDAOTextCase
     }
 
     /**
-     * @see de.freese.pim.server.addressbook.dao.AbstractDAOTextCase#test0100InsertKontakts()
+     * @see de.freese.pim.server.addressbook.dao.AbstractDAOTestCase#test0100InsertKontakts()
      */
     @Override
     @Test
@@ -62,7 +62,7 @@ public class TestSpringContextAddressbookDAO extends AbstractDAOTextCase
     }
 
     /**
-     * @see de.freese.pim.server.addressbook.dao.AbstractDAOTextCase#test0110InsertKontaktWithNullVorname()
+     * @see de.freese.pim.server.addressbook.dao.AbstractDAOTestCase#test0110InsertKontaktWithNullVorname()
      */
     @Override
     @Test
@@ -73,7 +73,7 @@ public class TestSpringContextAddressbookDAO extends AbstractDAOTextCase
     }
 
     /**
-     * @see de.freese.pim.server.addressbook.dao.AbstractDAOTextCase#test0120InsertKontaktWithBlankVorname()
+     * @see de.freese.pim.server.addressbook.dao.AbstractDAOTestCase#test0120InsertKontaktWithBlankVorname()
      */
     @Override
     @Test(expected = SQLIntegrityConstraintViolationException.class)
@@ -84,7 +84,7 @@ public class TestSpringContextAddressbookDAO extends AbstractDAOTextCase
     }
 
     /**
-     * @see de.freese.pim.server.addressbook.dao.AbstractDAOTextCase#test0130InsertKontaktExisting()
+     * @see de.freese.pim.server.addressbook.dao.AbstractDAOTestCase#test0130InsertKontaktExisting()
      */
     @Override
     @Test(expected = SQLIntegrityConstraintViolationException.class)
@@ -95,7 +95,7 @@ public class TestSpringContextAddressbookDAO extends AbstractDAOTextCase
     }
 
     /**
-     * @see de.freese.pim.server.addressbook.dao.AbstractDAOTextCase#test0200UpdateKontakt()
+     * @see de.freese.pim.server.addressbook.dao.AbstractDAOTestCase#test0200UpdateKontakt()
      */
     @Override
     @Test
@@ -106,7 +106,7 @@ public class TestSpringContextAddressbookDAO extends AbstractDAOTextCase
     }
 
     /**
-     * @see de.freese.pim.server.addressbook.dao.AbstractDAOTextCase#test0300InsertAttribut()
+     * @see de.freese.pim.server.addressbook.dao.AbstractDAOTestCase#test0300InsertAttribut()
      */
     @Override
     @Test
@@ -117,7 +117,7 @@ public class TestSpringContextAddressbookDAO extends AbstractDAOTextCase
     }
 
     /**
-     * @see de.freese.pim.server.addressbook.dao.AbstractDAOTextCase#test0310InsertInsertAttributWithNullValue()
+     * @see de.freese.pim.server.addressbook.dao.AbstractDAOTestCase#test0310InsertInsertAttributWithNullValue()
      */
     @Override
     @Test(expected = SQLIntegrityConstraintViolationException.class)
@@ -128,7 +128,7 @@ public class TestSpringContextAddressbookDAO extends AbstractDAOTextCase
     }
 
     /**
-     * @see de.freese.pim.server.addressbook.dao.AbstractDAOTextCase#test0320InsertInsertAttributWithBlankValue()
+     * @see de.freese.pim.server.addressbook.dao.AbstractDAOTestCase#test0320InsertInsertAttributWithBlankValue()
      */
     @Override
     @Test(expected = SQLIntegrityConstraintViolationException.class)
@@ -139,7 +139,7 @@ public class TestSpringContextAddressbookDAO extends AbstractDAOTextCase
     }
 
     /**
-     * @see de.freese.pim.server.addressbook.dao.AbstractDAOTextCase#test0330InsertInsertAttributWithNull()
+     * @see de.freese.pim.server.addressbook.dao.AbstractDAOTestCase#test0330InsertInsertAttributWithNull()
      */
     @Override
     @Test(expected = SQLIntegrityConstraintViolationException.class)
@@ -150,7 +150,7 @@ public class TestSpringContextAddressbookDAO extends AbstractDAOTextCase
     }
 
     /**
-     * @see de.freese.pim.server.addressbook.dao.AbstractDAOTextCase#test0340InsertInsertAttributWithBlank()
+     * @see de.freese.pim.server.addressbook.dao.AbstractDAOTestCase#test0340InsertInsertAttributWithBlank()
      */
     @Override
     @Test(expected = SQLIntegrityConstraintViolationException.class)
@@ -161,7 +161,7 @@ public class TestSpringContextAddressbookDAO extends AbstractDAOTextCase
     }
 
     /**
-     * @see de.freese.pim.server.addressbook.dao.AbstractDAOTextCase#test0350InsertAttributExisting()
+     * @see de.freese.pim.server.addressbook.dao.AbstractDAOTestCase#test0350InsertAttributExisting()
      */
     @Override
     @Test(expected = SQLIntegrityConstraintViolationException.class)
@@ -172,7 +172,7 @@ public class TestSpringContextAddressbookDAO extends AbstractDAOTextCase
     }
 
     /**
-     * @see de.freese.pim.server.addressbook.dao.AbstractDAOTextCase#test0400UpdateAttribut()
+     * @see de.freese.pim.server.addressbook.dao.AbstractDAOTestCase#test0400UpdateAttribut()
      */
     @Override
     @Test
@@ -183,7 +183,7 @@ public class TestSpringContextAddressbookDAO extends AbstractDAOTextCase
     }
 
     /**
-     * @see de.freese.pim.server.addressbook.dao.AbstractDAOTextCase#test0500GetKontaktDetailsAll()
+     * @see de.freese.pim.server.addressbook.dao.AbstractDAOTestCase#test0500GetKontaktDetailsAll()
      */
     @Override
     @Test
@@ -194,7 +194,7 @@ public class TestSpringContextAddressbookDAO extends AbstractDAOTextCase
     }
 
     /**
-     * @see de.freese.pim.server.addressbook.dao.AbstractDAOTextCase#test0510GetKontaktDetailsWithID()
+     * @see de.freese.pim.server.addressbook.dao.AbstractDAOTestCase#test0510GetKontaktDetailsWithID()
      */
     @Override
     @Test
@@ -205,7 +205,7 @@ public class TestSpringContextAddressbookDAO extends AbstractDAOTextCase
     }
 
     /**
-     * @see de.freese.pim.server.addressbook.dao.AbstractDAOTextCase#test0520GetKontaktDetailsWithIDs()
+     * @see de.freese.pim.server.addressbook.dao.AbstractDAOTestCase#test0520GetKontaktDetailsWithIDs()
      */
     @Override
     @Test
@@ -216,7 +216,7 @@ public class TestSpringContextAddressbookDAO extends AbstractDAOTextCase
     }
 
     /**
-     * @see de.freese.pim.server.addressbook.dao.AbstractDAOTextCase#test0600GetKontakte()
+     * @see de.freese.pim.server.addressbook.dao.AbstractDAOTestCase#test0600GetKontakte()
      */
     @Override
     @Test
@@ -227,7 +227,7 @@ public class TestSpringContextAddressbookDAO extends AbstractDAOTextCase
     }
 
     /**
-     * @see de.freese.pim.server.addressbook.dao.AbstractDAOTextCase#test0700SearchKontakts()
+     * @see de.freese.pim.server.addressbook.dao.AbstractDAOTestCase#test0700SearchKontakts()
      */
     @Override
     @Test
@@ -238,7 +238,7 @@ public class TestSpringContextAddressbookDAO extends AbstractDAOTextCase
     }
 
     /**
-     * @see de.freese.pim.server.addressbook.dao.AbstractDAOTextCase#test0900DeleteAttribut()
+     * @see de.freese.pim.server.addressbook.dao.AbstractDAOTestCase#test0900DeleteAttribut()
      */
     @Override
     @Test
@@ -249,7 +249,7 @@ public class TestSpringContextAddressbookDAO extends AbstractDAOTextCase
     }
 
     /**
-     * @see de.freese.pim.server.addressbook.dao.AbstractDAOTextCase#test1000DeleteKontakt()
+     * @see de.freese.pim.server.addressbook.dao.AbstractDAOTestCase#test1000DeleteKontakt()
      */
     @Override
     @Test

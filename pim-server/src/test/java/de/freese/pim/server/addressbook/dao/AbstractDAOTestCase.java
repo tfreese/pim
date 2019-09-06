@@ -19,7 +19,7 @@ import de.freese.pim.server.addressbook.model.KontaktAttribut;
  *
  * @author Thomas Freese
  */
-public abstract class AbstractDAOTextCase
+public abstract class AbstractDAOTestCase
 {
     /**
      * @param dataSource {@link DataSource}
@@ -30,9 +30,9 @@ public abstract class AbstractDAOTextCase
     }
 
     /**
-     * Erstellt ein neues {@link AbstractDAOTextCase} Object.
+     * Erstellt ein neues {@link AbstractDAOTestCase} Object.
      */
-    public AbstractDAOTextCase()
+    public AbstractDAOTestCase()
     {
         super();
     }
