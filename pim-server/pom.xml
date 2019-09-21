@@ -78,10 +78,6 @@
 			<artifactId>pim-common</artifactId>
 			<version>${project.version}</version>
 		</dependency>
-		<!--dependency>
-			<groupId>com.sun.mail</groupId>
-			<artifactId>javax.mail</artifactId>
-			</dependency -->
 		<dependency>
 			<groupId>org.flywaydb</groupId>
 			<artifactId>flyway-core</artifactId>
