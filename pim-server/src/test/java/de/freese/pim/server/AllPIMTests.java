@@ -22,6 +22,7 @@ import de.freese.pim.server.mail.AllMailTests;
         AllAddressbookTests.class, AllMailTests.class, TestCrypt.class
 })
 @Disabled
+@SuppressWarnings("deprecation")
 public class AllPIMTests
 {
 

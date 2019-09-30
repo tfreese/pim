@@ -39,6 +39,7 @@ public class HsqldbMemoryConfig extends AbstractHSQLDBConfig
     /**
      * @see de.freese.pim.server.spring.config.AbstractDBConfig#preDestroy()
      */
+    @SuppressWarnings("deprecation")
     @Override
     @PreDestroy
     public void preDestroy() throws Exception

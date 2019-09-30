@@ -80,6 +80,7 @@ public class HsqldbEmbeddedServerConfig extends AbstractHSQLDBConfig
     /**
      * @see de.freese.pim.server.spring.config.AbstractDBConfig#preDestroy()
      */
+    @SuppressWarnings("deprecation")
     @Override
     @PreDestroy
     public void preDestroy() throws Exception
