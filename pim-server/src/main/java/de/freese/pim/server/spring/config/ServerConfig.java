@@ -2,6 +2,7 @@
 package de.freese.pim.server.spring.config;
 
 import java.util.List;
+import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -71,11 +72,14 @@ public class ServerConfig extends WebMvcConfigurationSupport // implements WebMv
      * @return {@link ThreadPoolExecutorFactoryBean}
      */
     @Bean
+    @ConditionalOnMissingBean(
+    {
+            Executor.class, ExecutorService.class
+    })
     @Primary
-    @ConditionalOnMissingBean(ExecutorService.class)
     public ThreadPoolExecutorFactoryBean executorService()
     {
-        int coreSize = Runtime.getRuntime().availableProcessors() * 2;
+        int coreSize = Math.max(2, Runtime.getRuntime().availableProcessors());
         int maxSize = coreSize * 2;
         int queueSize = maxSize * 2;
         int keepAliveSeconds = 60;
@@ -132,11 +136,10 @@ public class ServerConfig extends WebMvcConfigurationSupport // implements WebMv
      * @return {@link ScheduledExecutorFactoryBean}
      */
     @Bean
-    // @Primary
     @ConditionalOnMissingBean(ScheduledExecutorService.class)
     public ScheduledExecutorFactoryBean scheduledExecutorService()
     {
-        int poolSize = Runtime.getRuntime().availableProcessors();
+        int poolSize = Math.max(2, Runtime.getRuntime().availableProcessors() / 2);
 
         ScheduledExecutorFactoryBean bean = new ScheduledExecutorFactoryBean();
         bean.setPoolSize(poolSize);
@@ -157,11 +160,15 @@ public class ServerConfig extends WebMvcConfigurationSupport // implements WebMv
     {
             "taskExecutor", "asyncTaskExecutor"
     })
-    @ConditionalOnMissingBean(AsyncTaskExecutor.class)
+    @ConditionalOnMissingBean(
+    {
+            AsyncTaskExecutor.class, TaskExecutor.class
+    })
     // public TaskExecutor springTaskExecutor(@Qualifier("executorService") final ExecutorService executorService)
     public AsyncTaskExecutor springTaskExecutor()
     {
         AsyncTaskExecutor bean = new ConcurrentTaskExecutor(executorService().getObject());
+        // AsyncTaskExecutor bean = new ConcurrentTaskExecutor(executorService);
 
         return bean;
     }

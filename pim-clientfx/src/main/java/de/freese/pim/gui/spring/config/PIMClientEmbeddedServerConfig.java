@@ -8,6 +8,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ThreadPoolExecutor;
 import javax.annotation.Resource;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -15,6 +16,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.task.AsyncTaskExecutor;
+import org.springframework.core.task.TaskExecutor;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.scheduling.concurrent.ConcurrentTaskExecutor;
@@ -68,7 +70,7 @@ public class PIMClientEmbeddedServerConfig extends WebMvcConfigurationSupport
     {
         // Verlagert die asynchrone Ausführung von Server-Requests (Callable, WebAsyncTask) in diesen ThreadPool.
         // Ansonsten würde für jeden Request immer ein neuer Thread erzeugt, siehe TaskExecutor des RequestMappingHandlerAdapter.
-        configurer.setTaskExecutor(taskExecutor(executorService().getObject()));
+        configurer.setTaskExecutor(springTaskExecutor(executorService().getObject()));
     }
 
     /**
@@ -77,7 +79,7 @@ public class PIMClientEmbeddedServerConfig extends WebMvcConfigurationSupport
     @Bean
     public ThreadPoolExecutorFactoryBean executorService()
     {
-        int coreSize = Runtime.getRuntime().availableProcessors() * 2;
+        int coreSize = Math.max(2, Runtime.getRuntime().availableProcessors());
         int maxSize = coreSize;
         int queueSize = maxSize * 5;
 
@@ -168,9 +170,13 @@ public class PIMClientEmbeddedServerConfig extends WebMvcConfigurationSupport
      */
     @Bean(
     {
-            "taskExecutor", "serverTaskExecutor"
+            "taskExecutor", "asyncTaskExecutor"
     })
-    public AsyncTaskExecutor taskExecutor(final ExecutorService executorService)
+    @ConditionalOnMissingBean(
+    {
+            AsyncTaskExecutor.class, TaskExecutor.class
+    })
+    public AsyncTaskExecutor springTaskExecutor(final ExecutorService executorService)
     {
         AsyncTaskExecutor bean = new ConcurrentTaskExecutor(executorService);
 

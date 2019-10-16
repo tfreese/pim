@@ -89,7 +89,7 @@ public class PIMCommonConfig
     @ConditionalOnMissingBean(ScheduledExecutorService.class)
     public ScheduledExecutorFactoryBean scheduledExecutorService()
     {
-        int poolSize = Runtime.getRuntime().availableProcessors();
+        int poolSize = Math.max(2, Runtime.getRuntime().availableProcessors() / 2);
 
         ScheduledExecutorFactoryBean bean = new ScheduledExecutorFactoryBean();
         bean.setPoolSize(poolSize);
@@ -106,11 +106,11 @@ public class PIMCommonConfig
      * @param scheduledExecutorService {@link ScheduledExecutorService}
      * @return {@link TaskScheduler}
      */
-    @Bean
+    @Bean("taskScheduler")
     @ConditionalOnMissingBean(TaskScheduler.class)
-    public TaskScheduler taskScheduler(final ExecutorService executorService, final ScheduledExecutorService scheduledExecutorService)
+    public TaskScheduler springTaskScheduler(final ExecutorService executorService, final ScheduledExecutorService scheduledExecutorService)
     {
-        ConcurrentTaskScheduler bean = new ConcurrentTaskScheduler(executorService, scheduledExecutorService);
+        TaskScheduler bean = new ConcurrentTaskScheduler(executorService, scheduledExecutorService);
 
         return bean;
     }
