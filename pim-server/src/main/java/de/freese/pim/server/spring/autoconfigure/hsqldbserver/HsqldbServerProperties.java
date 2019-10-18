@@ -8,7 +8,35 @@ import java.util.List;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
- * Properties für {@link HsqldbServerAutoConfiguration}.
+ * Properties für {@link HsqldbServerAutoConfiguration}.<br>
+ * Format:
+ *
+ * <pre>
+ * Als Properties:
+ * hsqldb.server.enabled = true
+ * hsqldb.server.port = ${port}
+ * hsqldb.server.noSystemExit = true
+ * hsqldb.server.silent = true
+ * hsqldb.server.trace = false
+ * hsqldb.server.db[0].name=${name0}
+ * hsqldb.server.db[0].path=file:/${path}/${name0}
+ * hsqldb.server.db[1].name=${name1}
+ * hsqldb.server.db[1].path=mem:${name1}
+ *
+ * Als YAML:
+ * hsqldb:
+ *     server:
+ *         enabled: true
+ *         port: ${port}
+ *         noSystemExit: true
+ *         silent: true
+ *         trace: trace
+ *         db:
+ *             - name: ${name0}
+ *               path: file:/${path}/${name0}
+ *             - name: ${name1}
+ *               path: mem:${name1}
+ * </pre>
  *
  * @author Thomas Freese
  */

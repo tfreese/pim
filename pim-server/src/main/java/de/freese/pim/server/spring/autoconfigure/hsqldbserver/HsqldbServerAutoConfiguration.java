@@ -3,7 +3,6 @@
  */
 package de.freese.pim.server.spring.autoconfigure.hsqldbserver;
 
-import de.freese.pim.server.spring.autoconfigure.hsqldbserver.HsqldbServerProperties.DB;
 import java.util.List;
 import javax.annotation.Resource;
 import org.hsqldb.Database;
@@ -18,22 +17,40 @@ import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import de.freese.pim.server.spring.autoconfigure.hsqldbserver.HsqldbServerProperties.DB;
 
 /**
  * AutoConfiguration für ein HSQLDB-{@link Server}.<br>
  * Nur wenn noch kein {@link Server} vorhanden ist, wird ein {@link Server} erzeugt.<br>
  * Wird VOR der {@link DataSourceAutoConfiguration} ausgeführt.<br>
  * <br>
- * Beispiel:
+ * Format:
  *
  * <pre>
+ * Als Properties:
  * hsqldb.server.enabled = true
- * hsqldb.server.port = ${hsqldbPort}
+ * hsqldb.server.port = ${port}
  * hsqldb.server.noSystemExit = true
  * hsqldb.server.silent = true
  * hsqldb.server.trace = false
- * hsqldb.server.db[0].name=${pim.db-name}
- * hsqldb.server.db[0].path=file:/${pim.home}/${pim.db-name}
+ * hsqldb.server.db[0].name=${name0}
+ * hsqldb.server.db[0].path=file:/${path}/${name0}
+ * hsqldb.server.db[1].name=${name1}
+ * hsqldb.server.db[1].path=mem:${name1}
+ *
+ * Als YAML:
+ * hsqldb:
+ *     server:
+ *         enabled: true
+ *         port: ${port}
+ *         noSystemExit: true
+ *         silent: true
+ *         trace: trace
+ *         db:
+ *             - name: ${name0}
+ *               path: file:/${path}/${name0}
+ *             - name: ${name1}
+ *               path: mem:${name1}
  * </pre>
  *
  * @author Thomas Freese
@@ -68,7 +85,6 @@ public class HsqldbServerAutoConfiguration
 
     /**
      * @return {@link Server}
-     *
      * @throws Exception Falls was schief geht.
      */
     @Bean(initMethod = "start", destroyMethod = "shutdown")
