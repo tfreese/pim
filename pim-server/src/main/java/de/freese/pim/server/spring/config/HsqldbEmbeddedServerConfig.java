@@ -10,7 +10,7 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.annotation.PropertySources;
 import org.springframework.util.SocketUtils;
 import de.freese.pim.common.utils.Utils;
-import de.freese.pim.server.spring.autoconfigure.hsqldbserver.HsqldbServerAutoConfiguration;
+import de.freese.spring.autoconfigure.hsqldbserver.HsqldbServerAutoConfiguration;
 
 /**
  * Spring-Konfiguration der Datenbank.<br>
