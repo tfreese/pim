@@ -4,19 +4,17 @@
 package de.freese.pim.server.addressbook.dao;
 
 import java.sql.SQLIntegrityConstraintViolationException;
-
 import javax.sql.DataSource;
-
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.FixMethodOrder;
-import org.junit.Test;
-import org.junit.runners.MethodSorters;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
-
 import de.freese.pim.server.addressbook.TestAddressbookConfig;
 
 /**
@@ -24,7 +22,7 @@ import de.freese.pim.server.addressbook.TestAddressbookConfig;
  *
  * @author Thomas Freese
  */
-@FixMethodOrder(MethodSorters.NAME_ASCENDING)
+@TestMethodOrder(MethodOrderer.Alphanumeric.class)
 public class TestSpringManualTxAddressbookDAO extends AbstractDAOTestCase
 {
     /**
@@ -45,8 +43,8 @@ public class TestSpringManualTxAddressbookDAO extends AbstractDAOTestCase
     /**
      *
      */
-    @AfterClass
-    public static void afterClass()
+    @AfterAll
+    public static void afterAll()
     {
         closeDataSource(dataSource);
     }
@@ -54,8 +52,8 @@ public class TestSpringManualTxAddressbookDAO extends AbstractDAOTestCase
     /**
      * @throws Exception Falls was schief geht.
      */
-    @BeforeClass
-    public static void beforeClass() throws Exception
+    @BeforeAll
+    public static void beforeAll() throws Exception
     {
         TestAddressbookConfig config = new TestAddressbookConfig();
 
@@ -125,46 +123,50 @@ public class TestSpringManualTxAddressbookDAO extends AbstractDAOTestCase
      * @see de.freese.pim.server.addressbook.dao.AbstractDAOTestCase#test0120InsertKontaktWithBlankVorname()
      */
     @Override
-    @Test(expected = SQLIntegrityConstraintViolationException.class)
+    @Test
     public void test0120InsertKontaktWithBlankVorname() throws Throwable
     {
         TransactionDefinition transactionDefinition = new DefaultTransactionDefinition();
         TransactionStatus transactionStatus = transactionManager.getTransaction(transactionDefinition);
 
-        try
-        {
-            doTest0120InsertKontaktWithBlankVorname(addressBookDAO);
+        Assertions.assertThrows(SQLIntegrityConstraintViolationException.class, () -> {
+            try
+            {
+                doTest0120InsertKontaktWithBlankVorname(addressBookDAO);
 
-            // transactionManager.commit(transactionStatus);
-        }
-        catch (Throwable ex)
-        {
-            transactionManager.rollback(transactionStatus);
-            throw ex;
-        }
+                // transactionManager.commit(transactionStatus);
+            }
+            catch (Throwable ex)
+            {
+                transactionManager.rollback(transactionStatus);
+                throw ex;
+            }
+        });
     }
 
     /**
      * @see de.freese.pim.server.addressbook.dao.AbstractDAOTestCase#test0130InsertKontaktExisting()
      */
     @Override
-    @Test(expected = SQLIntegrityConstraintViolationException.class)
+    @Test
     public void test0130InsertKontaktExisting() throws Throwable
     {
         TransactionDefinition transactionDefinition = new DefaultTransactionDefinition();
         TransactionStatus transactionStatus = transactionManager.getTransaction(transactionDefinition);
 
-        try
-        {
-            doTest0130InsertKontaktExisting(addressBookDAO);
+        Assertions.assertThrows(SQLIntegrityConstraintViolationException.class, () -> {
+            try
+            {
+                doTest0130InsertKontaktExisting(addressBookDAO);
 
-            // transactionManager.commit(transactionStatus);
-        }
-        catch (Throwable ex)
-        {
-            transactionManager.rollback(transactionStatus);
-            throw ex;
-        }
+                // transactionManager.commit(transactionStatus);
+            }
+            catch (Throwable ex)
+            {
+                transactionManager.rollback(transactionStatus);
+                throw ex;
+            }
+        });
     }
 
     /**
@@ -217,115 +219,125 @@ public class TestSpringManualTxAddressbookDAO extends AbstractDAOTestCase
      * @see de.freese.pim.server.addressbook.dao.AbstractDAOTestCase#test0310InsertInsertAttributWithNullValue()
      */
     @Override
-    @Test(expected = SQLIntegrityConstraintViolationException.class)
+    @Test
     public void test0310InsertInsertAttributWithNullValue() throws Throwable
     {
         TransactionDefinition transactionDefinition = new DefaultTransactionDefinition();
         TransactionStatus transactionStatus = transactionManager.getTransaction(transactionDefinition);
 
-        try
-        {
-            doTest0310InsertInsertAttributWithNullValue(addressBookDAO);
+        Assertions.assertThrows(SQLIntegrityConstraintViolationException.class, () -> {
+            try
+            {
+                doTest0310InsertInsertAttributWithNullValue(addressBookDAO);
 
-            // transactionManager.commit(transactionStatus);
-        }
-        catch (Throwable ex)
-        {
-            transactionManager.rollback(transactionStatus);
-            throw ex;
-        }
+                // transactionManager.commit(transactionStatus);
+            }
+            catch (Throwable ex)
+            {
+                transactionManager.rollback(transactionStatus);
+                throw ex;
+            }
+        });
     }
 
     /**
      * @see de.freese.pim.server.addressbook.dao.AbstractDAOTestCase#test0320InsertInsertAttributWithBlankValue()
      */
     @Override
-    @Test(expected = SQLIntegrityConstraintViolationException.class)
+    @Test
     public void test0320InsertInsertAttributWithBlankValue() throws Throwable
     {
         TransactionDefinition transactionDefinition = new DefaultTransactionDefinition();
         TransactionStatus transactionStatus = transactionManager.getTransaction(transactionDefinition);
 
-        try
-        {
-            doTest0320InsertInsertAttributWithBlankValue(addressBookDAO);
+        Assertions.assertThrows(SQLIntegrityConstraintViolationException.class, () -> {
+            try
+            {
+                doTest0320InsertInsertAttributWithBlankValue(addressBookDAO);
 
-            // transactionManager.commit(transactionStatus);
-        }
-        catch (Throwable ex)
-        {
-            transactionManager.rollback(transactionStatus);
-            throw ex;
-        }
+                // transactionManager.commit(transactionStatus);
+            }
+            catch (Throwable ex)
+            {
+                transactionManager.rollback(transactionStatus);
+                throw ex;
+            }
+        });
     }
 
     /**
      * @see de.freese.pim.server.addressbook.dao.AbstractDAOTestCase#test0330InsertInsertAttributWithNull()
      */
     @Override
-    @Test(expected = SQLIntegrityConstraintViolationException.class)
+    @Test
     public void test0330InsertInsertAttributWithNull() throws Throwable
     {
         TransactionDefinition transactionDefinition = new DefaultTransactionDefinition();
         TransactionStatus transactionStatus = transactionManager.getTransaction(transactionDefinition);
 
-        try
-        {
-            doTest0330InsertInsertAttributWithNull(addressBookDAO);
+        Assertions.assertThrows(SQLIntegrityConstraintViolationException.class, () -> {
+            try
+            {
+                doTest0330InsertInsertAttributWithNull(addressBookDAO);
 
-            // transactionManager.commit(transactionStatus);
-        }
-        catch (Throwable ex)
-        {
-            transactionManager.rollback(transactionStatus);
-            throw ex;
-        }
+                // transactionManager.commit(transactionStatus);
+            }
+            catch (Throwable ex)
+            {
+                transactionManager.rollback(transactionStatus);
+                throw ex;
+            }
+        });
     }
 
     /**
      * @see de.freese.pim.server.addressbook.dao.AbstractDAOTestCase#test0340InsertInsertAttributWithBlank()
      */
     @Override
-    @Test(expected = SQLIntegrityConstraintViolationException.class)
+    @Test
     public void test0340InsertInsertAttributWithBlank() throws Throwable
     {
         TransactionDefinition transactionDefinition = new DefaultTransactionDefinition();
         TransactionStatus transactionStatus = transactionManager.getTransaction(transactionDefinition);
 
-        try
-        {
-            doTest0340InsertInsertAttributWithBlank(addressBookDAO);
+        Assertions.assertThrows(SQLIntegrityConstraintViolationException.class, () -> {
+            try
+            {
+                doTest0340InsertInsertAttributWithBlank(addressBookDAO);
 
-            // transactionManager.commit(transactionStatus);
-        }
-        catch (Throwable ex)
-        {
-            transactionManager.rollback(transactionStatus);
-            throw ex;
-        }
+                // transactionManager.commit(transactionStatus);
+            }
+            catch (Throwable ex)
+            {
+                transactionManager.rollback(transactionStatus);
+                throw ex;
+            }
+        });
     }
 
     /**
      * @see de.freese.pim.server.addressbook.dao.AbstractDAOTestCase#test0350InsertAttributExisting()
      */
     @Override
-    @Test(expected = SQLIntegrityConstraintViolationException.class)
+    @Test
     public void test0350InsertAttributExisting() throws Throwable
     {
         TransactionDefinition transactionDefinition = new DefaultTransactionDefinition();
         TransactionStatus transactionStatus = transactionManager.getTransaction(transactionDefinition);
 
-        try
-        {
-            doTest0350InsertAttributExisting(addressBookDAO);
+        Assertions.assertThrows(SQLIntegrityConstraintViolationException.class, () -> {
+            try
+            {
+                doTest0350InsertAttributExisting(addressBookDAO);
 
-            // transactionManager.commit(transactionStatus);
-        }
-        catch (Throwable ex)
-        {
-            transactionManager.rollback(transactionStatus);
-            throw ex;
-        }
+                // transactionManager.commit(transactionStatus);
+            }
+            catch (Throwable ex)
+            {
+                transactionManager.rollback(transactionStatus);
+                throw ex;
+            }
+        });
     }
 
     /**

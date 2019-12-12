@@ -4,20 +4,17 @@
 package de.freese.pim.server.addressbook.dao;
 
 import java.sql.SQLIntegrityConstraintViolationException;
-
 import javax.annotation.Resource;
-
-import org.junit.FixMethodOrder;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.MethodSorters;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.test.annotation.Commit;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
-
 import de.freese.pim.server.addressbook.TestAddressbookConfig;
 
 /**
@@ -25,13 +22,13 @@ import de.freese.pim.server.addressbook.TestAddressbookConfig;
  *
  * @author Thomas Freese
  */
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
+@TestMethodOrder(MethodOrderer.Alphanumeric.class)
 @ContextConfiguration(classes =
 {
         TestAddressbookConfig.class
 })
 @Transactional(transactionManager = "transactionManager")
-@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @ActiveProfiles("test")
 // @DirtiesContext
 public class TestSpringContextAddressbookDAO extends AbstractDAOTestCase

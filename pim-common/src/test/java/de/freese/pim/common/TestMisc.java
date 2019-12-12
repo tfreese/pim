@@ -10,11 +10,11 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 import java.util.concurrent.ThreadPoolExecutor;
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.FixMethodOrder;
-import org.junit.Test;
-import org.junit.runners.MethodSorters;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.scheduling.concurrent.ThreadPoolExecutorFactoryBean;
 
 /**
@@ -22,14 +22,14 @@ import org.springframework.scheduling.concurrent.ThreadPoolExecutorFactoryBean;
  *
  * @author Thomas Freese
  */
-@FixMethodOrder(MethodSorters.NAME_ASCENDING)
+@TestMethodOrder(MethodOrderer.Alphanumeric.class)
 public class TestMisc
 {
     /**
      *
      */
-    @BeforeClass
-    public static void beforeclass()
+    @BeforeAll
+    public static void beforeAll()
     {
         System.setProperty("java.util.concurrent.ForkJoinPool.common.parallelism", Integer.toString(Runtime.getRuntime().availableProcessors() * 2));
 
@@ -94,8 +94,8 @@ public class TestMisc
 
         Thread.sleep(100);
 
-        Assert.assertEquals(1, results.size());
-        Assert.assertEquals("Test-1-2", results.get(0));
+        Assertions.assertEquals(1, results.size());
+        Assertions.assertEquals("Test-1-2", results.get(0));
     }
 
     /**

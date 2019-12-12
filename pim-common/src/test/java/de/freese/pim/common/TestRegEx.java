@@ -5,12 +5,10 @@ package de.freese.pim.common;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import org.junit.Assert;
-import org.junit.FixMethodOrder;
-import org.junit.Test;
-import org.junit.runners.MethodSorters;
-
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 import de.freese.pim.common.utils.Utils;
 
 /**
@@ -18,7 +16,7 @@ import de.freese.pim.common.utils.Utils;
  *
  * @author Thomas Freese
  */
-@FixMethodOrder(MethodSorters.NAME_ASCENDING)
+@TestMethodOrder(MethodOrderer.Alphanumeric.class)
 public class TestRegEx
 {
     /**
@@ -43,30 +41,30 @@ public class TestRegEx
         // \\d{1,}$
 
         String[] splits = "a-1".split("[-_]");
-        Assert.assertEquals(2, splits.length);
-        Assert.assertEquals("a", splits[0]);
-        Assert.assertEquals("1", splits[1]);
+        Assertions.assertEquals(2, splits.length);
+        Assertions.assertEquals("a", splits[0]);
+        Assertions.assertEquals("1", splits[1]);
 
         splits = "a-1".split("(?<=[a-z])|(?=\\d)");
-        Assert.assertEquals(3, splits.length);
-        Assert.assertEquals("a", splits[0]);
-        Assert.assertEquals("-", splits[1]);
-        Assert.assertEquals("1", splits[2]);
+        Assertions.assertEquals(3, splits.length);
+        Assertions.assertEquals("a", splits[0]);
+        Assertions.assertEquals("-", splits[1]);
+        Assertions.assertEquals("1", splits[2]);
 
         // Pattern pattern = Pattern.compile("([a-z]+)|(\\d{1,})");
         Pattern pattern = Pattern.compile("[a-zA-Z]+"); // Liefert nur Buchstaben
 
         Matcher matcher = pattern.matcher("a-1");
         matcher.find();
-        Assert.assertEquals("a", matcher.group());
+        Assertions.assertEquals("a", matcher.group());
 
         matcher = pattern.matcher("a_1");
         matcher.find();
-        Assert.assertEquals("a", matcher.group());
+        Assertions.assertEquals("a", matcher.group());
 
         matcher = pattern.matcher("a1");
         matcher.find();
-        Assert.assertEquals("a", matcher.group());
+        Assertions.assertEquals("a", matcher.group());
     }
 
     /**
@@ -75,11 +73,11 @@ public class TestRegEx
     @Test
     public void test020MailFalse()
     {
-        Assert.assertFalse("a".matches(MAIL_REGEX));
-        Assert.assertFalse("a@".matches(MAIL_REGEX));
-        Assert.assertFalse("a@b".matches(MAIL_REGEX));
-        Assert.assertFalse("a@b.".matches(MAIL_REGEX));
-        Assert.assertFalse("a@b.d".matches(MAIL_REGEX));
+        Assertions.assertFalse("a".matches(MAIL_REGEX));
+        Assertions.assertFalse("a@".matches(MAIL_REGEX));
+        Assertions.assertFalse("a@b".matches(MAIL_REGEX));
+        Assertions.assertFalse("a@b.".matches(MAIL_REGEX));
+        Assertions.assertFalse("a@b.d".matches(MAIL_REGEX));
     }
 
     /**
@@ -88,10 +86,10 @@ public class TestRegEx
     @Test
     public void test020MailTrue()
     {
-        Assert.assertTrue("a@b.de".matches(MAIL_REGEX));
-        Assert.assertTrue("a@b.com".matches(MAIL_REGEX));
-        Assert.assertTrue("a.c@b.de".matches(MAIL_REGEX));
-        Assert.assertTrue("a.c@b.com".matches(MAIL_REGEX));
+        Assertions.assertTrue("a@b.de".matches(MAIL_REGEX));
+        Assertions.assertTrue("a@b.com".matches(MAIL_REGEX));
+        Assertions.assertTrue("a.c@b.de".matches(MAIL_REGEX));
+        Assertions.assertTrue("a.c@b.com".matches(MAIL_REGEX));
     }
 
     /**
@@ -100,6 +98,6 @@ public class TestRegEx
     @Test
     public void test030Misc()
     {
-        Assert.assertTrue("20040117.000000".matches(".*\\d{6}.*"));
+        Assertions.assertTrue("20040117.000000".matches(".*\\d{6}.*"));
     }
 }

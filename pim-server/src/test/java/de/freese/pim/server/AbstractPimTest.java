@@ -12,7 +12,6 @@ import java.nio.file.Paths;
  */
 public abstract class AbstractPimTest
 {
-
     /**
      *
      */

@@ -9,11 +9,10 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.stream.Collectors;
-
-import org.junit.Assert;
-import org.junit.FixMethodOrder;
-import org.junit.Test;
-import org.junit.runners.MethodSorters;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 import de.freese.pim.common.utils.Crypt;
 
 /**
@@ -21,7 +20,7 @@ import de.freese.pim.common.utils.Crypt;
  *
  * @author Thomas Freese
  */
-@FixMethodOrder(MethodSorters.NAME_ASCENDING)
+@TestMethodOrder(MethodOrderer.Alphanumeric.class)
 public class TestCrypt
 {
     /**
@@ -55,7 +54,7 @@ public class TestCrypt
              BufferedReader buffer = new BufferedReader(new InputStreamReader(decryptedStream, StandardCharsets.UTF_8)))
         {
             String decrypted = buffer.lines().collect(Collectors.joining("\n"));
-            Assert.assertEquals(clearText, decrypted);
+            Assertions.assertEquals(clearText, decrypted);
         }
 
         // InputStream isClear = new ReaderInputStream(new StringReader(clearText);
@@ -75,6 +74,6 @@ public class TestCrypt
         String encrypted = crypt.encrypt(clearText);
         String decrypted = crypt.decrypt(encrypted);
 
-        Assert.assertEquals(clearText, decrypted);
+        Assertions.assertEquals(clearText, decrypted);
     }
 }

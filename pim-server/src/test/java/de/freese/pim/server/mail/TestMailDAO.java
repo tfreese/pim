@@ -9,21 +9,18 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Arrays;
 import java.util.List;
-
 import javax.annotation.Resource;
-
-import org.junit.Assert;
-import org.junit.FixMethodOrder;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.MethodSorters;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.test.annotation.Commit;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
-
 import de.freese.pim.common.model.mail.InternetAddress;
 import de.freese.pim.common.model.mail.MailPort;
 import de.freese.pim.server.mail.dao.MailDAO;
@@ -36,13 +33,13 @@ import de.freese.pim.server.mail.model.MailFolder;
  *
  * @author Thomas Freese
  */
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
+@TestMethodOrder(MethodOrderer.Alphanumeric.class)
 @ContextConfiguration(classes =
 {
         TestMailConfig.class
 })
 @Transactional(transactionManager = "transactionManager")
-@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @ActiveProfiles("test")
 // @DirtiesContext
 public class TestMailDAO
@@ -98,7 +95,7 @@ public class TestMailDAO
 
         this.mailDAO.insertAccount(account);
 
-        Assert.assertEquals(2, account.getID());
+        Assertions.assertEquals(2, account.getID());
     }
 
     /**
@@ -110,19 +107,19 @@ public class TestMailDAO
     {
         List<MailAccount> accounts = this.mailDAO.getMailAccounts();
 
-        Assert.assertNotNull(accounts);
-        Assert.assertEquals(1, accounts.size());
+        Assertions.assertNotNull(accounts);
+        Assertions.assertEquals(1, accounts.size());
 
         MailAccount account = accounts.get(0);
-        Assert.assertEquals(2, account.getID());
-        Assert.assertEquals("a@b.de", account.getMail());
-        Assert.assertEquals("gehaim", account.getPassword());
-        Assert.assertEquals("imap-host", account.getImapHost());
-        Assert.assertEquals(MailPort.IMAP, account.getImapPort());
-        Assert.assertEquals(true, account.isImapLegitimation());
-        Assert.assertEquals("smtp-host", account.getSmtpHost());
-        Assert.assertEquals(MailPort.SMTP, account.getSmtpPort());
-        Assert.assertEquals(false, account.isSmtpLegitimation());
+        Assertions.assertEquals(2, account.getID());
+        Assertions.assertEquals("a@b.de", account.getMail());
+        Assertions.assertEquals("gehaim", account.getPassword());
+        Assertions.assertEquals("imap-host", account.getImapHost());
+        Assertions.assertEquals(MailPort.IMAP, account.getImapPort());
+        Assertions.assertEquals(true, account.isImapLegitimation());
+        Assertions.assertEquals("smtp-host", account.getSmtpHost());
+        Assertions.assertEquals(MailPort.SMTP, account.getSmtpPort());
+        Assertions.assertEquals(false, account.isSmtpLegitimation());
     }
 
     /**
@@ -133,8 +130,8 @@ public class TestMailDAO
     {
         List<MailAccount> accounts = this.mailDAO.getMailAccounts();
 
-        Assert.assertNotNull(accounts);
-        Assert.assertEquals(1, accounts.size());
+        Assertions.assertNotNull(accounts);
+        Assertions.assertEquals(1, accounts.size());
 
         MailAccount account = accounts.get(0);
 
@@ -159,19 +156,19 @@ public class TestMailDAO
     {
         List<MailAccount> accounts = this.mailDAO.getMailAccounts();
 
-        Assert.assertNotNull(accounts);
-        Assert.assertEquals(1, accounts.size());
+        Assertions.assertNotNull(accounts);
+        Assertions.assertEquals(1, accounts.size());
 
         MailAccount account = accounts.get(0);
-        Assert.assertEquals(2, account.getID());
-        Assert.assertEquals("c@d.com", account.getMail());
-        Assert.assertEquals("gehaim2", account.getPassword());
-        Assert.assertEquals("host-imap", account.getImapHost());
-        Assert.assertEquals(MailPort.IMAPS, account.getImapPort());
-        Assert.assertEquals(false, account.isImapLegitimation());
-        Assert.assertEquals("host-smtp", account.getSmtpHost());
-        Assert.assertEquals(MailPort.SMTPS, account.getSmtpPort());
-        Assert.assertEquals(true, account.isSmtpLegitimation());
+        Assertions.assertEquals(2, account.getID());
+        Assertions.assertEquals("c@d.com", account.getMail());
+        Assertions.assertEquals("gehaim2", account.getPassword());
+        Assertions.assertEquals("host-imap", account.getImapHost());
+        Assertions.assertEquals(MailPort.IMAPS, account.getImapPort());
+        Assertions.assertEquals(false, account.isImapLegitimation());
+        Assertions.assertEquals("host-smtp", account.getSmtpHost());
+        Assertions.assertEquals(MailPort.SMTPS, account.getSmtpPort());
+        Assertions.assertEquals(true, account.isSmtpLegitimation());
     }
 
     /**
@@ -206,7 +203,7 @@ public class TestMailDAO
 
         this.mailDAO.insertFolder(2, Arrays.asList(folder));
 
-        Assert.assertEquals(4, folder.getID());
+        Assertions.assertEquals(4, folder.getID());
     }
 
     /**
@@ -218,14 +215,14 @@ public class TestMailDAO
     {
         List<MailFolder> folders = this.mailDAO.getMailFolder(2);
 
-        Assert.assertNotNull(folders);
-        Assert.assertEquals(1, folders.size());
+        Assertions.assertNotNull(folders);
+        Assertions.assertEquals(1, folders.size());
 
         MailFolder folder = folders.get(0);
-        Assert.assertEquals(4, folder.getID());
-        Assert.assertEquals("a/b", folder.getFullName());
-        Assert.assertEquals("b", folder.getName());
-        Assert.assertFalse(folder.isAbonniert());
+        Assertions.assertEquals(4, folder.getID());
+        Assertions.assertEquals("a/b", folder.getFullName());
+        Assertions.assertEquals("b", folder.getName());
+        Assertions.assertFalse(folder.isAbonniert());
     }
 
     /**
@@ -236,8 +233,8 @@ public class TestMailDAO
     {
         List<MailFolder> folders = this.mailDAO.getMailFolder(2);
 
-        Assert.assertNotNull(folders);
-        Assert.assertEquals(1, folders.size());
+        Assertions.assertNotNull(folders);
+        Assertions.assertEquals(1, folders.size());
 
         MailFolder folder = folders.get(0);
 
@@ -257,14 +254,14 @@ public class TestMailDAO
     {
         List<MailFolder> folders = this.mailDAO.getMailFolder(2);
 
-        Assert.assertNotNull(folders);
-        Assert.assertEquals(1, folders.size());
+        Assertions.assertNotNull(folders);
+        Assertions.assertEquals(1, folders.size());
 
         MailFolder folder = folders.get(0);
-        Assert.assertEquals(4, folder.getID());
-        Assert.assertEquals("b/c", folder.getFullName());
-        Assert.assertEquals("c", folder.getName());
-        Assert.assertTrue(folder.isAbonniert());
+        Assertions.assertEquals(4, folder.getID());
+        Assertions.assertEquals("b/c", folder.getFullName());
+        Assertions.assertEquals("c", folder.getName());
+        Assertions.assertTrue(folder.isAbonniert());
     }
 
     /**
@@ -326,23 +323,21 @@ public class TestMailDAO
     {
         List<Mail> mails = this.mailDAO.getMails(4);
 
-        Assert.assertNotNull(mails);
-        Assert.assertEquals(1, mails.size());
+        Assertions.assertNotNull(mails);
+        Assertions.assertEquals(1, mails.size());
 
         Mail mail = mails.get(0);
-        Assert.assertEquals("a@a.aa", mail.getFrom().getAddress());
-        Assert.assertEquals(1, mail.getMsgNum());
-        Assert.assertEquals(java.util.Date.from(LocalDateTime.of(2017, 02, 03, 15, 00).atZone(ZoneId.systemDefault()).toInstant()),
-                mail.getReceivedDate());
-        Assert.assertFalse(mail.isSeen());
-        Assert.assertEquals(java.util.Date.from(LocalDateTime.of(2017, 02, 03, 15, 01).atZone(ZoneId.systemDefault()).toInstant()),
-                mail.getSendDate());
-        Assert.assertEquals(13, mail.getSize());
-        Assert.assertEquals("-TEST-", mail.getSubject());
-        Assert.assertEquals("b@b.bb", mail.getTo()[0].getAddress());
-        Assert.assertEquals("c@c.cc", mail.getCc()[0].getAddress());
-        Assert.assertEquals("d@d.dd", mail.getBcc()[0].getAddress());
-        Assert.assertEquals(2, mail.getUID());
+        Assertions.assertEquals("a@a.aa", mail.getFrom().getAddress());
+        Assertions.assertEquals(1, mail.getMsgNum());
+        Assertions.assertEquals(java.util.Date.from(LocalDateTime.of(2017, 02, 03, 15, 00).atZone(ZoneId.systemDefault()).toInstant()), mail.getReceivedDate());
+        Assertions.assertFalse(mail.isSeen());
+        Assertions.assertEquals(java.util.Date.from(LocalDateTime.of(2017, 02, 03, 15, 01).atZone(ZoneId.systemDefault()).toInstant()), mail.getSendDate());
+        Assertions.assertEquals(13, mail.getSize());
+        Assertions.assertEquals("-TEST-", mail.getSubject());
+        Assertions.assertEquals("b@b.bb", mail.getTo()[0].getAddress());
+        Assertions.assertEquals("c@c.cc", mail.getCc()[0].getAddress());
+        Assertions.assertEquals("d@d.dd", mail.getBcc()[0].getAddress());
+        Assertions.assertEquals(2, mail.getUID());
     }
 
     /**
@@ -353,8 +348,8 @@ public class TestMailDAO
     {
         List<Mail> mails = this.mailDAO.getMails(4);
 
-        Assert.assertNotNull(mails);
-        Assert.assertEquals(1, mails.size());
+        Assertions.assertNotNull(mails);
+        Assertions.assertEquals(1, mails.size());
 
         Mail mail = mails.get(0);
         mail.setSeen(true);
@@ -373,23 +368,21 @@ public class TestMailDAO
     {
         List<Mail> mails = this.mailDAO.getMails(4);
 
-        Assert.assertNotNull(mails);
-        Assert.assertEquals(1, mails.size());
+        Assertions.assertNotNull(mails);
+        Assertions.assertEquals(1, mails.size());
 
         Mail mail = mails.get(0);
-        Assert.assertEquals("a@a.aa", mail.getFrom().getAddress());
-        Assert.assertEquals(1, mail.getMsgNum());
-        Assert.assertEquals(java.util.Date.from(LocalDateTime.of(2017, 02, 03, 15, 00).atZone(ZoneId.systemDefault()).toInstant()),
-                mail.getReceivedDate());
-        Assert.assertTrue(mail.isSeen());
-        Assert.assertEquals(java.util.Date.from(LocalDateTime.of(2017, 02, 03, 15, 01).atZone(ZoneId.systemDefault()).toInstant()),
-                mail.getSendDate());
-        Assert.assertEquals(13, mail.getSize());
-        Assert.assertEquals("-TEST-", mail.getSubject());
-        Assert.assertEquals("b@b.bb", mail.getTo()[0].getAddress());
-        Assert.assertEquals("c@c.cc", mail.getCc()[0].getAddress());
-        Assert.assertEquals("d@d.dd", mail.getBcc()[0].getAddress());
-        Assert.assertEquals(2, mail.getUID());
+        Assertions.assertEquals("a@a.aa", mail.getFrom().getAddress());
+        Assertions.assertEquals(1, mail.getMsgNum());
+        Assertions.assertEquals(java.util.Date.from(LocalDateTime.of(2017, 02, 03, 15, 00).atZone(ZoneId.systemDefault()).toInstant()), mail.getReceivedDate());
+        Assertions.assertTrue(mail.isSeen());
+        Assertions.assertEquals(java.util.Date.from(LocalDateTime.of(2017, 02, 03, 15, 01).atZone(ZoneId.systemDefault()).toInstant()), mail.getSendDate());
+        Assertions.assertEquals(13, mail.getSize());
+        Assertions.assertEquals("-TEST-", mail.getSubject());
+        Assertions.assertEquals("b@b.bb", mail.getTo()[0].getAddress());
+        Assertions.assertEquals("c@c.cc", mail.getCc()[0].getAddress());
+        Assertions.assertEquals("d@d.dd", mail.getBcc()[0].getAddress());
+        Assertions.assertEquals(2, mail.getUID());
     }
 
     /**
@@ -410,8 +403,8 @@ public class TestMailDAO
     {
         List<Mail> mails = this.mailDAO.getMails(4);
 
-        Assert.assertNotNull(mails);
-        Assert.assertEquals(0, mails.size());
+        Assertions.assertNotNull(mails);
+        Assertions.assertEquals(0, mails.size());
     }
 
     /**
@@ -432,8 +425,8 @@ public class TestMailDAO
     {
         List<MailFolder> folders = this.mailDAO.getMailFolder(2);
 
-        Assert.assertNotNull(folders);
-        Assert.assertEquals(0, folders.size());
+        Assertions.assertNotNull(folders);
+        Assertions.assertEquals(0, folders.size());
     }
 
     /**
@@ -454,7 +447,7 @@ public class TestMailDAO
     {
         List<MailFolder> folders = this.mailDAO.getMailFolder(2);
 
-        Assert.assertNotNull(folders);
-        Assert.assertEquals(0, folders.size());
+        Assertions.assertNotNull(folders);
+        Assertions.assertEquals(0, folders.size());
     }
 }

@@ -7,18 +7,18 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.Resource;
-import org.junit.Assert;
-import org.junit.FixMethodOrder;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.MethodSorters;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -30,7 +30,8 @@ import de.freese.pim.server.PIMServerApplication;
  *
  * @author Thomas Freese
  */
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
+@TestMethodOrder(MethodOrderer.Alphanumeric.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT, classes =
 {
         PIMServerApplication.class
@@ -44,7 +45,6 @@ import de.freese.pim.server.PIMServerApplication;
 })
 @AutoConfigureMockMvc
 // @DirtiesContext
-@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class TestRestServer
 {
     /**
@@ -154,7 +154,7 @@ public class TestRestServer
                 .andExpect(status().is2xxSuccessful());
             // @formatter:off
 
-            Assert.assertTrue(mvcResult.getAsyncResult().toString().startsWith("201"));
+            Assertions.assertTrue(mvcResult.getAsyncResult().toString().startsWith("201"));
         }
     }
 }

@@ -34,17 +34,17 @@ import javax.mail.search.FlagTerm;
 import javax.mail.search.SearchTerm;
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
-import org.junit.AfterClass;
-import org.junit.Assert;
-import org.junit.Assume;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.FixMethodOrder;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Assumptions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
-import org.junit.runner.RunWith;
-import org.junit.runners.MethodSorters;
-import org.junit.runners.Parameterized;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import com.sun.mail.imap.IMAPFolder;
 import com.sun.mail.util.ASCIIUtility;
 import de.freese.pim.common.function.FunctionStripNotLetter;
@@ -54,8 +54,8 @@ import de.freese.pim.server.mail.api.JavaMailContent;
 /**
  * @author Thomas Freese
  */
-@RunWith(Parameterized.class)
-@FixMethodOrder(MethodSorters.NAME_ASCENDING)
+@ExtendWith(SpringExtension.class)
+@TestMethodOrder(MethodOrderer.Alphanumeric.class)
 @Disabled
 public class TestReceiveMail extends AbstractMailTest
 {
@@ -72,8 +72,8 @@ public class TestReceiveMail extends AbstractMailTest
     /**
      * @throws Exception Falls was schief geht.
      */
-    @AfterClass
-    public static void afterClass() throws Exception
+    @AfterAll
+    public static void afterAll() throws Exception
     {
         if (store != null)
         {
@@ -84,8 +84,8 @@ public class TestReceiveMail extends AbstractMailTest
     /**
      *
      */
-    @BeforeClass
-    public static void beforeClass()
+    @BeforeAll
+    public static void beforeAll()
     {
         Authenticator authenticator = null;
 
@@ -117,11 +117,11 @@ public class TestReceiveMail extends AbstractMailTest
     /**
      * @throws Exception Falls was schief geht.
      */
-    @Before
-    public void beforeMethod() throws Exception
+    @BeforeEach
+    public void beforeEach() throws Exception
     {
         System.out.println();
-        Assume.assumeFalse("On Work", isWork());
+        Assumptions.assumeFalse(isWork(), "On Work");
     }
 
     /**
@@ -185,7 +185,7 @@ public class TestReceiveMail extends AbstractMailTest
             // fp.add(FetchProfile.Item.CONTENT_INFO);
             inboxFolder.fetch(messages, fp);
 
-            Assert.assertNotNull(messages);
+            Assertions.assertNotNull(messages);
 
             for (Message message : messages)
             {
@@ -333,7 +333,7 @@ public class TestReceiveMail extends AbstractMailTest
                             .collect(Collectors.toList());
                     // @formatter:on
 
-                    Assert.assertNotNull(values);
+                    Assertions.assertNotNull(values);
                     System.out.println(values);
 
                     // @formatter:off
