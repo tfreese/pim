@@ -14,7 +14,7 @@
     <packaging>pom</packaging>
 
     <name>${project.groupId} - ${project.artifactId}</name>
-    <description>Parent for the Personal Information Management Application</description>
+    <description>Parent for the Personal Information Management Application.</description>
 
     <dependencies>
         <!-- compile scope -->
