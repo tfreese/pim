@@ -11,14 +11,12 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -30,8 +28,7 @@ import de.freese.pim.server.PIMServerApplication;
  *
  * @author Thomas Freese
  */
-@ExtendWith(SpringExtension.class)
-@TestMethodOrder(MethodOrderer.Alphanumeric.class)
+// @ExtendWith(SpringExtension.class) // Ist bereits in SpringBootTest enthalten
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT, classes =
 {
         PIMServerApplication.class
@@ -39,12 +36,12 @@ import de.freese.pim.server.PIMServerApplication;
 {
         "spring.main.banner-mode=OFF", "logging.config=classpath:logback-server.xml" // , "spring.config.name=application-Server"
 })
+@TestMethodOrder(MethodOrderer.Alphanumeric.class)
 @ActiveProfiles(
 {
         "Server", "HsqldbMemory"
 })
 @AutoConfigureMockMvc
-// @DirtiesContext
 public class TestRestServer
 {
     /**
@@ -154,7 +151,7 @@ public class TestRestServer
                 .andExpect(status().is2xxSuccessful());
             // @formatter:off
 
-            Assertions.assertTrue(mvcResult.getAsyncResult().toString().startsWith("201"));
+            Assertions.assertTrue(mvcResult.getAsyncResult().toString().startsWith("20"));
         }
     }
 }

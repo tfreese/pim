@@ -245,7 +245,7 @@ public class TestSimpleRestService
                 .andExpect(status().is2xxSuccessful());
             // @formatter:on
 
-            Assert.assertTrue(mvcResult.getAsyncResult().toString().startsWith("201"));
+            Assert.assertTrue(mvcResult.getAsyncResult().toString().startsWith("20"));
         }
     }
 }
