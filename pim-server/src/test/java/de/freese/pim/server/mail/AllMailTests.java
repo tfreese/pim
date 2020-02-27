@@ -3,20 +3,19 @@
  */
 package de.freese.pim.server.mail;
 
-import org.junit.jupiter.api.Disabled;
+import org.junit.platform.runner.JUnitPlatform;
+import org.junit.platform.suite.api.SelectPackages;
 import org.junit.runner.RunWith;
-import org.junit.runners.Suite;
-import org.junit.runners.Suite.SuiteClasses;
 
 /**
  * @author Thomas Freese
  */
-@RunWith(Suite.class)
-@SuiteClasses(
-{
-        TestSendMail.class, TestReceiveMail.class, TestMailDAO.class
-})
-@Disabled
+@RunWith(JUnitPlatform.class)
+@SelectPackages("de.freese.pim.server.mail")
+// @SelectClasses(
+// {
+// TestSendMail.class, TestReceiveMail.class, TestMailDAO.class
+// })
 public class AllMailTests
 {
     /**

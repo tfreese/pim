@@ -3,6 +3,7 @@ package de.freese.pim.gui.mail.view;
 
 import java.awt.Desktop;
 import java.io.File;
+import java.io.InputStream;
 import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -261,9 +262,9 @@ public class MailContentView extends GridPane
         Path target = file.toPath();
 
         Runnable task = () -> {
-            try
+            try (InputStream inputStream = dataSource.getInputStream())
             {
-                Files.copy(dataSource.getInputStream(), target, StandardCopyOption.REPLACE_EXISTING);
+                Files.copy(inputStream, target, StandardCopyOption.REPLACE_EXISTING);
 
                 // Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
                 //

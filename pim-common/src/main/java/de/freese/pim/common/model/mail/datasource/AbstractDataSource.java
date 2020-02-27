@@ -59,19 +59,22 @@ public class AbstractDataSource implements DataSource
         this.name = source.getName();
         this.contentType = source.getContentType();
 
-        if (monitor == null)
+        try (InputStream inputStream = source.getInputStream())
         {
-            this.data = StreamUtils.copyToByteArray(source.getInputStream());
-        }
-        else
-        {
-            try (FastByteArrayOutputStream baos = new FastByteArrayOutputStream(1024);
-                 // try (ByteArrayOutputStream baos = new ByteArrayOutputStream(1024);
-                 OutputStream mos = new MonitorOutputStream(baos, monitor, 0))
+            if (monitor == null)
             {
-                StreamUtils.copy(source.getInputStream(), mos);
-                mos.flush();
-                this.data = baos.toByteArray();
+                this.data = StreamUtils.copyToByteArray(inputStream);
+            }
+            else
+            {
+                try (FastByteArrayOutputStream baos = new FastByteArrayOutputStream(1024);
+                     // try (ByteArrayOutputStream baos = new ByteArrayOutputStream(1024);
+                     OutputStream mos = new MonitorOutputStream(baos, monitor, 0))
+                {
+                    StreamUtils.copy(inputStream, mos);
+                    mos.flush();
+                    this.data = baos.toByteArray();
+                }
             }
         }
     }

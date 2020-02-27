@@ -231,6 +231,7 @@ public class PIMApplication extends Application
     /**
      * @see javafx.application.Application#init()
      */
+    @SuppressWarnings("resource")
     @Override
     public void init() throws Exception
     {

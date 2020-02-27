@@ -29,8 +29,28 @@ public class PIMServerApplication
     public static final Logger LOGGER = LoggerFactory.getLogger(PIMServerApplication.class);
 
     /**
+     * Liefert die möglichen Optionen der Kommandozeile.<br>
+     * Dies sind die JRE Programm Argumente.
+     *
+     * @return {@link Options}
+     */
+    private static Options getCommandOptions()
+    {
+        Options options = new Options();
+
+        // --spring.profiles.active=Server,HsqldbEmbeddedServer --server.port=61222
+        // --spring.profiles.active=Server,SqliteLocalFile --server.port=61222
+        options.addOption(Option.builder().longOpt("spring.profiles.active").required().hasArg().argName("=Profile1,Profile2").valueSeparator('=')
+                .desc("Profiles: [Server,HsqldbEmbeddedServer]").build());
+        options.addOption(Option.builder().longOpt("server.port").required().hasArg().argName("=port").valueSeparator('=').desc("Server Port").build());
+
+        return options;
+    }
+
+    /**
      * @param args String[]
      */
+    @SuppressWarnings("resource")
     public static void main(final String[] args)
     {
         if (args.length == 0)
@@ -68,26 +88,6 @@ public class PIMServerApplication
         // @formatter:on
 
         application.run(args);
-    }
-
-    /**
-     * Liefert die möglichen Optionen der Kommandozeile.<br>
-     * Dies sind die JRE Programm Argumente.
-     *
-     * @return {@link Options}
-     */
-    private static Options getCommandOptions()
-    {
-        Options options = new Options();
-
-        // --spring.profiles.active=Server,HsqldbEmbeddedServer --server.port=61222
-        // --spring.profiles.active=Server,SqliteLocalFile --server.port=61222
-        options.addOption(Option.builder().longOpt("spring.profiles.active").required().hasArg().argName("=Profile1,Profile2")
-                .valueSeparator('=').desc("Profiles: [Server,HsqldbEmbeddedServer]").build());
-        options.addOption(Option.builder().longOpt("server.port").required().hasArg().argName("=port").valueSeparator('=')
-                .desc("Server Port").build());
-
-        return options;
     }
 
     /**

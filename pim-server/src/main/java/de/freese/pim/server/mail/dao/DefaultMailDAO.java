@@ -18,14 +18,11 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
-
 import javax.mail.internet.AddressException;
-
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
-
 import de.freese.pim.common.model.mail.InternetAddress;
 import de.freese.pim.common.model.mail.MailPort;
 import de.freese.pim.common.utils.Crypt;
@@ -137,51 +134,6 @@ public class DefaultMailDAO extends AbstractDAO implements MailDAO
         }
 
         /**
-         * @see org.springframework.jdbc.core.RowMapper#mapRow(java.sql.ResultSet, int)
-         */
-        @Override
-        public Mail mapRow(final ResultSet rs, final int rowNum) throws SQLException
-        {
-            Mail mail = new Mail();
-
-            try
-            {
-                InternetAddress fromAddress = Optional.ofNullable(parseInternetAddress(rs.getString("SENDER"))).map(f -> f[0]).orElse(null);
-
-                Clob clob = rs.getClob("RECIPIENT_TO");
-                String clobString = clobToString(clob);
-                InternetAddress[] toRecipient = parseInternetAddress(clobString);
-
-                clob = rs.getClob("RECIPIENT_CC");
-                clobString = clobToString(clob);
-                InternetAddress[] ccRecipient = parseInternetAddress(clobString);
-
-                clob = rs.getClob("RECIPIENT_BCC");
-                clobString = clobToString(clob);
-                InternetAddress[] bccRecipient = parseInternetAddress(clobString);
-
-                mail.setFolderID(rs.getLong("FOLDER_ID"));
-                mail.setUID(rs.getLong("UID"));
-                mail.setMsgNum(rs.getInt("MSG_NUM"));
-                mail.setFrom(fromAddress);
-                mail.setTo(toRecipient);
-                mail.setCc(ccRecipient);
-                mail.setBcc(bccRecipient);
-                mail.setReceivedDate(rs.getTimestamp("RECEIVED_DATE"));
-                mail.setSendDate(rs.getTimestamp("SEND_DATE"));
-                mail.setSubject(rs.getString("SUBJECT"));
-                mail.setSize(rs.getInt("SIZE"));
-                mail.setSeen(rs.getBoolean("SEEN"));
-
-                return mail;
-            }
-            catch (AddressException | IOException ex)
-            {
-                throw new SQLException(ex);
-            }
-        }
-
-        /**
          * @param clob {@link Clob}
          * @return String
          * @throws SQLException Falls was schief geht.
@@ -224,6 +176,51 @@ public class DefaultMailDAO extends AbstractDAO implements MailDAO
             // }
 
             return clobString;
+        }
+
+        /**
+         * @see org.springframework.jdbc.core.RowMapper#mapRow(java.sql.ResultSet, int)
+         */
+        @Override
+        public Mail mapRow(final ResultSet rs, final int rowNum) throws SQLException
+        {
+            Mail mail = new Mail();
+
+            try
+            {
+                InternetAddress fromAddress = Optional.ofNullable(parseInternetAddress(rs.getString("SENDER"))).map(f -> f[0]).orElse(null);
+
+                Clob clob = rs.getClob("RECIPIENT_TO");
+                String clobString = clobToString(clob);
+                InternetAddress[] toRecipient = parseInternetAddress(clobString);
+
+                clob = rs.getClob("RECIPIENT_CC");
+                clobString = clobToString(clob);
+                InternetAddress[] ccRecipient = parseInternetAddress(clobString);
+
+                clob = rs.getClob("RECIPIENT_BCC");
+                clobString = clobToString(clob);
+                InternetAddress[] bccRecipient = parseInternetAddress(clobString);
+
+                mail.setFolderID(rs.getLong("FOLDER_ID"));
+                mail.setUID(rs.getLong("UID"));
+                mail.setMsgNum(rs.getInt("MSG_NUM"));
+                mail.setFrom(fromAddress);
+                mail.setTo(toRecipient);
+                mail.setCc(ccRecipient);
+                mail.setBcc(bccRecipient);
+                mail.setReceivedDate(rs.getTimestamp("RECEIVED_DATE"));
+                mail.setSendDate(rs.getTimestamp("SEND_DATE"));
+                mail.setSubject(rs.getString("SUBJECT"));
+                mail.setSize(rs.getInt("SIZE"));
+                mail.setSeen(rs.getBoolean("SEEN"));
+
+                return mail;
+            }
+            catch (AddressException | IOException ex)
+            {
+                throw new SQLException(ex);
+            }
         }
 
         /**
@@ -424,6 +421,14 @@ public class DefaultMailDAO extends AbstractDAO implements MailDAO
     }
 
     /**
+     * @return String
+     */
+    protected String getUserID()
+    {
+        return Utils.getSystemUserName();
+    }
+
+    /**
      * @see de.freese.pim.server.mail.dao.MailDAO#insertAccount(de.freese.pim.server.mail.model.MailAccount)
      */
     @Override
@@ -447,8 +452,7 @@ public class DefaultMailDAO extends AbstractDAO implements MailDAO
         sql.append(", ?, ?, ?");
         sql.append(")");
 
-        int affectedRows = getJdbcTemplate().update(sql.toString(), ps ->
-        {
+        int affectedRows = getJdbcTemplate().update(sql.toString(), ps -> {
             ps.setLong(1, id);
             ps.setString(2, userID);
             ps.setString(3, account.getMail());
@@ -526,6 +530,7 @@ public class DefaultMailDAO extends AbstractDAO implements MailDAO
     /**
      * @see de.freese.pim.server.mail.dao.MailDAO#insertMail(long, java.util.Collection)
      */
+    @SuppressWarnings("resource")
     @Override
     public int[] insertMail(final long folderID, final Collection<Mail> mails)
     {
@@ -537,23 +542,20 @@ public class DefaultMailDAO extends AbstractDAO implements MailDAO
         StringBuilder sb = new StringBuilder();
         sb.append("insert into MAIL");
         sb.append(" (");
-        sb.append(
-                " FOLDER_ID, UID, MSG_NUM, SENDER, RECIPIENT_TO, RECIPIENT_CC, RECIPIENT_BCC, RECEIVED_DATE, SEND_DATE, SUBJECT, SIZE, SEEN");
+        sb.append(" FOLDER_ID, UID, MSG_NUM, SENDER, RECIPIENT_TO, RECIPIENT_CC, RECIPIENT_BCC, RECEIVED_DATE, SEND_DATE, SUBJECT, SIZE, SEEN");
         sb.append(") values (");
         sb.append("?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?");
         sb.append(")");
         String sql = sb.toString();
 
-        int[][] affectedRows = getJdbcTemplate().batchUpdate(sql, mails, mails.size(), (ps, mail) ->
-        {
+        int[][] affectedRows = getJdbcTemplate().batchUpdate(sql, mails, mails.size(), (ps, mail) -> {
             String from = null;
 
             if (mail.getFrom() != null)
             {
                 try
                 {
-                    from = new javax.mail.internet.InternetAddress(mail.getFrom().getAddress(), mail.getFrom().getPersonal())
-                            .toUnicodeString();
+                    from = new javax.mail.internet.InternetAddress(mail.getFrom().getAddress(), mail.getFrom().getPersonal()).toUnicodeString();
                 }
                 catch (UnsupportedEncodingException ueex)
                 {
@@ -626,8 +628,7 @@ public class DefaultMailDAO extends AbstractDAO implements MailDAO
         sql.append(", SMTP_LEGITIMATION = ?");
         sql.append(" where id = ?");
 
-        int affectedRows = getJdbcTemplate().update(sql.toString(), ps ->
-        {
+        int affectedRows = getJdbcTemplate().update(sql.toString(), ps -> {
             ps.setString(1, account.getMail());
             ps.setString(2, encryptedPassword);
             ps.setString(3, account.getImapHost());
@@ -656,8 +657,7 @@ public class DefaultMailDAO extends AbstractDAO implements MailDAO
         sql.append(", ABONNIERT = ?");
         sql.append(" where id = ?");
 
-        int affectedRows = getJdbcTemplate().update(sql.toString(), ps ->
-        {
+        int affectedRows = getJdbcTemplate().update(sql.toString(), ps -> {
             ps.setString(1, folder.getFullName());
             ps.setString(2, folder.getName());
             ps.setBoolean(3, folder.isAbonniert());
@@ -681,21 +681,12 @@ public class DefaultMailDAO extends AbstractDAO implements MailDAO
         sql.append(" FOLDER_ID = ?");
         sql.append(" and UID = ?");
 
-        int affectedRows = getJdbcTemplate().update(sql.toString(), ps ->
-        {
+        int affectedRows = getJdbcTemplate().update(sql.toString(), ps -> {
             ps.setBoolean(1, mail.isSeen());
             ps.setLong(2, folderID);
             ps.setLong(3, mail.getUID());
         });
 
         return affectedRows;
-    }
-
-    /**
-     * @return String
-     */
-    protected String getUserID()
-    {
-        return Utils.getSystemUserName();
     }
 }

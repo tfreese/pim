@@ -43,8 +43,7 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.boot.test.context.SpringBootTest;
 import com.sun.mail.imap.IMAPFolder;
 import com.sun.mail.util.ASCIIUtility;
 import de.freese.pim.common.function.FunctionStripNotLetter;
@@ -54,7 +53,7 @@ import de.freese.pim.server.mail.api.JavaMailContent;
 /**
  * @author Thomas Freese
  */
-@ExtendWith(SpringExtension.class)
+@SpringBootTest
 @TestMethodOrder(MethodOrderer.Alphanumeric.class)
 @Disabled
 public class TestReceiveMail extends AbstractMailTest

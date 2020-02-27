@@ -3,23 +3,22 @@
  */
 package de.freese.pim.server.mail;
 
-import java.sql.BatchUpdateException;
-import java.sql.SQLIntegrityConstraintViolationException;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Arrays;
 import java.util.List;
 import javax.annotation.Resource;
-import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
-import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.annotation.Commit;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 import de.freese.pim.common.model.mail.InternetAddress;
 import de.freese.pim.common.model.mail.MailPort;
@@ -33,8 +32,6 @@ import de.freese.pim.server.mail.model.MailFolder;
  *
  * @author Thomas Freese
  */
-// @ExtendWith(SpringExtension.class) // Ist bereits in SpringBootTest enthalten
-@RunWith(SpringRunner.class)
 @SpringBootTest(classes =
 {
         TestMailConfig.class
@@ -61,20 +58,17 @@ public class TestMailDAO
     /**
      * @throws Throwable Falls was schief geht.
      */
-    @Test(expected = SQLIntegrityConstraintViolationException.class)
+    @Test
     @Rollback
     public void test010InsertAccountFail() throws Throwable
     {
         MailAccount account = new MailAccount();
 
-        try
-        {
+        DataIntegrityViolationException exception = assertThrows(DataIntegrityViolationException.class, () -> {
             this.mailDAO.insertAccount(account);
-        }
-        catch (RuntimeException ex)
-        {
-            throw ex.getCause();
-        }
+        });
+
+        assertNotNull(exception);
     }
 
     /**
@@ -174,20 +168,17 @@ public class TestMailDAO
     /**
      * @throws Throwable Falls was schief geht.
      */
-    @Test(expected = BatchUpdateException.class)
+    @Test
     @Rollback
     public void test020InsertFolderFail() throws Throwable
     {
         MailFolder folder = new MailFolder();
 
-        try
-        {
+        DataIntegrityViolationException exception = assertThrows(DataIntegrityViolationException.class, () -> {
             this.mailDAO.insertFolder(2, Arrays.asList(folder));
-        }
-        catch (RuntimeException ex)
-        {
-            throw ex.getCause();
-        }
+        });
+
+        assertNotNull(exception);
     }
 
     /**
@@ -267,20 +258,17 @@ public class TestMailDAO
     /**
      * @throws Throwable Falls was schief geht.
      */
-    @Test(expected = BatchUpdateException.class)
+    @Test
     @Rollback
     public void test030InsertMailFail() throws Throwable
     {
         Mail mail = new Mail();
 
-        try
-        {
+        DataIntegrityViolationException exception = assertThrows(DataIntegrityViolationException.class, () -> {
             this.mailDAO.insertMail(4, Arrays.asList(mail));
-        }
-        catch (RuntimeException ex)
-        {
-            throw ex.getCause();
-        }
+        });
+
+        assertNotNull(exception);
     }
 
     /**

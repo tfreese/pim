@@ -194,6 +194,7 @@ public class JavaMailBuilder
      * @return {@link JavaMailBuilder}
      * @throws MessagingException Falls was schief geht.
      */
+    @SuppressWarnings("resource")
     public JavaMailBuilder attachment(final String attachmentFilename, final InputStream inputStream) throws MessagingException
     {
         Objects.requireNonNull(attachmentFilename, () -> "Attachment filename must not be null");
@@ -654,6 +655,7 @@ public class JavaMailBuilder
      * @return {@link JavaMailBuilder}
      * @throws MessagingException Falls was schief geht.
      */
+    @SuppressWarnings("resource")
     public JavaMailBuilder inline(final String contentID, final InputStream inputStream, final String mimeType) throws MessagingException
     {
         Objects.requireNonNull(contentID, "Content ID must not be null");

@@ -3,23 +3,20 @@ package de.freese.pim.server.mail;
 
 import java.util.Properties;
 import javax.mail.Session;
-import org.junit.AfterClass;
 import org.junit.Assume;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.FixMethodOrder;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
-import org.junit.runner.RunWith;
-import org.junit.runners.MethodSorters;
-import org.junit.runners.Parameterized;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.core.io.ClassPathResource;
 
 /**
  * @author Thomas Freese
  */
-@RunWith(Parameterized.class)
-@FixMethodOrder(MethodSorters.NAME_ASCENDING)
+@TestMethodOrder(MethodOrderer.Alphanumeric.class)
 @Disabled
 public class TestSendMail extends AbstractMailTest
 {
@@ -36,8 +33,8 @@ public class TestSendMail extends AbstractMailTest
     /**
      *
      */
-    @AfterClass
-    public static void afterClass()
+    @AfterAll
+    public static void afterAll()
     {
         // Empty
     }
@@ -45,8 +42,8 @@ public class TestSendMail extends AbstractMailTest
     /**
      *
      */
-    @BeforeClass
-    public static void beforeClass()
+    @BeforeAll
+    public static void beforeAll()
     {
         sender = new JavaMailSender();
         sender.setHost(MAIL_SMPT_HOST);
@@ -74,8 +71,8 @@ public class TestSendMail extends AbstractMailTest
     /**
      *
      */
-    @Before
-    public void beforeMethod()
+    @BeforeEach
+    public void beforeEach()
     {
         Assume.assumeFalse("On Work", isWork());
 

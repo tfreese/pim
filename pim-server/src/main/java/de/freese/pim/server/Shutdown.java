@@ -1,13 +1,13 @@
 // Created: 11.08.2016
 package de.freese.pim.server;
 
-import org.springframework.core.io.DefaultResourceLoader;
-import org.springframework.core.io.Resource;
-
+import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.util.Optional;
 import java.util.Properties;
+import org.springframework.core.io.DefaultResourceLoader;
+import org.springframework.core.io.Resource;
 
 /**
  * Sendet das shutdown-Signal.
@@ -17,16 +17,7 @@ import java.util.Properties;
 public class Shutdown
 {
     /**
-     * Erzeugt eine neue Instanz von {@link Shutdown}
-     */
-    public Shutdown()
-    {
-        super();
-    }
-
-    /**
      * @param args String[]
-     *
      * @throws Exception Falls was schief geht.
      */
     public static void main(final String[] args) throws Exception
@@ -38,7 +29,10 @@ public class Shutdown
 
         if (resource.isReadable())
         {
-            props.load(resource.getInputStream());
+            try (InputStream inputStream = resource.getInputStream())
+            {
+                props.load(inputStream);
+            }
         }
 
         int port = Integer.parseInt(Optional.ofNullable(props.getProperty("server.port")).orElse("61222"));
@@ -54,5 +48,13 @@ public class Shutdown
         connection.setRequestMethod("POST");
         connection.getResponseCode();
         connection.disconnect();
+    }
+
+    /**
+     * Erzeugt eine neue Instanz von {@link Shutdown}
+     */
+    public Shutdown()
+    {
+        super();
     }
 }

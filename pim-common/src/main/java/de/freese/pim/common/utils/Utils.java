@@ -504,6 +504,7 @@ public final class Utils
      * @return {@link List}
      * @throws SQLException Falls was schief geht.
      */
+    @SuppressWarnings("resource")
     public static List<String[]> toList(final ResultSet resultSet) throws SQLException
     {
         Objects.requireNonNull(resultSet, () -> "resultSet required");
@@ -553,6 +554,7 @@ public final class Utils
      * @param delimiter String
      * @see #padding(List, String)
      */
+    @SuppressWarnings("resource")
     public static <T extends CharSequence> void write(final List<T[]> rows, final PrintStream ps, final String delimiter)
     {
         Objects.requireNonNull(rows, () -> "rows required");

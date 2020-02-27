@@ -5,25 +5,22 @@ package de.freese.pim.server;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
-import org.junit.jupiter.api.Disabled;
+import org.junit.platform.runner.JUnitPlatform;
+import org.junit.platform.suite.api.SelectPackages;
 import org.junit.runner.RunWith;
-import org.junit.runners.Suite;
-import org.junit.runners.Suite.SuiteClasses;
 import org.springframework.mock.jndi.SimpleNamingContextBuilder;
-import de.freese.pim.server.addressbook.AllAddressbookTests;
-import de.freese.pim.server.mail.AllMailTests;
 
 /**
  * @author Thomas Freese
  */
-@RunWith(Suite.class)
-@SuiteClasses(
-{
-        AllAddressbookTests.class, AllMailTests.class, TestCrypt.class
-})
-@Disabled
+@RunWith(JUnitPlatform.class)
+@SelectPackages("de.freese.pim.server")
+// @SelectClasses(
+// {
+// AllAddressbookTest.class, AllMailTests.class, TestCrypt.class
+// })
 @SuppressWarnings("deprecation")
-public class AllPIMTests
+public class AllPIMTest
 {
 
     /**
@@ -51,9 +48,9 @@ public class AllPIMTests
     }
 
     /**
-     * Erzeugt eine neue Instanz von {@link AllPIMTests}
+     * Erzeugt eine neue Instanz von {@link AllPIMTest}
      */
-    public AllPIMTests()
+    public AllPIMTest()
     {
         super();
     }
