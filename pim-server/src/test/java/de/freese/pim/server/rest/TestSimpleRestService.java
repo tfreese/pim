@@ -8,12 +8,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadPoolExecutor;
 import javax.annotation.Resource;
-import org.junit.Assert;
-import org.junit.FixMethodOrder;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.MethodSorters;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -23,7 +23,6 @@ import org.springframework.scheduling.concurrent.ConcurrentTaskScheduler;
 import org.springframework.scheduling.concurrent.ScheduledExecutorFactoryBean;
 import org.springframework.scheduling.concurrent.ThreadPoolExecutorFactoryBean;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -136,12 +135,11 @@ class Config extends WebMvcConfigurationSupport
 /**
  * @author Thomas Freese
  */
-@RunWith(SpringRunner.class)
+@SpringBootTest
 @WebMvcTest(TestService.class) // Nur für diesen einen Service, ohne weitere Abhängigkeiten.
 @Import(Config.class)
 @ActiveProfiles("SimpleRestService")
-// @DirtiesContext
-@FixMethodOrder(MethodSorters.NAME_ASCENDING)
+@TestMethodOrder(MethodOrderer.Alphanumeric.class)
 public class TestSimpleRestService
 {
     /**
@@ -245,7 +243,7 @@ public class TestSimpleRestService
                 .andExpect(status().is2xxSuccessful());
             // @formatter:on
 
-            Assert.assertTrue(mvcResult.getAsyncResult().toString().startsWith("20"));
+            Assertions.assertTrue(mvcResult.getAsyncResult().toString().startsWith("20"));
         }
     }
 }
