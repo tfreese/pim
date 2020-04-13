@@ -11,7 +11,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Dient nur dazu die Threads des {@link ForkJoinPool#commonPool()} umzubenennen.
- * 
+ *
  * @author Thomas Freese
  */
 public class PIMForkJoinWorkerThreadFactory implements ForkJoinWorkerThreadFactory
@@ -49,7 +49,7 @@ public class PIMForkJoinWorkerThreadFactory implements ForkJoinWorkerThreadFacto
     {
         super();
 
-        this.namePrefix = "fork-join-";
+        this.namePrefix = "fork-join";
     }
 
     /**
@@ -60,7 +60,7 @@ public class PIMForkJoinWorkerThreadFactory implements ForkJoinWorkerThreadFacto
     {
         ForkJoinWorkerThread thread = new PIMForkJoinWorkerThread(pool);
 
-        String threadName = String.format("%s%02d", this.namePrefix, this.counter.getAndIncrement());
+        String threadName = String.format("%s-%02d", this.namePrefix, this.counter.getAndIncrement());
         thread.setName(threadName);
 
         return thread;
