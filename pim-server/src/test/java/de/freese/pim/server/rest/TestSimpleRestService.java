@@ -13,7 +13,6 @@ import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -135,7 +134,7 @@ class Config extends WebMvcConfigurationSupport
 /**
  * @author Thomas Freese
  */
-@SpringBootTest
+// @SpringBootTest // Kollidiert mit @WebMvcTest
 @WebMvcTest(TestService.class) // Nur für diesen einen Service, ohne weitere Abhängigkeiten.
 @Import(Config.class)
 @ActiveProfiles("SimpleRestService")
