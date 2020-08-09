@@ -1,25 +1,6 @@
 // Created: 20.01.2017
 package de.freese.pim.server.mail.service;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-import javax.annotation.PreDestroy;
-import javax.annotation.Resource;
-import org.apache.commons.lang3.ArrayUtils;
-import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.BeanFactory;
-import org.springframework.beans.factory.BeanFactoryAware;
-import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
-import org.springframework.beans.factory.support.DefaultListableBeanFactory;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import de.freese.pim.common.model.mail.MailContent;
 import de.freese.pim.common.service.AbstractService;
 import de.freese.pim.common.utils.io.IOMonitor;
@@ -29,6 +10,27 @@ import de.freese.pim.server.mail.dao.MailDAO;
 import de.freese.pim.server.mail.model.Mail;
 import de.freese.pim.server.mail.model.MailAccount;
 import de.freese.pim.server.mail.model.MailFolder;
+import org.apache.commons.lang3.ArrayUtils;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.BeanFactoryAware;
+import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
+import org.springframework.beans.factory.support.DefaultListableBeanFactory;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
+import javax.annotation.PreDestroy;
+import javax.annotation.Resource;
 
 /**
  * Service für die Mail-API.
@@ -44,8 +46,8 @@ public class DefaultMailService extends AbstractService implements MailService, 
     private BeanFactory beanFactory = null;
 
     /**
-    *
-    */
+     *
+     */
     private MailDAO mailDAO = null;
 
     /**
@@ -57,7 +59,6 @@ public class DefaultMailService extends AbstractService implements MailService, 
     }
 
     /**
-     * @Valid
      * @see de.freese.pim.server.mail.service.MailService#connectAccount(de.freese.pim.server.mail.model.MailAccount)
      */
     @Override
@@ -65,11 +66,12 @@ public class DefaultMailService extends AbstractService implements MailService, 
     {
         getLogger().info("connect {}", account.getMail());
 
+        // BeanFactory per Definition:
         // BeanDefinitionBuilder builder = BeanDefinitionBuilder.rootBeanDefinition(SomeClass.class);
         // builder.addPropertyReference("propertyName", "someBean"); // add dependency to other bean
         // builder.addPropertyValue("propertyName", someValue); // set property value
         // DefaultListableBeanFactory factory = (DefaultListableBeanFactory) context.getBeanFactory();
-        // factory.registerBeanDefinition("beanName", builder.getBeanDefinition());
+        // BeanDefinitionRegistry#registerBeanDefinition("beanName", builder.getBeanDefinition());
 
         // BeanDefinitionBuilder.genericBeanDefinition(String.class).addConstructorArgValue("test").getBeanDefinition()
         // BeanDefinitionBuilder.genericBeanDefinition(TestBean.class).addConstructorArgReference("myTestStringBean").getBeanDefinition()
@@ -78,9 +80,13 @@ public class DefaultMailService extends AbstractService implements MailService, 
         // beanDefinition.setBeanClassName(className);
         // beanDefinition.setFactoryMethodName("getService");
         // beanDefinition.setLazyInit(true);
-        // factory.registerBeanDefinition("beanName", beanDefinition);
+        // BeanDefinitionRegistry#registerBeanDefinition("beanName", beanDefinition);
 
-        String beanName = "mailAPI-" + account.getID();
+        // BeanFactory per Programmation:
+        // GenericApplicationContext#registerBean(Foo.class);
+        // GenericApplicationContext#registerBean(Bar.class, () -> new Bar(ctx.getBean(Foo.class));
+
+        String beanName = getAccountBeanName(account.getID());
 
         if (getApplicationContext().containsBean(beanName))
         {
@@ -133,7 +139,7 @@ public class DefaultMailService extends AbstractService implements MailService, 
      * @see de.freese.pim.server.mail.service.MailService#disconnectAccounts(long[])
      */
     @Override
-    public void disconnectAccounts(final long...accountIDs)
+    public void disconnectAccounts(final long... accountIDs)
     {
         getLogger().info("Disconnect Accounts");
 
@@ -159,40 +165,6 @@ public class DefaultMailService extends AbstractService implements MailService, 
     }
 
     /**
-     * Schliessen der MailAPI-Verbindung des MailAccounts
-     *
-     * @param accountID long
-     */
-    protected void disconnectMailAPI(final long accountID)
-    {
-        String beanName = "mailAPI-" + accountID;
-
-        DefaultListableBeanFactory bf = (DefaultListableBeanFactory) getBeanFactory();
-        MailAPI mailAPI = bf.getBean(beanName, MailAPI.class);
-
-        getLogger().info("Close " + mailAPI.getAccount().getMail());
-
-        try
-        {
-            mailAPI.disconnect();
-        }
-        catch (Exception ex)
-        {
-            getLogger().warn(ex.getMessage());
-        }
-
-        bf.destroySingleton(beanName);
-    }
-
-    /**
-     * @return {@link BeanFactory}
-     */
-    protected BeanFactory getBeanFactory()
-    {
-        return this.beanFactory;
-    }
-
-    /**
      * @see de.freese.pim.server.mail.service.MailService#getMailAccounts()
      */
     @Override
@@ -207,26 +179,6 @@ public class DefaultMailService extends AbstractService implements MailService, 
     }
 
     /**
-     * @param accountID long
-     * @return {@link MailAPI}
-     */
-    protected MailAPI getMailAPI(final long accountID)
-    {
-        MailAPI mailAPI = getApplicationContext().getBean("mailAPI-" + accountID, MailAPI.class);
-
-        return mailAPI;
-    }
-
-    /**
-     * @return {@link MailDAO}
-     */
-    protected MailDAO getMailDAO()
-    {
-        return this.mailDAO;
-    }
-
-    /**
-     * @Valid
      * @see de.freese.pim.server.mail.service.MailService#insertAccount(de.freese.pim.server.mail.model.MailAccount)
      */
     @Override
@@ -343,7 +295,7 @@ public class DefaultMailService extends AbstractService implements MailService, 
             return Collections.emptyList();
         }
 
-        if (newMails.size() > 0)
+        if (!newMails.isEmpty())
         {
             int[] affectedRows = getMailDAO().insertMail(folderID, newMails);
 
@@ -357,24 +309,6 @@ public class DefaultMailService extends AbstractService implements MailService, 
         mails.stream().forEach(m -> m.setFolderFullName(folderFullName));
 
         return mails;
-    }
-
-    /**
-     * @see org.springframework.beans.factory.BeanFactoryAware#setBeanFactory(org.springframework.beans.factory.BeanFactory)
-     */
-    @Override
-    public void setBeanFactory(final BeanFactory beanFactory) throws BeansException
-    {
-        this.beanFactory = beanFactory;
-    }
-
-    /**
-     * @param mailDAO {@link MailDAO}
-     */
-    @Resource
-    public void setMailDAO(final MailDAO mailDAO)
-    {
-        this.mailDAO = mailDAO;
     }
 
     /**
@@ -403,7 +337,7 @@ public class DefaultMailService extends AbstractService implements MailService, 
             }
             catch (Exception ex)
             {
-                // Ignore
+                getLogger().error(ex.getMessage());
             }
         }
 
@@ -438,5 +372,90 @@ public class DefaultMailService extends AbstractService implements MailService, 
         }
 
         return affectedRows;
+    }
+
+    /**
+     * Schliessen der MailAPI-Verbindung des MailAccounts
+     *
+     * @param accountID long
+     */
+    protected void disconnectMailAPI(final long accountID)
+    {
+        String beanName = getAccountBeanName(accountID);
+
+        DefaultListableBeanFactory bf = (DefaultListableBeanFactory) getBeanFactory();
+        MailAPI mailAPI = bf.getBean(beanName, MailAPI.class);
+
+        getLogger().info("Close {}", mailAPI.getAccount().getMail());
+
+        try
+        {
+            mailAPI.disconnect();
+        }
+        catch (Exception ex)
+        {
+            getLogger().error(ex.getMessage());
+        }
+
+        bf.destroySingleton(beanName);
+    }
+
+    /**
+     * @return {@link BeanFactory}
+     */
+    protected BeanFactory getBeanFactory()
+    {
+        return this.beanFactory;
+    }
+
+    /**
+     * @see org.springframework.beans.factory.BeanFactoryAware#setBeanFactory(org.springframework.beans.factory.BeanFactory)
+     */
+    @Override
+    public void setBeanFactory(final BeanFactory beanFactory) throws BeansException
+    {
+        this.beanFactory = beanFactory;
+    }
+
+    /**
+     * @param accountID long
+     *
+     * @return {@link MailAPI}
+     */
+    protected MailAPI getMailAPI(final long accountID)
+    {
+        String beanName = getAccountBeanName(accountID);
+        MailAPI mailAPI = getApplicationContext().getBean(beanName, MailAPI.class);
+
+        return mailAPI;
+    }
+
+    /**
+     * @return {@link MailDAO}
+     */
+    protected MailDAO getMailDAO()
+    {
+        return this.mailDAO;
+    }
+
+    /**
+     * @param mailDAO {@link MailDAO}
+     */
+    @Resource
+    public void setMailDAO(final MailDAO mailDAO)
+    {
+        this.mailDAO = mailDAO;
+    }
+
+    /**
+     * @param accountID long
+     *
+     * @return String
+     */
+    private String getAccountBeanName(long accountID)
+    {
+        String beanName = "mailAPI-" + accountID;
+
+        return beanName;
     }
 }

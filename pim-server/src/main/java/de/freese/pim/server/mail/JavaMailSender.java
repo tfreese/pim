@@ -1,12 +1,15 @@
 // Created: 09.12.2016
 package de.freese.pim.server.mail;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Properties;
+
 import javax.mail.AuthenticationFailedException;
 import javax.mail.Authenticator;
 import javax.mail.MessagingException;
@@ -15,7 +18,6 @@ import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.MimeMessage;
-import org.apache.commons.lang3.StringUtils;
 
 /**
  * Siehe org.springframework.mail.javamail.JavaMailSenderImpl
@@ -30,8 +32,8 @@ public class JavaMailSender
     private static class MailAuthenticator extends Authenticator
     {
         /**
-        *
-        */
+         *
+         */
         private final PasswordAuthentication authentication;
 
         /**
@@ -109,16 +111,134 @@ public class JavaMailSender
     }
 
     /**
+     * @return String
+     */
+    public String getHost()
+    {
+        return this.host;
+    }
+
+    /**
+     * @param host String
+     */
+    public void setHost(final String host)
+    {
+        this.host = Objects.requireNonNull(host, "host required");
+    }
+
+    /**
+     * @return {@link Properties}
+     */
+    public Properties getJavaMailProperties()
+    {
+        return this.javaMailProperties;
+    }
+
+    /**
+     * @param javaMailProperties {@link Properties}
+     */
+    public void setJavaMailProperties(final Properties javaMailProperties)
+    {
+        this.javaMailProperties = Objects.requireNonNull(javaMailProperties, "javaMailProperties required");
+    }
+
+    /**
+     * @return int
+     */
+    public int getPort()
+    {
+        return this.port;
+    }
+
+    /**
+     * @param port int
+     */
+    public void setPort(final int port)
+    {
+        this.port = port;
+    }
+
+    /**
+     * @return String
+     */
+    public String getProtocol()
+    {
+        return this.protocol;
+    }
+
+    /**
+     * @param protocol String
+     */
+    public void setProtocol(final String protocol)
+    {
+        this.protocol = Objects.requireNonNull(protocol, "protocol required");
+    }
+
+    /**
+     * @return {@link Session}
+     */
+    public synchronized Session getSession()
+    {
+        if (this.session == null)
+        {
+            this.session = Session.getInstance(getJavaMailProperties(), getAuthenticator());
+        }
+
+        return this.session;
+    }
+
+    /**
+     * @param session {@link Session}
+     */
+    public synchronized void setSession(final Session session)
+    {
+        this.session = Objects.requireNonNull(session, () -> "Session must not be null");
+    }
+
+    /**
+     * @param mimeMessages {@link MimeMessage}[]
+     *
+     * @throws Exception Falls was schief geht.
+     */
+    public void send(final MimeMessage... mimeMessages) throws Exception
+    {
+        doSend(mimeMessages, null);
+    }
+
+    /**
+     * @param userName String
+     * @param password String
+     */
+    public void setAuthentication(final String userName, final String password)
+    {
+        this.authenticator = new MailAuthenticator(userName, password);
+    }
+
+    /**
+     * Validate that this instance can connect to the server that it is configured for. Throws a {@link MessagingException} if the connection attempt failed.
+     *
+     * @throws MessagingException Falls was schief geht.
+     */
+    public void testConnection() throws MessagingException
+    {
+        try (Transport transport = connectTransport())
+        {
+            // NOOP
+        }
+    }
+
+    /**
      * Obtain and connect a Transport from the underlying JavaMail Session, passing in the specified host, port, username, and password.
      *
      * @return the connected Transport object
+     *
      * @throws MessagingException if the connect attempt failed
-     * @since 4.1.2
      * @see #getTransport
      * @see #getHost()
      * @see #getPort()
      * @see #getUsername()
      * @see #getPassword()
+     * @since 4.1.2
      */
     protected Transport connectTransport() throws MessagingException
     {
@@ -134,12 +254,12 @@ public class JavaMailSender
     /**
      * Actually send the given array of MimeMessages via JavaMail.
      *
-     * @param mimeMessages MimeMessage objects to send
+     * @param mimeMessages     MimeMessage objects to send
      * @param originalMessages corresponding original message objects that the MimeMessages have been created from (with same array length and indices as the
-     *            "mimeMessages" array), if any
+     *                         "mimeMessages" array), if any
+     *
      * @throws Exception Falls was schief geht.
      */
-    @SuppressWarnings("resource")
     protected void doSend(final MimeMessage[] mimeMessages, final Object[] originalMessages) throws Exception
     {
         Map<Object, Exception> failedMessages = new LinkedHashMap<>();
@@ -255,61 +375,18 @@ public class JavaMailSender
     /**
      * @return String
      */
-    public String getHost()
-    {
-        return this.host;
-    }
-
-    /**
-     * @return {@link Properties}
-     */
-    public Properties getJavaMailProperties()
-    {
-        return this.javaMailProperties;
-    }
-
-    /**
-     * @return String
-     */
     protected String getPassword()
     {
         return getAuthenticator().getPasswordAuthentication().getPassword();
     }
 
     /**
-     * @return int
-     */
-    public int getPort()
-    {
-        return this.port;
-    }
-
-    /**
-     * @return String
-     */
-    public String getProtocol()
-    {
-        return this.protocol;
-    }
-
-    /**
-     * @return {@link Session}
-     */
-    public synchronized Session getSession()
-    {
-        if (this.session == null)
-        {
-            this.session = Session.getInstance(getJavaMailProperties(), getAuthenticator());
-        }
-
-        return this.session;
-    }
-
-    /**
      * Obtain a Transport object from the given JavaMail Session, using the configured protocol.
      *
      * @param session {@link Session}
+     *
      * @return {@link Transport}
+     *
      * @throws NoSuchProviderException Falls was schief geht.
      * @see javax.mail.Session#getTransport(String)
      * @see #getSession()
@@ -317,19 +394,19 @@ public class JavaMailSender
      */
     protected Transport getTransport(final Session session) throws NoSuchProviderException
     {
-        String protocol = getProtocol();
+        String proto = getProtocol();
 
-        if (protocol == null)
+        if (proto == null)
         {
-            protocol = session.getProperty("mail.transport.protocol");
+            proto = session.getProperty("mail.transport.protocol");
         }
 
-        if (protocol == null)
+        if (proto == null)
         {
-            protocol = DEFAULT_PROTOCOL;
+            proto = DEFAULT_PROTOCOL;
         }
 
-        return session.getTransport(protocol);
+        return session.getTransport(proto);
     }
 
     /**
@@ -338,88 +415,5 @@ public class JavaMailSender
     protected String getUsername()
     {
         return getAuthenticator().getPasswordAuthentication().getUserName();
-    }
-
-    /**
-     * @param mimeMessage {@link MimeMessage}
-     * @throws Exception Falls was schief geht.
-     */
-    public void send(final MimeMessage mimeMessage) throws Exception
-    {
-        send(new MimeMessage[]
-        {
-                mimeMessage
-        });
-    }
-
-    /**
-     * @param mimeMessages {@link MimeMessage}[]
-     * @throws Exception Falls was schief geht.
-     */
-    public void send(final MimeMessage...mimeMessages) throws Exception
-    {
-        doSend(mimeMessages, null);
-    }
-
-    /**
-     * @param userName String
-     * @param password String
-     */
-    public void setAuthentication(final String userName, final String password)
-    {
-        this.authenticator = new MailAuthenticator(userName, password);
-    }
-
-    /**
-     * @param host String
-     */
-    public void setHost(final String host)
-    {
-        this.host = Objects.requireNonNull(host, "host required");
-    }
-
-    /**
-     * @param javaMailProperties {@link Properties}
-     */
-    public void setJavaMailProperties(final Properties javaMailProperties)
-    {
-        this.javaMailProperties = Objects.requireNonNull(javaMailProperties, "javaMailProperties required");
-    }
-
-    /**
-     * @param port int
-     */
-    public void setPort(final int port)
-    {
-        this.port = port;
-    }
-
-    /**
-     * @param protocol String
-     */
-    public void setProtocol(final String protocol)
-    {
-        this.protocol = Objects.requireNonNull(protocol, "protocol required");
-    }
-
-    /**
-     * @param session {@link Session}
-     */
-    public synchronized void setSession(final Session session)
-    {
-        this.session = Objects.requireNonNull(session, () -> "Session must not be null");
-    }
-
-    /**
-     * Validate that this instance can connect to the server that it is configured for. Throws a {@link MessagingException} if the connection attempt failed.
-     *
-     * @throws MessagingException Falls was schief geht.
-     */
-    public void testConnection() throws MessagingException
-    {
-        try (Transport transport = connectTransport())
-        {
-            // NOOP
-        }
     }
 }

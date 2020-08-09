@@ -1,11 +1,6 @@
 // Created: 25.01.2017
 package de.freese.pim.gui.mail;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.concurrent.Callable;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import de.freese.pim.gui.mail.model.FXMail;
 import de.freese.pim.gui.mail.model.FXMailAccount;
 import de.freese.pim.gui.mail.model.FXMailFolder;
@@ -14,6 +9,12 @@ import de.freese.pim.gui.view.ErrorDialog;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.scene.control.TreeView;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.List;
+import java.util.Objects;
+import java.util.concurrent.Callable;
 
 /**
  * Laden der Mails pro MailFolder.
@@ -23,13 +24,13 @@ import javafx.scene.control.TreeView;
 public class LoadMailsTask extends Task<Void> implements Callable<Void>
 {
     /**
-    *
-    */
+     *
+     */
     public static final Logger LOGGER = LoggerFactory.getLogger(LoadMailsTask.class);
 
     /**
-    *
-    */
+     *
+     */
     private final FXMailAccount account;
 
     /**
@@ -38,17 +39,17 @@ public class LoadMailsTask extends Task<Void> implements Callable<Void>
     private final List<FXMailFolder> folders;
 
     /**
-    *
-    */
+     *
+     */
     private final FXMailService mailService;
 
     /**
      * Erzeugt eine neue Instanz von {@link LoadMailsTask}
      *
-     * @param treeView {@link TreeView}
-     * @param folders {@link List}
+     * @param treeView    {@link TreeView}
+     * @param folders     {@link List}
      * @param mailService {@link FXMailService}
-     * @param account {@link FXMailAccount}
+     * @param account     {@link FXMailAccount}
      */
     public LoadMailsTask(final TreeView<Object> treeView, final List<FXMailFolder> folders, final FXMailService mailService, final FXMailAccount account)
     {
@@ -60,10 +61,9 @@ public class LoadMailsTask extends Task<Void> implements Callable<Void>
         this.mailService = Objects.requireNonNull(mailService, "mailService required");
         this.account = Objects.requireNonNull(account, "account required");
 
-        setOnSucceeded(event -> {
-            treeView.refresh();
-        });
-        setOnFailed(event -> {
+        setOnSucceeded(event -> treeView.refresh());
+        setOnFailed(event ->
+        {
             Throwable th = getException();
 
             LOGGER.error(null, th);
@@ -85,7 +85,8 @@ public class LoadMailsTask extends Task<Void> implements Callable<Void>
 
             List<FXMail> mails = this.mailService.loadMails(this.account, mf);
 
-            Runnable task = () -> {
+            Runnable task = () ->
+            {
 
                 if (mails != null)
                 {
