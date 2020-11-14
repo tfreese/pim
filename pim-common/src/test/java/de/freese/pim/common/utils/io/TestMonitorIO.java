@@ -1,22 +1,22 @@
 // Created: 11.01.2017
 package de.freese.pim.common.utils.io;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.channels.Channels;
 import java.util.Optional;
-import org.junit.Assert;
-import org.junit.FixMethodOrder;
-import org.junit.Test;
-import org.junit.runners.MethodSorters;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 
 /**
  * @author Thomas Freese
  */
-@FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class TestMonitorIO
+@TestMethodOrder(MethodOrderer.MethodName.class)
+class TestMonitorIO
 {
     /**
      * BiConsumer<Long, Long> monitor = (size, current) -> System.out.printf("\r%d / %d%n", current, size);
@@ -29,14 +29,6 @@ public class TestMonitorIO
          *
          */
         private Long current = null;
-
-        /**
-         * Erzeugt eine neue Instanz von {@link Monitor}
-         */
-        public Monitor()
-        {
-            super();
-        }
 
         /**
          * @return long
@@ -65,18 +57,10 @@ public class TestMonitorIO
     };
 
     /**
-     * Erzeugt eine neue Instanz von {@link TestMonitorIO}
-     */
-    public TestMonitorIO()
-    {
-        super();
-    }
-
-    /**
      * @throws Exception Falls was schief geht.
      */
     @Test
-    public void test010InputStream() throws Exception
+    void test010InputStream() throws Exception
     {
         // BiConsumer<Long, Long> monitor = (size, current) -> System.out.printf("\r%d / %d%n", current, size);
         Monitor monitor = new Monitor();
@@ -90,7 +74,7 @@ public class TestMonitorIO
             {
                 mis.read();
 
-                Assert.assertEquals(i + 1, monitor.getCurrent());
+                assertEquals(i + 1, monitor.getCurrent());
             }
         }
 
@@ -100,13 +84,13 @@ public class TestMonitorIO
         try (MonitorInputStream mis = new MonitorInputStream(is, monitor, is.available()))
         {
             mis.read(new byte[2]);
-            Assert.assertEquals(2, monitor.getCurrent());
+            assertEquals(2, monitor.getCurrent());
 
             mis.read(new byte[3]);
-            Assert.assertEquals(5, monitor.getCurrent());
+            assertEquals(5, monitor.getCurrent());
 
             mis.read(new byte[4]);
-            Assert.assertEquals(9, monitor.getCurrent());
+            assertEquals(9, monitor.getCurrent());
         }
 
         // Pro Byte[] Range
@@ -115,7 +99,7 @@ public class TestMonitorIO
         try (MonitorInputStream mis = new MonitorInputStream(is, monitor, is.available()))
         {
             mis.read(new byte[10], 2, 8);
-            Assert.assertEquals(8, monitor.getCurrent());
+            assertEquals(8, monitor.getCurrent());
         }
     }
 
@@ -123,7 +107,7 @@ public class TestMonitorIO
      * @throws Exception Falls was schief geht.
      */
     @Test
-    public void test020OutputStream() throws Exception
+    void test020OutputStream() throws Exception
     {
         Monitor monitor = new Monitor();
 
@@ -134,7 +118,7 @@ public class TestMonitorIO
             {
                 mos.write(BYTES[i]);
 
-                Assert.assertEquals(i + 1, monitor.getCurrent());
+                assertEquals(i + 1, monitor.getCurrent());
             }
         }
 
@@ -142,20 +126,20 @@ public class TestMonitorIO
         try (MonitorOutputStream mos = new MonitorOutputStream(new ByteArrayOutputStream(), monitor, BYTES.length))
         {
             mos.write(new byte[2]);
-            Assert.assertEquals(2, monitor.getCurrent());
+            assertEquals(2, monitor.getCurrent());
 
             mos.write(new byte[3]);
-            Assert.assertEquals(5, monitor.getCurrent());
+            assertEquals(5, monitor.getCurrent());
 
             mos.write(new byte[4]);
-            Assert.assertEquals(9, monitor.getCurrent());
+            assertEquals(9, monitor.getCurrent());
         }
 
         // Pro Byte[] Range
         try (MonitorOutputStream mos = new MonitorOutputStream(new ByteArrayOutputStream(), monitor, BYTES.length))
         {
             mos.write(BYTES, 2, 8);
-            Assert.assertEquals(8, monitor.getCurrent());
+            assertEquals(8, monitor.getCurrent());
         }
     }
 
@@ -163,7 +147,7 @@ public class TestMonitorIO
      * @throws Exception Falls was schief geht.
      */
     @Test
-    public void test030ReadableByteChannel() throws Exception
+    void test030ReadableByteChannel() throws Exception
     {
         Monitor monitor = new Monitor();
 
@@ -176,7 +160,7 @@ public class TestMonitorIO
             {
                 mrc.read(buffer);
 
-                Assert.assertEquals(i + 1, monitor.getCurrent());
+                assertEquals(i + 1, monitor.getCurrent());
 
                 buffer.clear();
             }
@@ -186,13 +170,13 @@ public class TestMonitorIO
         try (MonitoringReadableByteChannel mrc = new MonitoringReadableByteChannel(Channels.newChannel(new ByteArrayInputStream(BYTES)), monitor, BYTES.length))
         {
             mrc.read(ByteBuffer.allocateDirect(2));
-            Assert.assertEquals(2, monitor.getCurrent());
+            assertEquals(2, monitor.getCurrent());
 
             mrc.read(ByteBuffer.allocateDirect(3));
-            Assert.assertEquals(5, monitor.getCurrent());
+            assertEquals(5, monitor.getCurrent());
 
             mrc.read(ByteBuffer.allocateDirect(4));
-            Assert.assertEquals(9, monitor.getCurrent());
+            assertEquals(9, monitor.getCurrent());
         }
     }
 
@@ -200,7 +184,7 @@ public class TestMonitorIO
      * @throws Exception Falls was schief geht.
      */
     @Test
-    public void test040WritableByteChannel() throws Exception
+    void test040WritableByteChannel() throws Exception
     {
         Monitor monitor = new Monitor();
 
@@ -213,7 +197,7 @@ public class TestMonitorIO
             {
                 mwc.write(buffer);
 
-                Assert.assertEquals(i + 1, monitor.getCurrent());
+                assertEquals(i + 1, monitor.getCurrent());
 
                 buffer.clear();
             }
@@ -223,13 +207,13 @@ public class TestMonitorIO
         try (MonitoringWritableByteChannel mwc = new MonitoringWritableByteChannel(Channels.newChannel(new ByteArrayOutputStream()), monitor, BYTES.length))
         {
             mwc.write(ByteBuffer.wrap(new byte[2]));
-            Assert.assertEquals(2, monitor.getCurrent());
+            assertEquals(2, monitor.getCurrent());
 
             mwc.write(ByteBuffer.wrap(new byte[3]));
-            Assert.assertEquals(5, monitor.getCurrent());
+            assertEquals(5, monitor.getCurrent());
 
             mwc.write(ByteBuffer.wrap(new byte[4]));
-            Assert.assertEquals(9, monitor.getCurrent());
+            assertEquals(9, monitor.getCurrent());
         }
     }
 }

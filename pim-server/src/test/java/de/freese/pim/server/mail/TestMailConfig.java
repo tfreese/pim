@@ -27,14 +27,6 @@ import de.freese.pim.server.mail.dao.MailDAO;
 public class TestMailConfig
 {
     /**
-     * Erstellt ein neues {@link TestMailConfig} Object.
-     */
-    public TestMailConfig()
-    {
-        super();
-    }
-
-    /**
      * @return {@link DataSource}
      * @throws Exception Falls was schief geht.
      */

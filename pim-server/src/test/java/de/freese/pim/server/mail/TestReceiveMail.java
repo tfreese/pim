@@ -54,7 +54,7 @@ import de.freese.pim.server.mail.api.JavaMailContent;
  * @author Thomas Freese
  */
 @SpringBootTest
-@TestMethodOrder(MethodOrderer.Alphanumeric.class)
+@TestMethodOrder(MethodOrderer.MethodName.class)
 @Disabled
 public class TestReceiveMail extends AbstractMailTest
 {
@@ -72,7 +72,7 @@ public class TestReceiveMail extends AbstractMailTest
      * @throws Exception Falls was schief geht.
      */
     @AfterAll
-    public static void afterAll() throws Exception
+    static void afterAll() throws Exception
     {
         if (store != null)
         {
@@ -84,7 +84,7 @@ public class TestReceiveMail extends AbstractMailTest
      *
      */
     @BeforeAll
-    public static void beforeAll()
+    static void beforeAll()
     {
         Authenticator authenticator = null;
 
@@ -95,14 +95,6 @@ public class TestReceiveMail extends AbstractMailTest
         properties.put("mail.imap.starttls.enable", "true");
 
         session = Session.getInstance(properties, authenticator);
-    }
-
-    /**
-     * Erstellt ein neues {@link TestReceiveMail} Object.
-     */
-    public TestReceiveMail()
-    {
-        super();
     }
 
     // /**
@@ -117,7 +109,7 @@ public class TestReceiveMail extends AbstractMailTest
      * @throws Exception Falls was schief geht.
      */
     @BeforeEach
-    public void beforeEach() throws Exception
+    void beforeEach() throws Exception
     {
         System.out.println();
         Assumptions.assumeFalse(isWork(), "On Work");
@@ -127,7 +119,7 @@ public class TestReceiveMail extends AbstractMailTest
      * @throws Exception Falls was schief geht.
      */
     @Test
-    public void test000Connect() throws Exception
+    void test000Connect() throws Exception
     {
         store = session.getStore("imaps");
         store.connect(MAIL_IMAP_HOST, MAIL_IMAP_PORT.getPort(), this.from, this.password);
@@ -137,7 +129,7 @@ public class TestReceiveMail extends AbstractMailTest
      * @throws Exception Falls was schief geht.
      */
     @Test
-    public void test010ListFolder() throws Exception
+    void test010ListFolder() throws Exception
     {
         Folder defaultFolder = null;
 
@@ -160,7 +152,7 @@ public class TestReceiveMail extends AbstractMailTest
      * @throws Exception Falls was schief geht.
      */
     @Test
-    public void test020SaveNewMails() throws Exception
+    void test020SaveNewMails() throws Exception
     {
         Folder inboxFolder = null;
 
@@ -236,7 +228,7 @@ public class TestReceiveMail extends AbstractMailTest
      * @throws Exception Falls was schief geht.
      */
     @Test
-    public void test021ReadSavedMails() throws Exception
+    void test021ReadSavedMails() throws Exception
     {
         // Files.newDirectoryStream(Paths.get("."), path -> path.toString().endsWith(".msg")).forEach(System.out::println);
 
@@ -264,7 +256,7 @@ public class TestReceiveMail extends AbstractMailTest
      * @throws Exception Falls was schief geht.
      */
     @Test
-    public void test022ReadAttachementsFromSavedMails() throws Exception
+    void test022ReadAttachementsFromSavedMails() throws Exception
     {
         try (Stream<Path> mailFiles = Files.find(TMP_TEST_PATH, 1, (path, attrs) -> attrs.isRegularFile() && path.toString().endsWith(".eml")))
         {
@@ -302,7 +294,7 @@ public class TestReceiveMail extends AbstractMailTest
      * @throws Exception Falls was schief geht.
      */
     @Test
-    public void test023ReadTextFromSavedMails() throws Exception
+    void test023ReadTextFromSavedMails() throws Exception
     {
         try (Stream<Path> mailFiles = Files.find(TMP_TEST_PATH, 1, (path, attrs) -> attrs.isRegularFile() && path.toString().endsWith(".eml")))
         {

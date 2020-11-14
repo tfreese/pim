@@ -27,14 +27,6 @@ import de.freese.pim.server.addressbook.dao.DefaultAddressBookDAO;
 public class TestAddressbookConfig
 {
     /**
-     * Erstellt ein neues {@link TestAddressbookConfig} Object.
-     */
-    public TestAddressbookConfig()
-    {
-        super();
-    }
-
-    /**
      * @param dataSource {@link DataSource}
      * @return {@link AddressBookDAO}
      */

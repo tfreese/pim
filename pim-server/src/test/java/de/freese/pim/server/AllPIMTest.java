@@ -32,7 +32,7 @@ public class AllPIMTest
      *
      */
     @AfterClass
-    public static void afterClass()
+    static void afterClass()
     {
         namingContext.clear();
     }
@@ -41,7 +41,7 @@ public class AllPIMTest
      * @throws Exception Falls was schief geht.
      */
     @BeforeClass
-    public static void beforeClass() throws Exception
+    static void beforeClass() throws Exception
     {
         namingContext = SimpleNamingContextBuilder.emptyActivatedContextBuilder();
         // namingContext.bind("java:comp/env/jdbc/spring/manualTX", new TestConfig().dataSource());

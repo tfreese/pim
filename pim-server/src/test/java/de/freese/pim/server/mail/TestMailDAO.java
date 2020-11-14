@@ -36,7 +36,7 @@ import de.freese.pim.server.mail.model.MailFolder;
 {
         TestMailConfig.class
 })
-@TestMethodOrder(MethodOrderer.Alphanumeric.class)
+@TestMethodOrder(MethodOrderer.MethodName.class)
 @Transactional(transactionManager = "transactionManager")
 @ActiveProfiles("test")
 public class TestMailDAO
@@ -48,19 +48,11 @@ public class TestMailDAO
     private MailDAO mailDAO = null;
 
     /**
-     * Erstellt ein neues {@link TestMailDAO} Object.
-     */
-    public TestMailDAO()
-    {
-        super();
-    }
-
-    /**
      * @throws Throwable Falls was schief geht.
      */
     @Test
     @Rollback
-    public void test010InsertAccountFail() throws Throwable
+    void test010InsertAccountFail() throws Throwable
     {
         MailAccount account = new MailAccount();
 
@@ -75,7 +67,7 @@ public class TestMailDAO
      */
     @Test
     @Commit
-    public void test011InsertAccount()
+    void test011InsertAccount()
     {
         MailAccount account = new MailAccount();
         account.setMail("a@b.de");
@@ -97,7 +89,7 @@ public class TestMailDAO
     @Test
     @Transactional(readOnly = true)
     @Rollback
-    public void test012SelectAccount()
+    void test012SelectAccount()
     {
         List<MailAccount> accounts = this.mailDAO.getMailAccounts();
 
@@ -120,7 +112,7 @@ public class TestMailDAO
      */
     @Test
     @Commit
-    public void test013UpdateAccount()
+    void test013UpdateAccount()
     {
         List<MailAccount> accounts = this.mailDAO.getMailAccounts();
 
@@ -146,7 +138,7 @@ public class TestMailDAO
     @Test
     @Transactional(readOnly = true)
     @Rollback
-    public void test014UpdateAccountCheck()
+    void test014UpdateAccountCheck()
     {
         List<MailAccount> accounts = this.mailDAO.getMailAccounts();
 
@@ -170,7 +162,7 @@ public class TestMailDAO
      */
     @Test
     @Rollback
-    public void test020InsertFolderFail() throws Throwable
+    void test020InsertFolderFail() throws Throwable
     {
         MailFolder folder = new MailFolder();
 
@@ -185,7 +177,7 @@ public class TestMailDAO
      */
     @Test
     @Commit
-    public void test021InsertFolder()
+    void test021InsertFolder()
     {
         MailFolder folder = new MailFolder();
         folder.setFullName("a/b");
@@ -202,7 +194,7 @@ public class TestMailDAO
     @Test
     @Transactional(readOnly = true)
     @Rollback
-    public void test022SelectFolder()
+    void test022SelectFolder()
     {
         List<MailFolder> folders = this.mailDAO.getMailFolder(2);
 
@@ -220,7 +212,7 @@ public class TestMailDAO
      */
     @Test
     @Commit
-    public void test023UpdateFolder()
+    void test023UpdateFolder()
     {
         List<MailFolder> folders = this.mailDAO.getMailFolder(2);
 
@@ -241,7 +233,7 @@ public class TestMailDAO
     @Test
     @Transactional(readOnly = true)
     @Rollback
-    public void test024UpdateFolderCheck()
+    void test024UpdateFolderCheck()
     {
         List<MailFolder> folders = this.mailDAO.getMailFolder(2);
 
@@ -260,7 +252,7 @@ public class TestMailDAO
      */
     @Test
     @Rollback
-    public void test030InsertMailFail() throws Throwable
+    void test030InsertMailFail() throws Throwable
     {
         Mail mail = new Mail();
 
@@ -275,7 +267,7 @@ public class TestMailDAO
      */
     @Test
     @Commit
-    public void test031InsertMail()
+    void test031InsertMail()
     {
         Mail mail = new Mail();
         mail.setFrom(new InternetAddress("a@a.aa"));
@@ -307,7 +299,7 @@ public class TestMailDAO
     @Test
     @Transactional(readOnly = true)
     @Rollback
-    public void test032SelectMail()
+    void test032SelectMail()
     {
         List<Mail> mails = this.mailDAO.getMails(4);
 
@@ -332,7 +324,7 @@ public class TestMailDAO
      */
     @Test
     @Commit
-    public void test033UpdateMail()
+    void test033UpdateMail()
     {
         List<Mail> mails = this.mailDAO.getMails(4);
 
@@ -352,7 +344,7 @@ public class TestMailDAO
     @Test
     @Transactional(readOnly = true)
     @Rollback
-    public void test034UpdateMailCheck()
+    void test034UpdateMailCheck()
     {
         List<Mail> mails = this.mailDAO.getMails(4);
 
@@ -377,7 +369,7 @@ public class TestMailDAO
      */
     @Test
     @Commit
-    public void test040DeleteMail()
+    void test040DeleteMail()
     {
         this.mailDAO.deleteMail(4, 2);
     }
@@ -387,7 +379,7 @@ public class TestMailDAO
     @Test
     @Transactional(readOnly = true)
     @Rollback
-    public void test041DeleteMailCheck()
+    void test041DeleteMailCheck()
     {
         List<Mail> mails = this.mailDAO.getMails(4);
 
@@ -399,7 +391,7 @@ public class TestMailDAO
      */
     @Test
     @Commit
-    public void test050DeleteFolder()
+    void test050DeleteFolder()
     {
         this.mailDAO.deleteFolder(4);
     }
@@ -409,7 +401,7 @@ public class TestMailDAO
     @Test
     @Transactional(readOnly = true)
     @Rollback
-    public void test051DeleteFolderCheck()
+    void test051DeleteFolderCheck()
     {
         List<MailFolder> folders = this.mailDAO.getMailFolder(2);
 
@@ -421,7 +413,7 @@ public class TestMailDAO
      */
     @Test
     @Commit
-    public void test060DeleteAccount()
+    void test060DeleteAccount()
     {
         this.mailDAO.deleteAccount(2);
     }
@@ -431,7 +423,7 @@ public class TestMailDAO
     @Test
     @Transactional(readOnly = true)
     @Rollback
-    public void test061DeleteAccountCheck()
+    void test061DeleteAccountCheck()
     {
         List<MailFolder> folders = this.mailDAO.getMailFolder(2);
 

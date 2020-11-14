@@ -22,26 +22,18 @@ import org.springframework.scheduling.concurrent.ThreadPoolExecutorFactoryBean;
  *
  * @author Thomas Freese
  */
-@TestMethodOrder(MethodOrderer.Alphanumeric.class)
-public class TestMisc
+@TestMethodOrder(MethodOrderer.MethodName.class)
+class TestMisc
 {
     /**
      *
      */
     @BeforeAll
-    public static void beforeAll()
+    static void beforeAll()
     {
         System.setProperty("java.util.concurrent.ForkJoinPool.common.parallelism", Integer.toString(Runtime.getRuntime().availableProcessors() * 2));
 
         System.setProperty("java.util.concurrent.ForkJoinPool.common.threadFactory", "de.freese.pim.common.concurrent.PIMForkJoinWorkerThreadFactory");
-    }
-
-    /**
-     * Erzeugt eine neue Instanz von {@link TestMisc}
-     */
-    public TestMisc()
-    {
-        super();
     }
 
     /**
@@ -51,7 +43,7 @@ public class TestMisc
      * @throws Exception Falls was schief geht.
      */
     @Test
-    public void test010CompletableFuture() throws Exception
+    void test010CompletableFuture() throws Exception
     {
         List<String> results = new ArrayList<>();
 
@@ -102,7 +94,7 @@ public class TestMisc
      * @throws Exception Falls was schief geht.
      */
     @Test
-    public void test020ThreadPool() throws Exception
+    void test020ThreadPool() throws Exception
     {
         ThreadPoolExecutorFactoryBean bean = new ThreadPoolExecutorFactoryBean();
         bean.setCorePoolSize(4);

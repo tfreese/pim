@@ -26,7 +26,7 @@ import de.freese.pim.server.addressbook.TestAddressbookConfig;
 {
         TestAddressbookConfig.class
 })
-@TestMethodOrder(MethodOrderer.Alphanumeric.class)
+@TestMethodOrder(MethodOrderer.MethodName.class)
 @Transactional(transactionManager = "transactionManager")
 @ActiveProfiles("test")
 // @DirtiesContext
@@ -37,14 +37,6 @@ public class TestSpringContextAddressbookDAO extends AbstractDAOTestCase
      */
     @Resource
     private AddressBookDAO addressBookDAO = null;
-
-    /**
-     * Erstellt ein neues {@link TestSpringContextAddressbookDAO} Object.
-     */
-    public TestSpringContextAddressbookDAO()
-    {
-        super();
-    }
 
     /**
      * @see de.freese.pim.server.addressbook.dao.AbstractDAOTestCase#test0100InsertKontakts()

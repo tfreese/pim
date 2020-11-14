@@ -16,8 +16,8 @@ import de.freese.pim.common.utils.Utils;
  *
  * @author Thomas Freese
  */
-@TestMethodOrder(MethodOrderer.Alphanumeric.class)
-public class TestRegEx
+@TestMethodOrder(MethodOrderer.MethodName.class)
+class TestRegEx
 {
     /**
     *
@@ -25,18 +25,10 @@ public class TestRegEx
     private static final String MAIL_REGEX = Utils.MAIL_REGEX;
 
     /**
-     * Erzeugt eine neue Instanz von {@link TestRegEx}
-     */
-    public TestRegEx()
-    {
-        super();
-    }
-
-    /**
      * Falsche Mail-Formate.
      */
     @Test
-    public void test010ThreadName()
+    void test010ThreadName()
     {
         // \\d{1,}$
 
@@ -71,7 +63,7 @@ public class TestRegEx
      * Falsche Mail-Formate.
      */
     @Test
-    public void test020MailFalse()
+    void test020MailFalse()
     {
         Assertions.assertFalse("a".matches(MAIL_REGEX));
         Assertions.assertFalse("a@".matches(MAIL_REGEX));
@@ -84,7 +76,7 @@ public class TestRegEx
      * Richtige Mail-Formate.
      */
     @Test
-    public void test020MailTrue()
+    void test020MailTrue()
     {
         Assertions.assertTrue("a@b.de".matches(MAIL_REGEX));
         Assertions.assertTrue("a@b.com".matches(MAIL_REGEX));
@@ -96,7 +88,7 @@ public class TestRegEx
      * Richtige Mail-Formate.
      */
     @Test
-    public void test030Misc()
+    void test030Misc()
     {
         Assertions.assertTrue("20040117.000000".matches(".*\\d{6}.*"));
     }

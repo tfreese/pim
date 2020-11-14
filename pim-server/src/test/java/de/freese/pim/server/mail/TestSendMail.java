@@ -16,7 +16,7 @@ import org.springframework.core.io.ClassPathResource;
 /**
  * @author Thomas Freese
  */
-@TestMethodOrder(MethodOrderer.Alphanumeric.class)
+@TestMethodOrder(MethodOrderer.MethodName.class)
 @Disabled
 public class TestSendMail extends AbstractMailTest
 {
@@ -34,7 +34,7 @@ public class TestSendMail extends AbstractMailTest
      *
      */
     @AfterAll
-    public static void afterAll()
+    static void afterAll()
     {
         // Empty
     }
@@ -43,7 +43,7 @@ public class TestSendMail extends AbstractMailTest
      *
      */
     @BeforeAll
-    public static void beforeAll()
+    static void beforeAll()
     {
         sender = new JavaMailSender();
         sender.setHost(MAIL_SMPT_HOST);
@@ -61,18 +61,10 @@ public class TestSendMail extends AbstractMailTest
     }
 
     /**
-     * Erzeugt eine neue Instanz von {@link TestSendMail}
-     */
-    public TestSendMail()
-    {
-        super();
-    }
-
-    /**
      *
      */
     @BeforeEach
-    public void beforeEach()
+    void beforeEach()
     {
         Assume.assumeFalse("On Work", isWork());
 
@@ -83,7 +75,7 @@ public class TestSendMail extends AbstractMailTest
      * @throws Exception Falls was schief geht.
      */
     @Test
-    public void test000Connect() throws Exception
+    void test000Connect() throws Exception
     {
         sender.testConnection();
     }
@@ -92,7 +84,7 @@ public class TestSendMail extends AbstractMailTest
      * @throws Exception Falls was schief geht.
      */
     @Test
-    public void test100PlainText() throws Exception
+    void test100PlainText() throws Exception
     {
         // @formatter:off
         JavaMailBuilder.create(session)
@@ -108,7 +100,7 @@ public class TestSendMail extends AbstractMailTest
      * @throws Exception Falls was schief geht.
      */
     @Test
-    public void test100PlainTextWithAttachment() throws Exception
+    void test100PlainTextWithAttachment() throws Exception
     {
         // Resource resource = new ClassPathResource("mail/text.txt");
         // InputStream inputStream = resource.getInputStream();
@@ -130,7 +122,7 @@ public class TestSendMail extends AbstractMailTest
      * @throws Exception Falls was schief geht.
      */
     @Test
-    public void test200Html() throws Exception
+    void test200Html() throws Exception
     {
         StringBuilder html = new StringBuilder();
         html.append("<!DOCTYPE html><html lang=\"de\"><head></head><body>");
@@ -152,7 +144,7 @@ public class TestSendMail extends AbstractMailTest
      * @throws Exception Falls was schief geht.
      */
     @Test
-    public void test210HtmlWithAttachment() throws Exception
+    void test210HtmlWithAttachment() throws Exception
     {
         StringBuilder html = new StringBuilder();
         html.append("<!DOCTYPE html><html lang=\"de\"><head></head><body>");
@@ -175,7 +167,7 @@ public class TestSendMail extends AbstractMailTest
      * @throws Exception Falls was schief geht.
      */
     @Test
-    public void test220HtmlWithInline() throws Exception
+    void test220HtmlWithInline() throws Exception
     {
         StringBuilder html = new StringBuilder();
         html.append("<!DOCTYPE html><html lang=\"de\"><head></head><body>");

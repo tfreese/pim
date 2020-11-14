@@ -36,7 +36,7 @@ import de.freese.pim.server.PIMServerApplication;
 {
         "spring.main.banner-mode=OFF", "logging.config=classpath:logback-server.xml" // , "spring.config.name=application-Server"
 })
-@TestMethodOrder(MethodOrderer.Alphanumeric.class)
+@TestMethodOrder(MethodOrderer.MethodName.class)
 @ActiveProfiles(
 {
         "Server", "HsqldbMemory"
@@ -48,27 +48,19 @@ public class TestRestServer
     *
     */
     @LocalServerPort
-    private String localServerPort = null;
+    private String localServerPort;
 
     /**
     *
     */
     @Resource
-    private MockMvc mockMvc = null;
-
-    /**
-     * Erzeugt eine neue Instanz von {@link TestRestServer}
-     */
-    public TestRestServer()
-    {
-        super();
-    }
+    private MockMvc mockMvc;
 
     /**
      * @throws Exception Falls was schief geht.
      */
     @Test
-    public void test010NoParamGreetingShouldReturnDefaultMessage() throws Exception
+    void test010NoParamGreetingShouldReturnDefaultMessage() throws Exception
     {
         // .andDo(print()).andExpect(jsonPath("$.content").value("Hello, Spring Community!"));
 
@@ -84,7 +76,7 @@ public class TestRestServer
      * @throws Exception Falls was schief geht.
      */
     @Test
-    public void test020ParamGreetingShouldReturnTailoredMessage() throws Exception
+    void test020ParamGreetingShouldReturnTailoredMessage() throws Exception
     {
         // .andDo(print()).andExpect(jsonPath("$.content").value("Hello, Spring Community!"));
 
@@ -100,7 +92,7 @@ public class TestRestServer
      * @throws Exception Falls was schief geht.
      */
     @Test
-    public void test030AsyncDateDeferredResult() throws Exception
+    void test030AsyncDateDeferredResult() throws Exception
     {
         testAsync("/test/asyncDateDeferredResult");
     }
@@ -109,7 +101,7 @@ public class TestRestServer
      * @throws Exception Falls was schief geht.
      */
     @Test
-    public void test040AsyncDateCallable() throws Exception
+    void test040AsyncDateCallable() throws Exception
     {
         testAsync("/test/asyncDateCallable");
     }
@@ -118,7 +110,7 @@ public class TestRestServer
      * @throws Exception Falls was schief geht.
      */
     @Test
-    public void test040AsyncDateWebAsyncTask() throws Exception
+    void test040AsyncDateWebAsyncTask() throws Exception
     {
         testAsync("/test/asyncDateWebAsyncTask");
     }

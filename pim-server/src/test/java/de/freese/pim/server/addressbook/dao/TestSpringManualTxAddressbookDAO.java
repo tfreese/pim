@@ -22,7 +22,7 @@ import de.freese.pim.server.addressbook.TestAddressbookConfig;
  *
  * @author Thomas Freese
  */
-@TestMethodOrder(MethodOrderer.Alphanumeric.class)
+@TestMethodOrder(MethodOrderer.MethodName.class)
 public class TestSpringManualTxAddressbookDAO extends AbstractDAOTestCase
 {
     /**
@@ -44,7 +44,7 @@ public class TestSpringManualTxAddressbookDAO extends AbstractDAOTestCase
      *
      */
     @AfterAll
-    public static void afterAll()
+    static void afterAll()
     {
         closeDataSource(dataSource);
     }
@@ -53,7 +53,7 @@ public class TestSpringManualTxAddressbookDAO extends AbstractDAOTestCase
      * @throws Exception Falls was schief geht.
      */
     @BeforeAll
-    public static void beforeAll() throws Exception
+    static void beforeAll() throws Exception
     {
         TestAddressbookConfig config = new TestAddressbookConfig();
 
@@ -63,14 +63,6 @@ public class TestSpringManualTxAddressbookDAO extends AbstractDAOTestCase
         addressBookDAO = config.addressBookDAO(dataSource);
         ((DefaultAddressBookDAO) addressBookDAO).setSequenceQuery(config.sequenceQuery());
         ((DefaultAddressBookDAO) addressBookDAO).afterPropertiesSet();
-    }
-
-    /**
-     * Erstellt ein neues {@link TestSpringManualTxAddressbookDAO} Object.
-     */
-    public TestSpringManualTxAddressbookDAO()
-    {
-        super();
     }
 
     /**

@@ -138,7 +138,7 @@ class Config extends WebMvcConfigurationSupport
 @WebMvcTest(TestService.class) // Nur für diesen einen Service, ohne weitere Abhängigkeiten.
 @Import(Config.class)
 @ActiveProfiles("SimpleRestService")
-@TestMethodOrder(MethodOrderer.Alphanumeric.class)
+@TestMethodOrder(MethodOrderer.MethodName.class)
 public class TestSimpleRestService
 {
     /**
@@ -148,18 +148,10 @@ public class TestSimpleRestService
     private MockMvc mockMvc = null;
 
     /**
-     * Erzeugt eine neue Instanz von {@link TestSimpleRestService}
-     */
-    public TestSimpleRestService()
-    {
-        super();
-    }
-
-    /**
      * @throws Exception Falls was schief geht.
      */
     @Test
-    public void test010NoParamGreetingShouldReturnDefaultMessage() throws Exception
+    void test010NoParamGreetingShouldReturnDefaultMessage() throws Exception
     {
         // .andDo(print()).andExpect(jsonPath("$.content").value("Hello, Spring Community!"));
 
@@ -175,7 +167,7 @@ public class TestSimpleRestService
      * @throws Exception Falls was schief geht.
      */
     @Test
-    public void test020ParamGreetingShouldReturnTailoredMessage() throws Exception
+    void test020ParamGreetingShouldReturnTailoredMessage() throws Exception
     {
         // .andDo(print()).andExpect(jsonPath("$.content").value("Hello, Spring Community!"));
 
@@ -191,7 +183,7 @@ public class TestSimpleRestService
      * @throws Exception Falls was schief geht.
      */
     @Test
-    public void test030AsyncDateDeferredResult() throws Exception
+    void test030AsyncDateDeferredResult() throws Exception
     {
         testAsync("/test/asyncDateDeferredResult");
     }
@@ -200,7 +192,7 @@ public class TestSimpleRestService
      * @throws Exception Falls was schief geht.
      */
     @Test
-    public void test040AsyncDateCallable() throws Exception
+    void test040AsyncDateCallable() throws Exception
     {
         testAsync("/test/asyncDateCallable");
     }
@@ -209,7 +201,7 @@ public class TestSimpleRestService
      * @throws Exception Falls was schief geht.
      */
     @Test
-    public void test040AsyncDateWebAsyncTask() throws Exception
+    void test040AsyncDateWebAsyncTask() throws Exception
     {
         testAsync("/test/asyncDateWebAsyncTask");
     }

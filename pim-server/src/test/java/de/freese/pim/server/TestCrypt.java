@@ -20,22 +20,14 @@ import de.freese.pim.common.utils.Crypt;
  *
  * @author Thomas Freese
  */
-@TestMethodOrder(MethodOrderer.Alphanumeric.class)
+@TestMethodOrder(MethodOrderer.MethodName.class)
 public class TestCrypt
 {
-    /**
-     * Erzeugt eine neue Instanz von {@link TestCrypt}
-     */
-    public TestCrypt()
-    {
-        super();
-    }
-
     /**
      * @throws Exception Falls was schief geht.
      */
     @Test
-    public void testCryptStream() throws Exception
+    void testCryptStream() throws Exception
     {
         String clearText = "testABC123,.öäü#+";
 
@@ -65,7 +57,7 @@ public class TestCrypt
      * @throws Exception Falls was schief geht.
      */
     @Test
-    public void testCryptString() throws Exception
+    void testCryptString() throws Exception
     {
         String clearText = "testABC123,.öäü#+";
 

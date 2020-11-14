@@ -58,14 +58,6 @@ public class TestService
     private AsyncTaskExecutor taskExecutor = null;
 
     /**
-     * Erzeugt eine neue Instanz von {@link TestService}
-     */
-    public TestService()
-    {
-        super();
-    }
-
-    /**
      * Läuft im ThreadPool "MvcAsync" des RequestMappingHandlerAdapter, wenn über {@link WebMvcConfigurationSupport} nicht anders konfiguriert.
      *
      * @return {@link Future}

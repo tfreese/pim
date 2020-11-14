@@ -20,7 +20,7 @@ import javafx.stage.Stage;
 /**
  * @author Thomas Freese
  */
-public class TestProgressIndicator extends Application
+public class ProgressIndicatorDemo extends Application
 {
     /**
      * @param args String[]
@@ -31,9 +31,9 @@ public class TestProgressIndicator extends Application
     }
 
     /**
-     * Erstellt ein neues {@link TestProgressIndicator} Object.
+     * Erstellt ein neues {@link ProgressIndicatorDemo} Object.
      */
-    public TestProgressIndicator()
+    public ProgressIndicatorDemo()
     {
         super();
     }
