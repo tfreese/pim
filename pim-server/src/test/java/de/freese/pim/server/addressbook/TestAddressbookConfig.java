@@ -5,6 +5,7 @@
 package de.freese.pim.server.addressbook;
 
 import java.util.function.Function;
+import java.util.function.UnaryOperator;
 import javax.sql.DataSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -81,9 +82,9 @@ public class TestAddressbookConfig
      * @return {@link Function}
      */
     @Bean
-    public Function<String, String> sequenceQuery()
+    public UnaryOperator<String> sequenceQuery()
     {
-        Function<String, String> query = seq -> "call next value for " + seq;
+        UnaryOperator<String> query = seq -> "call next value for " + seq;
 
         return query;
     }

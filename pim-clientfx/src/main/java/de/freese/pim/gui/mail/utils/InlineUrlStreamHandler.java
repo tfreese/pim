@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLStreamHandler;
-
 import de.freese.pim.common.model.mail.MailContent;
 
 /**
@@ -19,7 +18,7 @@ public class InlineUrlStreamHandler extends URLStreamHandler
     /**
     *
     */
-    private static MailContent mailContent = null;
+    private static MailContent mailContent;
 
     /**
      * @return {@link MailContent}

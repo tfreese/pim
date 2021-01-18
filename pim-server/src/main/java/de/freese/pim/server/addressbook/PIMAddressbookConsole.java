@@ -10,7 +10,6 @@ import java.nio.file.Paths;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
@@ -27,7 +26,6 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
-
 import de.freese.pim.common.utils.PreserveOrderOptionGroup;
 import de.freese.pim.common.utils.Utils;
 import de.freese.pim.server.addressbook.dao.AddressBookDAO;
@@ -51,116 +49,7 @@ public class PIMAddressbookConsole
     /**
      *
      */
-    public static PrintStream PRINTSTREAM = System.out;
-
-    /**
-     * @param args String[]
-     * @throws Exception Falls was schief geht.
-     */
-    public static void main(String[] args) throws Exception
-    {
-        if (args.length == 0)
-        {
-            usage();
-        }
-
-        CommandLine line = null;
-
-        try
-        {
-            CommandLineParser parser = new DefaultParser();
-            line = parser.parse(getCommandOptions(), args);
-        }
-        catch (Exception ex)
-        {
-            LOGGER.error(ex.getMessage());
-
-            usage();
-        }
-
-        // SysOutOverSLF4J.sendSystemOutAndErrToSLF4J();
-
-        Path home = Paths.get(System.getProperty("user.home"), ".pim");
-
-        if (!Files.exists(home))
-        {
-            Files.createDirectories(home);
-        }
-
-        SingleConnectionDataSource dataSource = new SingleConnectionDataSource();
-        dataSource.setDriverClassName("org.hsqldb.jdbc.JDBCDriver");
-        dataSource.setUrl("jdbc:hsqldb:file:" + System.getProperty("user.home") + "/.pim/pimdb;shutdown=true");
-        dataSource.setAutoCommit(true);
-        dataSource.setSuppressClose(true);
-
-        try
-        {
-            PlatformTransactionManager transactionManager = new DataSourceTransactionManager(dataSource);
-
-            DefaultAddressBookDAO addressBookDAO = new DefaultAddressBookDAO();
-            addressBookDAO.setDataSource(dataSource);
-
-            PIMAddressbookConsole addressbook = new PIMAddressbookConsole();
-            addressbook.setAddressBookDAO(addressBookDAO);
-            addressbook.setTransactionManager(transactionManager);
-            addressbook.setPrintStream(PRINTSTREAM);
-
-            if (line.hasOption("ik"))
-            {
-                args = line.getOptionValues("insert-kontakt");
-                addressbook.insertKontakt(args[0], args[1]);
-            }
-            else if (line.hasOption("uk"))
-            {
-                args = line.getOptionValues("update-kontakt");
-                long id = Long.parseLong(args[0]);
-                addressbook.updateKontakt(id, args[1], args[2]);
-            }
-            else if (line.hasOption("dk"))
-            {
-                long id = Long.parseLong(line.getOptionValue("delete-kontakt"));
-                addressbook.deleteKontakt(id);
-            }
-            else if (line.hasOption("ia"))
-            {
-                args = line.getOptionValues("insert-attribut");
-                long id = Long.parseLong(args[0]);
-                addressbook.insertAttribut(id, args[1], args[2]);
-            }
-            else if (line.hasOption("ua"))
-            {
-                args = line.getOptionValues("update-attribut");
-                long id = Long.parseLong(args[0]);
-                addressbook.updateAttribut(id, args[1], args[2]);
-                // long id = Long.parseLong(args[1]);
-                // addressbook.updateAttribut(id, args[2], StringUtils.join(args, ' ', 3, args.length));
-            }
-            else if (line.hasOption("da"))
-            {
-                args = line.getOptionValues("delete-attribut");
-                long id = Long.parseLong(args[0]);
-                addressbook.deleteAttribut(id, args[1]);
-            }
-            else if (line.hasOption("lk"))
-            {
-                addressbook.getKontakte();
-            }
-            else if (line.hasOption("vk"))
-            {
-                long id = Long.parseLong(line.getOptionValue("view-kontakt"));
-                addressbook.getKontaktDetails(id);
-            }
-            else if (line.hasOption("s"))
-            {
-                args = line.getOptionValues("search");
-                addressbook.search(args[0]);
-            }
-        }
-        finally
-        {
-            dataSource.destroy();
-        }
-    }
+    public static PrintStream PRINT_STREAM = System.out;
 
     /**
      * Liefert die möglichen Optionen der Kommandozeile.<br>
@@ -222,6 +111,115 @@ public class PIMAddressbookConsole
     }
 
     /**
+     * @param args String[]
+     * @throws Exception Falls was schief geht.
+     */
+    public static void main(String[] args) throws Exception
+    {
+        if (args.length == 0)
+        {
+            usage();
+        }
+
+        CommandLine line = null;
+
+        try
+        {
+            CommandLineParser parser = new DefaultParser();
+            line = parser.parse(getCommandOptions(), args);
+        }
+        catch (Exception ex)
+        {
+            LOGGER.error(ex.getMessage());
+
+            usage();
+        }
+
+        // SysOutOverSLF4J.sendSystemOutAndErrToSLF4J();
+
+        Path home = Paths.get(System.getProperty("user.home"), ".pim");
+
+        if (!Files.exists(home))
+        {
+            Files.createDirectories(home);
+        }
+
+        SingleConnectionDataSource dataSource = new SingleConnectionDataSource();
+        dataSource.setDriverClassName("org.hsqldb.jdbc.JDBCDriver");
+        dataSource.setUrl("jdbc:hsqldb:file:" + System.getProperty("user.home") + "/.pim/pimdb;shutdown=true");
+        dataSource.setAutoCommit(true);
+        dataSource.setSuppressClose(true);
+
+        try
+        {
+            PlatformTransactionManager transactionManager = new DataSourceTransactionManager(dataSource);
+
+            DefaultAddressBookDAO addressBookDAO = new DefaultAddressBookDAO();
+            addressBookDAO.setDataSource(dataSource);
+
+            PIMAddressbookConsole addressbook = new PIMAddressbookConsole();
+            addressbook.setAddressBookDAO(addressBookDAO);
+            addressbook.setTransactionManager(transactionManager);
+            addressbook.setPrintStream(PRINT_STREAM);
+
+            if (line.hasOption("ik"))
+            {
+                args = line.getOptionValues("insert-kontakt");
+                addressbook.insertKontakt(args[0], args[1]);
+            }
+            else if (line.hasOption("uk"))
+            {
+                args = line.getOptionValues("update-kontakt");
+                long id = Long.parseLong(args[0]);
+                addressbook.updateKontakt(id, args[1], args[2]);
+            }
+            else if (line.hasOption("dk"))
+            {
+                long id = Long.parseLong(line.getOptionValue("delete-kontakt"));
+                addressbook.deleteKontakt(id);
+            }
+            else if (line.hasOption("ia"))
+            {
+                args = line.getOptionValues("insert-attribut");
+                long id = Long.parseLong(args[0]);
+                addressbook.insertAttribut(id, args[1], args[2]);
+            }
+            else if (line.hasOption("ua"))
+            {
+                args = line.getOptionValues("update-attribut");
+                long id = Long.parseLong(args[0]);
+                addressbook.updateAttribut(id, args[1], args[2]);
+                // long id = Long.parseLong(args[1]);
+                // addressbook.updateAttribut(id, args[2], StringUtils.join(args, ' ', 3, args.length));
+            }
+            else if (line.hasOption("da"))
+            {
+                args = line.getOptionValues("delete-attribut");
+                long id = Long.parseLong(args[0]);
+                addressbook.deleteAttribut(id, args[1]);
+            }
+            else if (line.hasOption("lk"))
+            {
+                addressbook.getKontakte();
+            }
+            else if (line.hasOption("vk"))
+            {
+                long id = Long.parseLong(line.getOptionValue("view-kontakt"));
+                addressbook.getKontaktDetails(id);
+            }
+            else if (line.hasOption("s"))
+            {
+                args = line.getOptionValues("search");
+                addressbook.search(args[0]);
+            }
+        }
+        finally
+        {
+            dataSource.destroy();
+        }
+    }
+
+    /**
      *
      */
     private static void usage()
@@ -243,7 +241,7 @@ public class PIMAddressbookConsole
     /**
      *
      */
-    private AddressBookDAO addressBookDAO = null;
+    private AddressBookDAO addressBookDAO;
 
     /**
      *
@@ -253,7 +251,7 @@ public class PIMAddressbookConsole
     /**
      *
      */
-    private PlatformTransactionManager transactionManager = null;
+    private PlatformTransactionManager transactionManager;
 
     /**
      *
@@ -357,8 +355,7 @@ public class PIMAddressbookConsole
                     "ID", "VORNAME", "NACHNAME"
             });
 
-            kontakte.forEach(k ->
-            {
+            kontakte.forEach(k -> {
                 String[] row = new String[3];
                 rows.add(row);
 
@@ -466,8 +463,7 @@ public class PIMAddressbookConsole
                 "ID", "VORNAME", "NACHNAME", "ATTRIBUT", "WERT"
         });
 
-        kontakte.forEach(kontakt ->
-        {
+        kontakte.forEach(kontakt -> {
             rows.add(new String[]
             {
                     Long.toString(kontakt.getID()), kontakt.getNachname(), kontakt.getVorname(), StringUtils.EMPTY, StringUtils.EMPTY
@@ -475,7 +471,7 @@ public class PIMAddressbookConsole
 
             List<KontaktAttribut> kontaktAttribute = kontakt.getAttribute();
 
-            if (kontaktAttribute.size() > 0)
+            if (!kontaktAttribute.isEmpty())
             {
                 rows.get(rows.size() - 1)[3] = kontaktAttribute.get(0).getAttribut();
                 rows.get(rows.size() - 1)[4] = kontaktAttribute.get(0).getWert();
@@ -483,8 +479,7 @@ public class PIMAddressbookConsole
 
             if (kontaktAttribute.size() > 1)
             {
-                kontaktAttribute.stream().skip(1).forEach(ka ->
-                {
+                kontaktAttribute.stream().skip(1).forEach(ka -> {
                     String[] row = new String[5];
                     rows.add(row);
 

@@ -20,33 +20,33 @@ public class MailFolder
     *
     */
     // @NotNull
-    private long accountID = 0;
+    private long accountID;
 
     /**
     *
     */
     // @NotNull
     // @Size(min = 0, max = 100)
-    private String fullName = null;
+    private String fullName;
 
     /**
     *
     */
     // @NotNull
-    private long id = 0;
+    private long id;
 
     /**
     *
     */
     // @NotNull
     // @Size(min = 0, max = 100)
-    private String name = null;
+    private String name;
 
     /**
      *
      */
     // @NotNull
-    private boolean sendFolder = false;
+    private boolean sendFolder;
 
     /**
      * Erzeugt eine neue Instanz von {@link MailFolder}

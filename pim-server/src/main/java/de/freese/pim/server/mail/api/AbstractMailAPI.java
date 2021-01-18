@@ -22,7 +22,7 @@ public abstract class AbstractMailAPI implements MailAPI
     /**
     *
     */
-    private Executor executor = null;
+    private Executor executor;
 
     /**
     *
@@ -34,7 +34,7 @@ public abstract class AbstractMailAPI implements MailAPI
      *
      * @param account {@link MailAccount}
      */
-    public AbstractMailAPI(final MailAccount account)
+    protected AbstractMailAPI(final MailAccount account)
     {
         super();
 

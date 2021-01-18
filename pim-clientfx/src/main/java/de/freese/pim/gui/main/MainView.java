@@ -34,13 +34,13 @@ public class MainView extends BorderPane implements View
      *
      */
     @FXML
-    private Button buttonContactView = null;
+    private Button buttonContactView;
 
     /**
      *
      */
     @FXML
-    private Button buttonMailView = null;
+    private Button buttonMailView;
 
     /**
      *
@@ -50,7 +50,7 @@ public class MainView extends BorderPane implements View
     /**
      *
      */
-    private VBox vBox = null;
+    private VBox vBox;
 
     /**
      * Erzeugt eine neue Instanz von {@link MainView}

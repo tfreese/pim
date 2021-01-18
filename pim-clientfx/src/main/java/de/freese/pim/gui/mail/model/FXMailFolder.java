@@ -77,19 +77,19 @@ public class FXMailFolder
     *
     */
     @JsonIgnore
-    private FXMailFolder parent = null;
+    private FXMailFolder parent;
 
     /**
     *
     */
     @JsonIgnore
-    private IntegerBinding unreadMailsCount = null;
+    private IntegerBinding unreadMailsCount;
 
     /**
     *
     */
     @JsonIgnore
-    private IntegerBinding unreadMailsCountTotal = null;
+    private IntegerBinding unreadMailsCountTotal;
 
     /**
      * Erzeugt eine neue Instanz von {@link FXMailFolder}

@@ -72,7 +72,7 @@ public class JavaMailBuilder
     /**
      *
      */
-    private InternetAddress from = null;
+    private InternetAddress from;
 
     /**
      *
@@ -82,12 +82,12 @@ public class JavaMailBuilder
     /**
      *
      */
-    private boolean isHTML = false;
+    private boolean isHTML;
 
     /**
      *
      */
-    private String messageID = null;
+    private String messageID;
 
     /**
        *
@@ -112,12 +112,12 @@ public class JavaMailBuilder
     /**
      *
      */
-    private String subject = null;
+    private String subject;
 
     /**
      *
      */
-    private String text = null;
+    private String text;
 
     /**
      *
@@ -235,10 +235,7 @@ public class JavaMailBuilder
             Objects.requireNonNull(internetAddress, () -> "BCC address must not be null");
 
             validateAddress(internetAddress);
-        }
 
-        for (InternetAddress internetAddress : bcc)
-        {
             this.recipientsBcc.add(internetAddress);
         }
 
@@ -449,10 +446,7 @@ public class JavaMailBuilder
             Objects.requireNonNull(internetAddress, () -> "CC address must not be null");
 
             validateAddress(internetAddress);
-        }
 
-        for (InternetAddress internetAddress : cc)
-        {
             this.recipientsCc.add(internetAddress);
         }
 
@@ -758,10 +752,7 @@ public class JavaMailBuilder
             Objects.requireNonNull(internetAddress, "To address must not be null");
 
             validateAddress(internetAddress);
-        }
 
-        for (InternetAddress internetAddress : to)
-        {
             this.recipientsTo.add(internetAddress);
         }
 

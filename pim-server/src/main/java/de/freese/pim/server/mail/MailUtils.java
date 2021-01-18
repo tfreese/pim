@@ -4,10 +4,6 @@
 
 package de.freese.pim.server.mail;
 
-import de.freese.pim.common.model.mail.InternetAddress;
-import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.ArrayUtils;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,7 +12,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
-
 import javax.activation.DataSource;
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -24,6 +19,9 @@ import javax.mail.Multipart;
 import javax.mail.Part;
 import javax.mail.internet.MimePart;
 import javax.mail.internet.MimeUtility;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.ArrayUtils;
+import de.freese.pim.common.model.mail.InternetAddress;
 
 /**
  * Mail-Utils.
@@ -32,41 +30,6 @@ import javax.mail.internet.MimeUtility;
  */
 public final class MailUtils
 {
-    /**
-     *
-     */
-    public static final String CONTENT_TYPE_CHARSET_SUFFIX = ";charset=";
-
-    /**
-     *
-     */
-    public static final String CONTENT_TYPE_HTML = "text/html";
-
-    /**
-     *
-     */
-    public static final String CONTENT_TYPE_PLAIN = "text/plain";
-
-    /**
-     *
-     */
-    public static final String HEADER_CONTENT_ID = "Content-ID";
-
-    /**
-     *
-     */
-    public static final String HEADER_MESSAGE_ID = "Message-ID";
-
-    /**
-     *
-     */
-    public static final String MULTIPART_SUBTYPE_MIXED = "mixed";
-
-    /**
-     *
-     */
-    public static final String MULTIPART_SUBTYPE_RELATED = "related";
-
     /**
      * @author Thomas Freese
      */
@@ -85,7 +48,7 @@ public final class MailUtils
         /**
          * Erstellt ein neues {@link AbstractTextPart} Object.
          *
-         * @param content  String
+         * @param content String
          * @param mimeType String
          */
         private AbstractTextPart(final String content, final String mimeType)
@@ -125,7 +88,7 @@ public final class MailUtils
     /**
      * @author Thomas Freese
      */
-    public static class HTMLTextPart extends AbstractTextPart
+    public static final class HTMLTextPart extends AbstractTextPart
     {
         /**
          * Erstellt ein neues {@link HTMLTextPart} Object.
@@ -141,7 +104,7 @@ public final class MailUtils
     /**
      * @author Thomas Freese
      */
-    public static class PlainTextPart extends AbstractTextPart
+    public static final class PlainTextPart extends AbstractTextPart
     {
         /**
          * Erstellt ein neues {@link PlainTextPart} Object.
@@ -155,15 +118,48 @@ public final class MailUtils
     }
 
     /**
+     *
+     */
+    public static final String CONTENT_TYPE_CHARSET_SUFFIX = ";charset=";
+
+    /**
+     *
+     */
+    public static final String CONTENT_TYPE_HTML = "text/html";
+
+    /**
+     *
+     */
+    public static final String CONTENT_TYPE_PLAIN = "text/plain";
+
+    /**
+     *
+     */
+    public static final String HEADER_CONTENT_ID = "Content-ID";
+
+    /**
+     *
+     */
+    public static final String HEADER_MESSAGE_ID = "Message-ID";
+
+    /**
+     *
+     */
+    public static final String MULTIPART_SUBTYPE_MIXED = "mixed";
+
+    /**
+     *
+     */
+    public static final String MULTIPART_SUBTYPE_RELATED = "related";
+
+    /**
      * Liefert alle vorhandenen Attachment-MimeParts einer {@link Message}.<br>
      * Key = Filename<br>
      * Value = {@link MimePart}<br>
      *
      * @param part {@link Part}, @see {@link Message}
-     *
      * @return {@link Map}; ist niemals null
-     *
-     * @throws IOException        Falls was schief geht.
+     * @throws IOException Falls was schief geht.
      * @throws MessagingException Falls was schief geht.
      */
     public static Map<String, MimePart> getAttachmentMap(final Part part) throws MessagingException, IOException
@@ -187,10 +183,8 @@ public final class MailUtils
      * Liefert alle vorhandenen Attachments-MimeParts einer {@link Message}.
      *
      * @param part {@link Part}, @see {@link Message}
-     *
      * @return {@link List}; ist niemals null
-     *
-     * @throws IOException        Falls was schief geht.
+     * @throws IOException Falls was schief geht.
      * @throws MessagingException Falls was schief geht.
      */
     public static List<MimePart> getAttachments(final Part part) throws MessagingException, IOException
@@ -227,10 +221,8 @@ public final class MailUtils
      * Value = {@link MimePart}<br>
      *
      * @param part {@link Part}, @see {@link Message}
-     *
      * @return {@link Map}; ist niemals null
-     *
-     * @throws IOException        Falls was schief geht.
+     * @throws IOException Falls was schief geht.
      * @throws MessagingException Falls was schief geht.
      */
     public static Map<String, MimePart> getInlineMap(final Part part) throws MessagingException, IOException
@@ -263,10 +255,8 @@ public final class MailUtils
      * Liefert alle vorhandenen Inline-MimeParts einer {@link Message}.
      *
      * @param part {@link Part}, @see {@link Message}
-     *
      * @return {@link List}; ist niemals null
-     *
-     * @throws IOException        Falls was schief geht.
+     * @throws IOException Falls was schief geht.
      * @throws MessagingException Falls was schief geht.
      */
     public static List<MimePart> getInlines(final Part part) throws MessagingException, IOException
@@ -301,10 +291,8 @@ public final class MailUtils
      * Liefert die Gesamtgröße aller einzelnen Parts.
      *
      * @param part {@link Part}, @see {@link Message}
-     *
      * @return long
-     *
-     * @throws IOException        Falls was schief geht.
+     * @throws IOException Falls was schief geht.
      * @throws MessagingException Falls was schief geht.
      */
     public static long getSizeOfAllParts(final Part part) throws MessagingException, IOException
@@ -336,10 +324,8 @@ public final class MailUtils
      * Dabei wird zuerst nach HTML gesucht, dann nach Plain-Text.
      *
      * @param part {@link Part}, @see {@link Message}
-     *
      * @return {@link List}; ist niemals null
-     *
-     * @throws IOException        Falls was schief geht.
+     * @throws IOException Falls was schief geht.
      * @throws MessagingException Falls was schief geht.
      */
     public static DataSource getTextDataSource(final Part part) throws MessagingException, IOException
@@ -361,10 +347,8 @@ public final class MailUtils
      * Liefert alle vorhandenen Text-DataSources (text/plain, text/html) einer {@link Message}.
      *
      * @param part {@link Part}, @see {@link Message}
-     *
      * @return {@link List}; ist niemals null
-     *
-     * @throws IOException        Falls was schief geht.
+     * @throws IOException Falls was schief geht.
      * @throws MessagingException Falls was schief geht.
      */
     public static List<DataSource> getTextDataSources(final Part part) throws MessagingException, IOException
@@ -401,10 +385,8 @@ public final class MailUtils
      * Liefert alle vorhandenen Text-Parts (text/plain, text/html) einer {@link Message}.
      *
      * @param part {@link Part}, @see {@link Message}
-     *
      * @return {@link List}; ist niemals null
-     *
-     * @throws IOException        Falls was schief geht.
+     * @throws IOException Falls was schief geht.
      * @throws MessagingException Falls was schief geht.
      */
     public static List<AbstractTextPart> getTextParts(final Part part) throws MessagingException, IOException
@@ -451,7 +433,6 @@ public final class MailUtils
 
     /**
      * @param address {@link javax.mail.internet.InternetAddress}
-     *
      * @return {@link InternetAddress}
      */
     public static InternetAddress map(final javax.mail.internet.InternetAddress address)
@@ -467,7 +448,6 @@ public final class MailUtils
 
     /**
      * @param addresses {@link javax.mail.internet.InternetAddress}[]
-     *
      * @return {@link InternetAddress}[]
      */
     public static InternetAddress[] map(final javax.mail.internet.InternetAddress[] addresses)

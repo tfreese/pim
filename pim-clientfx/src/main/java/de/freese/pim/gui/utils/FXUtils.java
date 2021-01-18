@@ -373,7 +373,7 @@ public final class FXUtils
     public static void pasteClipboard(final TableView<?> table)
     {
         // abort if there's not cell selected to start with
-        if (table.getSelectionModel().getSelectedCells().size() == 0)
+        if (table.getSelectionModel().getSelectedCells().isEmpty())
         {
             return;
         }
@@ -670,7 +670,7 @@ public final class FXUtils
         Set<Node> nodes = components.stream()
                 .map(f -> Utils.getValue(f, view))
                 .filter(v -> v instanceof Node)
-                .map(v -> (Node) v)
+                .map(Node.class::cast)
                 .flatMap(node -> node.lookupAll("*").stream())
                 .collect(Collectors.toSet());
         // @formatter:on

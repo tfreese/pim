@@ -37,37 +37,37 @@ public class ContactView implements View
     *
     */
     @FXML
-    private Button buttonAddContact = null;
+    private Button buttonAddContact;
 
     /**
     *
     */
     @FXML
-    private Button buttonDeleteContact = null;
+    private Button buttonDeleteContact;
 
     /**
     *
     */
     @FXML
-    private Button buttonEditContact = null;
+    private Button buttonEditContact;
 
     /**
      *
      */
     @FXML
-    private Label labelFilter = null;
+    private Label labelFilter;
 
     /**
      *
      */
     @FXML
-    private Label labelNachname = null;
+    private Label labelNachname;
 
     /**
      *
      */
     @FXML
-    private Label labelVorname = null;
+    private Label labelVorname;
 
     /**
      *
@@ -85,19 +85,19 @@ public class ContactView implements View
     *
     */
     @FXML
-    private TableView<FXKontakt> tableViewKontakt = null;
+    private TableView<FXKontakt> tableViewKontakt;
 
     /**
      *
      */
     @FXML
-    private TextField textFieldNachname = null;
+    private TextField textFieldNachname;
 
     /**
      *
      */
     @FXML
-    private TextField textFieldVorname = null;
+    private TextField textFieldVorname;
 
     /**
      * Erzeugt eine neue Instanz von {@link ContactView}
@@ -249,23 +249,21 @@ public class ContactView implements View
         FilteredList<FXKontakt> filteredData = new FilteredList<>(FXCollections.observableArrayList());
 
         // Filter-Textfeld mit FilteredList verbinden.
-        propertyKontaktFilter.addListener((observable, oldValue, newValue) -> {
-            filteredData.setPredicate(kontakt -> {
-                if (StringUtils.isBlank(newValue))
-                {
-                    return true;
-                }
+        propertyKontaktFilter.addListener((observable, oldValue, newValue) -> filteredData.setPredicate(kontakt -> {
+            if (StringUtils.isBlank(newValue))
+            {
+                return true;
+            }
 
-                String text = kontakt.getNachname() + " " + kontakt.getVorname();
+            String text = kontakt.getNachname() + " " + kontakt.getVorname();
 
-                if (StringUtils.containsIgnoreCase(text, newValue))
-                {
-                    return true;
-                }
+            if (StringUtils.containsIgnoreCase(text, newValue))
+            {
+                return true;
+            }
 
-                return false;
-            });
-        });
+            return false;
+        }));
 
         // Da die ObservableList der TableItems neu gesetzt wird, muss auch die Sortierung neu gemacht werden.
         SortedList<FXKontakt> sortedData = new SortedList<>(filteredData);

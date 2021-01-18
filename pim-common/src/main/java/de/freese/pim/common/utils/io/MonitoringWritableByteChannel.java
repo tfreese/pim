@@ -31,7 +31,7 @@ public class MonitoringWritableByteChannel implements WritableByteChannel
     /**
      * Anzahl geschriebene Bytes.
      */
-    private long sizeWritten = 0;
+    private long sizeWritten;
 
     /**
      * Erzeugt eine neue Instanz von {@link MonitoringWritableByteChannel}

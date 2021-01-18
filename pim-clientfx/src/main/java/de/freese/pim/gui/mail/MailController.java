@@ -52,19 +52,19 @@ public class MailController extends AbstractController
     /**
      *
      */
-    @FXML
-    private Button buttonAddAccount = null;
+    private static final String FORMAT_DATE = "%1$ta %1$td.%1$tm.%1$ty %1$tH:%1$tM:%1$tS";
 
     /**
      *
      */
     @FXML
-    private Button buttonEditAccount = null;
+    private Button buttonAddAccount;
 
     /**
      *
      */
-    private final String formatDate = "%1$ta %1$td.%1$tm.%1$ty %1$tH:%1$tM:%1$tS";
+    @FXML
+    private Button buttonEditAccount;
 
     // /**
     // * DateTimeFormatter formatterDate = DateTimeFormatter.ofPattern("EE dd.MM.yy HH:mm:ss");
@@ -75,7 +75,7 @@ public class MailController extends AbstractController
      *
      */
     @FXML
-    private MailContentView mailContentView = null;
+    private MailContentView mailContentView;
 
     /**
      *
@@ -86,19 +86,19 @@ public class MailController extends AbstractController
      *
      */
     @FXML
-    private Node mainNode = null;
+    private Node mainNode;
 
     /**
      *
      */
     @FXML
-    private Node naviNode = null;
+    private Node naviNode;
 
     /**
      *
      */
     @FXML
-    private ProgressIndicator progressIndicator = null;
+    private ProgressIndicator progressIndicator;
 
     /**
     *
@@ -113,30 +113,30 @@ public class MailController extends AbstractController
     /**
      * Spalten für die Empfangs-Sicht.
      */
-    private List<TableColumn<FXMail, ?>> tableColumnsReceived = null;
+    private List<TableColumn<FXMail, ?>> tableColumnsReceived;
 
     /**
      * Spalten für die Sende-Sicht.
      */
-    private List<TableColumn<FXMail, ?>> tableColumnsSend = null;
+    private List<TableColumn<FXMail, ?>> tableColumnsSend;
 
     /**
      *
      */
     @FXML
-    private TableView<FXMail> tableViewMail = null;
+    private TableView<FXMail> tableViewMail;
 
     /**
      *
      */
     @FXML
-    private ToolBar toolBar = null;
+    private ToolBar toolBar;
 
     /**
      *
      */
     @FXML
-    private TreeView<Object> treeViewMail = null;
+    private TreeView<Object> treeViewMail;
 
     /**
      * Erzeugt eine neue Instanz von {@link MailController}
@@ -173,9 +173,8 @@ public class MailController extends AbstractController
      *
      * @param root {@link TreeItem}
      * @param account {@link FXMailAccount}
-     * @throws Exception Falls was schief geht.
      */
-    private void addMailAccountToGUI(final TreeItem<Object> root, final FXMailAccount account) throws Exception
+    private void addMailAccountToGUI(final TreeItem<Object> root, final FXMailAccount account)
     {
         // Path basePath = SettingService.getInstance().getHome();
         // Path accountPath = basePath.resolve(account.getMail());
@@ -307,34 +306,32 @@ public class MailController extends AbstractController
         this.selectedMail.bind(this.tableViewMail.getSelectionModel().selectedItemProperty());
         this.selectedMail.addListener((observable, oldValue, newValue) -> selectedMail(newValue));
 
-        this.tableViewMail.setRowFactory(tableView -> {
-            return new TableRow<>()
+        this.tableViewMail.setRowFactory(tableView -> new TableRow<>()
+        {
+            /**
+             * @param item {@link FXMail}
+             * @param empty boolean
+             */
+            @Override
+            public void updateItem(final FXMail item, final boolean empty)
             {
-                /**
-                 * @param item {@link FXMail}
-                 * @param empty boolean
-                 */
-                @Override
-                public void updateItem(final FXMail item, final boolean empty)
+                super.updateItem(item, empty);
+
+                if ((item == null) || empty)
                 {
-                    super.updateItem(item, empty);
-
-                    if ((item == null) || empty)
-                    {
-                        setStyle(null);
-                        return;
-                    }
-
-                    if (!item.isSeen())
-                    {
-                        setStyle("-fx-font-weight: bold;");
-                    }
-                    else
-                    {
-                        setStyle(null);
-                    }
+                    setStyle(null);
+                    return;
                 }
-            };
+
+                if (!item.isSeen())
+                {
+                    setStyle("-fx-font-weight: bold;");
+                }
+                else
+                {
+                    setStyle(null);
+                }
+            }
         });
 
         // Tree
@@ -606,7 +603,7 @@ public class MailController extends AbstractController
 
             columnReceived.setSortable(false);
             columnReceived.setStyle("-fx-alignment: center-left;");
-            columnReceived.setCellValueFactory(cell -> cell.getValue().receivedDateProperty().asString(this.formatDate));
+            columnReceived.setCellValueFactory(cell -> cell.getValue().receivedDateProperty().asString(FORMAT_DATE));
             // columnReceived.setCellFactory(column -> {
             // return new TableCell<Mail, Date>()
             // {
@@ -662,7 +659,7 @@ public class MailController extends AbstractController
             columnTo.setSortable(false);
             columnTo.setStyle("-fx-alignment: center-left;");
             columnTo.setCellValueFactory(cell -> cell.getValue().toProperty());
-            columnTo.setCellFactory(new InternetAddressCellFactory<FXMail>());
+            columnTo.setCellFactory(new InternetAddressCellFactory<>());
 
             columnSubject.setSortable(false);
             columnSubject.setStyle("-fx-alignment: center-left;");
@@ -670,7 +667,7 @@ public class MailController extends AbstractController
 
             columnSend.setSortable(false);
             columnSend.setStyle("-fx-alignment: center-left;");
-            columnSend.setCellValueFactory(cell -> cell.getValue().sendDateProperty().asString(this.formatDate));
+            columnSend.setCellValueFactory(cell -> cell.getValue().sendDateProperty().asString(FORMAT_DATE));
 
             this.tableColumnsSend.add(columnTo);
             this.tableColumnsSend.add(columnSubject);

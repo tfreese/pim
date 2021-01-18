@@ -96,7 +96,7 @@ public class FXMailAccount
     *
     */
     @JsonIgnore
-    private ObservableIntegerValue unreadMailsCount = null;
+    private ObservableIntegerValue unreadMailsCount;
 
     /**
      * Erstellt ein neues {@link FXMailAccount} Object.

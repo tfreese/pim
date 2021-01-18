@@ -30,13 +30,13 @@ public class MailView implements View
      *
      */
     @FXML
-    private Button buttonAddAccount = null;
+    private Button buttonAddAccount;
 
     /**
     *
     */
     @FXML
-    private Button buttonEditAccount = null;
+    private Button buttonEditAccount;
 
     // /**
     // *
@@ -66,25 +66,25 @@ public class MailView implements View
     *
     */
     @FXML
-    private ProgressIndicator progressIndicator = null;
+    private ProgressIndicator progressIndicator;
 
     /**
     *
     */
     @FXML
-    private TableView<FXMail> tableViewMail = null;
+    private TableView<FXMail> tableViewMail;
 
     /**
      *
      */
     @FXML
-    private ToolBar toolBar = null;
+    private ToolBar toolBar;
 
     /**
     *
     */
     @FXML
-    private TreeView<Object> treeViewMail = null;
+    private TreeView<Object> treeViewMail;
 
     /**
      * Erzeugt eine neue Instanz von {@link MailView}
@@ -171,7 +171,7 @@ public class MailView implements View
      */
     private ToolBar createToolbar()
     {
-        ToolBar toolBar = new ToolBar();
+        ToolBar tb = new ToolBar();
 
         // Image image = new Image("images/mail.png", 16, 16, true, true);
         ImageView imageView = new ImageView();
@@ -192,9 +192,9 @@ public class MailView implements View
         this.buttonEditAccount.setGraphic(imageView);
         this.buttonEditAccount.setTooltip(new Tooltip("%mailaccount.edit"));
 
-        toolBar.getItems().add(this.buttonAddAccount);
-        toolBar.getItems().add(this.buttonEditAccount);
+        tb.getItems().add(this.buttonAddAccount);
+        tb.getItems().add(this.buttonEditAccount);
 
-        return toolBar;
+        return tb;
     }
 }

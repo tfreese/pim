@@ -13,7 +13,7 @@ public abstract class AbstractFXAddressbookService extends AbstractFXService imp
     /**
      * Erzeugt eine neue Instanz von {@link AbstractFXAddressbookService}
      */
-    public AbstractFXAddressbookService()
+    protected AbstractFXAddressbookService()
     {
         super();
     }

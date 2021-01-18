@@ -56,7 +56,7 @@ public class HsqldbEmbeddedServerConfig extends AbstractHSQLDBConfig
     *
     */
     @Resource
-    private DataSource dataSource = null;
+    private DataSource dataSource;
 
     // /**
     // *

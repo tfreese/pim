@@ -14,76 +14,76 @@ public class Mail
     /**
     *
     */
-    private InternetAddress[] bcc = null;
+    private InternetAddress[] bcc;
 
     /**
     *
     */
-    private InternetAddress[] cc = null;
+    private InternetAddress[] cc;
 
     /**
      *
      */
     // @NotNull
-    private String folderFullName = null;
+    private String folderFullName;
 
     /**
     *
     */
     // @NotNull
-    private long folderID = 0L;
+    private long folderID;
 
     /**
      *
      */
-    private InternetAddress from = null;
+    private InternetAddress from;
 
     /**
      * Ist immer größer als 0.
      */
     // @NotNull
-    private int msgNum = 0;
+    private int msgNum;
 
     /**
     *
     */
     // @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date receivedDate = null;
+    private Date receivedDate;
 
     /**
     *
     */
     // @NotNull
-    private boolean seen = false;
+    private boolean seen;
 
     /**
     *
     */
     // @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date sendDate = null;
+    private Date sendDate;
 
     /**
      *
      */
     // @NotNull
-    private int size = 0;
+    private int size;
 
     /**
     *
     */
     // @Size(max = 400)
-    private String subject = null;
+    private String subject;
 
     /**
     *
     */
-    private InternetAddress[] to = null;
+    private InternetAddress[] to;
 
     /**
      *
      */
     // @NotNull
-    private long uid = 0L;
+    private long uid;
 
     /**
      * Erzeugt eine neue Instanz von {@link Mail}

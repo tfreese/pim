@@ -26,7 +26,7 @@ public class AddressBookRestController extends AbstractRemoteService implements 
     /**
      *
      */
-    private AddressBookService addressBookService = null;
+    private AddressBookService addressBookService;
 
     /**
      * Erzeugt eine neue Instanz von {@link AddressBookRestController}

@@ -18,17 +18,17 @@ import org.springframework.core.io.ClassPathResource;
  */
 @TestMethodOrder(MethodOrderer.MethodName.class)
 @Disabled
-public class TestSendMail extends AbstractMailTest
+class TestSendMail extends AbstractMailTest
 {
     /**
      *
      */
-    private static JavaMailSender sender = null;
+    private static JavaMailSender sender;
 
     /**
     *
     */
-    private static Session session = null;
+    private static Session session;
 
     /**
      *

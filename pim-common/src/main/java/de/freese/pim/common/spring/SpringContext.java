@@ -35,17 +35,17 @@ public class SpringContext implements ApplicationContextAware, ResourceLoaderAwa
     /**
     *
     */
-    private static ApplicationContext applicationContext = null;
+    private static ApplicationContext applicationContext;
 
     /**
     *
     */
-    private static Environment environment = null;
+    private static Environment environment;
 
     /**
      *
      */
-    private static ResourceLoader resourceLoader = null;
+    private static ResourceLoader resourceLoader;
 
     /**
      * @return {@link ApplicationContext}

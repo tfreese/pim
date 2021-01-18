@@ -35,7 +35,7 @@ public class MailRestController extends AbstractRemoteService implements MailSer
     /**
     *
     */
-    private MailService mailService = null;
+    private MailService mailService;
 
     /**
      * Erzeugt eine neue Instanz von {@link MailRestController}
@@ -171,9 +171,7 @@ public class MailRestController extends AbstractRemoteService implements MailSer
     public Callable<List<Mail>> loadMailsAsyncCallable(@PathVariable("accountID") final long accountID, @PathVariable("folderID") final long folderID,
                                                        @PathVariable("folderFullName") final String folderFullName)
     {
-        Callable<List<Mail>> callable = () -> {
-            return getMailService().loadMails(accountID, folderID, folderFullName);
-        };
+        Callable<List<Mail>> callable = () -> getMailService().loadMails(accountID, folderID, folderFullName);
 
         return callable;
     }

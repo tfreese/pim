@@ -52,7 +52,7 @@ public class PIMClientEmbeddedServerConfig extends WebMvcConfigurationSupport
     *
     */
     @Resource
-    private ObjectMapper jsonMapper = null;
+    private ObjectMapper jsonMapper;
 
     /**
      * Erzeugt eine neue Instanz von {@link PIMClientEmbeddedServerConfig}

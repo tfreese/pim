@@ -3,6 +3,7 @@
  */
 package de.freese.pim.server.addressbook.dao;
 
+import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import java.sql.SQLIntegrityConstraintViolationException;
@@ -30,13 +31,13 @@ import de.freese.pim.server.addressbook.TestAddressbookConfig;
 @Transactional(transactionManager = "transactionManager")
 @ActiveProfiles("test")
 // @DirtiesContext
-public class TestSpringContextAddressbookDAO extends AbstractDAOTestCase
+class TestSpringContextAddressbookDAO extends AbstractDAOTestCase
 {
     /**
      *
      */
     @Resource
-    private AddressBookDAO addressBookDAO = null;
+    private AddressBookDAO addressBookDAO;
 
     /**
      * @see de.freese.pim.server.addressbook.dao.AbstractDAOTestCase#test0100InsertKontakts()
@@ -44,9 +45,11 @@ public class TestSpringContextAddressbookDAO extends AbstractDAOTestCase
     @Override
     @Test
     @Commit
-    public void test0100InsertKontakts() throws Throwable
+    void test0100InsertKontakts() throws Throwable
     {
         doTest0100InsertKontakts(this.addressBookDAO);
+
+        assertTrue(true);
     }
 
     /**
@@ -55,9 +58,11 @@ public class TestSpringContextAddressbookDAO extends AbstractDAOTestCase
     @Override
     @Test
     @Commit
-    public void test0110InsertKontaktWithNullVorname() throws Throwable
+    void test0110InsertKontaktWithNullVorname() throws Throwable
     {
         doTest0110InsertKontaktWithNullVorname(this.addressBookDAO);
+
+        assertTrue(true);
     }
 
     /**
@@ -66,7 +71,7 @@ public class TestSpringContextAddressbookDAO extends AbstractDAOTestCase
     @Override
     @Test
     @Rollback
-    public void test0120InsertKontaktWithBlankVorname() throws Throwable
+    void test0120InsertKontaktWithBlankVorname() throws Throwable
     {
         SQLIntegrityConstraintViolationException exception = assertThrows(SQLIntegrityConstraintViolationException.class, () -> {
             doTest0120InsertKontaktWithBlankVorname(this.addressBookDAO);
@@ -81,7 +86,7 @@ public class TestSpringContextAddressbookDAO extends AbstractDAOTestCase
     @Override
     @Test
     @Rollback
-    public void test0130InsertKontaktExisting() throws Throwable
+    void test0130InsertKontaktExisting() throws Throwable
     {
         SQLIntegrityConstraintViolationException exception = assertThrows(SQLIntegrityConstraintViolationException.class, () -> {
             doTest0130InsertKontaktExisting(this.addressBookDAO);
@@ -96,9 +101,11 @@ public class TestSpringContextAddressbookDAO extends AbstractDAOTestCase
     @Override
     @Test
     @Commit
-    public void test0200UpdateKontakt() throws Throwable
+    void test0200UpdateKontakt() throws Throwable
     {
         doTest0200UpdateKontakt(this.addressBookDAO);
+
+        assertTrue(true);
     }
 
     /**
@@ -107,9 +114,11 @@ public class TestSpringContextAddressbookDAO extends AbstractDAOTestCase
     @Override
     @Test
     @Commit
-    public void test0300InsertAttribut() throws Throwable
+    void test0300InsertAttribut() throws Throwable
     {
         doTest0300InsertAttribut(this.addressBookDAO);
+
+        assertTrue(true);
     }
 
     /**
@@ -118,7 +127,7 @@ public class TestSpringContextAddressbookDAO extends AbstractDAOTestCase
     @Override
     @Test
     @Rollback
-    public void test0310InsertInsertAttributWithNullValue() throws Throwable
+    void test0310InsertInsertAttributWithNullValue() throws Throwable
     {
         SQLIntegrityConstraintViolationException exception = assertThrows(SQLIntegrityConstraintViolationException.class, () -> {
             doTest0310InsertInsertAttributWithNullValue(this.addressBookDAO);
@@ -133,7 +142,7 @@ public class TestSpringContextAddressbookDAO extends AbstractDAOTestCase
     @Override
     @Test
     @Rollback
-    public void test0320InsertInsertAttributWithBlankValue() throws Throwable
+    void test0320InsertInsertAttributWithBlankValue() throws Throwable
     {
         SQLIntegrityConstraintViolationException exception = assertThrows(SQLIntegrityConstraintViolationException.class, () -> {
             doTest0320InsertInsertAttributWithBlankValue(this.addressBookDAO);
@@ -148,7 +157,7 @@ public class TestSpringContextAddressbookDAO extends AbstractDAOTestCase
     @Override
     @Test
     @Rollback
-    public void test0330InsertInsertAttributWithNull() throws Throwable
+    void test0330InsertInsertAttributWithNull() throws Throwable
     {
         SQLIntegrityConstraintViolationException exception = assertThrows(SQLIntegrityConstraintViolationException.class, () -> {
             doTest0330InsertInsertAttributWithNull(this.addressBookDAO);
@@ -163,7 +172,7 @@ public class TestSpringContextAddressbookDAO extends AbstractDAOTestCase
     @Override
     @Test
     @Rollback
-    public void test0340InsertInsertAttributWithBlank() throws Throwable
+    void test0340InsertInsertAttributWithBlank() throws Throwable
     {
         SQLIntegrityConstraintViolationException exception = assertThrows(SQLIntegrityConstraintViolationException.class, () -> {
             doTest0340InsertInsertAttributWithBlank(this.addressBookDAO);
@@ -178,7 +187,7 @@ public class TestSpringContextAddressbookDAO extends AbstractDAOTestCase
     @Override
     @Test
     @Rollback
-    public void test0350InsertAttributExisting() throws Throwable
+    void test0350InsertAttributExisting() throws Throwable
     {
         SQLIntegrityConstraintViolationException exception = assertThrows(SQLIntegrityConstraintViolationException.class, () -> {
             doTest0350InsertAttributExisting(this.addressBookDAO);
@@ -193,9 +202,11 @@ public class TestSpringContextAddressbookDAO extends AbstractDAOTestCase
     @Override
     @Test
     @Commit
-    public void test0400UpdateAttribut() throws Throwable
+    void test0400UpdateAttribut() throws Throwable
     {
         doTest0400UpdateAttribut(this.addressBookDAO);
+
+        assertTrue(true);
     }
 
     /**
@@ -204,9 +215,11 @@ public class TestSpringContextAddressbookDAO extends AbstractDAOTestCase
     @Override
     @Test
     @Transactional(readOnly = true)
-    public void test0500GetKontaktDetailsAll() throws Throwable
+    void test0500GetKontaktDetailsAll() throws Throwable
     {
         doTest0500GetKontaktDetailsAll(this.addressBookDAO);
+
+        assertTrue(true);
     }
 
     /**
@@ -215,9 +228,11 @@ public class TestSpringContextAddressbookDAO extends AbstractDAOTestCase
     @Override
     @Test
     @Transactional(readOnly = true)
-    public void test0510GetKontaktDetailsWithID() throws Throwable
+    void test0510GetKontaktDetailsWithID() throws Throwable
     {
         doTest0510GetKontaktDetailsWithID(this.addressBookDAO);
+
+        assertTrue(true);
     }
 
     /**
@@ -226,9 +241,11 @@ public class TestSpringContextAddressbookDAO extends AbstractDAOTestCase
     @Override
     @Test
     @Transactional(readOnly = true)
-    public void test0520GetKontaktDetailsWithIDs() throws Throwable
+    void test0520GetKontaktDetailsWithIDs() throws Throwable
     {
         doTest0520GetKontaktDetailsWithIDs(this.addressBookDAO);
+
+        assertTrue(true);
     }
 
     /**
@@ -237,9 +254,11 @@ public class TestSpringContextAddressbookDAO extends AbstractDAOTestCase
     @Override
     @Test
     @Transactional(readOnly = true)
-    public void test0600GetKontakte() throws Throwable
+    void test0600GetKontakte() throws Throwable
     {
         doTest0600GetKontakte(this.addressBookDAO);
+
+        assertTrue(true);
     }
 
     /**
@@ -248,9 +267,11 @@ public class TestSpringContextAddressbookDAO extends AbstractDAOTestCase
     @Override
     @Test
     @Transactional(readOnly = true)
-    public void test0700SearchKontakts() throws Throwable
+    void test0700SearchKontakts() throws Throwable
     {
         doTest0700SearchKontakts(this.addressBookDAO);
+
+        assertTrue(true);
     }
 
     /**
@@ -259,9 +280,11 @@ public class TestSpringContextAddressbookDAO extends AbstractDAOTestCase
     @Override
     @Test
     @Commit
-    public void test0900DeleteAttribut() throws Throwable
+    void test0900DeleteAttribut() throws Throwable
     {
         doTest0900DeleteAttribut(this.addressBookDAO);
+
+        assertTrue(true);
     }
 
     /**
@@ -270,8 +293,10 @@ public class TestSpringContextAddressbookDAO extends AbstractDAOTestCase
     @Override
     @Test
     @Commit
-    public void test1000DeleteKontakt() throws Throwable
+    void test1000DeleteKontakt() throws Throwable
     {
         doTest1000DeleteKontakt(this.addressBookDAO);
+
+        assertTrue(true);
     }
 }

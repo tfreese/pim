@@ -28,7 +28,7 @@ public class SumUnreadMailsBinding extends IntegerBinding
     /**
      * Array of currently observed properties of elements of our list.
      */
-    private BooleanProperty[] observedProperties = null;
+    private BooleanProperty[] observedProperties;
 
     /**
      * Erzeugt eine neue Instanz von {@link SumUnreadMailsBinding}
@@ -83,7 +83,7 @@ public class SumUnreadMailsBinding extends IntegerBinding
 
         if (!this.boundList.isEmpty())
         {
-            this.observedProperties = this.boundList.parallelStream().map(m -> m.seenProperty()).toArray(BooleanProperty[]::new);
+            this.observedProperties = this.boundList.parallelStream().map(FXMail::seenProperty).toArray(BooleanProperty[]::new);
         }
 
         // Bind IntegerBinding's inner listener to all new properties

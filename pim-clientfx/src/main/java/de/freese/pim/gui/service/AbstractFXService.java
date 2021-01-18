@@ -15,12 +15,12 @@ public abstract class AbstractFXService extends AbstractRemoteService
     /**
     *
     */
-    private ObjectMapper jsonMapper = null;
+    private ObjectMapper jsonMapper;
 
     /**
      * Erzeugt eine neue Instanz von {@link AbstractFXService}
      */
-    public AbstractFXService()
+    protected AbstractFXService()
     {
         super();
     }

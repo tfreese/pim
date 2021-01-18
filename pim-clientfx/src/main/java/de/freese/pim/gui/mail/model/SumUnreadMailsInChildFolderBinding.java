@@ -29,7 +29,7 @@ public class SumUnreadMailsInChildFolderBinding extends IntegerBinding
     /**
      * Array of currently observed properties of elements of our list.
      */
-    private ObservableIntegerValue[] observedProperties = null;
+    private ObservableIntegerValue[] observedProperties;
 
     /**
      * Erzeugt eine neue Instanz von {@link SumUnreadMailsInChildFolderBinding}

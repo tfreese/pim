@@ -10,10 +10,9 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Objects;
 import java.util.function.Function;
-
+import java.util.function.UnaryOperator;
 import javax.annotation.Resource;
 import javax.sql.DataSource;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
@@ -30,7 +29,7 @@ public abstract class AbstractDAO implements InitializingBean
     /**
      *
      */
-    private JdbcTemplate jdbcTemplate = null;
+    private JdbcTemplate jdbcTemplate;
 
     /**
      *
@@ -40,17 +39,17 @@ public abstract class AbstractDAO implements InitializingBean
     // /**
     // *
     // */
-    // private SequenceQueryExecutor sequenceQueryExecutor = null;
+    // private SequenceQueryExecutor sequenceQueryExecutor;
 
     /**
      *
      */
-    private Function<String, String> sequenceQuery = null;
+    private Function<String, String> sequenceQuery;
 
     /**
      * Erstellt ein neues {@link AbstractDAO} Object.
      */
-    public AbstractDAO()
+    protected AbstractDAO()
     {
         super();
     }
@@ -74,41 +73,6 @@ public abstract class AbstractDAO implements InitializingBean
     }
 
     /**
-     * Ersetzt ggf. ein vorhandenes {@link JdbcTemplate}.
-     *
-     * @param dataSource {@link DataSource}
-     */
-    @Resource
-    public void setDataSource(final DataSource dataSource)
-    {
-        Objects.requireNonNull(dataSource, "dataSource required");
-
-        this.jdbcTemplate = new JdbcTemplate(dataSource);
-    }
-
-    /**
-     * SQL für Sequenz-Abfragen.
-     *
-     * @param sequenceQuery {@link Function}
-     */
-    @Resource
-    public void setSequenceQuery(final Function<String, String> sequenceQuery)
-    {
-        this.sequenceQuery = Objects.requireNonNull(sequenceQuery, "sequenceQuery required");
-    }
-
-    // /**
-    // * Erstellt einen {@link Semaphore} im {@link JdbcTemplate}, der den Zugriff auf die {@link DataSource} reguliert.
-    // *
-    // * @param maxConnections int
-    // */
-    // @Value("${spring.datasource.tomcat.maxActive:1}")
-    // public void setMaxConnections(final int maxConnections)
-    // {
-    // this.maxConnections = maxConnections;
-    // }
-
-    /**
      * @return {@link JdbcTemplate}
      */
     protected JdbcTemplate getJdbcTemplate()
@@ -124,6 +88,17 @@ public abstract class AbstractDAO implements InitializingBean
         return this.logger;
     }
 
+    // /**
+    // * Erstellt einen {@link Semaphore} im {@link JdbcTemplate}, der den Zugriff auf die {@link DataSource} reguliert.
+    // *
+    // * @param maxConnections int
+    // */
+    // @Value("${spring.datasource.tomcat.maxActive:1}")
+    // public void setMaxConnections(final int maxConnections)
+    // {
+    // this.maxConnections = maxConnections;
+    // }
+
     /**
      * Liefert die nächste ID/PK der Sequence/Tabelle.
      *
@@ -134,7 +109,7 @@ public abstract class AbstractDAO implements InitializingBean
     {
         String sql = this.sequenceQuery.apply(sequence);
 
-        try (Connection connection = this.jdbcTemplate.getDataSource().getConnection();
+        try (Connection connection = getJdbcTemplate().getDataSource().getConnection();
              Statement stmt = connection.createStatement();
              ResultSet rs = stmt.executeQuery(sql))
         {
@@ -147,5 +122,29 @@ public abstract class AbstractDAO implements InitializingBean
         {
             throw new DataRetrievalFailureException("", sex);
         }
+    }
+
+    /**
+     * Ersetzt ggf. ein vorhandenes {@link JdbcTemplate}.
+     *
+     * @param dataSource {@link DataSource}
+     */
+    @Resource
+    public void setDataSource(final DataSource dataSource)
+    {
+        Objects.requireNonNull(dataSource, "dataSource required");
+
+        this.jdbcTemplate = new JdbcTemplate(dataSource);
+    }
+
+    /**
+     * SQL für Sequenz-Abfragen.
+     *
+     * @param sequenceQuery {@link UnaryOperator}
+     */
+    @Resource
+    public void setSequenceQuery(final UnaryOperator<String> sequenceQuery)
+    {
+        this.sequenceQuery = Objects.requireNonNull(sequenceQuery, "sequenceQuery required");
     }
 }

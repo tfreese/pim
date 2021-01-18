@@ -21,7 +21,7 @@ public class DefaultAddressBookService extends AbstractService implements Addres
     /**
      *
      */
-    private AddressBookDAO addressBookDAO = null;
+    private AddressBookDAO addressBookDAO;
 
     /**
      * Erzeugt eine neue Instanz von {@link DefaultAddressBookService}

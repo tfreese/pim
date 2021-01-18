@@ -24,7 +24,7 @@ public class Kontakt implements Comparable<Kontakt>
     /**
      *
      */
-    private String nachname = null;
+    private String nachname;
 
     // /**
     // *
@@ -34,7 +34,7 @@ public class Kontakt implements Comparable<Kontakt>
     /**
      *
      */
-    private String vorname = null;
+    private String vorname;
 
     /**
      * Erzeugt eine neue Instanz von {@link Kontakt}
@@ -62,6 +62,27 @@ public class Kontakt implements Comparable<Kontakt>
     }
 
     /**
+     * @param attribut {@link KontaktAttribut}
+     */
+    private void addAttribut(final KontaktAttribut attribut)
+    {
+        if (getAttribute().contains(attribut))
+        {
+            throw new RuntimeException("Attribut bereits vorhanden");
+        }
+
+        getAttribute().add(attribut);
+    }
+
+    // /**
+    // * @param listener {@link PropertyChangeListener}
+    // */
+    // public void addPropertyChangeListener(final PropertyChangeListener listener)
+    // {
+    // this.pcs.addPropertyChangeListener(listener);
+    // }
+
+    /**
      * @param attribut String
      * @param wert String
      */
@@ -74,14 +95,6 @@ public class Kontakt implements Comparable<Kontakt>
 
         addAttribut(ka);
     }
-
-    // /**
-    // * @param listener {@link PropertyChangeListener}
-    // */
-    // public void addPropertyChangeListener(final PropertyChangeListener listener)
-    // {
-    // this.pcs.addPropertyChangeListener(listener);
-    // }
 
     /**
      * @see java.lang.Comparable#compareTo(java.lang.Object)
@@ -215,6 +228,14 @@ public class Kontakt implements Comparable<Kontakt>
         return result;
     }
 
+    // /**
+    // * @param listener {@link PropertyChangeListener}
+    // */
+    // public void removePropertyChangeListener(final PropertyChangeListener listener)
+    // {
+    // this.pcs.removePropertyChangeListener(listener);
+    // }
+
     /**
      * @param id long
      */
@@ -224,14 +245,6 @@ public class Kontakt implements Comparable<Kontakt>
         this.id = id;
         // this.pcs.firePropertyChange("id", old, getID());
     }
-
-    // /**
-    // * @param listener {@link PropertyChangeListener}
-    // */
-    // public void removePropertyChangeListener(final PropertyChangeListener listener)
-    // {
-    // this.pcs.removePropertyChangeListener(listener);
-    // }
 
     /**
      * @param nachname String
@@ -267,18 +280,5 @@ public class Kontakt implements Comparable<Kontakt>
         builder.append("]");
 
         return builder.toString();
-    }
-
-    /**
-     * @param attribut {@link KontaktAttribut}
-     */
-    private void addAttribut(final KontaktAttribut attribut)
-    {
-        if (getAttribute().contains(attribut))
-        {
-            throw new RuntimeException("Attribut bereits vorhanden");
-        }
-
-        getAttribute().add(attribut);
     }
 }

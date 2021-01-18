@@ -25,7 +25,7 @@ public abstract class AbstractPimTest
     /**
      * Erstellt ein neues {@link AbstractPimTest} Object.
      */
-    public AbstractPimTest()
+    protected AbstractPimTest()
     {
         super();
     }

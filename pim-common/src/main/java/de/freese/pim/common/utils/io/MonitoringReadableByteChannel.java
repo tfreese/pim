@@ -31,7 +31,7 @@ public class MonitoringReadableByteChannel implements ReadableByteChannel
     /**
      * Anzahl gelesener Bytes.
      */
-    private long sizeRead = 0;
+    private long sizeRead;
 
     /**
      * Erzeugt eine neue Instanz von {@link MonitoringReadableByteChannel}

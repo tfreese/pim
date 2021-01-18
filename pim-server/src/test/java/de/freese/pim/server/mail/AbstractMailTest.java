@@ -3,10 +3,6 @@
  */
 package de.freese.pim.server.mail;
 
-import de.freese.pim.common.model.mail.MailPort;
-import de.freese.pim.common.model.mail.MailProvider;
-import de.freese.pim.server.AbstractPimTest;
-
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -14,6 +10,9 @@ import java.util.Arrays;
 import java.util.Properties;
 import org.junit.runners.Parameterized.Parameter;
 import org.junit.runners.Parameterized.Parameters;
+import de.freese.pim.common.model.mail.MailPort;
+import de.freese.pim.common.model.mail.MailProvider;
+import de.freese.pim.server.AbstractPimTest;
 
 /**
  * https://javamail.java.net/nonav/docs/api/com/sun/mail/imap/package-summary.html
@@ -49,7 +48,6 @@ public abstract class AbstractMailTest extends AbstractPimTest
 
     /**
      * @return {@link Iterable}
-     *
      * @throws Exception Falls was schief geht.
      */
     @Parameters(name = "Account: {0}") // {index}
@@ -63,9 +61,7 @@ public abstract class AbstractMailTest extends AbstractPimTest
         {
             System.err.println("need property file with from, to and password: " + path);
 
-            return Arrays.asList(new Object[][]
-            {
-            });
+            return Arrays.asList(new Object[][] {});
         }
 
         Properties properties = new Properties();
@@ -77,9 +73,9 @@ public abstract class AbstractMailTest extends AbstractPimTest
 
         return Arrays.asList(new Object[][]
         {
-            {
-                properties.getProperty("from"), properties.getProperty("to"), properties.getProperty("password")
-            }
+                {
+                        properties.getProperty("from"), properties.getProperty("to"), properties.getProperty("password")
+                }
         });
     }
 
@@ -112,7 +108,7 @@ public abstract class AbstractMailTest extends AbstractPimTest
     /**
      * Erstellt ein neues {@link AbstractMailTest} Object.
      */
-    public AbstractMailTest()
+    protected AbstractMailTest()
     {
         super();
     }

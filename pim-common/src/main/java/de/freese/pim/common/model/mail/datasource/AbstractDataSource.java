@@ -17,7 +17,7 @@ import de.freese.pim.common.utils.io.MonitorOutputStream;
  *
  * @author Thomas Freese
  */
-public class AbstractDataSource implements DataSource
+public abstract class AbstractDataSource implements DataSource
 {
     /**
      *
@@ -40,7 +40,7 @@ public class AbstractDataSource implements DataSource
      * @param source {@link DataSource}
      * @throws IOException Falls was schief geht.
      */
-    public AbstractDataSource(final DataSource source) throws IOException
+    protected AbstractDataSource(final DataSource source) throws IOException
     {
         this(source, null);
     }
@@ -52,7 +52,7 @@ public class AbstractDataSource implements DataSource
      * @param monitor {@link IOMonitor}; Optional
      * @throws IOException Falls was schief geht.
      */
-    public AbstractDataSource(final DataSource source, final IOMonitor monitor) throws IOException
+    protected AbstractDataSource(final DataSource source, final IOMonitor monitor) throws IOException
     {
         super();
 
@@ -86,7 +86,7 @@ public class AbstractDataSource implements DataSource
      * @param contentType String
      * @param data byte[]
      */
-    public AbstractDataSource(final String name, final String contentType, final byte[] data)
+    protected AbstractDataSource(final String name, final String contentType, final byte[] data)
     {
         super();
 

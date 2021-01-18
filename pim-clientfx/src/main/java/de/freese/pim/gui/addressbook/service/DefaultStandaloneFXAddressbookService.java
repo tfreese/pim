@@ -24,7 +24,7 @@ public class DefaultStandaloneFXAddressbookService extends AbstractFXAddressbook
     /**
      *
      */
-    private AddressBookService addressBookService = null;
+    private AddressBookService addressBookService;
 
     /**
      * Erzeugt eine neue Instanz von {@link DefaultStandaloneFXAddressbookService}

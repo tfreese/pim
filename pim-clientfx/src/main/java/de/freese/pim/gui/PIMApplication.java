@@ -61,12 +61,12 @@ public class PIMApplication extends Application
     /**
      *
      */
-    private static Window mainWindow = null;
+    private static Window mainWindow;
 
     /**
      * Bildschirm auf dem PIM läuft.
      */
-    private static Screen screen = null;
+    private static Screen screen;
 
     /**
      * Blockiert die GUI.

@@ -18,7 +18,7 @@ public abstract class AbstractDBConfig
     /**
      * Erstellt ein neues {@link AbstractDBConfig} Object.
      */
-    public AbstractDBConfig()
+    protected AbstractDBConfig()
     {
         super();
     }

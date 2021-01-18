@@ -18,7 +18,7 @@ public interface Logger
      *
      * @since 1.3
      */
-    final public String ROOT_LOGGER_NAME = "ROOT";
+    public final String ROOT_LOGGER_NAME = "ROOT";
 
     /**
      * Log a message with the specific Marker at the DEBUG level.

@@ -36,7 +36,7 @@ public class DefaultStandaloneFXMailService extends AbstractFXMailService
     /**
      *
      */
-    private MailService mailService = null;
+    private MailService mailService;
 
     /**
      * Erstellt ein neues {@link DefaultStandaloneFXMailService} Object.

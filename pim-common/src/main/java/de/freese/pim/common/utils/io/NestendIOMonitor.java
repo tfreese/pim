@@ -16,7 +16,7 @@ public class NestendIOMonitor implements IOMonitor
     /**
     *
     */
-    private long currentyAccepted = 0;
+    private long currentyAccepted;
 
     /**
      *

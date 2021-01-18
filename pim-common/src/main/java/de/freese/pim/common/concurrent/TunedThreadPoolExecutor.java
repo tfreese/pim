@@ -94,7 +94,7 @@ public class TunedThreadPoolExecutor extends ThreadPoolExecutor
     public TunedThreadPoolExecutor(final int corePoolSize, final int maximumPoolSize, final long keepAliveTime, final TimeUnit unit, final int queueCapacity,
             final ThreadFactory threadFactory, final RejectedExecutionHandler handler)
     {
-        this(corePoolSize, maximumPoolSize, keepAliveTime, unit, new TunedLinkedBlockingQueue<Runnable>(queueCapacity), threadFactory, handler);
+        this(corePoolSize, maximumPoolSize, keepAliveTime, unit, new TunedLinkedBlockingQueue<>(queueCapacity), threadFactory, handler);
     }
 
     /**

@@ -66,12 +66,12 @@ public class JavaMailAPI extends AbstractMailAPI
     /**
      *
      */
-    private Session session = null;
+    private Session session;
 
     /**
      *
      */
-    private int storeIndex = 0;
+    private int storeIndex;
 
     /**
      * Für RoundRobin-Pool.
@@ -141,7 +141,7 @@ public class JavaMailAPI extends AbstractMailAPI
     @Override
     public void connect()
     {
-        this.session = Utils.executeSafely(() -> createSession());
+        this.session = Utils.executeSafely(this::createSession);
     }
 
     /**

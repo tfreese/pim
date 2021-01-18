@@ -11,17 +11,17 @@ public class KontaktAttribut implements Comparable<KontaktAttribut>
     /**
     *
     */
-    private String attribut = null;
+    private String attribut;
 
     /**
     *
     */
-    private long kontaktID = 0;
+    private long kontaktID;
 
     /**
     *
     */
-    private String wert = null;
+    private String wert;
 
     /**
      * Erzeugt eine neue Instanz von {@link KontaktAttribut}

@@ -3,6 +3,7 @@
  */
 package de.freese.pim.server.addressbook.dao;
 
+import static org.junit.Assert.assertTrue;
 import java.sql.SQLIntegrityConstraintViolationException;
 import javax.sql.DataSource;
 import org.junit.jupiter.api.AfterAll;
@@ -23,22 +24,22 @@ import de.freese.pim.server.addressbook.TestAddressbookConfig;
  * @author Thomas Freese
  */
 @TestMethodOrder(MethodOrderer.MethodName.class)
-public class TestSpringManualTxAddressbookDAO extends AbstractDAOTestCase
+class TestSpringManualTxAddressbookDAO extends AbstractDAOTestCase
 {
     /**
      *
      */
-    private static AddressBookDAO addressBookDAO = null;
+    private static AddressBookDAO addressBookDAO;
 
     /**
      *
      */
-    private static DataSource dataSource = null;
+    private static DataSource dataSource;
 
     /**
      *
      */
-    private static PlatformTransactionManager transactionManager = null;
+    private static PlatformTransactionManager transactionManager;
 
     /**
      *
@@ -70,7 +71,7 @@ public class TestSpringManualTxAddressbookDAO extends AbstractDAOTestCase
      */
     @Override
     @Test
-    public void test0100InsertKontakts() throws Throwable
+    void test0100InsertKontakts() throws Throwable
     {
         TransactionDefinition transactionDefinition = new DefaultTransactionDefinition();
         TransactionStatus transactionStatus = transactionManager.getTransaction(transactionDefinition);
@@ -86,6 +87,8 @@ public class TestSpringManualTxAddressbookDAO extends AbstractDAOTestCase
             transactionManager.rollback(transactionStatus);
             throw ex;
         }
+
+        assertTrue(true);
     }
 
     /**
@@ -93,7 +96,7 @@ public class TestSpringManualTxAddressbookDAO extends AbstractDAOTestCase
      */
     @Override
     @Test
-    public void test0110InsertKontaktWithNullVorname() throws Throwable
+    void test0110InsertKontaktWithNullVorname() throws Throwable
     {
         TransactionDefinition transactionDefinition = new DefaultTransactionDefinition();
         TransactionStatus transactionStatus = transactionManager.getTransaction(transactionDefinition);
@@ -109,6 +112,8 @@ public class TestSpringManualTxAddressbookDAO extends AbstractDAOTestCase
             transactionManager.rollback(transactionStatus);
             throw ex;
         }
+
+        assertTrue(true);
     }
 
     /**
@@ -116,7 +121,7 @@ public class TestSpringManualTxAddressbookDAO extends AbstractDAOTestCase
      */
     @Override
     @Test
-    public void test0120InsertKontaktWithBlankVorname() throws Throwable
+    void test0120InsertKontaktWithBlankVorname() throws Throwable
     {
         TransactionDefinition transactionDefinition = new DefaultTransactionDefinition();
         TransactionStatus transactionStatus = transactionManager.getTransaction(transactionDefinition);
@@ -141,7 +146,7 @@ public class TestSpringManualTxAddressbookDAO extends AbstractDAOTestCase
      */
     @Override
     @Test
-    public void test0130InsertKontaktExisting() throws Throwable
+    void test0130InsertKontaktExisting() throws Throwable
     {
         TransactionDefinition transactionDefinition = new DefaultTransactionDefinition();
         TransactionStatus transactionStatus = transactionManager.getTransaction(transactionDefinition);
@@ -166,7 +171,7 @@ public class TestSpringManualTxAddressbookDAO extends AbstractDAOTestCase
      */
     @Override
     @Test
-    public void test0200UpdateKontakt() throws Throwable
+    void test0200UpdateKontakt() throws Throwable
     {
         TransactionDefinition transactionDefinition = new DefaultTransactionDefinition();
         TransactionStatus transactionStatus = transactionManager.getTransaction(transactionDefinition);
@@ -182,6 +187,8 @@ public class TestSpringManualTxAddressbookDAO extends AbstractDAOTestCase
             transactionManager.rollback(transactionStatus);
             throw ex;
         }
+
+        assertTrue(true);
     }
 
     /**
@@ -189,7 +196,7 @@ public class TestSpringManualTxAddressbookDAO extends AbstractDAOTestCase
      */
     @Override
     @Test
-    public void test0300InsertAttribut() throws Throwable
+    void test0300InsertAttribut() throws Throwable
     {
         TransactionDefinition transactionDefinition = new DefaultTransactionDefinition();
         TransactionStatus transactionStatus = transactionManager.getTransaction(transactionDefinition);
@@ -205,6 +212,8 @@ public class TestSpringManualTxAddressbookDAO extends AbstractDAOTestCase
             transactionManager.rollback(transactionStatus);
             throw ex;
         }
+
+        assertTrue(true);
     }
 
     /**
@@ -212,7 +221,7 @@ public class TestSpringManualTxAddressbookDAO extends AbstractDAOTestCase
      */
     @Override
     @Test
-    public void test0310InsertInsertAttributWithNullValue() throws Throwable
+    void test0310InsertInsertAttributWithNullValue() throws Throwable
     {
         TransactionDefinition transactionDefinition = new DefaultTransactionDefinition();
         TransactionStatus transactionStatus = transactionManager.getTransaction(transactionDefinition);
@@ -237,7 +246,7 @@ public class TestSpringManualTxAddressbookDAO extends AbstractDAOTestCase
      */
     @Override
     @Test
-    public void test0320InsertInsertAttributWithBlankValue() throws Throwable
+    void test0320InsertInsertAttributWithBlankValue() throws Throwable
     {
         TransactionDefinition transactionDefinition = new DefaultTransactionDefinition();
         TransactionStatus transactionStatus = transactionManager.getTransaction(transactionDefinition);
@@ -262,7 +271,7 @@ public class TestSpringManualTxAddressbookDAO extends AbstractDAOTestCase
      */
     @Override
     @Test
-    public void test0330InsertInsertAttributWithNull() throws Throwable
+    void test0330InsertInsertAttributWithNull() throws Throwable
     {
         TransactionDefinition transactionDefinition = new DefaultTransactionDefinition();
         TransactionStatus transactionStatus = transactionManager.getTransaction(transactionDefinition);
@@ -287,7 +296,7 @@ public class TestSpringManualTxAddressbookDAO extends AbstractDAOTestCase
      */
     @Override
     @Test
-    public void test0340InsertInsertAttributWithBlank() throws Throwable
+    void test0340InsertInsertAttributWithBlank() throws Throwable
     {
         TransactionDefinition transactionDefinition = new DefaultTransactionDefinition();
         TransactionStatus transactionStatus = transactionManager.getTransaction(transactionDefinition);
@@ -312,7 +321,7 @@ public class TestSpringManualTxAddressbookDAO extends AbstractDAOTestCase
      */
     @Override
     @Test
-    public void test0350InsertAttributExisting() throws Throwable
+    void test0350InsertAttributExisting() throws Throwable
     {
         TransactionDefinition transactionDefinition = new DefaultTransactionDefinition();
         TransactionStatus transactionStatus = transactionManager.getTransaction(transactionDefinition);
@@ -337,7 +346,7 @@ public class TestSpringManualTxAddressbookDAO extends AbstractDAOTestCase
      */
     @Override
     @Test
-    public void test0400UpdateAttribut() throws Throwable
+    void test0400UpdateAttribut() throws Throwable
     {
         TransactionDefinition transactionDefinition = new DefaultTransactionDefinition();
         TransactionStatus transactionStatus = transactionManager.getTransaction(transactionDefinition);
@@ -353,6 +362,8 @@ public class TestSpringManualTxAddressbookDAO extends AbstractDAOTestCase
             transactionManager.rollback(transactionStatus);
             throw ex;
         }
+
+        assertTrue(true);
     }
 
     /**
@@ -360,7 +371,7 @@ public class TestSpringManualTxAddressbookDAO extends AbstractDAOTestCase
      */
     @Override
     @Test
-    public void test0500GetKontaktDetailsAll() throws Throwable
+    void test0500GetKontaktDetailsAll() throws Throwable
     {
         DefaultTransactionDefinition transactionDefinition = new DefaultTransactionDefinition();
         transactionDefinition.setReadOnly(true);
@@ -378,6 +389,8 @@ public class TestSpringManualTxAddressbookDAO extends AbstractDAOTestCase
             transactionManager.rollback(transactionStatus);
             throw ex;
         }
+
+        assertTrue(true);
     }
 
     /**
@@ -385,7 +398,7 @@ public class TestSpringManualTxAddressbookDAO extends AbstractDAOTestCase
      */
     @Override
     @Test
-    public void test0510GetKontaktDetailsWithID() throws Throwable
+    void test0510GetKontaktDetailsWithID() throws Throwable
     {
         DefaultTransactionDefinition transactionDefinition = new DefaultTransactionDefinition();
         transactionDefinition.setReadOnly(true);
@@ -403,6 +416,8 @@ public class TestSpringManualTxAddressbookDAO extends AbstractDAOTestCase
             transactionManager.rollback(transactionStatus);
             throw ex;
         }
+
+        assertTrue(true);
     }
 
     /**
@@ -410,7 +425,7 @@ public class TestSpringManualTxAddressbookDAO extends AbstractDAOTestCase
      */
     @Override
     @Test
-    public void test0520GetKontaktDetailsWithIDs() throws Throwable
+    void test0520GetKontaktDetailsWithIDs() throws Throwable
     {
         DefaultTransactionDefinition transactionDefinition = new DefaultTransactionDefinition();
         transactionDefinition.setReadOnly(true);
@@ -428,6 +443,8 @@ public class TestSpringManualTxAddressbookDAO extends AbstractDAOTestCase
             transactionManager.rollback(transactionStatus);
             throw ex;
         }
+
+        assertTrue(true);
     }
 
     /**
@@ -435,7 +452,7 @@ public class TestSpringManualTxAddressbookDAO extends AbstractDAOTestCase
      */
     @Override
     @Test
-    public void test0600GetKontakte() throws Throwable
+    void test0600GetKontakte() throws Throwable
     {
         DefaultTransactionDefinition transactionDefinition = new DefaultTransactionDefinition();
         transactionDefinition.setReadOnly(true);
@@ -453,6 +470,8 @@ public class TestSpringManualTxAddressbookDAO extends AbstractDAOTestCase
             transactionManager.rollback(transactionStatus);
             throw ex;
         }
+
+        assertTrue(true);
     }
 
     /**
@@ -460,7 +479,7 @@ public class TestSpringManualTxAddressbookDAO extends AbstractDAOTestCase
      */
     @Override
     @Test
-    public void test0700SearchKontakts() throws Throwable
+    void test0700SearchKontakts() throws Throwable
     {
         DefaultTransactionDefinition transactionDefinition = new DefaultTransactionDefinition();
         transactionDefinition.setReadOnly(true);
@@ -478,6 +497,8 @@ public class TestSpringManualTxAddressbookDAO extends AbstractDAOTestCase
             transactionManager.rollback(transactionStatus);
             throw ex;
         }
+
+        assertTrue(true);
     }
 
     /**
@@ -485,7 +506,7 @@ public class TestSpringManualTxAddressbookDAO extends AbstractDAOTestCase
      */
     @Override
     @Test
-    public void test0900DeleteAttribut() throws Throwable
+    void test0900DeleteAttribut() throws Throwable
     {
         TransactionDefinition transactionDefinition = new DefaultTransactionDefinition();
         TransactionStatus transactionStatus = transactionManager.getTransaction(transactionDefinition);
@@ -501,6 +522,8 @@ public class TestSpringManualTxAddressbookDAO extends AbstractDAOTestCase
             transactionManager.rollback(transactionStatus);
             throw ex;
         }
+
+        assertTrue(true);
     }
 
     /**
@@ -508,7 +531,7 @@ public class TestSpringManualTxAddressbookDAO extends AbstractDAOTestCase
      */
     @Override
     @Test
-    public void test1000DeleteKontakt() throws Throwable
+    void test1000DeleteKontakt() throws Throwable
     {
         TransactionDefinition transactionDefinition = new DefaultTransactionDefinition();
         TransactionStatus transactionStatus = transactionManager.getTransaction(transactionDefinition);
@@ -524,5 +547,7 @@ public class TestSpringManualTxAddressbookDAO extends AbstractDAOTestCase
             transactionManager.rollback(transactionStatus);
             throw ex;
         }
+
+        assertTrue(true);
     }
 }

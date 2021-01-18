@@ -25,28 +25,28 @@ public class MainController extends AbstractController
     *
     */
     @FXML
-    private Button buttonContactView = null;
+    private Button buttonContactView;
 
     /**
     *
     */
     @FXML
-    private Button buttonMailView = null;
+    private Button buttonMailView;
 
     /**
      *
      */
-    private ContactController contactController = null;
+    private ContactController contactController;
 
     /**
      *
      */
-    private MailController mailController = null;
+    private MailController mailController;
 
     /**
      *
      */
-    private MainView mainView = null;
+    private MainView mainView;
 
     /**
      * Erzeugt eine neue Instanz von {@link MainController}

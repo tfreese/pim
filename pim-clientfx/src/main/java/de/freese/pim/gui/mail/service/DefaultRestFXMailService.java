@@ -42,12 +42,12 @@ public class DefaultRestFXMailService extends AbstractFXMailService
     /**
     *
     */
-    private AsyncRestTemplate asyncRestTemplate = null;
+    private AsyncRestTemplate asyncRestTemplate;
 
     /**
      *
      */
-    private RestTemplate restTemplate = null;
+    private RestTemplate restTemplate;
 
     /**
      * Erstellt ein neues {@link DefaultRestFXMailService} Object.

@@ -26,7 +26,7 @@ public class AllPIMTest
     /**
      *
      */
-    private static SimpleNamingContextBuilder namingContext = null;
+    private static SimpleNamingContextBuilder namingContext;
 
     /**
      *

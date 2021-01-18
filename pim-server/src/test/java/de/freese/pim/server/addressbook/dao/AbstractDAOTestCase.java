@@ -29,7 +29,7 @@ public abstract class AbstractDAOTestCase
     /**
      * Erstellt ein neues {@link AbstractDAOTestCase} Object.
      */
-    public AbstractDAOTestCase()
+    protected AbstractDAOTestCase()
     {
         super();
     }
@@ -381,95 +381,95 @@ public abstract class AbstractDAOTestCase
     /**
      * @throws Throwable Falls was schief geht.
      */
-    public abstract void test0100InsertKontakts() throws Throwable;
+    abstract void test0100InsertKontakts() throws Throwable;
 
     /**
      * @throws Throwable Falls was schief geht.
      */
-    public abstract void test0110InsertKontaktWithNullVorname() throws Throwable;
+    abstract void test0110InsertKontaktWithNullVorname() throws Throwable;
 
     /**
      * @throws Throwable Falls was schief geht.
      */
-    public abstract void test0120InsertKontaktWithBlankVorname() throws Throwable;
+    abstract void test0120InsertKontaktWithBlankVorname() throws Throwable;
 
     /**
      * @throws Throwable Falls was schief geht.
      */
-    public abstract void test0130InsertKontaktExisting() throws Throwable;
+    abstract void test0130InsertKontaktExisting() throws Throwable;
 
     /**
      * @throws Throwable Falls was schief geht.
      */
-    public abstract void test0200UpdateKontakt() throws Throwable;
+    abstract void test0200UpdateKontakt() throws Throwable;
 
     /**
      * @throws Throwable Falls was schief geht.
      */
-    public abstract void test0300InsertAttribut() throws Throwable;
+    abstract void test0300InsertAttribut() throws Throwable;
 
     /**
      * @throws Throwable Falls was schief geht.
      */
-    public abstract void test0310InsertInsertAttributWithNullValue() throws Throwable;
+    abstract void test0310InsertInsertAttributWithNullValue() throws Throwable;
 
     /**
      * @throws Throwable Falls was schief geht.
      */
-    public abstract void test0320InsertInsertAttributWithBlankValue() throws Throwable;
+    abstract void test0320InsertInsertAttributWithBlankValue() throws Throwable;
 
     /**
      * @throws Throwable Falls was schief geht.
      */
-    public abstract void test0330InsertInsertAttributWithNull() throws Throwable;
+    abstract void test0330InsertInsertAttributWithNull() throws Throwable;
 
     /**
      * @throws Throwable Falls was schief geht.
      */
-    public abstract void test0340InsertInsertAttributWithBlank() throws Throwable;
+    abstract void test0340InsertInsertAttributWithBlank() throws Throwable;
 
     /**
      * @throws Throwable Falls was schief geht.
      */
-    public abstract void test0350InsertAttributExisting() throws Throwable;
+    abstract void test0350InsertAttributExisting() throws Throwable;
 
     /**
      * @throws Throwable Falls was schief geht.
      */
-    public abstract void test0400UpdateAttribut() throws Throwable;
+    abstract void test0400UpdateAttribut() throws Throwable;
 
     /**
      * @throws Throwable Falls was schief geht.
      */
-    public abstract void test0500GetKontaktDetailsAll() throws Throwable;
+    abstract void test0500GetKontaktDetailsAll() throws Throwable;
 
     /**
      * @throws Throwable Falls was schief geht.
      */
-    public abstract void test0510GetKontaktDetailsWithID() throws Throwable;
+    abstract void test0510GetKontaktDetailsWithID() throws Throwable;
 
     /**
      * @throws Throwable Falls was schief geht.
      */
-    public abstract void test0520GetKontaktDetailsWithIDs() throws Throwable;
+    abstract void test0520GetKontaktDetailsWithIDs() throws Throwable;
 
     /**
      * @throws Throwable Falls was schief geht.
      */
-    public abstract void test0600GetKontakte() throws Throwable;
+    abstract void test0600GetKontakte() throws Throwable;
 
     /**
      * @throws Throwable Falls was schief geht.
      */
-    public abstract void test0700SearchKontakts() throws Throwable;
+    abstract void test0700SearchKontakts() throws Throwable;
 
     /**
      * @throws Throwable Falls was schief geht.
      */
-    public abstract void test0900DeleteAttribut() throws Throwable;
+    abstract void test0900DeleteAttribut() throws Throwable;
 
     /**
      * @throws Throwable Falls was schief geht.
      */
-    public abstract void test1000DeleteKontakt() throws Throwable;
+    abstract void test1000DeleteKontakt() throws Throwable;
 }

@@ -42,7 +42,7 @@ import de.freese.pim.server.PIMServerApplication;
         "Server", "HsqldbMemory"
 })
 @AutoConfigureMockMvc
-public class TestRestServer
+class TestRestServer
 {
     /**
     *

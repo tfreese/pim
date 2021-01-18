@@ -30,7 +30,7 @@ public abstract class AbstractPIMClientConfig
     /**
      * Erzeugt eine neue Instanz von {@link AbstractPIMClientConfig}
      */
-    public AbstractPIMClientConfig()
+    protected AbstractPIMClientConfig()
     {
         super();
     }

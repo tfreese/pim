@@ -112,9 +112,8 @@ public class InitMailAPITask extends Task<List<FXMailFolder>>
         {
             // @formatter:off
             CompletableFuture<Void> cf = CompletableFuture.supplyAsync(() ->
-            {
-                return this.mailService.loadMails(this.account, mf);
-            }, taskExecutor)
+                this.mailService.loadMails(this.account, mf)
+            , taskExecutor)
             .exceptionally(ex ->
             {
                 LOGGER.error(null, ex);
@@ -140,7 +139,7 @@ public class InitMailAPITask extends Task<List<FXMailFolder>>
             master = CompletableFuture.allOf(master, cf);
         }
 
-        master.thenAccept(result -> Platform.runLater(() -> treeView.refresh()));
+        master.thenAccept(result -> Platform.runLater(treeView::refresh));
     }
 
     /**
@@ -152,7 +151,7 @@ public class InitMailAPITask extends Task<List<FXMailFolder>>
         // @formatter:off
         try(Stream<FXMailFolder> stream =folders.parallelStream())
         {
-            stream.onClose(() -> Platform.runLater(() -> treeView.refresh()))
+            stream.onClose(() -> Platform.runLater(treeView::refresh))
             .forEach(mf ->
             {
                 List<FXMail> mails = this.mailService.loadMails(this.account, mf);

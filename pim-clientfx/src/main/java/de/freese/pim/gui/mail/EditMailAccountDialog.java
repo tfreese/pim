@@ -3,9 +3,7 @@ package de.freese.pim.gui.mail;
 
 import java.util.Optional;
 import java.util.ResourceBundle;
-
 import org.apache.commons.lang3.StringUtils;
-
 import de.freese.pim.common.model.mail.MailPort;
 import de.freese.pim.common.model.mail.MailProvider;
 import de.freese.pim.common.utils.Utils;
@@ -117,19 +115,6 @@ public class EditMailAccountDialog
     }
 
     /**
-     * Editiert einen MailAccount.
-     *
-     * @param mailService {@link FXMailService}
-     * @param bundle {@link ResourceBundle}
-     * @param account {@link FXMailAccount}
-     * @return {@link Optional}
-     */
-    public Optional<FXMailAccount> editAccount(final FXMailService mailService, final ResourceBundle bundle, final FXMailAccount account)
-    {
-        return openDialog(mailService, bundle, account, "mailaccount.edit", "imageview-edit");
-    }
-
-    /**
      * Testet die Mail-Einstellungen.
      *
      * @param event {@link ActionEvent}
@@ -149,7 +134,7 @@ public class EditMailAccountDialog
         String pw1 = this.password1.getText();
         String pw2 = this.password2.getText();
 
-        if (StringUtils.isBlank(pw1) || StringUtils.isBlank(pw1))
+        if (StringUtils.isBlank(pw1))
         {
             message.append(bundle.getString("passwoerter.nicht_ausgefuellt")).append("\n");
         }
@@ -177,6 +162,19 @@ public class EditMailAccountDialog
     }
 
     /**
+     * Editiert einen MailAccount.
+     *
+     * @param mailService {@link FXMailService}
+     * @param bundle {@link ResourceBundle}
+     * @param account {@link FXMailAccount}
+     * @return {@link Optional}
+     */
+    public Optional<FXMailAccount> editAccount(final FXMailService mailService, final ResourceBundle bundle, final FXMailAccount account)
+    {
+        return openDialog(mailService, bundle, account, "mailaccount.edit", "imageview-edit");
+    }
+
+    /**
      * Initialisiert und öffnet den Dialog.
      *
      * @param mailService {@link FXMailService}
@@ -186,8 +184,8 @@ public class EditMailAccountDialog
      * @param imageStyleClass String
      * @return {@link Optional}
      */
-    private Optional<FXMailAccount> openDialog(final FXMailService mailService, final ResourceBundle bundle, final FXMailAccount account,
-            final String titleKey, final String imageStyleClass)
+    private Optional<FXMailAccount> openDialog(final FXMailService mailService, final ResourceBundle bundle, final FXMailAccount account, final String titleKey,
+                                               final String imageStyleClass)
     {
         // DialogObject
         FXMailAccount bean = new FXMailAccount();
@@ -270,37 +268,31 @@ public class EditMailAccountDialog
         okButton.addEventFilter(ActionEvent.ACTION, event -> checkValidConfig(event, bundle));
 
         // OK-Button disablen, wenn eines dieser Felder leer ist.
-        this.mail.textProperty().addListener((observable, oldValue, newValue) ->
-        {
+        this.mail.textProperty().addListener((observable, oldValue, newValue) -> {
             okButton.setDisable(newValue.trim().isEmpty());
 
             this.labelTestResult.setText(null);
             this.labelTestResult.setStyle(null);
         });
-        this.imapHost.textProperty().addListener((observable, oldValue, newValue) ->
-        {
+        this.imapHost.textProperty().addListener((observable, oldValue, newValue) -> {
             this.labelTestResult.setText(null);
             this.labelTestResult.setStyle(null);
         });
-        this.smtpHost.textProperty().addListener((observable, oldValue, newValue) ->
-        {
+        this.smtpHost.textProperty().addListener((observable, oldValue, newValue) -> {
             this.labelTestResult.setText(null);
             this.labelTestResult.setStyle(null);
         });
-        this.password1.textProperty().addListener((observable, oldValue, newValue) ->
-        {
+        this.password1.textProperty().addListener((observable, oldValue, newValue) -> {
             this.labelTestResult.setText(null);
             this.labelTestResult.setStyle(null);
             this.password2.clear();
         });
-        this.password2.textProperty().addListener((observable, oldValue, newValue) ->
-        {
+        this.password2.textProperty().addListener((observable, oldValue, newValue) -> {
             this.labelTestResult.setText(null);
             this.labelTestResult.setStyle(null);
         });
 
-        this.aboView.setCellFactory(
-                CheckBoxListCell.forListView(FXMailFolder::abonniertProperty, FXUtils.toStringConverter(FXMailFolder::getFullName)));
+        this.aboView.setCellFactory(CheckBoxListCell.forListView(FXMailFolder::abonniertProperty, FXUtils.toStringConverter(FXMailFolder::getFullName)));
         this.aboView.setItems(bean.getFolder());
 
         // Laypout
@@ -313,8 +305,7 @@ public class EditMailAccountDialog
         {
             okButton.setDisable(true);
 
-            this.provider.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) ->
-            {
+            this.provider.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
                 if (newValue == null)
                 {
                     return;

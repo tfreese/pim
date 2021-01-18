@@ -2,6 +2,7 @@
 package de.freese.pim.common.function;
 
 import java.util.function.Function;
+import java.util.function.UnaryOperator;
 
 /**
  * Diese {@link Function} entfernt alle Zeichen, die keine Lettern sind {@link Character#isLetter(char)}.<br>
@@ -9,7 +10,7 @@ import java.util.function.Function;
  *
  * @author Thomas Freese
  */
-public class FunctionStripNotLetter implements Function<String, String>
+public class FunctionStripNotLetter implements UnaryOperator<String>
 {
     /**
      *

@@ -139,13 +139,13 @@ class Config extends WebMvcConfigurationSupport
 @Import(Config.class)
 @ActiveProfiles("SimpleRestService")
 @TestMethodOrder(MethodOrderer.MethodName.class)
-public class TestSimpleRestService
+class TestSimpleRestService
 {
     /**
     *
     */
     @Resource
-    private MockMvc mockMvc = null;
+    private MockMvc mockMvc;
 
     /**
      * @throws Exception Falls was schief geht.

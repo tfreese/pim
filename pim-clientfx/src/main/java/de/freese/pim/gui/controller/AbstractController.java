@@ -23,7 +23,7 @@ public abstract class AbstractController implements Initializable
     /**
     *
     */
-    private boolean activated = false;
+    private boolean activated;
 
     /**
     *
@@ -43,7 +43,7 @@ public abstract class AbstractController implements Initializable
     /**
      * Erzeugt eine neue Instanz von {@link AbstractController}
      */
-    public AbstractController()
+    protected AbstractController()
     {
         super();
 

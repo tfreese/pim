@@ -26,7 +26,7 @@ public class HsqldbMemoryConfig extends AbstractHSQLDBConfig
     *
     */
     @Resource
-    private DataSource dataSource = null;
+    private DataSource dataSource;
 
     /**
      * Erzeugt eine neue Instanz von {@link HsqldbMemoryConfig}

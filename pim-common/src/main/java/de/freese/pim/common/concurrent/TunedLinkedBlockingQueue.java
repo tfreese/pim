@@ -43,12 +43,12 @@ public class TunedLinkedBlockingQueue<T> extends LinkedBlockingQueue<T>
     /**
      *
      */
-    private IntSupplier currentSize = null;
+    private IntSupplier currentSize;
 
     /**
      *
      */
-    private IntSupplier maxSize = null;
+    private IntSupplier maxSize;
 
     /**
      * Erstellt ein neues {@link TunedLinkedBlockingQueue} Object.

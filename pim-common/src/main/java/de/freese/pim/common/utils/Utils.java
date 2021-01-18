@@ -417,16 +417,14 @@ public final class Utils
         int[] columnWidth = new int[columnCount];
 
         // @formatter:off
-        IntStream.range(0, columnCount).forEach(column
-                ->
-                {
+        IntStream.range(0, columnCount).forEach(column ->
                     columnWidth[column] = rows.stream()
                             .parallel()
                             .map(r -> r[column])
                             .mapToInt(CharSequence::length)
                             .max()
-                            .orElse(0);
-        });
+                            .orElse(0)
+        );
         // @formatter:on
 
         // Strings pro Spalte formatieren und schreiben.

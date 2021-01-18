@@ -21,7 +21,7 @@ import de.freese.pim.common.utils.Crypt;
  * @author Thomas Freese
  */
 @TestMethodOrder(MethodOrderer.MethodName.class)
-public class TestCrypt
+class TestCrypt
 {
     /**
      * @throws Exception Falls was schief geht.

@@ -15,14 +15,14 @@ public class MailAccount
     /**
      *
      */
-    private long id = 0;
+    private long id;
 
     /**
      *
      */
     // @NotNull
     // @Size(min = 0, max = 50)
-    private String imapHost = null;
+    private String imapHost;
 
     /**
      *
@@ -41,21 +41,21 @@ public class MailAccount
     // @NotNull
     // @Pattern(regexp = Utils.MAIL_REGEX)
     // @Size(min = 0, max = 50)
-    private String mail = null;
+    private String mail;
 
     /**
      *
      */
     // @NotNull
     // @Size(min = 0, max = 100)
-    private String password = null;
+    private String password;
 
     /**
      *
      */
     // @NotNull
     // @Size(min = 0, max = 50)
-    private String smtpHost = null;
+    private String smtpHost;
 
     /**
      *

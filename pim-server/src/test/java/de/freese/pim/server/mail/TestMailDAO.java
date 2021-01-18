@@ -39,13 +39,13 @@ import de.freese.pim.server.mail.model.MailFolder;
 @TestMethodOrder(MethodOrderer.MethodName.class)
 @Transactional(transactionManager = "transactionManager")
 @ActiveProfiles("test")
-public class TestMailDAO
+class TestMailDAO
 {
     /**
      *
      */
     @Resource
-    private MailDAO mailDAO = null;
+    private MailDAO mailDAO;
 
     /**
      * @throws Throwable Falls was schief geht.

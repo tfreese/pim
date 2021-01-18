@@ -46,7 +46,7 @@ public class ServerConfig extends WebMvcConfigurationSupport // implements WebMv
      *
      */
     @Resource
-    private ObjectMapper jsonMapper = null;
+    private ObjectMapper jsonMapper;
 
     /**
      * Erzeugt eine neue Instanz von {@link ServerConfig}

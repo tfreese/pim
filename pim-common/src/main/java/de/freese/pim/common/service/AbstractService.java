@@ -19,7 +19,7 @@ public abstract class AbstractService implements ApplicationContextAware
     /**
      *
      */
-    private ApplicationContext applicationContext = null;
+    private ApplicationContext applicationContext;
 
     /**
     *
@@ -29,7 +29,7 @@ public abstract class AbstractService implements ApplicationContextAware
     /**
     *
     */
-    private AsyncTaskExecutor taskExecutor = null;
+    private AsyncTaskExecutor taskExecutor;
 
     // /**
     // *
@@ -39,7 +39,7 @@ public abstract class AbstractService implements ApplicationContextAware
     /**
      * Erzeugt eine neue Instanz von {@link AbstractService}
      */
-    public AbstractService()
+    protected AbstractService()
     {
         super();
     }

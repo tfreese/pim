@@ -30,7 +30,7 @@ public class MonitorOutputStream extends OutputStream
     /**
      * Anzahl geschriebene Bytes.
      */
-    private long sizeWritten = 0;
+    private long sizeWritten;
 
     /**
      * Erzeugt eine neue Instanz von {@link MonitorOutputStream}

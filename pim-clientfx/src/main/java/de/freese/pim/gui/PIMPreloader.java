@@ -24,7 +24,7 @@ public class PIMPreloader extends Preloader
     /**
      *
      */
-    private Label labelStatus = null;
+    private Label labelStatus;
 
     /**
     *
@@ -34,12 +34,12 @@ public class PIMPreloader extends Preloader
     /**
      *
      */
-    private ProgressIndicator progress = null;
+    private ProgressIndicator progress;
 
     /**
      *
      */
-    private Stage stage = null;
+    private Stage stage;
 
     /**
      * Erzeugt eine neue Instanz von {@link PIMPreloader}
@@ -139,11 +139,11 @@ public class PIMPreloader extends Preloader
         // application loading progress is rescaled to be first 50%
         // Even if there is nothing to load 0% and 100% events can be
         // delivered
-        if ((info.getProgress() != 1.0) || !this.noLoadingProgress)
+        if ((info.getProgress() != 1.0D) || !this.noLoadingProgress)
         {
             // this.progress.setProgress(info.getProgress() / 2);
 
-            if (info.getProgress() > 0)
+            if (info.getProgress() > 0D)
             {
                 this.noLoadingProgress = false;
             }

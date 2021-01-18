@@ -8,6 +8,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.function.Function;
+import java.util.function.UnaryOperator;
 import javax.sql.DataSource;
 import org.springframework.context.annotation.Bean;
 
@@ -26,7 +27,7 @@ public abstract class AbstractHSQLDBConfig extends AbstractDBConfig
     /**
      * Erstellt ein neues {@link AbstractHSQLDBConfig} Object.
      */
-    public AbstractHSQLDBConfig()
+    protected AbstractHSQLDBConfig()
     {
         super();
     }
@@ -39,7 +40,7 @@ public abstract class AbstractHSQLDBConfig extends AbstractDBConfig
     @Bean
     public Function<String, String> sequenceQuery()
     {
-        Function<String, String> query = seq -> "call next value for " + seq;
+        UnaryOperator<String> query = seq -> "call next value for " + seq;
 
         return query;
     }

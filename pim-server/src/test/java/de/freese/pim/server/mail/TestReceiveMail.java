@@ -56,17 +56,17 @@ import de.freese.pim.server.mail.api.JavaMailContent;
 @SpringBootTest
 @TestMethodOrder(MethodOrderer.MethodName.class)
 @Disabled
-public class TestReceiveMail extends AbstractMailTest
+class TestReceiveMail extends AbstractMailTest
 {
     /**
      *
      */
-    private static Session session = null;
+    private static Session session;
 
     /**
      *
      */
-    private static Store store = null;
+    private static Store store;
 
     /**
      * @throws Exception Falls was schief geht.

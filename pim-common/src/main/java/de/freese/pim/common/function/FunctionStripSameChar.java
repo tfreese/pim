@@ -2,18 +2,19 @@
 package de.freese.pim.common.function;
 
 import java.util.function.Function;
+import java.util.function.UnaryOperator;
 
 /**
  * Diese {@link Function} liefert einen leeren String, wenn dieser nur aus dem selben Zeichen besteht.<br>
  *
  * @author Thomas Freese
  */
-public class FunctionStripSameChar implements Function<String, String>
+public class FunctionStripSameChar implements UnaryOperator<String>
 {
     /**
      *
      */
-    public static final Function<String, String> INSTANCE = new FunctionStripSameChar();
+    public static final UnaryOperator<String> INSTANCE = new FunctionStripSameChar();
 
     /**
      * Erzeugt eine neue Instanz von {@link FunctionStripSameChar}

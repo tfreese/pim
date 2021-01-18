@@ -53,31 +53,31 @@ public class ContactController extends AbstractController
     *
     */
     @FXML
-    private Button buttonAddContact = null;
+    private Button buttonAddContact;
 
     /**
     *
     */
     @FXML
-    private Button buttonDeleteContact = null;
+    private Button buttonDeleteContact;
 
     /**
     *
     */
     @FXML
-    private Button buttonEditContact = null;
+    private Button buttonEditContact;
 
     /**
     *
     */
     @FXML
-    private Node mainNode = null;
+    private Node mainNode;
 
     /**
     *
     */
     @FXML
-    private Node naviNode = null;
+    private Node naviNode;
 
     /**
     *
@@ -88,19 +88,19 @@ public class ContactController extends AbstractController
     *
     */
     @FXML
-    private TableView<FXKontakt> tableViewKontakt = null;
+    private TableView<FXKontakt> tableViewKontakt;
 
     /**
      *
      */
     @FXML
-    private TextField textFieldNachname = null;
+    private TextField textFieldNachname;
 
     /**
      *
      */
     @FXML
-    private TextField textFieldVorname = null;
+    private TextField textFieldVorname;
 
     /**
      * Erzeugt eine neue Instanz von {@link ContactController}
