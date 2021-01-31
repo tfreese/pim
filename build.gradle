@@ -7,6 +7,8 @@ buildscript {
 // Tasks im SubModul ausführen: gradle MODUL:clean build
 
 subprojects {
+	apply plugin: 'java'
+	
 	dependencies {
 		implementation(platform("de.freese:maven-bom:$version_mavenBom"))
 		//implementation("org.springframework.boot:spring-boot-starter")
@@ -29,6 +31,7 @@ project("pim-common") {
 }
 
 project("pim-server") {
+	apply plugin: "java-library"
 	apply plugin: "org.springframework.boot"
 	description = "Server for PIM"
 	dependencies {
@@ -103,12 +106,19 @@ project("pim-server") {
 }
 
 project("pim-clientfx") {
+	apply plugin: "java-library"
 	apply plugin: "org.springframework.boot"
+	//apply plugin: 'org.openjfx.javafxplugin'
 	description = "GUI for PIM"
 	dependencies {
 		implementation(project(":pim-common"))
 		implementation(project(":pim-server"))
 
+		/*javafx {
+			version = "15"
+			modules = [ 'javafx.controls', 'javafx-fxml', 'javafx-web' ]
+		}*/
+		
 		implementation("org.openjfx:javafx-controls")
 		implementation("org.openjfx:javafx-fxml")
 		implementation("org.openjfx:javafx-web")
