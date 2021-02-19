@@ -8,7 +8,7 @@ buildscript {
 
 subprojects {
 	apply plugin: 'java'
-	
+
 	dependencies {
 		implementation(platform("de.freese:maven-bom:$version_mavenBom"))
 		//implementation("org.springframework.boot:spring-boot-starter")
