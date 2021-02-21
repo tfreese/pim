@@ -31,14 +31,6 @@ public class ProgressIndicatorDemo extends Application
     }
 
     /**
-     * Erstellt ein neues {@link ProgressIndicatorDemo} Object.
-     */
-    public ProgressIndicatorDemo()
-    {
-        super();
-    }
-
-    /**
      * Verschiedene Farben.
      *
      * @param progress 0-1

@@ -23,14 +23,6 @@ public abstract class AbstractPimTest
     public static final Path TMP_TEST_PATH = Paths.get(System.getProperty("user.dir"), "test");
 
     /**
-     * Erstellt ein neues {@link AbstractPimTest} Object.
-     */
-    protected AbstractPimTest()
-    {
-        super();
-    }
-
-    /**
      * Liefert true, wenn ich auf der Arbeit bin.
      *
      * @return boolean

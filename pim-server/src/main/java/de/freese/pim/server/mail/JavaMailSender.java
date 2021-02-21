@@ -406,7 +406,7 @@ public class JavaMailSender
     {
         try (Transport transport = connectTransport())
         {
-            // NOOP
+            transport.isConnected();
         }
     }
 }

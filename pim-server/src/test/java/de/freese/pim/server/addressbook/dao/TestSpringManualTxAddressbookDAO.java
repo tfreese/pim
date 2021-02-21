@@ -3,7 +3,7 @@
  */
 package de.freese.pim.server.addressbook.dao;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.sql.SQLIntegrityConstraintViolationException;
 import javax.sql.DataSource;
 import org.junit.jupiter.api.AfterAll;

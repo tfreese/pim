@@ -1,148 +1,148 @@
-buildscript {
-	dependencies {
-		classpath("org.springframework.boot:spring-boot-gradle-plugin:$version_springBoot")
-	}
-}
-
 // Tasks im SubModul ausführen: gradle MODUL:clean build
 
 subprojects {
-	apply plugin: 'java'
+    apply plugin: 'java'
+    apply plugin: "maven-publish"
+    apply plugin: "de.freese.gradle.conventions"
+    apply plugin: "io.spring.dependency-management"
 
-	dependencies {
-		implementation(platform("de.freese:maven-bom:$version_mavenBom"))
-		//implementation("org.springframework.boot:spring-boot-starter")
+    dependencyManagement {
+        imports {
+            mavenBom "org.springframework.boot:spring-boot-dependencies:$version_springBoot"
+        }
+
+        dependencies {
+            dependency "commons-cli:commons-cli:$version_commonsCli"
+            dependency "commons-io:commons-io:$version_commonsIo"
+            dependency "org.apache.commons:commons-collections4:$version_commonsCollections"
+            dependency "org.jsoup:jsoup:$version_jsoup"
+        }
     }
 }
 
 project("pim-common") {
-	apply plugin: "java-library"
-	description = "Common Components for PIM"
-	dependencies {
-		api("commons-cli:commons-cli")
-		api("commons-io:commons-io")
-		api("javax.activation:javax.activation-api")
-		api("org.apache.commons:commons-collections4")
-		api("org.apache.commons:commons-lang3")
-		api("org.springframework.boot:spring-boot-starter-json")
+    apply plugin: "java-library"
+    description = "Common Components for PIM"
+    dependencies {
+        api("commons-cli:commons-cli")
+        api("commons-io:commons-io")
+        api("javax.activation:javax.activation-api")
+        api("org.apache.commons:commons-collections4")
+        api("org.apache.commons:commons-lang3")
+        api("org.springframework.boot:spring-boot-starter-json")
 
-		testImplementation("org.springframework.boot:spring-boot-starter-test")
+        testImplementation("org.springframework.boot:spring-boot-starter-test")
     }
 }
 
 project("pim-server") {
-	apply plugin: "java-library"
-	apply plugin: "org.springframework.boot"
-	description = "Server for PIM"
-	dependencies {
-		implementation(project(":pim-common"))
-		
-		implementation("de.freese.spring:spring-autoconfigure-hsqldbserver:$project.archiveVersion")
+    apply plugin: "java-library"
+    apply plugin: "org.springframework.boot"
+    description = "Server for PIM"
+    dependencies {
+        implementation(project(":pim-common"))
 
-		implementation("org.flywaydb:flyway-core")
-		implementation("org.hsqldb:hsqldb")
-		implementation("org.springframework.boot:spring-boot-starter-jdbc")
-		implementation("org.springframework.boot:spring-boot-starter-mail") {
-			exclude group:"javax.activation", module:"activation"
-		}
-		implementation("org.springframework.boot:spring-boot-starter-web")
+        api("org.springframework.boot:spring-boot-starter-web")
+        implementation("de.freese.spring:spring-autoconfigure-hsqldbserver:$project.version")
 
-		runtimeOnly("org.springframework.boot:spring-boot-starter-actuator")
-		runtimeOnly("org.xerial:sqlite-jdbc")
+        implementation("org.flywaydb:flyway-core")
+        implementation("org.hsqldb:hsqldb")
+        implementation("org.springframework.boot:spring-boot-starter-jdbc")
+        implementation("org.springframework.boot:spring-boot-starter-mail") {
+            exclude group: "javax.activation", module: "activation"
+        }
 
-		testImplementation("org.jsoup:jsoup")
-		testImplementation("org.springframework.boot:spring-boot-starter-test")
+        runtimeOnly("org.springframework.boot:spring-boot-starter-actuator")
+        runtimeOnly("org.xerial:sqlite-jdbc")
+
+        testImplementation("org.junit.jupiter:junit-jupiter-engine")
+        testImplementation("org.junit.platform:junit-platform-runner")
+        testImplementation("org.springframework.boot:spring-boot-starter-test")
+        testImplementation("org.jsoup:jsoup")
     }
-    
-	//Für Placeholder in *.properties
-	ext.artifactId = project.name
 
-	// Start: gradle clean bootRun
-	// Repackage: gradle clean bootRepackage
-	springBoot {
-		mainClassName = "de.freese.pim.server.PIMServerApplication"
-		//layout = "ZIP"
+    //Für Placeholder in *.properties
+    ext.artifactId = project.name
 
-		//backupSource = false
-	}
+    // Start: gradle bootRun
+    springBoot {
+        mainClassName = "de.freese.pim.server.PIMServerApplication"
+    }
 
-	//applicationDefaultJvmArgs = ["-Dfile.encoding=UTF-8", "-verbose:class"]
-	// gradle bootRun -PjvmArgs="-Dwhatever1=value1 -Dwhatever2=value2"
-	// gradle clean bootRepackage
-	bootRun {
-		//        if ( project.hasProperty('jvmArgs') ) {
-		//            println project.jvmArgs
-		//            //jvmArgs project.jvmArgs.split('\\s+')
-		//            jvmargs (project.jvmArgs.split("\\s+") as List)
-		//            println jvmArgs
-		//        }
+    //applicationDefaultJvmArgs = ["-Dfile.encoding=UTF-8", "-verbose:class"]
+    // gradle bootRun -PjvmArgs="-Dwhatever1=value1 -Dwhatever2=value2"
+    // gradle clean bootRepackage
+    bootRun {
+        //        if ( project.hasProperty('jvmArgs') ) {
+        //            println project.jvmArgs
+        //            //jvmArgs project.jvmArgs.split('\\s+')
+        //            jvmargs (project.jvmArgs.split("\\s+") as List)
+        //            println jvmArgs
+        //        }
 
-		args = ["--spring.profiles.active=Server,HsqldbEmbeddedServer", "--server.port=65111"]
+        args = ["--spring.profiles.active=Server,HsqldbEmbeddedServer", "--server.port=65111"]
 
-		//        systemProperty 'spring.profiles.active', 'Server,HsqldbEmbeddedServer'
-		//        systemProperty 'server.port', '65555'
-	}
+        //        systemProperty 'spring.profiles.active', 'Server,HsqldbEmbeddedServer'
+        //        systemProperty 'server.port', '65555'
+    }
 
-		// bootRun benutzt sonst nur die Resourcen in src/main/resources
-	processResources {
-		//        inputs.property('project.artifactId', project.name)
-		//        inputs.property('project.description', project.description)
-		//        inputs.property('project.version', project.version)
+    // bootRun benutzt sonst nur die Resourcen in src/main/resources
+    processResources {
+        //        inputs.property('project.artifactId', project.name)
+        //        inputs.property('project.description', project.description)
+        //        inputs.property('project.version', project.version)
 
-		//filesMatching('**/*.properties')
-		filesMatching('application-Server.properties')
-		{
-			expand(project.properties)
-			//            expand ('@project.artifactId': project.name,
-			//                '@project.description': project.description,
-			//                '@project.version': project.version
-			//            )
+        //filesMatching('**/*.properties')
+        filesMatching("application-Server.properties")
+                {
+                    expand(project.properties)
+                    //            expand ('@project.artifactId': project.name,
+                    //                '@project.description': project.description,
+                    //                '@project.version': project.version
+                    //            )
 
-			//            expand project.artifactId: project.name
-			//            expand project.description: project.description
-			//            expand project.version: project.version
-		}
-	}
+                    //            expand project.artifactId: project.name
+                    //            expand project.description: project.description
+                    //            expand project.version: project.version
+                }
+    }
 }
 
 project("pim-clientfx") {
-	apply plugin: "java-library"
-	apply plugin: "org.springframework.boot"
-	//apply plugin: 'org.openjfx.javafxplugin'
-	description = "GUI for PIM"
-	dependencies {
-		implementation(project(":pim-common"))
-		implementation(project(":pim-server"))
+    apply plugin: "java-library"
+    apply plugin: "org.springframework.boot"
+    apply plugin: "org.openjfx.javafxplugin"
+    description = "GUI for PIM"
+    test.enabled = false
+    dependencies {
+        implementation(project(":pim-common"))
+        implementation(project(":pim-server"))
 
-		/*javafx {
-			version = "15"
-			modules = [ 'javafx.controls', 'javafx-fxml', 'javafx-web' ]
-		}*/
-		
-		implementation("org.openjfx:javafx-controls")
-		implementation("org.openjfx:javafx-fxml")
-		implementation("org.openjfx:javafx-web")
+        javafx {
+            version = "15"
+            modules = ["javafx.controls", "javafx.fxml", "javafx.web"]
+        }
+
+        //implementation("org.openjfx:javafx-controls")
+        //implementation("org.openjfx:javafx-fxml")
+        //implementation("org.openjfx:javafx-web")
     }
-    
-	//Für Placeholder in *.properties
-	ext.artifactId = project.name
 
-	//applicationDefaultJvmArgs = ["-Dfile.encoding=UTF-8", "-verbose:class"]
-	// gradle bootRun -PjvmArgs="-Dwhatever1=value1 -Dwhatever2=value2"
-	// gradle clean bootRepackage
-	springBoot {
-		mainClassName = "de.freese.pim.gui.PIMApplication"
-		//layout = "ZIP"
+    //Für Placeholder in *.properties
+    ext.artifactId = project.name
 
-		//backupSource = false
-	}
+    //applicationDefaultJvmArgs = ["-Dfile.encoding=UTF-8", "-verbose:class"]
+    // gradle bootRun -PjvmArgs="-Dwhatever1=value1 -Dwhatever2=value2"
+    springBoot {
+        mainClassName = "de.freese.pim.gui.PIMApplication"
+    }
 
-	// bootRun benutzt sonst nur die Resourcen in src/main/resources
-	processResources {
-		//filesMatching('**/*.properties')
-		filesMatching('application-ClientEmbeddedServer.properties')
-		{
-			expand(project.properties)
-		}
-	}
+    // bootRun benutzt sonst nur die Resourcen in src/main/resources
+    processResources {
+        //filesMatching("**/*.properties")
+        filesMatching("application-ClientEmbeddedServer.properties")
+                {
+                    expand(project.properties)
+                }
+    }
 }

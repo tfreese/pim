@@ -1,9 +1,9 @@
 // Created: 12.12.2016
 package de.freese.pim.server.mail;
 
+import static org.junit.jupiter.api.Assumptions.assumeFalse;
 import java.util.Properties;
 import javax.mail.Session;
-import org.junit.Assume;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -66,7 +66,7 @@ class TestSendMail extends AbstractMailTest
     @BeforeEach
     void beforeEach()
     {
-        Assume.assumeFalse("On Work", isWork());
+        assumeFalse(isWork(), "On Work");
 
         sender.setAuthentication(this.from, this.password);
     }

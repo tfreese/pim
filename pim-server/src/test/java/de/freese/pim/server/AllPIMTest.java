@@ -3,17 +3,14 @@
  */
 package de.freese.pim.server;
 
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.platform.runner.JUnitPlatform;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.platform.suite.api.SelectPackages;
-import org.junit.runner.RunWith;
 import org.springframework.mock.jndi.SimpleNamingContextBuilder;
 
 /**
  * @author Thomas Freese
  */
-@RunWith(JUnitPlatform.class)
 @SelectPackages("de.freese.pim.server")
 // @SelectClasses(
 // {
@@ -31,8 +28,8 @@ public class AllPIMTest
     /**
      *
      */
-    @AfterClass
-    static void afterClass()
+    @AfterAll
+    static void afterAll()
     {
         namingContext.clear();
     }
@@ -40,20 +37,13 @@ public class AllPIMTest
     /**
      * @throws Exception Falls was schief geht.
      */
-    @BeforeClass
-    static void beforeClass() throws Exception
+    @BeforeAll
+    static void beforeAll() throws Exception
     {
         namingContext = SimpleNamingContextBuilder.emptyActivatedContextBuilder();
         // namingContext.bind("java:comp/env/jdbc/spring/manualTX", new TestConfig().dataSource());
     }
 
-    /**
-     * Erzeugt eine neue Instanz von {@link AllPIMTest}
-     */
-    public AllPIMTest()
-    {
-        super();
-    }
     // /**
     // * In der Methode werden alle Testklassen registriert die durch JUnit aufgerufen werden sollen.
     // *

@@ -25,7 +25,7 @@ import de.freese.pim.server.mail.dao.MailDAO;
 @Configuration
 @EnableTransactionManagement
 @Profile("test")
-public class TestMailConfig
+class TestMailConfig
 {
     /**
      * @return {@link DataSource}

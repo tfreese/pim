@@ -3,9 +3,9 @@
  */
 package de.freese.pim.server.addressbook.dao;
 
-import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.sql.SQLIntegrityConstraintViolationException;
 import javax.annotation.Resource;
 import org.junit.jupiter.api.MethodOrderer;
