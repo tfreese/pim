@@ -64,27 +64,24 @@ project("pim-server") {
     //Für Placeholder in *.properties
     ext.artifactId = project.name
 
+	// Sonst würde nur das BootJar erstellt werden.
+	jar {
+		enabled = true
+	}
+
     // Start: gradle bootRun
-    springBoot {
-        mainClassName = "de.freese.pim.server.PIMServerApplication"
+    bootJar {
+        mainClass = "de.freese.pim.server.PIMServerApplication"
+        classifier = "boot"
     }
-
-    //applicationDefaultJvmArgs = ["-Dfile.encoding=UTF-8", "-verbose:class"]
-    // gradle bootRun -PjvmArgs="-Dwhatever1=value1 -Dwhatever2=value2"
-    // gradle clean bootRepackage
+    
+    // gradle bootRun --args="--spring.profiles.active=Server,HsqldbEmbeddedServer --server.port=65111"
     bootRun {
-        //        if ( project.hasProperty('jvmArgs') ) {
-        //            println project.jvmArgs
-        //            //jvmArgs project.jvmArgs.split('\\s+')
-        //            jvmargs (project.jvmArgs.split("\\s+") as List)
-        //            println jvmArgs
-        //        }
-
-        args = ["--spring.profiles.active=Server,HsqldbEmbeddedServer", "--server.port=65111"]
-
-        //        systemProperty 'spring.profiles.active', 'Server,HsqldbEmbeddedServer'
-        //        systemProperty 'server.port', '65555'
-    }
+        args = [
+        	  "--spring.profiles.active=Server,HsqldbEmbeddedServer"
+        	, "--server.port=65111"
+        ]
+	}
 
     // bootRun benutzt sonst nur die Resourcen in src/main/resources
     processResources {
@@ -131,18 +128,17 @@ project("pim-clientfx") {
     //Für Placeholder in *.properties
     ext.artifactId = project.name
 
-    //applicationDefaultJvmArgs = ["-Dfile.encoding=UTF-8", "-verbose:class"]
-    // gradle bootRun -PjvmArgs="-Dwhatever1=value1 -Dwhatever2=value2"
-    springBoot {
-        mainClassName = "de.freese.pim.gui.PIMApplication"
+    bootJar {
+        mainClass = "de.freese.pim.gui.PIMApplication"
+        classifier = "boot"
     }
 
     // bootRun benutzt sonst nur die Resourcen in src/main/resources
     processResources {
         //filesMatching("**/*.properties")
         filesMatching("application-ClientEmbeddedServer.properties")
-                {
-                    expand(project.properties)
-                }
+            {
+                expand(project.properties)
+            }
     }
 }
