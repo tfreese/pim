@@ -2,8 +2,6 @@
 
 subprojects {
     apply plugin: 'java'
-    apply plugin: "maven-publish"
-    apply plugin: "de.freese.gradle.conventions"
     apply plugin: "io.spring.dependency-management"
 
     dependencyManagement {
@@ -64,15 +62,9 @@ project("pim-server") {
     //Für Placeholder in *.properties
     ext.artifactId = project.name
 
-	// Sonst würde nur das BootJar erstellt werden.
-	jar {
-		enabled = true
-	}
-
     // Start: gradle bootRun
     bootJar {
         mainClass = "de.freese.pim.server.PIMServerApplication"
-        classifier = "boot"
     }
     
     // gradle bootRun --args="--spring.profiles.active=Server,HsqldbEmbeddedServer --server.port=65111"
@@ -130,7 +122,6 @@ project("pim-clientfx") {
 
     bootJar {
         mainClass = "de.freese.pim.gui.PIMApplication"
-        classifier = "boot"
     }
 
     // bootRun benutzt sonst nur die Resourcen in src/main/resources
