@@ -108,13 +108,9 @@ project("pim-clientfx") {
         implementation(project(":pim-server"))
 
         javafx {
-            version = "15"
+        	version = "$version_javafxBase"
             modules = ["javafx.controls", "javafx.fxml", "javafx.web"]
         }
-
-        //implementation("org.openjfx:javafx-controls")
-        //implementation("org.openjfx:javafx-fxml")
-        //implementation("org.openjfx:javafx-web")
     }
 
     //Für Placeholder in *.properties
