@@ -75,25 +75,24 @@ project("pim-server") {
         ]
 	}
 
-    // bootRun benutzt sonst nur die Resourcen in src/main/resources
     processResources {
-        //        inputs.property('project.artifactId', project.name)
-        //        inputs.property('project.description', project.description)
-        //        inputs.property('project.version', project.version)
+        // inputs.property("project.artifactId", project.name)
+        // inputs.property("project.description", project.description)
+        // inputs.property("project.version", project.version)
 
-        //filesMatching('**/*.properties')
-        filesMatching("application-Server.properties")
-                {
-                    expand(project.properties)
-                    //            expand ('@project.artifactId': project.name,
-                    //                '@project.description': project.description,
-                    //                '@project.version': project.version
-                    //            )
+        // filesMatching("**/*.properties")
+        filesMatching("application-Server.properties") {
+            expand(project.properties)
+            
+            //	expand ("@project.artifactId": project.name,
+            //			"@project.description": project.description,
+            //			"@project.version": project.version
+            //	)
 
-                    //            expand project.artifactId: project.name
-                    //            expand project.description: project.description
-                    //            expand project.version: project.version
-                }
+            // expand project.artifactId: project.name
+            // expand project.description: project.description
+            // expand project.version: project.version	
+        }
     }
 }
 
