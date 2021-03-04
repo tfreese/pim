@@ -116,8 +116,15 @@ project("pim-clientfx") {
     ext.artifactId = project.name
 
     bootJar {
-        mainClass = "de.freese.pim.gui.PIMApplication"
+        mainClass = "de.freese.pim.gui.PIMLauncher"
     }
+    
+    // gradle bootRun --args="--spring.profiles.active=ClientStandalone,HsqldbEmbeddedServer"
+    bootRun {
+        args = [
+        	  "--spring.profiles.active=ClientStandalone,HsqldbEmbeddedServer"
+        ]
+	}    
 
     // bootRun benutzt sonst nur die Resourcen in src/main/resources
     processResources {
