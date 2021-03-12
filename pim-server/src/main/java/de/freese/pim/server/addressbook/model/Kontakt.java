@@ -3,6 +3,7 @@ package de.freese.pim.server.addressbook.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Entity für einen Kontakt.
@@ -19,7 +20,7 @@ public class Kontakt implements Comparable<Kontakt>
     /**
      *
      */
-    private long id = 0;
+    private long id;
 
     /**
      *
@@ -133,11 +134,6 @@ public class Kontakt implements Comparable<Kontakt>
             return true;
         }
 
-        if (obj == null)
-        {
-            return false;
-        }
-
         if (!(obj instanceof Kontakt))
         {
             return false;
@@ -145,36 +141,8 @@ public class Kontakt implements Comparable<Kontakt>
 
         Kontakt other = (Kontakt) obj;
 
-        if (getID() != getID())
-        {
-            return false;
-        }
-
-        if (getNachname() == null)
-        {
-            if (other.getNachname() != null)
-            {
-                return false;
-            }
-        }
-        else if (!getNachname().equals(other.getNachname()))
-        {
-            return false;
-        }
-
-        if (getVorname() == null)
-        {
-            if (getVorname() != null)
-            {
-                return false;
-            }
-        }
-        else if (!getVorname().equals(getVorname()))
-        {
-            return false;
-        }
-
-        return true;
+        return Objects.equals(this.attribute, other.attribute) && (this.id == other.id) && Objects.equals(this.nachname, other.nachname)
+                && Objects.equals(this.vorname, other.vorname);
     }
 
     /**
@@ -217,15 +185,7 @@ public class Kontakt implements Comparable<Kontakt>
     @Override
     public int hashCode()
     {
-        final int prime = 31;
-        int result = 1;
-
-        result = (prime * result) + ((getAttribute() == null) ? 0 : getAttribute().hashCode());
-        result = (prime * result) + (int) (getID() ^ (getID() >>> 32));
-        result = (prime * result) + ((getNachname() == null) ? 0 : getNachname().hashCode());
-        result = (prime * result) + ((getVorname() == null) ? 0 : getVorname().hashCode());
-
-        return result;
+        return Objects.hash(this.attribute, this.id, this.nachname, this.vorname);
     }
 
     // /**

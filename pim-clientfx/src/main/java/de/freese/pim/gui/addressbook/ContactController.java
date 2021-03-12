@@ -189,13 +189,11 @@ public class ContactController extends AbstractController
         gridPane.add(new Label(resources.getString("vorname")), 0, 1);
         gridPane.add(vorname, 1, 1);
 
-        nachname.textProperty().addListener((observable, oldValue, newValue) -> {
-            okButton.setDisable(newValue.trim().isEmpty());
-        });
+        nachname.textProperty().addListener((observable, oldValue, newValue) -> okButton.setDisable(newValue.trim().isEmpty()));
 
         dialog.getDialogPane().setContent(gridPane);
 
-        Platform.runLater(() -> nachname.requestFocus());
+        Platform.runLater(nachname::requestFocus);
 
         dialog.setResultConverter(buttonType -> {
             if (buttonType == ButtonType.OK)
@@ -388,9 +386,7 @@ public class ContactController extends AbstractController
             }
         };
 
-        task.setOnSucceeded(event -> {
-            getKontakteList().addAll(task.getValue());
-        });
+        task.setOnSucceeded(event -> getKontakteList().addAll(task.getValue()));
 
         task.setOnFailed(event -> {
             getLogger().error(null, task.getException());

@@ -30,7 +30,7 @@ import org.springframework.util.Assert;
  * @author Thomas Freese
  */
 @Component
-public class SpringContext implements ApplicationContextAware, ResourceLoaderAware, EnvironmentAware, InitializingBean
+public final class SpringContext implements ApplicationContextAware, ResourceLoaderAware, EnvironmentAware, InitializingBean
 {
     /**
     *

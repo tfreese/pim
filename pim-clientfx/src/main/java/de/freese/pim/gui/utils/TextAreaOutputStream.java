@@ -52,7 +52,7 @@ public class TextAreaOutputStream extends OutputStream
 
             while (splits.length > this.keepLastNLines)
             {
-                int index = getText().indexOf("\n");
+                int index = getText().indexOf('\n');
 
                 super.replaceText(0, index + 1, "");
             }

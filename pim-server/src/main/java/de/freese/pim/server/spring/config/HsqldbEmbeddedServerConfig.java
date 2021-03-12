@@ -7,7 +7,6 @@ import javax.sql.DataSource;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.context.annotation.PropertySources;
 import org.springframework.util.SocketUtils;
 import de.freese.pim.common.utils.Utils;
 import de.freese.spring.autoconfigure.hsqldbserver.HsqldbServerAutoConfiguration;
@@ -20,10 +19,8 @@ import de.freese.spring.autoconfigure.hsqldbserver.HsqldbServerAutoConfiguration
  */
 @Configuration
 @Profile("HsqldbEmbeddedServer")
-@PropertySources(
-{
-        @PropertySource("classpath:hikari-pool.properties"), @PropertySource("classpath:database.properties")
-})
+@PropertySource("classpath:hikari-pool.properties")
+@PropertySource("classpath:database.properties")
 public class HsqldbEmbeddedServerConfig extends AbstractHSQLDBConfig
 {
     static

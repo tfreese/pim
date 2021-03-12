@@ -55,7 +55,7 @@ public class SumUnreadMailsInChildFolderBinding extends IntegerBinding
 
         if (this.observedProperties != null)
         {
-            sum = Stream.of(this.observedProperties).parallel().mapToInt(op -> op.intValue()).sum();
+            sum = Stream.of(this.observedProperties).parallel().mapToInt(ObservableIntegerValue::intValue).sum();
         }
 
         return sum;
@@ -84,7 +84,7 @@ public class SumUnreadMailsInChildFolderBinding extends IntegerBinding
 
         if (!this.boundList.isEmpty())
         {
-            this.observedProperties = this.boundList.parallelStream().map(mf -> mf.unreadMailsCountTotalBinding()).toArray(ObservableIntegerValue[]::new);
+            this.observedProperties = this.boundList.parallelStream().map(FXMailFolder::unreadMailsCountTotalBinding).toArray(ObservableIntegerValue[]::new);
         }
 
         // Bind IntegerBinding's inner listener to all new properties

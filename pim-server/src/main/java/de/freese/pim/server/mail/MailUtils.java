@@ -4,7 +4,6 @@
 
 package de.freese.pim.server.mail;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -14,7 +13,6 @@ import java.util.Optional;
 import java.util.stream.Stream;
 import javax.activation.DataSource;
 import javax.mail.Message;
-import javax.mail.MessagingException;
 import javax.mail.Multipart;
 import javax.mail.Part;
 import javax.mail.internet.MimePart;
@@ -33,7 +31,7 @@ public final class MailUtils
     /**
      * @author Thomas Freese
      */
-    public static abstract class AbstractTextPart
+    public abstract static class AbstractTextPart
     {
         /**
          *
@@ -51,7 +49,7 @@ public final class MailUtils
          * @param content String
          * @param mimeType String
          */
-        private AbstractTextPart(final String content, final String mimeType)
+        AbstractTextPart(final String content, final String mimeType)
         {
             super();
 
@@ -95,7 +93,7 @@ public final class MailUtils
          *
          * @param text String
          */
-        private HTMLTextPart(final String text)
+        HTMLTextPart(final String text)
         {
             super(text, CONTENT_TYPE_HTML);
         }
@@ -111,7 +109,7 @@ public final class MailUtils
          *
          * @param text String
          */
-        private PlainTextPart(final String text)
+        PlainTextPart(final String text)
         {
             super(text, CONTENT_TYPE_PLAIN);
         }
@@ -159,10 +157,9 @@ public final class MailUtils
      *
      * @param part {@link Part}, @see {@link Message}
      * @return {@link Map}; ist niemals null
-     * @throws IOException Falls was schief geht.
-     * @throws MessagingException Falls was schief geht.
+     * @throws Exception Falls was schief geht.
      */
-    public static Map<String, MimePart> getAttachmentMap(final Part part) throws MessagingException, IOException
+    public static Map<String, MimePart> getAttachmentMap(final Part part) throws Exception
     {
         Map<String, MimePart> map = new HashMap<>();
 
@@ -184,10 +181,9 @@ public final class MailUtils
      *
      * @param part {@link Part}, @see {@link Message}
      * @return {@link List}; ist niemals null
-     * @throws IOException Falls was schief geht.
-     * @throws MessagingException Falls was schief geht.
+     * @throws Exception Falls was schief geht.
      */
-    public static List<MimePart> getAttachments(final Part part) throws MessagingException, IOException
+    public static List<MimePart> getAttachments(final Part part) throws Exception
     {
         List<MimePart> bodyParts = new ArrayList<>();
 
@@ -222,10 +218,9 @@ public final class MailUtils
      *
      * @param part {@link Part}, @see {@link Message}
      * @return {@link Map}; ist niemals null
-     * @throws IOException Falls was schief geht.
-     * @throws MessagingException Falls was schief geht.
+     * @throws Exception Falls was schief geht.
      */
-    public static Map<String, MimePart> getInlineMap(final Part part) throws MessagingException, IOException
+    public static Map<String, MimePart> getInlineMap(final Part part) throws Exception
     {
         Map<String, MimePart> map = new HashMap<>();
 
@@ -256,10 +251,9 @@ public final class MailUtils
      *
      * @param part {@link Part}, @see {@link Message}
      * @return {@link List}; ist niemals null
-     * @throws IOException Falls was schief geht.
-     * @throws MessagingException Falls was schief geht.
+     * @throws Exception Falls was schief geht.
      */
-    public static List<MimePart> getInlines(final Part part) throws MessagingException, IOException
+    public static List<MimePart> getInlines(final Part part) throws Exception
     {
         List<MimePart> bodyParts = new ArrayList<>();
 
@@ -292,10 +286,9 @@ public final class MailUtils
      *
      * @param part {@link Part}, @see {@link Message}
      * @return long
-     * @throws IOException Falls was schief geht.
-     * @throws MessagingException Falls was schief geht.
+     * @throws Exception Falls was schief geht.
      */
-    public static long getSizeOfAllParts(final Part part) throws MessagingException, IOException
+    public static long getSizeOfAllParts(final Part part) throws Exception
     {
         long size = part.getSize();
 
@@ -325,10 +318,9 @@ public final class MailUtils
      *
      * @param part {@link Part}, @see {@link Message}
      * @return {@link List}; ist niemals null
-     * @throws IOException Falls was schief geht.
-     * @throws MessagingException Falls was schief geht.
+     * @throws Exception Falls was schief geht.
      */
-    public static DataSource getTextDataSource(final Part part) throws MessagingException, IOException
+    public static DataSource getTextDataSource(final Part part) throws Exception
     {
         List<DataSource> dataSources = getTextDataSources(part);
 
@@ -348,10 +340,9 @@ public final class MailUtils
      *
      * @param part {@link Part}, @see {@link Message}
      * @return {@link List}; ist niemals null
-     * @throws IOException Falls was schief geht.
-     * @throws MessagingException Falls was schief geht.
+     * @throws Exception Falls was schief geht.
      */
-    public static List<DataSource> getTextDataSources(final Part part) throws MessagingException, IOException
+    public static List<DataSource> getTextDataSources(final Part part) throws Exception
     {
         List<DataSource> dataSources = new ArrayList<>();
 
@@ -386,10 +377,9 @@ public final class MailUtils
      *
      * @param part {@link Part}, @see {@link Message}
      * @return {@link List}; ist niemals null
-     * @throws IOException Falls was schief geht.
-     * @throws MessagingException Falls was schief geht.
+     * @throws Exception Falls was schief geht..
      */
-    public static List<AbstractTextPart> getTextParts(final Part part) throws MessagingException, IOException
+    public static List<AbstractTextPart> getTextParts(final Part part) throws Exception
     {
         List<AbstractTextPart> textParts = new ArrayList<>();
 

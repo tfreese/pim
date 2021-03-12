@@ -2,9 +2,7 @@
 package de.freese.pim.common.model.mail;
 
 import java.util.Map;
-
 import javax.activation.DataSource;
-
 import de.freese.pim.common.model.mail.datasource.AttachmentDataSource;
 import de.freese.pim.common.model.mail.datasource.InlineDataSource;
 import de.freese.pim.common.model.mail.datasource.MessageDataSource;

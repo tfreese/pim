@@ -31,7 +31,7 @@ import javax.mail.internet.MimeUtility;
  *
  * @author Thomas Freese
  */
-public class JavaMailBuilder
+public final class JavaMailBuilder
 {
     /**
      * @param session {@link Session}
@@ -260,10 +260,9 @@ public class JavaMailBuilder
      * @param bcc String
      * @param personal String
      * @return {@link JavaMailBuilder}
-     * @throws MessagingException Falls was schief geht.
-     * @throws UnsupportedEncodingException Falls was schief geht.
+     * @throws Exception Falls was schief geht.
      */
-    public JavaMailBuilder bcc(final String bcc, final String personal) throws MessagingException, UnsupportedEncodingException
+    public JavaMailBuilder bcc(final String bcc, final String personal) throws Exception
     {
         Objects.requireNonNull(bcc, () -> "BCC address must not be null");
 
@@ -471,10 +470,9 @@ public class JavaMailBuilder
      * @param cc String
      * @param personal String
      * @return {@link JavaMailBuilder}
-     * @throws MessagingException Falls was schief geht.
-     * @throws UnsupportedEncodingException Falls was schief geht.
+     * @throws Exception Falls was schief geht.
      */
-    public JavaMailBuilder cc(final String cc, final String personal) throws MessagingException, UnsupportedEncodingException
+    public JavaMailBuilder cc(final String cc, final String personal) throws Exception
     {
         Objects.requireNonNull(cc, () -> "CC address must not be null");
 
@@ -489,7 +487,7 @@ public class JavaMailBuilder
      * @param name String
      * @return {@link DataSource}
      */
-    protected DataSource createDataSource(final InputStream inputStream, final String contentType, final String name)
+    private DataSource createDataSource(final InputStream inputStream, final String contentType, final String name)
     {
         return new DataSource()
         {
@@ -565,10 +563,9 @@ public class JavaMailBuilder
      * @param from String
      * @param personal String
      * @return {@link JavaMailBuilder}
-     * @throws MessagingException Falls was schief geht.
-     * @throws UnsupportedEncodingException Falls was schief geht.
+     * @throws Exception Falls was schief geht.
      */
-    public JavaMailBuilder from(final String from, final String personal) throws MessagingException, UnsupportedEncodingException
+    public JavaMailBuilder from(final String from, final String personal) throws Exception
     {
         Objects.requireNonNull(from, "From address must not be null");
 
@@ -580,7 +577,7 @@ public class JavaMailBuilder
     /**
      * @return String
      */
-    protected String getCharset()
+    private String getCharset()
     {
         return this.charset;
     }
@@ -588,7 +585,7 @@ public class JavaMailBuilder
     /**
      * @return {@link FileTypeMap}
      */
-    protected FileTypeMap getFileTypeMap()
+    private FileTypeMap getFileTypeMap()
     {
         return this.fileTypeMap;
     }
@@ -596,7 +593,7 @@ public class JavaMailBuilder
     /**
      * @return {@link Session}
      */
-    protected Session getSession()
+    private Session getSession()
     {
         return this.session;
     }
@@ -678,7 +675,7 @@ public class JavaMailBuilder
      * @return {@link InternetAddress}
      * @throws MessagingException Falls was schief geht.
      */
-    protected InternetAddress parseAddress(final String address) throws MessagingException
+    private InternetAddress parseAddress(final String address) throws MessagingException
     {
         InternetAddress[] parsed = InternetAddress.parse(address);
 
@@ -714,9 +711,8 @@ public class JavaMailBuilder
      * @param text String
      * @param isHTML boolean
      * @return {@link JavaMailBuilder}
-     * @throws MessagingException Falls was schief geht.
      */
-    public JavaMailBuilder text(final String text, final boolean isHTML) throws MessagingException
+    public JavaMailBuilder text(final String text, final boolean isHTML)
     {
         this.text = Objects.requireNonNull(text, "Text must not be null");
         this.isHTML = isHTML;
@@ -777,10 +773,9 @@ public class JavaMailBuilder
      * @param to String
      * @param personal String
      * @return {@link JavaMailBuilder}
-     * @throws MessagingException Falls was schief geht.
-     * @throws UnsupportedEncodingException Falls was schief geht.
+     * @throws Exception Falls was schief geht.
      */
-    public JavaMailBuilder to(final String to, final String personal) throws MessagingException, UnsupportedEncodingException
+    public JavaMailBuilder to(final String to, final String personal) throws Exception
     {
         Objects.requireNonNull(to, "To address must not be null");
 
@@ -800,7 +795,7 @@ public class JavaMailBuilder
      * @throws AddressException if validation failed
      * @see javax.mail.internet.InternetAddress#validate()
      */
-    protected void validateAddress(final InternetAddress address) throws AddressException
+    private void validateAddress(final InternetAddress address) throws AddressException
     {
         if (this.validateAddresses)
         {

@@ -24,14 +24,6 @@ public class DefaultAddressBookService extends AbstractService implements Addres
     private AddressBookDAO addressBookDAO;
 
     /**
-     * Erzeugt eine neue Instanz von {@link DefaultAddressBookService}
-     */
-    public DefaultAddressBookService()
-    {
-        super();
-    }
-
-    /**
      * @see de.freese.pim.server.addressbook.dao.AddressBookDAO#backup(java.nio.file.Path)
      */
     @Override

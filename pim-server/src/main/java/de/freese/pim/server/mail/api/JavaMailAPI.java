@@ -53,6 +53,7 @@ public class JavaMailAPI extends AbstractMailAPI
      * @author Thomas Freese
      * @param <T> Konkreter Return-Typ
      */
+    @FunctionalInterface
     private interface FolderCallback<T>
     {
         /**

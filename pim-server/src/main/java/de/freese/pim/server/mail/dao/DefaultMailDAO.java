@@ -591,7 +591,7 @@ public class DefaultMailDAO extends AbstractDAO implements MailDAO
             ps.setBoolean(12, mail.isSeen());
         });
 
-        return Stream.of(affectedRows).flatMapToInt(af -> IntStream.of(af)).toArray();
+        return Stream.of(affectedRows).flatMapToInt(IntStream::of).toArray();
 
         // }
         // catch (Exception ex)

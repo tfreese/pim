@@ -39,7 +39,7 @@ import de.freese.pim.server.addressbook.model.KontaktAttribut;
  *
  * @author Thomas Freese
  */
-public class PIMAddressbookConsole
+public final class PIMAddressbookConsole
 {
     /**
     *
@@ -49,7 +49,7 @@ public class PIMAddressbookConsole
     /**
      *
      */
-    public static PrintStream PRINT_STREAM = System.out;
+    public static final PrintStream PRINT_STREAM = System.out;
 
     /**
      * Liefert die möglichen Optionen der Kommandozeile.<br>

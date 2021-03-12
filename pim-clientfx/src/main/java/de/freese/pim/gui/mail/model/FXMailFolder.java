@@ -347,8 +347,8 @@ public class FXMailFolder
 
         nameProperty().set(name);
 
-        Predicate<String> predicate = n -> "send".equals(n);
-        predicate = predicate.or(n -> "sent".equals(n));
+        Predicate<String> predicate = "send"::equals;
+        predicate = predicate.or("sent"::equals);
         predicate = predicate.or(n -> n.startsWith("gesendet"));
 
         isSendFolderProperty().set(predicate.test(name.toLowerCase()));

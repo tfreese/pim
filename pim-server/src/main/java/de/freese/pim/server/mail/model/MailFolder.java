@@ -157,8 +157,8 @@ public class MailFolder
     {
         this.name = name;
 
-        Predicate<String> predicate = n -> "send".equals(n);
-        predicate = predicate.or(n -> "sent".equals(n));
+        Predicate<String> predicate = "send"::equals;
+        predicate = predicate.or("sent"::equals);
         predicate = predicate.or(n -> n.startsWith("gesendet"));
 
         this.sendFolder = predicate.test(name.toLowerCase());

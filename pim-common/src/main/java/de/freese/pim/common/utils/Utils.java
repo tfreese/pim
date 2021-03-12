@@ -87,7 +87,7 @@ public final class Utils
     /**
     *
     */
-    public static final Predicate<Path> PREDICATE_MAIL_FOLDER_LEAF = p -> p.getFileName().toString().equals(".leaf");
+    public static final Predicate<Path> PREDICATE_MAIL_FOLDER_LEAF = p -> ".leaf".equals(p.getFileName().toString());
 
     /**
     *
