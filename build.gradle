@@ -58,15 +58,10 @@ project("pim-server") {
         testImplementation("org.springframework.boot:spring-boot-starter-test")
         testImplementation("org.jsoup:jsoup")
     }
-
-    //Für Placeholder in *.properties
-    ext.artifactId = project.name
-
-    // Start: gradle bootRun
+    // Start: gradle bootRun --args="--spring.profiles.active=dev"
     bootJar {
         mainClass = "de.freese.pim.server.PIMServerApplication"
     }
-    
     // gradle bootRun --args="--spring.profiles.active=Server,HsqldbEmbeddedServer --server.port=65111"
     bootRun {
         args = [
@@ -74,7 +69,10 @@ project("pim-server") {
         	, "--server.port=65111"
         ]
 	}
-
+	    
+    //Für Placeholder in *.properties
+    ext.artifactId = project.name
+    
     processResources {
         // inputs.property("project.artifactId", project.name)
         // inputs.property("project.description", project.description)
@@ -111,20 +109,19 @@ project("pim-clientfx") {
             modules = ["javafx.controls", "javafx.fxml", "javafx.web"]
         }
     }
-
-    //Für Placeholder in *.properties
-    ext.artifactId = project.name
-
+    // Start: gradle bootRun --args="--spring.profiles.active=dev"
     bootJar {
         mainClass = "de.freese.pim.gui.PIMLauncher"
-    }
-    
+    }    
     // gradle bootRun --args="--spring.profiles.active=ClientStandalone,HsqldbEmbeddedServer"
     bootRun {
         args = [
         	  "--spring.profiles.active=ClientStandalone,HsqldbEmbeddedServer"
         ]
-	}    
+	} 
+	
+    //Für Placeholder in *.properties
+    ext.artifactId = project.name
 
     // bootRun benutzt sonst nur die Resourcen in src/main/resources
     processResources {
