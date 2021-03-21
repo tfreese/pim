@@ -38,13 +38,6 @@ public class PIMCommonConfig
     // */
     // @Resource
     // private ExecutorService executorService = null;
-    /**
-     * Erzeugt eine neue Instanz von {@link PIMCommonConfig}
-     */
-    public PIMCommonConfig()
-    {
-        super();
-    }
 
     // /**
     // * @return

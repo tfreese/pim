@@ -49,14 +49,6 @@ public class ServerConfig extends WebMvcConfigurationSupport // implements WebMv
     private ObjectMapper jsonMapper;
 
     /**
-     * Erzeugt eine neue Instanz von {@link ServerConfig}
-     */
-    public ServerConfig()
-    {
-        super();
-    }
-
-    /**
      * @see org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport#configureAsyncSupport(org.springframework.web.servlet.config.annotation.AsyncSupportConfigurer)
      */
     @Override
