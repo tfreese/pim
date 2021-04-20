@@ -5,11 +5,16 @@ package de.freese.pim.server.mail;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
+
 import javax.annotation.Resource;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
@@ -20,6 +25,7 @@ import org.springframework.test.annotation.Commit;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
+
 import de.freese.pim.common.model.mail.InternetAddress;
 import de.freese.pim.common.model.mail.MailPort;
 import de.freese.pim.server.mail.dao.MailDAO;
@@ -306,12 +312,15 @@ class TestMailDAO
         Assertions.assertNotNull(mails);
         Assertions.assertEquals(1, mails.size());
 
+        Date dateExpectedReceived = Timestamp.from(LocalDateTime.of(2017, 02, 03, 15, 00).atZone(ZoneId.systemDefault()).toInstant());
+        Date dateExpectedSend = Timestamp.from(LocalDateTime.of(2017, 02, 03, 15, 01).atZone(ZoneId.systemDefault()).toInstant());
+
         Mail mail = mails.get(0);
         Assertions.assertEquals("a@a.aa", mail.getFrom().getAddress());
         Assertions.assertEquals(1, mail.getMsgNum());
-        Assertions.assertEquals(java.util.Date.from(LocalDateTime.of(2017, 02, 03, 15, 00).atZone(ZoneId.systemDefault()).toInstant()), mail.getReceivedDate());
+        Assertions.assertEquals(dateExpectedReceived, mail.getReceivedDate());
         Assertions.assertFalse(mail.isSeen());
-        Assertions.assertEquals(java.util.Date.from(LocalDateTime.of(2017, 02, 03, 15, 01).atZone(ZoneId.systemDefault()).toInstant()), mail.getSendDate());
+        Assertions.assertEquals(dateExpectedSend, mail.getSendDate());
         Assertions.assertEquals(13, mail.getSize());
         Assertions.assertEquals("-TEST-", mail.getSubject());
         Assertions.assertEquals("b@b.bb", mail.getTo()[0].getAddress());

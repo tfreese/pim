@@ -8,21 +8,24 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.sql.Clob;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
+
 import javax.mail.internet.AddressException;
+
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
+
 import de.freese.pim.common.model.mail.InternetAddress;
 import de.freese.pim.common.model.mail.MailPort;
 import de.freese.pim.common.utils.Crypt;
@@ -565,8 +568,8 @@ public class DefaultMailDAO extends AbstractDAO implements MailDAO
             String to = Optional.ofNullable(mail.getTo()).map(InternetAddress::toString).orElse(null);
             String cc = Optional.ofNullable(mail.getCc()).map(InternetAddress::toString).orElse(null);
             String bcc = Optional.ofNullable(mail.getBcc()).map(InternetAddress::toString).orElse(null);
-            Date reveicedDate = Optional.ofNullable(mail.getReceivedDate()).map(rd -> new Date(rd.getTime())).orElse(null);
-            Date sendDate = Optional.ofNullable(mail.getSendDate()).map(rd -> new Date(rd.getTime())).orElse(null);
+            Timestamp reveicedTimestamp = Optional.ofNullable(mail.getReceivedDate()).map(rd -> new Timestamp(rd.getTime())).orElse(null);
+            Timestamp sendTimestamp = Optional.ofNullable(mail.getSendDate()).map(rd -> new Timestamp(rd.getTime())).orElse(null);
 
             Clob clobTo = ps.getConnection().createClob();
             clobTo.setString(1, StringUtils.defaultString(to, ""));
@@ -584,8 +587,8 @@ public class DefaultMailDAO extends AbstractDAO implements MailDAO
             ps.setClob(5, clobTo);
             ps.setClob(6, clobCc);
             ps.setClob(7, clobBcc);
-            ps.setDate(8, reveicedDate);
-            ps.setDate(9, sendDate);
+            ps.setTimestamp(8, reveicedTimestamp);
+            ps.setTimestamp(9, sendTimestamp);
             ps.setString(10, mail.getSubject());
             ps.setInt(11, mail.getSize());
             ps.setBoolean(12, mail.isSeen());
