@@ -1,7 +1,7 @@
 // Tasks im SubModul ausführen: gradle MODUL:clean build
 
 subprojects {
-    apply plugin: 'java'
+    apply plugin: "java"
     apply plugin: "io.spring.dependency-management"
 
     dependencyManagement {
