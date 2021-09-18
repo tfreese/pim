@@ -11,14 +11,14 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
+
 import javax.activation.DataSource;
 import javax.mail.Message;
 import javax.mail.Multipart;
 import javax.mail.Part;
 import javax.mail.internet.MimePart;
 import javax.mail.internet.MimeUtility;
-import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.ArrayUtils;
+
 import de.freese.pim.common.model.mail.InternetAddress;
 
 /**
@@ -156,7 +156,9 @@ public final class MailUtils
      * Value = {@link MimePart}<br>
      *
      * @param part {@link Part}, @see {@link Message}
+     *
      * @return {@link Map}; ist niemals null
+     *
      * @throws Exception Falls was schief geht.
      */
     public static Map<String, MimePart> getAttachmentMap(final Part part) throws Exception
@@ -180,7 +182,9 @@ public final class MailUtils
      * Liefert alle vorhandenen Attachments-MimeParts einer {@link Message}.
      *
      * @param part {@link Part}, @see {@link Message}
+     *
      * @return {@link List}; ist niemals null
+     *
      * @throws Exception Falls was schief geht.
      */
     public static List<MimePart> getAttachments(final Part part) throws Exception
@@ -201,7 +205,7 @@ public final class MailUtils
 
                 List<MimePart> list = getAttachments(bp);
 
-                if (CollectionUtils.isNotEmpty(list))
+                if ((list != null) && !list.isEmpty())
                 {
                     bodyParts.addAll(list);
                 }
@@ -217,7 +221,9 @@ public final class MailUtils
      * Value = {@link MimePart}<br>
      *
      * @param part {@link Part}, @see {@link Message}
+     *
      * @return {@link Map}; ist niemals null
+     *
      * @throws Exception Falls was schief geht.
      */
     public static Map<String, MimePart> getInlineMap(final Part part) throws Exception
@@ -230,7 +236,7 @@ public final class MailUtils
         {
             String[] contentIDs = Optional.ofNullable(inline.getHeader(HEADER_CONTENT_ID)).orElse(null);
 
-            if (ArrayUtils.isEmpty(contentIDs))
+            if ((contentIDs == null) || (contentIDs.length == 0))
             {
                 continue;
             }
@@ -250,7 +256,9 @@ public final class MailUtils
      * Liefert alle vorhandenen Inline-MimeParts einer {@link Message}.
      *
      * @param part {@link Part}, @see {@link Message}
+     *
      * @return {@link List}; ist niemals null
+     *
      * @throws Exception Falls was schief geht.
      */
     public static List<MimePart> getInlines(final Part part) throws Exception
@@ -271,7 +279,7 @@ public final class MailUtils
 
                 List<MimePart> list = getInlines(bp);
 
-                if (CollectionUtils.isNotEmpty(list))
+                if ((list != null) && !list.isEmpty())
                 {
                     bodyParts.addAll(list);
                 }
@@ -285,7 +293,9 @@ public final class MailUtils
      * Liefert die Gesamtgröße aller einzelnen Parts.
      *
      * @param part {@link Part}, @see {@link Message}
+     *
      * @return long
+     *
      * @throws Exception Falls was schief geht.
      */
     public static long getSizeOfAllParts(final Part part) throws Exception
@@ -317,7 +327,9 @@ public final class MailUtils
      * Dabei wird zuerst nach HTML gesucht, dann nach Plain-Text.
      *
      * @param part {@link Part}, @see {@link Message}
+     *
      * @return {@link List}; ist niemals null
+     *
      * @throws Exception Falls was schief geht.
      */
     public static DataSource getTextDataSource(final Part part) throws Exception
@@ -339,7 +351,9 @@ public final class MailUtils
      * Liefert alle vorhandenen Text-DataSources (text/plain, text/html) einer {@link Message}.
      *
      * @param part {@link Part}, @see {@link Message}
+     *
      * @return {@link List}; ist niemals null
+     *
      * @throws Exception Falls was schief geht.
      */
     public static List<DataSource> getTextDataSources(final Part part) throws Exception
@@ -362,7 +376,7 @@ public final class MailUtils
 
                 List<DataSource> ds = getTextDataSources(bp);
 
-                if (CollectionUtils.isNotEmpty(ds))
+                if ((ds != null) && !ds.isEmpty())
                 {
                     dataSources.addAll(ds);
                 }
@@ -376,7 +390,9 @@ public final class MailUtils
      * Liefert alle vorhandenen Text-Parts (text/plain, text/html) einer {@link Message}.
      *
      * @param part {@link Part}, @see {@link Message}
+     *
      * @return {@link List}; ist niemals null
+     *
      * @throws Exception Falls was schief geht..
      */
     public static List<AbstractTextPart> getTextParts(final Part part) throws Exception
@@ -411,7 +427,7 @@ public final class MailUtils
 
                 List<AbstractTextPart> tp = getTextParts(bp);
 
-                if (CollectionUtils.isNotEmpty(tp))
+                if ((tp != null) && !tp.isEmpty())
                 {
                     textParts.addAll(tp);
                 }
@@ -423,6 +439,7 @@ public final class MailUtils
 
     /**
      * @param address {@link javax.mail.internet.InternetAddress}
+     *
      * @return {@link InternetAddress}
      */
     public static InternetAddress map(final javax.mail.internet.InternetAddress address)
@@ -438,6 +455,7 @@ public final class MailUtils
 
     /**
      * @param addresses {@link javax.mail.internet.InternetAddress}[]
+     *
      * @return {@link InternetAddress}[]
      */
     public static InternetAddress[] map(final javax.mail.internet.InternetAddress[] addresses)

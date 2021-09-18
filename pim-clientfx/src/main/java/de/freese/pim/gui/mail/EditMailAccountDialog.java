@@ -3,7 +3,7 @@ package de.freese.pim.gui.mail;
 
 import java.util.Optional;
 import java.util.ResourceBundle;
-import org.apache.commons.lang3.StringUtils;
+
 import de.freese.pim.common.model.mail.MailPort;
 import de.freese.pim.common.model.mail.MailProvider;
 import de.freese.pim.common.utils.Utils;
@@ -107,6 +107,7 @@ public class EditMailAccountDialog
      *
      * @param mailService {@link FXMailService}
      * @param bundle {@link ResourceBundle}
+     *
      * @return {@link Optional}
      */
     public Optional<FXMailAccount> addAccount(final FXMailService mailService, final ResourceBundle bundle)
@@ -124,9 +125,7 @@ public class EditMailAccountDialog
     {
         StringBuilder message = new StringBuilder();
 
-        String mailRegEx = Utils.MAIL_REGEX;
-
-        if (!StringUtils.defaultIfBlank(this.mail.getText(), "").matches(mailRegEx))
+        if (!this.mail.getText().matches(Utils.MAIL_REGEX))
         {
             message.append(bundle.getString("mail.format.invalid")).append("\n");
         }
@@ -134,7 +133,7 @@ public class EditMailAccountDialog
         String pw1 = this.password1.getText();
         String pw2 = this.password2.getText();
 
-        if (StringUtils.isBlank(pw1))
+        if ((pw1 == null) || pw1.isBlank())
         {
             message.append(bundle.getString("passwoerter.nicht_ausgefuellt")).append("\n");
         }
@@ -167,6 +166,7 @@ public class EditMailAccountDialog
      * @param mailService {@link FXMailService}
      * @param bundle {@link ResourceBundle}
      * @param account {@link FXMailAccount}
+     *
      * @return {@link Optional}
      */
     public Optional<FXMailAccount> editAccount(final FXMailService mailService, final ResourceBundle bundle, final FXMailAccount account)
@@ -182,6 +182,7 @@ public class EditMailAccountDialog
      * @param account {@link FXMailAccount}
      * @param titleKey String
      * @param imageStyleClass String
+     *
      * @return {@link Optional}
      */
     private Optional<FXMailAccount> openDialog(final FXMailService mailService, final ResourceBundle bundle, final FXMailAccount account, final String titleKey,

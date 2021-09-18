@@ -11,10 +11,11 @@ import java.nio.file.Path;
 import java.security.Key;
 import java.util.Base64;
 import java.util.Objects;
+
 import javax.crypto.Cipher;
 import javax.crypto.CipherOutputStream;
 import javax.crypto.spec.IvParameterSpec;
-import org.apache.commons.lang3.StringUtils;
+
 import de.freese.pim.common.PIMException;
 
 /**
@@ -43,7 +44,7 @@ public class Crypt
      * 16bit<br>
      * AES Initialisierungsvektor, muss dem Empfänger bekannt sein !
      */
-    private static final byte[] INIT_VECTOR = new byte[]
+    private static final byte[] INIT_VECTOR =
     {
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
     };
@@ -80,6 +81,7 @@ public class Crypt
 
     /**
      * @param input Verschlüsselter {@link InputStream}, dieser wird geschlossen.
+     *
      * @return Entschlüsselter {@link InputStream}
      */
     public InputStream decrypt(final InputStream input)
@@ -127,11 +129,12 @@ public class Crypt
 
     /**
      * @param input Verschlüsselter String
+     *
      * @return Klartext
      */
     public String decrypt(final String input)
     {
-        if (StringUtils.isBlank(input))
+        if ((input == null) || input.isBlank())
         {
             return null;
         }
@@ -161,6 +164,7 @@ public class Crypt
 
     /**
      * @param input Der {@link InputStream} wird geschlossen.
+     *
      * @return Entschlüsselter {@link InputStream}
      */
     public InputStream encrypt(final InputStream input)
@@ -203,11 +207,12 @@ public class Crypt
 
     /**
      * @param input Klartext
+     *
      * @return Verschlüsselter String
      */
     public String encrypt(final String input)
     {
-        if (StringUtils.isBlank(input))
+        if ((input == null) || input.isBlank())
         {
             return null;
         }
@@ -247,6 +252,7 @@ public class Crypt
      * Liefert den {@link OutputStream} zum verschlüsseln.
      *
      * @param output {@link OutputStream}
+     *
      * @return {@link OutputStream}
      */
     public OutputStream getCipherOutputStream(final OutputStream output)

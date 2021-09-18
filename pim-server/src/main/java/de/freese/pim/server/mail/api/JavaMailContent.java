@@ -12,8 +12,6 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimePart;
 import javax.mail.internet.MimeUtility;
 
-import org.apache.commons.lang3.StringUtils;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import de.freese.pim.common.model.mail.DefaultMailContent;
@@ -72,6 +70,7 @@ public class JavaMailContent extends DefaultMailContent
      * Erzeugt eine neue Instanz von {@link JavaMailContent}
      *
      * @param message {@link MimeMessage}
+     *
      * @throws Exception Falls was schief geht.
      */
     public JavaMailContent(final MimeMessage message) throws Exception
@@ -84,6 +83,7 @@ public class JavaMailContent extends DefaultMailContent
      *
      * @param message {@link MimeMessage}
      * @param monitor {@link IOMonitor}
+     *
      * @throws Exception Falls was schief geht.
      */
     public JavaMailContent(final MimeMessage message, final IOMonitor monitor) throws Exception
@@ -103,12 +103,12 @@ public class JavaMailContent extends DefaultMailContent
         ContentType ct = new ContentType(messageDataSource.getContentType());
         setMessageContentType(ct.getBaseType().toLowerCase());
 
-        if (StringUtils.isBlank(encoding))
+        if ((encoding == null) || encoding.isBlank())
         {
             encoding = MimeUtility.javaCharset(ct.getParameter("charset"));
         }
 
-        if (StringUtils.isBlank(encoding))
+        if ((encoding == null) || encoding.isBlank())
         {
             encoding = "UTF-8";
         }

@@ -1,9 +1,6 @@
 // Created: 29.11.2016
 package de.freese.pim.common.utils;
 
-import static org.apache.commons.lang3.StringUtils.isEmpty;
-import static org.apache.commons.lang3.StringUtils.isNotBlank;
-import static org.apache.commons.lang3.StringUtils.rightPad;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.lang.annotation.Annotation;
@@ -29,8 +26,10 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import de.freese.pim.common.function.ExceptionalRunnable;
 import de.freese.pim.common.function.ExceptionalSupplier;
 
@@ -110,7 +109,7 @@ public final class Utils
     @SuppressWarnings("unchecked")
     public static <T extends CharSequence> void addHeaderSeparator(final List<T[]> rows, final String separator)
     {
-        if ((rows == null) || rows.isEmpty() || isEmpty(separator))
+        if ((rows == null) || rows.isEmpty() || (separator == null) || separator.isEmpty())
         {
             return;
         }
@@ -125,7 +124,7 @@ public final class Utils
 
         for (int column = 0; column < columnCount; column++)
         {
-            row[column] = org.apache.commons.lang3.StringUtils.repeat(separator, rows.get(0)[column].length());
+            row[column] = separator.repeat(rows.get(0)[column].length());
         }
 
         rows.add(1, (T[]) row);
@@ -135,6 +134,7 @@ public final class Utils
      * Löscht das Verzeichnis rekursiv inklusive Dateien und Unterverzeichnisse.
      *
      * @param path {@link Path}
+     *
      * @throws IOException Falls was schief geht.
      */
     public static void deleteDirectoryRecursiv(final Path path) throws IOException
@@ -194,6 +194,7 @@ public final class Utils
      *
      * @param <R> Konkreter Return-Typ
      * @param supplier {@link ExceptionalSupplier}
+     *
      * @return Object
      */
     public static <R> R executeSafely(final ExceptionalSupplier<R, ?> supplier)
@@ -217,6 +218,7 @@ public final class Utils
      *
      * @param object Object
      * @param annotation Class
+     *
      * @return {@link Set}
      */
     public static Set<Field> getAnnotatedFields(final Object object, final Class<? extends Annotation> annotation)
@@ -235,15 +237,16 @@ public final class Utils
      * Liefert die eigentliche {@link Exception}, falls diese z.b. noch in einer {@link RuntimeException} verpackt ist.
      *
      * @param exception {@link Exception}
+     *
      * @return {@link Exception}
      */
     public static Exception getCause(final Exception exception)
     {
         Throwable th = exception;
 
-        if (exception instanceof RuntimeException)
+        if (exception instanceof RuntimeException rex)
         {
-            th = ((RuntimeException) exception).getCause();
+            th = rex.getCause();
         }
 
         return (Exception) th;
@@ -298,7 +301,9 @@ public final class Utils
      * @param bean Object
      * @param name String
      * @param parameterTypes Class[]
+     *
      * @return {@link Method}
+     *
      * @throws RuntimeException Falls was schief geht.
      */
     public static Method getMethod(final Object bean, final String name, final Class<?>...parameterTypes) throws RuntimeException
@@ -318,6 +323,7 @@ public final class Utils
      * Liefert den nächsten nicht belegten Port.
      *
      * @param fallbackPort int; Falls die Port-Ermittlung fehlschlägt
+     *
      * @return int
      */
     public static int getNextFreePort(final int fallbackPort)
@@ -356,7 +362,9 @@ public final class Utils
      *
      * @param field {@link Field}
      * @param bean Object
+     *
      * @return Object
+     *
      * @throws RuntimeException Falls was schief geht.
      */
     public static Object getValue(final Field field, final Object bean) throws RuntimeException
@@ -378,6 +386,7 @@ public final class Utils
      * @param method {@link Method}
      * @param bean Object
      * @param args Object[]
+     *
      * @return Object
      */
     public static Object invokeMethod(final Method method, final Object bean, final Object...args)
@@ -401,12 +410,13 @@ public final class Utils
      * @param <T> Konkreter Typ
      * @param rows {@link List}
      * @param padding String
+     *
      * @see #write(List, PrintStream, String)
      */
     @SuppressWarnings("unchecked")
     public static <T extends CharSequence> void padding(final List<T[]> rows, final String padding)
     {
-        if ((rows == null) || rows.isEmpty() || isEmpty(padding))
+        if ((rows == null) || rows.isEmpty() || (padding == null) || padding.isEmpty())
         {
             return;
         }
@@ -431,7 +441,7 @@ public final class Utils
         rows.stream().parallel().forEach(r -> {
             for (int column = 0; column < columnCount; column++)
             {
-                String value = rightPad(r[column].toString(), columnWidth[column], padding);
+                String value = String.format("%-" + columnWidth[column] + "s", r[column].toString()).replace(" ", padding);
 
                 r[column] = (T) value;
             }
@@ -499,7 +509,9 @@ public final class Utils
      * Wenn das ResultSet einen Typ != ResultSet.TYPE_FORWARD_ONLY besitzt, wird {@link ResultSet#first()} aufgerufen und kann weiter verwendet werden.
      *
      * @param resultSet {@link ResultSet}
+     *
      * @return {@link List}
+     *
      * @throws SQLException Falls was schief geht.
      */
     @SuppressWarnings("resource")
@@ -550,6 +562,7 @@ public final class Utils
      * @param rows {@link List}
      * @param ps {@link PrintStream}
      * @param delimiter String
+     *
      * @see #padding(List, String)
      */
     @SuppressWarnings("resource")
@@ -571,7 +584,7 @@ public final class Utils
             {
                 ps.print(r[column]);
 
-                if ((column < (columnCount - 1)) && isNotBlank(delimiter))
+                if ((column < (columnCount - 1)) && (delimiter != null) && !delimiter.isBlank())
                 {
                     ps.print(delimiter);
                 }
@@ -591,6 +604,7 @@ public final class Utils
      *
      * @param resultSet {@link ResultSet}
      * @param ps {@link PrintStream}
+     *
      * @throws SQLException Falls was schief geht.
      */
     public static void write(final ResultSet resultSet, final PrintStream ps) throws SQLException

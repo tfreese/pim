@@ -14,6 +14,7 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -21,7 +22,6 @@ import java.util.stream.Stream;
 
 import javax.mail.internet.AddressException;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -50,14 +50,6 @@ public class DefaultMailDAO extends AbstractDAO implements MailDAO
      */
     private static class MailAccountRowMapper implements RowMapper<MailAccount>
     {
-        /**
-         * Erzeugt eine neue Instanz von {@link MailAccountRowMapper}
-         */
-        public MailAccountRowMapper()
-        {
-            super();
-        }
-
         /**
          * @see org.springframework.jdbc.core.RowMapper#mapRow(java.sql.ResultSet, int)
          */
@@ -98,14 +90,6 @@ public class DefaultMailDAO extends AbstractDAO implements MailDAO
     private static class MailFolderRowMapper implements RowMapper<MailFolder>
     {
         /**
-         * Erzeugt eine neue Instanz von {@link MailFolderRowMapper}
-         */
-        public MailFolderRowMapper()
-        {
-            super();
-        }
-
-        /**
          * @see org.springframework.jdbc.core.RowMapper#mapRow(java.sql.ResultSet, int)
          */
         @Override
@@ -129,16 +113,10 @@ public class DefaultMailDAO extends AbstractDAO implements MailDAO
     private static class MailRowMapper implements RowMapper<Mail>
     {
         /**
-         * Erzeugt eine neue Instanz von {@link MailRowMapper}
-         */
-        public MailRowMapper()
-        {
-            super();
-        }
-
-        /**
          * @param clob {@link Clob}
+         *
          * @return String
+         *
          * @throws SQLException Falls was schief geht.
          * @throws IOException Falls was schief geht.
          */
@@ -228,34 +206,22 @@ public class DefaultMailDAO extends AbstractDAO implements MailDAO
 
         /**
          * @param value String
+         *
          * @return {@link InternetAddress}
+         *
          * @throws AddressException Falls was schief geht.
          */
         private InternetAddress[] parseInternetAddress(final String value) throws AddressException
         {
-            if (StringUtils.isBlank(value))
+            if ((value == null) || value.isBlank())
             {
                 return null;
             }
 
-            InternetAddress[] recipients = null;
-
-            if (StringUtils.isNotBlank(value))
-            {
-                recipients = MailUtils.map(javax.mail.internet.InternetAddress.parse(value));
-            }
+            InternetAddress[] recipients = MailUtils.map(javax.mail.internet.InternetAddress.parse(value));
 
             return recipients;
         }
-
-    }
-
-    /**
-     * Erstellt ein neues {@link DefaultMailDAO} Object.
-     */
-    public DefaultMailDAO()
-    {
-        super();
     }
 
     /**
@@ -572,13 +538,13 @@ public class DefaultMailDAO extends AbstractDAO implements MailDAO
             Timestamp sendTimestamp = Optional.ofNullable(mail.getSendDate()).map(rd -> new Timestamp(rd.getTime())).orElse(null);
 
             Clob clobTo = ps.getConnection().createClob();
-            clobTo.setString(1, StringUtils.defaultString(to, ""));
+            clobTo.setString(1, Objects.toString(to, ""));
 
             Clob clobCc = ps.getConnection().createClob();
-            clobCc.setString(1, StringUtils.defaultString(cc, ""));
+            clobCc.setString(1, Objects.toString(cc, ""));
 
             Clob clobBcc = ps.getConnection().createClob();
-            clobBcc.setString(1, StringUtils.defaultString(bcc, ""));
+            clobBcc.setString(1, Objects.toString(bcc, ""));
 
             ps.setLong(1, folderID);
             ps.setLong(2, mail.getUID());

@@ -1,14 +1,19 @@
 // Created: 25.01.2017
 package de.freese.pim.gui.mail;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Stream;
-import org.apache.commons.collections4.ListUtils;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.task.AsyncTaskExecutor;
+
 import de.freese.pim.common.spring.SpringContext;
 import de.freese.pim.gui.mail.model.FXMail;
 import de.freese.pim.gui.mail.model.FXMailAccount;
@@ -149,7 +154,7 @@ public class InitMailAPITask extends Task<List<FXMailFolder>>
     protected void loadMailsByParallelStream(final List<FXMailFolder> folders, final TreeView<Object> treeView)
     {
         // @formatter:off
-        try(Stream<FXMailFolder> stream =folders.parallelStream())
+        try(Stream<FXMailFolder> stream = folders.parallelStream())
         {
             stream.onClose(() -> Platform.runLater(treeView::refresh))
             .forEach(mf ->
@@ -179,8 +184,21 @@ public class InitMailAPITask extends Task<List<FXMailFolder>>
         AsyncTaskExecutor taskExecutor = SpringContext.getAsyncTaskExecutor();
 
         int partitionSize = Math.max(1, (folders.size() / 3) + 1); // Jeweils 3 Stores pro MailAPI.
-        // partitionSize = folders.size();
-        List<List<FXMailFolder>> partitions = ListUtils.partition(folders, partitionSize);
+
+        // List<List<FXMailFolder>> partitions = ListUtils.partition(folders, partitionSize);
+
+        // Nachteil: Die Reihenfolge der Elemente ist hinüber.
+        Map<Integer, List<FXMailFolder>> partitionMap = new HashMap<>();
+
+        for (int i = 0; i < folders.size(); i++)
+        {
+            FXMailFolder value = folders.get(i);
+            int indexToUse = i % partitionSize;
+
+            partitionMap.computeIfAbsent(indexToUse, key -> new ArrayList<>()).add(value);
+        }
+
+        Collection<List<FXMailFolder>> partitions = partitionMap.values();
 
         for (List<FXMailFolder> partition : partitions)
         {

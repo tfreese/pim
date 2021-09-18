@@ -8,11 +8,12 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.IntStream;
-import org.apache.commons.lang3.StringUtils;
+
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
+
 import de.freese.pim.common.utils.Utils;
 import de.freese.pim.server.addressbook.model.Kontakt;
 import de.freese.pim.server.dao.AbstractDAO;
@@ -57,7 +58,7 @@ public class DefaultAddressBookDAO extends AbstractDAO implements AddressBookDAO
             {
                 long id = rs.getLong("ID");
 
-                Kontakt kontakt = null;
+                final Kontakt kontakt;
 
                 if ((kontakte.isEmpty()) || (id != kontakte.get(kontakte.size() - 1).getID()))
                 {
@@ -71,7 +72,7 @@ public class DefaultAddressBookDAO extends AbstractDAO implements AddressBookDAO
 
                 String attribut = rs.getString("ATTRIBUT");
 
-                if (StringUtils.isNotBlank(attribut))
+                if ((attribut != null) && !attribut.isBlank())
                 {
                     kontakt.addAttribut(attribut, rs.getString("WERT"));
                 }

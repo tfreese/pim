@@ -10,6 +10,7 @@ import java.nio.file.Paths;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.ArrayList;
 import java.util.List;
+
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
@@ -17,7 +18,6 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.OptionGroup;
 import org.apache.commons.cli.Options;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
@@ -26,6 +26,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
+
 import de.freese.pim.common.utils.PreserveOrderOptionGroup;
 import de.freese.pim.common.utils.Utils;
 import de.freese.pim.server.addressbook.dao.AddressBookDAO;
@@ -112,6 +113,7 @@ public final class PIMAddressbookConsole
 
     /**
      * @param args String[]
+     *
      * @throws Exception Falls was schief geht.
      */
     public static void main(String[] args) throws Exception
@@ -466,7 +468,7 @@ public final class PIMAddressbookConsole
         kontakte.forEach(kontakt -> {
             rows.add(new String[]
             {
-                    Long.toString(kontakt.getID()), kontakt.getNachname(), kontakt.getVorname(), StringUtils.EMPTY, StringUtils.EMPTY
+                    Long.toString(kontakt.getID()), kontakt.getNachname(), kontakt.getVorname(), "", ""
             });
 
             List<KontaktAttribut> kontaktAttribute = kontakt.getAttribute();
@@ -483,9 +485,9 @@ public final class PIMAddressbookConsole
                     String[] row = new String[5];
                     rows.add(row);
 
-                    row[0] = StringUtils.EMPTY;
-                    row[1] = StringUtils.EMPTY;
-                    row[2] = StringUtils.EMPTY;
+                    row[0] = "";
+                    row[1] = "";
+                    row[2] = "";
                     row[3] = ka.getAttribut();
                     row[4] = ka.getWert();
                 });

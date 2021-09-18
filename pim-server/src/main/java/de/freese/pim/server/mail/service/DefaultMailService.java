@@ -2,6 +2,7 @@
 package de.freese.pim.server.mail.service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -10,9 +11,10 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+
 import javax.annotation.PreDestroy;
 import javax.annotation.Resource;
-import org.apache.commons.lang3.ArrayUtils;
+
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
@@ -20,6 +22,7 @@ import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import de.freese.pim.common.model.mail.MailContent;
 import de.freese.pim.common.service.AbstractService;
 import de.freese.pim.common.utils.io.IOMonitor;
@@ -42,19 +45,10 @@ public class DefaultMailService extends AbstractService implements MailService, 
      *
      */
     private BeanFactory beanFactory;
-
     /**
      *
      */
     private MailDAO mailDAO;
-
-    /**
-     * Erzeugt eine neue Instanz von {@link DefaultMailService}
-     */
-    public DefaultMailService()
-    {
-        super();
-    }
 
     /**
      * @see de.freese.pim.server.mail.service.MailService#connectAccount(de.freese.pim.server.mail.model.MailAccount)
@@ -141,9 +135,11 @@ public class DefaultMailService extends AbstractService implements MailService, 
     {
         getLogger().info("Disconnect Accounts");
 
-        long[] ids = accountIDs;
+        List<Long> ids = new ArrayList<>();
 
-        if (ids.length == 0)
+        Arrays.stream(accountIDs).forEach(ids::add);
+
+        if (ids.isEmpty())
         {
             // Alle schliessen.
             String[] mailAPINames = getApplicationContext().getBeanNamesForType(MailAPI.class);
@@ -152,7 +148,7 @@ public class DefaultMailService extends AbstractService implements MailService, 
             {
                 long accountID = Long.parseLong(mailAPIName.split("[-]")[1]);
 
-                ids = ArrayUtils.add(ids, accountID);
+                ids.add(accountID);
             }
         }
 
@@ -190,6 +186,7 @@ public class DefaultMailService extends AbstractService implements MailService, 
 
     /**
      * @param accountID long
+     *
      * @return String
      */
     private String getAccountBeanName(final long accountID)
@@ -223,6 +220,7 @@ public class DefaultMailService extends AbstractService implements MailService, 
 
     /**
      * @param accountID long
+     *
      * @return {@link MailAPI}
      */
     protected MailAPI getMailAPI(final long accountID)
@@ -394,6 +392,7 @@ public class DefaultMailService extends AbstractService implements MailService, 
 
     /**
      * @Valid
+     *
      * @see de.freese.pim.server.mail.service.MailService#test(de.freese.pim.server.mail.model.MailAccount)
      */
     @Override
@@ -427,6 +426,7 @@ public class DefaultMailService extends AbstractService implements MailService, 
 
     /**
      * @Valid
+     *
      * @see de.freese.pim.server.mail.service.MailService#updateAccount(de.freese.pim.server.mail.model.MailAccount)
      */
     @Override

@@ -17,9 +17,10 @@ import java.util.StringTokenizer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
-import org.apache.commons.lang3.StringUtils;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 // import com.sun.javafx.binding.StringFormatter;
 import de.freese.pim.common.utils.Utils;
 import de.freese.pim.gui.PIMApplication;
@@ -233,6 +234,7 @@ public final class FXUtils
     /**
      * @param bean Object
      * @param method String
+     *
      * @return {@link JavaBeanLongProperty}
      */
     public static JavaBeanLongProperty createLongProperty(final Object bean, final String method)
@@ -251,6 +253,7 @@ public final class FXUtils
     /**
      * @param bean Object
      * @param method String
+     *
      * @return {@link JavaBeanStringProperty}
      */
     public static JavaBeanStringProperty createStringProperty(final Object bean, final String method)
@@ -272,6 +275,7 @@ public final class FXUtils
      *
      * @param progress double; 0-1
      * @param colors {@link Color}[]; min. 2 Farben
+     *
      * @return int[], RGB
      */
     public static int[] getProgressRGB(final double progress, final Color...colors)
@@ -294,9 +298,9 @@ public final class FXUtils
             };
         }
 
-        int r = 0;
-        int g = 0;
-        int b = 0;
+        int r;
+        int g;
+        int b;
 
         final double segment = (colors.length - 1) * progress;
         final int step = (int) segment;
@@ -406,12 +410,7 @@ public final class FXUtils
                 int colTable = pasteCellPosition.getColumn() + colClipboard;
 
                 // skip if we reached the end of the table
-                if (rowTable >= table.getItems().size())
-                {
-                    continue;
-                }
-
-                if (colTable >= table.getColumns().size())
+                if ((rowTable >= table.getItems().size()) || (colTable >= table.getColumns().size()))
                 {
                     continue;
                 }
@@ -512,6 +511,7 @@ public final class FXUtils
      *
      * @param <T> Konkreter Typ des Values
      * @param converter {@link Function}
+     *
      * @return {@link ObservableValue}<String>
      */
     public static <T> StringConverter<T> toStringConverter(final Function<T, String> converter)
@@ -611,7 +611,7 @@ public final class FXUtils
             return;
         }
 
-        if (StringUtils.startsWith(tooltip.getText(), "%"))
+        if (tooltip.getText().startsWith("%"))
         {
             tooltip.setText(resources.getString(tooltip.getText().substring(1)));
         }
@@ -623,7 +623,7 @@ public final class FXUtils
      */
     public static void translate(final Labeled labeled, final ResourceBundle resources)
     {
-        if (StringUtils.startsWith(labeled.getText(), "%"))
+        if (labeled.getText().startsWith("%"))
         {
             labeled.setText(resources.getString(labeled.getText().substring(1)));
         }
@@ -637,7 +637,7 @@ public final class FXUtils
      */
     public static void translate(final TableColumnBase<?, ?> tableColumn, final ResourceBundle resources)
     {
-        if (StringUtils.startsWith(tableColumn.getText(), "%"))
+        if (tableColumn.getText().startsWith("%"))
         {
             tableColumn.setText(resources.getString(tableColumn.getText().substring(1)));
         }
@@ -649,7 +649,7 @@ public final class FXUtils
      */
     public static void translate(final Text text, final ResourceBundle resources)
     {
-        if (StringUtils.startsWith(text.getText(), "%"))
+        if (text.getText().startsWith("%"))
         {
             text.setText(resources.getString(text.getText().substring(1)));
         }

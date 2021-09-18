@@ -17,6 +17,7 @@ import java.util.Optional;
 import java.util.Properties;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
 import javax.mail.Authenticator;
 import javax.mail.FetchProfile;
 import javax.mail.Flags;
@@ -32,7 +33,7 @@ import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.search.FlagTerm;
 import javax.mail.search.SearchTerm;
-import org.apache.commons.lang3.StringUtils;
+
 import org.jsoup.Jsoup;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
@@ -44,8 +45,10 @@ import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.boot.test.context.SpringBootTest;
+
 import com.sun.mail.imap.IMAPFolder;
 import com.sun.mail.util.ASCIIUtility;
+
 import de.freese.pim.common.function.FunctionStripNotLetter;
 import de.freese.pim.common.model.mail.MailContent;
 import de.freese.pim.server.mail.api.JavaMailContent;
@@ -318,7 +321,7 @@ class TestReceiveMail extends AbstractMailTest
                             .filter(t -> !t.matches(linkRegEx)) // URLs entfernen
                             .filter(t -> !t.matches(mailRegEx)) // Mails entfernen
                             .map(FunctionStripNotLetter.INSTANCE)
-                            .filter(StringUtils::isNotBlank)
+                            .filter(s -> !s.isBlank())
                             //.peek(t -> System.out.println(Thread.currentThread().getName()))
                             .distinct()
                             .collect(Collectors.toList());

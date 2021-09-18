@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Properties;
+
 import javax.mail.AuthenticationFailedException;
 import javax.mail.Authenticator;
 import javax.mail.MessagingException;
@@ -15,7 +16,6 @@ import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.MimeMessage;
-import org.apache.commons.lang3.StringUtils;
 
 /**
  * Siehe org.springframework.mail.javamail.JavaMailSenderImpl
@@ -101,29 +101,24 @@ public class JavaMailSender
     private Session session;
 
     /**
-     * Erzeugt eine neue Instanz von {@link JavaMailSender}
-     */
-    public JavaMailSender()
-    {
-        super();
-    }
-
-    /**
      * Obtain and connect a Transport from the underlying JavaMail Session, passing in the specified host, port, username, and password.
      *
      * @return the connected Transport object
+     *
      * @throws MessagingException if the connect attempt failed
+     *
      * @see #getTransport
      * @see #getHost()
      * @see #getPort()
      * @see #getUsername()
      * @see #getPassword()
+     *
      * @since 4.1.2
      */
     protected Transport connectTransport() throws MessagingException
     {
-        String username = Optional.ofNullable(getUsername()).filter(StringUtils::isNotBlank).orElse(null);
-        String password = Optional.ofNullable(getPassword()).filter(StringUtils::isNotBlank).orElse(null);
+        String username = Optional.ofNullable(getUsername()).filter(s -> !s.isBlank()).orElse(null);
+        String password = Optional.ofNullable(getPassword()).filter(s -> !s.isBlank()).orElse(null);
 
         Transport transport = getTransport(getSession());
         transport.connect(getHost(), getPort(), username, password);
@@ -137,6 +132,7 @@ public class JavaMailSender
      * @param mimeMessages MimeMessage objects to send
      * @param originalMessages corresponding original message objects that the MimeMessages have been created from (with same array length and indices as the
      *            "mimeMessages" array), if any
+     *
      * @throws Exception Falls was schief geht.
      */
     protected void doSend(final MimeMessage[] mimeMessages, final Object[] originalMessages) throws Exception
@@ -308,8 +304,11 @@ public class JavaMailSender
      * Obtain a Transport object from the given JavaMail Session, using the configured protocol.
      *
      * @param session {@link Session}
+     *
      * @return {@link Transport}
+     *
      * @throws NoSuchProviderException Falls was schief geht.
+     *
      * @see javax.mail.Session#getTransport(String)
      * @see #getSession()
      * @see #getProtocol()
@@ -341,6 +340,7 @@ public class JavaMailSender
 
     /**
      * @param mimeMessages {@link MimeMessage}[]
+     *
      * @throws Exception Falls was schief geht.
      */
     public void send(final MimeMessage...mimeMessages) throws Exception

@@ -1,7 +1,6 @@
 // Created: 13.12.2016
 package de.freese.pim.gui.addressbook;
 
-import org.apache.commons.lang3.StringUtils;
 import de.freese.pim.gui.addressbook.model.FXKontakt;
 import de.freese.pim.gui.view.View;
 import javafx.beans.property.StringProperty;
@@ -210,6 +209,7 @@ public class ContactView implements View
 
     /**
      * @param propertyKontaktFilter {@link StringProperty}
+     *
      * @return {@link TableView}
      */
     private TableView<FXKontakt> createTableViewKontakt(final StringProperty propertyKontaktFilter)
@@ -250,14 +250,14 @@ public class ContactView implements View
 
         // Filter-Textfeld mit FilteredList verbinden.
         propertyKontaktFilter.addListener((observable, oldValue, newValue) -> filteredData.setPredicate(kontakt -> {
-            if (StringUtils.isBlank(newValue))
+            if ((newValue == null) || newValue.isBlank())
             {
                 return true;
             }
 
             String text = kontakt.getNachname() + " " + kontakt.getVorname();
 
-            if (StringUtils.containsIgnoreCase(text, newValue))
+            if (text.equalsIgnoreCase(newValue))
             {
                 return true;
             }

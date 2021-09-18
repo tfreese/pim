@@ -5,9 +5,7 @@ import java.net.URL;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.tuple.MutablePair;
-import org.apache.commons.lang3.tuple.Pair;
+
 import de.freese.pim.common.spring.SpringContext;
 import de.freese.pim.gui.addressbook.model.FXKontakt;
 import de.freese.pim.gui.addressbook.service.FXAddressbookService;
@@ -36,6 +34,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.util.Pair;
 
 /**
  * Controller des Addressbuchs.
@@ -137,6 +136,7 @@ public class ContactController extends AbstractController
      * @param imageStyleClass String
      * @param kontakt {@link FXKontakt}
      * @param resources {@link ResourceBundle}
+     *
      * @return {@link java.awt.Dialog}
      */
     private Dialog<Pair<String, String>> createAddEditKontaktDialog(final String titleKey, final String textKey, final String imageStyleClass,
@@ -177,7 +177,7 @@ public class ContactController extends AbstractController
 
         Node okButton = dialog.getDialogPane().lookupButton(ButtonType.OK);
 
-        if (StringUtils.isBlank(nachname.getText()))
+        if ((nachname.getText() == null) || nachname.getText().isBlank())
         {
             okButton.setDisable(true);
         }
@@ -198,7 +198,7 @@ public class ContactController extends AbstractController
         dialog.setResultConverter(buttonType -> {
             if (buttonType == ButtonType.OK)
             {
-                return new MutablePair<>(nachname.getText(), vorname.getText());
+                return new Pair<>(nachname.getText(), vorname.getText());
             }
 
             return null;
@@ -272,7 +272,7 @@ public class ContactController extends AbstractController
             result.ifPresent(pair -> {
                 try
                 {
-                    FXKontakt kontakt = new FXKontakt(pair.getLeft(), StringUtils.defaultIfBlank(pair.getRight(), null));
+                    FXKontakt kontakt = new FXKontakt(pair.getKey(), pair.getValue());
 
                     getAddressbookService().insertKontakt(kontakt);
 
@@ -297,8 +297,8 @@ public class ContactController extends AbstractController
             result.ifPresent(pair -> {
                 try
                 {
-                    String nachname = pair.getLeft();
-                    String vorname = StringUtils.defaultIfBlank(pair.getRight(), null);
+                    String nachname = pair.getKey();
+                    String vorname = pair.getValue();
 
                     getAddressbookService().updateKontakt(this.selectedKontakt.getValue().getID(), nachname, vorname);
 
