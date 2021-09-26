@@ -43,64 +43,46 @@ public class EditMailAccountDialog
      *
      */
     private ListView<FXMailFolder> aboView = new ListView<>();
-
     /**
      *
      */
     private Button buttonTest = new Button("Test");
-
     /**
      *
      */
     private TextField imapHost = new TextField();
-
     /**
      *
      */
     private ComboBox<MailPort> imapPort = new ComboBox<>();
-
     /**
      *
      */
     private Label labelTestResult = new Label();
-
     /**
      *
      */
     private TextField mail = new TextField();
-
     /**
      *
      */
     private PasswordField password1 = new PasswordField();
-
     /**
      *
      */
     private PasswordField password2 = new PasswordField();
-
     /**
      *
      */
     private ComboBox<MailProvider> provider = new ComboBox<>();
-
     /**
      *
      */
     private TextField smtpHost = new TextField();
-
     /**
      *
      */
     private ComboBox<MailPort> smtpPort = new ComboBox<>();
-
-    /**
-     * Erzeugt eine neue Instanz von {@link EditMailAccountDialog}
-     */
-    public EditMailAccountDialog()
-    {
-        super();
-    }
 
     /**
      * Legt einen neuen MailAccount an.

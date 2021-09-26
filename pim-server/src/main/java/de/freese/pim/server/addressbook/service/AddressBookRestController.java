@@ -3,7 +3,9 @@ package de.freese.pim.server.addressbook.service;
 
 import java.nio.file.Path;
 import java.util.List;
+
 import javax.annotation.Resource;
+
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
 import de.freese.pim.common.service.AbstractRemoteService;
 import de.freese.pim.server.addressbook.model.Kontakt;
 
@@ -27,14 +30,6 @@ public class AddressBookRestController extends AbstractRemoteService implements 
      *
      */
     private AddressBookService addressBookService;
-
-    /**
-     * Erzeugt eine neue Instanz von {@link AddressBookRestController}
-     */
-    public AddressBookRestController()
-    {
-        super();
-    }
 
     /**
      * @see de.freese.pim.server.addressbook.dao.AddressBookDAO#backup(java.nio.file.Path)

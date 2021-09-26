@@ -5,8 +5,11 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.Map;
 import java.util.stream.Collectors;
+
 import org.slf4j.LoggerFactory;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import de.freese.pim.common.model.mail.datasource.AttachmentDataSource;
 import de.freese.pim.common.model.mail.datasource.InlineDataSource;
 import de.freese.pim.common.model.mail.datasource.MessageDataSource;
@@ -22,40 +25,27 @@ public class DefaultMailContent implements MailContent
     *
     */
     private Map<String, AttachmentDataSource> attachmentMap;
-
     /**
      *
      */
     private String encoding;
-
     /**
      *
      */
     private Map<String, InlineDataSource> inlineMap;
-
     /**
     *
     */
     private MessageDataSource message;
-
     /**
      *
      */
     @JsonIgnore
     private transient String messageContent;
-
     /**
     *
     */
     private String messageContentType;
-
-    /**
-     * Erzeugt eine neue Instanz von {@link DefaultMailContent}
-     */
-    public DefaultMailContent()
-    {
-        super();
-    }
 
     /**
      * @see de.freese.pim.common.model.mail.MailContent#getAttachments()

@@ -5,11 +5,14 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import javax.annotation.Resource;
+
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+
 import de.freese.pim.gui.addressbook.model.FXKontakt;
 
 /**
@@ -28,14 +31,6 @@ public class DefaultRestFXAddressbookService extends AbstractFXAddressbookServic
     *
     */
     private RestTemplate restTemplate;
-
-    /**
-     * Erzeugt eine neue Instanz von {@link DefaultRestFXAddressbookService}
-     */
-    public DefaultRestFXAddressbookService()
-    {
-        super();
-    }
 
     /**
      * @see de.freese.pim.gui.addressbook.service.FXAddressbookService#deleteKontakt(long)

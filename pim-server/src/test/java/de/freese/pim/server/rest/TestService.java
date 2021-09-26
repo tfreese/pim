@@ -8,7 +8,9 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
+
 import javax.annotation.Resource;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.task.AsyncTaskExecutor;
@@ -35,6 +37,7 @@ import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBo
  **
  * @see ResponseBodyEmitter
  * @see StreamingResponseBody
+ *
  * @author Thomas Freese
  */
 @RestController
@@ -49,13 +52,12 @@ public class TestService
      *
      */
     private Logger logger = LoggerFactory.getLogger(TestService.class);
-
     /**
      * @see ThreadPoolTaskExecutor
      * @see ConcurrentTaskExecutor
      */
     @Resource
-    private AsyncTaskExecutor taskExecutor = null;
+    private AsyncTaskExecutor taskExecutor;
 
     /**
      * Läuft im ThreadPool "MvcAsync" des RequestMappingHandlerAdapter, wenn über {@link WebMvcConfigurationSupport} nicht anders konfiguriert.
@@ -152,6 +154,7 @@ public class TestService
      * http://localhost:61222/greeter/test/?name=World
      *
      * @param name String
+     *
      * @return {@link Map}
      */
     @GetMapping("/greeting")

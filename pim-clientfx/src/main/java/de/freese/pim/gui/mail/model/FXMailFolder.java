@@ -3,8 +3,10 @@ package de.freese.pim.gui.mail.model;
 
 import java.util.Comparator;
 import java.util.function.Predicate;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javafx.beans.binding.IntegerBinding;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.LongProperty;
@@ -29,62 +31,51 @@ public class FXMailFolder
      *
      */
     private final BooleanProperty abonniertProperty = new SimpleBooleanProperty(this, "abonniert", true);
-
     /**
     *
     */
     private LongProperty accountIDProperty = new SimpleLongProperty(this, "accountID", 0L);
-
     /**
      *
      */
     @JsonIgnore
     private final ObservableList<FXMailFolder> childs = FXCollections.observableArrayList();
-
     /**
     *
     */
     private final StringProperty fullNameProperty = new SimpleStringProperty(this, "fullName", null);
-
     /**
     *
     */
     private LongProperty idProperty = new SimpleLongProperty(this, "id", 0L);
-
     /**
      *
      */
     private BooleanProperty isSendFolderProperty = new SimpleBooleanProperty(this, "isSendFolder", false);
-
     /**
       *
       */
     @JsonIgnore
     private final ObservableList<FXMail> mails = FXCollections.observableArrayList();
-
     /**
      *
      */
     @JsonIgnore
     private final SortedList<FXMail> mailsSorted = new SortedList<>(this.mails);
-
     /**
     *
     */
     private final StringProperty nameProperty = new SimpleStringProperty(this, "name", null);
-
     /**
     *
     */
     @JsonIgnore
     private FXMailFolder parent;
-
     /**
     *
     */
     @JsonIgnore
     private IntegerBinding unreadMailsCount;
-
     /**
     *
     */

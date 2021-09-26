@@ -1,6 +1,4 @@
-/**
- * Created on 15.01.2017 14:48:49
- */
+// Created: 25.01.2017
 package de.freese.pim.gui.mail;
 
 import de.freese.pim.common.model.mail.InternetAddress;
@@ -10,18 +8,11 @@ import javafx.util.Callback;
 
 /**
  * @author Thomas Freese
+ *
  * @param <S> Konkreter Typ des Row-Objektes
  */
 public class InternetAddressCellFactory<S> implements Callback<TableColumn<S, InternetAddress[]>, TableCell<S, InternetAddress[]>>
 {
-    /**
-     * Erstellt ein neues Object.
-     */
-    public InternetAddressCellFactory()
-    {
-        super();
-    }
-
     /**
      * @see javafx.util.Callback#call(java.lang.Object)
      */

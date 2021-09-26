@@ -3,6 +3,7 @@ package de.freese.pim.gui.mail.model;
 
 import java.util.Objects;
 import java.util.stream.Stream;
+
 import javafx.beans.binding.IntegerBinding;
 import javafx.beans.property.BooleanProperty;
 import javafx.collections.ListChangeListener;
@@ -19,12 +20,10 @@ public class SumUnreadMailsBinding extends IntegerBinding
      * Listener that has to call rebinding in response of any change in observable list.
      */
     private final ListChangeListener<FXMail> BOUND_LIST_CHANGE_LISTENER = (final ListChangeListener.Change<? extends FXMail> change) -> refreshBinding();
-
     /**
      * Reference to our observable list.
      */
     private final ObservableList<FXMail> boundList;
-
     /**
      * Array of currently observed properties of elements of our list.
      */

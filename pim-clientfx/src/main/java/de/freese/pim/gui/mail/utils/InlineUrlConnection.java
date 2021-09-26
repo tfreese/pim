@@ -22,7 +22,6 @@ public class InlineUrlConnection extends URLConnection
      *
      */
     private final DataSource dataSource;
-
     /**
      *
      */
@@ -33,6 +32,7 @@ public class InlineUrlConnection extends URLConnection
      *
      * @param mailContent {@link MailContent}
      * @param url {@link URL}
+     *
      * @throws IOException Falls was schief geht.
      */
     public InlineUrlConnection(final MailContent mailContent, final URL url) throws IOException

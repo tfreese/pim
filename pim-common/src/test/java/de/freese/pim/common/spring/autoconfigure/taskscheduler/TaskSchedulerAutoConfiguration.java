@@ -1,4 +1,4 @@
-// Erzeugt: 02.03.2016
+// Created: 02.03.2016
 package de.freese.pim.common.spring.autoconfigure.taskscheduler;
 
 import java.util.concurrent.Executor;
@@ -42,26 +42,16 @@ public class TaskSchedulerAutoConfiguration
      *
      */
     private static final Logger LOGGER = LoggerFactory.getLogger(TaskSchedulerAutoConfiguration.class);
-
     /**
      *
      */
     @Resource
-    private ExecutorService executorService = null;
-
+    private ExecutorService executorService;
     /**
      *
      */
     @Resource
-    private ScheduledExecutorService scheduledExecutorService = null;
-
-    /**
-     * Erzeugt eine neue Instanz von {@link TaskSchedulerAutoConfiguration}
-     */
-    public TaskSchedulerAutoConfiguration()
-    {
-        super();
-    }
+    private ScheduledExecutorService scheduledExecutorService;
 
     /**
      * , "taskExecutor"

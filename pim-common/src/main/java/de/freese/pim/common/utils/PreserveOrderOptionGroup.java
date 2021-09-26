@@ -4,6 +4,7 @@ package de.freese.pim.common.utils;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
+
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.OptionGroup;
 
@@ -18,19 +19,10 @@ public class PreserveOrderOptionGroup extends OptionGroup
      *
      */
     private static final long serialVersionUID = 5453910230985427926L;
-
     /**
      *
      */
     private final Map<String, Option> optionMap = new LinkedHashMap<>();
-
-    /**
-     * Erzeugt eine neue Instanz von {@link PreserveOrderOptionGroup}
-     */
-    public PreserveOrderOptionGroup()
-    {
-        super();
-    }
 
     /**
      * @see org.apache.commons.cli.OptionGroup#addOption(org.apache.commons.cli.Option)

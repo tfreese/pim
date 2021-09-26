@@ -1,7 +1,4 @@
-/**
- * Created: 12.02.2017
- */
-
+// Created: 12.02.2017
 package de.freese.pim.common.spring.concurrent;
 
 import java.util.concurrent.BlockingQueue;
@@ -17,8 +14,8 @@ import org.springframework.scheduling.concurrent.ThreadPoolExecutorFactoryBean;
 import de.freese.pim.common.concurrent.TunedLinkedBlockingQueue;
 
 /**
- * Das Default-Verhalten eines {@link ThreadPoolExecutor} mit einer Bounded-Queue ist, dass erst neue Threads erzeugt werden, wenn die
- * corePoolSize erreicht und die Queue voll ist.<br>
+ * Das Default-Verhalten eines {@link ThreadPoolExecutor} mit einer Bounded-Queue ist, dass erst neue Threads erzeugt werden, wenn die corePoolSize erreicht und
+ * die Queue voll ist.<br>
  * Bei folgender Konfiguration
  *
  * <pre>
@@ -30,8 +27,8 @@ import de.freese.pim.common.concurrent.TunedLinkedBlockingQueue;
  * würden erst die Threads 4 - 10 erzeugt werden, wenn in der Queue 20 Tasks liegen.<br>
  * Somit läuft der ThreadPool immer nur mit 3 Threads und nicht mit max. 10 wie erwartet, wenn z.B. 11 Tasks bearbeitet werden müssen.<br>
  * <br>
- * Die Lösung ist, die Methode {@link LinkedBlockingQueue#offer(Object)} so zu implementieren, dass FALSE gelifert wird, wenn die
- * maximumPoolSize noch nicht erreicht ist.<br>
+ * Die Lösung ist, die Methode {@link LinkedBlockingQueue#offer(Object)} so zu implementieren, dass FALSE gelifert wird, wenn die maximumPoolSize noch nicht
+ * erreicht ist.<br>
  * Dies zwingt den {@link ThreadPoolExecutor} dazu neue Threads zu erzeugen, auch wenn die Queue nocht nicht voll ist.<br>
  * <br>
  *
@@ -45,23 +42,15 @@ public class TunedThreadPoolExecutorFactoryBean extends ThreadPoolExecutorFactor
     private static final long serialVersionUID = 4992566896817015389L;
 
     /**
-     * Erstellt ein neues {@link TunedThreadPoolExecutorFactoryBean} Object.
-     */
-    public TunedThreadPoolExecutorFactoryBean()
-    {
-        super();
-    }
-
-    /**
-     * @see org.springframework.scheduling.concurrent.ThreadPoolExecutorFactoryBean#createExecutor(int, int, int,
-     *      java.util.concurrent.BlockingQueue, java.util.concurrent.ThreadFactory, java.util.concurrent.RejectedExecutionHandler)
+     * @see org.springframework.scheduling.concurrent.ThreadPoolExecutorFactoryBean#createExecutor(int, int, int, java.util.concurrent.BlockingQueue,
+     *      java.util.concurrent.ThreadFactory, java.util.concurrent.RejectedExecutionHandler)
      */
     @Override
-    protected ThreadPoolExecutor createExecutor(final int corePoolSize, final int maxPoolSize, final int keepAliveSeconds,
-            final BlockingQueue<Runnable> queue, final ThreadFactory threadFactory, final RejectedExecutionHandler rejectedExecutionHandler)
+    protected ThreadPoolExecutor createExecutor(final int corePoolSize, final int maxPoolSize, final int keepAliveSeconds, final BlockingQueue<Runnable> queue,
+                                                final ThreadFactory threadFactory, final RejectedExecutionHandler rejectedExecutionHandler)
     {
-        ThreadPoolExecutor tpe = new ThreadPoolExecutor(corePoolSize, maxPoolSize, keepAliveSeconds, TimeUnit.SECONDS, queue, threadFactory,
-                rejectedExecutionHandler);
+        ThreadPoolExecutor tpe =
+                new ThreadPoolExecutor(corePoolSize, maxPoolSize, keepAliveSeconds, TimeUnit.SECONDS, queue, threadFactory, rejectedExecutionHandler);
 
         if (queue instanceof TunedLinkedBlockingQueue)
         {

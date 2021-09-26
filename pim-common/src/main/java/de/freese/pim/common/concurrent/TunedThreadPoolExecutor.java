@@ -1,7 +1,4 @@
-/**
- * Created: 12.02.2017
- */
-
+// Created: 12.02.2017
 package de.freese.pim.common.concurrent;
 
 import java.util.concurrent.Executors;

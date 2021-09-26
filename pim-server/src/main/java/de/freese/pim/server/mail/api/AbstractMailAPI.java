@@ -3,8 +3,10 @@ package de.freese.pim.server.mail.api;
 
 import java.util.Objects;
 import java.util.concurrent.Executor;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import de.freese.pim.server.mail.model.MailAccount;
 
 /**
@@ -18,12 +20,10 @@ public abstract class AbstractMailAPI implements MailAPI
      *
      */
     private final MailAccount account;
-
     /**
     *
     */
     private Executor executor;
-
     /**
     *
     */

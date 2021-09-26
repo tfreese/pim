@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
 import javax.activation.FileDataSource;
@@ -35,6 +36,7 @@ public final class JavaMailBuilder
 {
     /**
      * @param session {@link Session}
+     *
      * @return {@link JavaMailBuilder}
      */
     public static JavaMailBuilder create(final Session session)
@@ -47,6 +49,7 @@ public final class JavaMailBuilder
      * @param charset String
      * @param fileTypeMap {@link FileTypeMap}; optional, wird für Attachements benötigt
      * @param validateAddresses boolean
+     *
      * @return {@link JavaMailBuilder}
      */
     public static JavaMailBuilder create(final Session session, final String charset, final FileTypeMap fileTypeMap, final boolean validateAddresses)
@@ -58,67 +61,54 @@ public final class JavaMailBuilder
      *
      */
     private final List<MimeBodyPart> attachments = new ArrayList<>();
-
     /**
      *
      */
     private final String charset;
-
     /**
      *
      */
     private final FileTypeMap fileTypeMap;
-
     /**
      *
      */
     private InternetAddress from;
-
     /**
      *
      */
     private final List<MimeBodyPart> inlines = new ArrayList<>();
-
     /**
      *
      */
     private boolean isHTML;
-
     /**
      *
      */
     private String messageID;
-
     /**
-       *
-       */
+     *
+     */
     private final List<InternetAddress> recipientsBcc = new ArrayList<>();
-
     /**
     *
     */
     private final List<InternetAddress> recipientsCc = new ArrayList<>();
-
     /**
     *
     */
     private final List<InternetAddress> recipientsTo = new ArrayList<>();
-
     /**
      *
      */
     private final Session session;
-
     /**
      *
      */
     private String subject;
-
     /**
      *
      */
     private String text;
-
     /**
      *
      */
@@ -145,7 +135,9 @@ public final class JavaMailBuilder
     /**
      * @param attachmentFilename String
      * @param dataSource {@link DataSource}
+     *
      * @return {@link JavaMailBuilder}
+     *
      * @throws MessagingException Falls was schief geht.
      */
     public JavaMailBuilder attachment(final String attachmentFilename, final DataSource dataSource) throws MessagingException
@@ -173,7 +165,9 @@ public final class JavaMailBuilder
     /**
      * @param attachmentFilename String
      * @param file {@link File}
+     *
      * @return {@link JavaMailBuilder}
+     *
      * @throws MessagingException Falls was schief geht.
      */
     public JavaMailBuilder attachment(final String attachmentFilename, final File file) throws MessagingException
@@ -191,10 +185,11 @@ public final class JavaMailBuilder
     /**
      * @param attachmentFilename String
      * @param inputStream {@link InputStream}
+     *
      * @return {@link JavaMailBuilder}
+     *
      * @throws MessagingException Falls was schief geht.
      */
-    @SuppressWarnings("resource")
     public JavaMailBuilder attachment(final String attachmentFilename, final InputStream inputStream) throws MessagingException
     {
         Objects.requireNonNull(attachmentFilename, () -> "Attachment filename must not be null");
@@ -209,7 +204,9 @@ public final class JavaMailBuilder
 
     /**
      * @param bcc {@link InternetAddress}
+     *
      * @return {@link JavaMailBuilder}
+     *
      * @throws MessagingException Falls was schief geht.
      */
     public JavaMailBuilder bcc(final InternetAddress bcc) throws MessagingException
@@ -225,7 +222,9 @@ public final class JavaMailBuilder
 
     /**
      * @param bcc {@link InternetAddress}[]
+     *
      * @return {@link JavaMailBuilder}
+     *
      * @throws MessagingException Falls was schief geht.
      */
     public JavaMailBuilder bcc(final InternetAddress...bcc) throws MessagingException
@@ -244,7 +243,9 @@ public final class JavaMailBuilder
 
     /**
      * @param bcc String
+     *
      * @return {@link JavaMailBuilder}
+     *
      * @throws MessagingException Falls was schief geht.
      */
     public JavaMailBuilder bcc(final String bcc) throws MessagingException
@@ -259,7 +260,9 @@ public final class JavaMailBuilder
     /**
      * @param bcc String
      * @param personal String
+     *
      * @return {@link JavaMailBuilder}
+     *
      * @throws Exception Falls was schief geht.
      */
     public JavaMailBuilder bcc(final String bcc, final String personal) throws Exception
@@ -273,6 +276,7 @@ public final class JavaMailBuilder
 
     /**
      * @return {@link MimeMessage}
+     *
      * @throws MessagingException Falls was schief geht.
      */
     public MimeMessage build() throws MessagingException
@@ -282,7 +286,9 @@ public final class JavaMailBuilder
 
     /**
      * @param contentStream {@link InputStream}; Message Input Stream
+     *
      * @return {@link MimeMessage}
+     *
      * @throws MessagingException Falls was schief geht.
      */
     public MimeMessage build(final InputStream contentStream) throws MessagingException
@@ -394,6 +400,7 @@ public final class JavaMailBuilder
      * {@link JavaMailSender} wird benötigt.
      *
      * @param mailSender {@link JavaMailSender}
+     *
      * @throws Exception Falls was schief geht.
      */
     public void buildAndSend(final JavaMailSender mailSender) throws Exception
@@ -406,6 +413,7 @@ public final class JavaMailBuilder
      *
      * @param mailSender {@link JavaMailSender}
      * @param contentStream {@link InputStream}; Message Input Stream
+     *
      * @throws Exception Falls was schief geht.
      */
     public void buildAndSend(final JavaMailSender mailSender, final InputStream contentStream) throws Exception
@@ -419,7 +427,9 @@ public final class JavaMailBuilder
 
     /**
      * @param cc {@link InternetAddress}
+     *
      * @return {@link JavaMailBuilder}
+     *
      * @throws MessagingException Falls was schief geht.
      */
     public JavaMailBuilder cc(final InternetAddress cc) throws MessagingException
@@ -435,7 +445,9 @@ public final class JavaMailBuilder
 
     /**
      * @param cc {@link InternetAddress}[]
+     *
      * @return {@link JavaMailBuilder}
+     *
      * @throws MessagingException Falls was schief geht.
      */
     public JavaMailBuilder cc(final InternetAddress...cc) throws MessagingException
@@ -454,7 +466,9 @@ public final class JavaMailBuilder
 
     /**
      * @param cc String
+     *
      * @return {@link JavaMailBuilder}
+     *
      * @throws MessagingException Falls was schief geht.
      */
     public JavaMailBuilder cc(final String cc) throws MessagingException
@@ -469,7 +483,9 @@ public final class JavaMailBuilder
     /**
      * @param cc String
      * @param personal String
+     *
      * @return {@link JavaMailBuilder}
+     *
      * @throws Exception Falls was schief geht.
      */
     public JavaMailBuilder cc(final String cc, final String personal) throws Exception
@@ -485,6 +501,7 @@ public final class JavaMailBuilder
      * @param inputStream {@link InputStream}
      * @param contentType String
      * @param name String
+     *
      * @return {@link DataSource}
      */
     private DataSource createDataSource(final InputStream inputStream, final String contentType, final String name)
@@ -531,7 +548,9 @@ public final class JavaMailBuilder
 
     /**
      * @param from {@link InternetAddress}
+     *
      * @return {@link JavaMailBuilder}
+     *
      * @throws MessagingException Falls was schief geht.
      */
     public JavaMailBuilder from(final InternetAddress from) throws MessagingException
@@ -547,7 +566,9 @@ public final class JavaMailBuilder
 
     /**
      * @param from String
+     *
      * @return {@link JavaMailBuilder}
+     *
      * @throws MessagingException Falls was schief geht.
      */
     public JavaMailBuilder from(final String from) throws MessagingException
@@ -562,7 +583,9 @@ public final class JavaMailBuilder
     /**
      * @param from String
      * @param personal String
+     *
      * @return {@link JavaMailBuilder}
+     *
      * @throws Exception Falls was schief geht.
      */
     public JavaMailBuilder from(final String from, final String personal) throws Exception
@@ -601,7 +624,9 @@ public final class JavaMailBuilder
     /**
      * @param contentID String
      * @param dataSource {@link DataSource}
+     *
      * @return {@link JavaMailBuilder}
+     *
      * @throws MessagingException Falls was schief geht.
      */
     public JavaMailBuilder inline(final String contentID, final DataSource dataSource) throws MessagingException
@@ -624,7 +649,9 @@ public final class JavaMailBuilder
     /**
      * @param contentID String
      * @param file {@link File}
+     *
      * @return {@link JavaMailBuilder}
+     *
      * @throws MessagingException Falls was schief geht.
      */
     public JavaMailBuilder inline(final String contentID, final File file) throws MessagingException
@@ -643,10 +670,11 @@ public final class JavaMailBuilder
      * @param contentID String
      * @param inputStream {@link InputStream}
      * @param mimeType String
+     *
      * @return {@link JavaMailBuilder}
+     *
      * @throws MessagingException Falls was schief geht.
      */
-    @SuppressWarnings("resource")
     public JavaMailBuilder inline(final String contentID, final InputStream inputStream, final String mimeType) throws MessagingException
     {
         Objects.requireNonNull(contentID, "Content ID must not be null");
@@ -661,6 +689,7 @@ public final class JavaMailBuilder
 
     /**
      * @param messageID String
+     *
      * @return {@link JavaMailBuilder}
      */
     public JavaMailBuilder messageID(final String messageID)
@@ -672,7 +701,9 @@ public final class JavaMailBuilder
 
     /**
      * @param address String
+     *
      * @return {@link InternetAddress}
+     *
      * @throws MessagingException Falls was schief geht.
      */
     private InternetAddress parseAddress(final String address) throws MessagingException
@@ -698,6 +729,7 @@ public final class JavaMailBuilder
 
     /**
      * @param subject String
+     *
      * @return {@link JavaMailBuilder}
      */
     public JavaMailBuilder subject(final String subject)
@@ -710,6 +742,7 @@ public final class JavaMailBuilder
     /**
      * @param text String
      * @param isHTML boolean
+     *
      * @return {@link JavaMailBuilder}
      */
     public JavaMailBuilder text(final String text, final boolean isHTML)
@@ -722,7 +755,9 @@ public final class JavaMailBuilder
 
     /**
      * @param to {@link InternetAddress}
+     *
      * @return {@link JavaMailBuilder}
+     *
      * @throws MessagingException Falls was schief geht.
      */
     public JavaMailBuilder to(final InternetAddress to) throws MessagingException
@@ -738,7 +773,9 @@ public final class JavaMailBuilder
 
     /**
      * @param to {@link InternetAddress}[]
+     *
      * @return {@link JavaMailBuilder}
+     *
      * @throws MessagingException Falls was schief geht.
      */
     public JavaMailBuilder to(final InternetAddress...to) throws MessagingException
@@ -757,7 +794,9 @@ public final class JavaMailBuilder
 
     /**
      * @param to String
+     *
      * @return {@link JavaMailBuilder}
+     *
      * @throws MessagingException Falls was schief geht.
      */
     public JavaMailBuilder to(final String to) throws MessagingException
@@ -772,7 +811,9 @@ public final class JavaMailBuilder
     /**
      * @param to String
      * @param personal String
+     *
      * @return {@link JavaMailBuilder}
+     *
      * @throws Exception Falls was schief geht.
      */
     public JavaMailBuilder to(final String to, final String personal) throws Exception
@@ -792,7 +833,9 @@ public final class JavaMailBuilder
      * Note that this method will just work on JavaMail >= 1.3. You can override it for validation on older JavaMail versions or for custom validation.
      *
      * @param address the address to validate
+     *
      * @throws AddressException if validation failed
+     *
      * @see javax.mail.internet.InternetAddress#validate()
      */
     private void validateAddress(final InternetAddress address) throws AddressException

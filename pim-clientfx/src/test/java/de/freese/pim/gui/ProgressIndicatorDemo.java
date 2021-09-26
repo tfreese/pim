@@ -1,10 +1,8 @@
-/**
- * Created: 28.01.2017
- */
-
+// Created: 28.01.2017
 package de.freese.pim.gui;
 
 import java.util.concurrent.ForkJoinPool;
+
 import de.freese.pim.gui.utils.FXUtils;
 import javafx.application.Application;
 import javafx.beans.binding.Bindings;
@@ -34,6 +32,7 @@ public class ProgressIndicatorDemo extends Application
      * Verschiedene Farben.
      *
      * @param progress 0-1
+     *
      * @return int[], RGB
      */
     int[] getRGB_1(final double progress)
@@ -111,12 +110,13 @@ public class ProgressIndicatorDemo extends Application
      * Von Rot nach Grün
      *
      * @param progress 0-1
+     *
      * @return int[], RGB
      */
     int[] getRGB_2(final double progress)
     {
-        int r = 0;
-        int g = 0;
+        int r;
+        int g;
         int b = 0;
 
         g = (int) (progress * 255);
@@ -132,13 +132,14 @@ public class ProgressIndicatorDemo extends Application
      * Von Rot nach Grün
      *
      * @param progress 0-1
+     *
      * @return int[], RGB
      */
     int[] getRGB_3(final double progress)
     {
-        int r = 0;
-        int g = 0;
-        int b = 0;
+        int r;
+        int g;
+        int b;
 
         Color color = Color.RED.interpolate(Color.GREEN, progress);
         r = (int) (color.getRed() * 255);

@@ -2,6 +2,7 @@
 package de.freese.pim.server.mail.service;
 
 import java.util.List;
+
 import de.freese.pim.common.model.mail.MailContent;
 import de.freese.pim.common.utils.io.IOMonitor;
 import de.freese.pim.server.mail.api.MailAPI;
@@ -21,54 +22,58 @@ public interface MailService
      *
      * @param account {@link MailAccount}
      */
-    public void connectAccount(MailAccount account);
+    void connectAccount(MailAccount account);
 
     /**
      * Löschen eines {@link MailAccount}.<br>
      *
      * @param accountID long
+     *
      * @return int; affectedRows
      */
-    public int deleteAccount(long accountID);
+    int deleteAccount(long accountID);
 
     /**
      * Schliessen der MailAPI-Verbindung der MailAccounts.
      *
      * @param accountIDs long[]
      */
-    public void disconnectAccounts(long...accountIDs);
+    void disconnectAccounts(long...accountIDs);
 
     /**
      * Liefert alle MailAccounts, sortiert nach MAIL.
      *
      * @return {@link List}
      */
-    public List<MailAccount> getMailAccounts();
+    List<MailAccount> getMailAccounts();
 
     /**
      * Anlegen eines neuen {@link MailAccount}.<br>
      *
      * @param account {@link MailAccount}
+     *
      * @return long; PrimaryKey
      */
-    public long insertAccount(MailAccount account);
+    long insertAccount(MailAccount account);
 
     /**
      * Anlegen von {@link MailFolder}.<br>
      *
      * @param accountID long
      * @param folders {@link List}
+     *
      * @return long[]; PrimaryKeys
      */
-    public long[] insertFolder(long accountID, List<MailFolder> folders);
+    long[] insertFolder(long accountID, List<MailFolder> folders);
 
     /**
      * Lädt die Folder des Accounts.
      *
      * @param accountID long
+     *
      * @return {@link List}
      */
-    public List<MailFolder> loadFolder(long accountID);
+    List<MailFolder> loadFolder(long accountID);
 
     /**
      * Liefert den Inhalt der Mail.<br>
@@ -78,9 +83,10 @@ public interface MailService
      * @param folderFullName String
      * @param mailUID long
      * @param monitor {@link IOMonitor}, optional
+     *
      * @return {@link MailContent}
      */
-    public MailContent loadMailContent(long accountID, String folderFullName, long mailUID, IOMonitor monitor);
+    MailContent loadMailContent(long accountID, String folderFullName, long mailUID, IOMonitor monitor);
 
     /**
      * Lädt die Mails des Folders vom Provider und aus der DB.
@@ -88,32 +94,36 @@ public interface MailService
      * @param accountID long
      * @param folderID long
      * @param folderFullName String
+     *
      * @return {@link List}
      */
-    public List<Mail> loadMails(long accountID, long folderID, String folderFullName);
+    List<Mail> loadMails(long accountID, long folderID, String folderFullName);
 
     /**
      * Testet die Verbindung zu einem MailAccount und liefert bei Erfolg dessen Ordner.
      *
      * @param account {@link MailAccount}
+     *
      * @return {@link List}
      */
-    public List<MailFolder> test(MailAccount account);
+    List<MailFolder> test(MailAccount account);
 
     /**
      * Ändern eines {@link MailAccount}.
      *
      * @param account {@link MailAccount}
+     *
      * @return int; affectedRows
      */
-    public int updateAccount(MailAccount account);
+    int updateAccount(MailAccount account);
 
     /**
      * Ändern von {@link MailFolder}.
      *
      * @param accountID long
      * @param folders {@link List}
+     *
      * @return int[]; affectedRows
      */
-    public int[] updateFolder(long accountID, List<MailFolder> folders);
+    int[] updateFolder(long accountID, List<MailFolder> folders);
 }

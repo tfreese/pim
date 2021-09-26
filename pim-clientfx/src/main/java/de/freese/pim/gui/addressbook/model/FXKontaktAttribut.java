@@ -20,24 +20,14 @@ public class FXKontaktAttribut implements Comparable<FXKontaktAttribut>
     *
     */
     private final StringProperty attributProperty = new SimpleStringProperty(this, "attribut", null);
-
     /**
     *
     */
     private final LongProperty kontaktIDProperty = new SimpleLongProperty(this, "kontaktID", 0);
-
     /**
     *
     */
     private final StringProperty wertProperty = new SimpleStringProperty(this, "wert", null);
-
-    /**
-     * Erzeugt eine neue Instanz von {@link FXKontaktAttribut}
-     */
-    public FXKontaktAttribut()
-    {
-        super();
-    }
 
     /**
      * @return {@link StringProperty}
@@ -58,12 +48,7 @@ public class FXKontaktAttribut implements Comparable<FXKontaktAttribut>
             return 0;
         }
 
-        int comp = 0;
-
-        if (comp == 0)
-        {
-            comp = getAttribut().compareTo(ka.getAttribut());
-        }
+        int comp = getAttribut().compareTo(ka.getAttribut());
 
         if (comp == 0)
         {

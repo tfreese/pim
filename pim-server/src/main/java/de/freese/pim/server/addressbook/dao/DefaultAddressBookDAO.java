@@ -39,14 +39,6 @@ public class DefaultAddressBookDAO extends AbstractDAO implements AddressBookDAO
         private final RowMapper<Kontakt> kontaktRowMapper = new KontaktRowMapper();
 
         /**
-         * Erzeugt eine neue Instanz von {@link KontaktDetailsResultSetExtractor}
-         */
-        public KontaktDetailsResultSetExtractor()
-        {
-            super();
-        }
-
-        /**
          * @see org.springframework.jdbc.core.ResultSetExtractor#extractData(java.sql.ResultSet)
          */
         @Override
@@ -90,14 +82,6 @@ public class DefaultAddressBookDAO extends AbstractDAO implements AddressBookDAO
     private static class KontaktRowMapper implements RowMapper<Kontakt>
     {
         /**
-         * Erzeugt eine neue Instanz von {@link KontaktRowMapper}
-         */
-        public KontaktRowMapper()
-        {
-            super();
-        }
-
-        /**
          * @see org.springframework.jdbc.core.RowMapper#mapRow(java.sql.ResultSet, int)
          */
         @Override
@@ -111,14 +95,6 @@ public class DefaultAddressBookDAO extends AbstractDAO implements AddressBookDAO
 
             return kontakt;
         }
-    }
-
-    /**
-     * Erzeugt eine neue Instanz von {@link DefaultAddressBookDAO}
-     */
-    public DefaultAddressBookDAO()
-    {
-        super();
     }
 
     /**

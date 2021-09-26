@@ -1,6 +1,4 @@
-/**
- * Created: 30.12.2016
- */
+// Created: 30.12.2016
 package de.freese.pim.server.mail;
 
 import java.io.InputStream;
@@ -8,8 +6,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Properties;
+
 import org.junit.runners.Parameterized.Parameter;
 import org.junit.runners.Parameterized.Parameters;
+
 import de.freese.pim.common.model.mail.MailPort;
 import de.freese.pim.common.model.mail.MailProvider;
 import de.freese.pim.server.AbstractPimTest;
@@ -25,22 +25,18 @@ public abstract class AbstractMailTest extends AbstractPimTest
      *
      */
     protected static final Boolean DEBUG = Boolean.FALSE;
-
     /**
      *
      */
     public static final String MAIL_IMAP_HOST = getMailProvider().getImapHost();
-
     /**
      *
      */
     public static final MailPort MAIL_IMAP_PORT = getMailProvider().getImapPort();
-
     /**
      *
      */
     public static final String MAIL_SMPT_HOST = getMailProvider().getSmtpHost();
-
     /**
      *
      */
@@ -48,6 +44,7 @@ public abstract class AbstractMailTest extends AbstractPimTest
 
     /**
      * @return {@link Iterable}
+     *
      * @throws Exception Falls was schief geht.
      */
     @Parameters(name = "Account: {0}") // {index}
@@ -91,25 +88,15 @@ public abstract class AbstractMailTest extends AbstractPimTest
      *
      */
     @Parameter(value = 0)
-    public String from = null;
-
+    public String from;
     /**
      *
      */
     @Parameter(value = 2)
     public String password;
-
     /**
      *
      */
     @Parameter(value = 1)
     public String to;
-
-    /**
-     * Erstellt ein neues {@link AbstractMailTest} Object.
-     */
-    protected AbstractMailTest()
-    {
-        super();
-    }
 }

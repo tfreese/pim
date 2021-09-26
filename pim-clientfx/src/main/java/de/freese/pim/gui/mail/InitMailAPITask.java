@@ -36,12 +36,10 @@ public class InitMailAPITask extends Task<List<FXMailFolder>>
      *
      */
     public static final Logger LOGGER = LoggerFactory.getLogger(InitMailAPITask.class);
-
     /**
      *
      */
     private final FXMailAccount account;
-
     /**
      *
      */

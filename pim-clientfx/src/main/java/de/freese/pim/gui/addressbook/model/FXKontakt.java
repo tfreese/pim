@@ -1,6 +1,8 @@
 // Created: 30.05.2016
 package de.freese.pim.gui.addressbook.model;
 
+import java.util.Objects;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -26,27 +28,22 @@ public class FXKontakt implements Comparable<FXKontakt>
      */
     @JsonIgnore
     private final ObservableList<FXKontaktAttribut> attribute = FXCollections.observableArrayList();
-
     /**
      *
      */
     private final LongProperty idProperty = new SimpleLongProperty(this, "id", 0);
-
     /**
      *
      */
     private final StringProperty nachnameProperty = new SimpleStringProperty(this, "nachname", null);
-
     // /**
     // *
     // */
     // private final transient PropertyChangeSupport pcs = new PropertyChangeSupport(this);
-
     /**
      *
      */
     private final StringExpression toStringExpression;
-
     /**
      *
      */
@@ -77,6 +74,27 @@ public class FXKontakt implements Comparable<FXKontakt>
     }
 
     /**
+     * @param attribut {@link FXKontaktAttribut}
+     */
+    private void addAttribut(final FXKontaktAttribut attribut)
+    {
+        if (getAttribute().contains(attribut))
+        {
+            throw new RuntimeException("Attribut bereits vorhanden");
+        }
+
+        getAttribute().add(attribut);
+    }
+
+    // /**
+    // * @param listener {@link PropertyChangeListener}
+    // */
+    // public void addPropertyChangeListener(final PropertyChangeListener listener)
+    // {
+    // this.pcs.addPropertyChangeListener(listener);
+    // }
+
+    /**
      * @param attribut String
      * @param wert String
      */
@@ -90,14 +108,6 @@ public class FXKontakt implements Comparable<FXKontakt>
         addAttribut(ka);
     }
 
-    // /**
-    // * @param listener {@link PropertyChangeListener}
-    // */
-    // public void addPropertyChangeListener(final PropertyChangeListener listener)
-    // {
-    // this.pcs.addPropertyChangeListener(listener);
-    // }
-
     /**
      * @see java.lang.Comparable#compareTo(java.lang.Object)
      */
@@ -109,12 +119,7 @@ public class FXKontakt implements Comparable<FXKontakt>
             return 0;
         }
 
-        int comp = 0;
-
-        if (comp == 0)
-        {
-            comp = getNachname().compareTo(k.getNachname());
-        }
+        int comp = getNachname().compareTo(k.getNachname());
 
         if (comp == 0)
         {
@@ -135,48 +140,13 @@ public class FXKontakt implements Comparable<FXKontakt>
             return true;
         }
 
-        if (obj == null)
+        if (!(obj instanceof FXKontakt other))
         {
             return false;
         }
 
-        if (!(obj instanceof FXKontakt))
-        {
-            return false;
-        }
-
-        FXKontakt other = (FXKontakt) obj;
-
-        if (getID() != getID())
-        {
-            return false;
-        }
-
-        if (getNachname() == null)
-        {
-            if (other.getNachname() != null)
-            {
-                return false;
-            }
-        }
-        else if (!getNachname().equals(other.getNachname()))
-        {
-            return false;
-        }
-
-        if (getVorname() == null)
-        {
-            if (getVorname() != null)
-            {
-                return false;
-            }
-        }
-        else if (!getVorname().equals(getVorname()))
-        {
-            return false;
-        }
-
-        return true;
+        return Objects.equals(getAttribute(), other.getAttribute()) && Objects.equals(getID(), other.getID())
+                && Objects.equals(getNachname(), other.getNachname()) && Objects.equals(getVorname(), other.getVorname());
     }
 
     /**
@@ -219,15 +189,7 @@ public class FXKontakt implements Comparable<FXKontakt>
     @Override
     public int hashCode()
     {
-        final int prime = 31;
-        int result = 1;
-
-        result = (prime * result) + ((getAttribute() == null) ? 0 : getAttribute().hashCode());
-        result = (prime * result) + (int) (getID() ^ (getID() >>> 32));
-        result = (prime * result) + ((getNachname() == null) ? 0 : getNachname().hashCode());
-        result = (prime * result) + ((getVorname() == null) ? 0 : getVorname().hashCode());
-
-        return result;
+        return Objects.hash(getAttribute(), getID(), getNachname(), getVorname());
     }
 
     /**
@@ -238,14 +200,6 @@ public class FXKontakt implements Comparable<FXKontakt>
         return this.idProperty;
     }
 
-    /**
-     * @return {@link StringProperty}
-     */
-    public StringProperty nachnameProperty()
-    {
-        return this.nachnameProperty;
-    }
-
     // /**
     // * @param listener {@link PropertyChangeListener}
     // */
@@ -253,6 +207,14 @@ public class FXKontakt implements Comparable<FXKontakt>
     // {
     // this.pcs.removePropertyChangeListener(listener);
     // }
+
+    /**
+     * @return {@link StringProperty}
+     */
+    public StringProperty nachnameProperty()
+    {
+        return this.nachnameProperty;
+    }
 
     /**
      * @param id long
@@ -307,18 +269,5 @@ public class FXKontakt implements Comparable<FXKontakt>
     public StringProperty vornameProperty()
     {
         return this.vornameProperty;
-    }
-
-    /**
-     * @param attribut {@link FXKontaktAttribut}
-     */
-    private void addAttribut(final FXKontaktAttribut attribut)
-    {
-        if (getAttribute().contains(attribut))
-        {
-            throw new RuntimeException("Attribut bereits vorhanden");
-        }
-
-        getAttribute().add(attribut);
     }
 }

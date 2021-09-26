@@ -15,6 +15,7 @@ import java.net.URLStreamHandlerFactory;
  * </pre>
  *
  * @author Thomas Freese
+ *
  * @see InlineUrlStreamHandler
  * @see InlineUrlConnection
  */
@@ -24,14 +25,6 @@ public class MailUrlStreamHandlerFactory implements URLStreamHandlerFactory
     // *
     // */
     // private final static Logger LOGGER = LoggerFactory.getLogger(MailUrlStreamHandlerFactory.class);
-
-    /**
-     * Erzeugt eine neue Instanz von {@link MailUrlStreamHandlerFactory}
-     */
-    public MailUrlStreamHandlerFactory()
-    {
-        super();
-    }
 
     /**
      * @see java.net.URLStreamHandlerFactory#createURLStreamHandler(java.lang.String)

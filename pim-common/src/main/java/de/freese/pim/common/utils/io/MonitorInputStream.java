@@ -4,12 +4,14 @@ package de.freese.pim.common.utils.io;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Objects;
+
 import javax.swing.ProgressMonitorInputStream;
 
 /**
  * {@link InputStream} mit der Möglichkeit zur Überwachung durch einen Monitor.<br>
  *
  * @see ProgressMonitorInputStream
+ *
  * @author Thomas Freese
  */
 public class MonitorInputStream extends InputStream
@@ -18,17 +20,14 @@ public class MonitorInputStream extends InputStream
     *
     */
     private final InputStream delegate;
-
     /**
     *
     */
     private final IOMonitor monitor;
-
     /**
      * Anzahl Bytes (Größe) des gesamten Channels.
      */
     private final long size;
-
     /**
      * Anzahl gelesener Bytes.
      */

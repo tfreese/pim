@@ -64,37 +64,30 @@ public class JavaMailSender
      *
      */
     public static final String DEFAULT_PROTOCOL = "smtp";
-
     /**
      *
      */
     private static final String HEADER_MESSAGE_ID = "Message-ID";
-
     /**
      *
      */
     private MailAuthenticator authenticator;
-
     /**
      *
      */
     private String host;
-
     /**
      *
      */
     private Properties javaMailProperties = new Properties();
-
     /**
      *
      */
     private int port = -1;
-
     /**
      *
      */
     private String protocol = DEFAULT_PROTOCOL;
-
     /**
      *
      */

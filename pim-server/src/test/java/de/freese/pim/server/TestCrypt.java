@@ -1,6 +1,3 @@
-/**
- *
- */
 package de.freese.pim.server;
 
 import java.io.BufferedReader;
@@ -9,10 +6,12 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.stream.Collectors;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
+
 import de.freese.pim.common.utils.Crypt;
 
 /**

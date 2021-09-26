@@ -1,7 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties. To change this template file, choose Tools | Templates and open the template in
- * the editor.
- */
 package de.freese.pim.gui;
 
 import de.freese.pim.gui.view.ErrorDialog;
@@ -25,29 +21,18 @@ public class PIMPreloader extends Preloader
      *
      */
     private Label labelStatus;
-
     /**
     *
     */
     private boolean noLoadingProgress = true;
-
     /**
      *
      */
     private ProgressIndicator progress;
-
     /**
      *
      */
     private Stage stage;
-
-    /**
-     * Erzeugt eine neue Instanz von {@link PIMPreloader}
-     */
-    public PIMPreloader()
-    {
-        super();
-    }
 
     /**
      * @return {@link Scene}
@@ -83,10 +68,10 @@ public class PIMPreloader extends Preloader
     @Override
     public void handleApplicationNotification(final PreloaderNotification info)
     {
-        if (info instanceof PIMPreloaderNotification)
+        if (info instanceof PIMPreloaderNotification noti)
         {
-            double progress = ((PIMPreloaderNotification) info).getProgress();
-            String status = ((PIMPreloaderNotification) info).getStatus();
+            double progress = noti.getProgress();
+            String status = noti.getStatus();
 
             this.labelStatus.setText(status);
             this.progress.setProgress(progress);

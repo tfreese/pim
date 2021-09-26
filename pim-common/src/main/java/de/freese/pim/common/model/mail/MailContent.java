@@ -2,7 +2,9 @@
 package de.freese.pim.common.model.mail;
 
 import java.util.Map;
+
 import javax.activation.DataSource;
+
 import de.freese.pim.common.model.mail.datasource.AttachmentDataSource;
 import de.freese.pim.common.model.mail.datasource.InlineDataSource;
 import de.freese.pim.common.model.mail.datasource.MessageDataSource;
@@ -21,14 +23,14 @@ public interface MailContent
      *
      * @return {@link Map}
      */
-    public Map<String, AttachmentDataSource> getAttachments();
+    Map<String, AttachmentDataSource> getAttachments();
 
     /**
      * Liefert das Encoding.
      *
      * @return String
      */
-    public String getEncoding();
+    String getEncoding();
 
     /**
      * Liefert die {@link DataSource} der Inlines.<br>
@@ -37,26 +39,26 @@ public interface MailContent
      *
      * @return {@link Map}
      */
-    public Map<String, InlineDataSource> getInlines();
+    Map<String, InlineDataSource> getInlines();
 
     /**
      * Liefert die {@link DataSource} des Textes der Mail.
      *
      * @return {@link MessageDataSource}
      */
-    public MessageDataSource getMessage();
+    MessageDataSource getMessage();
 
     /**
      * Liefert den Text der Mail.
      *
      * @return String
      */
-    public String getMessageContent();
+    String getMessageContent();
 
     /**
      * Liefert den ContetnType für den Text der Mail.
      *
      * @return String
      */
-    public String getMessageContentType();
+    String getMessageContentType();
 }

@@ -2,12 +2,14 @@
 package de.freese.pim.common.utils.io;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.channels.Channels;
 import java.util.Optional;
+
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
@@ -28,7 +30,7 @@ class TestMonitorIO
         /**
          *
          */
-        private Long current = null;
+        private Long current;
 
         /**
          * @return long
@@ -51,7 +53,7 @@ class TestMonitorIO
     /**
      *
      */
-    private static final byte[] BYTES = new byte[]
+    private static final byte[] BYTES =
     {
             0, 1, 2, 3, 4, 5, 6, 7, 8, 9
     };

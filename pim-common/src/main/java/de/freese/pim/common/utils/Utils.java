@@ -44,17 +44,14 @@ public final class Utils
      *
      */
     private static final Logger LOGGER = LoggerFactory.getLogger(Utils.class);
-
     /**
      * ^(.+)@(.+)\\.\\w{2,3}$
      */
     public static final String MAIL_REGEX = "^(.+)@(.+)\\.[a-zA-Z]{2,3}$";
-
     /**
      *
      */
     public static final Predicate<Path> PREDICATE_IS_DIR = Files::isDirectory;
-
     /**
      *
      */
@@ -77,22 +74,18 @@ public final class Utils
      *
      */
     public static final Predicate<Path> PREDICATE_IS_HIDDEN_NOT = PREDICATE_IS_HIDDEN.negate();
-
     /**
      *
      */
     public static final Predicate<Path> PREDICATE_MAIL_FOLDER = PREDICATE_IS_DIR_NOT.or(PREDICATE_IS_HIDDEN_NOT);
-
     /**
     *
     */
     public static final Predicate<Path> PREDICATE_MAIL_FOLDER_LEAF = p -> ".leaf".equals(p.getFileName().toString());
-
     /**
     *
     */
     public static final Predicate<Path> PREDICATE_MAIL_FOLDER_LEAF_NOT = PREDICATE_MAIL_FOLDER_LEAF.negate();
-
     /**
     *
     */
@@ -514,7 +507,6 @@ public final class Utils
      *
      * @throws SQLException Falls was schief geht.
      */
-    @SuppressWarnings("resource")
     public static List<String[]> toList(final ResultSet resultSet) throws SQLException
     {
         Objects.requireNonNull(resultSet, () -> "resultSet required");
@@ -565,7 +557,6 @@ public final class Utils
      *
      * @see #padding(List, String)
      */
-    @SuppressWarnings("resource")
     public static <T extends CharSequence> void write(final List<T[]> rows, final PrintStream ps, final String delimiter)
     {
         Objects.requireNonNull(rows, () -> "rows required");

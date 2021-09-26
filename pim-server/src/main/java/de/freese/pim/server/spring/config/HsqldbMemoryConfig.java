@@ -4,6 +4,7 @@ package de.freese.pim.server.spring.config;
 import javax.annotation.PreDestroy;
 import javax.annotation.Resource;
 import javax.sql.DataSource;
+
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.PropertySource;
@@ -24,14 +25,6 @@ public class HsqldbMemoryConfig extends AbstractHSQLDBConfig
     */
     @Resource
     private DataSource dataSource;
-
-    /**
-     * Erzeugt eine neue Instanz von {@link HsqldbMemoryConfig}
-     */
-    public HsqldbMemoryConfig()
-    {
-        super();
-    }
 
     /**
      * @see de.freese.pim.server.spring.config.AbstractDBConfig#preDestroy()

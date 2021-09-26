@@ -1,7 +1,4 @@
-/**
- * Created: 06.04.2017
- */
-
+// Created: 06.04.2017
 package org.slf4j;
 
 import java.util.function.Supplier;
@@ -15,6 +12,7 @@ public final class Utils
 {
     /**
      * @param supplier {@link Supplier}
+     *
      * @return String
      */
     public static String getNullSafe(final Supplier<String> supplier)

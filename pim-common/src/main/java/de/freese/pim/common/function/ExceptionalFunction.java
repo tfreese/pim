@@ -8,9 +8,11 @@ import java.util.function.Function;
  * Interface einer {@link Function} mit einer Exception.<br>
  *
  * @author Thomas Freese
+ *
  * @param <T> Konkreter Parameter-Typ
  * @param <R> Konkreter Ergebnis-Typ
  * @param <E> Konkreter Exception-Typ
+ *
  * @see java.util.function.Function
  */
 @FunctionalInterface
@@ -18,6 +20,7 @@ public interface ExceptionalFunction<T, R, E extends Exception>
 {
     /**
      * @see java.util.function.Function#identity()
+     *
      * @return {@link Function}
      */
     static <T> Function<T, T> identity()
@@ -27,10 +30,12 @@ public interface ExceptionalFunction<T, R, E extends Exception>
 
     /**
      * @see java.util.function.Function#andThen(Function)
+     *
      * @param after {@link ExceptionalFunction}
+     *
      * @return {@link ExceptionalFunction}
      */
-    public default <V> ExceptionalFunction<T, V, E> andThen(final ExceptionalFunction<R, V, E> after)
+    default <V> ExceptionalFunction<T, V, E> andThen(final ExceptionalFunction<R, V, E> after)
     {
         Objects.requireNonNull(after);
 
@@ -51,18 +56,23 @@ public interface ExceptionalFunction<T, R, E extends Exception>
 
     /**
      * @see java.util.function.Function#apply(Object)
+     *
      * @param t Object
+     *
      * @return Object
+     *
      * @throws Exception Falls was schief geht.
      */
-    public R apply(T t) throws E;
+    R apply(T t) throws E;
 
     /**
      * @see java.util.function.Function#compose(Function)
+     *
      * @param before {@link ExceptionalFunction}
+     *
      * @return {@link ExceptionalFunction}
      */
-    public default <V> ExceptionalFunction<V, R, E> compose(final ExceptionalFunction<V, T, E> before)
+    default <V> ExceptionalFunction<V, R, E> compose(final ExceptionalFunction<V, T, E> before)
     {
         Objects.requireNonNull(before);
 

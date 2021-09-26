@@ -1,12 +1,11 @@
-/**
- * Created: 10.02.2017
- */
-
+// Created: 10.02.2017
 package de.freese.pim.server.mail;
 
 import java.util.function.Function;
 import java.util.function.UnaryOperator;
+
 import javax.sql.DataSource;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -16,6 +15,7 @@ import org.springframework.jdbc.datasource.SingleConnectionDataSource;
 import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+
 import de.freese.pim.server.mail.dao.DefaultMailDAO;
 import de.freese.pim.server.mail.dao.MailDAO;
 
@@ -29,6 +29,7 @@ class TestMailConfig
 {
     /**
      * @return {@link DataSource}
+     *
      * @throws Exception Falls was schief geht.
      */
     @Bean(destroyMethod = "destroy")
@@ -64,6 +65,7 @@ class TestMailConfig
 
     /**
      * @param dataSource {@link DataSource}
+     *
      * @return {@link MailDAO}
      */
     @Bean
@@ -91,6 +93,7 @@ class TestMailConfig
 
     /**
      * @param dataSource {@link DataSource}
+     *
      * @return {@link PlatformTransactionManager}
      */
     @Bean

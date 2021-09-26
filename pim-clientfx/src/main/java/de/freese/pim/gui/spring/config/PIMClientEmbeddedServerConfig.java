@@ -6,7 +6,9 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ThreadPoolExecutor;
+
 import javax.annotation.Resource;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.web.client.RestTemplateBuilder;
@@ -24,6 +26,7 @@ import org.springframework.scheduling.concurrent.ThreadPoolExecutorFactoryBean;
 import org.springframework.util.SocketUtils;
 import org.springframework.web.servlet.config.annotation.AsyncSupportConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
@@ -53,14 +56,6 @@ public class PIMClientEmbeddedServerConfig extends WebMvcConfigurationSupport
     */
     @Resource
     private ObjectMapper jsonMapper;
-
-    /**
-     * Erzeugt eine neue Instanz von {@link PIMClientEmbeddedServerConfig}
-     */
-    public PIMClientEmbeddedServerConfig()
-    {
-        super();
-    }
 
     /**
      * @see org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport#configureAsyncSupport(org.springframework.web.servlet.config.annotation.AsyncSupportConfigurer)
@@ -106,9 +101,8 @@ public class PIMClientEmbeddedServerConfig extends WebMvcConfigurationSupport
         // Make sure dates are serialised in ISO-8601 format instead as timestamps
         for (HttpMessageConverter<?> converter : converters)
         {
-            if (converter instanceof MappingJackson2HttpMessageConverter)
+            if (converter instanceof MappingJackson2HttpMessageConverter jsonMessageConverter)
             {
-                MappingJackson2HttpMessageConverter jsonMessageConverter = (MappingJackson2HttpMessageConverter) converter;
                 jsonMessageConverter.setObjectMapper(this.jsonMapper);
                 // ObjectMapper objectMapper = jsonMessageConverter.getObjectMapper();
                 // objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
@@ -133,6 +127,7 @@ public class PIMClientEmbeddedServerConfig extends WebMvcConfigurationSupport
 
     /**
      * @param pimHome String
+     *
      * @return {@link Path}
      */
     @Bean
@@ -148,6 +143,7 @@ public class PIMClientEmbeddedServerConfig extends WebMvcConfigurationSupport
      * @Value("${server.port}") final int serverPort
      *
      * @param serverPort int
+     *
      * @return {@link RestTemplateBuilder}
      */
     @Bean
@@ -166,6 +162,7 @@ public class PIMClientEmbeddedServerConfig extends WebMvcConfigurationSupport
 
     /**
      * @param executorService {@link ExecutorService}
+     *
      * @return {@link AsyncTaskExecutor}
      */
     @Bean(

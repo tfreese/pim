@@ -1,11 +1,10 @@
-/**
- * Created: 10.02.2017
- */
-
+// Created: 10.02.2017
 package de.freese.pim.server.spring.config;
 
 import javax.sql.DataSource;
+
 import org.springframework.beans.factory.DisposableBean;
+
 import com.zaxxer.hikari.HikariDataSource;
 
 /**
@@ -16,32 +15,26 @@ import com.zaxxer.hikari.HikariDataSource;
 public abstract class AbstractDBConfig
 {
     /**
-     * Erstellt ein neues {@link AbstractDBConfig} Object.
-     */
-    protected AbstractDBConfig()
-    {
-        super();
-    }
-
-    /**
      * @param dataSource {@link DataSource}
+     *
      * @throws Exception Falls was schief geht.
+     *
      * @deprecated Siehe misc-jsensors: HsqldbServerAutoConfiguration#hsqldbServer
      */
     @Deprecated
     protected void close(final DataSource dataSource) throws Exception
     {
-        if (dataSource instanceof DisposableBean)
+        if (dataSource instanceof DisposableBean db)
         {
-            ((DisposableBean) dataSource).destroy();
+            db.destroy();
         }
-        else if (dataSource instanceof HikariDataSource)
+        else if (dataSource instanceof HikariDataSource ds)
         {
-            ((HikariDataSource) dataSource).close();
+            ds.close();
         }
-        // else if (dataSource instanceof org.apache.tomcat.jdbc.pool.DataSource)
+        // else if (dataSource instanceof org.apache.tomcat.jdbc.pool.DataSource ds)
         // {
-        // ((org.apache.tomcat.jdbc.pool.DataSource) dataSource).close(true);
+        // ds.close(true);
         // }
     }
 

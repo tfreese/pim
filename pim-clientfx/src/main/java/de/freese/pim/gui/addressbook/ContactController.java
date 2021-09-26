@@ -47,54 +47,45 @@ public class ContactController extends AbstractController
     *
     */
     private final FXAddressbookService addressbookService;
-
     /**
     *
     */
     @FXML
     private Button buttonAddContact;
-
     /**
     *
     */
     @FXML
     private Button buttonDeleteContact;
-
     /**
     *
     */
     @FXML
     private Button buttonEditContact;
-
     /**
     *
     */
     @FXML
     private Node mainNode;
-
     /**
     *
     */
     @FXML
     private Node naviNode;
-
     /**
     *
     */
     private final ObjectProperty<FXKontakt> selectedKontakt = new SimpleObjectProperty<>();
-
     /**
     *
     */
     @FXML
     private TableView<FXKontakt> tableViewKontakt;
-
     /**
      *
      */
     @FXML
     private TextField textFieldNachname;
-
     /**
      *
      */

@@ -17,17 +17,14 @@ public class MonitoringWritableByteChannel implements WritableByteChannel
      *
      */
     private final WritableByteChannel delegate;
-
     /**
      *
      */
     private final IOMonitor monitor;
-
     /**
      * Anzahl Bytes (Größe) des gesamten Channels.
      */
     private final long size;
-
     /**
      * Anzahl geschriebene Bytes.
      */

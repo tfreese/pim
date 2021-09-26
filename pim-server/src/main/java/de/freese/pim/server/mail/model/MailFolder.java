@@ -15,46 +15,33 @@ public class MailFolder
      */
     // @NotNull
     private boolean abonniert = true;
-
     /**
     *
     */
     // @NotNull
     private long accountID;
-
     /**
     *
     */
     // @NotNull
     // @Size(min = 0, max = 100)
     private String fullName;
-
     /**
     *
     */
     // @NotNull
     private long id;
-
     /**
     *
     */
     // @NotNull
     // @Size(min = 0, max = 100)
     private String name;
-
     /**
      *
      */
     // @NotNull
     private boolean sendFolder;
-
-    /**
-     * Erzeugt eine neue Instanz von {@link MailFolder}
-     */
-    public MailFolder()
-    {
-        super();
-    }
 
     /**
      * @return long

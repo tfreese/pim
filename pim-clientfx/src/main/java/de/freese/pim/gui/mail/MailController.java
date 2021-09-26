@@ -9,6 +9,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
+
 import de.freese.pim.common.model.mail.InternetAddress;
 import de.freese.pim.common.model.mail.MailContent;
 import de.freese.pim.common.spring.SpringContext;
@@ -53,85 +54,70 @@ public class MailController extends AbstractController
      *
      */
     private static final String FORMAT_DATE = "%1$ta %1$td.%1$tm.%1$ty %1$tH:%1$tM:%1$tS";
-
     /**
      *
      */
     @FXML
     private Button buttonAddAccount;
-
     /**
      *
      */
     @FXML
     private Button buttonEditAccount;
-
     // /**
     // * DateTimeFormatter formatterDate = DateTimeFormatter.ofPattern("EE dd.MM.yy HH:mm:ss");
     // */
     // private final DateFormat formatterDate = new SimpleDateFormat("EE dd.MM.yy HH:mm:ss");
-
     /**
      *
      */
     @FXML
     private MailContentView mailContentView;
-
     /**
      *
      */
     private final FXMailService mailService;
-
     /**
      *
      */
     @FXML
     private Node mainNode;
-
     /**
      *
      */
     @FXML
     private Node naviNode;
-
     /**
      *
      */
     @FXML
     private ProgressIndicator progressIndicator;
-
     /**
     *
     */
     private final ObjectProperty<FXMail> selectedMail = new SimpleObjectProperty<>();
-
     /**
      *
      */
     private final ObjectProperty<TreeItem<Object>> selectedTreeItem = new SimpleObjectProperty<>();
-
     /**
      * Spalten für die Empfangs-Sicht.
      */
     private List<TableColumn<FXMail, ?>> tableColumnsReceived;
-
     /**
      * Spalten für die Sende-Sicht.
      */
     private List<TableColumn<FXMail, ?>> tableColumnsSend;
-
     /**
      *
      */
     @FXML
     private TableView<FXMail> tableViewMail;
-
     /**
      *
      */
     @FXML
     private ToolBar toolBar;
-
     /**
      *
      */
@@ -195,6 +181,7 @@ public class MailController extends AbstractController
      * Liefert den MailAccount.
      *
      * @param treeItem {@link TreeItem}
+     *
      * @return {@link FXMailAccount}
      */
     private FXMailAccount getAccount(final TreeItem<Object> treeItem)
@@ -363,15 +350,15 @@ public class MailController extends AbstractController
                 String text = null;
                 int newMails = 0;
 
-                if (item instanceof FXMailAccount)
+                if (item instanceof FXMailAccount ma)
                 {
-                    text = ((FXMailAccount) item).getMail();
-                    newMails = ((FXMailAccount) item).getUnreadMailsCount();
+                    text = ma.getMail();
+                    newMails = ma.getUnreadMailsCount();
                 }
-                else if (item instanceof FXMailFolder)
+                else if (item instanceof FXMailFolder mf)
                 {
-                    text = ((FXMailFolder) item).getName();
-                    newMails = ((FXMailFolder) item).getUnreadMailsCountTotal();
+                    text = mf.getName();
+                    newMails = mf.getUnreadMailsCountTotal();
                 }
 
                 if (newMails > 0)
@@ -523,12 +510,7 @@ public class MailController extends AbstractController
     {
         this.tableViewMail.setItems(null);
 
-        if (treeItem == null)
-        {
-            return;
-        }
-
-        if (!(treeItem.getValue() instanceof FXMailFolder))
+        if ((treeItem == null) || !(treeItem.getValue() instanceof FXMailFolder))
         {
             return;
         }

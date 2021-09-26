@@ -16,22 +16,18 @@ public class Kontakt implements Comparable<Kontakt>
      *
      */
     private final List<KontaktAttribut> attribute = new ArrayList<>();
-
     /**
      *
      */
     private long id;
-
     /**
      *
      */
     private String nachname;
-
     // /**
     // *
     // */
     // private final transient PropertyChangeSupport pcs = new PropertyChangeSupport(this);
-
     /**
      *
      */
@@ -108,12 +104,7 @@ public class Kontakt implements Comparable<Kontakt>
             return 0;
         }
 
-        int comp = 0;
-
-        if (comp == 0)
-        {
-            comp = getNachname().compareTo(k.getNachname());
-        }
+        int comp = getNachname().compareTo(k.getNachname());
 
         if (comp == 0)
         {
@@ -134,12 +125,10 @@ public class Kontakt implements Comparable<Kontakt>
             return true;
         }
 
-        if (!(obj instanceof Kontakt))
+        if (!(obj instanceof Kontakt other))
         {
             return false;
         }
-
-        Kontakt other = (Kontakt) obj;
 
         return Objects.equals(this.attribute, other.attribute) && (this.id == other.id) && Objects.equals(this.nachname, other.nachname)
                 && Objects.equals(this.vorname, other.vorname);

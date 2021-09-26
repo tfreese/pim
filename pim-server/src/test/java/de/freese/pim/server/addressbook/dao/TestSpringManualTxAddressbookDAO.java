@@ -1,11 +1,12 @@
-/**
- * Created on 24.05.2016
- */
+// Created: 24.05.2016
 package de.freese.pim.server.addressbook.dao;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.sql.SQLIntegrityConstraintViolationException;
+
 import javax.sql.DataSource;
+
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -16,6 +17,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
+
 import de.freese.pim.server.addressbook.TestAddressbookConfig;
 
 /**
@@ -30,12 +32,10 @@ class TestSpringManualTxAddressbookDAO extends AbstractDAOTestCase
      *
      */
     private static AddressBookDAO addressBookDAO;
-
     /**
      *
      */
     private static DataSource dataSource;
-
     /**
      *
      */

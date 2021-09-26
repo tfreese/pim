@@ -8,6 +8,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ScheduledExecutorService;
+
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -36,12 +37,10 @@ public final class SpringContext implements ApplicationContextAware, ResourceLoa
     *
     */
     private static ApplicationContext applicationContext;
-
     /**
     *
     */
     private static Environment environment;
-
     /**
      *
      */
@@ -70,6 +69,7 @@ public final class SpringContext implements ApplicationContextAware, ResourceLoa
      *
      * @param <T> Konkreter Typ des empfangenen Objects
      * @param beanID String
+     *
      * @return Object
      */
     @SuppressWarnings("unchecked")
@@ -84,6 +84,7 @@ public final class SpringContext implements ApplicationContextAware, ResourceLoa
      * @param <T> Konkreter Typ des empfangenen Objects
      * @param beanID String
      * @param requiredType {@link Class}
+     *
      * @return Object
      */
     public static <T> T getBean(final String beanID, final Class<T> requiredType)
@@ -97,6 +98,7 @@ public final class SpringContext implements ApplicationContextAware, ResourceLoa
      * @param <T> Konkreter Return-Typ
      * @param clazz Class
      * @param annotationType Class
+     *
      * @return {@link Optional}
      */
     public static <T> Optional<T> getBeanByTypeAndAnnotation(final Class<T> clazz, final Class<? extends Annotation> annotationType)
@@ -113,6 +115,7 @@ public final class SpringContext implements ApplicationContextAware, ResourceLoa
      * @param <T> Konkreter Return-Typ
      * @param clazz Class
      * @param qualifier String
+     *
      * @return {@link Optional}
      */
     public static <T> Optional<T> getBeanByTypeAndQualifier(final Class<T> clazz, final String qualifier)
@@ -132,6 +135,7 @@ public final class SpringContext implements ApplicationContextAware, ResourceLoa
      * @param <T> Konkreter Return-Typ
      * @param clazz Class
      * @param annotationType Class
+     *
      * @return {@link Collection}
      */
     public static <T> Collection<T> getBeansByTypeAndAnnotation(final Class<T> clazz, final Class<? extends Annotation> annotationType)
@@ -167,7 +171,9 @@ public final class SpringContext implements ApplicationContextAware, ResourceLoa
      * Liefert die Resource.
      *
      * @param location String
+     *
      * @return {@link Resource}
+     *
      * @see ResourceLoader#getResource(String)
      */
     public static Resource getResource(final String location)
@@ -236,9 +242,9 @@ public final class SpringContext implements ApplicationContextAware, ResourceLoa
 
         SpringContext.applicationContext = Objects.requireNonNull(applicationContext, "applicationContext required");
 
-        if (SpringContext.applicationContext instanceof AbstractApplicationContext)
+        if (SpringContext.applicationContext instanceof AbstractApplicationContext ac)
         {
-            ((AbstractApplicationContext) SpringContext.applicationContext).registerShutdownHook();
+            ac.registerShutdownHook();
         }
     }
 

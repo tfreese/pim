@@ -1,18 +1,18 @@
-/**
- * Created: 14.02.2017
- */
-
+// Created: 14.02.2017
 package de.freese.pim.gui.mail.service;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+
 import javax.annotation.Resource;
+
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
+
 import com.fasterxml.jackson.databind.JavaType;
+
 import de.freese.pim.common.PIMException;
 import de.freese.pim.common.model.mail.MailContent;
 import de.freese.pim.common.utils.io.IOMonitor;
@@ -37,14 +37,6 @@ public class DefaultStandaloneFXMailService extends AbstractFXMailService
      *
      */
     private MailService mailService;
-
-    /**
-     * Erstellt ein neues {@link DefaultStandaloneFXMailService} Object.
-     */
-    public DefaultStandaloneFXMailService()
-    {
-        super();
-    }
 
     /**
      * @see de.freese.pim.gui.mail.service.FXMailService#connectAccount(de.freese.pim.gui.mail.model.FXMailAccount)
@@ -154,7 +146,7 @@ public class DefaultStandaloneFXMailService extends AbstractFXMailService
             int affectedRows = 0;
 
             // ID != 0 -> update
-            List<MailFolder> toUpdate = toPojoMailFolders(folders.stream().filter(mf -> mf.getID() > 0).collect(Collectors.toList()));
+            List<MailFolder> toUpdate = toPojoMailFolders(folders.stream().filter(mf -> mf.getID() > 0).toList());
 
             if (!toUpdate.isEmpty())
             {
@@ -163,7 +155,7 @@ public class DefaultStandaloneFXMailService extends AbstractFXMailService
             }
 
             // ID = 0 -> insert
-            List<MailFolder> toInsert = toPojoMailFolders(folders.stream().filter(mf -> mf.getID() == 0).collect(Collectors.toList()));
+            List<MailFolder> toInsert = toPojoMailFolders(folders.stream().filter(mf -> mf.getID() == 0).toList());
 
             if (!toInsert.isEmpty())
             {
@@ -294,7 +286,9 @@ public class DefaultStandaloneFXMailService extends AbstractFXMailService
      * Konvertiert die POJOs in die FX-Beans.
      *
      * @param accounts {@link List}
+     *
      * @return {@link List}
+     *
      * @throws Exception Falls was schief geht.
      */
     private List<FXMailAccount> toFXMailAccounts(final List<MailAccount> accounts) throws Exception
@@ -322,7 +316,9 @@ public class DefaultStandaloneFXMailService extends AbstractFXMailService
      * Konvertiert die POJOs in die FX-Beans.
      *
      * @param folders {@link List}
+     *
      * @return {@link List}
+     *
      * @throws Exception Falls was schief geht.
      */
     private List<FXMailFolder> toFXMailFolders(final List<MailFolder> folders) throws Exception
@@ -346,7 +342,9 @@ public class DefaultStandaloneFXMailService extends AbstractFXMailService
      * Konvertiert die POJOs in die FX-Beans.
      *
      * @param mails {@link List}
+     *
      * @return {@link List}
+     *
      * @throws Exception Falls was schief geht.
      */
     private List<FXMail> toFXMails(final List<Mail> mails) throws Exception
@@ -381,7 +379,9 @@ public class DefaultStandaloneFXMailService extends AbstractFXMailService
      * Konvertiert die FX-Bean in das POJO.
      *
      * @param account {@link FXMailAccount}
+     *
      * @return {@link MailAccount}
+     *
      * @throws Exception Falls was schief geht.
      */
     private MailAccount toPojoMailAccount(final FXMailAccount account) throws Exception
@@ -407,7 +407,9 @@ public class DefaultStandaloneFXMailService extends AbstractFXMailService
      * Konvertiert die FX-Beans in die POJOs.
      *
      * @param folders {@link List}
+     *
      * @return {@link List}
+     *
      * @throws Exception Falls was schief geht.
      */
     private List<MailFolder> toPojoMailFolders(final List<FXMailFolder> folders) throws Exception

@@ -1,6 +1,4 @@
-/**
- * 31.10.2006
- */
+// Created: 31.10.2006
 package de.freese.pim.common.utils;
 
 import javax.crypto.spec.SecretKeySpec;
@@ -15,7 +13,7 @@ class PimSecretKey extends SecretKeySpec
     /**
      * Konstante für Ver- und Entschlüsselung.
      */
-    private static final byte[] KEY = new byte[]
+    private static final byte[] KEY =
     {
             0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1
     };

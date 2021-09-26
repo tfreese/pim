@@ -1,7 +1,6 @@
-/**
- *
- */
 package de.freese.pim.common;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,6 +9,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 import java.util.concurrent.ThreadPoolExecutor;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.MethodOrderer;
@@ -138,5 +138,7 @@ class TestMisc
             futures.get(i).get();
             // ecs.take().get();
         }
+
+        assertTrue(true);
     }
 }

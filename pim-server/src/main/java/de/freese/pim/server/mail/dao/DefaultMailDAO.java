@@ -1,7 +1,4 @@
-/**
- * Created: 14.01.2017
- */
-
+// Created: 14.01.2017
 package de.freese.pim.server.mail.dao;
 
 import java.io.BufferedReader;

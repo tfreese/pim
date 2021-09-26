@@ -74,17 +74,14 @@ public final class FXUtils
     *
     */
     private static final EventHandler<InputEvent> EVENT_HANDLER_CONSUME_ALL = Event::consume;
-
     /**
      *
      */
     private static final KeyCodeCombination KEYCODE_COPY = new KeyCodeCombination(KeyCode.C, KeyCombination.CONTROL_ANY);
-
     /**
      *
      */
     private static final KeyCodeCombination KEYCODE_PASTE = new KeyCodeCombination(KeyCode.V, KeyCombination.CONTROL_ANY);
-
     /**
      *
      */
@@ -422,18 +419,18 @@ public final class FXUtils
                 ObservableValue<?> observableValue = tableColumn.getCellObservableValue(rowTable);
 
                 // TODO: handle double, etc
-                if (observableValue instanceof StringProperty)
+                if (observableValue instanceof StringProperty sp)
                 {
-                    ((StringProperty) observableValue).set(clipboardCellContent);
+                    sp.set(clipboardCellContent);
                 }
-                else if (observableValue instanceof IntegerProperty)
+                else if (observableValue instanceof IntegerProperty ip)
                 {
                     int value = 0;
 
                     try
                     {
                         value = NumberFormat.getInstance().parse(clipboardCellContent).intValue();
-                        ((IntegerProperty) observableValue).set(value);
+                        ip.set(value);
                     }
                     catch (ParseException ex)
                     {
@@ -676,8 +673,8 @@ public final class FXUtils
         // @formatter:on
 
         // Labeled / Text
-        Predicate<Object> isLabeled = v -> v instanceof Labeled;
-        Predicate<Object> isText = v -> v instanceof Text;
+        Predicate<Object> isLabeled = Labeled.class::isInstance;
+        Predicate<Object> isText = Text.class::isInstance;
 
         // @formatter:off
         nodes.stream()
@@ -702,7 +699,7 @@ public final class FXUtils
         // @formatter:on
 
         // Control
-        Predicate<Object> isControl = v -> v instanceof Control;
+        Predicate<Object> isControl = Control.class::isInstance;
 
         // Tooltip
         // @formatter:off
@@ -747,7 +744,7 @@ public final class FXUtils
         // @formatter:on
 
         // TableView
-        Predicate<Object> isTableView = v -> v instanceof TableView<?>;
+        Predicate<Object> isTableView = TableView.class::isInstance;
 
         // @formatter:off
         nodes.stream()

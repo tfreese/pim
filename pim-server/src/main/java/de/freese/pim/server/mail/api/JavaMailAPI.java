@@ -9,8 +9,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Properties;
 import java.util.Set;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
 import javax.mail.Authenticator;
 import javax.mail.FetchProfile;
 import javax.mail.Flags;
@@ -27,9 +27,12 @@ import javax.mail.Transport;
 import javax.mail.UIDFolder;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+
 import org.slf4j.LoggerFactory;
+
 import com.sun.mail.imap.IMAPFolder;
 import com.sun.mail.imap.IMAPStore;
+
 import de.freese.pim.common.function.ExceptionalFunction;
 import de.freese.pim.common.model.mail.MailContent;
 import de.freese.pim.common.utils.Utils;
@@ -51,6 +54,7 @@ public class JavaMailAPI extends AbstractMailAPI
      * Generisches Callback-Interface für einen Mail-{@link Folder}.
      *
      * @author Thomas Freese
+     *
      * @param <T> Konkreter Return-Typ
      */
     @FunctionalInterface
@@ -58,22 +62,22 @@ public class JavaMailAPI extends AbstractMailAPI
     {
         /**
          * @param folder {@link IMAPFolder}
+         *
          * @return Object
+         *
          * @throws Exception Falls was schief geht.
          */
-        public T doInFolder(IMAPFolder folder) throws Exception;
+        T doInFolder(IMAPFolder folder) throws Exception;
     }
 
     /**
      *
      */
     private Session session;
-
     /**
      *
      */
     private int storeIndex;
-
     /**
      * Für RoundRobin-Pool.
      */
@@ -93,6 +97,7 @@ public class JavaMailAPI extends AbstractMailAPI
      * Stellt sicher, das der {@link Folder} zum Lesen geöffnet ist.
      *
      * @param folder {@link Folder}
+     *
      * @throws MessagingException Falls was schief geht.
      */
     protected void checkRead(final Folder folder) throws MessagingException
@@ -107,6 +112,7 @@ public class JavaMailAPI extends AbstractMailAPI
      * Stellt sicher, das der {@link Folder} zum Schreiben geöffnet ist.
      *
      * @param folder {@link Folder}
+     *
      * @throws MessagingException Falls was schief geht.
      */
     protected void checkWrite(final Folder folder) throws MessagingException
@@ -121,6 +127,7 @@ public class JavaMailAPI extends AbstractMailAPI
      * Schliesst den {@link Folder} mit close(true).
      *
      * @param folder {@link Folder}
+     *
      * @throws MessagingException Falls was schief geht.
      */
     protected void closeFolder(final Folder folder) throws MessagingException
@@ -149,6 +156,7 @@ public class JavaMailAPI extends AbstractMailAPI
      * Connecten des {@link Service}.
      *
      * @param service {@link Service}
+     *
      * @throws MessagingException Falls was schief geht.
      */
     protected void connect(final Service service) throws MessagingException
@@ -166,6 +174,7 @@ public class JavaMailAPI extends AbstractMailAPI
      * Erzeugt die Mail-Session.
      *
      * @return {@link Session}
+     *
      * @throws MessagingException Falls was schief geht.
      */
     protected Session createSession() throws MessagingException
@@ -209,16 +218,18 @@ public class JavaMailAPI extends AbstractMailAPI
         properties.setProperty("mail.imaps.fetchsize", "1048576"); // 1MB, Long.toString(1024 * 1024)
         // properties.setProperty("mail.imaps.partialfetch", "false");
 
-        Session session = Session.getInstance(properties, authenticator);
+        Session s = Session.getInstance(properties, authenticator);
 
-        return session;
+        return s;
     }
 
     /**
      * Erzeugt den {@link Store}.
      *
      * @param session {@link Session}
+     *
      * @return {@link Store}
+     *
      * @throws NoSuchProviderException Falls was schief geht.
      */
     protected IMAPStore createStore(final Session session) throws NoSuchProviderException
@@ -230,7 +241,9 @@ public class JavaMailAPI extends AbstractMailAPI
      * Erzeugt den {@link Transport}.
      *
      * @param session {@link Session}
+     *
      * @return {@link Transport}
+     *
      * @throws NoSuchProviderException Falls was schief geht.
      */
     protected Transport createTransport(final Session session) throws NoSuchProviderException
@@ -241,7 +254,6 @@ public class JavaMailAPI extends AbstractMailAPI
     /**
      * @see de.freese.pim.server.mail.api.MailAPI#disconnect()
      */
-    @SuppressWarnings("resource")
     @Override
     public void disconnect()
     {
@@ -285,6 +297,7 @@ public class JavaMailAPI extends AbstractMailAPI
      * Schliessen des {@link Service}.
      *
      * @param service {@link Service}
+     *
      * @throws MessagingException Falls was schief geht.
      */
     protected void disconnect(final Service service) throws MessagingException
@@ -301,9 +314,9 @@ public class JavaMailAPI extends AbstractMailAPI
      * @param <T> Konkreter Return-Typ
      * @param folderFullName String
      * @param action {@link FolderCallback}
+     *
      * @return Object
      */
-    @SuppressWarnings("resource")
     protected <T> T executeInFolder(final String folderFullName, final FolderCallback<T> action)
     {
         return Utils.executeSafely(() -> {
@@ -339,7 +352,6 @@ public class JavaMailAPI extends AbstractMailAPI
     /**
      * @see de.freese.pim.server.mail.api.MailAPI#getFolder()
      */
-    @SuppressWarnings("resource")
     @Override
     public List<MailFolder> getFolder()
     {
@@ -356,7 +368,7 @@ public class JavaMailAPI extends AbstractMailAPI
                         mf.setAbonniert(true);
                         return mf;
                     })
-                    .collect(Collectors.toList());
+                    .toList();
             // @formatter:on
 
             // closeFolder(root);
@@ -377,9 +389,9 @@ public class JavaMailAPI extends AbstractMailAPI
      * Liefert einen {@link Store} mit dem Round-Robin Verfahren.
      *
      * @return {@link Store}
+     *
      * @throws MessagingException Falls was schief geht.
      */
-    @SuppressWarnings("resource")
     protected synchronized IMAPStore getStore() throws MessagingException
     {
         IMAPStore store = this.stores[this.storeIndex++];
@@ -546,9 +558,9 @@ public class JavaMailAPI extends AbstractMailAPI
      *
      * @param mail {@link Mail}
      * @param message {@link Message}
+     *
      * @throws MessagingException Falls was schief geht.
      */
-    @SuppressWarnings("resource")
     protected void populate(final Mail mail, final Message message) throws MessagingException
     {
         InternetAddress from = Optional.ofNullable(message.getFrom()).map(f -> (InternetAddress) f[0]).orElse(null);
@@ -602,6 +614,7 @@ public class JavaMailAPI extends AbstractMailAPI
      *
      * @param folder {@link Folder}
      * @param messages {@link Message}[]
+     *
      * @throws MessagingException Falls was schief geht.
      */
     private void preFetch(final Folder folder, final Message...messages) throws MessagingException
@@ -642,7 +655,6 @@ public class JavaMailAPI extends AbstractMailAPI
     /**
      * @see de.freese.pim.server.mail.api.MailAPI#testConnection()
      */
-    @SuppressWarnings("resource")
     @Override
     public void testConnection()
     {

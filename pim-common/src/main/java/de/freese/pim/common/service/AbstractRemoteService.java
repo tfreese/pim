@@ -13,15 +13,8 @@ import java.net.URLEncoder;
 public abstract class AbstractRemoteService extends AbstractService
 {
     /**
-     * Erzeugt eine neue Instanz von {@link AbstractRemoteService}
-     */
-    protected AbstractRemoteService()
-    {
-        super();
-    }
-
-    /**
      * @param value String
+     *
      * @return String
      */
     protected String urlDecode(final String value)
@@ -45,6 +38,7 @@ public abstract class AbstractRemoteService extends AbstractService
 
     /**
      * @param value String
+     *
      * @return String
      */
     protected String urlEncode(final String value)

@@ -29,12 +29,10 @@ public class Crypt
      *
      */
     private static final String AES_ALGORYTHM = "AES/CBC/PKCS5Padding";
-
     // /**
     // * 32bit entspricht AES256.
     // */
     // private static final int AES_KEY_SIZE = 32;
-
     /**
      *
      */
@@ -116,13 +114,12 @@ public class Crypt
 
             return new BufferedInputStream(Files.newInputStream(file));
         }
+        catch (RuntimeException ex)
+        {
+            throw ex;
+        }
         catch (Exception ex)
         {
-            if (ex instanceof RuntimeException)
-            {
-                throw (RuntimeException) ex;
-            }
-
             throw new PIMException(ex);
         }
     }
@@ -151,13 +148,12 @@ public class Crypt
 
             return new String(decrypted, getCharset());
         }
+        catch (RuntimeException ex)
+        {
+            throw ex;
+        }
         catch (Exception ex)
         {
-            if (ex instanceof RuntimeException)
-            {
-                throw (RuntimeException) ex;
-            }
-
             throw new PIMException(ex);
         }
     }
@@ -194,13 +190,12 @@ public class Crypt
 
             return new BufferedInputStream(Files.newInputStream(file));
         }
+        catch (RuntimeException ex)
+        {
+            throw ex;
+        }
         catch (Exception ex)
         {
-            if (ex instanceof RuntimeException)
-            {
-                throw (RuntimeException) ex;
-            }
-
             throw new PIMException(ex);
         }
     }
@@ -229,13 +224,12 @@ public class Crypt
             // return Base64.encodeBase64String(encrypted);
             return new String(Base64.getEncoder().encode(encrypted), getCharset());
         }
+        catch (RuntimeException ex)
+        {
+            throw ex;
+        }
         catch (Exception ex)
         {
-            if (ex instanceof RuntimeException)
-            {
-                throw (RuntimeException) ex;
-            }
-
             throw new PIMException(ex);
         }
     }
@@ -268,13 +262,12 @@ public class Crypt
 
             return cipherOS;
         }
+        catch (RuntimeException ex)
+        {
+            throw ex;
+        }
         catch (Exception ex)
         {
-            if (ex instanceof RuntimeException)
-            {
-                throw (RuntimeException) ex;
-            }
-
             throw new PIMException(ex);
         }
     }

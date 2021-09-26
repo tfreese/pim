@@ -1,8 +1,9 @@
-// Erzeugt: 03.03.2016
+// Created: 03.03.2016
 package de.freese.pim.common.spring.autoconfigure.scheduledexecutorservice;
 
 import java.util.concurrent.RejectedExecutionHandler;
 import java.util.concurrent.ThreadPoolExecutor;
+
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
@@ -17,29 +18,18 @@ public class ScheduledThreadPoolExecutorProperties
      *
      */
     private int poolSize = 1;
-
     /**
     *
     */
     private RejectedExecutionHandler rejectedExecutionHandler = new ThreadPoolExecutor.AbortPolicy();
-
     /**
      *
      */
     private String threadNamePrefix = "scheduler";
-
     /**
      *
      */
     private int threadPriority = Thread.NORM_PRIORITY;
-
-    /**
-     * Erzeugt eine neue Instanz von {@link ScheduledThreadPoolExecutorProperties}
-     */
-    public ScheduledThreadPoolExecutorProperties()
-    {
-        super();
-    }
 
     /**
      * @return int

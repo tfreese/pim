@@ -16,17 +16,14 @@ public class MonitorOutputStream extends OutputStream
     *
     */
     private final OutputStream delegate;
-
     /**
     *
     */
     private final IOMonitor monitor;
-
     /**
      * Anzahl Bytes (Größe) des gesamten Channels.
      */
     private final long size;
-
     /**
      * Anzahl geschriebene Bytes.
      */

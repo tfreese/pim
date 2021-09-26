@@ -1,11 +1,13 @@
-// Erzeugt: 02.03.2016
+// Created: 02.03.2016
 package de.freese.pim.common.spring.autoconfigure.executorservice;
 
 import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.RejectedExecutionHandler;
+
 import javax.annotation.Resource;
 import javax.sql.DataSource;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -49,32 +51,21 @@ public class ThreadPoolExecutorAutoConfiguration
      *
      */
     private static final Logger LOGGER = LoggerFactory.getLogger(ThreadPoolExecutorAutoConfiguration.class);
-
     /**
     *
     */
     @Resource
-    private DataSource dataSource = null;
-
+    private DataSource dataSource;
     /**
     *
     */
     @Resource
-    private DataSourcePoolMetadataProvider dataSourcePoolMetadataProvider = null;
-
+    private DataSourcePoolMetadataProvider dataSourcePoolMetadataProvider;
     /**
      *
      */
     @Resource
-    private ThreadPoolExecutorProperties executorProperties = null;
-
-    /**
-     * Erzeugt eine neue Instanz von {@link ThreadPoolExecutorAutoConfiguration}
-     */
-    public ThreadPoolExecutorAutoConfiguration()
-    {
-        super();
-    }
+    private ThreadPoolExecutorProperties executorProperties;
 
     /**
      * @return {@link ThreadPoolExecutorFactoryBean}

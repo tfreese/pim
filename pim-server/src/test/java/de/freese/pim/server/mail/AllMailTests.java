@@ -1,6 +1,4 @@
-/**
- * Created: 27.12.2016
- */
+// Created: 27.12.2016
 package de.freese.pim.server.mail;
 
 import org.junit.platform.suite.api.SelectPackages;

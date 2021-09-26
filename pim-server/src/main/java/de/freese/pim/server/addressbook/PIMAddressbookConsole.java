@@ -1,6 +1,4 @@
-/**
- * Created on 24.05.2016
- */
+// Created on 24.05.2016
 package de.freese.pim.server.addressbook;
 
 import java.io.PrintStream;
@@ -46,7 +44,6 @@ public final class PIMAddressbookConsole
     *
     */
     public static final Logger LOGGER = LoggerFactory.getLogger(PIMAddressbookConsole.class);
-
     /**
      *
      */

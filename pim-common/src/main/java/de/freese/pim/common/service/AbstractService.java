@@ -2,6 +2,7 @@
 package de.freese.pim.common.service;
 
 import javax.annotation.Resource;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
@@ -20,29 +21,18 @@ public abstract class AbstractService implements ApplicationContextAware
      *
      */
     private ApplicationContext applicationContext;
-
     /**
     *
     */
     private final Logger logger = LoggerFactory.getLogger(getClass());
-
     /**
     *
     */
     private AsyncTaskExecutor taskExecutor;
-
     // /**
     // *
     // */
     // private TaskScheduler taskScheduler = null;
-
-    /**
-     * Erzeugt eine neue Instanz von {@link AbstractService}
-     */
-    protected AbstractService()
-    {
-        super();
-    }
 
     /**
      * @return {@link ApplicationContext}

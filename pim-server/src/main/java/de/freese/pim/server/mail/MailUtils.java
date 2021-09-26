@@ -1,7 +1,4 @@
-/**
- * Created: 28.12.2016
- */
-
+// Created: 28.12.2016
 package de.freese.pim.server.mail;
 
 import java.util.ArrayList;
@@ -37,7 +34,6 @@ public final class MailUtils
          *
          */
         private final String content;
-
         /**
          *
          */
@@ -119,32 +115,26 @@ public final class MailUtils
      *
      */
     public static final String CONTENT_TYPE_CHARSET_SUFFIX = ";charset=";
-
     /**
      *
      */
     public static final String CONTENT_TYPE_HTML = "text/html";
-
     /**
      *
      */
     public static final String CONTENT_TYPE_PLAIN = "text/plain";
-
     /**
      *
      */
     public static final String HEADER_CONTENT_ID = "Content-ID";
-
     /**
      *
      */
     public static final String HEADER_MESSAGE_ID = "Message-ID";
-
     /**
      *
      */
     public static final String MULTIPART_SUBTYPE_MIXED = "mixed";
-
     /**
      *
      */
@@ -307,10 +297,8 @@ public final class MailUtils
             size = 0;
         }
 
-        if (part.getContent() instanceof Multipart)
+        if (part.getContent()instanceof Multipart mp)
         {
-            Multipart mp = (Multipart) part.getContent();
-
             for (int i = 0; i < mp.getCount(); i++)
             {
                 Part bp = mp.getBodyPart(i);

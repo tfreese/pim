@@ -1,7 +1,4 @@
-/**
- * Created: 21.02.2017
- */
-
+// Created: 21.02.2017
 package de.freese.pim.common.concurrent;
 
 import java.util.concurrent.ForkJoinPool;
@@ -36,7 +33,6 @@ public class PIMForkJoinWorkerThreadFactory implements ForkJoinWorkerThreadFacto
      *
      */
     private final AtomicInteger counter = new AtomicInteger(1);
-
     /**
      *
      */

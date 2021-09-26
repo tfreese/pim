@@ -6,7 +6,9 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ThreadPoolExecutor;
+
 import javax.annotation.Resource;
+
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
@@ -27,6 +29,7 @@ import org.springframework.scheduling.concurrent.ScheduledExecutorFactoryBean;
 import org.springframework.scheduling.concurrent.ThreadPoolExecutorFactoryBean;
 import org.springframework.web.servlet.config.annotation.AsyncSupportConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
@@ -99,9 +102,8 @@ public class ServerConfig extends WebMvcConfigurationSupport // implements WebMv
         // Make sure dates are serialised in ISO-8601 format instead as timestamps
         for (HttpMessageConverter<?> converter : converters)
         {
-            if (converter instanceof MappingJackson2HttpMessageConverter)
+            if (converter instanceof MappingJackson2HttpMessageConverter jsonMessageConverter)
             {
-                MappingJackson2HttpMessageConverter jsonMessageConverter = (MappingJackson2HttpMessageConverter) converter;
                 jsonMessageConverter.setObjectMapper(this.jsonMapper);
                 // ObjectMapper objectMapper = jsonMessageConverter.getObjectMapper();
                 // objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
@@ -170,6 +172,7 @@ public class ServerConfig extends WebMvcConfigurationSupport // implements WebMv
      *
      * @param executorService {@link ExecutorService}
      * @param scheduledExecutorService {@link ScheduledExecutorService}
+     *
      * @return {@link TaskScheduler}
      */
     @Bean("taskScheduler")

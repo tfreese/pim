@@ -5,10 +5,14 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+
 import javax.activation.DataSource;
+
 import org.springframework.util.FastByteArrayOutputStream;
 import org.springframework.util.StreamUtils;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import de.freese.pim.common.utils.io.IOMonitor;
 import de.freese.pim.common.utils.io.MonitorOutputStream;
 
@@ -23,12 +27,10 @@ public abstract class AbstractDataSource implements DataSource
      *
      */
     private final String contentType;
-
     /**
      *
      */
     private final byte[] data;
-
     /**
      *
      */
@@ -38,6 +40,7 @@ public abstract class AbstractDataSource implements DataSource
      * Erzeugt eine neue Instanz von {@link AbstractDataSource}
      *
      * @param source {@link DataSource}
+     *
      * @throws IOException Falls was schief geht.
      */
     protected AbstractDataSource(final DataSource source) throws IOException
@@ -50,6 +53,7 @@ public abstract class AbstractDataSource implements DataSource
      *
      * @param source {@link DataSource}
      * @param monitor {@link IOMonitor}; Optional
+     *
      * @throws IOException Falls was schief geht.
      */
     protected AbstractDataSource(final DataSource source, final IOMonitor monitor) throws IOException

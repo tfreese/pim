@@ -1,13 +1,11 @@
-/**
- * Created: 15.01.2017
- */
-
+// Created: 15.01.2017
 package de.freese.pim.server;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
+
 import de.freese.pim.common.utils.Utils;
 
 /**
@@ -30,6 +28,7 @@ public class Misc
 
     /**
      * @param args String[]
+     *
      * @throws Exception Falls was schief geht.
      */
     public static void main(final String[] args) throws Exception

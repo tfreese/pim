@@ -1,4 +1,4 @@
-// Erzeugt: 02.03.2016
+// Created: 02.03.2016
 package de.freese.pim.common.spring.autoconfigure.scheduledexecutorservice;
 
 import java.util.concurrent.RejectedExecutionHandler;
@@ -37,20 +37,11 @@ public class ScheduledThreadPoolExecutorAutoConfiguration
      *
      */
     private static final Logger LOGGER = LoggerFactory.getLogger(ScheduledThreadPoolExecutorAutoConfiguration.class);
-
     /**
      *
      */
     @Resource
-    private ScheduledThreadPoolExecutorProperties scheduledThreadPoolExecutorProperties = null;
-
-    /**
-     * Erzeugt eine neue Instanz von {@link ScheduledThreadPoolExecutorAutoConfiguration}
-     */
-    public ScheduledThreadPoolExecutorAutoConfiguration()
-    {
-        super();
-    }
+    private ScheduledThreadPoolExecutorProperties scheduledThreadPoolExecutorProperties;
 
     /**
      * @return {@link ScheduledExecutorFactoryBean}

@@ -18,14 +18,6 @@ public class FunctionStripNotLetter implements UnaryOperator<String>
     public static final Function<String, String> INSTANCE = new FunctionStripNotLetter();
 
     /**
-     * Erzeugt eine neue Instanz von {@link FunctionStripNotLetter}
-     */
-    public FunctionStripNotLetter()
-    {
-        super();
-    }
-
-    /**
      * @see java.util.function.Function#apply(java.lang.Object)
      */
     @Override

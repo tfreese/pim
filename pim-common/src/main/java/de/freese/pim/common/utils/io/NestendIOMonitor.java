@@ -1,7 +1,4 @@
-/**
- * Created: 16.02.2017
- */
-
+// Created: 16.02.2017
 package de.freese.pim.common.utils.io;
 
 import java.util.Objects;
@@ -17,12 +14,10 @@ public class NestendIOMonitor implements IOMonitor
     *
     */
     private long currentyAccepted;
-
     /**
      *
      */
     private final IOMonitor delegate;
-
     /**
      *
      */

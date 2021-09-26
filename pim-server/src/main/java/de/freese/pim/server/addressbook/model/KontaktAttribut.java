@@ -12,24 +12,14 @@ public class KontaktAttribut implements Comparable<KontaktAttribut>
     *
     */
     private String attribut;
-
     /**
     *
     */
     private long kontaktID;
-
     /**
     *
     */
     private String wert;
-
-    /**
-     * Erzeugt eine neue Instanz von {@link KontaktAttribut}
-     */
-    public KontaktAttribut()
-    {
-        super();
-    }
 
     /**
      * @see java.lang.Comparable#compareTo(java.lang.Object)
@@ -42,12 +32,7 @@ public class KontaktAttribut implements Comparable<KontaktAttribut>
             return 0;
         }
 
-        int comp = 0;
-
-        if (comp == 0)
-        {
-            comp = getAttribut().compareTo(ka.getAttribut());
-        }
+        int comp = getAttribut().compareTo(ka.getAttribut());
 
         if (comp == 0)
         {

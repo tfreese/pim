@@ -12,7 +12,6 @@ public class PIMPreloaderNotification implements PreloaderNotification
      *
      */
     private final double progress;
-
     /**
      *
      */

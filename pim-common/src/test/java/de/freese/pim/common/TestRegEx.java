@@ -1,14 +1,13 @@
-/**
- *
- */
 package de.freese.pim.common;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
+
 import de.freese.pim.common.utils.Utils;
 
 /**

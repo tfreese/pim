@@ -29,20 +29,11 @@ public class TaskExecutorAutoConfiguration
     *
     */
     private static final Logger LOGGER = LoggerFactory.getLogger(TaskExecutorAutoConfiguration.class);
-
     /**
     *
     */
     @Resource
-    private ExecutorService executorService = null;
-
-    /**
-     * Erzeugt eine neue Instanz von {@link TaskExecutorAutoConfiguration}
-     */
-    public TaskExecutorAutoConfiguration()
-    {
-        super();
-    }
+    private ExecutorService executorService;
 
     /**
      * @return {@link TaskExecutor}

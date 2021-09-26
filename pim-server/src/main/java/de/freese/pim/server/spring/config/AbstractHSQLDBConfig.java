@@ -1,7 +1,4 @@
-/**
- * Created: 10.02.2017
- */
-
+// Created: 10.02.2017
 package de.freese.pim.server.spring.config;
 
 import java.sql.Connection;
@@ -9,7 +6,9 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.function.Function;
 import java.util.function.UnaryOperator;
+
 import javax.sql.DataSource;
+
 import org.springframework.context.annotation.Bean;
 
 /**
@@ -22,14 +21,6 @@ public abstract class AbstractHSQLDBConfig extends AbstractDBConfig
     static
     {
         System.setProperty("flyway.locations", "classpath:db/hsqldb");
-    }
-
-    /**
-     * Erstellt ein neues {@link AbstractHSQLDBConfig} Object.
-     */
-    protected AbstractHSQLDBConfig()
-    {
-        super();
     }
 
     /**
@@ -49,7 +40,9 @@ public abstract class AbstractHSQLDBConfig extends AbstractDBConfig
      * Führt das Statement "SHUTDOWN COMPACT" aus.
      *
      * @param dataSource {@link DataSource}
+     *
      * @throws SQLException Falls was schief geht.
+     *
      * @deprecated Siehe misc-jsensors: HsqldbServerAutoConfiguration#hsqldbServer
      */
     @Deprecated

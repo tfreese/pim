@@ -1,11 +1,9 @@
-/**
- * Created: 14.01.2017
- */
-
+// Created: 14.01.2017
 package de.freese.pim.server.mail.dao;
 
 import java.util.Collection;
 import java.util.List;
+
 import de.freese.pim.server.mail.model.Mail;
 import de.freese.pim.server.mail.model.MailAccount;
 import de.freese.pim.server.mail.model.MailFolder;
@@ -19,74 +17,82 @@ public interface MailDAO
      * Löschen eines {@link MailAccount}.<br>
      *
      * @param accountID long
+     *
      * @return int; affectedRows
      */
-    public int deleteAccount(long accountID);
+    int deleteAccount(long accountID);
 
     /**
      * Löschen eines {@link MailFolder}.<br>
      *
      * @param folderID long
+     *
      * @return int; affectedRows
      */
-    public int deleteFolder(long folderID);
+    int deleteFolder(long folderID);
 
     /**
      * Löschen aller {@link MailFolder} eines Accounts.<br>
      *
      * @param accountID long
+     *
      * @return int; affectedRows
      */
-    public int deleteFolders(long accountID);
+    int deleteFolders(long accountID);
 
     /**
      * Löschen einer {@link Mail}.<br>
      *
      * @param folderID long
      * @param uid long
+     *
      * @return int; affectedRows
      */
-    public int deleteMail(long folderID, long uid);
+    int deleteMail(long folderID, long uid);
 
     /**
      * Löschen aller {@link Mail}s des Folders.<br>
      *
      * @param folderID long
+     *
      * @return int; affectedRows
      */
-    public int deleteMails(long folderID);
+    int deleteMails(long folderID);
 
     /**
      * Liefert alle MailAccounts, sortiert nach MAIL.
      *
      * @return {@link List}
      */
-    public List<MailAccount> getMailAccounts();
+    List<MailAccount> getMailAccounts();
 
     /**
      * Liefert alle Folder des Mail-Accounts, sortiert nach FULLNAME.
      *
      * @param accountID long
+     *
      * @return {@link List}
      */
-    public List<MailFolder> getMailFolder(long accountID);
+    List<MailFolder> getMailFolder(long accountID);
 
     /**
      * Liefert alle Mails des Folders.
      *
      * @param folderID long
+     *
      * @return {@link List}
      */
-    public List<Mail> getMails(long folderID);
+    List<Mail> getMails(long folderID);
 
     /**
      * Anlegen eines neuen {@link MailAccount}.<br>
      * Die ID wird dabei in die Entity gesetzt.
      *
      * @param account {@link MailAccount}
+     *
      * @return int; affectedRows
      */
-    public int insertAccount(MailAccount account);
+    int insertAccount(MailAccount account);
 
     /**
      * Anlegen von neuen {@link MailFolder}.<br>
@@ -94,9 +100,10 @@ public interface MailDAO
      *
      * @param accountID long
      * @param folders {@link Collection}
+     *
      * @return int[]; affectedRows
      */
-    public int[] insertFolder(long accountID, Collection<MailFolder> folders);
+    int[] insertFolder(long accountID, Collection<MailFolder> folders);
 
     /**
      * Anlegen einer neuen {@link Mail}.<br>
@@ -104,25 +111,28 @@ public interface MailDAO
      *
      * @param folderID long
      * @param mails {@link Collection}
+     *
      * @return int[]; affectedRows
      */
-    public int[] insertMail(long folderID, Collection<Mail> mails);
+    int[] insertMail(long folderID, Collection<Mail> mails);
 
     /**
      * Ändern eines {@link MailAccount}.
      *
      * @param account {@link MailAccount}
+     *
      * @return int; affectedRows
      */
-    public int updateAccount(MailAccount account);
+    int updateAccount(MailAccount account);
 
     /**
      * Ändern eines {@link MailFolder}.
      *
      * @param folder {@link MailFolder}
+     *
      * @return int; affectedRows
      */
-    public int updateFolder(MailFolder folder);
+    int updateFolder(MailFolder folder);
 
     /**
      * Ändern einer {@link Mail}.<br>
@@ -130,7 +140,8 @@ public interface MailDAO
      *
      * @param folderID long
      * @param mail {@link Mail}
+     *
      * @return int; affectedRows
      */
-    public int updateMail(long folderID, Mail mail);
+    int updateMail(long folderID, Mail mail);
 }

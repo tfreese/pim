@@ -1,6 +1,3 @@
-/**
- *
- */
 package de.freese.pim.server.addressbook;
 
 import org.junit.platform.suite.api.SelectPackages;

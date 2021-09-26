@@ -22,21 +22,13 @@ public class PIMClientRESTConfig extends AbstractPIMClientConfig
     // }
 
     /**
-     * Erzeugt eine neue Instanz von {@link PIMClientRESTConfig}
-     */
-    public PIMClientRESTConfig()
-    {
-        super();
-    }
-
-    /**
      * @param serverHost String
      * @param serverPort int
+     *
      * @return {@link RestTemplateBuilder}
      */
     @Bean
-    public RestTemplateBuilder restTemplateBuilder(@Value("${server.host}") final String serverHost,
-            @Value("${server.port}") final int serverPort)
+    public RestTemplateBuilder restTemplateBuilder(@Value("${server.host}") final String serverHost, @Value("${server.port}") final int serverPort)
     {
         // RestTemplateBuilder bean = new RestTemplateBuilder().rootUri(rootUri).basicAuthorization(username, password);
         String url = String.format("http://%s:%d/pim", serverHost, serverPort);

@@ -50,7 +50,6 @@ public class PIMServerApplication
     /**
      * @param args String[]
      */
-    @SuppressWarnings("resource")
     public static void main(final String[] args)
     {
         if (args.length == 0)

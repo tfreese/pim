@@ -3,6 +3,7 @@ package de.freese.pim.common.model.mail;
 
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -18,6 +19,7 @@ public class InternetAddress
 {
     /**
      * @param addresses {@link InternetAddress}[]
+     *
      * @return String
      */
     public static String toString(final InternetAddress[] addresses)
@@ -31,19 +33,10 @@ public class InternetAddress
      *
      */
     private final String address;
-
     /**
      *
      */
     private final String personal;
-
-    // /**
-    // * Erzeugt eine neue Instanz von {@link InternetAddress}
-    // */
-    // public InternetAddress()
-    // {
-    // super();
-    // }
 
     /**
      * Erzeugt eine neue Instanz von {@link InternetAddress}

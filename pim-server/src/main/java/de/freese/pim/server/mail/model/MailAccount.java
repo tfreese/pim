@@ -1,6 +1,4 @@
-/**
- * Created: 26.12.2016
- */
+// Created: 26.12.2016
 package de.freese.pim.server.mail.model;
 
 import de.freese.pim.common.model.mail.MailPort;
@@ -16,25 +14,21 @@ public class MailAccount
      *
      */
     private long id;
-
     /**
      *
      */
     // @NotNull
     // @Size(min = 0, max = 50)
     private String imapHost;
-
     /**
      *
      */
     private boolean imapLegitimation = true;
-
     /**
      *
      */
     // @NotNull
     private MailPort imapPort = MailPort.IMAPS;
-
     /**
      *
      */
@@ -42,26 +36,22 @@ public class MailAccount
     // @Pattern(regexp = Utils.MAIL_REGEX)
     // @Size(min = 0, max = 50)
     private String mail;
-
     /**
      *
      */
     // @NotNull
     // @Size(min = 0, max = 100)
     private String password;
-
     /**
      *
      */
     // @NotNull
     // @Size(min = 0, max = 50)
     private String smtpHost;
-
     /**
      *
      */
     private boolean smtpLegitimation = true;
-
     /**
      *
      */

@@ -4,6 +4,7 @@ package de.freese.pim.gui.mail;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
+
 import de.freese.pim.gui.mail.model.FXMailFolder;
 import javafx.collections.ListChangeListener;
 import javafx.scene.control.TreeItem;
@@ -50,6 +51,7 @@ public class TreeFolderListChangeListener implements ListChangeListener<FXMailFo
      * Liefert den abgeflachten Stream aller {@link TreeItem} der Hierarchie.
      *
      * @param treeItem {@link TreeItem}
+     *
      * @return {@link Stream}
      */
     private Stream<TreeItem<Object>> getFlattenedStream(final TreeItem<Object> treeItem)
@@ -125,9 +127,8 @@ public class TreeFolderListChangeListener implements ListChangeListener<FXMailFo
     private void removeChild(final TreeItem<Object> parent, final TreeItem<Object> child)
     {
         Runnable runnable = () -> {
-            if (parent.getValue() instanceof FXMailFolder)
+            if (parent.getValue()instanceof FXMailFolder mfParent)
             {
-                FXMailFolder mfParent = (FXMailFolder) parent.getValue();
                 FXMailFolder mfChild = (FXMailFolder) child.getValue();
                 mfParent.removeChild(mfChild);
             }

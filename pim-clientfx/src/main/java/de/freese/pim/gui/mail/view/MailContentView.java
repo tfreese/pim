@@ -10,9 +10,12 @@ import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.Optional;
 import java.util.ResourceBundle;
+
 import javax.activation.DataSource;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import de.freese.pim.common.model.mail.InternetAddress;
 import de.freese.pim.common.model.mail.MailContent;
 import de.freese.pim.common.spring.SpringContext;
@@ -54,32 +57,26 @@ public class MailContentView extends GridPane
      *
      */
     private final Label an;
-
     /**
     *
     */
     private final HBox attachments;
-
     /**
      *
      */
     private final Label bcc;
-
     /**
      *
      */
     private final ResourceBundle bundle;
-
     /**
      *
      */
     private final Label cc;
-
     /**
      *
      */
     private final Label von;
-
     /**
     *
     */

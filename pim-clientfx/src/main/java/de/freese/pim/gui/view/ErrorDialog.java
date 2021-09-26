@@ -25,6 +25,7 @@ public class ErrorDialog
      * Konvertiert den StackTrace.
      *
      * @param throwable {@link Throwable}
+     *
      * @return String
      */
     public static String toString(final Throwable throwable)
@@ -62,6 +63,7 @@ public class ErrorDialog
 
     /**
      * @param text String
+     *
      * @return {@link ErrorDialog}
      */
     public ErrorDialog contentText(final String text)
@@ -75,16 +77,15 @@ public class ErrorDialog
      * Ersetzt den Header- und Content-Text.
      *
      * @param throwable {@link Throwable}
+     *
      * @return {@link ErrorDialog}
      */
     public ErrorDialog forThrowable(final Throwable throwable)
     {
         Throwable th = throwable;
 
-        if (th instanceof PIMException)
+        if (th instanceof PIMException pex)
         {
-            PIMException pex = (PIMException) th;
-
             if (pex.getCause() != null)
             {
                 th = pex.getCause();
@@ -120,6 +121,7 @@ public class ErrorDialog
 
     /**
      * @param text String
+     *
      * @return {@link ErrorDialog}
      */
     public ErrorDialog headerText(final String text)
@@ -140,6 +142,7 @@ public class ErrorDialog
 
     /**
      * @param title String
+     *
      * @return {@link ErrorDialog}
      */
     public ErrorDialog title(final String title)

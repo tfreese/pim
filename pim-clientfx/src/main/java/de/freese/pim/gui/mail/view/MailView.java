@@ -31,55 +31,46 @@ public class MailView implements View
      */
     @FXML
     private Button buttonAddAccount;
-
     /**
     *
     */
     @FXML
     private Button buttonEditAccount;
-
     // /**
     // *
     // */
     // @FXML
     // private HTMLEditor editor = null;
-
     /**
     *
     */
     @FXML
     private MailContentView mailContentView;
-
     /**
      *
      */
     @FXML
     private final Region mainNode;
-
     /**
      *
      */
     @FXML
     private final Region naviNode;
-
     /**
     *
     */
     @FXML
     private ProgressIndicator progressIndicator;
-
     /**
     *
     */
     @FXML
     private TableView<FXMail> tableViewMail;
-
     /**
      *
      */
     @FXML
     private ToolBar toolBar;
-
     /**
     *
     */

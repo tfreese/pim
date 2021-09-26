@@ -2,7 +2,9 @@
 package de.freese.pim.gui.service;
 
 import javax.annotation.Resource;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import de.freese.pim.common.service.AbstractRemoteService;
 
 /**
@@ -16,14 +18,6 @@ public abstract class AbstractFXService extends AbstractRemoteService
     *
     */
     private ObjectMapper jsonMapper;
-
-    /**
-     * Erzeugt eine neue Instanz von {@link AbstractFXService}
-     */
-    protected AbstractFXService()
-    {
-        super();
-    }
 
     /**
      * @return {@link ObjectMapper}

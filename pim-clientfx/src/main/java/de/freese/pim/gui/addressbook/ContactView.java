@@ -37,61 +37,51 @@ public class ContactView implements View
     */
     @FXML
     private Button buttonAddContact;
-
     /**
     *
     */
     @FXML
     private Button buttonDeleteContact;
-
     /**
     *
     */
     @FXML
     private Button buttonEditContact;
-
     /**
      *
      */
     @FXML
     private Label labelFilter;
-
     /**
      *
      */
     @FXML
     private Label labelNachname;
-
     /**
      *
      */
     @FXML
     private Label labelVorname;
-
     /**
      *
      */
     @FXML
     private final Region mainNode;
-
     /**
     *
     */
     @FXML
     private final Region naviNode;
-
     /**
     *
     */
     @FXML
     private TableView<FXKontakt> tableViewKontakt;
-
     /**
      *
      */
     @FXML
     private TextField textFieldNachname;
-
     /**
      *
      */
@@ -257,12 +247,7 @@ public class ContactView implements View
 
             String text = kontakt.getNachname() + " " + kontakt.getVorname();
 
-            if (text.equalsIgnoreCase(newValue))
-            {
-                return true;
-            }
-
-            return false;
+            return text.equalsIgnoreCase(newValue);
         }));
 
         // Da die ObservableList der TableItems neu gesetzt wird, muss auch die Sortierung neu gemacht werden.

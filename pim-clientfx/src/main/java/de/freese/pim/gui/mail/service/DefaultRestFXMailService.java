@@ -1,15 +1,13 @@
-/**
- * Created: 14.02.2017
- */
-
+// Created: 14.02.2017
 package de.freese.pim.gui.mail.service;
 
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+
 import javax.annotation.Resource;
+
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.task.AsyncListenableTaskExecutor;
@@ -18,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.concurrent.ListenableFuture;
 import org.springframework.web.client.AsyncRestTemplate;
 import org.springframework.web.client.RestTemplate;
+
 import de.freese.pim.common.PIMException;
 import de.freese.pim.common.model.mail.DefaultMailContent;
 import de.freese.pim.common.model.mail.MailContent;
@@ -43,19 +42,10 @@ public class DefaultRestFXMailService extends AbstractFXMailService
     *
     */
     private AsyncRestTemplate asyncRestTemplate;
-
     /**
      *
      */
     private RestTemplate restTemplate;
-
-    /**
-     * Erstellt ein neues {@link DefaultRestFXMailService} Object.
-     */
-    public DefaultRestFXMailService()
-    {
-        super();
-    }
 
     /**
      * @see de.freese.pim.gui.mail.service.FXMailService#connectAccount(de.freese.pim.gui.mail.model.FXMailAccount)
@@ -134,7 +124,7 @@ public class DefaultRestFXMailService extends AbstractFXMailService
         int affectedRows = 0;
 
         // ID != 0 -> update
-        List<FXMailFolder> toUpdate = folders.stream().filter(mf -> mf.getID() > 0).collect(Collectors.toList());
+        List<FXMailFolder> toUpdate = folders.stream().filter(mf -> mf.getID() > 0).toList();
 
         if (!toUpdate.isEmpty())
         {
@@ -143,7 +133,7 @@ public class DefaultRestFXMailService extends AbstractFXMailService
         }
 
         // ID = 0 -> insert
-        List<FXMailFolder> toInsert = folders.stream().filter(mf -> mf.getID() == 0).collect(Collectors.toList());
+        List<FXMailFolder> toInsert = folders.stream().filter(mf -> mf.getID() == 0).toList();
 
         if (!toInsert.isEmpty())
         {

@@ -4,11 +4,13 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ResourceBundle;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
+
 import de.freese.pim.common.spring.SpringContext;
 import de.freese.pim.gui.main.MainController;
 import de.freese.pim.gui.utils.FXUtils;
@@ -51,12 +53,10 @@ public class PIMApplication extends Application
      *
      */
     public static final Logger LOGGER = LoggerFactory.getLogger(PIMApplication.class);
-
     /**
      *
      */
     private static Window mainWindow;
-
     /**
      * Bildschirm auf dem PIM läuft.
      */

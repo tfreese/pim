@@ -3,6 +3,7 @@ package de.freese.pim.gui.mail.model;
 
 import java.util.Objects;
 import java.util.stream.Stream;
+
 import javafx.beans.binding.IntegerBinding;
 import javafx.beans.value.ObservableIntegerValue;
 import javafx.collections.ListChangeListener;
@@ -20,12 +21,10 @@ public class SumUnreadMailsInChildFolderBinding extends IntegerBinding
      */
     private final ListChangeListener<FXMailFolder> BOUND_LIST_CHANGE_LISTENER =
             (final ListChangeListener.Change<? extends FXMailFolder> change) -> refreshBinding();
-
     /**
      * Reference to our observable list.
      */
     private final ObservableList<FXMailFolder> boundList;
-
     /**
      * Array of currently observed properties of elements of our list.
      */

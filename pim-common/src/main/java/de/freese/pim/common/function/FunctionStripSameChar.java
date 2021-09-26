@@ -17,14 +17,6 @@ public class FunctionStripSameChar implements UnaryOperator<String>
     public static final UnaryOperator<String> INSTANCE = new FunctionStripSameChar();
 
     /**
-     * Erzeugt eine neue Instanz von {@link FunctionStripSameChar}
-     */
-    public FunctionStripSameChar()
-    {
-        super();
-    }
-
-    /**
      * @see java.util.function.Function#apply(java.lang.Object)
      */
     @Override

@@ -1,10 +1,9 @@
-/**
- * Created: 26.12.2016
- */
+// Created: 26.12.2016
 package de.freese.pim.gui.mail.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import de.freese.pim.common.model.mail.MailPort;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.LongProperty;
@@ -34,64 +33,52 @@ public class FXMailAccount
     */
     @JsonIgnore
     private final FilteredList<FXMailFolder> abonnierteFolder;
-
     /**
     *
     */
     @JsonIgnore
     private final ObservableList<FXMailFolder> folder = FXCollections.observableArrayList();
-
     /**
      *
      */
     private LongProperty idProperty = new SimpleLongProperty(this, "id", 0L);
-
     /**
      *
      */
     private final StringProperty imapHostProperty = new SimpleStringProperty(this, "imapHost", null);
-
     /**
      *
      */
     private final BooleanProperty imapLegitimationProperty = new SimpleBooleanProperty(this, "imapLegitimation", true);
-
     /**
      *
      */
     private final ObjectProperty<MailPort> imapPortProperty = new SimpleObjectProperty<>(this, "imapPort", MailPort.IMAPS);
-
     /**
      *
      */
     private final StringProperty mailProperty = new SimpleStringProperty(this, "mail", null);
-
     /**
      *
      */
     private final StringProperty passwordProperty = new SimpleStringProperty(this, "password", null);
-
     /**
     *
     */
     @JsonIgnore
     private final FilteredList<FXMailFolder> rootFolder;
-
     /**
      *
      */
     private final StringProperty smtpHostProperty = new SimpleStringProperty(this, "smtpHost", null);
-
     /**
      *
      */
     private final BooleanProperty smtpLegitimationProperty = new SimpleBooleanProperty(this, "smtpLegitimation", true);
-
     /**
      *
      */
     private final ObjectProperty<MailPort> smtpPortProperty = new SimpleObjectProperty<>(this, "smtpPort", MailPort.SMTPS);
-
     /**
     *
     */

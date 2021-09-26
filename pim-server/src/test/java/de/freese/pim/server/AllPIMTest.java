@@ -1,6 +1,3 @@
-/**
- *
- */
 package de.freese.pim.server;
 
 import org.junit.jupiter.api.AfterAll;

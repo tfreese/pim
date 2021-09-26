@@ -17,17 +17,14 @@ public class MonitoringReadableByteChannel implements ReadableByteChannel
     *
     */
     private final ReadableByteChannel delegate;
-
     /**
     *
     */
     private final IOMonitor monitor;
-
     /**
      * Anzahl Bytes (Größe) des gesamten Channels.
      */
     private final long size;
-
     /**
      * Anzahl gelesener Bytes.
      */

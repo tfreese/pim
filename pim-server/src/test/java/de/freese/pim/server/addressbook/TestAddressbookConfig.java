@@ -1,12 +1,11 @@
-/**
- * Created: 10.07.2016
- */
-
+// Created: 10.07.2016
 package de.freese.pim.server.addressbook;
 
 import java.util.function.Function;
 import java.util.function.UnaryOperator;
+
 import javax.sql.DataSource;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -16,6 +15,7 @@ import org.springframework.jdbc.datasource.SingleConnectionDataSource;
 import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+
 import de.freese.pim.server.addressbook.dao.AddressBookDAO;
 import de.freese.pim.server.addressbook.dao.DefaultAddressBookDAO;
 
@@ -29,6 +29,7 @@ public class TestAddressbookConfig
 {
     /**
      * @param dataSource {@link DataSource}
+     *
      * @return {@link AddressBookDAO}
      */
     @Bean
@@ -63,13 +64,12 @@ public class TestAddressbookConfig
             // populator.addScript(new ClassPathResource("db/hsqldb/pim_addressbook_data.sql"));
             populator.execute(dataSource);
         }
+        catch (RuntimeException ex)
+        {
+            throw ex;
+        }
         catch (Exception ex)
         {
-            if (ex instanceof RuntimeException)
-            {
-                throw (RuntimeException) ex;
-            }
-
             throw new RuntimeException(ex);
         }
 
@@ -91,6 +91,7 @@ public class TestAddressbookConfig
 
     /**
      * @param dataSource {@link DataSource}
+     *
      * @return {@link PlatformTransactionManager}
      */
     @Bean

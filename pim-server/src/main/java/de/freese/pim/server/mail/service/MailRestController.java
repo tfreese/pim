@@ -4,7 +4,9 @@ package de.freese.pim.server.mail.service;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CompletableFuture;
+
 import javax.annotation.Resource;
+
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.async.DeferredResult;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter;
+
 import de.freese.pim.common.model.mail.MailContent;
 import de.freese.pim.common.service.AbstractRemoteService;
 import de.freese.pim.common.utils.io.IOMonitor;
@@ -36,14 +39,6 @@ public class MailRestController extends AbstractRemoteService implements MailSer
     *
     */
     private MailService mailService;
-
-    /**
-     * Erzeugt eine neue Instanz von {@link MailRestController}
-     */
-    public MailRestController()
-    {
-        super();
-    }
 
     /**
      * @see de.freese.pim.server.mail.service.MailService#connectAccount(de.freese.pim.server.mail.model.MailAccount)
@@ -95,6 +90,7 @@ public class MailRestController extends AbstractRemoteService implements MailSer
 
     /**
      * @Valid
+     *
      * @see de.freese.pim.server.mail.service.MailService#insertAccount(de.freese.pim.server.mail.model.MailAccount)
      */
     @Override
@@ -165,6 +161,7 @@ public class MailRestController extends AbstractRemoteService implements MailSer
      * @param accountID long
      * @param folderID long
      * @param folderFullName String
+     *
      * @return {@link List}
      */
     @GetMapping("/mailsAsyncCallable/{accountID}/{folderID}/{folderFullName}")
@@ -183,6 +180,7 @@ public class MailRestController extends AbstractRemoteService implements MailSer
      * @param accountID long
      * @param folderID long
      * @param folderFullName String
+     *
      * @return {@link List}
      */
     @GetMapping("/mailsAsyncDeferredResult/{accountID}/{folderID}/{folderFullName}")
@@ -221,6 +219,7 @@ public class MailRestController extends AbstractRemoteService implements MailSer
 
     /**
      * @Valid
+     *
      * @see de.freese.pim.server.mail.service.MailService#test(de.freese.pim.server.mail.model.MailAccount)
      */
     @Override
@@ -232,6 +231,7 @@ public class MailRestController extends AbstractRemoteService implements MailSer
 
     /**
      * @Valid
+     *
      * @see de.freese.pim.server.mail.service.MailService#updateAccount(de.freese.pim.server.mail.model.MailAccount)
      */
     @Override

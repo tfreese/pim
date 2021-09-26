@@ -1,7 +1,4 @@
-/**
- * Created: 06.02.2017
- */
-
+// Created: 06.02.2017
 package de.freese.pim.common.utils.io;
 
 import java.io.IOException;
@@ -9,19 +6,11 @@ import java.io.InputStream;
 
 /**
  * Leerer {@link InputStream}.
- * 
+ *
  * @author Thomas Freese
  */
 public class EmptyInputStream extends InputStream
 {
-    /**
-     * Erstellt ein neues {@link EmptyInputStream} Object.
-     */
-    public EmptyInputStream()
-    {
-        super();
-    }
-
     /**
      * @see java.io.InputStream#available()
      */

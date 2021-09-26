@@ -5,12 +5,14 @@ import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLStreamHandler;
+
 import de.freese.pim.common.model.mail.MailContent;
 
 /**
  * {@link URLStreamHandler} für ein Inline einer HTML-Mail.
  *
  * @author Thomas Freese
+ *
  * @see InlineUrlConnection
  */
 public class InlineUrlStreamHandler extends URLStreamHandler
@@ -34,14 +36,6 @@ public class InlineUrlStreamHandler extends URLStreamHandler
     public static void setMailContent(final MailContent mailContent)
     {
         InlineUrlStreamHandler.mailContent = mailContent;
-    }
-
-    /**
-     * Erzeugt eine neue Instanz von {@link InlineUrlStreamHandler}
-     */
-    public InlineUrlStreamHandler()
-    {
-        super();
     }
 
     /**

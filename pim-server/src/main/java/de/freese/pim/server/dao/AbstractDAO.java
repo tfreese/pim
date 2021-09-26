@@ -1,7 +1,4 @@
-/**
- * Created: 20.01.2017
- */
-
+// Created: 20.01.2017
 package de.freese.pim.server.dao;
 
 import java.sql.Connection;
@@ -11,8 +8,10 @@ import java.sql.Statement;
 import java.util.Objects;
 import java.util.function.Function;
 import java.util.function.UnaryOperator;
+
 import javax.annotation.Resource;
 import javax.sql.DataSource;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
@@ -30,29 +29,18 @@ public abstract class AbstractDAO implements InitializingBean
      *
      */
     private JdbcTemplate jdbcTemplate;
-
     /**
      *
      */
     private Logger logger = LoggerFactory.getLogger(getClass());
-
     // /**
     // *
     // */
     // private SequenceQueryExecutor sequenceQueryExecutor;
-
     /**
      *
      */
     private Function<String, String> sequenceQuery;
-
-    /**
-     * Erstellt ein neues {@link AbstractDAO} Object.
-     */
-    protected AbstractDAO()
-    {
-        super();
-    }
 
     /**
      * @see org.springframework.beans.factory.InitializingBean#afterPropertiesSet()
@@ -103,6 +91,7 @@ public abstract class AbstractDAO implements InitializingBean
      * Liefert die nächste ID/PK der Sequence/Tabelle.
      *
      * @param sequence String
+     *
      * @return long
      */
     protected long getNextID(final String sequence)

@@ -15,8 +15,10 @@ import java.util.Optional;
 import java.util.concurrent.Callable;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
+
 import javax.annotation.PreDestroy;
 import javax.annotation.Resource;
+
 import de.freese.pim.common.PIMException;
 import de.freese.pim.common.model.mail.DefaultMailContent;
 import de.freese.pim.common.model.mail.MailContent;
@@ -38,14 +40,6 @@ public abstract class AbstractFXMailService extends AbstractFXService implements
      *
      */
     private Path basePath;
-
-    /**
-     * Erzeugt eine neue Instanz von {@link AbstractFXMailService}
-     */
-    protected AbstractFXMailService()
-    {
-        super();
-    }
 
     /**
      * Folder-Hierarchie aufbauen basierend auf Namen.
@@ -152,7 +146,9 @@ public abstract class AbstractFXMailService extends AbstractFXService implements
      * @param account {@link FXMailAccount}
      * @param mail {@link FXMail}
      * @param monitor {@link IOMonitor}, optional
+     *
      * @return {@link MailContent}
+     *
      * @throws Exception Falls was schief geht.
      */
     protected abstract MailContent loadMailContent(Path mailPath, final FXMailAccount account, final FXMail mail, IOMonitor monitor) throws Exception;
@@ -162,6 +158,7 @@ public abstract class AbstractFXMailService extends AbstractFXService implements
      *
      * @param mailPath {@link Path}
      * @param mailContent {@link MailContent}
+     *
      * @throws Exception Falls was schief geht.
      */
     protected void saveMailContent(final Path mailPath, final MailContent mailContent) throws Exception
@@ -195,6 +192,7 @@ public abstract class AbstractFXMailService extends AbstractFXService implements
      *
      * @param mailPath {@link Path}
      * @param jsonContent String
+     *
      * @throws Exception Falls was schief geht.
      */
     protected void saveMailContent(final Path mailPath, final String jsonContent) throws Exception

@@ -4,6 +4,7 @@ package de.freese.pim.server.mail.api;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.Executor;
+
 import de.freese.pim.common.function.ExceptionalConsumer;
 import de.freese.pim.common.function.ExceptionalFunction;
 import de.freese.pim.common.model.mail.MailContent;
@@ -22,26 +23,26 @@ public interface MailAPI
     /**
      * Initialisiert den Service mit der konkreten Mail-API.
      */
-    public void connect();
+    void connect();
 
     /**
      * Schliessen der Verbindung.
      */
-    public void disconnect();
+    void disconnect();
 
     /**
      * Liefert den Account des Services.
      *
      * @return {@link MailAccount}
      */
-    public MailAccount getAccount();
+    MailAccount getAccount();
 
     /**
      * Liefert alle Folder des Accounts.
      *
      * @return {@link List}
      */
-    public List<MailFolder> getFolder();
+    List<MailFolder> getFolder();
 
     /**
      * Holt die Mail vom Provider und übergibt sie in dem {@link ExceptionalConsumer}.<br>
@@ -50,9 +51,10 @@ public interface MailAPI
      * @param folderFullName String
      * @param uid long
      * @param function {@link ExceptionalFunction}
+     *
      * @return Object
      */
-    public <T> T loadMail(String folderFullName, long uid, ExceptionalFunction<Object, T, Exception> function);
+    <T> T loadMail(String folderFullName, long uid, ExceptionalFunction<Object, T, Exception> function);
 
     /**
      * Holt die Mail vom Provider und übergibt sie in dem {@link ExceptionalConsumer}.<br>
@@ -60,9 +62,10 @@ public interface MailAPI
      * @param folderFullName String
      * @param uid long
      * @param monitor {@link IOMonitor}, optional
+     *
      * @return {@link MailContent}
      */
-    public MailContent loadMail(String folderFullName, long uid, IOMonitor monitor);
+    MailContent loadMail(String folderFullName, long uid, IOMonitor monitor);
 
     /**
      * Lädt die Mails des Folders vom Provider ab der definierten UID.<br>
@@ -70,24 +73,26 @@ public interface MailAPI
      *
      * @param folderFullName {@link String}
      * @param uidFrom long; Startindex der zu ladenen Mails
+     *
      * @return {@link List}
      */
-    public List<Mail> loadMails(String folderFullName, long uidFrom);
+    List<Mail> loadMails(String folderFullName, long uidFrom);
 
     /**
      * Liefert die aktuellen Message-UIDs im Folder.<br>
      *
      * @param folderFullName String
+     *
      * @return {@link Set}
      */
-    public Set<Long> loadMessageIDs(String folderFullName);
+    Set<Long> loadMessageIDs(String folderFullName);
 
     /**
      * Optionaler {@link Executor} für die Mail-API.
      *
      * @param executor {@link Executor}
      */
-    public void setExecutor(final Executor executor);
+    void setExecutor(final Executor executor);
 
     /**
      * Setzt das SEEN-Flag einer Mail.
@@ -95,10 +100,10 @@ public interface MailAPI
      * @param mail {@link Mail}
      * @param seen boolean
      */
-    public void setSeen(Mail mail, boolean seen);
+    void setSeen(Mail mail, boolean seen);
 
     /**
      * Testet die Verbindung.
      */
-    public void testConnection();
+    void testConnection();
 }

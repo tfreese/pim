@@ -1,8 +1,9 @@
-// Erzeugt: 03.03.2016
+// Created: 03.03.2016
 package de.freese.pim.common.spring.autoconfigure.executorservice;
 
 import java.util.concurrent.RejectedExecutionHandler;
 import java.util.concurrent.ThreadPoolExecutor;
+
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
@@ -16,55 +17,39 @@ public class ThreadPoolExecutorProperties
     /**
      *
      */
-    private boolean allowCoreThreadTimeOut = false;
-
+    private boolean allowCoreThreadTimeOut;
     /**
      *
      */
     private int corePoolSize = 1;
-
     /**
      *
      */
     private int keepAliveSeconds = 60;
-
     /**
      *
      */
     private int maxPoolSize = 10;
-
     /**
     *
     */
-    private boolean poolSizeNotGreaterAsDataSourceMaxActive = false;
-
+    private boolean poolSizeNotGreaterAsDataSourceMaxActive;
     /**
      *
      */
     private int queueCapacity = 0;
-
     /**
      *
      */
     private RejectedExecutionHandler rejectedExecutionHandler = new ThreadPoolExecutor.AbortPolicy();
-
     /**
      *
      */
     private String threadNamePrefix = "thread";
-
     /**
      *
      */
     private int threadPriority = Thread.NORM_PRIORITY;
-
-    /**
-     * Erzeugt eine neue Instanz von {@link ThreadPoolExecutorProperties}
-     */
-    public ThreadPoolExecutorProperties()
-    {
-        super();
-    }
 
     /**
      * @return int

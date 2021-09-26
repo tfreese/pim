@@ -1,13 +1,14 @@
-/**
- * Created on 24.05.2016
- */
+// Created: 24.05.2016
 package de.freese.pim.server.addressbook.dao;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.sql.SQLIntegrityConstraintViolationException;
+
 import javax.annotation.Resource;
+
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
@@ -16,6 +17,7 @@ import org.springframework.test.annotation.Commit;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
+
 import de.freese.pim.server.addressbook.TestAddressbookConfig;
 
 /**

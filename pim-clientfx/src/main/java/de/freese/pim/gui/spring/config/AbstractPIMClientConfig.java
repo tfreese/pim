@@ -6,6 +6,7 @@ import java.nio.file.Paths;
 import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ThreadPoolExecutor;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
@@ -27,14 +28,6 @@ import org.springframework.scheduling.concurrent.ThreadPoolExecutorFactoryBean;
 })
 public abstract class AbstractPIMClientConfig
 {
-    /**
-     * Erzeugt eine neue Instanz von {@link AbstractPIMClientConfig}
-     */
-    protected AbstractPIMClientConfig()
-    {
-        super();
-    }
-
     /**
      * @return {@link ThreadPoolExecutorFactoryBean}
      */
@@ -66,6 +59,7 @@ public abstract class AbstractPIMClientConfig
 
     /**
      * @param pimHome String
+     *
      * @return {@link Path}
      */
     @Bean
@@ -79,6 +73,7 @@ public abstract class AbstractPIMClientConfig
 
     /**
      * @param executorService {@link ExecutorService}
+     *
      * @return {@link AsyncTaskExecutor}
      */
     @Bean(

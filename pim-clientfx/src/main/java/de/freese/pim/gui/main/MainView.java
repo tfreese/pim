@@ -29,24 +29,20 @@ public class MainView extends BorderPane implements View
      *
      */
     public static final TextArea LOG_TEXT_AREA = new TextArea();
-
     /**
      *
      */
     @FXML
     private Button buttonContactView;
-
     /**
      *
      */
     @FXML
     private Button buttonMailView;
-
     /**
      *
      */
     private final SplitPane splitPane;
-
     /**
      *
      */

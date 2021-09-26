@@ -3,6 +3,7 @@ package de.freese.pim.gui.main;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+
 import de.freese.pim.gui.addressbook.ContactController;
 import de.freese.pim.gui.addressbook.ContactView;
 import de.freese.pim.gui.controller.AbstractController;
@@ -26,23 +27,19 @@ public class MainController extends AbstractController
     */
     @FXML
     private Button buttonContactView;
-
     /**
     *
     */
     @FXML
     private Button buttonMailView;
-
     /**
      *
      */
     private ContactController contactController;
-
     /**
      *
      */
     private MailController mailController;
-
     /**
      *
      */

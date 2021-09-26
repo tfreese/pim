@@ -12,17 +12,14 @@ public class PIMThreadFactory implements ThreadFactory
      *
      */
     private final String namePrefix;
-
     /**
      * Thread.NORM_PRIORITY
      */
     private final int priority;
-
     /**
      *
      */
     private final ThreadGroup threadGroup;
-
     /**
      *
      */

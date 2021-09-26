@@ -1,6 +1,4 @@
-/**
- * Created on 24.05.2016
- */
+// Created: 24.05.2016
 package de.freese.pim.server.mail;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;

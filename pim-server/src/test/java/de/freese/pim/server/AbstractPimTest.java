@@ -1,6 +1,4 @@
-/**
- * Created: 26.12.2016
- */
+// Created: 26.12.2016
 package de.freese.pim.server;
 
 import java.net.InetAddress;
@@ -16,7 +14,6 @@ public abstract class AbstractPimTest
      *
      */
     public static final Path HOME_DEFAULT = Paths.get(System.getProperty("user.home"), ".pim");
-
     /**
      * {@link Path} für TMP-Dateien.
      */
@@ -31,7 +28,7 @@ public abstract class AbstractPimTest
     {
         String domain = System.getenv("userdomain");
 
-        if ((domain != null) && domain.equals("DOMAIN_WORK"))
+        if ((domain != null) && "DOMAIN_WORK".equals(domain))
         {
             return true;
         }

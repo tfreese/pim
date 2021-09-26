@@ -3,10 +3,14 @@ package de.freese.pim.gui.addressbook.service;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.annotation.Resource;
+
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
+
 import com.fasterxml.jackson.databind.JavaType;
+
 import de.freese.pim.common.PIMException;
 import de.freese.pim.gui.addressbook.model.FXKontakt;
 import de.freese.pim.server.addressbook.model.Kontakt;
@@ -25,14 +29,6 @@ public class DefaultStandaloneFXAddressbookService extends AbstractFXAddressbook
      *
      */
     private AddressBookService addressBookService;
-
-    /**
-     * Erzeugt eine neue Instanz von {@link DefaultStandaloneFXAddressbookService}
-     */
-    public DefaultStandaloneFXAddressbookService()
-    {
-        super();
-    }
 
     /**
      * @see de.freese.pim.gui.addressbook.service.FXAddressbookService#deleteKontakt(long)
@@ -109,7 +105,9 @@ public class DefaultStandaloneFXAddressbookService extends AbstractFXAddressbook
      * Konvertiert die POJOs in die FX-Beans.
      *
      * @param contacts {@link List}
+     *
      * @return {@link List}
+     *
      * @throws Exception Falls was schief geht.
      */
     private List<FXKontakt> toFXContacts(final List<Kontakt> contacts) throws Exception

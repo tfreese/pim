@@ -1,7 +1,4 @@
-/**
- * Created: 12.02.2017
- */
-
+// Created: 12.02.2017
 package de.freese.pim.common.concurrent;
 
 import java.util.concurrent.LinkedBlockingQueue;
@@ -29,7 +26,9 @@ import java.util.function.IntSupplier;
  * <br>
  *
  * @author Thomas Freese
+ *
  * @param <T> Konkreter Typ
+ *
  * @see "org.apache.tomcat.util.threads.TaskQueue"
  * @see "http://tutorials.jenkov.com/java-concurrency/thread-pools.html"
  */
@@ -39,12 +38,10 @@ public class TunedLinkedBlockingQueue<T> extends LinkedBlockingQueue<T>
      *
      */
     private static final long serialVersionUID = 6374300294609033461L;
-
     /**
      *
      */
     private IntSupplier currentSize;
-
     /**
      *
      */
