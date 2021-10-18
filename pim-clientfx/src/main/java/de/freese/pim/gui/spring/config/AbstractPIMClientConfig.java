@@ -66,9 +66,7 @@ public abstract class AbstractPIMClientConfig
     @Primary
     public Path pimHomePath(@Value("${pim.home}") final String pimHome)
     {
-        Path path = Paths.get(pimHome);
-
-        return path;
+        return Paths.get(pimHome);
     }
 
     /**
@@ -86,8 +84,6 @@ public abstract class AbstractPIMClientConfig
     })
     public AsyncTaskExecutor springTaskExecutor(final ExecutorService executorService)
     {
-        AsyncTaskExecutor bean = new ConcurrentTaskExecutor(executorService);
-
-        return bean;
+        return new ConcurrentTaskExecutor(executorService);
     }
 }

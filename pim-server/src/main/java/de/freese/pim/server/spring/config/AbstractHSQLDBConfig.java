@@ -5,7 +5,6 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.function.Function;
-import java.util.function.UnaryOperator;
 
 import javax.sql.DataSource;
 
@@ -31,9 +30,7 @@ public abstract class AbstractHSQLDBConfig extends AbstractDBConfig
     @Bean
     public Function<String, String> sequenceQuery()
     {
-        UnaryOperator<String> query = seq -> "call next value for " + seq;
-
-        return query;
+        return seq -> "call next value for " + seq;
     }
 
     /**

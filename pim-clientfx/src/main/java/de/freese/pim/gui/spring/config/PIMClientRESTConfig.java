@@ -32,12 +32,11 @@ public class PIMClientRESTConfig extends AbstractPIMClientConfig
     {
         // RestTemplateBuilder bean = new RestTemplateBuilder().rootUri(rootUri).basicAuthorization(username, password);
         String url = String.format("http://%s:%d/pim", serverHost, serverPort);
-        RestTemplateBuilder bean = new RestTemplateBuilder().rootUri(url);
-
-        return bean;
 
         // RestTemplate rt = new RestTemplate();
         // rt.getMessageConverters().add(new MappingJacksonHttpMessageConverter());
         // rt.getMessageConverters().add(new StringHttpMessageConverter());
+
+        return new RestTemplateBuilder().rootUri(url);
     }
 }

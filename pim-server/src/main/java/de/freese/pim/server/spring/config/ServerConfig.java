@@ -161,10 +161,8 @@ public class ServerConfig extends WebMvcConfigurationSupport // implements WebMv
     // public TaskExecutor springTaskExecutor(@Qualifier("executorService") final ExecutorService executorService)
     public AsyncTaskExecutor springTaskExecutor()
     {
-        AsyncTaskExecutor bean = new ConcurrentTaskExecutor(executorService().getObject());
-        // AsyncTaskExecutor bean = new ConcurrentTaskExecutor(executorService);
-
-        return bean;
+        return new ConcurrentTaskExecutor(executorService().getObject());
+        // return new ConcurrentTaskExecutor(executorService);
     }
 
     /**
@@ -180,9 +178,7 @@ public class ServerConfig extends WebMvcConfigurationSupport // implements WebMv
     public TaskScheduler springTaskScheduler(@Qualifier("executorService") final ExecutorService executorService,
                                              final ScheduledExecutorService scheduledExecutorService)
     {
-        TaskScheduler bean = new ConcurrentTaskScheduler(executorService, scheduledExecutorService);
-
-        return bean;
+        return new ConcurrentTaskScheduler(executorService, scheduledExecutorService);
     }
 
     // /**
@@ -197,12 +193,10 @@ public class ServerConfig extends WebMvcConfigurationSupport // implements WebMv
     // bean.setMailDAO(new DefaultMailDAO().dataSource(dataSource));
     // bean.setExecutorService(executorService);
     // //
-    // // IMailService mailService = (IMailService) Proxy.newProxyInstance(PIMApplication.class.getClassLoader(), new Class<?>[]
+    // // return (IMailService) Proxy.newProxyInstance(PIMApplication.class.getClassLoader(), new Class<?>[]
     // // {
     // // IMailService.class
     // // }, new TransactionalInvocationHandler(PIMApplication.getDataSource(), defaultMailService));
-    //
-    // return bean;
     // }
 
     // /**

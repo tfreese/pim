@@ -1,5 +1,7 @@
 package de.freese.pim.common.concurrent;
 
+import java.util.Objects;
+import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -9,68 +11,63 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class PIMThreadFactory implements ThreadFactory
 {
     /**
-     *
-     */
-    private final String namePrefix;
+    *
+    */
+    private final boolean daemon;
     /**
-     * Thread.NORM_PRIORITY
-     */
-    private final int priority;
+    *
+    */
+    private final ThreadFactory defaultThreadFactory = Executors.defaultThreadFactory();
     /**
-     *
-     */
-    private final ThreadGroup threadGroup;
+    *
+    */
+    private final String namePattern;
     /**
-     *
-     */
+    *
+    */
     private final AtomicInteger threadNumber = new AtomicInteger(1);
 
     /**
      * Erzeugt eine neue Instanz von {@link PIMThreadFactory}
      *
-     * @param namePrefix String
+     * <pre>
+     * Defaults:
+     * - daemon = true
+     * </pre>
+     *
+     * @param namePattern String; Example: "thread-%d"
      */
-    public PIMThreadFactory(final String namePrefix)
+    public PIMThreadFactory(final String namePattern)
     {
-        this(namePrefix, Thread.NORM_PRIORITY);
+        this(namePattern, true);
     }
 
     /**
      * Erzeugt eine neue Instanz von {@link PIMThreadFactory}
      *
-     * @param namePrefix String
-     * @param priority int
+     * @param namePattern String
+     * @param daemon boolean
      */
-    public PIMThreadFactory(final String namePrefix, final int priority)
+    public PIMThreadFactory(final String namePattern, final boolean daemon)
     {
         super();
 
-        this.namePrefix = namePrefix;
-        this.priority = priority;
-
-        SecurityManager sm = System.getSecurityManager();
-        this.threadGroup = (sm != null) ? sm.getThreadGroup() : Thread.currentThread().getThreadGroup();
+        this.namePattern = Objects.requireNonNull(namePattern, "namePattern required");
+        this.daemon = daemon;
     }
 
     /**
      * @see java.util.concurrent.ThreadFactory#newThread(java.lang.Runnable)
      */
     @Override
-    public Thread newThread(final Runnable task)
+    public Thread newThread(final Runnable r)
     {
-        String threadName = String.format("%s%02d", this.namePrefix, this.threadNumber.getAndIncrement());
+        Thread thread = this.defaultThreadFactory.newThread(r);
 
-        Thread thread = new Thread(this.threadGroup, task, threadName);
+        String threadName = String.format(this.namePattern, this.threadNumber.getAndIncrement());
+        thread.setName(threadName);
 
-        if (thread.isDaemon())
-        {
-            thread.setDaemon(false);
-        }
-
-        if (thread.getPriority() != this.priority)
-        {
-            thread.setPriority(this.priority);
-        }
+        thread.setDaemon(this.daemon);
 
         return thread;
     }

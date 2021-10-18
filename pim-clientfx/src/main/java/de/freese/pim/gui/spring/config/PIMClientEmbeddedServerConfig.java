@@ -134,9 +134,7 @@ public class PIMClientEmbeddedServerConfig extends WebMvcConfigurationSupport
     @Primary
     public Path pimHomePath(@Value("${pim.home}") final String pimHome)
     {
-        Path path = Paths.get(pimHome);
-
-        return path;
+        return Paths.get(pimHome);
     }
 
     /**
@@ -151,13 +149,12 @@ public class PIMClientEmbeddedServerConfig extends WebMvcConfigurationSupport
     {
         // RestTemplateBuilder bean = new RestTemplateBuilder().rootUri(rootUri).basicAuthorization(username, password);
         String url = String.format("http://localhost:%d/pim", serverPort);
-        RestTemplateBuilder bean = new RestTemplateBuilder().rootUri(url);
-
-        return bean;
 
         // RestTemplate rt = new RestTemplate();
         // rt.getMessageConverters().add(new MappingJacksonHttpMessageConverter());
         // rt.getMessageConverters().add(new StringHttpMessageConverter());
+
+        return new RestTemplateBuilder().rootUri(url);
     }
 
     /**
@@ -175,9 +172,7 @@ public class PIMClientEmbeddedServerConfig extends WebMvcConfigurationSupport
     })
     public AsyncTaskExecutor springTaskExecutor(final ExecutorService executorService)
     {
-        AsyncTaskExecutor bean = new ConcurrentTaskExecutor(executorService);
-
-        return bean;
+        return new ConcurrentTaskExecutor(executorService);
     }
 
     // @Component
