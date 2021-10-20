@@ -6,7 +6,7 @@ import javafx.application.Preloader.PreloaderNotification;
 /**
  * @author Thomas Freese
  */
-public class PIMPreloaderNotification implements PreloaderNotification
+public class PimClientPreloaderNotification implements PreloaderNotification
 {
     /**
      *
@@ -18,12 +18,12 @@ public class PIMPreloaderNotification implements PreloaderNotification
     private final String status;
 
     /**
-     * Erzeugt eine neue Instanz von {@link PIMPreloaderNotification}
+     * Erzeugt eine neue Instanz von {@link PimClientPreloaderNotification}
      *
      * @param progress double
      * @param status String
      */
-    public PIMPreloaderNotification(final double progress, final String status)
+    public PimClientPreloaderNotification(final double progress, final String status)
     {
         super();
 
@@ -32,11 +32,11 @@ public class PIMPreloaderNotification implements PreloaderNotification
     }
 
     /**
-     * Erzeugt eine neue Instanz von {@link PIMPreloaderNotification}
+     * Erzeugt eine neue Instanz von {@link PimClientPreloaderNotification}
      *
      * @param status String
      */
-    public PIMPreloaderNotification(final String status)
+    public PimClientPreloaderNotification(final String status)
     {
         super();
 

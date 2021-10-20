@@ -8,6 +8,7 @@ import java.util.ResourceBundle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 
@@ -47,12 +48,12 @@ import javafx.stage.Window;
 // @EnableScheduling
 // @EnableAsync // @Async("executorService")
 // @EnableTransactionManagement // Wird durch Spring-Boot automatisch konfiguriert, wenn DataSource-Bean vorhanden.
-public class PIMApplication extends Application
+public class PimClientApplication extends Application
 {
     /**
      *
      */
-    public static final Logger LOGGER = LoggerFactory.getLogger(PIMApplication.class);
+    public static final Logger LOGGER = LoggerFactory.getLogger(PimClientApplication.class);
     /**
      *
      */
@@ -104,7 +105,6 @@ public class PIMApplication extends Application
     /**
      * @see javafx.application.Application#init()
      */
-    @SuppressWarnings("resource")
     @Override
     public void init() throws Exception
     {
@@ -127,14 +127,14 @@ public class PIMApplication extends Application
         // profiles = parameters.toArray(new String[0]);
         // }
 
-        notifyPreloader(new PIMPreloaderNotification("Init Springframework"));
+        notifyPreloader(new PimClientPreloaderNotification("Init Springframework"));
 
         // SpringApplication.run(Application.class, args);
         //
         // @formatter:off
-        SpringApplication application = new SpringApplicationBuilder(PIMApplication.class)
+        SpringApplication application = new SpringApplicationBuilder(PimClientApplication.class)
                 .headless(false) // Default true, hier false wegen JavaFX
-//                .web(false) // Wird eigentlich automatisch ermittelt.
+                .web(WebApplicationType.NONE) // Wird eigentlich automatisch ermittelt.
 //                .profiles(profiles)
                 .registerShutdownHook(true) // Default true
                 //.banner(new MyBanner())
@@ -169,7 +169,7 @@ public class PIMApplication extends Application
         // getApplicationContext().getAutowireCapableBeanFactory().autowireBean(this);
 
         LOGGER.info("Start P.I.M.");
-        notifyPreloader(new PIMPreloaderNotification("Start P.I.M."));
+        notifyPreloader(new PimClientPreloaderNotification("Start P.I.M."));
         // Utils.sleep(1, TimeUnit.SECONDS);
 
         String pimHome = SpringContext.getEnvironment().getProperty("pim.home");
@@ -195,9 +195,9 @@ public class PIMApplication extends Application
             // "JavaFX Application Thread" umbenennen.
             Thread.currentThread().setName("JavaFX-Appl.");
 
-            PIMApplication.mainWindow = primaryStage;
+            PimClientApplication.mainWindow = primaryStage;
 
-            notifyPreloader(new PIMPreloaderNotification("Init GUI"));
+            notifyPreloader(new PimClientPreloaderNotification("Init GUI"));
             // setUserAgentStylesheet(Application.STYLESHEET_CASPIAN);
             // setUserAgentStylesheet(Application.STYLESHEET_MODENA);
 

@@ -1,7 +1,7 @@
 // Created: 10.02.2017
 package de.freese.pim.server.spring.config;
 
-import java.util.function.Function;
+import java.util.function.UnaryOperator;
 
 import javax.annotation.PreDestroy;
 import javax.annotation.Resource;
@@ -48,10 +48,10 @@ public class SqliteLocalFileConfig extends AbstractDBConfig
     /**
      * SQL für Sequenz-Abfragen.
      *
-     * @return {@link Function}
+     * @return {@link UnaryOperator}
      */
     @Bean
-    public Function<String, String> sequenceQuery()
+    public UnaryOperator<String> sequenceQuery()
     {
         return seq -> "select random()";
     }

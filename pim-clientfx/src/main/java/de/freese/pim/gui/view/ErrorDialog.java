@@ -5,7 +5,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 
 import de.freese.pim.common.PIMException;
-import de.freese.pim.gui.PIMApplication;
+import de.freese.pim.gui.PimClientApplication;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Label;
@@ -136,7 +136,7 @@ public class ErrorDialog
      */
     public void showAndWait()
     {
-        PIMApplication.unblockGUI();
+        PimClientApplication.unblockGUI();
         this.alert.showAndWait();
     }
 

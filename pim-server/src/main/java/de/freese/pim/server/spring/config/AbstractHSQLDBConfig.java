@@ -4,7 +4,7 @@ package de.freese.pim.server.spring.config;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.function.Function;
+import java.util.function.UnaryOperator;
 
 import javax.sql.DataSource;
 
@@ -25,10 +25,10 @@ public abstract class AbstractHSQLDBConfig extends AbstractDBConfig
     /**
      * SQL für Sequenz-Abfragen.
      *
-     * @return {@link Function}
+     * @return {@link UnaryOperator}
      */
     @Bean
-    public Function<String, String> sequenceQuery()
+    public UnaryOperator<String> sequenceQuery()
     {
         return seq -> "call next value for " + seq;
     }

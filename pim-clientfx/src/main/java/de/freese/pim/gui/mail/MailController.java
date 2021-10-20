@@ -13,7 +13,7 @@ import java.util.ResourceBundle;
 import de.freese.pim.common.model.mail.InternetAddress;
 import de.freese.pim.common.model.mail.MailContent;
 import de.freese.pim.common.spring.SpringContext;
-import de.freese.pim.gui.PIMApplication;
+import de.freese.pim.gui.PimClientApplication;
 import de.freese.pim.gui.controller.AbstractController;
 import de.freese.pim.gui.mail.model.FXMail;
 import de.freese.pim.gui.mail.model.FXMailAccount;
@@ -458,7 +458,7 @@ public class MailController extends AbstractController
             return;
         }
 
-        PIMApplication.blockGUI();
+        PimClientApplication.blockGUI();
         FXMailAccount account = getAccount(this.selectedTreeItem.get());
 
         Task<MailContent> loadMailContentTask = new Task<>()
@@ -475,13 +475,13 @@ public class MailController extends AbstractController
             }
         };
         loadMailContentTask.setOnSucceeded(event -> {
-            PIMApplication.unblockGUI();
+            PimClientApplication.unblockGUI();
             MailContent mailContent = loadMailContentTask.getValue();
 
             this.mailContentView.newMailContent(mail, mailContent);
         });
         loadMailContentTask.setOnFailed(event -> {
-            PIMApplication.unblockGUI();
+            PimClientApplication.unblockGUI();
             Throwable th = loadMailContentTask.getException();
 
             getLogger().error(null, th);
@@ -495,7 +495,7 @@ public class MailController extends AbstractController
 
         ReadOnlyBooleanProperty runningProperty = loadMailContentTask.runningProperty();
         getProgressIndicator().visibleProperty().bind(runningProperty);
-        PIMApplication.getMainWindow().getScene().cursorProperty().bind(Bindings.when(runningProperty).then(Cursor.WAIT).otherwise(Cursor.DEFAULT));
+        PimClientApplication.getMainWindow().getScene().cursorProperty().bind(Bindings.when(runningProperty).then(Cursor.WAIT).otherwise(Cursor.DEFAULT));
 
         getTaskExecutor().execute(loadMailContentTask);
     }
@@ -544,7 +544,7 @@ public class MailController extends AbstractController
         ReadOnlyBooleanProperty runningProperty = loadMailsTask.runningProperty();
 
         getProgressIndicator().visibleProperty().bind(runningProperty);
-        PIMApplication.getMainWindow().getScene().cursorProperty().bind(Bindings.when(runningProperty).then(Cursor.WAIT).otherwise(Cursor.DEFAULT));
+        PimClientApplication.getMainWindow().getScene().cursorProperty().bind(Bindings.when(runningProperty).then(Cursor.WAIT).otherwise(Cursor.DEFAULT));
 
         getTaskExecutor().execute(loadMailsTask);
     }

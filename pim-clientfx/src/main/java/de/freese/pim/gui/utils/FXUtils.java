@@ -23,7 +23,7 @@ import org.slf4j.LoggerFactory;
 
 // import com.sun.javafx.binding.StringFormatter;
 import de.freese.pim.common.utils.Utils;
-import de.freese.pim.gui.PIMApplication;
+import de.freese.pim.gui.PimClientApplication;
 import de.freese.pim.gui.controller.AbstractController;
 import de.freese.pim.gui.view.View;
 import javafx.beans.property.IntegerProperty;
@@ -456,7 +456,7 @@ public final class FXUtils
     public static void preloadImage(final ImageView imageView)
     {
         Dialog<?> dialog = new Dialog<>();
-        dialog.initOwner(PIMApplication.getMainWindow());
+        dialog.initOwner(PimClientApplication.getMainWindow());
         dialog.setGraphic(imageView);
 
         imageView.applyCss();

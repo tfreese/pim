@@ -27,7 +27,6 @@ import org.springframework.scheduling.concurrent.ConcurrentTaskExecutor;
 import org.springframework.scheduling.concurrent.ConcurrentTaskScheduler;
 import org.springframework.scheduling.concurrent.ScheduledExecutorFactoryBean;
 import org.springframework.scheduling.concurrent.ThreadPoolExecutorFactoryBean;
-import org.springframework.web.servlet.config.annotation.AsyncSupportConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -41,7 +40,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @Profile("Server")
 @ComponentScan(basePackages =
 {
-        "de.freese.pim"
+        "de.freese.pim.server", "de.freese.pim.common"
 })
 public class ServerConfig extends WebMvcConfigurationSupport // implements WebMvcConfigurer
 {
@@ -51,17 +50,18 @@ public class ServerConfig extends WebMvcConfigurationSupport // implements WebMv
     @Resource
     private ObjectMapper jsonMapper;
 
-    /**
-     * @see org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport#configureAsyncSupport(org.springframework.web.servlet.config.annotation.AsyncSupportConfigurer)
-     */
-    @Override
-    protected void configureAsyncSupport(final AsyncSupportConfigurer configurer)
-    {
-        // Executer für die Verarbeitung der HTTP-Requests.
-        // Verlagert die asynchrone Ausführung von Server-Requests (Callable, WebAsyncTask) in diesen ThreadPool.
-        // Ansonsten würde für jeden Request immer ein neuer Thread erzeugt, siehe TaskExecutor des RequestMappingHandlerAdapter.
-        configurer.setTaskExecutor(springTaskExecutor());
-    }
+    // /**
+    // * @see
+    // org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport#configureAsyncSupport(org.springframework.web.servlet.config.annotation.AsyncSupportConfigurer)
+    // */
+    // @Override
+    // protected void configureAsyncSupport(final AsyncSupportConfigurer configurer)
+    // {
+    // // Executer für die Verarbeitung der HTTP-Requests.
+    // // Verlagert die asynchrone Ausführung von Server-Requests (Callable, WebAsyncTask) in diesen ThreadPool.
+    // // Ansonsten würde für jeden Request immer ein neuer Thread erzeugt, siehe TaskExecutor des RequestMappingHandlerAdapter.
+    // configurer.setTaskExecutor(springTaskExecutor());
+    // }
 
     /**
      * @return {@link ThreadPoolExecutorFactoryBean}
@@ -148,6 +148,8 @@ public class ServerConfig extends WebMvcConfigurationSupport // implements WebMv
     /**
      * Wird für {@link EnableAsync} benötigt.
      *
+     * @param executorService {@link ExecutorService}
+     *
      * @return {@link TaskExecutor}
      */
     @Bean(
@@ -158,11 +160,9 @@ public class ServerConfig extends WebMvcConfigurationSupport // implements WebMv
     {
             AsyncTaskExecutor.class, TaskExecutor.class
     })
-    // public TaskExecutor springTaskExecutor(@Qualifier("executorService") final ExecutorService executorService)
-    public AsyncTaskExecutor springTaskExecutor()
+    public AsyncTaskExecutor springTaskExecutor(final ExecutorService executorService)
     {
-        return new ConcurrentTaskExecutor(executorService().getObject());
-        // return new ConcurrentTaskExecutor(executorService);
+        return new ConcurrentTaskExecutor(executorService);
     }
 
     /**

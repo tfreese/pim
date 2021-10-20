@@ -6,6 +6,7 @@ import java.util.TimeZone;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ThreadPoolExecutor;
+
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,6 +14,7 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.concurrent.ConcurrentTaskScheduler;
 import org.springframework.scheduling.concurrent.ScheduledExecutorFactoryBean;
+
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -97,15 +99,14 @@ public class PIMCommonConfig
     /**
      * @param executorService {@link ExecutorService}
      * @param scheduledExecutorService {@link ScheduledExecutorService}
+     *
      * @return {@link TaskScheduler}
      */
     @Bean("taskScheduler")
     @ConditionalOnMissingBean(TaskScheduler.class)
     public TaskScheduler springTaskScheduler(final ExecutorService executorService, final ScheduledExecutorService scheduledExecutorService)
     {
-        TaskScheduler bean = new ConcurrentTaskScheduler(executorService, scheduledExecutorService);
-
-        return bean;
+        return new ConcurrentTaskScheduler(executorService, scheduledExecutorService);
     }
 
     // @Bean

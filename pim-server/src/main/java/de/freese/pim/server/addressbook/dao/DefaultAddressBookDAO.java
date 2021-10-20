@@ -146,9 +146,7 @@ public class DefaultAddressBookDAO extends AbstractDAO implements AddressBookDAO
         //
         // affectedRows = stmt.executeUpdate();
         // }
-        int affectedRows = getJdbcTemplate().update(sql, kontaktID, attribut.toUpperCase());
-
-        return affectedRows;
+        return getJdbcTemplate().update(sql, kontaktID, attribut.toUpperCase());
     }
 
     /**
@@ -179,9 +177,7 @@ public class DefaultAddressBookDAO extends AbstractDAO implements AddressBookDAO
 
         getJdbcTemplate().update(sqlAttribut, id);
 
-        int affectedRows = getJdbcTemplate().update(sqlKontakt, userID, id);
-
-        return affectedRows;
+        return getJdbcTemplate().update(sqlKontakt, userID, id);
     }
 
     /**
@@ -233,9 +229,7 @@ public class DefaultAddressBookDAO extends AbstractDAO implements AddressBookDAO
         // kontakte = new KontaktDetailsResultSetExtractor().extract(rs);
         // }
         // }
-        List<Kontakt> kontakte = getJdbcTemplate().query(sql.toString(), new KontaktDetailsResultSetExtractor(), userID);
-
-        return kontakte;
+        return getJdbcTemplate().query(sql.toString(), new KontaktDetailsResultSetExtractor(), userID);
     }
 
     /**
@@ -273,9 +267,7 @@ public class DefaultAddressBookDAO extends AbstractDAO implements AddressBookDAO
         // }
         // }
 
-        List<Kontakt> kontakte = getJdbcTemplate().query(sql.toString(), new KontaktRowMapper(), userID);
-
-        return kontakte;
+        return getJdbcTemplate().query(sql.toString(), new KontaktRowMapper(), userID);
     }
 
     /**
@@ -308,9 +300,7 @@ public class DefaultAddressBookDAO extends AbstractDAO implements AddressBookDAO
         // affectedRows = stmt.executeUpdate();
         // }
 
-        int affectedRows = getJdbcTemplate().update(sql, kontaktID, attribut == null ? null : attribut.toUpperCase(), wert);
-
-        return affectedRows;
+        return getJdbcTemplate().update(sql, kontaktID, attribut == null ? null : attribut.toUpperCase(), wert);
     }
 
     /**
@@ -379,10 +369,8 @@ public class DefaultAddressBookDAO extends AbstractDAO implements AddressBookDAO
         // }
         // }
 
-        List<Kontakt> kontakte = getJdbcTemplate().query(sql.toString(), new KontaktDetailsResultSetExtractor(), userID, "%" + name.toLowerCase() + "%",
+        return getJdbcTemplate().query(sql.toString(), new KontaktDetailsResultSetExtractor(), userID, "%" + name.toLowerCase() + "%",
                 "%" + name.toLowerCase() + "%");
-
-        return kontakte;
     }
 
     /**
@@ -406,9 +394,7 @@ public class DefaultAddressBookDAO extends AbstractDAO implements AddressBookDAO
         // affectedRows = stmt.executeUpdate();
         // }
 
-        int affectedRows = getJdbcTemplate().update(sql, wert, kontaktID, attribut.toUpperCase());
-
-        return affectedRows;
+        return getJdbcTemplate().update(sql, wert, kontaktID, attribut.toUpperCase());
     }
 
     /**
@@ -434,8 +420,6 @@ public class DefaultAddressBookDAO extends AbstractDAO implements AddressBookDAO
         // affectedRows = stmt.executeUpdate();
         // }
 
-        int affectedRows = getJdbcTemplate().update(sql, nachname, vorname, userID, id);
-
-        return affectedRows;
+        return getJdbcTemplate().update(sql, nachname, vorname, userID, id);
     }
 }

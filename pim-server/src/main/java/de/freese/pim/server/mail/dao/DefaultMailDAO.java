@@ -215,9 +215,7 @@ public class DefaultMailDAO extends AbstractDAO implements MailDAO
                 return null;
             }
 
-            InternetAddress[] recipients = MailUtils.map(javax.mail.internet.InternetAddress.parse(value));
-
-            return recipients;
+            return MailUtils.map(javax.mail.internet.InternetAddress.parse(value));
         }
     }
 
@@ -230,9 +228,7 @@ public class DefaultMailDAO extends AbstractDAO implements MailDAO
         StringBuilder sql = new StringBuilder();
         sql.append("delete from MAILACCOUNT where ID = ?");
 
-        int affectedRows = getJdbcTemplate().update(sql.toString(), accountID);
-
-        return affectedRows;
+        return getJdbcTemplate().update(sql.toString(), accountID);
     }
 
     /**
@@ -244,9 +240,7 @@ public class DefaultMailDAO extends AbstractDAO implements MailDAO
         StringBuilder sql = new StringBuilder();
         sql.append("delete from MAILFOLDER where ID = ?");
 
-        int affectedRows = getJdbcTemplate().update(sql.toString(), folderID);
-
-        return affectedRows;
+        return getJdbcTemplate().update(sql.toString(), folderID);
     }
 
     /**
@@ -258,9 +252,7 @@ public class DefaultMailDAO extends AbstractDAO implements MailDAO
         StringBuilder sql = new StringBuilder();
         sql.append("delete from MAILFOLDER where ACCOUNT_ID = ?");
 
-        int affectedRows = getJdbcTemplate().update(sql.toString(), accountID);
-
-        return affectedRows;
+        return getJdbcTemplate().update(sql.toString(), accountID);
     }
 
     /**
@@ -272,9 +264,7 @@ public class DefaultMailDAO extends AbstractDAO implements MailDAO
         StringBuilder sql = new StringBuilder();
         sql.append("delete from MAIL where FOLDER_ID = ? and UID = ?");
 
-        int affectedRows = getJdbcTemplate().update(sql.toString(), folderID, uid);
-
-        return affectedRows;
+        return getJdbcTemplate().update(sql.toString(), folderID, uid);
     }
 
     /**
@@ -286,9 +276,7 @@ public class DefaultMailDAO extends AbstractDAO implements MailDAO
         StringBuilder sql = new StringBuilder();
         sql.append("delete from MAIL where FOLDER_ID = ?");
 
-        int affectedRows = getJdbcTemplate().update(sql.toString(), folderID);
-
-        return affectedRows;
+        return getJdbcTemplate().update(sql.toString(), folderID);
     }
 
     /**
@@ -302,11 +290,8 @@ public class DefaultMailDAO extends AbstractDAO implements MailDAO
         StringBuilder sql = new StringBuilder();
         sql.append("select * from MAILACCOUNT where USER_ID = ? order by MAIL asc");
 
-        List<MailAccount> accountList = getJdbcTemplate().query(sql.toString(), new MailAccountRowMapper(), userID);
-
         // accountList.addAll(getMailAccountsJSON());
-
-        return accountList;
+        return getJdbcTemplate().query(sql.toString(), new MailAccountRowMapper(), userID);
     }
 
     // /**
@@ -367,9 +352,7 @@ public class DefaultMailDAO extends AbstractDAO implements MailDAO
         StringBuilder sql = new StringBuilder();
         sql.append("select * from MAILFOLDER where ACCOUNT_ID = ? order by FULLNAME asc");
 
-        List<MailFolder> folderList = getJdbcTemplate().query(sql.toString(), new MailFolderRowMapper(), accountID);
-
-        return folderList;
+        return getJdbcTemplate().query(sql.toString(), new MailFolderRowMapper(), accountID);
     }
 
     /**
@@ -381,9 +364,7 @@ public class DefaultMailDAO extends AbstractDAO implements MailDAO
         StringBuilder sql = new StringBuilder();
         sql.append("select * from MAIL where FOLDER_ID = ?");
 
-        List<Mail> mailList = getJdbcTemplate().query(sql.toString(), new MailRowMapper(), folderID);
-
-        return mailList;
+        return getJdbcTemplate().query(sql.toString(), new MailRowMapper(), folderID);
     }
 
     /**
@@ -458,7 +439,7 @@ public class DefaultMailDAO extends AbstractDAO implements MailDAO
 
         final List<MailFolder> list = (List<MailFolder>) folders;
 
-        int[] affectedRows = getJdbcTemplate().batchUpdate(sql, new BatchPreparedStatementSetter()
+        return getJdbcTemplate().batchUpdate(sql, new BatchPreparedStatementSetter()
         {
             /**
              * @see org.springframework.jdbc.core.BatchPreparedStatementSetter#getBatchSize()
@@ -489,8 +470,6 @@ public class DefaultMailDAO extends AbstractDAO implements MailDAO
                 mf.setID(id);
             }
         });
-
-        return affectedRows;
     }
 
     /**
@@ -593,7 +572,7 @@ public class DefaultMailDAO extends AbstractDAO implements MailDAO
         sql.append(", SMTP_LEGITIMATION = ?");
         sql.append(" where id = ?");
 
-        int affectedRows = getJdbcTemplate().update(sql.toString(), ps -> {
+        return getJdbcTemplate().update(sql.toString(), ps -> {
             ps.setString(1, account.getMail());
             ps.setString(2, encryptedPassword);
             ps.setString(3, account.getImapHost());
@@ -604,8 +583,6 @@ public class DefaultMailDAO extends AbstractDAO implements MailDAO
             ps.setBoolean(8, account.isSmtpLegitimation());
             ps.setLong(9, account.getID());
         });
-
-        return affectedRows;
     }
 
     /**
@@ -622,14 +599,12 @@ public class DefaultMailDAO extends AbstractDAO implements MailDAO
         sql.append(", ABONNIERT = ?");
         sql.append(" where id = ?");
 
-        int affectedRows = getJdbcTemplate().update(sql.toString(), ps -> {
+        return getJdbcTemplate().update(sql.toString(), ps -> {
             ps.setString(1, folder.getFullName());
             ps.setString(2, folder.getName());
             ps.setBoolean(3, folder.isAbonniert());
             ps.setLong(4, folder.getID());
         });
-
-        return affectedRows;
     }
 
     /**
@@ -646,12 +621,10 @@ public class DefaultMailDAO extends AbstractDAO implements MailDAO
         sql.append(" FOLDER_ID = ?");
         sql.append(" and UID = ?");
 
-        int affectedRows = getJdbcTemplate().update(sql.toString(), ps -> {
+        return getJdbcTemplate().update(sql.toString(), ps -> {
             ps.setBoolean(1, mail.isSeen());
             ps.setLong(2, folderID);
             ps.setLong(3, mail.getUID());
         });
-
-        return affectedRows;
     }
 }

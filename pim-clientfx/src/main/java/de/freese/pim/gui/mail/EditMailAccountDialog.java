@@ -7,7 +7,7 @@ import java.util.ResourceBundle;
 import de.freese.pim.common.model.mail.MailPort;
 import de.freese.pim.common.model.mail.MailProvider;
 import de.freese.pim.common.utils.Utils;
-import de.freese.pim.gui.PIMApplication;
+import de.freese.pim.gui.PimClientApplication;
 import de.freese.pim.gui.mail.model.FXMailAccount;
 import de.freese.pim.gui.mail.model.FXMailFolder;
 import de.freese.pim.gui.mail.service.FXMailService;
@@ -180,7 +180,7 @@ public class EditMailAccountDialog
         }
 
         Dialog<ButtonType> dialog = new Dialog<>();
-        dialog.initOwner(PIMApplication.getMainWindow());
+        dialog.initOwner(PimClientApplication.getMainWindow());
         dialog.initModality(Modality.APPLICATION_MODAL);
         dialog.setTitle(bundle.getString(titleKey));
         dialog.setHeaderText(bundle.getString(titleKey));
@@ -362,7 +362,7 @@ public class EditMailAccountDialog
      */
     private void test(final FXMailService mailService, final FXMailAccount bean, final ResourceBundle bundle)
     {
-        PIMApplication.getMainWindow().getScene().setCursor(Cursor.WAIT);
+        PimClientApplication.getMainWindow().getScene().setCursor(Cursor.WAIT);
 
         this.labelTestResult.setText(null);
         this.labelTestResult.setStyle(null);
@@ -387,7 +387,7 @@ public class EditMailAccountDialog
         }
         finally
         {
-            PIMApplication.getMainWindow().getScene().setCursor(Cursor.DEFAULT);
+            PimClientApplication.getMainWindow().getScene().setCursor(Cursor.DEFAULT);
         }
     }
 }

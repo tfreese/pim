@@ -38,7 +38,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @Profile("ClientEmbeddedServer")
 @ComponentScan(basePackages =
 {
-        "de.freese.pim"
+        "de.freese.pim.gui", "de.freese.pim.common"
 })
 public class PIMClientEmbeddedServerConfig extends WebMvcConfigurationSupport
 {

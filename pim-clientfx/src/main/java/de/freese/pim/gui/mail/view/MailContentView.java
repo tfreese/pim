@@ -19,7 +19,7 @@ import org.slf4j.LoggerFactory;
 import de.freese.pim.common.model.mail.InternetAddress;
 import de.freese.pim.common.model.mail.MailContent;
 import de.freese.pim.common.spring.SpringContext;
-import de.freese.pim.gui.PIMApplication;
+import de.freese.pim.gui.PimClientApplication;
 import de.freese.pim.gui.mail.model.FXMail;
 import de.freese.pim.gui.mail.utils.InlineUrlStreamHandler;
 import de.freese.pim.gui.view.ErrorDialog;
@@ -249,7 +249,7 @@ public class MailContentView extends GridPane
         fileChooser.setInitialFileName(dataSource.getName());
         // fileChooser.setSelectedExtensionFilter(new ExtensionFilter("Excel", "*.xls", "*.xlsx"));
 
-        final File file = fileChooser.showSaveDialog(PIMApplication.getMainWindow());
+        final File file = fileChooser.showSaveDialog(PimClientApplication.getMainWindow());
 
         if (file == null)
         {

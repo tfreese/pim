@@ -25,7 +25,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import de.freese.pim.server.PIMServerApplication;
+import de.freese.pim.server.PimServerApplication;
 
 /**
  * Vollständiger Test der gesamten Server-Anwendung.
@@ -35,7 +35,7 @@ import de.freese.pim.server.PIMServerApplication;
 // @ExtendWith(SpringExtension.class) // Ist bereits in SpringBootTest enthalten
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT, classes =
 {
-        PIMServerApplication.class
+        PimServerApplication.class
 }, properties =
 {
         "spring.main.banner-mode=OFF", "logging.config=classpath:logback-server.xml" // , "spring.config.name=application-Server"

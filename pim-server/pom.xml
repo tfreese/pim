@@ -46,7 +46,7 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<configuration>
-					<mainClass>de.freese.pim.server.PIMServerApplication</mainClass>
+					<mainClass>de.freese.pim.server.PimServerApplication</mainClass>
 					<!--jvmArguments>
 						-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5005
 						</jvmArguments -->
@@ -78,11 +78,6 @@
 			<artifactId>pim-common</artifactId>
 			<version>${project.version}</version>
 		</dependency>
-		<dependency>
-			<groupId>de.freese.spring</groupId>
-			<artifactId>spring-autoconfigure-hsqldbserver</artifactId>
-			<version>${project.version}</version>
-		</dependency>		
 		<dependency>
 			<groupId>org.flywaydb</groupId>
 			<artifactId>flyway-core</artifactId>

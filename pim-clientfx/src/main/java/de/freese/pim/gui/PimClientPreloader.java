@@ -15,7 +15,7 @@ import javafx.stage.Stage;
 /**
  * @author Thomas Freese
  */
-public class PIMPreloader extends Preloader
+public class PimClientPreloader extends Preloader
 {
     /**
      *
@@ -68,7 +68,7 @@ public class PIMPreloader extends Preloader
     @Override
     public void handleApplicationNotification(final PreloaderNotification info)
     {
-        if (info instanceof PIMPreloaderNotification noti)
+        if (info instanceof PimClientPreloaderNotification noti)
         {
             double progress = noti.getProgress();
             String status = noti.getStatus();
@@ -103,7 +103,7 @@ public class PIMPreloader extends Preloader
     @Override
     public boolean handleErrorNotification(final ErrorNotification info)
     {
-        PIMApplication.LOGGER.error(null, info.getCause());
+        PimClientApplication.LOGGER.error(null, info.getCause());
 
         new ErrorDialog().forThrowable(info.getCause()).showAndWait();
 

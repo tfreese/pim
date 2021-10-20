@@ -6,13 +6,15 @@ import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
+
 import com.sun.javafx.application.LauncherImpl;
+
 import de.freese.pim.gui.view.ErrorDialog;
 
 /**
  * @author Thomas Freese
  */
-public class PIMLauncher
+public class PimClientLauncher
 {
     /**
      * Liefert die möglichen Optionen der Kommandozeile.<br>
@@ -63,7 +65,7 @@ public class PIMLauncher
         }
         catch (Exception ex)
         {
-            PIMApplication.LOGGER.error(ex.getMessage());
+            PimClientApplication.LOGGER.error(ex.getMessage());
 
             usage();
         }
@@ -81,28 +83,13 @@ public class PIMLauncher
         // System.setProperty("org.slf4j.simpleLogger.log.de.freese.pim", "DEBUG");
         // SysOutOverSLF4J.sendSystemOutAndErrToSLF4J();
         Thread.setDefaultUncaughtExceptionHandler((t, ex) -> {
-            PIMApplication.LOGGER.error("***Default exception handler***");
-            PIMApplication.LOGGER.error(null, ex);
+            PimClientApplication.LOGGER.error("***Default exception handler***");
+            PimClientApplication.LOGGER.error(null, ex);
 
             new ErrorDialog().forThrowable(ex).showAndWait();
         });
 
-        Runnable task = () -> {
-            // launch(args);
-            LauncherImpl.launchApplication(PIMApplication.class, PIMPreloader.class, args);
-        };
-
-        task.run();
-
-        // // Eigene ThreadGroup für Handling von Runtime-Exceptions.
-        // PIMFXThreadGroup threadGroup = new PIMFXThreadGroup();
-        //
-        // // Kein Thread des gesamten Clients kann eine höhere Prio haben.
-        // threadGroup.setMaxPriority(Thread.NORM_PRIORITY + 1);
-        //
-        // Thread thread = new Thread(threadGroup, task, "PIM-Startup");
-        // // thread.setDaemon(false);
-        // thread.start();
+        LauncherImpl.launchApplication(PimClientApplication.class, PimClientPreloader.class, args);
     }
 
     /**

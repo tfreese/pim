@@ -7,7 +7,7 @@ import org.springframework.core.task.AsyncTaskExecutor;
 import org.springframework.scheduling.TaskScheduler;
 
 import de.freese.pim.common.spring.SpringContext;
-import de.freese.pim.gui.PIMApplication;
+import de.freese.pim.gui.PimClientApplication;
 import de.freese.pim.gui.main.MainController;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
@@ -77,7 +77,7 @@ public abstract class AbstractController implements Initializable
      */
     public Window getMainWindow()
     {
-        return PIMApplication.getMainWindow();
+        return PimClientApplication.getMainWindow();
     }
 
     /**
