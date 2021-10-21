@@ -29,10 +29,6 @@ public abstract class AbstractService implements ApplicationContextAware
     *
     */
     private AsyncTaskExecutor taskExecutor;
-    // /**
-    // *
-    // */
-    // private TaskScheduler taskScheduler = null;
 
     /**
      * @return {@link ApplicationContext}
@@ -56,7 +52,6 @@ public abstract class AbstractService implements ApplicationContextAware
     protected AsyncTaskExecutor getTaskExecutor()
     {
         return this.taskExecutor;
-        // return this.executorService;
     }
 
     /**

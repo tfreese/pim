@@ -27,7 +27,7 @@ import com.sun.mail.imap.protocol.IMAPResponse;
  *
  * @author Thomas Freese
  */
-public class IMPADownloadCommand implements ProtocolCommand
+public class IMAPDownloadCommand implements ProtocolCommand
 {
     /**
      *
@@ -39,22 +39,22 @@ public class IMPADownloadCommand implements ProtocolCommand
     private final long uid;
 
     /**
-     * Erzeugt eine neue Instanz von {@link IMPADownloadCommand}
+     * Erzeugt eine neue Instanz von {@link IMAPDownloadCommand}
      *
      * @param uid long; UID der {@link IMAPMessage}
      */
-    public IMPADownloadCommand(final long uid)
+    public IMAPDownloadCommand(final long uid)
     {
         this(null, uid);
     }
 
     /**
-     * Erzeugt eine neue Instanz von {@link IMPADownloadCommand}
+     * Erzeugt eine neue Instanz von {@link IMAPDownloadCommand}
      *
      * @param session {@link Session}
      * @param uid long; UID der {@link IMAPMessage}
      */
-    public IMPADownloadCommand(final Session session, final long uid)
+    public IMAPDownloadCommand(final Session session, final long uid)
     {
         super();
 

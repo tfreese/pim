@@ -35,9 +35,7 @@ public class ErrorDialog
 
         throwable.printStackTrace(printWriter);
 
-        String stackTrace = stringWriter.toString();
-
-        return stackTrace;
+        return stringWriter.toString();
     }
 
     /**

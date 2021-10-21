@@ -92,8 +92,7 @@ public abstract class AbstractFXMailService extends AbstractFXService implements
     {
         try
         {
-            getLogger().debug(() -> String.format("load mail: msgnum=%d; uid=%d; size=%d; subject=%s", mail.getMsgNum(), mail.getUID(), mail.getSize(),
-                    mail.getSubject()));
+            getLogger().debug("load mail: msgnum={}; uid={}; size={}; subject={}", mail.getMsgNum(), mail.getUID(), mail.getSize(), mail.getSubject());
 
             Path folderPath = getBasePath().resolve(account.getMail()).resolve(mail.getFolderFullName());
             Path mailPath = folderPath.resolve(Long.toString(mail.getUID())).resolve(mail.getUID() + ".json.zip");
@@ -102,7 +101,7 @@ public abstract class AbstractFXMailService extends AbstractFXService implements
 
             if (!Files.exists(mailPath))
             {
-                getLogger().debug(() -> String.format("download mail: msgnum=%d; uid=%d", mail.getMsgNum(), mail.getUID()));
+                getLogger().debug("download mail: msgnum={}; uid={}", mail.getMsgNum(), mail.getUID());
 
                 // Mail-Download.
                 Files.createDirectories(mailPath.getParent());

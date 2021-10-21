@@ -78,8 +78,6 @@ public class LoadMailsTask extends Task<Void> implements Callable<Void>
     {
         for (FXMailFolder mf : this.folders)
         {
-            // Thread.sleep(1000);
-
             List<FXMail> mails = this.mailService.loadMails(this.account, mf);
 
             Runnable task = () -> {

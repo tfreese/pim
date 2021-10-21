@@ -4,10 +4,13 @@ package de.freese.pim.server.rest;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadPoolExecutor;
+
 import javax.annotation.Resource;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
@@ -40,14 +43,6 @@ class Config extends WebMvcConfigurationSupport
     // System.setProperty("spring.main.banner-mode", "OFF");
     // System.setProperty("logging.config", "logback-test.xml");
     // }
-
-    /**
-     * Erzeugt eine neue Instanz von {@link Config}
-     */
-    Config()
-    {
-        super();
-    }
 
     /**
      * @see //
@@ -210,6 +205,7 @@ class TestSimpleRestService
      * Testet die asynchrone Ausführung einer bestimmten URL.
      *
      * @param url String
+     *
      * @throws Exception Falls was schief geht.
      */
     private void testAsync(final String url) throws Exception

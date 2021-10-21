@@ -67,14 +67,12 @@ public class TestService
     @GetMapping("/asyncDateCallable")
     public Callable<String> asycDateCallable()
     {
-        Callable<String> callable = () -> {
+        return () -> {
             getLogger().info("asyncDateCallable: thread={}", Thread.currentThread().getName());
             Thread.sleep(TimeUnit.SECONDS.toMillis(1));
 
             return LocalDateTime.now().toString();
         };
-
-        return callable;
     }
 
     /**

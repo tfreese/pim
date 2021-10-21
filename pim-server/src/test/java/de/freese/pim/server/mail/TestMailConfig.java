@@ -86,9 +86,7 @@ class TestMailConfig
     @Bean
     public UnaryOperator<String> sequenceQuery()
     {
-        UnaryOperator<String> query = seq -> "call next value for " + seq;
-
-        return query;
+        return seq -> "call next value for " + seq;
     }
 
     /**

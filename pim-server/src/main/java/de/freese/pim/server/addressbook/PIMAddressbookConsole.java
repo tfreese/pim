@@ -241,24 +241,14 @@ public final class PIMAddressbookConsole
      *
      */
     private AddressBookDAO addressBookDAO;
-
     /**
      *
      */
     private PrintStream printStream = System.out;
-
     /**
      *
      */
     private PlatformTransactionManager transactionManager;
-
-    /**
-     *
-     */
-    private PIMAddressbookConsole()
-    {
-        super();
-    }
 
     /**
      * @param kontakt_id long

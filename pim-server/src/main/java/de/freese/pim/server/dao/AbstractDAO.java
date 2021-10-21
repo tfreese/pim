@@ -1,10 +1,6 @@
 // Created: 20.01.2017
 package de.freese.pim.server.dao;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.Objects;
 import java.util.function.Function;
 import java.util.function.UnaryOperator;
@@ -15,8 +11,8 @@ import javax.sql.DataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.dao.DataRetrievalFailureException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.ResultSetExtractor;
 
 /**
  * Basis-Implementierung eines DAOs.
@@ -98,19 +94,21 @@ public abstract class AbstractDAO implements InitializingBean
     {
         String sql = this.sequenceQuery.apply(sequence);
 
-        try (Connection connection = getJdbcTemplate().getDataSource().getConnection();
-             Statement stmt = connection.createStatement();
-             ResultSet rs = stmt.executeQuery(sql))
-        {
-            rs.next();
-            long id = rs.getLong(1);
+        return getJdbcTemplate().query(sql, (ResultSetExtractor<Long>) rs -> rs.getLong(1));
 
-            return id;
-        }
-        catch (SQLException sex)
-        {
-            throw new DataRetrievalFailureException("", sex);
-        }
+        // try (Connection connection = getJdbcTemplate().getDataSource().getConnection();
+        // Statement stmt = connection.createStatement();
+        // ResultSet rs = stmt.executeQuery(sql))
+        // {
+        // rs.next();
+        // long id = rs.getLong(1);
+        //
+        // return id;
+        // }
+        // catch (SQLException sex)
+        // {
+        // throw new DataRetrievalFailureException("", sex);
+        // }
     }
 
     /**

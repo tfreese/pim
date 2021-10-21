@@ -60,9 +60,7 @@ class TestMailDAO
     {
         MailAccount account = new MailAccount();
 
-        DataIntegrityViolationException exception = assertThrows(DataIntegrityViolationException.class, () -> {
-            this.mailDAO.insertAccount(account);
-        });
+        DataIntegrityViolationException exception = assertThrows(DataIntegrityViolationException.class, () -> this.mailDAO.insertAccount(account));
 
         assertNotNull(exception);
     }
@@ -170,9 +168,8 @@ class TestMailDAO
     {
         MailFolder folder = new MailFolder();
 
-        DataIntegrityViolationException exception = assertThrows(DataIntegrityViolationException.class, () -> {
-            this.mailDAO.insertFolder(2, Arrays.asList(folder));
-        });
+        DataIntegrityViolationException exception =
+                assertThrows(DataIntegrityViolationException.class, () -> this.mailDAO.insertFolder(2, Arrays.asList(folder)));
 
         assertNotNull(exception);
     }
@@ -260,9 +257,7 @@ class TestMailDAO
     {
         Mail mail = new Mail();
 
-        DataIntegrityViolationException exception = assertThrows(DataIntegrityViolationException.class, () -> {
-            this.mailDAO.insertMail(4, Arrays.asList(mail));
-        });
+        DataIntegrityViolationException exception = assertThrows(DataIntegrityViolationException.class, () -> this.mailDAO.insertMail(4, Arrays.asList(mail)));
 
         assertNotNull(exception);
     }

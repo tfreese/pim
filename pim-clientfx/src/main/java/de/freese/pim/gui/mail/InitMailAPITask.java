@@ -97,9 +97,7 @@ public class InitMailAPITask extends Task<List<FXMailFolder>>
 
         this.mailService.connectAccount(this.account);
 
-        List<FXMailFolder> folders = this.mailService.loadFolder(this.account.getID());
-
-        return folders;
+        return this.mailService.loadFolder(this.account.getID());
     }
 
     /**

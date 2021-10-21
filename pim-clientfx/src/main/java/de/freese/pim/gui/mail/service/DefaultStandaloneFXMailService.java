@@ -98,9 +98,7 @@ public class DefaultStandaloneFXMailService extends AbstractFXMailService
         {
             List<MailAccount> accounts = getMailService().getMailAccounts();
 
-            List<FXMailAccount> fxBeans = toFXMailAccounts(accounts);
-
-            return fxBeans;
+            return toFXMailAccounts(accounts);
         }
         catch (Exception ex)
         {
@@ -272,9 +270,7 @@ public class DefaultStandaloneFXMailService extends AbstractFXMailService
             // List<FXMailFolder> fxBeans = getMailService().test(pojo).stream().map(this::toFXBean).collect(Collectors.toList());
             MailAccount pojo = toPojoMailAccount(account);
 
-            List<FXMailFolder> fxBeans = toFXMailFolders(getMailService().test(pojo));
-
-            return fxBeans;
+            return toFXMailFolders(getMailService().test(pojo));
         }
         catch (Exception ex)
         {
@@ -307,9 +303,8 @@ public class DefaultStandaloneFXMailService extends AbstractFXMailService
         JavaType type = getJsonMapper().getTypeFactory().constructCollectionType(ArrayList.class, FXMailAccount.class);
 
         byte[] jsonBytes = getJsonMapper().writer().writeValueAsBytes(accounts);
-        List<FXMailAccount> fxBeans = getJsonMapper().readValue(jsonBytes, type);
 
-        return fxBeans;
+        return getJsonMapper().readValue(jsonBytes, type);
     }
 
     /**
@@ -333,9 +328,8 @@ public class DefaultStandaloneFXMailService extends AbstractFXMailService
         JavaType type = getJsonMapper().getTypeFactory().constructCollectionType(ArrayList.class, FXMailFolder.class);
 
         byte[] jsonBytes = getJsonMapper().writer().writeValueAsBytes(folders);
-        List<FXMailFolder> fxBeans = getJsonMapper().readValue(jsonBytes, type);
 
-        return fxBeans;
+        return getJsonMapper().readValue(jsonBytes, type);
     }
 
     /**
@@ -370,9 +364,8 @@ public class DefaultStandaloneFXMailService extends AbstractFXMailService
 
         // byte[] jsonBytes = getJsonMapper().writer().writeValueAsBytes(mails);
         String json = getJsonMapper().writer().writeValueAsString(mails);
-        List<FXMail> fxBeans = getJsonMapper().readValue(json, type);
 
-        return fxBeans;
+        return getJsonMapper().readValue(json, type);
     }
 
     /**
@@ -398,9 +391,8 @@ public class DefaultStandaloneFXMailService extends AbstractFXMailService
         // ma.setSmtpPort(account.getSmtpPort());
 
         byte[] jsonBytes = getJsonMapper().writer().writeValueAsBytes(account);
-        MailAccount ma = getJsonMapper().readValue(jsonBytes, MailAccount.class);
 
-        return ma;
+        return getJsonMapper().readValue(jsonBytes, MailAccount.class);
     }
 
     /**
@@ -417,9 +409,8 @@ public class DefaultStandaloneFXMailService extends AbstractFXMailService
         JavaType type = getJsonMapper().getTypeFactory().constructCollectionType(ArrayList.class, MailFolder.class);
 
         byte[] jsonBytes = getJsonMapper().writer().writeValueAsBytes(folders);
-        List<MailFolder> fxBeans = getJsonMapper().readValue(jsonBytes, type);
 
-        return fxBeans;
+        return getJsonMapper().readValue(jsonBytes, type);
     }
 
     /**

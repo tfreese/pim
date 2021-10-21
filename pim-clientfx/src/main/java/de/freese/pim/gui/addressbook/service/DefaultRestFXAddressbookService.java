@@ -38,9 +38,7 @@ public class DefaultRestFXAddressbookService extends AbstractFXAddressbookServic
     @Override
     public int deleteKontakt(final long id)
     {
-        int affectedRows = getRestTemplate().postForObject("/addressBook/contact/delete/{contactID}", id, Integer.class);
-
-        return affectedRows;
+        return getRestTemplate().postForObject("/addressBook/contact/delete/{contactID}", id, Integer.class);
     }
 
     /**
@@ -92,8 +90,6 @@ public class DefaultRestFXAddressbookService extends AbstractFXAddressbookServic
         variables.put("surname", nachname);
         variables.put("forename", vorname);
 
-        int affectedRows = getRestTemplate().postForObject("/addressBook/contact/update/{contactID}", id, Integer.class, variables);
-
-        return affectedRows;
+        return getRestTemplate().postForObject("/addressBook/contact/update/{contactID}", id, Integer.class, variables);
     }
 }

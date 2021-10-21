@@ -168,9 +168,7 @@ public class MailRestController extends AbstractRemoteService implements MailSer
     public Callable<List<Mail>> loadMailsAsyncCallable(@PathVariable("accountID") final long accountID, @PathVariable("folderID") final long folderID,
                                                        @PathVariable("folderFullName") final String folderFullName)
     {
-        Callable<List<Mail>> callable = () -> getMailService().loadMails(accountID, folderID, folderFullName);
-
-        return callable;
+        return () -> getMailService().loadMails(accountID, folderID, folderFullName);
     }
 
     /**

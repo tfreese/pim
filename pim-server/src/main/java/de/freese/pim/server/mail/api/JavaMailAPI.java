@@ -218,9 +218,7 @@ public class JavaMailAPI extends AbstractMailAPI
         properties.setProperty("mail.imaps.fetchsize", "1048576"); // 1MB, Long.toString(1024 * 1024)
         // properties.setProperty("mail.imaps.partialfetch", "false");
 
-        Session s = Session.getInstance(properties, authenticator);
-
-        return s;
+        return Session.getInstance(properties, authenticator);
     }
 
     /**
@@ -359,7 +357,7 @@ public class JavaMailAPI extends AbstractMailAPI
             Folder root = getStore().getDefaultFolder();
 
             // @formatter:off
-            List<MailFolder> folder = Stream.of(root.list("*"))
+            return Stream.of(root.list("*"))
                     .map(f ->
                     {
                         MailFolder mf = new MailFolder();
@@ -372,8 +370,6 @@ public class JavaMailAPI extends AbstractMailAPI
             // @formatter:on
 
             // closeFolder(root);
-
-            return folder;
         });
     }
 

@@ -4,6 +4,9 @@ package de.freese.pim.gui.mail.utils;
 import java.net.URLStreamHandler;
 import java.net.URLStreamHandlerFactory;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * {@link URLStreamHandlerFactory} für eine Mail.<br>
  *
@@ -21,10 +24,10 @@ import java.net.URLStreamHandlerFactory;
  */
 public class MailUrlStreamHandlerFactory implements URLStreamHandlerFactory
 {
-    // /**
-    // *
-    // */
-    // private final static Logger LOGGER = LoggerFactory.getLogger(MailUrlStreamHandlerFactory.class);
+    /**
+    *
+    */
+    private final static Logger LOGGER = LoggerFactory.getLogger(MailUrlStreamHandlerFactory.class);
 
     /**
      * @see java.net.URLStreamHandlerFactory#createURLStreamHandler(java.lang.String)
@@ -51,7 +54,7 @@ public class MailUrlStreamHandlerFactory implements URLStreamHandlerFactory
         }
         catch (Exception ex)
         {
-            ex.printStackTrace();
+            LOGGER.error(null, ex);
         }
 
         throw new InternalError("could not load " + protocol + "system protocol handler");

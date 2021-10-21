@@ -57,7 +57,6 @@ public class TreeFolderListChangeListener implements ListChangeListener<FXMailFo
     private Stream<TreeItem<Object>> getFlattenedStream(final TreeItem<Object> treeItem)
     {
         return Stream.concat(Stream.of(treeItem), treeItem.getChildren().stream().flatMap(this::getFlattenedStream));
-        // return treeItem.getChildren().stream().flatMap(this::getFlattenedStream);
     }
 
     /**
@@ -80,8 +79,6 @@ public class TreeFolderListChangeListener implements ListChangeListener<FXMailFo
             {
                 for (FXMailFolder mf : change.getAddedSubList())
                 {
-                    // System.out.printf("Stream: count=%d%n", getFlattenedStream(getParent()).count());
-
                     // @formatter:off
                     Optional<TreeItem<Object>> parentItem = getFlattenedStream(getParent())
                             //.peek(System.out::println)

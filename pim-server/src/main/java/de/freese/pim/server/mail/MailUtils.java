@@ -348,8 +348,6 @@ public final class MailUtils
     {
         List<DataSource> dataSources = new ArrayList<>();
 
-        // part.getContentType();
-
         if (part.isMimeType("text/plain") || part.isMimeType("TEXT/plain") || part.isMimeType("text/html") || part.isMimeType("TEXT/html"))
         {
             dataSources.add(part.getDataHandler().getDataSource());

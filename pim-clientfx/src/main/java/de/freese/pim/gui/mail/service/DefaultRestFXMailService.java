@@ -62,9 +62,7 @@ public class DefaultRestFXMailService extends AbstractFXMailService
     @Override
     public int deleteAccount(final long accountID)
     {
-        int affectedRows = getRestTemplate().postForObject("/mail/account/delete/{id}", accountID, Integer.class);
-
-        return affectedRows;
+        return getRestTemplate().postForObject("/mail/account/delete/{id}", accountID, Integer.class);
     }
 
     /**
@@ -173,9 +171,7 @@ public class DefaultRestFXMailService extends AbstractFXMailService
 
         saveMailContent(mailPath, jsonContent.getBody());
 
-        MailContent mailContent = getJsonMapper().readValue(jsonContent.getBody(), DefaultMailContent.class);
-
-        return mailContent;
+        return getJsonMapper().readValue(jsonContent.getBody(), DefaultMailContent.class);
     }
 
     /**
@@ -252,8 +248,6 @@ public class DefaultRestFXMailService extends AbstractFXMailService
     @Override
     public int updateAccount(final FXMailAccount account)
     {
-        int affectedRows = getRestTemplate().postForObject("/mail/account/update", account, int.class);
-
-        return affectedRows;
+        return getRestTemplate().postForObject("/mail/account/update", account, int.class);
     }
 }

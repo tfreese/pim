@@ -104,7 +104,6 @@ public class ContactView implements View
      */
     private Region createMainNode()
     {
-        // return new Label("Contacts");
         GridPane gridPane = new GridPane();
         gridPane.getStyleClass().add("gridpane");
 

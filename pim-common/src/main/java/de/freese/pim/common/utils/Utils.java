@@ -217,13 +217,11 @@ public final class Utils
     public static Set<Field> getAnnotatedFields(final Object object, final Class<? extends Annotation> annotation)
     {
         // @formatter:off
-        Set<Field> set = Stream.of(object.getClass().getDeclaredFields())
+        return Stream.of(object.getClass().getDeclaredFields())
                 .filter(f -> f.isAnnotationPresent(annotation))
                 .peek(f -> f.setAccessible(true))
                 .collect(Collectors.toSet());
         // @formatter:on
-
-        return set;
     }
 
     /**

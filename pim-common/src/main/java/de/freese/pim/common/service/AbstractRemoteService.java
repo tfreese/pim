@@ -26,13 +26,11 @@ public abstract class AbstractRemoteService extends AbstractService
 
         try
         {
-            String encoded = URLDecoder.decode(value.trim(), "UTF-8");
-
-            return encoded;
+            return URLDecoder.decode(value.trim(), "UTF-8");
         }
-        catch (UnsupportedEncodingException ueex)
+        catch (UnsupportedEncodingException ex)
         {
-            throw new RuntimeException(ueex);
+            throw new RuntimeException(ex);
         }
     }
 
@@ -50,13 +48,11 @@ public abstract class AbstractRemoteService extends AbstractService
 
         try
         {
-            String encoded = URLEncoder.encode(value.trim(), "UTF-8");
-
-            return encoded;
+            return URLEncoder.encode(value.trim(), "UTF-8");
         }
-        catch (UnsupportedEncodingException ueex)
+        catch (UnsupportedEncodingException ex)
         {
-            throw new RuntimeException(ueex);
+            throw new RuntimeException(ex);
         }
     }
 }

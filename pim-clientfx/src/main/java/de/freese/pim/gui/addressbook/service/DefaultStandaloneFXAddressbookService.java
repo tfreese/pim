@@ -64,9 +64,7 @@ public class DefaultStandaloneFXAddressbookService extends AbstractFXAddressbook
         {
             List<Kontakt> contacts = getAddressBookService().getKontaktDetails(ids);
 
-            List<FXKontakt> fxBeans = toFXContacts(contacts);
-
-            return fxBeans;
+            return toFXContacts(contacts);
         }
         catch (Exception ex)
         {
@@ -115,9 +113,8 @@ public class DefaultStandaloneFXAddressbookService extends AbstractFXAddressbook
         JavaType type = getJsonMapper().getTypeFactory().constructCollectionType(ArrayList.class, FXKontakt.class);
 
         byte[] jsonBytes = getJsonMapper().writer().writeValueAsBytes(contacts);
-        List<FXKontakt> fxBeans = getJsonMapper().readValue(jsonBytes, type);
 
-        return fxBeans;
+        return getJsonMapper().readValue(jsonBytes, type);
     }
 
     /**

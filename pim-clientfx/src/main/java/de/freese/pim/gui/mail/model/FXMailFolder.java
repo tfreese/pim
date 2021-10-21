@@ -334,8 +334,6 @@ public class FXMailFolder
      */
     public void setName(final String name)
     {
-        // Objects.requireNonNull(name, "name required");
-
         nameProperty().set(name);
 
         Predicate<String> predicate = "send"::equals;

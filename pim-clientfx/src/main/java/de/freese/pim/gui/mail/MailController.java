@@ -193,9 +193,7 @@ public class MailController extends AbstractController
             ti = ti.getParent();
         }
 
-        FXMailAccount account = (FXMailAccount) ti.getValue();
-
-        return account;
+        return (FXMailAccount) ti.getValue();
     }
 
     /**
@@ -418,7 +416,7 @@ public class MailController extends AbstractController
      */
     private void loadMailAccounts(final TreeItem<Object> root)
     {
-        getLogger().debug(() -> "Load MailAccounts");
+        getLogger().debug("Load MailAccounts");
 
         // contextMenuProperty().bind(
         // Bindings.when(Bindings.equal(itemProperty(),"TABS"))
@@ -453,7 +451,7 @@ public class MailController extends AbstractController
 
         if (mail == null)
         {
-            getLogger().debug(() -> "no mail selected");
+            getLogger().debug("no mail selected");
 
             return;
         }
