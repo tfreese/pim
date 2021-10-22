@@ -4,13 +4,10 @@ package de.freese.pim.gui.spring.config;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.ThreadPoolExecutor;
 
 import javax.annotation.Resource;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -18,11 +15,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.task.AsyncTaskExecutor;
-import org.springframework.core.task.TaskExecutor;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.scheduling.concurrent.ConcurrentTaskExecutor;
-import org.springframework.scheduling.concurrent.ThreadPoolExecutorFactoryBean;
 import org.springframework.util.SocketUtils;
 import org.springframework.web.servlet.config.annotation.AsyncSupportConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
@@ -58,6 +52,12 @@ public class PIMClientEmbeddedServerConfig extends WebMvcConfigurationSupport
     private ObjectMapper jsonMapper;
 
     /**
+    *
+    */
+    @Resource
+    private AsyncTaskExecutor taskExecutor;
+
+    /**
      * @see org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport#configureAsyncSupport(org.springframework.web.servlet.config.annotation.AsyncSupportConfigurer)
      */
     @Override
@@ -65,31 +65,7 @@ public class PIMClientEmbeddedServerConfig extends WebMvcConfigurationSupport
     {
         // Verlagert die asynchrone Ausführung von Server-Requests (Callable, WebAsyncTask) in diesen ThreadPool.
         // Ansonsten würde für jeden Request immer ein neuer Thread erzeugt, siehe TaskExecutor des RequestMappingHandlerAdapter.
-        configurer.setTaskExecutor(springTaskExecutor(executorService().getObject()));
-    }
-
-    /**
-     * @return {@link ThreadPoolExecutorFactoryBean}
-     */
-    @Bean
-    public ThreadPoolExecutorFactoryBean executorService()
-    {
-        int coreSize = Math.max(2, Runtime.getRuntime().availableProcessors());
-        int maxSize = coreSize;
-        int queueSize = maxSize * 5;
-
-        ThreadPoolExecutorFactoryBean bean = new ThreadPoolExecutorFactoryBean();
-        bean.setCorePoolSize(coreSize);
-        bean.setMaxPoolSize(maxSize);
-        bean.setKeepAliveSeconds(0);
-        bean.setQueueCapacity(queueSize);
-        bean.setThreadPriority(Thread.NORM_PRIORITY);
-        bean.setThreadNamePrefix("client-");
-        bean.setRejectedExecutionHandler(new ThreadPoolExecutor.AbortPolicy());
-        bean.setAllowCoreThreadTimeOut(false);
-        bean.setExposeUnconfigurableExecutor(true);
-
-        return bean;
+        configurer.setTaskExecutor(this.taskExecutor);
     }
 
     /**
@@ -155,24 +131,6 @@ public class PIMClientEmbeddedServerConfig extends WebMvcConfigurationSupport
         // rt.getMessageConverters().add(new StringHttpMessageConverter());
 
         return new RestTemplateBuilder().rootUri(url);
-    }
-
-    /**
-     * @param executorService {@link ExecutorService}
-     *
-     * @return {@link AsyncTaskExecutor}
-     */
-    @Bean(
-    {
-            "taskExecutor", "asyncTaskExecutor"
-    })
-    @ConditionalOnMissingBean(
-    {
-            AsyncTaskExecutor.class, TaskExecutor.class
-    })
-    public AsyncTaskExecutor springTaskExecutor(final ExecutorService executorService)
-    {
-        return new ConcurrentTaskExecutor(executorService);
     }
 
     // @Component

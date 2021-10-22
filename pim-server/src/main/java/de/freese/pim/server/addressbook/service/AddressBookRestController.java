@@ -32,7 +32,7 @@ public class AddressBookRestController extends AbstractRemoteService implements 
     private AddressBookService addressBookService;
 
     /**
-     * @see de.freese.pim.server.addressbook.dao.AddressBookDAO#backup(java.nio.file.Path)
+     * @see de.freese.pim.server.addressbook.service.AddressBookService#backup(java.nio.file.Path)
      */
     @Override
     @PostMapping("/backup")
@@ -42,7 +42,7 @@ public class AddressBookRestController extends AbstractRemoteService implements 
     }
 
     /**
-     * @see de.freese.pim.server.addressbook.dao.AddressBookDAO#deleteAttribut(long, java.lang.String)
+     * @see de.freese.pim.server.addressbook.service.AddressBookService#deleteAttribut(long, java.lang.String)
      */
     @Override
     @PostMapping("/attribute/delete/{contactID}/{attribute}")
@@ -52,7 +52,7 @@ public class AddressBookRestController extends AbstractRemoteService implements 
     }
 
     /**
-     * @see de.freese.pim.server.addressbook.dao.AddressBookDAO#deleteKontakt(long)
+     * @see de.freese.pim.server.addressbook.service.AddressBookService#deleteKontakt(long)
      */
     @Override
     @PostMapping("/contact/delete/{contactID}")
@@ -70,7 +70,7 @@ public class AddressBookRestController extends AbstractRemoteService implements 
     }
 
     /**
-     * @see de.freese.pim.server.addressbook.dao.AddressBookDAO#getKontaktDetails(long[])
+     * @see de.freese.pim.server.addressbook.service.AddressBookService#getKontaktDetails(long[])
      */
     @Override
     @PostMapping("details")
@@ -80,7 +80,7 @@ public class AddressBookRestController extends AbstractRemoteService implements 
     }
 
     /**
-     * @see de.freese.pim.server.addressbook.dao.AddressBookDAO#getKontakte()
+     * @see de.freese.pim.server.addressbook.service.AddressBookService#getKontakte()
      */
     @Override
     @GetMapping("/contacts")
@@ -90,7 +90,7 @@ public class AddressBookRestController extends AbstractRemoteService implements 
     }
 
     /**
-     * @see de.freese.pim.server.addressbook.dao.AddressBookDAO#insertAttribut(long, java.lang.String, java.lang.String)
+     * @see de.freese.pim.server.addressbook.service.AddressBookService#insertAttribut(long, java.lang.String, java.lang.String)
      */
     @Override
     @PostMapping("/attribute/insert/{contactID}/{attribute}/{value}")
@@ -101,7 +101,7 @@ public class AddressBookRestController extends AbstractRemoteService implements 
     }
 
     /**
-     * @see de.freese.pim.server.addressbook.dao.AddressBookDAO#insertKontakt(java.lang.String, java.lang.String)
+     * @see de.freese.pim.server.addressbook.service.AddressBookService#insertKontakt(java.lang.String, java.lang.String)
      */
     @Override
     @PostMapping("/contact/insert")
@@ -111,7 +111,7 @@ public class AddressBookRestController extends AbstractRemoteService implements 
     }
 
     /**
-     * @see de.freese.pim.server.addressbook.dao.AddressBookDAO#searchKontakte(java.lang.String)
+     * @see de.freese.pim.server.addressbook.service.AddressBookService#searchKontakte(java.lang.String)
      */
     @Override
     @GetMapping("/contact/search/{name}")
@@ -130,7 +130,7 @@ public class AddressBookRestController extends AbstractRemoteService implements 
     }
 
     /**
-     * @see de.freese.pim.server.addressbook.dao.AddressBookDAO#updateAttribut(long, java.lang.String, java.lang.String)
+     * @see de.freese.pim.server.addressbook.service.AddressBookService#updateAttribut(long, java.lang.String, java.lang.String)
      */
     @Override
     @PostMapping("/attribute/update/{contactID}/{attribute}/{value}")
@@ -141,7 +141,7 @@ public class AddressBookRestController extends AbstractRemoteService implements 
     }
 
     /**
-     * @see de.freese.pim.server.addressbook.dao.AddressBookDAO#updateKontakt(long, java.lang.String, java.lang.String)
+     * @see de.freese.pim.server.addressbook.service.AddressBookService#updateKontakt(long, java.lang.String, java.lang.String)
      */
     @Override
     @PostMapping("/contact/update/{contactID}")

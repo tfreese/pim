@@ -1,10 +1,6 @@
 // Created: 10.02.2017
 package de.freese.pim.server.spring.config;
 
-import javax.annotation.PreDestroy;
-import javax.annotation.Resource;
-import javax.sql.DataSource;
-
 import org.hsqldb.Database;
 import org.hsqldb.server.Server;
 import org.springframework.beans.factory.annotation.Value;
@@ -27,22 +23,13 @@ import de.freese.pim.common.utils.Utils;
 @PropertySource("classpath:database.properties")
 public class HsqldbEmbeddedServerConfig extends AbstractHSQLDBConfig
 {
-    static
-    {
-        int port = getNextFreePort();
-
-        // Damit die Placeholder in Properties funktionieren: ${hsqldbPort}
-        System.setProperty("hsqldbPort", Integer.toString(port));
-    }
-
     /**
-     * Der Port muss feststehen BEVOR die DataSourceAutoConfiguration anspringt !<br>
-     * Siehe application-HsqldbEmbeddedServer.properties
-     *
-     * @return int
+     * Erstellt ein neues {@link HsqldbEmbeddedServerConfig} Object.
      */
-    private static int getNextFreePort()
+    public HsqldbEmbeddedServerConfig()
     {
+        super();
+
         int port = SocketUtils.findAvailableTcpPort();
 
         if (port <= 0)
@@ -50,14 +37,9 @@ public class HsqldbEmbeddedServerConfig extends AbstractHSQLDBConfig
             port = Utils.getNextFreePort(49001);
         }
 
-        return port;
+        // Damit die Placeholder in Properties funktionieren: ${hsqldbPort}
+        System.setProperty("hsqldbPort", Integer.toString(port));
     }
-
-    /**
-    *
-    */
-    @Resource
-    private DataSource dataSource;
 
     /**
      * @param pimHome String
@@ -96,21 +78,5 @@ public class HsqldbEmbeddedServerConfig extends AbstractHSQLDBConfig
         server.setDatabasePath(0, "file:/" + pimHome + "/" + pimDbName);
 
         return server;
-    }
-
-    /**
-     * @see de.freese.pim.server.spring.config.AbstractDBConfig#preDestroy()
-     */
-    @SuppressWarnings("deprecation")
-    @Override
-    @PreDestroy
-    public void preDestroy() throws Exception
-    {
-        // shutdownCompact(this.dataSource);
-        close(this.dataSource);
-        //
-        // // server.shutdownWithCatalogs(Database.CLOSEMODE_COMPACT);
-        // this.server.shutdownWithCatalogs(Database.CLOSEMODE_IMMEDIATELY);
-        // // server.stop();
     }
 }

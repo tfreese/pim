@@ -2,31 +2,16 @@
 package de.freese.pim.server.spring.config;
 
 import java.util.List;
-import java.util.concurrent.Executor;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ThreadPoolExecutor;
 
 import javax.annotation.Resource;
 
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.task.AsyncTaskExecutor;
-import org.springframework.core.task.TaskExecutor;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.scheduling.TaskScheduler;
-import org.springframework.scheduling.annotation.EnableAsync;
-import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.scheduling.concurrent.ConcurrentTaskExecutor;
-import org.springframework.scheduling.concurrent.ConcurrentTaskScheduler;
-import org.springframework.scheduling.concurrent.ScheduledExecutorFactoryBean;
-import org.springframework.scheduling.concurrent.ThreadPoolExecutorFactoryBean;
+import org.springframework.web.servlet.config.annotation.AsyncSupportConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -50,47 +35,22 @@ public class ServerConfig extends WebMvcConfigurationSupport // implements WebMv
     @Resource
     private ObjectMapper jsonMapper;
 
-    // /**
-    // * @see
-    // org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport#configureAsyncSupport(org.springframework.web.servlet.config.annotation.AsyncSupportConfigurer)
-    // */
-    // @Override
-    // protected void configureAsyncSupport(final AsyncSupportConfigurer configurer)
-    // {
-    // // Executer für die Verarbeitung der HTTP-Requests.
-    // // Verlagert die asynchrone Ausführung von Server-Requests (Callable, WebAsyncTask) in diesen ThreadPool.
-    // // Ansonsten würde für jeden Request immer ein neuer Thread erzeugt, siehe TaskExecutor des RequestMappingHandlerAdapter.
-    // configurer.setTaskExecutor(springTaskExecutor());
-    // }
+    /**
+     *
+     */
+    @Resource
+    private AsyncTaskExecutor taskExecutor;
 
     /**
-     * @return {@link ThreadPoolExecutorFactoryBean}
+     * @see org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport#configureAsyncSupport(org.springframework.web.servlet.config.annotation.AsyncSupportConfigurer)
      */
-    @Bean
-    @ConditionalOnMissingBean(
+    @Override
+    protected void configureAsyncSupport(final AsyncSupportConfigurer configurer)
     {
-            Executor.class, ExecutorService.class
-    })
-    @Primary
-    public ThreadPoolExecutorFactoryBean executorService()
-    {
-        int coreSize = Math.max(2, Runtime.getRuntime().availableProcessors());
-        int maxSize = coreSize * 2;
-        int queueSize = maxSize * 2;
-        int keepAliveSeconds = 60;
-
-        ThreadPoolExecutorFactoryBean bean = new ThreadPoolExecutorFactoryBean();
-        bean.setCorePoolSize(coreSize);
-        bean.setMaxPoolSize(maxSize);
-        bean.setQueueCapacity(queueSize);
-        bean.setKeepAliveSeconds(keepAliveSeconds);
-        bean.setThreadPriority(Thread.NORM_PRIORITY);
-        bean.setThreadNamePrefix("server-");
-        bean.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy());
-        bean.setAllowCoreThreadTimeOut(false);
-        bean.setExposeUnconfigurableExecutor(true);
-
-        return bean;
+        // Executer für die Verarbeitung der HTTP-Requests.
+        // Verlagert die asynchrone Ausführung von Server-Requests (Callable, WebAsyncTask) in diesen ThreadPool.
+        // Ansonsten würde für jeden Request immer ein neuer Thread erzeugt, siehe TaskExecutor des RequestMappingHandlerAdapter.
+        configurer.setTaskExecutor(this.taskExecutor);
     }
 
     /**
@@ -124,61 +84,6 @@ public class ServerConfig extends WebMvcConfigurationSupport // implements WebMv
                 break;
             }
         }
-    }
-
-    /**
-     * @return {@link ScheduledExecutorFactoryBean}
-     */
-    @Bean
-    @ConditionalOnMissingBean(ScheduledExecutorService.class)
-    public ScheduledExecutorFactoryBean scheduledExecutorService()
-    {
-        int poolSize = Math.max(2, Runtime.getRuntime().availableProcessors() / 2);
-
-        ScheduledExecutorFactoryBean bean = new ScheduledExecutorFactoryBean();
-        bean.setPoolSize(poolSize);
-        bean.setThreadPriority(Thread.NORM_PRIORITY);
-        bean.setThreadNamePrefix("scheduler-");
-        bean.setRejectedExecutionHandler(new ThreadPoolExecutor.DiscardOldestPolicy());
-        bean.setExposeUnconfigurableExecutor(true);
-
-        return bean;
-    }
-
-    /**
-     * Wird für {@link EnableAsync} benötigt.
-     *
-     * @param executorService {@link ExecutorService}
-     *
-     * @return {@link TaskExecutor}
-     */
-    @Bean(
-    {
-            "taskExecutor", "asyncTaskExecutor"
-    })
-    @ConditionalOnMissingBean(
-    {
-            AsyncTaskExecutor.class, TaskExecutor.class
-    })
-    public AsyncTaskExecutor springTaskExecutor(final ExecutorService executorService)
-    {
-        return new ConcurrentTaskExecutor(executorService);
-    }
-
-    /**
-     * Wird für {@link EnableScheduling} benötigt.
-     *
-     * @param executorService {@link ExecutorService}
-     * @param scheduledExecutorService {@link ScheduledExecutorService}
-     *
-     * @return {@link TaskScheduler}
-     */
-    @Bean("taskScheduler")
-    @ConditionalOnMissingBean(TaskScheduler.class)
-    public TaskScheduler springTaskScheduler(@Qualifier("executorService") final ExecutorService executorService,
-                                             final ScheduledExecutorService scheduledExecutorService)
-    {
-        return new ConcurrentTaskScheduler(executorService, scheduledExecutorService);
     }
 
     // /**

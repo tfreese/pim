@@ -21,10 +21,16 @@ import org.springframework.context.annotation.Profile;
 })
 public class PIMClientRESTConfig extends AbstractPIMClientConfig
 {
-    // static
-    // {
-    // System.setProperty("flyway.enabled", Boolean.toString(false));
-    // }
+    /**
+     * Erstellt ein neues {@link PIMClientRESTConfig} Object.
+     */
+    public PIMClientRESTConfig()
+    {
+        super();
+
+        System.setProperty("spring.main.web-application-type", "NONE");
+        System.setProperty("flyway.enabled", Boolean.toString(false));
+    }
 
     /**
      * @param serverHost String

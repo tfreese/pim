@@ -8,7 +8,6 @@ import java.util.ResourceBundle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 
@@ -134,7 +133,7 @@ public class PimClientApplication extends Application
         // @formatter:off
         SpringApplication application = new SpringApplicationBuilder(PimClientApplication.class)
                 .headless(false) // Default true, hier false wegen JavaFX
-                .web(WebApplicationType.NONE) // Wird eigentlich automatisch ermittelt.
+                //.web(WebApplicationType.NONE) // Wird eigentlich automatisch ermittelt.
 //                .profiles(profiles)
                 .registerShutdownHook(true) // Default true
                 //.banner(new MyBanner())

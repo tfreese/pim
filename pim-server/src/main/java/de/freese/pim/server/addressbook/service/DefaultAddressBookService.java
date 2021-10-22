@@ -3,9 +3,12 @@ package de.freese.pim.server.addressbook.service;
 
 import java.nio.file.Path;
 import java.util.List;
+
 import javax.annotation.Resource;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import de.freese.pim.common.service.AbstractService;
 import de.freese.pim.server.addressbook.dao.AddressBookDAO;
 import de.freese.pim.server.addressbook.model.Kontakt;
@@ -24,7 +27,7 @@ public class DefaultAddressBookService extends AbstractService implements Addres
     private AddressBookDAO addressBookDAO;
 
     /**
-     * @see de.freese.pim.server.addressbook.dao.AddressBookDAO#backup(java.nio.file.Path)
+     * @see de.freese.pim.server.addressbook.service.AddressBookService#backup(java.nio.file.Path)
      */
     @Override
     public boolean backup(final Path directory)
@@ -33,7 +36,7 @@ public class DefaultAddressBookService extends AbstractService implements Addres
     }
 
     /**
-     * @see de.freese.pim.server.addressbook.dao.AddressBookDAO#deleteAttribut(long, java.lang.String)
+     * @see de.freese.pim.server.addressbook.service.AddressBookService#deleteAttribut(long, java.lang.String)
      */
     @Override
     @Transactional
@@ -43,7 +46,7 @@ public class DefaultAddressBookService extends AbstractService implements Addres
     }
 
     /**
-     * @see de.freese.pim.server.addressbook.dao.AddressBookDAO#deleteKontakt(long)
+     * @see de.freese.pim.server.addressbook.service.AddressBookService#deleteKontakt(long)
      */
     @Override
     @Transactional
@@ -61,7 +64,7 @@ public class DefaultAddressBookService extends AbstractService implements Addres
     }
 
     /**
-     * @see de.freese.pim.server.addressbook.dao.AddressBookDAO#getKontaktDetails(long[])
+     * @see de.freese.pim.server.addressbook.service.AddressBookService#getKontaktDetails(long[])
      */
     @Override
     @Transactional(readOnly = true)
@@ -71,7 +74,7 @@ public class DefaultAddressBookService extends AbstractService implements Addres
     }
 
     /**
-     * @see de.freese.pim.server.addressbook.dao.AddressBookDAO#getKontakte()
+     * @see de.freese.pim.server.addressbook.service.AddressBookService#getKontakte()
      */
     @Override
     @Transactional(readOnly = true)
@@ -81,7 +84,7 @@ public class DefaultAddressBookService extends AbstractService implements Addres
     }
 
     /**
-     * @see de.freese.pim.server.addressbook.dao.AddressBookDAO#insertAttribut(long, java.lang.String, java.lang.String)
+     * @see de.freese.pim.server.addressbook.service.AddressBookService#insertAttribut(long, java.lang.String, java.lang.String)
      */
     @Override
     @Transactional
@@ -91,7 +94,7 @@ public class DefaultAddressBookService extends AbstractService implements Addres
     }
 
     /**
-     * @see de.freese.pim.server.addressbook.dao.AddressBookDAO#insertKontakt(java.lang.String, java.lang.String)
+     * @see de.freese.pim.server.addressbook.service.AddressBookService#insertKontakt(java.lang.String, java.lang.String)
      */
     @Override
     @Transactional
@@ -101,7 +104,7 @@ public class DefaultAddressBookService extends AbstractService implements Addres
     }
 
     /**
-     * @see de.freese.pim.server.addressbook.dao.AddressBookDAO#searchKontakte(java.lang.String)
+     * @see de.freese.pim.server.addressbook.service.AddressBookService#searchKontakte(java.lang.String)
      */
     @Override
     @Transactional(readOnly = true)
@@ -120,7 +123,7 @@ public class DefaultAddressBookService extends AbstractService implements Addres
     }
 
     /**
-     * @see de.freese.pim.server.addressbook.dao.AddressBookDAO#updateAttribut(long, java.lang.String, java.lang.String)
+     * @see de.freese.pim.server.addressbook.service.AddressBookService#updateAttribut(long, java.lang.String, java.lang.String)
      */
     @Override
     @Transactional
@@ -130,7 +133,7 @@ public class DefaultAddressBookService extends AbstractService implements Addres
     }
 
     /**
-     * @see de.freese.pim.server.addressbook.dao.AddressBookDAO#updateKontakt(long, java.lang.String, java.lang.String)
+     * @see de.freese.pim.server.addressbook.service.AddressBookService#updateKontakt(long, java.lang.String, java.lang.String)
      */
     @Override
     @Transactional

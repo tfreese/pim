@@ -21,7 +21,6 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-// import com.sun.javafx.binding.StringFormatter;
 import de.freese.pim.common.utils.Utils;
 import de.freese.pim.gui.PimClientApplication;
 import de.freese.pim.gui.controller.AbstractController;
@@ -108,8 +107,6 @@ public final class FXUtils
         Map<String, Field> viewMap = viewSet.stream().collect(Collectors.toMap(Field::getName, Function.identity()));
         Map<String, Field> controllerMap = controllerSet.stream().collect(Collectors.toMap(Field::getName, Function.identity()));
 
-        // viewSet.forEach(System.out::println);
-        // viewMap.forEach((key, value) -> System.out.println(key + " " + value));
         copyFields(view, viewMap, controller, controllerMap);
 
         translate(view, viewSet, resources);
@@ -241,6 +238,10 @@ public final class FXUtils
         {
             return JavaBeanLongPropertyBuilder.create().bean(bean).name(method).build();
         }
+        catch (RuntimeException ex)
+        {
+            throw ex;
+        }
         catch (Exception ex)
         {
             throw new RuntimeException(ex);
@@ -259,6 +260,10 @@ public final class FXUtils
         try
         {
             return JavaBeanStringPropertyBuilder.create().bean(bean).name(method).build();
+        }
+        catch (RuntimeException ex)
+        {
+            throw ex;
         }
         catch (Exception ex)
         {
@@ -302,8 +307,6 @@ public final class FXUtils
         final double segment = (colors.length - 1) * progress;
         final int step = (int) segment;
         final double stepProgress = segment - step;
-
-        // System.out.printf("Progress=%f, Segment=%f, Step=%d%n", progress, segment, step);
 
         Color c1 = colors[step];
         Color c2 = colors[step + 1];
@@ -515,7 +518,7 @@ public final class FXUtils
     {
         Objects.requireNonNull(converter, "converter required");
 
-        final StringConverter<T> stringConverter = new StringConverter<>()
+        return new StringConverter<>()
         {
             /**
              * @see javafx.util.StringConverter#fromString(java.lang.String)
@@ -535,8 +538,6 @@ public final class FXUtils
                 return converter.apply(object);
             }
         };
-
-        return stringConverter;
     }
 
     // /**
@@ -666,7 +667,7 @@ public final class FXUtils
         // @formatter:off
         Set<Node> nodes = components.stream()
                 .map(f -> Utils.getValue(f, view))
-                .filter(v -> v instanceof Node)
+                .filter(Node.class::isInstance)
                 .map(Node.class::cast)
                 .flatMap(node -> node.lookupAll("*").stream())
                 .collect(Collectors.toSet());

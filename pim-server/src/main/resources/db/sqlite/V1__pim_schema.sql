@@ -1,4 +1,7 @@
 PRAGMA foreign_keys = ON;
+--BEGIN TRANSACTION;
+
+
 
 DROP TABLE IF EXISTS SETTINGS;
 
@@ -9,3 +12,7 @@ CREATE TABLE SETTINGS --Tabelle für die User-Spezifische Konfiguration
    VALUE    VARCHAR (50) --Wert eines Attributes
 );
 CREATE UNIQUE INDEX SETTINGS_UNQ ON SETTINGS (USER_ID, KEY);
+
+
+
+--COMMIT;

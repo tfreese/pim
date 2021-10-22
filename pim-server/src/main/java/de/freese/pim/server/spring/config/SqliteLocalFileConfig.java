@@ -3,46 +3,66 @@ package de.freese.pim.server.spring.config;
 
 import java.util.function.UnaryOperator;
 
-import javax.annotation.PreDestroy;
-import javax.annotation.Resource;
 import javax.sql.DataSource;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.PropertySource;
+import org.sqlite.SQLiteConfig;
+import org.sqlite.SQLiteDataSource;
+import org.sqlite.javax.SQLiteConnectionPoolDataSource;
 
 /**
  * Spring-Konfiguration der Datenbank.
  *
  * @author Thomas Freese
  */
-@Configuration
+@Configuration()
 @Profile("SqliteLocalFile")
 @PropertySource("classpath:hikari-pool.properties")
 @PropertySource("classpath:database.properties")
-public class SqliteLocalFileConfig extends AbstractDBConfig
+public class SqliteLocalFileConfig
 {
-    static
+    /**
+     * Erstellt ein neues {@link SqliteLocalFileConfig} Object.
+     */
+    public SqliteLocalFileConfig()
     {
-        System.setProperty("flyway.locations", "classpath:db/sqlite");
+        super();
+
+        System.setProperty("spring.flyway.locations", "classpath:db/sqlite");
     }
 
     /**
-    *
-    */
-    @Resource
-    private DataSource dataSource;
-
-    /**
-     * @see de.freese.pim.server.spring.config.AbstractDBConfig#preDestroy()
+     * Nicht Hikari nehmen, sondern die SQLite-Implementierung.
+     *
+     * @param pimHome String
+     * @param pimDbName String
+     *
+     * @return {@link DataSource}
      */
-    @SuppressWarnings("deprecation")
-    @Override
-    @PreDestroy
-    public void preDestroy() throws Exception
+    @Bean
+    public DataSource dataSource(@Value("${pim.home}") final String pimHome, @Value("${pim.db-name}") final String pimDbName)
     {
-        close(this.dataSource);
+        // Native Libraries deaktivieren für den Zugriff auf die Dateien.
+        System.setProperty("sqlite.purejava", "true");
+
+        // Pfade für native Libraries.
+        // System.setProperty("org.sqlite.lib.path", "/home/tommy");
+        // System.setProperty("org.sqlite.lib.name", "sqlite-libsqlitejdbc.so");
+
+        // DriverManager.setLogWriter(new PrintWriter(System.out, true));
+
+        SQLiteConfig config = new SQLiteConfig();
+        config.setReadOnly(false);
+        config.setReadUncommited(true);
+
+        SQLiteDataSource dataSource = new SQLiteConnectionPoolDataSource(config);
+        dataSource.setUrl("jdbc:sqlite:" + pimHome + "/" + pimDbName + ".sqlite");
+
+        return dataSource;
     }
 
     /**

@@ -72,17 +72,6 @@ public abstract class AbstractDAO implements InitializingBean
         return this.logger;
     }
 
-    // /**
-    // * Erstellt einen {@link Semaphore} im {@link JdbcTemplate}, der den Zugriff auf die {@link DataSource} reguliert.
-    // *
-    // * @param maxConnections int
-    // */
-    // @Value("${spring.datasource.tomcat.maxActive:1}")
-    // public void setMaxConnections(final int maxConnections)
-    // {
-    // this.maxConnections = maxConnections;
-    // }
-
     /**
      * Liefert die nächste ID/PK der Sequence/Tabelle.
      *
