@@ -68,12 +68,7 @@
         <!-- compile scope -->
         <dependency>
             <groupId>${project.parent.groupId}</groupId>
-            <artifactId>pim-common</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>${project.parent.groupId}</groupId>
-            <artifactId>pim-server</artifactId>
+            <artifactId>pim-core</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
@@ -90,11 +85,6 @@
         </dependency>
 
         <!-- runtime scope -->
-        <!--dependency>
-        <groupId>uk.org.lidalia</groupId>
-        <artifactId>sysout-over-slf4j</artifactId>
-        </dependency -->
-
         <!-- provided scope -->
         <!-- test scope -->        
     </dependencies>

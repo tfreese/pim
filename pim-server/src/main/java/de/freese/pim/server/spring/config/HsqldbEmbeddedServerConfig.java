@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.util.SocketUtils;
 
-import de.freese.pim.common.utils.Utils;
+import de.freese.pim.core.utils.Utils;
 
 /**
  * Spring-Konfiguration der Datenbank.<br>

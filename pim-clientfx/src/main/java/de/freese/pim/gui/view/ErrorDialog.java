@@ -4,7 +4,7 @@ package de.freese.pim.gui.view;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
-import de.freese.pim.common.PIMException;
+import de.freese.pim.core.PIMException;
 import de.freese.pim.gui.PimClientApplication;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;

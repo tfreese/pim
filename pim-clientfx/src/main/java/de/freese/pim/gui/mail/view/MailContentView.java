@@ -16,9 +16,9 @@ import javax.activation.DataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.freese.pim.common.model.mail.InternetAddress;
-import de.freese.pim.common.model.mail.MailContent;
-import de.freese.pim.common.spring.SpringContext;
+import de.freese.pim.core.mail.InternetAddress;
+import de.freese.pim.core.mail.MailContent;
+import de.freese.pim.core.spring.SpringContext;
 import de.freese.pim.gui.PimClientApplication;
 import de.freese.pim.gui.mail.model.FXMail;
 import de.freese.pim.gui.mail.utils.InlineUrlStreamHandler;

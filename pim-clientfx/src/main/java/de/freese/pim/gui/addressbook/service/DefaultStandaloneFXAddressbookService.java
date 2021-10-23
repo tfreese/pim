@@ -11,10 +11,10 @@ import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.JavaType;
 
-import de.freese.pim.common.PIMException;
+import de.freese.pim.core.PIMException;
+import de.freese.pim.core.model.addressbook.Kontakt;
+import de.freese.pim.core.service.AddressBookService;
 import de.freese.pim.gui.addressbook.model.FXKontakt;
-import de.freese.pim.server.addressbook.model.Kontakt;
-import de.freese.pim.server.addressbook.service.AddressBookService;
 
 /**
  * AddressbookService für JavaFX, wenn es keinen Server gibt.

@@ -69,7 +69,7 @@ public class TestService
     {
         return () -> {
             getLogger().info("asyncDateCallable: thread={}", Thread.currentThread().getName());
-            Thread.sleep(TimeUnit.SECONDS.toMillis(1));
+            TimeUnit.SECONDS.sleep(1);
 
             return LocalDateTime.now().toString();
         };
@@ -89,7 +89,7 @@ public class TestService
             try
             {
                 getLogger().info("supplyAsync: thread={}", Thread.currentThread().getName());
-                Thread.sleep(TimeUnit.SECONDS.toMillis(1));
+                TimeUnit.SECONDS.sleep(1);
 
                 return LocalDateTime.now().toString();
             }
@@ -123,7 +123,7 @@ public class TestService
     {
         Callable<String> callable = () -> {
             getLogger().info("asycDateWebAsyncTask: thread={}", Thread.currentThread().getName());
-            Thread.sleep(TimeUnit.SECONDS.toMillis(1));
+            TimeUnit.SECONDS.sleep(1);
 
             return LocalDateTime.now().toString();
         };

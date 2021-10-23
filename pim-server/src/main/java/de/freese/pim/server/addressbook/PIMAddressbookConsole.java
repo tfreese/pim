@@ -25,12 +25,12 @@ import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
 
-import de.freese.pim.common.utils.PreserveOrderOptionGroup;
-import de.freese.pim.common.utils.Utils;
-import de.freese.pim.server.addressbook.dao.AddressBookDAO;
-import de.freese.pim.server.addressbook.dao.DefaultAddressBookDAO;
-import de.freese.pim.server.addressbook.model.Kontakt;
-import de.freese.pim.server.addressbook.model.KontaktAttribut;
+import de.freese.pim.core.dao.AddressBookDAO;
+import de.freese.pim.core.dao.DefaultAddressBookDAO;
+import de.freese.pim.core.model.addressbook.Kontakt;
+import de.freese.pim.core.model.addressbook.KontaktAttribut;
+import de.freese.pim.core.utils.PreserveOrderOptionGroup;
+import de.freese.pim.core.utils.Utils;
 
 /**
  * Console-Client für das Addressbuch.<br>

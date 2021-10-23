@@ -4,7 +4,7 @@ package de.freese.pim.gui.mail.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import de.freese.pim.common.model.mail.MailPort;
+import de.freese.pim.core.mail.MailPort;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.LongProperty;
 import javafx.beans.property.ObjectProperty;

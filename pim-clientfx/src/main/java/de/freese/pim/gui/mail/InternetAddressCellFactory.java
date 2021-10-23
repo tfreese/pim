@@ -1,7 +1,7 @@
 // Created: 25.01.2017
 package de.freese.pim.gui.mail;
 
-import de.freese.pim.common.model.mail.InternetAddress;
+import de.freese.pim.core.mail.InternetAddress;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.util.Callback;

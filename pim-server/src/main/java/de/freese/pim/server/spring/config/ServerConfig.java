@@ -25,7 +25,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @Profile("Server")
 @ComponentScan(basePackages =
 {
-        "de.freese.pim.server", "de.freese.pim.common"
+        "de.freese.pim.server", "de.freese.pim.core"
 })
 public class ServerConfig extends WebMvcConfigurationSupport // implements WebMvcConfigurer
 {
@@ -34,7 +34,6 @@ public class ServerConfig extends WebMvcConfigurationSupport // implements WebMv
      */
     @Resource
     private ObjectMapper jsonMapper;
-
     /**
      *
      */

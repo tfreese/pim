@@ -17,7 +17,7 @@ import org.springframework.context.annotation.Profile;
 @Profile("ClientREST")
 @ComponentScan(basePackages =
 {
-        "de.freese.pim.gui", "de.freese.pim.common"
+        "de.freese.pim.gui", "de.freese.pim.core"
 })
 public class PIMClientRESTConfig extends AbstractPIMClientConfig
 {

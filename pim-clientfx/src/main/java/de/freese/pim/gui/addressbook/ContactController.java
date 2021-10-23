@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
-import de.freese.pim.common.spring.SpringContext;
+import de.freese.pim.core.spring.SpringContext;
 import de.freese.pim.gui.addressbook.model.FXKontakt;
 import de.freese.pim.gui.addressbook.service.FXAddressbookService;
 import de.freese.pim.gui.controller.AbstractController;

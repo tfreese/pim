@@ -14,7 +14,7 @@ import org.springframework.context.annotation.Profile;
 @Profile("ClientStandalone")
 @ComponentScan(basePackages =
 {
-        "de.freese.pim.gui", "de.freese.pim.common"
+        "de.freese.pim.gui", "de.freese.pim.core"
 })
 public class PIMClientStandaloneConfig extends AbstractPIMClientConfig
 {

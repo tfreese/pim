@@ -3,9 +3,9 @@ package de.freese.pim.gui.mail.service;
 
 import java.util.List;
 
-import de.freese.pim.common.PIMException;
-import de.freese.pim.common.model.mail.MailContent;
-import de.freese.pim.common.utils.io.IOMonitor;
+import de.freese.pim.core.PIMException;
+import de.freese.pim.core.mail.MailContent;
+import de.freese.pim.core.utils.io.IOMonitor;
 import de.freese.pim.gui.mail.model.FXMail;
 import de.freese.pim.gui.mail.model.FXMailAccount;
 import de.freese.pim.gui.mail.model.FXMailFolder;

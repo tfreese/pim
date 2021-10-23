@@ -6,7 +6,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLStreamHandler;
 
-import de.freese.pim.common.model.mail.MailContent;
+import de.freese.pim.core.mail.MailContent;
 
 /**
  * {@link URLStreamHandler} für ein Inline einer HTML-Mail.

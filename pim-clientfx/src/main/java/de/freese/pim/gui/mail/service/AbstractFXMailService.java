@@ -19,11 +19,11 @@ import java.util.zip.GZIPOutputStream;
 import javax.annotation.PreDestroy;
 import javax.annotation.Resource;
 
-import de.freese.pim.common.PIMException;
-import de.freese.pim.common.model.mail.DefaultMailContent;
-import de.freese.pim.common.model.mail.MailContent;
-import de.freese.pim.common.utils.io.IOMonitor;
-import de.freese.pim.common.utils.io.MonitorInputStream;
+import de.freese.pim.core.PIMException;
+import de.freese.pim.core.mail.DefaultMailContent;
+import de.freese.pim.core.mail.MailContent;
+import de.freese.pim.core.utils.io.IOMonitor;
+import de.freese.pim.core.utils.io.MonitorInputStream;
 import de.freese.pim.gui.mail.model.FXMail;
 import de.freese.pim.gui.mail.model.FXMailAccount;
 import de.freese.pim.gui.mail.model.FXMailFolder;
@@ -85,7 +85,7 @@ public abstract class AbstractFXMailService extends AbstractFXService implements
 
     /**
      * @see de.freese.pim.gui.mail.service.FXMailService#loadMailContent(de.freese.pim.gui.mail.model.FXMailAccount, de.freese.pim.gui.mail.model.FXMail,
-     *      de.freese.pim.common.utils.io.IOMonitor)
+     *      de.freese.pim.core.utils.io.IOMonitor)
      */
     @Override
     public MailContent loadMailContent(final FXMailAccount account, final FXMail mail, final IOMonitor monitor)

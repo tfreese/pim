@@ -25,7 +25,7 @@
     </dependencies>
 
     <modules>
-        <module>pim-common</module>
+        <module>pim-core</module>
         <module>pim-server</module>
         <module>pim-clientfx</module>
     </modules>

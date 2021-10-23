@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.freese.pim.common.utils.Utils;
+import de.freese.pim.core.utils.Utils;
 import de.freese.pim.gui.PimClientApplication;
 import de.freese.pim.gui.controller.AbstractController;
 import de.freese.pim.gui.view.View;

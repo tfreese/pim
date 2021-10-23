@@ -10,9 +10,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
-import de.freese.pim.common.model.mail.InternetAddress;
-import de.freese.pim.common.model.mail.MailContent;
-import de.freese.pim.common.spring.SpringContext;
+import de.freese.pim.core.mail.InternetAddress;
+import de.freese.pim.core.mail.MailContent;
+import de.freese.pim.core.spring.SpringContext;
 import de.freese.pim.gui.PimClientApplication;
 import de.freese.pim.gui.controller.AbstractController;
 import de.freese.pim.gui.mail.model.FXMail;
@@ -375,7 +375,7 @@ public class MailController extends AbstractController
         }
         catch (Error er)
         {
-            // Wenn Tomcat der EmbeddedServer ist, war er doe Default URLStreamHandlerFactory hier schon gesetzt.
+            // Wenn Tomcat der EmbeddedServer ist, war die Default URLStreamHandlerFactory hier schon gesetzt.
             // TomcatURLStreamHandlerFactory.getInstance().addUserFactory(new MailUrlStreamHandlerFactory());
             try
             {

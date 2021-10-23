@@ -4,9 +4,9 @@ package de.freese.pim.gui.mail;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
-import de.freese.pim.common.model.mail.MailPort;
-import de.freese.pim.common.model.mail.MailProvider;
-import de.freese.pim.common.utils.Utils;
+import de.freese.pim.core.mail.MailPort;
+import de.freese.pim.core.mail.MailProvider;
+import de.freese.pim.core.utils.Utils;
 import de.freese.pim.gui.PimClientApplication;
 import de.freese.pim.gui.mail.model.FXMailAccount;
 import de.freese.pim.gui.mail.model.FXMailFolder;

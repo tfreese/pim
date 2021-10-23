@@ -8,8 +8,8 @@ import java.net.URLConnection;
 
 import javax.activation.DataSource;
 
-import de.freese.pim.common.model.mail.MailContent;
-import de.freese.pim.common.utils.io.EmptyInputStream;
+import de.freese.pim.core.mail.MailContent;
+import de.freese.pim.core.utils.io.EmptyInputStream;
 
 /**
  * {@link URLConnection} für ein Inline einer HTML-Mail.

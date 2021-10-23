@@ -3,7 +3,7 @@ package de.freese.pim.gui.addressbook.service;
 
 import java.util.List;
 
-import de.freese.pim.common.PIMException;
+import de.freese.pim.core.PIMException;
 import de.freese.pim.gui.addressbook.model.FXKontakt;
 
 /**

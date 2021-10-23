@@ -13,16 +13,16 @@ import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.JavaType;
 
-import de.freese.pim.common.PIMException;
-import de.freese.pim.common.model.mail.MailContent;
-import de.freese.pim.common.utils.io.IOMonitor;
+import de.freese.pim.core.PIMException;
+import de.freese.pim.core.mail.MailContent;
+import de.freese.pim.core.model.mail.Mail;
+import de.freese.pim.core.model.mail.MailAccount;
+import de.freese.pim.core.model.mail.MailFolder;
+import de.freese.pim.core.service.MailService;
+import de.freese.pim.core.utils.io.IOMonitor;
 import de.freese.pim.gui.mail.model.FXMail;
 import de.freese.pim.gui.mail.model.FXMailAccount;
 import de.freese.pim.gui.mail.model.FXMailFolder;
-import de.freese.pim.server.mail.model.Mail;
-import de.freese.pim.server.mail.model.MailAccount;
-import de.freese.pim.server.mail.model.MailFolder;
-import de.freese.pim.server.mail.service.MailService;
 
 /**
  * Standalone-MailService für JavaFX, wenn es keinen Server gibt.
@@ -199,7 +199,7 @@ public class DefaultStandaloneFXMailService extends AbstractFXMailService
 
     /**
      * @see de.freese.pim.gui.mail.service.AbstractFXMailService#loadMailContent(java.nio.file.Path, de.freese.pim.gui.mail.model.FXMailAccount,
-     *      de.freese.pim.gui.mail.model.FXMail, de.freese.pim.common.utils.io.IOMonitor)
+     *      de.freese.pim.gui.mail.model.FXMail, de.freese.pim.core.utils.io.IOMonitor)
      */
     @Override
     protected MailContent loadMailContent(final Path mailPath, final FXMailAccount account, final FXMail mail, final IOMonitor monitor) throws Exception

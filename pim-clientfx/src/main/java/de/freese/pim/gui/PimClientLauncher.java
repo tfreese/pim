@@ -28,8 +28,6 @@ public class PimClientLauncher
 
         // --spring.profiles.active=ClientStandalone,HsqldbEmbeddedServer
         // --spring.profiles.active=ClientREST --server.host=localhost --server.port=61222
-        // --spring.profiles.active=ClientEmbeddedServer,HsqldbEmbeddedServer
-        // --spring.profiles.active=ClientEmbeddedServer,SqliteLocalFile
 
         // OptionGroup group = new PreserveOrderOptionGroup();
         // group.addOption(Option.builder().longOpt("spring.profiles.active").required().desc("=Profile1,Profile2").build());

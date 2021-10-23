@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.core.task.AsyncTaskExecutor;
 import org.springframework.scheduling.TaskScheduler;
 
-import de.freese.pim.common.spring.SpringContext;
+import de.freese.pim.core.spring.SpringContext;
 import de.freese.pim.gui.PimClientApplication;
 import de.freese.pim.gui.main.MainController;
 import javafx.fxml.Initializable;

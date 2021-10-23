@@ -5,7 +5,7 @@ import javax.annotation.Resource;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import de.freese.pim.common.service.AbstractRemoteService;
+import de.freese.pim.core.service.AbstractRemoteService;
 
 /**
  * Basis-Service für JavaFX.

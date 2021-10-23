@@ -27,7 +27,7 @@ public class MailUrlStreamHandlerFactory implements URLStreamHandlerFactory
     /**
     *
     */
-    private final static Logger LOGGER = LoggerFactory.getLogger(MailUrlStreamHandlerFactory.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(MailUrlStreamHandlerFactory.class);
 
     /**
      * @see java.net.URLStreamHandlerFactory#createURLStreamHandler(java.lang.String)
@@ -35,15 +35,13 @@ public class MailUrlStreamHandlerFactory implements URLStreamHandlerFactory
     @Override
     public URLStreamHandler createURLStreamHandler(final String protocol)
     {
-        // LOGGER.info(protocol);
-
         if ("cid".equals(protocol))
         {
             // Find Inline
             return new InlineUrlStreamHandler();
         }
 
-        // Kopie von sun.misc.Launcher$Factory
+        // Kopie von java.net.URL.DefaultFactory
         String name = "sun.net.www.protocol." + protocol + ".Handler";
 
         try
@@ -54,9 +52,10 @@ public class MailUrlStreamHandlerFactory implements URLStreamHandlerFactory
         }
         catch (Exception ex)
         {
-            LOGGER.error(null, ex);
+            LOGGER.error(ex.getMessage());
         }
 
-        throw new InternalError("could not load " + protocol + "system protocol handler");
+        // throw new InternalError("could not load " + protocol + "system protocol handler");
+        return null;
     }
 }
