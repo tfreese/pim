@@ -11,22 +11,25 @@ subprojects {
 
         dependencies {
             dependency "commons-cli:commons-cli:$version_commonsCli"
-            dependency "org.apache.commons:commons-collections4:$version_commonsCollections"
             dependency "org.jsoup:jsoup:$version_jsoup"
         }
     }
 }
 
-project("pim-common") {
+project("pim-core") {
     apply plugin: "java-library"
-    description = "Common Components for PIM"
+    description = "Core Components for PIM"
     dependencies {
         api("commons-cli:commons-cli")
-        api("javax.activation:javax.activation-api")
-        api("org.apache.commons:commons-collections4")
-        api("org.apache.commons:commons-lang3")
+        api("org.flywaydb:flyway-core")
+        api("org.hsqldb:hsqldb")
+        api("org.springframework.boot:spring-boot-starter-jdbc")
         api("org.springframework.boot:spring-boot-starter-json")
+        api("org.springframework.boot:spring-boot-starter-mail")
+        api("org.xerial:sqlite-jdbc")
 
+        testImplementation("org.jsoup:jsoup")
+        testImplementation("org.junit.platform:junit-platform-runner")
         testImplementation("org.springframework.boot:spring-boot-starter-test")
     }
 }
@@ -36,32 +39,21 @@ project("pim-server") {
     apply plugin: "org.springframework.boot"
     description = "Server for PIM"
     dependencies {
-        implementation(project(":pim-common"))
+        implementation(project(":pim-core"))
 
         api("org.springframework.boot:spring-boot-starter-web")
-        implementation("de.freese.spring:spring-autoconfigure-hsqldbserver:$project.version")
-
-        implementation("org.flywaydb:flyway-core")
-        implementation("org.hsqldb:hsqldb")
-        implementation("org.springframework.boot:spring-boot-starter-jdbc")
-        implementation("org.springframework.boot:spring-boot-starter-mail") {
-            exclude group: "javax.activation", module: "activation"
-        }
 
         runtimeOnly("org.springframework.boot:spring-boot-starter-actuator")
-        runtimeOnly("org.xerial:sqlite-jdbc")
 
-        testImplementation("org.junit.jupiter:junit-jupiter-engine")
         testImplementation("org.junit.platform:junit-platform-runner")
         testImplementation("org.springframework.boot:spring-boot-starter-test")
-        testImplementation("org.jsoup:jsoup")
     }
     // Start: gradle bootRun --args="--spring.profiles.active=dev"
 	// The archive name. If the name has not been explicitly set, the pattern for the name is:
 	// [archiveBaseName]-[archiveAppendix]-[archiveVersion]-[archiveClassifier].[archiveExtension]
 	// archiveFileName = "my-boot.jar"
     bootJar {
-        mainClass = "de.freese.pim.server.PIMServerApplication"
+        mainClass = "de.freese.pim.server.PimServerApplication"
     }
     // gradle bootRun --args="--spring.profiles.active=Server,HsqldbEmbeddedServer --server.port=65111"
     bootRun {
@@ -91,7 +83,7 @@ project("pim-clientfx") {
     description = "GUI for PIM"
     test.enabled = false
     dependencies {
-        implementation(project(":pim-common"))
+        implementation(project(":pim-core"))
         implementation(project(":pim-server"))
 
         javafx {
@@ -104,12 +96,12 @@ project("pim-clientfx") {
 	// [archiveBaseName]-[archiveAppendix]-[archiveVersion]-[archiveClassifier].[archiveExtension]
 	// archiveFileName = "test2-boot.jar"      
     bootJar {
-        mainClass = "de.freese.pim.gui.PIMLauncher"
+        mainClass = "de.freese.pim.gui.PimClientLauncher"
     }    
-    // gradle bootRun --args="--spring.profiles.active=ClientStandalone,HsqldbEmbeddedServer"
+    // gradle bootRun --args="--spring.profiles.active=ClientStandalone"
     bootRun {
         args = [
-        	  "--spring.profiles.active=ClientStandalone,HsqldbEmbeddedServer"
+        	  "--spring.profiles.active=ClientRest"
         ]
 	} 
 	

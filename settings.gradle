@@ -1,6 +1,6 @@
 // Ohne rootProject.name würde der Name des Projekt-Verzeichnises verwendet werden.
 rootProject.name = "pim"
 
-include "pim-common"
+include "pim-core"
 include "pim-server"
 include "pim-clientfx"
