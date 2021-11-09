@@ -10,8 +10,6 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.util.SocketUtils;
 
-import de.freese.pim.core.utils.Utils;
-
 /**
  * Spring-Konfiguration der Datenbank.<br>
  *
@@ -31,11 +29,6 @@ public class HsqldbEmbeddedServerConfig extends AbstractHSQLDBConfig
         super();
 
         int port = SocketUtils.findAvailableTcpPort();
-
-        if (port <= 0)
-        {
-            port = Utils.getNextFreePort(49001);
-        }
 
         // Damit die Placeholder in Properties funktionieren: ${hsqldbPort}
         System.setProperty("hsqldbPort", Integer.toString(port));

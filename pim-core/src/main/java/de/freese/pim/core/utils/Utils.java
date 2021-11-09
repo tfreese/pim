@@ -7,7 +7,6 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.net.ServerSocket;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -308,34 +307,6 @@ public final class Utils
             LOGGER.error(ex.getMessage());
             throw new RuntimeException(ex);
         }
-    }
-
-    /**
-     * Liefert den nächsten nicht belegten Port.
-     *
-     * @param fallbackPort int; Falls die Port-Ermittlung fehlschlägt
-     *
-     * @return int
-     */
-    public static int getNextFreePort(final int fallbackPort)
-    {
-        int nextFreePort = -1;
-
-        try (ServerSocket serverSocket = new ServerSocket(0))
-        {
-            nextFreePort = serverSocket.getLocalPort();
-        }
-        catch (IOException ioe)
-        {
-            // Ignore
-        }
-
-        if (nextFreePort == -1)
-        {
-            nextFreePort = fallbackPort;
-        }
-
-        return nextFreePort;
     }
 
     /**
