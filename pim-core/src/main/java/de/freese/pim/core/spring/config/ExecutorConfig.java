@@ -12,8 +12,11 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.task.AsyncTaskExecutor;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.scheduling.TaskScheduler;
+import org.springframework.scheduling.annotation.AsyncConfigurer;
+import org.springframework.scheduling.annotation.AsyncConfigurerSupport;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.SchedulingConfigurer;
 import org.springframework.scheduling.concurrent.ConcurrentTaskExecutor;
 import org.springframework.scheduling.concurrent.ConcurrentTaskScheduler;
 import org.springframework.scheduling.concurrent.ScheduledExecutorFactoryBean;
@@ -22,6 +25,10 @@ import org.springframework.scheduling.concurrent.ThreadPoolExecutorFactoryBean;
 import de.freese.pim.core.concurrent.PIMForkJoinWorkerThreadFactory;
 
 /**
+ * @see AsyncConfigurer
+ * @see AsyncConfigurerSupport
+ * @see SchedulingConfigurer
+ *
  * @author Thomas Freese
  */
 @Configuration
@@ -75,7 +82,7 @@ public class ExecutorConfig
     @ConditionalOnMissingBean(ScheduledExecutorService.class)
     public ScheduledExecutorFactoryBean scheduledExecutorService()
     {
-        int poolSize = Math.max(2, Runtime.getRuntime().availableProcessors() / 2);
+        int poolSize = Math.max(2, Runtime.getRuntime().availableProcessors() / 4);
 
         ScheduledExecutorFactoryBean bean = new ScheduledExecutorFactoryBean();
         bean.setPoolSize(poolSize);
@@ -88,7 +95,10 @@ public class ExecutorConfig
     }
 
     /**
-     * Wird für {@link EnableAsync} benötigt.
+     * Wird für {@link EnableAsync} benötigt.<br>
+     *
+     * @see AsyncConfigurer
+     * @see AsyncConfigurerSupport
      *
      * @param executorService {@link ExecutorService}
      *
@@ -100,7 +110,7 @@ public class ExecutorConfig
     })
     @ConditionalOnMissingBean(
     {
-            AsyncTaskExecutor.class, TaskExecutor.class
+            TaskExecutor.class, AsyncTaskExecutor.class
     })
     public AsyncTaskExecutor springTaskExecutor(final ExecutorService executorService)
     {
@@ -108,7 +118,9 @@ public class ExecutorConfig
     }
 
     /**
-     * Wird für {@link EnableScheduling} benötigt.
+     * Wird für {@link EnableScheduling} benötigt.<br>
+     *
+     * @see SchedulingConfigurer
      *
      * @param executorService {@link ExecutorService}
      * @param scheduledExecutorService {@link ScheduledExecutorService}
