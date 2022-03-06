@@ -26,11 +26,10 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import de.freese.pim.core.function.ExceptionalRunnable;
 import de.freese.pim.core.function.ExceptionalSupplier;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Utils.
@@ -39,10 +38,6 @@ import de.freese.pim.core.function.ExceptionalSupplier;
  */
 public final class Utils
 {
-    /**
-     *
-     */
-    private static final Logger LOGGER = LoggerFactory.getLogger(Utils.class);
     /**
      * ^(.+)@(.+)\\.\\w{2,3}$
      */
@@ -58,7 +53,8 @@ public final class Utils
     /**
      * p -> p.getFileName().toString().startsWith(".");
      */
-    public static final Predicate<Path> PREDICATE_IS_HIDDEN = p -> {
+    public static final Predicate<Path> PREDICATE_IS_HIDDEN = p ->
+    {
         try
         {
             return Files.isHidden(p);
@@ -68,7 +64,6 @@ public final class Utils
             return false;
         }
     };
-
     /**
      *
      */
@@ -78,16 +73,20 @@ public final class Utils
      */
     public static final Predicate<Path> PREDICATE_MAIL_FOLDER = PREDICATE_IS_DIR_NOT.or(PREDICATE_IS_HIDDEN_NOT);
     /**
-    *
-    */
+     *
+     */
     public static final Predicate<Path> PREDICATE_MAIL_FOLDER_LEAF = p -> ".leaf".equals(p.getFileName().toString());
     /**
-    *
-    */
+     *
+     */
     public static final Predicate<Path> PREDICATE_MAIL_FOLDER_LEAF_NOT = PREDICATE_MAIL_FOLDER_LEAF.negate();
     /**
-    *
-    */
+     *
+     */
+    private static final Logger LOGGER = LoggerFactory.getLogger(Utils.class);
+    /**
+     *
+     */
     private static final String SYSTEM_USER_NAME = System.getProperty("user.name").toUpperCase();
 
     /**
@@ -136,7 +135,7 @@ public final class Utils
             throw new IllegalArgumentException("path is not a dirctory: " + path);
         }
 
-        Files.walkFileTree(path, new SimpleFileVisitor<Path>()
+        Files.walkFileTree(path, new SimpleFileVisitor<>()
         {
             /**
              * @see java.nio.file.SimpleFileVisitor#postVisitDirectory(java.lang.Object, java.io.IOException)
@@ -296,7 +295,7 @@ public final class Utils
      *
      * @throws RuntimeException Falls was schief geht.
      */
-    public static Method getMethod(final Object bean, final String name, final Class<?>...parameterTypes) throws RuntimeException
+    public static Method getMethod(final Object bean, final String name, final Class<?>... parameterTypes) throws RuntimeException
     {
         try
         {
@@ -351,7 +350,7 @@ public final class Utils
      *
      * @return Object
      */
-    public static Object invokeMethod(final Method method, final Object bean, final Object...args)
+    public static Object invokeMethod(final Method method, final Object bean, final Object... args)
     {
         try
         {
@@ -400,7 +399,8 @@ public final class Utils
         // @formatter:on
 
         // Strings pro Spalte formatieren und schreiben.
-        rows.stream().parallel().forEach(r -> {
+        rows.stream().parallel().forEach(r ->
+        {
             for (int column = 0; column < columnCount; column++)
             {
                 String value = String.format("%-" + columnWidth[column] + "s", r[column].toString()).replace(" ", padding);
@@ -478,7 +478,7 @@ public final class Utils
      */
     public static List<String[]> toList(final ResultSet resultSet) throws SQLException
     {
-        Objects.requireNonNull(resultSet, () -> "resultSet required");
+        Objects.requireNonNull(resultSet, "resultSet required");
 
         List<String[]> rows = new ArrayList<>();
 
@@ -528,8 +528,8 @@ public final class Utils
      */
     public static <T extends CharSequence> void write(final List<T[]> rows, final PrintStream ps, final String delimiter)
     {
-        Objects.requireNonNull(rows, () -> "rows required");
-        Objects.requireNonNull(ps, () -> "printStream required");
+        Objects.requireNonNull(rows, "rows required");
+        Objects.requireNonNull(ps, "printStream required");
 
         if (rows.isEmpty())
         {
@@ -539,7 +539,8 @@ public final class Utils
         int columnCount = rows.get(0).length;
 
         // Strings pro Spalte schreiben, parallel() verfälscht die Reihenfolge.
-        rows.forEach(r -> {
+        rows.forEach(r ->
+        {
             for (int column = 0; column < columnCount; column++)
             {
                 ps.print(r[column]);

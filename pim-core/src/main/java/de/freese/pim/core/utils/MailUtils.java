@@ -26,6 +26,35 @@ import de.freese.pim.core.mail.InternetAddress;
 public final class MailUtils
 {
     /**
+     *
+     */
+    public static final String CONTENT_TYPE_CHARSET_SUFFIX = ";charset=";
+    /**
+     *
+     */
+    public static final String CONTENT_TYPE_HTML = "text/html";
+    /**
+     *
+     */
+    public static final String CONTENT_TYPE_PLAIN = "text/plain";
+    /**
+     *
+     */
+    public static final String HEADER_CONTENT_ID = "Content-ID";
+    /**
+     *
+     */
+    public static final String HEADER_MESSAGE_ID = "Message-ID";
+    /**
+     *
+     */
+    public static final String MULTIPART_SUBTYPE_MIXED = "mixed";
+    /**
+     *
+     */
+    public static final String MULTIPART_SUBTYPE_RELATED = "related";
+
+    /**
      * @author Thomas Freese
      */
     public abstract static class AbstractTextPart
@@ -110,35 +139,6 @@ public final class MailUtils
             super(text, CONTENT_TYPE_PLAIN);
         }
     }
-
-    /**
-     *
-     */
-    public static final String CONTENT_TYPE_CHARSET_SUFFIX = ";charset=";
-    /**
-     *
-     */
-    public static final String CONTENT_TYPE_HTML = "text/html";
-    /**
-     *
-     */
-    public static final String CONTENT_TYPE_PLAIN = "text/plain";
-    /**
-     *
-     */
-    public static final String HEADER_CONTENT_ID = "Content-ID";
-    /**
-     *
-     */
-    public static final String HEADER_MESSAGE_ID = "Message-ID";
-    /**
-     *
-     */
-    public static final String MULTIPART_SUBTYPE_MIXED = "mixed";
-    /**
-     *
-     */
-    public static final String MULTIPART_SUBTYPE_RELATED = "related";
 
     /**
      * Liefert alle vorhandenen Attachment-MimeParts einer {@link Message}.<br>
@@ -297,7 +297,7 @@ public final class MailUtils
             size = 0;
         }
 
-        if (part.getContent()instanceof Multipart mp)
+        if (part.getContent() instanceof Multipart mp)
         {
             for (int i = 0; i < mp.getCount(); i++)
             {
@@ -326,7 +326,7 @@ public final class MailUtils
 
         Optional<DataSource> dataSource = dataSources.stream().filter(ds -> ds.getContentType().toLowerCase().startsWith(CONTENT_TYPE_HTML)).findFirst();
 
-        if (!dataSource.isPresent())
+        if (dataSource.isEmpty())
         {
             // Kein HTML gefunden -> nach Plain-Text suchen.
             dataSource = dataSources.stream().filter(ds -> ds.getContentType().toLowerCase().startsWith(CONTENT_TYPE_PLAIN)).findFirst();

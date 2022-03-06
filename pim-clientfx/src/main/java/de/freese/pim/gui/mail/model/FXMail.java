@@ -4,7 +4,6 @@ package de.freese.pim.gui.mail.model;
 import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import de.freese.pim.core.mail.InternetAddress;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
@@ -26,21 +25,21 @@ import javafx.beans.property.StringProperty;
 public class FXMail
 {
     /**
-    *
-    */
+     *
+     */
     private final ObjectProperty<InternetAddress[]> bccProperty = new SimpleObjectProperty<>(this, "to", null);
     /**
-    *
-    */
+     *
+     */
     private final ObjectProperty<InternetAddress[]> ccProperty = new SimpleObjectProperty<>(this, "to", null);
     /**
      *
      */
-    private StringProperty folderFullNameProperty = new SimpleStringProperty(this, "folderFullName", null);
+    private final StringProperty folderFullNameProperty = new SimpleStringProperty(this, "folderFullName", null);
     /**
-    *
-    */
-    private LongProperty folderIDProperty = new SimpleLongProperty(this, "folderID", 0L);
+     *
+     */
+    private final LongProperty folderIDProperty = new SimpleLongProperty(this, "folderID", 0L);
     /**
      *
      */
@@ -48,37 +47,37 @@ public class FXMail
     /**
      * Ist immer größer als 0.
      */
-    private IntegerProperty msgNumProperty = new SimpleIntegerProperty(this, "msgNum", 0);
+    private final IntegerProperty msgNumProperty = new SimpleIntegerProperty(this, "msgNum", 0);
     /**
-    *
-    */
+     *
+     */
     // @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private final ObjectProperty<Date> receivedDateProperty = new SimpleObjectProperty<>(this, "receivedDate", null);
     /**
-    *
-    */
+     *
+     */
     private final BooleanProperty seenProperty = new SimpleBooleanProperty(this, "seen", false);
     /**
-    *
-    */
+     *
+     */
     // @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private final ObjectProperty<Date> sendDateProperty = new SimpleObjectProperty<>(this, "sendDate", null);
     /**
      *
      */
-    private IntegerProperty sizeProperty = new SimpleIntegerProperty(this, "size", 0);
-    /**
-    *
-    */
     private final StringProperty subjectProperty = new SimpleStringProperty(this, "subject", null);
     /**
-    *
-    */
+     *
+     */
     private final ObjectProperty<InternetAddress[]> toProperty = new SimpleObjectProperty<>(this, "to", null);
     /**
      *
      */
-    private LongProperty uidProperty = new SimpleLongProperty(this, "uid", 0L);
+    private final IntegerProperty sizeProperty = new SimpleIntegerProperty(this, "size", 0);
+    /**
+     *
+     */
+    private final LongProperty uidProperty = new SimpleLongProperty(this, "uid", 0L);
 
     /**
      * @return {@link ObjectProperty}

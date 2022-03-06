@@ -14,12 +14,12 @@ import java.util.Objects;
 public class MonitoringReadableByteChannel implements ReadableByteChannel
 {
     /**
-    *
-    */
+     *
+     */
     private final ReadableByteChannel delegate;
     /**
-    *
-    */
+     *
+     */
     private final IOMonitor monitor;
     /**
      * Anzahl Bytes (Größe) des gesamten Channels.
@@ -41,8 +41,8 @@ public class MonitoringReadableByteChannel implements ReadableByteChannel
     {
         super();
 
-        this.delegate = Objects.requireNonNull(delegate, () -> "delegate required");
-        this.monitor = Objects.requireNonNull(monitor, () -> "monitor required");
+        this.delegate = Objects.requireNonNull(delegate, "delegate required");
+        this.monitor = Objects.requireNonNull(monitor, "monitor required");
         this.size = size;
     }
 

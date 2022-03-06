@@ -8,6 +8,13 @@ import java.util.stream.IntStream;
 
 import javax.annotation.Resource;
 
+import de.freese.pim.core.PIMException;
+import de.freese.pim.core.mail.DefaultMailContent;
+import de.freese.pim.core.mail.MailContent;
+import de.freese.pim.core.utils.io.IOMonitor;
+import de.freese.pim.gui.mail.model.FXMail;
+import de.freese.pim.gui.mail.model.FXMailAccount;
+import de.freese.pim.gui.mail.model.FXMailFolder;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.task.AsyncListenableTaskExecutor;
@@ -17,14 +24,6 @@ import org.springframework.util.concurrent.ListenableFuture;
 import org.springframework.web.client.AsyncRestTemplate;
 import org.springframework.web.client.RestTemplate;
 
-import de.freese.pim.core.PIMException;
-import de.freese.pim.core.mail.DefaultMailContent;
-import de.freese.pim.core.mail.MailContent;
-import de.freese.pim.core.utils.io.IOMonitor;
-import de.freese.pim.gui.mail.model.FXMail;
-import de.freese.pim.gui.mail.model.FXMailAccount;
-import de.freese.pim.gui.mail.model.FXMailFolder;
-
 /**
  * REST-MailService für JavaFX.
  *
@@ -33,14 +32,14 @@ import de.freese.pim.gui.mail.model.FXMailFolder;
 @SuppressWarnings("deprecation")
 @Service("clientMailService")
 @Profile(
-{
-        "ClientREST", "ClientEmbeddedServer"
-})
+        {
+                "ClientREST", "ClientEmbeddedServer"
+        })
 public class DefaultRestFXMailService extends AbstractFXMailService
 {
     /**
-    *
-    */
+     *
+     */
     private AsyncRestTemplate asyncRestTemplate;
     /**
      *
@@ -69,7 +68,7 @@ public class DefaultRestFXMailService extends AbstractFXMailService
      * @see de.freese.pim.gui.mail.service.FXMailService#disconnectAccounts(long[])
      */
     @Override
-    public void disconnectAccounts(final long...accountIDs)
+    public void disconnectAccounts(final long... accountIDs)
     {
         getRestTemplate().postForObject("/mail/account/disconnect", accountIDs, Void.class);
     }
@@ -77,7 +76,6 @@ public class DefaultRestFXMailService extends AbstractFXMailService
     /**
      * @return {@link AsyncRestTemplate}
      */
-    @SuppressWarnings("javadoc")
     public AsyncRestTemplate getAsyncRestTemplate()
     {
         return this.asyncRestTemplate;
@@ -92,14 +90,6 @@ public class DefaultRestFXMailService extends AbstractFXMailService
         FXMailAccount[] accounts = getRestTemplate().getForObject("/mail/accounts", FXMailAccount[].class);
 
         return Arrays.asList(accounts);
-    }
-
-    /**
-     * @return {@link RestTemplate}
-     */
-    protected RestTemplate getRestTemplate()
-    {
-        return this.restTemplate;
     }
 
     /**
@@ -157,21 +147,6 @@ public class DefaultRestFXMailService extends AbstractFXMailService
         FXMailFolder[] folders = getRestTemplate().getForObject("/mail/folder/{accountID}", FXMailFolder[].class, accountID);
 
         return Arrays.asList(folders);
-    }
-
-    /**
-     * @see de.freese.pim.gui.mail.service.AbstractFXMailService#loadMailContent(java.nio.file.Path, de.freese.pim.gui.mail.model.FXMailAccount,
-     *      de.freese.pim.gui.mail.model.FXMail, de.freese.pim.core.utils.io.IOMonitor)
-     */
-    @Override
-    protected MailContent loadMailContent(final Path mailPath, final FXMailAccount account, final FXMail mail, final IOMonitor monitor) throws Exception
-    {
-        ResponseEntity<String> jsonContent = getRestTemplate().getForEntity("/mail/content/{accountID}/{folderFullName}/{mailUID}", String.class,
-                account.getID(), urlEncode(urlEncode(mail.getFolderFullName())), mail.getUID());
-
-        saveMailContent(mailPath, jsonContent.getBody());
-
-        return getJsonMapper().readValue(jsonContent.getBody(), DefaultMailContent.class);
     }
 
     /**
@@ -249,5 +224,28 @@ public class DefaultRestFXMailService extends AbstractFXMailService
     public int updateAccount(final FXMailAccount account)
     {
         return getRestTemplate().postForObject("/mail/account/update", account, int.class);
+    }
+
+    /**
+     * @return {@link RestTemplate}
+     */
+    protected RestTemplate getRestTemplate()
+    {
+        return this.restTemplate;
+    }
+
+    /**
+     * @see de.freese.pim.gui.mail.service.AbstractFXMailService#loadMailContent(java.nio.file.Path, de.freese.pim.gui.mail.model.FXMailAccount,
+     * de.freese.pim.gui.mail.model.FXMail, de.freese.pim.core.utils.io.IOMonitor)
+     */
+    @Override
+    protected MailContent loadMailContent(final Path mailPath, final FXMailAccount account, final FXMail mail, final IOMonitor monitor) throws Exception
+    {
+        ResponseEntity<String> jsonContent = getRestTemplate().getForEntity("/mail/content/{accountID}/{folderFullName}/{mailUID}", String.class,
+                account.getID(), urlEncode(urlEncode(mail.getFolderFullName())), mail.getUID());
+
+        saveMailContent(mailPath, jsonContent.getBody());
+
+        return getJsonMapper().readValue(jsonContent.getBody(), DefaultMailContent.class);
     }
 }

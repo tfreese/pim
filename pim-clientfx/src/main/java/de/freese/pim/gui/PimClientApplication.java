@@ -5,12 +5,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ResourceBundle;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.builder.SpringApplicationBuilder;
-
 import de.freese.pim.core.spring.SpringContext;
 import de.freese.pim.gui.main.MainController;
 import de.freese.pim.gui.utils.FXUtils;
@@ -27,6 +21,11 @@ import javafx.scene.image.Image;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.Window;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.builder.SpringApplicationBuilder;
 
 /**
  * Startklasse der Personal Information Management Anwendung.<br>
@@ -99,7 +98,7 @@ public class PimClientApplication extends Application
     /**
      *
      */
-    private BooleanProperty ready = new SimpleBooleanProperty(false);
+    private final BooleanProperty ready = new SimpleBooleanProperty(false);
 
     /**
      * @see javafx.application.Application#init()
@@ -235,10 +234,12 @@ public class PimClientApplication extends Application
             primaryStage.setHeight(screenBounds.getHeight() - 200);
 
             // After the app is ready, show the stage
-            this.ready.addListener((observable, oldValue, newValue) -> {
+            this.ready.addListener((observable, oldValue, newValue) ->
+            {
                 if (Boolean.TRUE.equals(newValue))
                 {
-                    Platform.runLater(() -> {
+                    Platform.runLater(() ->
+                    {
                         primaryStage.show();
 
                         // System.setOut(new PrintStream(new TextAreaOutputStream(MainView.LOG_TEXT_AREA)));

@@ -23,13 +23,17 @@ import javafx.scene.control.ToolBar;
 public class MainController extends AbstractController
 {
     /**
-    *
-    */
+     *
+     */
+    private final MainView mainView;
+    /**
+     *
+     */
     @FXML
     private Button buttonContactView;
     /**
-    *
-    */
+     *
+     */
     @FXML
     private Button buttonMailView;
     /**
@@ -40,10 +44,6 @@ public class MainController extends AbstractController
      *
      */
     private MailController mailController;
-    /**
-     *
-     */
-    private MainView mainView;
 
     /**
      * Erzeugt eine neue Instanz von {@link MainController}
@@ -109,14 +109,16 @@ public class MainController extends AbstractController
         FXUtils.translate(this.buttonMailView, resources);
         FXUtils.translate(this.buttonContactView, resources);
 
-        this.buttonMailView.setOnAction(event -> {
+        this.buttonMailView.setOnAction(event ->
+        {
             this.mainView.setToolbar(this.mailController.getToolBar());
             this.mainView.setNavNode(this.mailController.getNaviNode());
             this.mainView.setMainNode(this.mailController.getMainNode());
             this.mailController.activate();
         });
 
-        this.buttonContactView.setOnAction(event -> {
+        this.buttonContactView.setOnAction(event ->
+        {
             this.mainView.setToolbar(this.contactController.getToolBar());
             this.mainView.setNavNode(this.contactController.getNaviNode());
             this.mainView.setMainNode(this.contactController.getMainNode());

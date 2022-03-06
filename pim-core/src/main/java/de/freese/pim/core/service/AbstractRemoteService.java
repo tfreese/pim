@@ -1,9 +1,9 @@
 // Created: 07.02.2017
 package de.freese.pim.core.service;
 
-import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 
 /**
  * Basis-Implementierung eines Remote-Service.
@@ -24,14 +24,7 @@ public abstract class AbstractRemoteService extends AbstractService
             return null;
         }
 
-        try
-        {
-            return URLDecoder.decode(value.trim(), "UTF-8");
-        }
-        catch (UnsupportedEncodingException ex)
-        {
-            throw new RuntimeException(ex);
-        }
+        return URLDecoder.decode(value.trim(), StandardCharsets.UTF_8);
     }
 
     /**
@@ -46,13 +39,6 @@ public abstract class AbstractRemoteService extends AbstractService
             return null;
         }
 
-        try
-        {
-            return URLEncoder.encode(value.trim(), "UTF-8");
-        }
-        catch (UnsupportedEncodingException ex)
-        {
-            throw new RuntimeException(ex);
-        }
+        return URLEncoder.encode(value.trim(), StandardCharsets.UTF_8);
     }
 }

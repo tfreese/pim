@@ -1,7 +1,7 @@
 // Created: 12.12.2016
 package de.freese.pim.core.mail;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Properties;
 
@@ -27,8 +27,8 @@ class TestSendMail extends AbstractMailTest
      */
     private static JavaMailSender sender;
     /**
-    *
-    */
+     *
+     */
     private static Session session;
 
     /**

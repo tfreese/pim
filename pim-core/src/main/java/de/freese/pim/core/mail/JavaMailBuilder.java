@@ -74,11 +74,31 @@ public final class JavaMailBuilder
     /**
      *
      */
-    private InternetAddress from;
+    private final List<MimeBodyPart> inlines = new ArrayList<>();
     /**
      *
      */
-    private final List<MimeBodyPart> inlines = new ArrayList<>();
+    private final List<InternetAddress> recipientsBcc = new ArrayList<>();
+    /**
+     *
+     */
+    private final List<InternetAddress> recipientsCc = new ArrayList<>();
+    /**
+     *
+     */
+    private final List<InternetAddress> recipientsTo = new ArrayList<>();
+    /**
+     *
+     */
+    private final Session session;
+    /**
+     *
+     */
+    private final boolean validateAddresses;
+    /**
+     *
+     */
+    private InternetAddress from;
     /**
      *
      */
@@ -90,31 +110,11 @@ public final class JavaMailBuilder
     /**
      *
      */
-    private final List<InternetAddress> recipientsBcc = new ArrayList<>();
-    /**
-    *
-    */
-    private final List<InternetAddress> recipientsCc = new ArrayList<>();
-    /**
-    *
-    */
-    private final List<InternetAddress> recipientsTo = new ArrayList<>();
-    /**
-     *
-     */
-    private final Session session;
-    /**
-     *
-     */
     private String subject;
     /**
      *
      */
     private String text;
-    /**
-     *
-     */
-    private final boolean validateAddresses;
 
     /**
      * Erzeugt eine neue Instanz von {@link JavaMailBuilder}
@@ -144,8 +144,8 @@ public final class JavaMailBuilder
      */
     public JavaMailBuilder attachment(final String attachmentFilename, final DataSource dataSource) throws MessagingException
     {
-        Objects.requireNonNull(attachmentFilename, () -> "Attachment filename must not be null");
-        Objects.requireNonNull(dataSource, () -> "DataSource must not be null");
+        Objects.requireNonNull(attachmentFilename, "Attachment filename must not be null");
+        Objects.requireNonNull(dataSource, "DataSource must not be null");
 
         try
         {
@@ -174,8 +174,8 @@ public final class JavaMailBuilder
      */
     public JavaMailBuilder attachment(final String attachmentFilename, final File file) throws MessagingException
     {
-        Objects.requireNonNull(attachmentFilename, () -> "Attachment filename must not be null");
-        Objects.requireNonNull(file, () -> "File must not be null");
+        Objects.requireNonNull(attachmentFilename, "Attachment filename must not be null");
+        Objects.requireNonNull(file, "File must not be null");
 
         FileDataSource dataSource = new FileDataSource(file);
         dataSource.setFileTypeMap(getFileTypeMap());
@@ -194,8 +194,8 @@ public final class JavaMailBuilder
      */
     public JavaMailBuilder attachment(final String attachmentFilename, final InputStream inputStream) throws MessagingException
     {
-        Objects.requireNonNull(attachmentFilename, () -> "Attachment filename must not be null");
-        Objects.requireNonNull(inputStream, () -> "InputStream must not be null");
+        Objects.requireNonNull(attachmentFilename, "Attachment filename must not be null");
+        Objects.requireNonNull(inputStream, "InputStream must not be null");
 
         String contentType = getFileTypeMap().getContentType(attachmentFilename);
         DataSource dataSource = createDataSource(inputStream, contentType, attachmentFilename);
@@ -213,7 +213,7 @@ public final class JavaMailBuilder
      */
     public JavaMailBuilder bcc(final InternetAddress bcc) throws MessagingException
     {
-        Objects.requireNonNull(bcc, () -> "BCC address must not be null");
+        Objects.requireNonNull(bcc, "BCC address must not be null");
 
         validateAddress(bcc);
 
@@ -229,11 +229,11 @@ public final class JavaMailBuilder
      *
      * @throws MessagingException Falls was schief geht.
      */
-    public JavaMailBuilder bcc(final InternetAddress...bcc) throws MessagingException
+    public JavaMailBuilder bcc(final InternetAddress... bcc) throws MessagingException
     {
         for (InternetAddress internetAddress : bcc)
         {
-            Objects.requireNonNull(internetAddress, () -> "BCC address must not be null");
+            Objects.requireNonNull(internetAddress, "BCC address must not be null");
 
             validateAddress(internetAddress);
 
@@ -252,7 +252,7 @@ public final class JavaMailBuilder
      */
     public JavaMailBuilder bcc(final String bcc) throws MessagingException
     {
-        Objects.requireNonNull(bcc, () -> "BCC address must not be null");
+        Objects.requireNonNull(bcc, "BCC address must not be null");
 
         bcc(parseAddress(bcc));
 
@@ -269,7 +269,7 @@ public final class JavaMailBuilder
      */
     public JavaMailBuilder bcc(final String bcc, final String personal) throws Exception
     {
-        Objects.requireNonNull(bcc, () -> "BCC address must not be null");
+        Objects.requireNonNull(bcc, "BCC address must not be null");
 
         bcc(getCharset() != null ? new InternetAddress(bcc, personal, getCharset()) : new InternetAddress(bcc, personal));
 
@@ -420,7 +420,7 @@ public final class JavaMailBuilder
      */
     public void buildAndSend(final JavaMailSender mailSender, final InputStream contentStream) throws Exception
     {
-        Objects.requireNonNull(mailSender, () -> "sender required");
+        Objects.requireNonNull(mailSender, "sender required");
 
         MimeMessage mail = build(contentStream);
 
@@ -436,7 +436,7 @@ public final class JavaMailBuilder
      */
     public JavaMailBuilder cc(final InternetAddress cc) throws MessagingException
     {
-        Objects.requireNonNull(cc, () -> "CC address must not be null");
+        Objects.requireNonNull(cc, "CC address must not be null");
 
         validateAddress(cc);
 
@@ -452,11 +452,11 @@ public final class JavaMailBuilder
      *
      * @throws MessagingException Falls was schief geht.
      */
-    public JavaMailBuilder cc(final InternetAddress...cc) throws MessagingException
+    public JavaMailBuilder cc(final InternetAddress... cc) throws MessagingException
     {
         for (InternetAddress internetAddress : cc)
         {
-            Objects.requireNonNull(internetAddress, () -> "CC address must not be null");
+            Objects.requireNonNull(internetAddress, "CC address must not be null");
 
             validateAddress(internetAddress);
 
@@ -475,7 +475,7 @@ public final class JavaMailBuilder
      */
     public JavaMailBuilder cc(final String cc) throws MessagingException
     {
-        Objects.requireNonNull(cc, () -> "CC address must not be null");
+        Objects.requireNonNull(cc, "CC address must not be null");
 
         cc(parseAddress(cc));
 
@@ -492,60 +492,11 @@ public final class JavaMailBuilder
      */
     public JavaMailBuilder cc(final String cc, final String personal) throws Exception
     {
-        Objects.requireNonNull(cc, () -> "CC address must not be null");
+        Objects.requireNonNull(cc, "CC address must not be null");
 
         cc(getCharset() != null ? new InternetAddress(cc, personal, getCharset()) : new InternetAddress(cc, personal));
 
         return this;
-    }
-
-    /**
-     * @param inputStream {@link InputStream}
-     * @param contentType String
-     * @param name String
-     *
-     * @return {@link DataSource}
-     */
-    private DataSource createDataSource(final InputStream inputStream, final String contentType, final String name)
-    {
-        return new DataSource()
-        {
-            /**
-             * @see javax.activation.DataSource#getContentType()
-             */
-            @Override
-            public String getContentType()
-            {
-                return contentType;
-            }
-
-            /**
-             * @see javax.activation.DataSource#getInputStream()
-             */
-            @Override
-            public InputStream getInputStream() throws IOException
-            {
-                return inputStream;
-            }
-
-            /**
-             * @see javax.activation.DataSource#getName()
-             */
-            @Override
-            public String getName()
-            {
-                return name;
-            }
-
-            /**
-             * @see javax.activation.DataSource#getOutputStream()
-             */
-            @Override
-            public OutputStream getOutputStream()
-            {
-                throw new UnsupportedOperationException("Read-only javax.activation.DataSource");
-            }
-        };
     }
 
     /**
@@ -597,30 +548,6 @@ public final class JavaMailBuilder
         from(getCharset() != null ? new InternetAddress(from, personal, getCharset()) : new InternetAddress(from, personal));
 
         return this;
-    }
-
-    /**
-     * @return String
-     */
-    private String getCharset()
-    {
-        return this.charset;
-    }
-
-    /**
-     * @return {@link FileTypeMap}
-     */
-    private FileTypeMap getFileTypeMap()
-    {
-        return this.fileTypeMap;
-    }
-
-    /**
-     * @return {@link Session}
-     */
-    private Session getSession()
-    {
-        return this.session;
     }
 
     /**
@@ -702,34 +629,6 @@ public final class JavaMailBuilder
     }
 
     /**
-     * @param address String
-     *
-     * @return {@link InternetAddress}
-     *
-     * @throws MessagingException Falls was schief geht.
-     */
-    private InternetAddress parseAddress(final String address) throws MessagingException
-    {
-        InternetAddress[] parsed = InternetAddress.parse(address);
-
-        if (parsed.length != 1)
-        {
-            throw new AddressException("Illegal address", address);
-        }
-
-        InternetAddress raw = parsed[0];
-
-        try
-        {
-            return (getCharset() != null ? new InternetAddress(raw.getAddress(), raw.getPersonal(), getCharset()) : raw);
-        }
-        catch (UnsupportedEncodingException ex)
-        {
-            throw new MessagingException("Failed to parse embedded personal name to correct encoding", ex);
-        }
-    }
-
-    /**
      * @param subject String
      *
      * @return {@link JavaMailBuilder}
@@ -780,7 +679,7 @@ public final class JavaMailBuilder
      *
      * @throws MessagingException Falls was schief geht.
      */
-    public JavaMailBuilder to(final InternetAddress...to) throws MessagingException
+    public JavaMailBuilder to(final InternetAddress... to) throws MessagingException
     {
         for (InternetAddress internetAddress : to)
         {
@@ -828,6 +727,107 @@ public final class JavaMailBuilder
     }
 
     /**
+     * @param inputStream {@link InputStream}
+     * @param contentType String
+     * @param name String
+     *
+     * @return {@link DataSource}
+     */
+    private DataSource createDataSource(final InputStream inputStream, final String contentType, final String name)
+    {
+        return new DataSource()
+        {
+            /**
+             * @see javax.activation.DataSource#getContentType()
+             */
+            @Override
+            public String getContentType()
+            {
+                return contentType;
+            }
+
+            /**
+             * @see javax.activation.DataSource#getInputStream()
+             */
+            @Override
+            public InputStream getInputStream() throws IOException
+            {
+                return inputStream;
+            }
+
+            /**
+             * @see javax.activation.DataSource#getName()
+             */
+            @Override
+            public String getName()
+            {
+                return name;
+            }
+
+            /**
+             * @see javax.activation.DataSource#getOutputStream()
+             */
+            @Override
+            public OutputStream getOutputStream()
+            {
+                throw new UnsupportedOperationException("Read-only javax.activation.DataSource");
+            }
+        };
+    }
+
+    /**
+     * @return String
+     */
+    private String getCharset()
+    {
+        return this.charset;
+    }
+
+    /**
+     * @return {@link FileTypeMap}
+     */
+    private FileTypeMap getFileTypeMap()
+    {
+        return this.fileTypeMap;
+    }
+
+    /**
+     * @return {@link Session}
+     */
+    private Session getSession()
+    {
+        return this.session;
+    }
+
+    /**
+     * @param address String
+     *
+     * @return {@link InternetAddress}
+     *
+     * @throws MessagingException Falls was schief geht.
+     */
+    private InternetAddress parseAddress(final String address) throws MessagingException
+    {
+        InternetAddress[] parsed = InternetAddress.parse(address);
+
+        if (parsed.length != 1)
+        {
+            throw new AddressException("Illegal address", address);
+        }
+
+        InternetAddress raw = parsed[0];
+
+        try
+        {
+            return (getCharset() != null ? new InternetAddress(raw.getAddress(), raw.getPersonal(), getCharset()) : raw);
+        }
+        catch (UnsupportedEncodingException ex)
+        {
+            throw new MessagingException("Failed to parse embedded personal name to correct encoding", ex);
+        }
+    }
+
+    /**
      * Validate the given mail address. Called by all of MimeMessageHelper's address setters and adders.
      * <p>
      * Default implementation invokes {@code InternetAddress.validate()}, provided that address validation is activated for the helper instance.
@@ -837,7 +837,6 @@ public final class JavaMailBuilder
      * @param address the address to validate
      *
      * @throws AddressException if validation failed
-     *
      * @see javax.mail.internet.InternetAddress#validate()
      */
     private void validateAddress(final InternetAddress address) throws AddressException

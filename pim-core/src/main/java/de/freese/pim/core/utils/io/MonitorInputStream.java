@@ -10,19 +10,18 @@ import javax.swing.ProgressMonitorInputStream;
 /**
  * {@link InputStream} mit der Möglichkeit zur Überwachung durch einen Monitor.<br>
  *
- * @see ProgressMonitorInputStream
- *
  * @author Thomas Freese
+ * @see ProgressMonitorInputStream
  */
 public class MonitorInputStream extends InputStream
 {
     /**
-    *
-    */
+     *
+     */
     private final InputStream delegate;
     /**
-    *
-    */
+     *
+     */
     private final IOMonitor monitor;
     /**
      * Anzahl Bytes (Größe) des gesamten Channels.
@@ -44,8 +43,8 @@ public class MonitorInputStream extends InputStream
     {
         super();
 
-        this.delegate = Objects.requireNonNull(delegate, () -> "delegate required");
-        this.monitor = Objects.requireNonNull(monitor, () -> "monitor required");
+        this.delegate = Objects.requireNonNull(delegate, "delegate required");
+        this.monitor = Objects.requireNonNull(monitor, "monitor required");
         this.size = size;
     }
 

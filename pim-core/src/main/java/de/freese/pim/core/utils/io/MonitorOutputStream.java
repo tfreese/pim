@@ -13,12 +13,12 @@ import java.util.Objects;
 public class MonitorOutputStream extends OutputStream
 {
     /**
-    *
-    */
+     *
+     */
     private final OutputStream delegate;
     /**
-    *
-    */
+     *
+     */
     private final IOMonitor monitor;
     /**
      * Anzahl Bytes (Größe) des gesamten Channels.
@@ -40,8 +40,8 @@ public class MonitorOutputStream extends OutputStream
     {
         super();
 
-        this.delegate = Objects.requireNonNull(delegate, () -> "delegate required");
-        this.monitor = Objects.requireNonNull(monitor, () -> "monitor required");
+        this.delegate = Objects.requireNonNull(delegate, "delegate required");
+        this.monitor = Objects.requireNonNull(monitor, "monitor required");
         this.size = size;
     }
 

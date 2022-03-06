@@ -1,6 +1,8 @@
 // Created: 27.12.2016
 package de.freese.pim.core.mail;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.io.BufferedInputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -32,6 +34,10 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.search.FlagTerm;
 import javax.mail.search.SearchTerm;
 
+import com.sun.mail.imap.IMAPFolder;
+import com.sun.mail.util.ASCIIUtility;
+import de.freese.pim.core.function.FunctionStripNotLetter;
+import de.freese.pim.core.mail.api.JavaMailContent;
 import org.jsoup.Jsoup;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
@@ -41,12 +47,6 @@ import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.boot.test.context.SpringBootTest;
-
-import com.sun.mail.imap.IMAPFolder;
-import com.sun.mail.util.ASCIIUtility;
-
-import de.freese.pim.core.function.FunctionStripNotLetter;
-import de.freese.pim.core.mail.api.JavaMailContent;
 
 /**
  * @author Thomas Freese
@@ -134,6 +134,8 @@ class TestReceiveMail extends AbstractMailTest
                 defaultFolder.close(false);
             }
         }
+
+        assertTrue(true);
     }
 
     /**
@@ -222,7 +224,7 @@ class TestReceiveMail extends AbstractMailTest
 
         try (Stream<Path> mailFiles = Files.find(TMP_TEST_PATH, Integer.MAX_VALUE, (path, attrs) -> attrs.isRegularFile() && path.toString().endsWith(".eml")))
         {
-            for (Path mail : mailFiles.collect(Collectors.toList()))
+            for (Path mail : mailFiles.toList())
             {
                 try (InputStream is = new BufferedInputStream(Files.newInputStream(mail)))
                 {
@@ -248,7 +250,7 @@ class TestReceiveMail extends AbstractMailTest
     {
         try (Stream<Path> mailFiles = Files.find(TMP_TEST_PATH, 1, (path, attrs) -> attrs.isRegularFile() && path.toString().endsWith(".eml")))
         {
-            for (Path mailPath : mailFiles.collect(Collectors.toList()))
+            for (Path mailPath : mailFiles.toList())
             {
                 try (InputStream is = new BufferedInputStream(Files.newInputStream(mailPath)))
                 {
@@ -286,7 +288,7 @@ class TestReceiveMail extends AbstractMailTest
     {
         try (Stream<Path> mailFiles = Files.find(TMP_TEST_PATH, 1, (path, attrs) -> attrs.isRegularFile() && path.toString().endsWith(".eml")))
         {
-            for (Path mail : mailFiles.collect(Collectors.toList()))
+            for (Path mail : mailFiles.toList())
             {
                 try (InputStream is = new BufferedInputStream(Files.newInputStream(mail)))
                 {

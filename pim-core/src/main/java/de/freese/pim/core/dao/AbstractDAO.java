@@ -12,7 +12,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.ResultSetExtractor;
 
 /**
  * Basis-Implementierung eines DAOs.
@@ -24,11 +23,11 @@ public abstract class AbstractDAO implements InitializingBean
     /**
      *
      */
-    private JdbcTemplate jdbcTemplate;
+    private final Logger logger = LoggerFactory.getLogger(getClass());
     /**
      *
      */
-    private Logger logger = LoggerFactory.getLogger(getClass());
+    private JdbcTemplate jdbcTemplate;
     // /**
     // *
     // */
@@ -54,6 +53,30 @@ public abstract class AbstractDAO implements InitializingBean
         // }
         //
         // Objects.requireNonNull(this.sequenceQueryExecutor, "sequenceQueryExecutor required");
+    }
+
+    /**
+     * Ersetzt ggf. ein vorhandenes {@link JdbcTemplate}.
+     *
+     * @param dataSource {@link DataSource}
+     */
+    @Resource
+    public void setDataSource(final DataSource dataSource)
+    {
+        Objects.requireNonNull(dataSource, "dataSource required");
+
+        this.jdbcTemplate = new JdbcTemplate(dataSource);
+    }
+
+    /**
+     * SQL für Sequenz-Abfragen.
+     *
+     * @param sequenceQuery {@link UnaryOperator}
+     */
+    @Resource
+    public void setSequenceQuery(final UnaryOperator<String> sequenceQuery)
+    {
+        this.sequenceQuery = Objects.requireNonNull(sequenceQuery, "sequenceQuery required");
     }
 
     /**
@@ -83,7 +106,8 @@ public abstract class AbstractDAO implements InitializingBean
     {
         String sql = this.sequenceQuery.apply(sequence);
 
-        return getJdbcTemplate().query(sql, (ResultSetExtractor<Long>) rs -> {
+        return getJdbcTemplate().query(sql, rs ->
+        {
             rs.next();
             return rs.getLong(1);
         });
@@ -100,29 +124,5 @@ public abstract class AbstractDAO implements InitializingBean
         // {
         // throw new DataRetrievalFailureException("", sex);
         // }
-    }
-
-    /**
-     * Ersetzt ggf. ein vorhandenes {@link JdbcTemplate}.
-     *
-     * @param dataSource {@link DataSource}
-     */
-    @Resource
-    public void setDataSource(final DataSource dataSource)
-    {
-        Objects.requireNonNull(dataSource, "dataSource required");
-
-        this.jdbcTemplate = new JdbcTemplate(dataSource);
-    }
-
-    /**
-     * SQL für Sequenz-Abfragen.
-     *
-     * @param sequenceQuery {@link UnaryOperator}
-     */
-    @Resource
-    public void setSequenceQuery(final UnaryOperator<String> sequenceQuery)
-    {
-        this.sequenceQuery = Objects.requireNonNull(sequenceQuery, "sequenceQuery required");
     }
 }
