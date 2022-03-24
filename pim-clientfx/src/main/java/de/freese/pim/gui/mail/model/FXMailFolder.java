@@ -46,6 +46,10 @@ public class FXMailFolder
     /**
      *
      */
+    private final LongProperty idProperty = new SimpleLongProperty(this, "id", 0L);
+    /**
+     *
+     */
     private final BooleanProperty isSendFolderProperty = new SimpleBooleanProperty(this, "isSendFolder", false);
     /**
      *
@@ -64,15 +68,6 @@ public class FXMailFolder
     /**
      *
      */
-    private final LongProperty idProperty = new SimpleLongProperty(this, "id", 0L);
-    /**
-     *
-     */
-    @JsonIgnore
-    private FXMailFolder parent;
-    /**
-     *
-     */
     @JsonIgnore
     private final IntegerBinding unreadMailsCount;
     /**
@@ -80,6 +75,11 @@ public class FXMailFolder
      */
     @JsonIgnore
     private final IntegerBinding unreadMailsCountTotal;
+    /**
+     *
+     */
+    @JsonIgnore
+    private FXMailFolder parent;
 
     /**
      * Erzeugt eine neue Instanz von {@link FXMailFolder}
@@ -142,7 +142,7 @@ public class FXMailFolder
     }
 
     /**
-     * Liefert den vollen Hierarchie-Namen, zB PARENT_NAME/FOLDER_NAME.
+     * Liefert den vollen Hierarchie-Namen, z.B. PARENT_NAME/FOLDER_NAME.
      *
      * @return String
      */
@@ -216,7 +216,7 @@ public class FXMailFolder
     }
 
     /**
-     * Liefert das Flag um den Folder zu abonnieren/beobachten.
+     * Liefert das Flag, um den Folder zu abonnieren/beobachten.
      *
      * @return boolean
      */
@@ -226,7 +226,7 @@ public class FXMailFolder
     }
 
     /**
-     * Liefert das Flag um den Folder zu abonnieren/beobachten.
+     * Liefert das Flag, um den Folder zu abonnieren/beobachten.
      *
      * @return boolean
      */
@@ -273,7 +273,7 @@ public class FXMailFolder
     }
 
     /**
-     * Setzt das Flag um den Folder zu abonnieren/beobachten.
+     * Setzt das Flag, um den Folder zu abonnieren/beobachten.
      *
      * @param abo boolean
      */
@@ -291,7 +291,7 @@ public class FXMailFolder
     }
 
     /**
-     * Setzt den vollen Hierarchie-Namen, zB PARENT_NAME/FOLDER_NAME.
+     * Setzt den vollen Hierarchie-Namen, z.B. PARENT_NAME/FOLDER_NAME.
      *
      * @param fullName String
      */

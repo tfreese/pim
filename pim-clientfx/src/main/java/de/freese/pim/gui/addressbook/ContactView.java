@@ -33,18 +33,28 @@ import javafx.scene.layout.Region;
 public class ContactView implements View
 {
     /**
-    *
-    */
+     *
+     */
+    @FXML
+    private final Region mainNode;
+    /**
+     *
+     */
+    @FXML
+    private final Region naviNode;
+    /**
+     *
+     */
     @FXML
     private Button buttonAddContact;
     /**
-    *
-    */
+     *
+     */
     @FXML
     private Button buttonDeleteContact;
     /**
-    *
-    */
+     *
+     */
     @FXML
     private Button buttonEditContact;
     /**
@@ -65,16 +75,6 @@ public class ContactView implements View
     /**
      *
      */
-    @FXML
-    private final Region mainNode;
-    /**
-    *
-    */
-    @FXML
-    private final Region naviNode;
-    /**
-    *
-    */
     @FXML
     private TableView<FXKontakt> tableViewKontakt;
     /**
@@ -220,7 +220,7 @@ public class ContactView implements View
         TableColumn<FXKontakt, String> columnNachname = new TableColumn<>("%nachname");
         TableColumn<FXKontakt, String> columnVorname = new TableColumn<>("%vorname");
 
-        columnID.prefWidthProperty().bind(tableView.widthProperty().multiply(0.1D)); // 10% Breite
+        columnID.prefWidthProperty().bind(tableView.widthProperty().multiply(0.1D)); // 10 % Breite
 
         columnID.setResizable(false);
         columnID.setCellValueFactory(cell -> cell.getValue().idProperty());
@@ -238,7 +238,8 @@ public class ContactView implements View
         FilteredList<FXKontakt> filteredData = new FilteredList<>(FXCollections.observableArrayList());
 
         // Filter-Textfeld mit FilteredList verbinden.
-        propertyKontaktFilter.addListener((observable, oldValue, newValue) -> filteredData.setPredicate(kontakt -> {
+        propertyKontaktFilter.addListener((observable, oldValue, newValue) -> filteredData.setPredicate(kontakt ->
+        {
             if ((newValue == null) || newValue.isBlank())
             {
                 return true;

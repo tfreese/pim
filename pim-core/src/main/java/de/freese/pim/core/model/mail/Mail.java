@@ -13,12 +13,12 @@ import de.freese.pim.core.mail.InternetAddress;
 public class Mail
 {
     /**
-    *
-    */
+     *
+     */
     private InternetAddress[] bcc;
     /**
-    *
-    */
+     *
+     */
     private InternetAddress[] cc;
     /**
      *
@@ -26,8 +26,8 @@ public class Mail
     // @NotNull
     private String folderFullName;
     /**
-    *
-    */
+     *
+     */
     // @NotNull
     private long folderID;
     /**
@@ -40,18 +40,18 @@ public class Mail
     // @NotNull
     private int msgNum;
     /**
-    *
-    */
+     *
+     */
     // @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date receivedDate;
     /**
-    *
-    */
+     *
+     */
     // @NotNull
     private boolean seen;
     /**
-    *
-    */
+     *
+     */
     // @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date sendDate;
     /**
@@ -60,13 +60,13 @@ public class Mail
     // @NotNull
     private int size;
     /**
-    *
-    */
+     *
+     */
     // @Size(max = 400)
     private String subject;
     /**
-    *
-    */
+     *
+     */
     private InternetAddress[] to;
     /**
      *
@@ -204,7 +204,7 @@ public class Mail
     }
 
     /**
-     * Setzt den Empfänger, Blind Copy.
+     * Setzt den Empfänger, 'Blind Copy'.
      *
      * @param bcc {@link InternetAddress}
      */

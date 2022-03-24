@@ -33,7 +33,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 /**
- * Dialog zum anlegen eines neuen {@link FXMailAccount}.
+ * Dialog zum Anlegen eines neuen {@link FXMailAccount}.
  *
  * @author Thomas Freese
  */
@@ -339,7 +339,7 @@ public class EditMailAccountDialog
         // Rest
         dialog.getDialogPane().setContent(gridPane);
 
-        Platform.runLater(() -> this.mail.requestFocus());
+        Platform.runLater(this.mail::requestFocus);
 
         Optional<ButtonType> result = dialog.showAndWait();
 

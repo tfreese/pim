@@ -18,9 +18,6 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import de.freese.pim.core.utils.Utils;
 import de.freese.pim.gui.PimClientApplication;
 import de.freese.pim.gui.controller.AbstractController;
@@ -61,6 +58,8 @@ import javafx.scene.text.Text;
 import javafx.stage.Window;
 import javafx.util.Duration;
 import javafx.util.StringConverter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * JavaFX-Utils.
@@ -70,8 +69,8 @@ import javafx.util.StringConverter;
 public final class FXUtils
 {
     /**
-    *
-    */
+     *
+     */
     private static final EventHandler<InputEvent> EVENT_HANDLER_CONSUME_ALL = Event::consume;
     /**
      *
@@ -143,7 +142,7 @@ public final class FXUtils
 
     /**
      * Kopieren der mit {@link FXML} annotierten Attribute der View in den Controller.<br>
-     * Die übereinstimmenden Attribute, werden aus den Maps entfernt.
+     * Die übereinstimmenden Attribute werden aus den Maps entfernt.
      *
      * @param view {@link View}
      * @param viewMap {@link Map}
@@ -185,14 +184,14 @@ public final class FXUtils
     {
         StringBuilder clipboardString = new StringBuilder();
 
-        for (Iterator<?> iteratorPosition = table.getSelectionModel().getSelectedCells().iterator(); iteratorPosition.hasNext();)
+        for (Iterator<?> iteratorPosition = table.getSelectionModel().getSelectedCells().iterator(); iteratorPosition.hasNext(); )
         {
             TablePosition<?, ?> position = (TablePosition<?, ?>) iteratorPosition.next();
 
             int row = position.getRow();
 
             // Ganze Zeile kopieren.
-            for (Iterator<?> iteratorCell = table.getColumns().iterator(); iteratorCell.hasNext();)
+            for (Iterator<?> iteratorCell = table.getColumns().iterator(); iteratorCell.hasNext(); )
             {
                 TableColumn<?, ?> column = (TableColumn<?, ?>) iteratorCell.next();
 
@@ -280,14 +279,14 @@ public final class FXUtils
      *
      * @return int[], RGB
      */
-    public static int[] getProgressRGB(final double progress, final Color...colors)
+    public static int[] getProgressRGB(final double progress, final Color... colors)
     {
         if ((progress < 0D) || (progress > 1D) || (colors.length < 2))
         {
             return new int[]
-            {
-                    0, 0, 0
-            };
+                    {
+                            0, 0, 0
+                    };
         }
 
         if (progress == 1D)
@@ -295,9 +294,9 @@ public final class FXUtils
             Color c = colors[colors.length - 1];
 
             return new int[]
-            {
-                    (int) (c.getRed() * 255), (int) (c.getGreen() * 255), (int) (c.getBlue() * 255)
-            };
+                    {
+                            (int) (c.getRed() * 255), (int) (c.getGreen() * 255), (int) (c.getBlue() * 255)
+                    };
         }
 
         int r;
@@ -318,9 +317,9 @@ public final class FXUtils
         b = (int) (color.getBlue() * 255);
 
         return new int[]
-        {
-                r, g, b
-        };
+                {
+                        r, g, b
+                };
     }
 
     /**
@@ -330,7 +329,8 @@ public final class FXUtils
      */
     public static void installCopyHandler(final Node node)
     {
-        node.setOnKeyPressed(event -> {
+        node.setOnKeyPressed(event ->
+        {
             if (KEYCODE_COPY.match(event))
             {
                 if (event.getSource() instanceof TableView)
@@ -354,7 +354,8 @@ public final class FXUtils
      */
     public static void installPasteHandler(final Node node)
     {
-        node.setOnKeyPressed(event -> {
+        node.setOnKeyPressed(event ->
+        {
             if (KEYCODE_PASTE.match(event))
             {
                 if (event.getSource() instanceof TableView)
@@ -376,7 +377,7 @@ public final class FXUtils
      */
     public static void pasteClipboard(final TableView<?> table)
     {
-        // abort if there's not cell selected to start with
+        // abort if there's no cell selected to start with
         if (table.getSelectionModel().getSelectedCells().isEmpty())
         {
             return;
@@ -470,6 +471,40 @@ public final class FXUtils
     }
 
     /**
+     * Formattiert das Objekt als String.
+     *
+     * @param <T> Konkreter Typ des Values
+     * @param converter {@link Function}
+     *
+     * @return {@link ObservableValue}<String>
+     */
+    public static <T> StringConverter<T> toStringConverter(final Function<T, String> converter)
+    {
+        Objects.requireNonNull(converter, "converter required");
+
+        return new StringConverter<>()
+        {
+            /**
+             * @see javafx.util.StringConverter#fromString(java.lang.String)
+             */
+            @Override
+            public T fromString(final String string)
+            {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            /**
+             * @see javafx.util.StringConverter#toString(java.lang.Object)
+             */
+            @Override
+            public String toString(final T object)
+            {
+                return converter.apply(object);
+            }
+        };
+    }
+
+    /**
      * Ändern der Display-Zeiten im Tooltip, da diese Möglichkeit noch nicht besteht.
      */
     public static void tooltipBehaviorHack()
@@ -504,40 +539,6 @@ public final class FXUtils
                 // Falsche interne Klasse des Tooltips
             }
         }
-    }
-
-    /**
-     * Formattiert das Objekt als String.
-     *
-     * @param <T> Konkreter Typ des Values
-     * @param converter {@link Function}
-     *
-     * @return {@link ObservableValue}<String>
-     */
-    public static <T> StringConverter<T> toStringConverter(final Function<T, String> converter)
-    {
-        Objects.requireNonNull(converter, "converter required");
-
-        return new StringConverter<>()
-        {
-            /**
-             * @see javafx.util.StringConverter#fromString(java.lang.String)
-             */
-            @Override
-            public T fromString(final String string)
-            {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            /**
-             * @see javafx.util.StringConverter#toString(java.lang.Object)
-             */
-            @Override
-            public String toString(final T object)
-            {
-                return converter.apply(object);
-            }
-        };
     }
 
     // /**

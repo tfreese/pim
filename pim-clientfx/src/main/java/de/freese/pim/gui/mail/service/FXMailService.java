@@ -22,7 +22,7 @@ public interface FXMailService
      *
      * @param account {@link FXMailAccount}
      *
-     * @throws PIMException Falls was schief geht.
+     * @throws PIMException Falls was schiefgeht.
      */
     void connectAccount(FXMailAccount account);
 
@@ -33,7 +33,7 @@ public interface FXMailService
      *
      * @return int; affectedRows
      *
-     * @throws PIMException Falls was schief geht.
+     * @throws PIMException Falls was schiefgeht.
      */
     int deleteAccount(long accountID);
 
@@ -42,16 +42,16 @@ public interface FXMailService
      *
      * @param accountIDs long[]
      *
-     * @throws PIMException Falls was schief geht.
+     * @throws PIMException Falls was schiefgeht.
      */
-    void disconnectAccounts(long...accountIDs);
+    void disconnectAccounts(long... accountIDs);
 
     /**
      * Liefert alle MailAccounts, sortiert nach MAIL.
      *
      * @return {@link List}
      *
-     * @throws PIMException Falls was schief geht.
+     * @throws PIMException Falls was schiefgeht.
      */
     List<FXMailAccount> getMailAccounts();
 
@@ -61,7 +61,7 @@ public interface FXMailService
      *
      * @param account {@link FXMailAccount}
      *
-     * @throws PIMException Falls was schief geht.
+     * @throws PIMException Falls was schiefgeht.
      */
     void insertAccount(FXMailAccount account);
 
@@ -74,7 +74,7 @@ public interface FXMailService
      *
      * @return int; affectedRows
      *
-     * @throws PIMException Falls was schief geht.
+     * @throws PIMException Falls was schiefgeht.
      */
     int insertOrUpdateFolder(long accountID, List<FXMailFolder> folders);
 
@@ -85,7 +85,7 @@ public interface FXMailService
      *
      * @return {@link List}
      *
-     * @throws PIMException Falls was schief geht.
+     * @throws PIMException Falls was schiefgeht.
      */
     List<FXMailFolder> loadFolder(long accountID);
 
@@ -99,7 +99,7 @@ public interface FXMailService
      *
      * @return {@link MailContent}
      *
-     * @throws PIMException Falls was schief geht.
+     * @throws PIMException Falls was schiefgeht.
      */
     MailContent loadMailContent(FXMailAccount account, FXMail mail, IOMonitor monitor);
 
@@ -111,7 +111,7 @@ public interface FXMailService
      *
      * @return {@link List}
      *
-     * @throws PIMException Falls was schief geht.
+     * @throws PIMException Falls was schiefgeht.
      */
     List<FXMail> loadMails(FXMailAccount account, FXMailFolder folder);
 
@@ -122,7 +122,7 @@ public interface FXMailService
      *
      * @return {@link List}
      *
-     * @throws PIMException Falls was schief geht.
+     * @throws PIMException Falls was schiefgeht.
      */
     List<FXMailFolder> test(FXMailAccount account);
 
@@ -133,7 +133,7 @@ public interface FXMailService
      *
      * @return int; affectedRows
      *
-     * @throws PIMException Falls was schief geht.
+     * @throws PIMException Falls was schiefgeht.
      */
     int updateAccount(FXMailAccount account);
 }

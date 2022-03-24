@@ -5,7 +5,7 @@ import java.util.function.Function;
 import java.util.function.UnaryOperator;
 
 /**
- * Diese {@link Function} liefert einen leeren String, wenn dieser nur aus dem selben Zeichen besteht.<br>
+ * Diese {@link Function} liefert einen leeren String, wenn dieser nur aus demselben Zeichen besteht.<br>
  *
  * @author Thomas Freese
  */

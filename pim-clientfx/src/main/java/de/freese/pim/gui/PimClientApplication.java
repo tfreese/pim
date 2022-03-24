@@ -78,7 +78,7 @@ public class PimClientApplication extends Application
     }
 
     /**
-     * Liefert den Bildschirm auf dem PIM läuft.
+     * Liefert den Bildschirm, auf dem PIM läuft.
      *
      * @return {@link Screen}
      */

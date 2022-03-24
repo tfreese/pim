@@ -4,12 +4,11 @@ package de.freese.pim.core.utils.io;
 import java.util.function.BiConsumer;
 
 /**
- * Interface für die Möglichkeit zur Streams/Channels zu monitoren.<br>
+ * Interface für die Möglichkeit Streams oder Channels zu monitoren.<br>
  * Der Monitor empfängt die Anzahl geschriebener/gelesener Bytes (Parameter 1) und die Gesamtgröße (Parameter 2).<br>
  * Er implementiert ebenfalls BiConsumer(Long, Long).
  *
  * @author Thomas Freese
- *
  * @see MonitoringReadableByteChannel
  * @see MonitoringWritableByteChannel
  * @see MonitorInputStream

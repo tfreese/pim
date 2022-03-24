@@ -43,9 +43,9 @@ public class Crypt
      * AES Initialisierungsvektor, muss dem Empfänger bekannt sein !
      */
     private static final byte[] INIT_VECTOR =
-    {
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-    };
+            {
+                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+            };
 
     /**
      *
@@ -61,8 +61,8 @@ public class Crypt
     }
 
     /**
-    *
-    */
+     *
+     */
     private final Charset charset;
 
     /**
@@ -243,7 +243,7 @@ public class Crypt
     }
 
     /**
-     * Liefert den {@link OutputStream} zum verschlüsseln.
+     * Liefert den {@link OutputStream} zum Verschlüsseln.
      *
      * @param output {@link OutputStream}
      *

@@ -20,7 +20,7 @@ public interface FXAddressbookService
      *
      * @return int; affectedRows
      *
-     * @throws PIMException Falls was schief geht.
+     * @throws PIMException Falls was schiefgeht.
      */
     int deleteKontakt(long id);
 
@@ -31,9 +31,9 @@ public interface FXAddressbookService
      *
      * @return {@link List}
      *
-     * @throws PIMException Falls was schief geht.
+     * @throws PIMException Falls was schiefgeht.
      */
-    List<FXKontakt> getKontaktDetails(long...ids);
+    List<FXKontakt> getKontaktDetails(long... ids);
 
     /**
      * Anlegen eines neuen Kontakts.<br>
@@ -41,7 +41,7 @@ public interface FXAddressbookService
      *
      * @param kontakt FXKontakt
      *
-     * @throws PIMException Falls was schief geht.
+     * @throws PIMException Falls was schiefgeht.
      */
     void insertKontakt(FXKontakt kontakt);
 
@@ -54,7 +54,7 @@ public interface FXAddressbookService
      *
      * @return int; affectedRows
      *
-     * @throws PIMException Falls was schief geht.
+     * @throws PIMException Falls was schiefgeht.
      */
     int updateKontakt(long id, String nachname, String vorname);
 }

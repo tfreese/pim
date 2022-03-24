@@ -68,6 +68,7 @@ public class JavaMailSender
             return this.authentication;
         }
     }
+
     /**
      *
      */
@@ -211,11 +212,11 @@ public class JavaMailSender
     }
 
     /**
-     * Obtain and connect a Transport from the underlying JavaMail Session, passing in the specified host, port, username, and password.
+     * Obtain and connect Transport from the underlying JavaMail Session, passing in the specified host, port, username, and password.
      *
      * @return the connected Transport object
      *
-     * @throws MessagingException if the connect attempt failed
+     * @throws MessagingException if connect attempt failed
      * @see #getTransport
      * @see #getHost()
      * @see #getPort()

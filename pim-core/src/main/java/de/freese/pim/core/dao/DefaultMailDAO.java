@@ -19,11 +19,6 @@ import java.util.stream.Stream;
 
 import javax.mail.internet.AddressException;
 
-import org.springframework.context.annotation.Profile;
-import org.springframework.jdbc.core.BatchPreparedStatementSetter;
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.stereotype.Repository;
-
 import de.freese.pim.core.mail.InternetAddress;
 import de.freese.pim.core.mail.MailPort;
 import de.freese.pim.core.model.mail.Mail;
@@ -32,6 +27,10 @@ import de.freese.pim.core.model.mail.MailFolder;
 import de.freese.pim.core.utils.Crypt;
 import de.freese.pim.core.utils.MailUtils;
 import de.freese.pim.core.utils.Utils;
+import org.springframework.context.annotation.Profile;
+import org.springframework.jdbc.core.BatchPreparedStatementSetter;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Repository;
 
 /**
  * Basis DAO-Implementierung für die Mailverwaltung.<br>
@@ -111,53 +110,6 @@ public class DefaultMailDAO extends AbstractDAO implements MailDAO
     private static class MailRowMapper implements RowMapper<Mail>
     {
         /**
-         * @param clob {@link Clob}
-         *
-         * @return String
-         *
-         * @throws SQLException Falls was schief geht.
-         * @throws IOException Falls was schief geht.
-         */
-        private String clobToString(final Clob clob) throws IOException, SQLException
-        {
-            String clobString = null;
-
-            // clobString = clob.getSubString(0,(int) clob.length());
-
-            try (BufferedReader buffer = new BufferedReader(clob.getCharacterStream()))
-            {
-                clobString = buffer.lines().collect(Collectors.joining());
-            }
-
-            // StringBuilder sb = new StringBuilder();
-            //
-            // try (Reader reader = clob.getCharacterStream();
-            // BufferedReader br = new BufferedReader(reader))
-            // {
-            // int b = 0;
-            //
-            // while (-1 != (b = br.read()))
-            // {
-            // sb.append((char) b);
-            // }
-            // }
-
-            // try (InputStream in = clob.getAsciiStream();
-            // Reader read = new InputStreamReader(in);
-            // StringWriter sw = new StringWriter())
-            // {
-            // int c = -1;
-            //
-            // while ((c = read.read()) != -1)
-            // {
-            // sw.write(c);
-            // }
-            // }
-
-            return clobString;
-        }
-
-        /**
          * @see org.springframework.jdbc.core.RowMapper#mapRow(java.sql.ResultSet, int)
          */
         @Override
@@ -200,6 +152,53 @@ public class DefaultMailDAO extends AbstractDAO implements MailDAO
             {
                 throw new SQLException(ex);
             }
+        }
+
+        /**
+         * @param clob {@link Clob}
+         *
+         * @return String
+         *
+         * @throws SQLException Falls was schiefgeht.
+         * @throws IOException Falls was schiefgeht.
+         */
+        private String clobToString(final Clob clob) throws IOException, SQLException
+        {
+            String clobString = null;
+
+            // clobString = clob.getSubString(0,(int) clob.length());
+
+            try (BufferedReader buffer = new BufferedReader(clob.getCharacterStream()))
+            {
+                clobString = buffer.lines().collect(Collectors.joining());
+            }
+
+            // StringBuilder sb = new StringBuilder();
+            //
+            // try (Reader reader = clob.getCharacterStream();
+            // BufferedReader br = new BufferedReader(reader))
+            // {
+            // int b = 0;
+            //
+            // while (-1 != (b = br.read()))
+            // {
+            // sb.append((char) b);
+            // }
+            // }
+
+            // try (InputStream in = clob.getAsciiStream();
+            // Reader read = new InputStreamReader(in);
+            // StringWriter sw = new StringWriter())
+            // {
+            // int c = -1;
+            //
+            // while ((c = read.read()) != -1)
+            // {
+            // sw.write(c);
+            // }
+            // }
+
+            return clobString;
         }
 
         /**
@@ -369,14 +368,6 @@ public class DefaultMailDAO extends AbstractDAO implements MailDAO
     }
 
     /**
-     * @return String
-     */
-    protected String getUserID()
-    {
-        return Utils.getSystemUserName();
-    }
-
-    /**
      * @see de.freese.pim.core.dao.MailDAO#insertAccount(de.freese.pim.core.model.mail.MailAccount)
      */
     @Override
@@ -400,7 +391,8 @@ public class DefaultMailDAO extends AbstractDAO implements MailDAO
         sql.append(", ?, ?, ?");
         sql.append(")");
 
-        int affectedRows = getJdbcTemplate().update(sql.toString(), ps -> {
+        int affectedRows = getJdbcTemplate().update(sql.toString(), ps ->
+        {
             ps.setLong(1, id);
             ps.setString(2, userID);
             ps.setString(3, account.getMail());
@@ -493,7 +485,8 @@ public class DefaultMailDAO extends AbstractDAO implements MailDAO
         sb.append(")");
         String sql = sb.toString();
 
-        int[][] affectedRows = getJdbcTemplate().batchUpdate(sql, mails, mails.size(), (ps, mail) -> {
+        int[][] affectedRows = getJdbcTemplate().batchUpdate(sql, mails, mails.size(), (ps, mail) ->
+        {
             String from = null;
 
             if (mail.getFrom() != null)
@@ -573,7 +566,8 @@ public class DefaultMailDAO extends AbstractDAO implements MailDAO
         sql.append(", SMTP_LEGITIMATION = ?");
         sql.append(" where id = ?");
 
-        return getJdbcTemplate().update(sql.toString(), ps -> {
+        return getJdbcTemplate().update(sql.toString(), ps ->
+        {
             ps.setString(1, account.getMail());
             ps.setString(2, encryptedPassword);
             ps.setString(3, account.getImapHost());
@@ -600,7 +594,8 @@ public class DefaultMailDAO extends AbstractDAO implements MailDAO
         sql.append(", ABONNIERT = ?");
         sql.append(" where id = ?");
 
-        return getJdbcTemplate().update(sql.toString(), ps -> {
+        return getJdbcTemplate().update(sql.toString(), ps ->
+        {
             ps.setString(1, folder.getFullName());
             ps.setString(2, folder.getName());
             ps.setBoolean(3, folder.isAbonniert());
@@ -622,10 +617,19 @@ public class DefaultMailDAO extends AbstractDAO implements MailDAO
         sql.append(" FOLDER_ID = ?");
         sql.append(" and UID = ?");
 
-        return getJdbcTemplate().update(sql.toString(), ps -> {
+        return getJdbcTemplate().update(sql.toString(), ps ->
+        {
             ps.setBoolean(1, mail.isSeen());
             ps.setLong(2, folderID);
             ps.setLong(3, mail.getUID());
         });
+    }
+
+    /**
+     * @return String
+     */
+    protected String getUserID()
+    {
+        return Utils.getSystemUserName();
     }
 }

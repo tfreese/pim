@@ -65,15 +65,15 @@ public class FXMail
     /**
      *
      */
+    private final IntegerProperty sizeProperty = new SimpleIntegerProperty(this, "size", 0);
+    /**
+     *
+     */
     private final StringProperty subjectProperty = new SimpleStringProperty(this, "subject", null);
     /**
      *
      */
     private final ObjectProperty<InternetAddress[]> toProperty = new SimpleObjectProperty<>(this, "to", null);
-    /**
-     *
-     */
-    private final IntegerProperty sizeProperty = new SimpleIntegerProperty(this, "size", 0);
     /**
      *
      */
@@ -281,7 +281,7 @@ public class FXMail
     }
 
     /**
-     * Setzt den Empfänger, Blind Copy.
+     * Setzt den Empfänger, 'Blind Copy'.
      *
      * @param bcc {@link InternetAddress}
      */

@@ -35,5 +35,5 @@ public enum PIMProfile
     /**
      * SQLITE als Local-File DB
      */
-    SqliteLocalFile;
+    SqliteLocalFile
 }

@@ -16,24 +16,24 @@ public class MailFolder
     // @NotNull
     private boolean abonniert = true;
     /**
-    *
-    */
+     *
+     */
     // @NotNull
     private long accountID;
     /**
-    *
-    */
+     *
+     */
     // @NotNull
     // @Size(min = 0, max = 100)
     private String fullName;
     /**
-    *
-    */
+     *
+     */
     // @NotNull
     private long id;
     /**
-    *
-    */
+     *
+     */
     // @NotNull
     // @Size(min = 0, max = 100)
     private String name;
@@ -52,7 +52,7 @@ public class MailFolder
     }
 
     /**
-     * Liefert den vollen Hierarchie-Namen, zB PARENT_NAME/FOLDER_NAME.
+     * Liefert den vollen Hierarchie-Namen, z.B. PARENT_NAME/FOLDER_NAME.
      *
      * @return String
      */
@@ -80,7 +80,7 @@ public class MailFolder
     }
 
     /**
-     * Liefert das Flag um den Folder zu abonnieren/beobachten.
+     * Liefert das Flag, um den Folder zu abonnieren/beobachten.
      *
      * @return boolean
      */
@@ -100,7 +100,7 @@ public class MailFolder
     }
 
     /**
-     * Setzt das Flag um den Folder zu abonnieren/beobachten.
+     * Setzt das Flag, um den Folder zu abonnieren/beobachten.
      *
      * @param abo boolean
      */
@@ -118,7 +118,7 @@ public class MailFolder
     }
 
     /**
-     * Setzt den vollen Hierarchie-Namen, zB PARENT_NAME/FOLDER_NAME.
+     * Setzt den vollen Hierarchie-Namen, z.B. PARENT_NAME/FOLDER_NAME.
      *
      * @param fullName String
      */

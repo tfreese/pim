@@ -18,7 +18,7 @@ import de.freese.pim.core.utils.io.IOMonitor;
 public interface MailService
 {
     /**
-     * Erstellt für den Account eine Instanz von Typ {@link MailAPI} und verbindet stellt die Verbindung her.<br>
+     * Erstellt für den Account eine Instanz von Typ {@link MailAPI} und stellt die Verbindung her.<br>
      *
      * @param account {@link MailAccount}
      */
@@ -38,7 +38,7 @@ public interface MailService
      *
      * @param accountIDs long[]
      */
-    void disconnectAccounts(long...accountIDs);
+    void disconnectAccounts(long... accountIDs);
 
     /**
      * Liefert alle MailAccounts, sortiert nach MAIL.

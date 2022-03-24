@@ -69,7 +69,7 @@ public interface MailAPI
 
     /**
      * Lädt die Mails des Folders vom Provider ab der definierten UID.<br>
-     * Ist die Liste null ist der Folder nicht mehr existent.
+     * Die Liste ist null, wenn der Folder nicht mehr existent.
      *
      * @param folderFullName {@link String}
      * @param uidFrom long; Startindex der zu ladenen Mails

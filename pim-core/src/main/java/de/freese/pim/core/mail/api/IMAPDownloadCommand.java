@@ -68,7 +68,7 @@ public class IMAPDownloadCommand implements ProtocolCommand
     @Override
     public Object doCommand(final IMAPProtocol protocol) throws ProtocolException
     {
-        // a uid fetch 234789 bodystructure followed by b uid fetch 234789 (body.peek[1.1] body.peek[2])
+        // UID fetch 234789 bodystructure followed by b uid fetch 234789 (body.peek[1.1] body.peek[2])
 
         Argument args = new Argument();
         args.writeNumber(this.uid).writeString("BODY[]");

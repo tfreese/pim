@@ -29,6 +29,76 @@ public class ProgressIndicatorDemo extends Application
     }
 
     /**
+     * @see javafx.application.Application#start(javafx.stage.Stage)
+     */
+    @Override
+    public void start(final Stage primaryStage) throws Exception
+    {
+        ProgressIndicator progressIndicator = new ProgressIndicator();
+        progressIndicator.setVisible(false);
+        // progressIndicator.setMaxSize(250D, 250D);
+
+        Task<Void> task = new Task<>()
+        {
+            /**
+             * @see javafx.concurrent.Task#call()
+             */
+            @Override
+            protected Void call() throws Exception
+            {
+                int progress = 0;
+
+                while (progress <= 100)
+                {
+                    updateProgress(++progress, 100);
+
+                    Thread.sleep(40); // 25 Frames/Sekunde
+
+                    if (progress == 100)
+                    {
+                        progress = 0;
+                    }
+                }
+
+                return null;
+            }
+        };
+
+        progressIndicator.progressProperty().bind(task.progressProperty());
+        progressIndicator.visibleProperty().bind(task.runningProperty());
+        progressIndicator.styleProperty().bind(Bindings.createStringBinding(() ->
+        {
+            final double percent = progressIndicator.getProgress();
+            if (percent < 0)
+            {
+                // indeterminate
+                return null;
+            }
+
+            // int[] rgb = getRGB_1(percent);
+            // int[] rgb = getRGB_2(percent);
+            // int[] rgb = getRGB_3(percent);
+            int[] rgb = FXUtils.getProgressRGB(percent, Color.RED, Color.ORANGE, Color.GREEN);
+
+            final String style = String.format("-fx-progress-color: rgb(%d,%d,%d)", rgb[0], rgb[1], rgb[2]);
+            return style;
+        }, progressIndicator.progressProperty()));
+
+        Button button = new Button("Start");
+        button.setOnAction(event -> ForkJoinPool.commonPool().execute(task));
+
+        StackPane stackPane = new StackPane();
+        stackPane.setPadding(new Insets(0));
+        stackPane.getChildren().add(button);
+        stackPane.getChildren().add(progressIndicator);
+
+        Scene scene = new Scene(stackPane, 500, 500);
+        primaryStage.setScene(scene);
+        primaryStage.centerOnScreen();
+        primaryStage.show();
+    }
+
+    /**
      * Verschiedene Farben.
      *
      * @param progress 0-1
@@ -47,6 +117,7 @@ public class ProgressIndicatorDemo extends Application
         final int n = (int) m; // integer of m
         final double f = m - n; // fraction of m
         final int t = (int) (255 * f);
+
         switch (n)
         {
             case 0:
@@ -101,9 +172,9 @@ public class ProgressIndicatorDemo extends Application
         }
 
         return new int[]
-        {
-                r, g, b
-        };
+                {
+                        r, g, b
+                };
     }
 
     /**
@@ -123,9 +194,9 @@ public class ProgressIndicatorDemo extends Application
         r = 255 - g;
 
         return new int[]
-        {
-                r, g, b
-        };
+                {
+                        r, g, b
+                };
     }
 
     /**
@@ -147,77 +218,8 @@ public class ProgressIndicatorDemo extends Application
         b = (int) (color.getBlue() * 255);
 
         return new int[]
-        {
-                r, g, b
-        };
-    }
-
-    /**
-     * @see javafx.application.Application#start(javafx.stage.Stage)
-     */
-    @Override
-    public void start(final Stage primaryStage) throws Exception
-    {
-        ProgressIndicator progressIndicator = new ProgressIndicator();
-        progressIndicator.setVisible(false);
-        // progressIndicator.setMaxSize(250D, 250D);
-
-        Task<Void> task = new Task<>()
-        {
-            /**
-             * @see javafx.concurrent.Task#call()
-             */
-            @Override
-            protected Void call() throws Exception
-            {
-                int progress = 0;
-
-                while (progress <= 100)
                 {
-                    updateProgress(++progress, 100);
-
-                    Thread.sleep(40); // 25 Frames/Sekunde
-
-                    if (progress == 100)
-                    {
-                        progress = 0;
-                    }
-                }
-
-                return null;
-            }
-        };
-
-        progressIndicator.progressProperty().bind(task.progressProperty());
-        progressIndicator.visibleProperty().bind(task.runningProperty());
-        progressIndicator.styleProperty().bind(Bindings.createStringBinding(() -> {
-            final double percent = progressIndicator.getProgress();
-            if (percent < 0)
-            {
-                // indeterminate
-                return null;
-            }
-
-            // int[] rgb = getRGB_1(percent);
-            // int[] rgb = getRGB_2(percent);
-            // int[] rgb = getRGB_3(percent);
-            int[] rgb = FXUtils.getProgressRGB(percent, Color.RED, Color.ORANGE, Color.GREEN);
-
-            final String style = String.format("-fx-progress-color: rgb(%d,%d,%d)", rgb[0], rgb[1], rgb[2]);
-            return style;
-        }, progressIndicator.progressProperty()));
-
-        Button button = new Button("Start");
-        button.setOnAction(event -> ForkJoinPool.commonPool().execute(task));
-
-        StackPane stackPane = new StackPane();
-        stackPane.setPadding(new Insets(0));
-        stackPane.getChildren().add(button);
-        stackPane.getChildren().add(progressIndicator);
-
-        Scene scene = new Scene(stackPane, 500, 500);
-        primaryStage.setScene(scene);
-        primaryStage.centerOnScreen();
-        primaryStage.show();
+                        r, g, b
+                };
     }
 }

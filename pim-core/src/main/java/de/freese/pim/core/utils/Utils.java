@@ -91,7 +91,7 @@ public final class Utils
 
     /**
      * Fügt am Index 1 der Liste eine Trenn-Linie ein.<br>
-     * Die Breite pro Spalte orientiert sich am ersten Wert (Header) der Spalte. Ist der Separator null oder leer wird nichts gemacht.<br>
+     * Die Breite pro Spalte orientiert sich am ersten Wert (Header) der Spalte. Ist der Separator Null oder leer wird nichts gemacht.<br>
      *
      * @param <T> Konkreter Typ
      * @param rows {@link List}
@@ -319,7 +319,7 @@ public final class Utils
     }
 
     /**
-     * Liefert das Value aus dem {@link Field} der Bean.<br>
+     * Liefert den Wert aus dem {@link Field} der Bean.<br>
      *
      * @param field {@link Field}
      * @param bean Object
@@ -439,7 +439,7 @@ public final class Utils
             }
             catch (InterruptedException ie)
             {
-                // Abbruch wenn laufender Thread interruped ist.
+                // Abbruch, wenn laufender Thread interruped ist.
                 executorService.shutdownNow();
 
                 // Interruptd Status signalisieren.
@@ -474,7 +474,7 @@ public final class Utils
      *
      * @return {@link List}
      *
-     * @throws SQLException Falls was schief geht.
+     * @throws SQLException Falls was schiefgeht.
      */
     public static List<String[]> toList(final ResultSet resultSet) throws SQLException
     {
@@ -566,7 +566,7 @@ public final class Utils
      * @param resultSet {@link ResultSet}
      * @param ps {@link PrintStream}
      *
-     * @throws SQLException Falls was schief geht.
+     * @throws SQLException Falls was schiefgeht.
      */
     public static void write(final ResultSet resultSet, final PrintStream ps) throws SQLException
     {
