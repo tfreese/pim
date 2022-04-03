@@ -8,7 +8,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.util.SocketUtils;
 
 /**
  * Spring-Konfiguration der Datenbank.<br>
@@ -21,19 +20,6 @@ import org.springframework.util.SocketUtils;
 @PropertySource("classpath:database.properties")
 public class HsqldbEmbeddedServerConfig extends AbstractHSQLDBConfig
 {
-    /**
-     * Erstellt ein neues {@link HsqldbEmbeddedServerConfig} Object.
-     */
-    public HsqldbEmbeddedServerConfig()
-    {
-        super();
-
-        int port = SocketUtils.findAvailableTcpPort();
-
-        // Damit die Placeholder in Properties funktionieren: ${hsqldbPort}
-        System.setProperty("hsqldbPort", Integer.toString(port));
-    }
-
     /**
      * @param pimHome String
      * @param pimDbName String
