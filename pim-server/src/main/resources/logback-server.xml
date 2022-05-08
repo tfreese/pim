@@ -7,14 +7,13 @@
     <!--property name="pattern" value="%date{yyyy-MM-dd HH:mm:ss.SSS} - %-5level[%thread] - %logger{0}[%method] - %message%n" /-->
     <!--property name="pattern" value="%date{HH:mm:ss.SSS} - %clr(%.-1level){yellow}[%-12thread] - %logger{0} - %message%n" /-->
     <property name="pattern" value="%date{HH:mm:ss.SSS} - %5level - [%20.-20thread] - %replace(%-40.-40logger{0}){' ', '.'} - %message%n" />
-    
-    <!--property name="log.dir" value="${user.dir}/log" /-->
-    <property name="log.dir" value="${user.home}/.pim/logs" />
 
-	<!-- Conditions brauchen org.codehaus.janino:janino -->
+    <property name="log.dir" value="${user.home}/.java-apps/pim/logs" />
+
+    <!-- Conditions brauchen org.codehaus.janino:janino -->
     <!--if condition='isNull("log.dir")'>
         <then>
-            <property name="log.dir" value="${user.home}/logs/pim" />
+            <property name="log.dir" value="${user.home}/.java-apps/pim/logs" />
         </then>
         <else>
         </else>
@@ -22,10 +21,10 @@
 
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <target>System.out</target>
-        <immediateFlush>true</immediateFlush>          
+        <immediateFlush>true</immediateFlush>
         <encoder>
             <pattern>${pattern}</pattern>
-            <outputPatternAsHeader>false</outputPatternAsHeader>  
+            <outputPatternAsHeader>false</outputPatternAsHeader>
         </encoder>
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
             <level>ERROR</level>
@@ -35,11 +34,11 @@
     </appender>
 
     <appender name="STDERR" class="ch.qos.logback.core.ConsoleAppender">
-        <target>System.err</target>        
-        <immediateFlush>true</immediateFlush>  
+        <target>System.err</target>
+        <immediateFlush>true</immediateFlush>
         <encoder>
             <pattern>${pattern}</pattern>
-            <outputPatternAsHeader>false</outputPatternAsHeader>                     
+            <outputPatternAsHeader>false</outputPatternAsHeader>
         </encoder>
         <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
             <level>ERROR</level>
@@ -47,7 +46,7 @@
     </appender>
 
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${log.dir}/pim-server.log</file>        
+        <file>${log.dir}/pim-server.log</file>
         <append>true</append>
         <immediateFlush>true</immediateFlush>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
@@ -60,10 +59,10 @@
             <maxHistory>30</maxHistory>
             <totalSizeCap>100MB</totalSizeCap>
             <maxFileSize>10MB</maxFileSize>
-        </rollingPolicy-->        
+        </rollingPolicy-->
         <encoder>
             <pattern>${pattern}</pattern>
-            <outputPatternAsHeader>false</outputPatternAsHeader>            
+            <outputPatternAsHeader>false</outputPatternAsHeader>
         </encoder>
         <!--filter class="ch.qos.logback.classic.filter.LevelFilter">
             <level>ERROR</level>
@@ -71,18 +70,18 @@
             <onMismatch>ACCEPT</onMismatch>
         </filter-->
     </appender>
-    
+
     <appender name="FILE_ASYNC" class="ch.qos.logback.classic.AsyncAppender">
         <appender-ref ref="FILE" />
-    </appender>    
+    </appender>
 
     <!--logger name="javax.mail" level="INFO"/>
     <logger name="org.apache.tomcat.jdbc.pool" level="INFO"/>
     <logger name="org.springframework.boot.autoconfigure" level="INFO"/>
     <logger name="org.springframework.jdbc.core.JdbcTemplate" level="INFO"/-->
-        
-    <logger name="de.freese.pim" level="INFO"/>        
-    <logger name="de.freese.pim.core.jdbc" level="INFO"/>
+
+    <logger name="de.freese.pim" level="INFO" />
+    <logger name="de.freese.pim.core.jdbc" level="INFO" />
 
     <root level="INFO">
         <appender-ref ref="STDOUT" />
