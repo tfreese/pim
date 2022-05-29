@@ -24,7 +24,7 @@ public abstract class AbstractRemoteService extends AbstractService
             return null;
         }
 
-        return URLDecoder.decode(value.trim(), StandardCharsets.UTF_8);
+        return URLDecoder.decode(value.strip(), StandardCharsets.UTF_8);
     }
 
     /**
@@ -39,6 +39,6 @@ public abstract class AbstractRemoteService extends AbstractService
             return null;
         }
 
-        return URLEncoder.encode(value.trim(), StandardCharsets.UTF_8);
+        return URLEncoder.encode(value.strip(), StandardCharsets.UTF_8);
     }
 }

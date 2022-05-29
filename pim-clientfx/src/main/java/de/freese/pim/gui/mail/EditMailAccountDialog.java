@@ -253,7 +253,7 @@ public class EditMailAccountDialog
         // OK-Button disablen, wenn eines dieser Felder leer ist.
         this.mail.textProperty().addListener((observable, oldValue, newValue) ->
         {
-            okButton.setDisable(newValue.trim().isEmpty());
+            okButton.setDisable(newValue.strip().isEmpty());
 
             this.labelTestResult.setText(null);
             this.labelTestResult.setStyle(null);

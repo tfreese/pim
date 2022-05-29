@@ -44,41 +44,41 @@ import javafx.util.Pair;
 public class ContactController extends AbstractController
 {
     /**
-    *
-    */
+     *
+     */
     private final FXAddressbookService addressbookService;
     /**
-    *
-    */
+     *
+     */
     @FXML
     private Button buttonAddContact;
     /**
-    *
-    */
+     *
+     */
     @FXML
     private Button buttonDeleteContact;
     /**
-    *
-    */
+     *
+     */
     @FXML
     private Button buttonEditContact;
     /**
-    *
-    */
+     *
+     */
     @FXML
     private Node mainNode;
     /**
-    *
-    */
+     *
+     */
     @FXML
     private Node naviNode;
     /**
-    *
-    */
+     *
+     */
     private final ObjectProperty<FXKontakt> selectedKontakt = new SimpleObjectProperty<>();
     /**
-    *
-    */
+     *
+     */
     @FXML
     private TableView<FXKontakt> tableViewKontakt;
     /**
@@ -180,13 +180,14 @@ public class ContactController extends AbstractController
         gridPane.add(new Label(resources.getString("vorname")), 0, 1);
         gridPane.add(vorname, 1, 1);
 
-        nachname.textProperty().addListener((observable, oldValue, newValue) -> okButton.setDisable(newValue.trim().isEmpty()));
+        nachname.textProperty().addListener((observable, oldValue, newValue) -> okButton.setDisable(newValue.strip().isEmpty()));
 
         dialog.getDialogPane().setContent(gridPane);
 
         Platform.runLater(nachname::requestFocus);
 
-        dialog.setResultConverter(buttonType -> {
+        dialog.setResultConverter(buttonType ->
+        {
             if (buttonType == ButtonType.OK)
             {
                 return new Pair<>(nachname.getText(), vorname.getText());
@@ -256,11 +257,13 @@ public class ContactController extends AbstractController
         this.textFieldVorname.textProperty()
                 .bind(Bindings.when(this.selectedKontakt.isNull()).then("").otherwise(Bindings.selectString(this.selectedKontakt, "vorname")));
 
-        this.buttonAddContact.setOnAction(event -> {
+        this.buttonAddContact.setOnAction(event ->
+        {
             Dialog<Pair<String, String>> dialog = createAddEditKontaktDialog("contact.add", "contact.add", "imageview-add", null, resources);
 
             Optional<Pair<String, String>> result = dialog.showAndWait();
-            result.ifPresent(pair -> {
+            result.ifPresent(pair ->
+            {
                 try
                 {
                     FXKontakt kontakt = new FXKontakt(pair.getKey(), pair.getValue());
@@ -280,12 +283,14 @@ public class ContactController extends AbstractController
             });
         });
 
-        this.buttonEditContact.setOnAction(event -> {
+        this.buttonEditContact.setOnAction(event ->
+        {
             Dialog<Pair<String, String>> dialog =
                     createAddEditKontaktDialog("contact.edit", "contact.edit", "imageview-edit", this.selectedKontakt.getValue(), resources);
 
             Optional<Pair<String, String>> result = dialog.showAndWait();
-            result.ifPresent(pair -> {
+            result.ifPresent(pair ->
+            {
                 try
                 {
                     String nachname = pair.getKey();
@@ -305,7 +310,8 @@ public class ContactController extends AbstractController
             });
         });
 
-        this.buttonDeleteContact.setOnAction(event -> {
+        this.buttonDeleteContact.setOnAction(event ->
+        {
             Alert alert = new Alert(AlertType.WARNING);
             alert.getDialogPane().getStylesheets().add("styles/styles.css");
             alert.setTitle(resources.getString("contact.delete"));
@@ -379,7 +385,8 @@ public class ContactController extends AbstractController
 
         task.setOnSucceeded(event -> getKontakteList().addAll(task.getValue()));
 
-        task.setOnFailed(event -> {
+        task.setOnFailed(event ->
+        {
             getLogger().error(null, task.getException());
 
             new ErrorDialog().forThrowable(task.getException()).showAndWait();

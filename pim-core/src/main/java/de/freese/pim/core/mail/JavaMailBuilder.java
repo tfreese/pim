@@ -350,7 +350,7 @@ public final class JavaMailBuilder
         rootMultipart.addBodyPart(relatedBodyPart);
 
         // Text
-        if ((this.text != null) && (this.text.trim().length() > 0))
+        if ((this.text != null) && (this.text.strip().length() > 0))
         {
             MimeBodyPart textBodyPart = new MimeBodyPart();
             relatedMultipart.addBodyPart(textBodyPart);
