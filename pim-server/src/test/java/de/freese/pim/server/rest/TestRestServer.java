@@ -10,6 +10,7 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import de.freese.pim.server.PimServerApplication;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
@@ -17,15 +18,13 @@ import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
-import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-
-import de.freese.pim.server.PimServerApplication;
 
 /**
  * Vollständiger Test der gesamten Server-Anwendung.
@@ -34,28 +33,28 @@ import de.freese.pim.server.PimServerApplication;
  */
 // @ExtendWith(SpringExtension.class) // Ist bereits in SpringBootTest enthalten
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT, classes =
-{
-        PimServerApplication.class
-}, properties =
-{
-        "spring.main.banner-mode=OFF", "logging.config=classpath:logback-server.xml" // , "spring.config.name=application-Server"
-})
+        {
+                PimServerApplication.class
+        }, properties =
+        {
+                "spring.main.banner-mode=OFF", "logging.config=classpath:logback-server.xml" // , "spring.config.name=application-Server"
+        })
 @TestMethodOrder(MethodOrderer.MethodName.class)
 @ActiveProfiles(
-{
-        "Server", "HsqldbMemory"
-})
+        {
+                "Server", "HsqldbMemory"
+        })
 @AutoConfigureMockMvc
 class TestRestServer
 {
     /**
-    *
-    */
+     *
+     */
     @LocalServerPort
     private String localServerPort;
     /**
-    *
-    */
+     *
+     */
     @Resource
     private MockMvc mockMvc;
 
