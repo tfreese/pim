@@ -59,7 +59,7 @@ class TestRestServer
     private MockMvc mockMvc;
 
     /**
-     * @throws Exception Falls was schief geht.
+     * @throws Exception Falls was schiefgeht.
      */
     @Test
     void test010NoParamGreetingShouldReturnDefaultMessage() throws Exception
@@ -75,7 +75,7 @@ class TestRestServer
     }
 
     /**
-     * @throws Exception Falls was schief geht.
+     * @throws Exception Falls was schiefgeht.
      */
     @Test
     void test020ParamGreetingShouldReturnTailoredMessage() throws Exception
@@ -91,7 +91,7 @@ class TestRestServer
     }
 
     /**
-     * @throws Exception Falls was schief geht.
+     * @throws Exception Falls was schiefgeht.
      */
     @Test
     void test030AsyncDateDeferredResult() throws Exception
@@ -100,7 +100,7 @@ class TestRestServer
     }
 
     /**
-     * @throws Exception Falls was schief geht.
+     * @throws Exception Falls was schiefgeht.
      */
     @Test
     void test040AsyncDateCallable() throws Exception
@@ -109,7 +109,7 @@ class TestRestServer
     }
 
     /**
-     * @throws Exception Falls was schief geht.
+     * @throws Exception Falls was schiefgeht.
      */
     @Test
     void test040AsyncDateWebAsyncTask() throws Exception
@@ -122,7 +122,7 @@ class TestRestServer
      *
      * @param url String
      *
-     * @throws Exception Falls was schief geht.
+     * @throws Exception Falls was schiefgeht.
      */
     private void testAsync(final String url) throws Exception
     {
