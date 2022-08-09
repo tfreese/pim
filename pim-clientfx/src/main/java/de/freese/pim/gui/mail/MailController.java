@@ -93,8 +93,8 @@ public class MailController extends AbstractController
     @FXML
     private ProgressIndicator progressIndicator;
     /**
-    *
-    */
+     *
+     */
     private final ObjectProperty<FXMail> selectedMail = new SimpleObjectProperty<>();
     /**
      *
@@ -165,7 +165,7 @@ public class MailController extends AbstractController
         // Path basePath = SettingService.getInstance().getHome();
         // Path accountPath = basePath.resolve(account.getMail());
 
-        // IMailAPI mailAPI = new JavaMailAPI(account, accountPath);
+        // IMailAPI mailAPI = new JavaMailApi(account, accountPath);
         // mailAPI.setMailService(this.mailService);
         // mailAPI.setExecutorService(getExecutorService());
 
@@ -246,10 +246,12 @@ public class MailController extends AbstractController
     public void initialize(final URL location, final ResourceBundle resources)
     {
         // Buttons
-        this.buttonAddAccount.setOnAction(event -> {
+        this.buttonAddAccount.setOnAction(event ->
+        {
             EditMailAccountDialog dialog = new EditMailAccountDialog();
             Optional<FXMailAccount> result = dialog.addAccount(getMailService(), resources);
-            result.ifPresent(account -> {
+            result.ifPresent(account ->
+            {
                 try
                 {
                     getMailService().insertAccount(account);
@@ -267,12 +269,14 @@ public class MailController extends AbstractController
         });
 
         this.buttonEditAccount.disableProperty().bind(this.selectedTreeItem.isNull());
-        this.buttonEditAccount.setOnAction(event -> {
+        this.buttonEditAccount.setOnAction(event ->
+        {
             FXMailAccount ma = getAccount(this.selectedTreeItem.get());
 
             EditMailAccountDialog dialog = new EditMailAccountDialog();
             Optional<FXMailAccount> result = dialog.editAccount(getMailService(), resources, ma);
-            result.ifPresent(account -> {
+            result.ifPresent(account ->
+            {
                 try
                 {
                     getMailService().updateAccount(account);
@@ -392,7 +396,8 @@ public class MailController extends AbstractController
             }
         }
 
-        getProgressIndicator().styleProperty().bind(Bindings.createStringBinding(() -> {
+        getProgressIndicator().styleProperty().bind(Bindings.createStringBinding(() ->
+        {
             double percent = getProgressIndicator().getProgress();
 
             if (percent < 0)
@@ -472,13 +477,15 @@ public class MailController extends AbstractController
                 return mailContent;
             }
         };
-        loadMailContentTask.setOnSucceeded(event -> {
+        loadMailContentTask.setOnSucceeded(event ->
+        {
             PimClientApplication.unblockGUI();
             MailContent mailContent = loadMailContentTask.getValue();
 
             this.mailContentView.newMailContent(mail, mailContent);
         });
-        loadMailContentTask.setOnFailed(event -> {
+        loadMailContentTask.setOnFailed(event ->
+        {
             PimClientApplication.unblockGUI();
             Throwable th = loadMailContentTask.getException();
 

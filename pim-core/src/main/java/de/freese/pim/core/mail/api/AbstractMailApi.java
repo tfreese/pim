@@ -4,37 +4,36 @@ package de.freese.pim.core.mail.api;
 import java.util.Objects;
 import java.util.concurrent.Executor;
 
+import de.freese.pim.core.model.mail.MailAccount;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.freese.pim.core.model.mail.MailAccount;
-
 /**
- * Basis-Implementierung der {@link MailAPI}.
+ * Basis-Implementierung der {@link MailApi}.
  *
  * @author Thomas Freese
  */
-public abstract class AbstractMailAPI implements MailAPI
+public abstract class AbstractMailApi implements MailApi
 {
     /**
      *
      */
     private final MailAccount account;
     /**
-    *
-    */
+     *
+     */
     private Executor executor;
     /**
-    *
-    */
+     *
+     */
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     /**
-     * Erzeugt eine neue Instanz von {@link AbstractMailAPI}
+     * Erzeugt eine neue Instanz von {@link AbstractMailApi}
      *
      * @param account {@link MailAccount}
      */
-    protected AbstractMailAPI(final MailAccount account)
+    protected AbstractMailApi(final MailAccount account)
     {
         super();
 
@@ -42,7 +41,7 @@ public abstract class AbstractMailAPI implements MailAPI
     }
 
     /**
-     * @see de.freese.pim.core.mail.api.MailAPI#getAccount()
+     * @see MailApi#getAccount()
      */
     @Override
     public MailAccount getAccount()
@@ -69,7 +68,7 @@ public abstract class AbstractMailAPI implements MailAPI
     }
 
     /**
-     * @see de.freese.pim.core.mail.api.MailAPI#setExecutor(java.util.concurrent.Executor)
+     * @see MailApi#setExecutor(java.util.concurrent.Executor)
      */
     @Override
     public void setExecutor(final Executor executor)
@@ -84,7 +83,7 @@ public abstract class AbstractMailAPI implements MailAPI
     public String toString()
     {
         StringBuilder builder = new StringBuilder();
-        builder.append("JavaMailAPI [").append(getAccount()).append("]");
+        builder.append("JavaMailApi [").append(getAccount()).append("]");
 
         return builder.toString();
     }

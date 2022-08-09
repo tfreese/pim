@@ -7,7 +7,6 @@ import javax.activation.DataSource;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import de.freese.pim.core.utils.io.IOMonitor;
 
 /**
@@ -21,7 +20,8 @@ public class AttachmentDataSource extends AbstractDataSource
      * Erzeugt eine neue Instanz von {@link AttachmentDataSource}
      *
      * @param source {@link DataSource}
-     * @throws IOException Falls was schief geht.
+     *
+     * @throws IOException Falls was schiefgeht.
      */
     public AttachmentDataSource(final DataSource source) throws IOException
     {
@@ -33,7 +33,8 @@ public class AttachmentDataSource extends AbstractDataSource
      *
      * @param source {@link DataSource}
      * @param monitor {@link IOMonitor}
-     * @throws IOException Falls was schief geht.
+     *
+     * @throws IOException Falls was schiefgeht.
      */
     public AttachmentDataSource(final DataSource source, final IOMonitor monitor) throws IOException
     {
@@ -49,7 +50,7 @@ public class AttachmentDataSource extends AbstractDataSource
      */
     @JsonCreator
     public AttachmentDataSource(@JsonProperty("name") final String name, @JsonProperty("contentType") final String contentType,
-            @JsonProperty("data") final byte[] data)
+                                @JsonProperty("data") final byte[] data)
     {
         super(name, contentType, data);
     }

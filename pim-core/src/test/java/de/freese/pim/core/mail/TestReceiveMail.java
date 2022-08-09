@@ -66,7 +66,7 @@ class TestReceiveMail extends AbstractMailTest
     private static Store store;
 
     /**
-     * @throws Exception Falls was schief geht.
+     * @throws Exception Falls was schiefgeht.
      */
     @AfterAll
     static void afterAll() throws Exception
@@ -95,7 +95,7 @@ class TestReceiveMail extends AbstractMailTest
     }
 
     // /**
-    // * @throws Exception Falls was schief geht.
+    // * @throws Exception Falls was schiefgeht.
     // */
     // @After
     // public void afterMethod() throws Exception
@@ -104,7 +104,7 @@ class TestReceiveMail extends AbstractMailTest
     // }
 
     /**
-     * @throws Exception Falls was schief geht.
+     * @throws Exception Falls was schiefgeht.
      */
     @Test
     void test000Connect() throws Exception
@@ -114,7 +114,7 @@ class TestReceiveMail extends AbstractMailTest
     }
 
     /**
-     * @throws Exception Falls was schief geht.
+     * @throws Exception Falls was schiefgeht.
      */
     @Test
     void test010ListFolder() throws Exception
@@ -139,7 +139,7 @@ class TestReceiveMail extends AbstractMailTest
     }
 
     /**
-     * @throws Exception Falls was schief geht.
+     * @throws Exception Falls was schiefgeht.
      */
     @Test
     void test020SaveNewMails() throws Exception
@@ -215,7 +215,7 @@ class TestReceiveMail extends AbstractMailTest
     }
 
     /**
-     * @throws Exception Falls was schief geht.
+     * @throws Exception Falls was schiefgeht.
      */
     @Test
     void test021ReadSavedMails() throws Exception
@@ -243,7 +243,7 @@ class TestReceiveMail extends AbstractMailTest
     }
 
     /**
-     * @throws Exception Falls was schief geht.
+     * @throws Exception Falls was schiefgeht.
      */
     @Test
     void test022ReadAttachementsFromSavedMails() throws Exception
@@ -281,7 +281,7 @@ class TestReceiveMail extends AbstractMailTest
     }
 
     /**
-     * @throws Exception Falls was schief geht.
+     * @throws Exception Falls was schiefgeht.
      */
     @Test
     void test023ReadTextFromSavedMails() throws Exception
@@ -340,7 +340,7 @@ class TestReceiveMail extends AbstractMailTest
                     // Locale locale = FunctionStripStopWords.guessLocale(values);
                     // Function<String, String> functionStemmer = FunctionStemmer.get(locale);
                     //
-//                        // @formatter:off
+                    //                        // @formatter:off
 //                        // parallelStream wegen Stemmer nicht möglich.
 //                        values.stream()
 //                            .map(t -> Locale.GERMAN.equals(locale) ? FunctionNormalizeGerman.INSTANCE.apply(t) : t)

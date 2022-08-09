@@ -28,11 +28,8 @@ import javax.mail.UIDFolder;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
-import org.slf4j.LoggerFactory;
-
 import com.sun.mail.imap.IMAPFolder;
 import com.sun.mail.imap.IMAPStore;
-
 import de.freese.pim.core.function.ExceptionalFunction;
 import de.freese.pim.core.mail.MailContent;
 import de.freese.pim.core.model.mail.Mail;
@@ -42,20 +39,21 @@ import de.freese.pim.core.utils.MailUtils;
 import de.freese.pim.core.utils.Utils;
 import de.freese.pim.core.utils.io.IOMonitor;
 import de.freese.pim.core.utils.io.NestendIOMonitor;
+import org.slf4j.LoggerFactory;
 
 /**
- * JavaMail-Implementierung des {@link MailAPI}.
+ * JavaMail-Implementierung des {@link MailApi}.
  *
  * @author Thomas Freese
  */
-public class JavaMailAPI extends AbstractMailAPI
+public class JavaMailApi extends AbstractMailApi
 {
     /**
      * Generisches Callback-Interface für einen Mail-{@link Folder}.
      *
-     * @author Thomas Freese
-     *
      * @param <T> Konkreter Return-Typ
+     *
+     * @author Thomas Freese
      */
     @FunctionalInterface
     private interface FolderCallback<T>
@@ -65,7 +63,7 @@ public class JavaMailAPI extends AbstractMailAPI
          *
          * @return Object
          *
-         * @throws Exception Falls was schief geht.
+         * @throws Exception Falls was schiefgeht.
          */
         T doInFolder(IMAPFolder folder) throws Exception;
     }
@@ -84,11 +82,11 @@ public class JavaMailAPI extends AbstractMailAPI
     private final IMAPStore[] stores = new IMAPStore[Math.max(1, 3)];
 
     /**
-     * Erzeugt eine neue Instanz von {@link JavaMailAPI}
+     * Erzeugt eine neue Instanz von {@link JavaMailApi}
      *
      * @param account {@link MailAccount}
      */
-    public JavaMailAPI(final MailAccount account)
+    public JavaMailApi(final MailAccount account)
     {
         super(account);
     }
@@ -98,7 +96,7 @@ public class JavaMailAPI extends AbstractMailAPI
      *
      * @param folder {@link Folder}
      *
-     * @throws MessagingException Falls was schief geht.
+     * @throws MessagingException Falls was schiefgeht.
      */
     protected void checkRead(final Folder folder) throws MessagingException
     {
@@ -113,7 +111,7 @@ public class JavaMailAPI extends AbstractMailAPI
      *
      * @param folder {@link Folder}
      *
-     * @throws MessagingException Falls was schief geht.
+     * @throws MessagingException Falls was schiefgeht.
      */
     protected void checkWrite(final Folder folder) throws MessagingException
     {
@@ -128,7 +126,7 @@ public class JavaMailAPI extends AbstractMailAPI
      *
      * @param folder {@link Folder}
      *
-     * @throws MessagingException Falls was schief geht.
+     * @throws MessagingException Falls was schiefgeht.
      */
     protected void closeFolder(final Folder folder) throws MessagingException
     {
@@ -144,7 +142,7 @@ public class JavaMailAPI extends AbstractMailAPI
     }
 
     /**
-     * @see de.freese.pim.core.mail.api.MailAPI#connect()
+     * @see MailApi#connect()
      */
     @Override
     public void connect()
@@ -157,7 +155,7 @@ public class JavaMailAPI extends AbstractMailAPI
      *
      * @param service {@link Service}
      *
-     * @throws MessagingException Falls was schief geht.
+     * @throws MessagingException Falls was schiefgeht.
      */
     protected void connect(final Service service) throws MessagingException
     {
@@ -175,7 +173,7 @@ public class JavaMailAPI extends AbstractMailAPI
      *
      * @return {@link Session}
      *
-     * @throws MessagingException Falls was schief geht.
+     * @throws MessagingException Falls was schiefgeht.
      */
     protected Session createSession() throws MessagingException
     {
@@ -228,7 +226,7 @@ public class JavaMailAPI extends AbstractMailAPI
      *
      * @return {@link Store}
      *
-     * @throws NoSuchProviderException Falls was schief geht.
+     * @throws NoSuchProviderException Falls was schiefgeht.
      */
     protected IMAPStore createStore(final Session session) throws NoSuchProviderException
     {
@@ -242,7 +240,7 @@ public class JavaMailAPI extends AbstractMailAPI
      *
      * @return {@link Transport}
      *
-     * @throws NoSuchProviderException Falls was schief geht.
+     * @throws NoSuchProviderException Falls was schiefgeht.
      */
     protected Transport createTransport(final Session session) throws NoSuchProviderException
     {
@@ -250,7 +248,7 @@ public class JavaMailAPI extends AbstractMailAPI
     }
 
     /**
-     * @see de.freese.pim.core.mail.api.MailAPI#disconnect()
+     * @see MailApi#disconnect()
      */
     @Override
     public void disconnect()
@@ -296,7 +294,7 @@ public class JavaMailAPI extends AbstractMailAPI
      *
      * @param service {@link Service}
      *
-     * @throws MessagingException Falls was schief geht.
+     * @throws MessagingException Falls was schiefgeht.
      */
     protected void disconnect(final Service service) throws MessagingException
     {
@@ -317,7 +315,8 @@ public class JavaMailAPI extends AbstractMailAPI
      */
     protected <T> T executeInFolder(final String folderFullName, final FolderCallback<T> action)
     {
-        return Utils.executeSafely(() -> {
+        return Utils.executeSafely(() ->
+        {
             IMAPFolder folder = (IMAPFolder) getStore().getFolder(folderFullName);
 
             if (folder == null)
@@ -348,12 +347,13 @@ public class JavaMailAPI extends AbstractMailAPI
     }
 
     /**
-     * @see de.freese.pim.core.mail.api.MailAPI#getFolder()
+     * @see MailApi#getFolder()
      */
     @Override
     public List<MailFolder> getFolder()
     {
-        return Utils.executeSafely(() -> {
+        return Utils.executeSafely(() ->
+        {
             Folder root = getStore().getDefaultFolder();
 
             // @formatter:off
@@ -386,7 +386,7 @@ public class JavaMailAPI extends AbstractMailAPI
      *
      * @return {@link Store}
      *
-     * @throws MessagingException Falls was schief geht.
+     * @throws MessagingException Falls was schiefgeht.
      */
     protected synchronized IMAPStore getStore() throws MessagingException
     {
@@ -413,12 +413,13 @@ public class JavaMailAPI extends AbstractMailAPI
     }
 
     /**
-     * @see de.freese.pim.core.mail.api.MailAPI#loadMail(java.lang.String, long, de.freese.pim.core.function.ExceptionalFunction)
+     * @see MailApi#loadMail(java.lang.String, long, de.freese.pim.core.function.ExceptionalFunction)
      */
     @Override
     public <T> T loadMail(final String folderFullName, final long uid, final ExceptionalFunction<Object, T, Exception> function)
     {
-        return executeInFolder(folderFullName, folder -> {
+        return executeInFolder(folderFullName, folder ->
+        {
             MimeMessage message = (MimeMessage) folder.getMessageByUID(uid);
             preFetch(folder, message);
 
@@ -427,12 +428,13 @@ public class JavaMailAPI extends AbstractMailAPI
     }
 
     /**
-     * @see de.freese.pim.core.mail.api.MailAPI#loadMail(java.lang.String, long, de.freese.pim.core.utils.io.IOMonitor)
+     * @see MailApi#loadMail(java.lang.String, long, de.freese.pim.core.utils.io.IOMonitor)
      */
     @Override
     public MailContent loadMail(final String folderFullName, final long uid, final IOMonitor monitor)
     {
-        return executeInFolder(folderFullName, folder -> {
+        return executeInFolder(folderFullName, folder ->
+        {
             MimeMessage mimeMessage = (MimeMessage) folder.getMessageByUID(uid);
             preFetch(folder, mimeMessage);
 
@@ -479,12 +481,13 @@ public class JavaMailAPI extends AbstractMailAPI
     }
 
     /**
-     * @see de.freese.pim.core.mail.api.MailAPI#loadMails(java.lang.String, long)
+     * @see MailApi#loadMails(java.lang.String, long)
      */
     @Override
     public List<Mail> loadMails(final String folderFullName, final long uidFrom)
     {
-        List<Mail> mails = executeInFolder(folderFullName, folder -> {
+        List<Mail> mails = executeInFolder(folderFullName, folder ->
+        {
             long uidTo = folder.getUIDNext();
             // SearchTerm searchTerm = new SearchTerm()
             // {
@@ -524,12 +527,13 @@ public class JavaMailAPI extends AbstractMailAPI
     }
 
     /**
-     * @see de.freese.pim.core.mail.api.MailAPI#loadMessageIDs(java.lang.String)
+     * @see MailApi#loadMessageIDs(java.lang.String)
      */
     @Override
     public Set<Long> loadMessageIDs(final String folderFullName)
     {
-        Set<Long> ids = executeInFolder(folderFullName, folder -> {
+        Set<Long> ids = executeInFolder(folderFullName, folder ->
+        {
             Message[] msgs = folder.getMessages();
 
             FetchProfile fp = new FetchProfile();
@@ -555,7 +559,7 @@ public class JavaMailAPI extends AbstractMailAPI
      * @param mail {@link Mail}
      * @param message {@link Message}
      *
-     * @throws MessagingException Falls was schief geht.
+     * @throws MessagingException Falls was schiefgeht.
      */
     protected void populate(final Mail mail, final Message message) throws MessagingException
     {
@@ -611,9 +615,9 @@ public class JavaMailAPI extends AbstractMailAPI
      * @param folder {@link Folder}
      * @param messages {@link Message}[]
      *
-     * @throws MessagingException Falls was schief geht.
+     * @throws MessagingException Falls was schiefgeht.
      */
-    private void preFetch(final Folder folder, final Message...messages) throws MessagingException
+    private void preFetch(final Folder folder, final Message... messages) throws MessagingException
     {
         FetchProfile fp = new FetchProfile();
         fp.add(IMAPFolder.FetchProfileItem.HEADERS);
@@ -628,17 +632,18 @@ public class JavaMailAPI extends AbstractMailAPI
     }
 
     /**
-     * @see de.freese.pim.core.mail.api.MailAPI#setSeen(de.freese.pim.core.model.mail.Mail, boolean)
+     * @see MailApi#setSeen(de.freese.pim.core.model.mail.Mail, boolean)
      */
     @Override
     public void setSeen(final Mail mail, final boolean seen)
     {
-        executeInFolder(mail.getFolderFullName(), folder -> {
+        executeInFolder(mail.getFolderFullName(), folder ->
+        {
             // Bulk-Operation auf Server.
             folder.setFlags(new int[]
-            {
-                    mail.getMsgNum()
-            }, new Flags(Flags.Flag.SEEN), seen);
+                    {
+                            mail.getMsgNum()
+                    }, new Flags(Flags.Flag.SEEN), seen);
 
             // Einzel-Operation auf Server.
             // Message message = f.getMessage(mail.getMsgNum());
@@ -649,12 +654,13 @@ public class JavaMailAPI extends AbstractMailAPI
     }
 
     /**
-     * @see de.freese.pim.core.mail.api.MailAPI#testConnection()
+     * @see MailApi#testConnection()
      */
     @Override
     public void testConnection()
     {
-        Utils.executeSafely(() -> {
+        Utils.executeSafely(() ->
+        {
             // Test Connection Empfang.
             Store s = createStore(this.session);
             connect(s);

@@ -9,6 +9,12 @@ import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.freese.pim.core.dao.AddressBookDAO;
+import de.freese.pim.core.dao.DefaultAddressBookDAO;
+import de.freese.pim.core.model.addressbook.Kontakt;
+import de.freese.pim.core.model.addressbook.KontaktAttribut;
+import de.freese.pim.core.utils.PreserveOrderOptionGroup;
+import de.freese.pim.core.utils.Utils;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
@@ -25,13 +31,6 @@ import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
 
-import de.freese.pim.core.dao.AddressBookDAO;
-import de.freese.pim.core.dao.DefaultAddressBookDAO;
-import de.freese.pim.core.model.addressbook.Kontakt;
-import de.freese.pim.core.model.addressbook.KontaktAttribut;
-import de.freese.pim.core.utils.PreserveOrderOptionGroup;
-import de.freese.pim.core.utils.Utils;
-
 /**
  * Console-Client für das Addressbuch.<br>
  * Als Default wird die lokale HSQLDB (Utils#HSQLDB_URL) verwendet.
@@ -41,8 +40,8 @@ import de.freese.pim.core.utils.Utils;
 public final class PIMAddressbookConsole
 {
     /**
-    *
-    */
+     *
+     */
     public static final Logger LOGGER = LoggerFactory.getLogger(PIMAddressbookConsole.class);
     /**
      *
@@ -111,7 +110,7 @@ public final class PIMAddressbookConsole
     /**
      * @param args String[]
      *
-     * @throws Exception Falls was schief geht.
+     * @throws Exception Falls was schiefgeht.
      */
     public static void main(String[] args) throws Exception
     {
@@ -331,6 +330,7 @@ public final class PIMAddressbookConsole
     }
 
     /**
+     *
      */
     private void getKontakte()
     {
@@ -340,11 +340,12 @@ public final class PIMAddressbookConsole
 
             List<String[]> rows = new ArrayList<>();
             rows.add(new String[]
-            {
-                    "ID", "VORNAME", "NACHNAME"
-            });
+                    {
+                            "ID", "VORNAME", "NACHNAME"
+                    });
 
-            kontakte.forEach(k -> {
+            kontakte.forEach(k ->
+            {
                 String[] row = new String[3];
                 rows.add(row);
 
@@ -448,15 +449,16 @@ public final class PIMAddressbookConsole
     {
         List<String[]> rows = new ArrayList<>();
         rows.add(new String[]
-        {
-                "ID", "VORNAME", "NACHNAME", "ATTRIBUT", "WERT"
-        });
+                {
+                        "ID", "VORNAME", "NACHNAME", "ATTRIBUT", "WERT"
+                });
 
-        kontakte.forEach(kontakt -> {
+        kontakte.forEach(kontakt ->
+        {
             rows.add(new String[]
-            {
-                    Long.toString(kontakt.getID()), kontakt.getNachname(), kontakt.getVorname(), "", ""
-            });
+                    {
+                            Long.toString(kontakt.getID()), kontakt.getNachname(), kontakt.getVorname(), "", ""
+                    });
 
             List<KontaktAttribut> kontaktAttribute = kontakt.getAttribute();
 
@@ -468,7 +470,8 @@ public final class PIMAddressbookConsole
 
             if (kontaktAttribute.size() > 1)
             {
-                kontaktAttribute.stream().skip(1).forEach(ka -> {
+                kontaktAttribute.stream().skip(1).forEach(ka ->
+                {
                     String[] row = new String[5];
                     rows.add(row);
 

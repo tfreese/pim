@@ -5,14 +5,13 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 
+import de.freese.pim.core.concurrent.PIMForkJoinWorkerThreadFactory;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
-
-import de.freese.pim.core.concurrent.PIMForkJoinWorkerThreadFactory;
 
 /**
  * Testklasse für Sonstiges.
@@ -38,7 +37,7 @@ class TestMisc
      * http://www.angelikalanger.com/Articles/EffectiveJava/79.Java8.CompletableFuture/79.Java8.CompletableFuture.html<br>
      * http://www.nurkiewicz.com/2013/05/java-8-definitive-guide-to.html
      *
-     * @throws Exception Falls was schief geht.
+     * @throws Exception Falls was schiefgeht.
      */
     @Test
     void test010CompletableFuture() throws Exception

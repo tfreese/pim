@@ -206,7 +206,7 @@ public class DefaultMailDAO extends AbstractDAO implements MailDAO
          *
          * @return {@link InternetAddress}
          *
-         * @throws AddressException Falls was schief geht.
+         * @throws AddressException Falls was schiefgeht.
          */
         private InternetAddress[] parseInternetAddress(final String value) throws AddressException
         {

@@ -6,15 +6,13 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
-import org.springframework.context.annotation.Profile;
-import org.springframework.stereotype.Service;
-
 import com.fasterxml.jackson.databind.JavaType;
-
 import de.freese.pim.core.PIMException;
 import de.freese.pim.core.model.addressbook.Kontakt;
 import de.freese.pim.core.service.AddressBookService;
 import de.freese.pim.gui.addressbook.model.FXKontakt;
+import org.springframework.context.annotation.Profile;
+import org.springframework.stereotype.Service;
 
 /**
  * AddressbookService für JavaFX, wenn es keinen Server gibt.
@@ -58,7 +56,7 @@ public class DefaultStandaloneFXAddressbookService extends AbstractFXAddressbook
      * @see de.freese.pim.gui.addressbook.service.FXAddressbookService#getKontaktDetails(long[])
      */
     @Override
-    public List<FXKontakt> getKontaktDetails(final long...ids)
+    public List<FXKontakt> getKontaktDetails(final long... ids)
     {
         try
         {
@@ -106,7 +104,7 @@ public class DefaultStandaloneFXAddressbookService extends AbstractFXAddressbook
      *
      * @return {@link List}
      *
-     * @throws Exception Falls was schief geht.
+     * @throws Exception Falls was schiefgeht.
      */
     private List<FXKontakt> toFXContacts(final List<Kontakt> contacts) throws Exception
     {

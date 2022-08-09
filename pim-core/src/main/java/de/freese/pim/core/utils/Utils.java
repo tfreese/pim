@@ -126,7 +126,7 @@ public final class Utils
      *
      * @param path {@link Path}
      *
-     * @throws IOException Falls was schief geht.
+     * @throws IOException Falls was schiefgeht.
      */
     public static void deleteDirectoryRecursiv(final Path path) throws IOException
     {
@@ -293,7 +293,7 @@ public final class Utils
      *
      * @return {@link Method}
      *
-     * @throws RuntimeException Falls was schief geht.
+     * @throws RuntimeException Falls was schiefgeht.
      */
     public static Method getMethod(final Object bean, final String name, final Class<?>... parameterTypes) throws RuntimeException
     {
@@ -326,7 +326,7 @@ public final class Utils
      *
      * @return Object
      *
-     * @throws RuntimeException Falls was schief geht.
+     * @throws RuntimeException Falls was schiefgeht.
      */
     public static Object getValue(final Field field, final Object bean) throws RuntimeException
     {

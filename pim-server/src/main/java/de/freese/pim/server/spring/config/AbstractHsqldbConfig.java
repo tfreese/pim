@@ -10,12 +10,12 @@ import org.springframework.context.annotation.Bean;
  *
  * @author Thomas Freese
  */
-public abstract class AbstractHSQLDBConfig
+public abstract class AbstractHsqldbConfig
 {
     /**
-     * Erstellt ein neues {@link AbstractHSQLDBConfig} Object.
+     * Erstellt ein neues {@link AbstractHsqldbConfig} Object.
      */
-    protected AbstractHSQLDBConfig()
+    protected AbstractHsqldbConfig()
     {
         super();
 

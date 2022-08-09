@@ -4,7 +4,7 @@ package de.freese.pim.core.service;
 import java.util.List;
 
 import de.freese.pim.core.mail.MailContent;
-import de.freese.pim.core.mail.api.MailAPI;
+import de.freese.pim.core.mail.api.MailApi;
 import de.freese.pim.core.model.mail.Mail;
 import de.freese.pim.core.model.mail.MailAccount;
 import de.freese.pim.core.model.mail.MailFolder;
@@ -18,7 +18,7 @@ import de.freese.pim.core.utils.io.IOMonitor;
 public interface MailService
 {
     /**
-     * Erstellt für den Account eine Instanz von Typ {@link MailAPI} und stellt die Verbindung her.<br>
+     * Erstellt für den Account eine Instanz von Typ {@link MailApi} und stellt die Verbindung her.<br>
      *
      * @param account {@link MailAccount}
      */
@@ -34,7 +34,7 @@ public interface MailService
     int deleteAccount(long accountID);
 
     /**
-     * Schliessen der MailAPI-Verbindung der MailAccounts.
+     * Schliessen der MailApi-Verbindung der MailAccounts.
      *
      * @param accountIDs long[]
      */

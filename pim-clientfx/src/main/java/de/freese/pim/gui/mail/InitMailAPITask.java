@@ -10,10 +10,6 @@ import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Stream;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.core.task.AsyncTaskExecutor;
-
 import de.freese.pim.core.spring.SpringContext;
 import de.freese.pim.gui.mail.model.FXMail;
 import de.freese.pim.gui.mail.model.FXMailAccount;
@@ -24,9 +20,12 @@ import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.core.task.AsyncTaskExecutor;
 
 /**
- * Initialisierung der MailAPI pro MailAccount.
+ * Initialisierung der MailApi pro MailAccount.
  *
  * @author Thomas Freese
  */
@@ -63,7 +62,8 @@ public class InitMailAPITask extends Task<List<FXMailFolder>>
         this.mailService = Objects.requireNonNull(mailService, "mailService required");
         this.account = Objects.requireNonNull(account, "account required");
 
-        setOnSucceeded(event -> {
+        setOnSucceeded(event ->
+        {
             List<FXMailFolder> folders = getValue();
 
             account.getFolderSubscribed().addListener(new TreeFolderListChangeListener(parent));
@@ -78,7 +78,8 @@ public class InitMailAPITask extends Task<List<FXMailFolder>>
             // loadMailsByParallelStream(account.getFolderSubscribed(), treeView);
         });
 
-        setOnFailed(event -> {
+        setOnFailed(event ->
+        {
             Throwable th = getException();
 
             LOGGER.error(null, th);
@@ -179,7 +180,7 @@ public class InitMailAPITask extends Task<List<FXMailFolder>>
     {
         AsyncTaskExecutor taskExecutor = SpringContext.getAsyncTaskExecutor();
 
-        int partitionSize = Math.max(1, (folders.size() / 3) + 1); // Jeweils 3 Stores pro MailAPI.
+        int partitionSize = Math.max(1, (folders.size() / 3) + 1); // Jeweils 3 Stores pro MailApi.
 
         // List<List<FXMailFolder>> partitions = ListUtils.partition(folders, partitionSize);
 

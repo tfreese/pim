@@ -180,7 +180,7 @@ public class ContactController extends AbstractController
         gridPane.add(new Label(resources.getString("vorname")), 0, 1);
         gridPane.add(vorname, 1, 1);
 
-        nachname.textProperty().addListener((observable, oldValue, newValue) -> okButton.setDisable(newValue.strip().isEmpty()));
+        nachname.textProperty().addListener((observable, oldValue, newValue) -> okButton.setDisable(newValue.isBlank()));
 
         dialog.getDialogPane().setContent(gridPane);
 

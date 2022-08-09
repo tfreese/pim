@@ -9,7 +9,6 @@ import java.net.URLConnection;
 import javax.activation.DataSource;
 
 import de.freese.pim.core.mail.MailContent;
-import de.freese.pim.core.utils.io.EmptyInputStream;
 
 /**
  * {@link URLConnection} für ein Inline einer HTML-Mail.
@@ -33,7 +32,7 @@ public class InlineUrlConnection extends URLConnection
      * @param mailContent {@link MailContent}
      * @param url {@link URL}
      *
-     * @throws IOException Falls was schief geht.
+     * @throws IOException Falls was schiefgeht.
      */
     public InlineUrlConnection(final MailContent mailContent, final URL url) throws IOException
     {
@@ -83,7 +82,7 @@ public class InlineUrlConnection extends URLConnection
     {
         if (this.dataSource == null)
         {
-            return new EmptyInputStream();
+            return InputStream.nullInputStream();
         }
 
         return this.dataSource.getInputStream();

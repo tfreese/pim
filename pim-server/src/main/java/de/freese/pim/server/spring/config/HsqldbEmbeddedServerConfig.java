@@ -18,7 +18,7 @@ import org.springframework.context.annotation.PropertySource;
 @Profile("HsqldbEmbeddedServer")
 @PropertySource("classpath:hikari-pool.properties")
 @PropertySource("classpath:database.properties")
-public class HsqldbEmbeddedServerConfig extends AbstractHSQLDBConfig
+public class HsqldbEmbeddedServerConfig extends AbstractHsqldbConfig
 {
     /**
      * @param pimHome String

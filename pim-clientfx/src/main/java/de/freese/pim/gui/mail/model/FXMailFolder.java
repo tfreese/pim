@@ -216,7 +216,7 @@ public class FXMailFolder
     }
 
     /**
-     * Liefert das Flag, um den Folder zu abonnieren/beobachten.
+     * Liefert das Flag, um den Folder zu abbonnieren/beobachten.
      *
      * @return boolean
      */
@@ -226,7 +226,7 @@ public class FXMailFolder
     }
 
     /**
-     * Liefert das Flag, um den Folder zu abonnieren/beobachten.
+     * Liefert das Flag, um den Folder zu abbonnieren/beobachten.
      *
      * @return boolean
      */
@@ -273,7 +273,7 @@ public class FXMailFolder
     }
 
     /**
-     * Setzt das Flag, um den Folder zu abonnieren/beobachten.
+     * Setzt das Flag, um den Folder zu abbonnieren/beobachten.
      *
      * @param abo boolean
      */

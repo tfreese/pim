@@ -7,22 +7,20 @@ import java.util.function.Consumer;
 /**
  * Interface eines {@link Consumer} mit einer Exception.<br>
  *
- * @author Thomas Freese
- *
  * @param <T> Konkreter Parameter-Typ
  * @param <E> Konkreter Exception-Typ
  *
+ * @author Thomas Freese
  * @see java.util.function.Consumer
  */
 @FunctionalInterface
 public interface ExceptionalConsumer<T, E extends Exception>
 {
     /**
-     * @see java.util.function.Consumer#accept(Object)
-     *
      * @param t Object
      *
-     * @throws Exception Falls was schief geht.
+     * @throws Exception Falls was schiefgeht.
+     * @see java.util.function.Consumer#accept(Object)
      */
     void accept(T t) throws E;
 
@@ -43,17 +41,18 @@ public interface ExceptionalConsumer<T, E extends Exception>
     // }
 
     /**
-     * @see java.util.function.Consumer#andThen(Consumer)
-     *
      * @param after {@link ExceptionalConsumer}
      *
      * @return {@link ExceptionalConsumer}
+     *
+     * @see java.util.function.Consumer#andThen(Consumer)
      */
     default ExceptionalConsumer<T, E> andThen(final ExceptionalConsumer<T, E> after)
     {
         Objects.requireNonNull(after);
 
-        return t -> {
+        return t ->
+        {
             accept(t);
             after.accept(t);
         };

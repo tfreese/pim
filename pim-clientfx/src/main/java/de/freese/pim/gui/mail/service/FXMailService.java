@@ -18,7 +18,7 @@ import de.freese.pim.gui.mail.model.FXMailFolder;
 public interface FXMailService
 {
     /**
-     * Erstellt für den Account eine Instanz von Typ der MailAPI und stellt die Verbindung her.<br>
+     * Erstellt für den Account eine Instanz von Typ der MailApi und stellt die Verbindung her.<br>
      *
      * @param account {@link FXMailAccount}
      *

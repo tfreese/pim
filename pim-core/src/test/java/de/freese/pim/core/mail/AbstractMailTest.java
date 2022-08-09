@@ -46,7 +46,7 @@ public abstract class AbstractMailTest
     /**
      * @return {@link Iterable}
      *
-     * @throws Exception Falls was schief geht.
+     * @throws Exception Falls was schiefgeht.
      */
     @Parameters(name = "Account: {0}") // {index}
     public static Iterable<Object[]> accounts() throws Exception
@@ -59,7 +59,7 @@ public abstract class AbstractMailTest
         {
             System.err.println("need property file with from, to and password: " + path);
 
-            return Arrays.asList(new Object[][] {});
+            return Arrays.asList(new Object[][]{});
         }
 
         Properties properties = new Properties();
@@ -70,11 +70,11 @@ public abstract class AbstractMailTest
         }
 
         return Arrays.asList(new Object[][]
-        {
                 {
-                        properties.getProperty("from"), properties.getProperty("to"), properties.getProperty("password")
-                }
-        });
+                        {
+                                properties.getProperty("from"), properties.getProperty("to"), properties.getProperty("password")
+                        }
+                });
     }
 
     /**

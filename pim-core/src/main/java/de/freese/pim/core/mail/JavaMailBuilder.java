@@ -140,7 +140,7 @@ public final class JavaMailBuilder
      *
      * @return {@link JavaMailBuilder}
      *
-     * @throws MessagingException Falls was schief geht.
+     * @throws MessagingException Falls was schiefgeht.
      */
     public JavaMailBuilder attachment(final String attachmentFilename, final DataSource dataSource) throws MessagingException
     {
@@ -170,7 +170,7 @@ public final class JavaMailBuilder
      *
      * @return {@link JavaMailBuilder}
      *
-     * @throws MessagingException Falls was schief geht.
+     * @throws MessagingException Falls was schiefgeht.
      */
     public JavaMailBuilder attachment(final String attachmentFilename, final File file) throws MessagingException
     {
@@ -190,7 +190,7 @@ public final class JavaMailBuilder
      *
      * @return {@link JavaMailBuilder}
      *
-     * @throws MessagingException Falls was schief geht.
+     * @throws MessagingException Falls was schiefgeht.
      */
     public JavaMailBuilder attachment(final String attachmentFilename, final InputStream inputStream) throws MessagingException
     {
@@ -209,7 +209,7 @@ public final class JavaMailBuilder
      *
      * @return {@link JavaMailBuilder}
      *
-     * @throws MessagingException Falls was schief geht.
+     * @throws MessagingException Falls was schiefgeht.
      */
     public JavaMailBuilder bcc(final InternetAddress bcc) throws MessagingException
     {
@@ -227,7 +227,7 @@ public final class JavaMailBuilder
      *
      * @return {@link JavaMailBuilder}
      *
-     * @throws MessagingException Falls was schief geht.
+     * @throws MessagingException Falls was schiefgeht.
      */
     public JavaMailBuilder bcc(final InternetAddress... bcc) throws MessagingException
     {
@@ -248,7 +248,7 @@ public final class JavaMailBuilder
      *
      * @return {@link JavaMailBuilder}
      *
-     * @throws MessagingException Falls was schief geht.
+     * @throws MessagingException Falls was schiefgeht.
      */
     public JavaMailBuilder bcc(final String bcc) throws MessagingException
     {
@@ -265,7 +265,7 @@ public final class JavaMailBuilder
      *
      * @return {@link JavaMailBuilder}
      *
-     * @throws Exception Falls was schief geht.
+     * @throws Exception Falls was schiefgeht.
      */
     public JavaMailBuilder bcc(final String bcc, final String personal) throws Exception
     {
@@ -279,7 +279,7 @@ public final class JavaMailBuilder
     /**
      * @return {@link MimeMessage}
      *
-     * @throws MessagingException Falls was schief geht.
+     * @throws MessagingException Falls was schiefgeht.
      */
     public MimeMessage build() throws MessagingException
     {
@@ -291,7 +291,7 @@ public final class JavaMailBuilder
      *
      * @return {@link MimeMessage}
      *
-     * @throws MessagingException Falls was schief geht.
+     * @throws MessagingException Falls was schiefgeht.
      */
     public MimeMessage build(final InputStream contentStream) throws MessagingException
     {
@@ -403,7 +403,7 @@ public final class JavaMailBuilder
      *
      * @param mailSender {@link JavaMailSender}
      *
-     * @throws Exception Falls was schief geht.
+     * @throws Exception Falls was schiefgeht.
      */
     public void buildAndSend(final JavaMailSender mailSender) throws Exception
     {
@@ -416,7 +416,7 @@ public final class JavaMailBuilder
      * @param mailSender {@link JavaMailSender}
      * @param contentStream {@link InputStream}; Message Input Stream
      *
-     * @throws Exception Falls was schief geht.
+     * @throws Exception Falls was schiefgeht.
      */
     public void buildAndSend(final JavaMailSender mailSender, final InputStream contentStream) throws Exception
     {
@@ -432,7 +432,7 @@ public final class JavaMailBuilder
      *
      * @return {@link JavaMailBuilder}
      *
-     * @throws MessagingException Falls was schief geht.
+     * @throws MessagingException Falls was schiefgeht.
      */
     public JavaMailBuilder cc(final InternetAddress cc) throws MessagingException
     {
@@ -450,7 +450,7 @@ public final class JavaMailBuilder
      *
      * @return {@link JavaMailBuilder}
      *
-     * @throws MessagingException Falls was schief geht.
+     * @throws MessagingException Falls was schiefgeht.
      */
     public JavaMailBuilder cc(final InternetAddress... cc) throws MessagingException
     {
@@ -471,7 +471,7 @@ public final class JavaMailBuilder
      *
      * @return {@link JavaMailBuilder}
      *
-     * @throws MessagingException Falls was schief geht.
+     * @throws MessagingException Falls was schiefgeht.
      */
     public JavaMailBuilder cc(final String cc) throws MessagingException
     {
@@ -488,7 +488,7 @@ public final class JavaMailBuilder
      *
      * @return {@link JavaMailBuilder}
      *
-     * @throws Exception Falls was schief geht.
+     * @throws Exception Falls was schiefgeht.
      */
     public JavaMailBuilder cc(final String cc, final String personal) throws Exception
     {
@@ -504,7 +504,7 @@ public final class JavaMailBuilder
      *
      * @return {@link JavaMailBuilder}
      *
-     * @throws MessagingException Falls was schief geht.
+     * @throws MessagingException Falls was schiefgeht.
      */
     public JavaMailBuilder from(final InternetAddress from) throws MessagingException
     {
@@ -522,7 +522,7 @@ public final class JavaMailBuilder
      *
      * @return {@link JavaMailBuilder}
      *
-     * @throws MessagingException Falls was schief geht.
+     * @throws MessagingException Falls was schiefgeht.
      */
     public JavaMailBuilder from(final String from) throws MessagingException
     {
@@ -539,7 +539,7 @@ public final class JavaMailBuilder
      *
      * @return {@link JavaMailBuilder}
      *
-     * @throws Exception Falls was schief geht.
+     * @throws Exception Falls was schiefgeht.
      */
     public JavaMailBuilder from(final String from, final String personal) throws Exception
     {
@@ -556,7 +556,7 @@ public final class JavaMailBuilder
      *
      * @return {@link JavaMailBuilder}
      *
-     * @throws MessagingException Falls was schief geht.
+     * @throws MessagingException Falls was schiefgeht.
      */
     public JavaMailBuilder inline(final String contentID, final DataSource dataSource) throws MessagingException
     {
@@ -581,7 +581,7 @@ public final class JavaMailBuilder
      *
      * @return {@link JavaMailBuilder}
      *
-     * @throws MessagingException Falls was schief geht.
+     * @throws MessagingException Falls was schiefgeht.
      */
     public JavaMailBuilder inline(final String contentID, final File file) throws MessagingException
     {
@@ -602,7 +602,7 @@ public final class JavaMailBuilder
      *
      * @return {@link JavaMailBuilder}
      *
-     * @throws MessagingException Falls was schief geht.
+     * @throws MessagingException Falls was schiefgeht.
      */
     public JavaMailBuilder inline(final String contentID, final InputStream inputStream, final String mimeType) throws MessagingException
     {
@@ -659,7 +659,7 @@ public final class JavaMailBuilder
      *
      * @return {@link JavaMailBuilder}
      *
-     * @throws MessagingException Falls was schief geht.
+     * @throws MessagingException Falls was schiefgeht.
      */
     public JavaMailBuilder to(final InternetAddress to) throws MessagingException
     {
@@ -677,7 +677,7 @@ public final class JavaMailBuilder
      *
      * @return {@link JavaMailBuilder}
      *
-     * @throws MessagingException Falls was schief geht.
+     * @throws MessagingException Falls was schiefgeht.
      */
     public JavaMailBuilder to(final InternetAddress... to) throws MessagingException
     {
@@ -698,7 +698,7 @@ public final class JavaMailBuilder
      *
      * @return {@link JavaMailBuilder}
      *
-     * @throws MessagingException Falls was schief geht.
+     * @throws MessagingException Falls was schiefgeht.
      */
     public JavaMailBuilder to(final String to) throws MessagingException
     {
@@ -715,7 +715,7 @@ public final class JavaMailBuilder
      *
      * @return {@link JavaMailBuilder}
      *
-     * @throws Exception Falls was schief geht.
+     * @throws Exception Falls was schiefgeht.
      */
     public JavaMailBuilder to(final String to, final String personal) throws Exception
     {
@@ -804,7 +804,7 @@ public final class JavaMailBuilder
      *
      * @return {@link InternetAddress}
      *
-     * @throws MessagingException Falls was schief geht.
+     * @throws MessagingException Falls was schiefgeht.
      */
     private InternetAddress parseAddress(final String address) throws MessagingException
     {

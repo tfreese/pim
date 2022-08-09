@@ -31,104 +31,104 @@ public abstract class AbstractDAOTestCase
     }
 
     /**
-     * @throws Throwable Falls was schief geht.
+     * @throws Throwable Falls was schiefgeht.
      */
     abstract void test0100InsertKontakts() throws Throwable;
 
     /**
-     * @throws Throwable Falls was schief geht.
+     * @throws Throwable Falls was schiefgeht.
      */
     abstract void test0110InsertKontaktWithNullVorname() throws Throwable;
 
     /**
-     * @throws Throwable Falls was schief geht.
+     * @throws Throwable Falls was schiefgeht.
      */
     abstract void test0120InsertKontaktWithBlankVorname() throws Throwable;
 
     /**
-     * @throws Throwable Falls was schief geht.
+     * @throws Throwable Falls was schiefgeht.
      */
     abstract void test0130InsertKontaktExisting() throws Throwable;
 
     /**
-     * @throws Throwable Falls was schief geht.
+     * @throws Throwable Falls was schiefgeht.
      */
     abstract void test0200UpdateKontakt() throws Throwable;
 
     /**
-     * @throws Throwable Falls was schief geht.
+     * @throws Throwable Falls was schiefgeht.
      */
     abstract void test0300InsertAttribut() throws Throwable;
 
     /**
-     * @throws Throwable Falls was schief geht.
+     * @throws Throwable Falls was schiefgeht.
      */
     abstract void test0310InsertInsertAttributWithNullValue() throws Throwable;
 
     /**
-     * @throws Throwable Falls was schief geht.
+     * @throws Throwable Falls was schiefgeht.
      */
     abstract void test0320InsertInsertAttributWithBlankValue() throws Throwable;
 
     /**
-     * @throws Throwable Falls was schief geht.
+     * @throws Throwable Falls was schiefgeht.
      */
     abstract void test0330InsertInsertAttributWithNull() throws Throwable;
 
     /**
-     * @throws Throwable Falls was schief geht.
+     * @throws Throwable Falls was schiefgeht.
      */
     abstract void test0340InsertInsertAttributWithBlank() throws Throwable;
 
     /**
-     * @throws Throwable Falls was schief geht.
+     * @throws Throwable Falls was schiefgeht.
      */
     abstract void test0350InsertAttributExisting() throws Throwable;
 
     /**
-     * @throws Throwable Falls was schief geht.
+     * @throws Throwable Falls was schiefgeht.
      */
     abstract void test0400UpdateAttribut() throws Throwable;
 
     /**
-     * @throws Throwable Falls was schief geht.
+     * @throws Throwable Falls was schiefgeht.
      */
     abstract void test0500GetKontaktDetailsAll() throws Throwable;
 
     /**
-     * @throws Throwable Falls was schief geht.
+     * @throws Throwable Falls was schiefgeht.
      */
     abstract void test0510GetKontaktDetailsWithID() throws Throwable;
 
     /**
-     * @throws Throwable Falls was schief geht.
+     * @throws Throwable Falls was schiefgeht.
      */
     abstract void test0520GetKontaktDetailsWithIDs() throws Throwable;
 
     /**
-     * @throws Throwable Falls was schief geht.
+     * @throws Throwable Falls was schiefgeht.
      */
     abstract void test0600GetKontakte() throws Throwable;
 
     /**
-     * @throws Throwable Falls was schief geht.
+     * @throws Throwable Falls was schiefgeht.
      */
     abstract void test0700SearchKontakts() throws Throwable;
 
     /**
-     * @throws Throwable Falls was schief geht.
+     * @throws Throwable Falls was schiefgeht.
      */
     abstract void test0900DeleteAttribut() throws Throwable;
 
     /**
-     * @throws Throwable Falls was schief geht.
+     * @throws Throwable Falls was schiefgeht.
      */
     abstract void test1000DeleteKontakt() throws Throwable;
 
     /**
      * @param addressBookDAO {@link AddressBookDAO}
      *
-     * @throws Throwable Falls was schief geht.
+     * @throws Throwable Falls was schiefgeht.
      */
     protected void doTest0100InsertKontakts(final AddressBookDAO addressBookDAO) throws Throwable
     {
@@ -142,7 +142,7 @@ public abstract class AbstractDAOTestCase
     /**
      * @param addressBookDAO {@link AddressBookDAO}
      *
-     * @throws Throwable Falls was schief geht.
+     * @throws Throwable Falls was schiefgeht.
      */
     protected void doTest0110InsertKontaktWithNullVorname(final AddressBookDAO addressBookDAO) throws Throwable
     {
@@ -153,7 +153,7 @@ public abstract class AbstractDAOTestCase
     /**
      * @param addressBookDAO {@link AddressBookDAO}
      *
-     * @throws Throwable Falls was schief geht.
+     * @throws Throwable Falls was schiefgeht.
      */
     protected void doTest0120InsertKontaktWithBlankVorname(final AddressBookDAO addressBookDAO) throws Throwable
     {
@@ -173,7 +173,7 @@ public abstract class AbstractDAOTestCase
     /**
      * @param addressBookDAO {@link AddressBookDAO}
      *
-     * @throws Throwable Falls was schief geht.
+     * @throws Throwable Falls was schiefgeht.
      */
     protected void doTest0130InsertKontaktExisting(final AddressBookDAO addressBookDAO) throws Throwable
     {
@@ -193,7 +193,7 @@ public abstract class AbstractDAOTestCase
     /**
      * @param addressBookDAO {@link AddressBookDAO}
      *
-     * @throws Throwable Falls was schief geht.
+     * @throws Throwable Falls was schiefgeht.
      */
     protected void doTest0200UpdateKontakt(final AddressBookDAO addressBookDAO) throws Throwable
     {
@@ -205,7 +205,7 @@ public abstract class AbstractDAOTestCase
     /**
      * @param addressBookDAO {@link AddressBookDAO}
      *
-     * @throws Throwable Falls was schief geht.
+     * @throws Throwable Falls was schiefgeht.
      */
     protected void doTest0300InsertAttribut(final AddressBookDAO addressBookDAO) throws Throwable
     {
@@ -217,7 +217,7 @@ public abstract class AbstractDAOTestCase
     /**
      * @param addressBookDAO {@link AddressBookDAO}
      *
-     * @throws Throwable Falls was schief geht.
+     * @throws Throwable Falls was schiefgeht.
      */
     protected void doTest0310InsertInsertAttributWithNullValue(final AddressBookDAO addressBookDAO) throws Throwable
     {
@@ -237,7 +237,7 @@ public abstract class AbstractDAOTestCase
     /**
      * @param addressBookDAO {@link AddressBookDAO}
      *
-     * @throws Throwable Falls was schief geht.
+     * @throws Throwable Falls was schiefgeht.
      */
     protected void doTest0320InsertInsertAttributWithBlankValue(final AddressBookDAO addressBookDAO) throws Throwable
     {
@@ -257,7 +257,7 @@ public abstract class AbstractDAOTestCase
     /**
      * @param addressBookDAO {@link AddressBookDAO}
      *
-     * @throws Throwable Falls was schief geht.
+     * @throws Throwable Falls was schiefgeht.
      */
     protected void doTest0330InsertInsertAttributWithNull(final AddressBookDAO addressBookDAO) throws Throwable
     {
@@ -277,7 +277,7 @@ public abstract class AbstractDAOTestCase
     /**
      * @param addressBookDAO {@link AddressBookDAO}
      *
-     * @throws Throwable Falls was schief geht.
+     * @throws Throwable Falls was schiefgeht.
      */
     protected void doTest0340InsertInsertAttributWithBlank(final AddressBookDAO addressBookDAO) throws Throwable
     {
@@ -297,7 +297,7 @@ public abstract class AbstractDAOTestCase
     /**
      * @param addressBookDAO {@link AddressBookDAO}
      *
-     * @throws Throwable Falls was schief geht.
+     * @throws Throwable Falls was schiefgeht.
      */
     protected void doTest0350InsertAttributExisting(final AddressBookDAO addressBookDAO) throws Throwable
     {
@@ -317,7 +317,7 @@ public abstract class AbstractDAOTestCase
     /**
      * @param addressBookDAO {@link AddressBookDAO}
      *
-     * @throws Throwable Falls was schief geht.
+     * @throws Throwable Falls was schiefgeht.
      */
     protected void doTest0400UpdateAttribut(final AddressBookDAO addressBookDAO) throws Throwable
     {
@@ -329,7 +329,7 @@ public abstract class AbstractDAOTestCase
     /**
      * @param addressBookDAO {@link AddressBookDAO}
      *
-     * @throws Throwable Falls was schief geht.
+     * @throws Throwable Falls was schiefgeht.
      */
     protected void doTest0500GetKontaktDetailsAll(final AddressBookDAO addressBookDAO) throws Throwable
     {
@@ -364,7 +364,7 @@ public abstract class AbstractDAOTestCase
     /**
      * @param addressBookDAO {@link AddressBookDAO}
      *
-     * @throws Throwable Falls was schief geht.
+     * @throws Throwable Falls was schiefgeht.
      */
     protected void doTest0510GetKontaktDetailsWithID(final AddressBookDAO addressBookDAO) throws Throwable
     {
@@ -386,7 +386,7 @@ public abstract class AbstractDAOTestCase
     /**
      * @param addressBookDAO {@link AddressBookDAO}
      *
-     * @throws Throwable Falls was schief geht.
+     * @throws Throwable Falls was schiefgeht.
      */
     protected void doTest0520GetKontaktDetailsWithIDs(final AddressBookDAO addressBookDAO) throws Throwable
     {
@@ -414,7 +414,7 @@ public abstract class AbstractDAOTestCase
     /**
      * @param addressBookDAO {@link AddressBookDAO}
      *
-     * @throws Throwable Falls was schief geht.
+     * @throws Throwable Falls was schiefgeht.
      */
     protected void doTest0600GetKontakte(final AddressBookDAO addressBookDAO) throws Throwable
     {
@@ -439,7 +439,7 @@ public abstract class AbstractDAOTestCase
     /**
      * @param addressBookDAO {@link AddressBookDAO}
      *
-     * @throws Throwable Falls was schief geht.
+     * @throws Throwable Falls was schiefgeht.
      */
     protected void doTest0700SearchKontakts(final AddressBookDAO addressBookDAO) throws Throwable
     {
@@ -467,7 +467,7 @@ public abstract class AbstractDAOTestCase
     /**
      * @param addressBookDAO {@link AddressBookDAO}
      *
-     * @throws Throwable Falls was schief geht.
+     * @throws Throwable Falls was schiefgeht.
      */
     protected void doTest0900DeleteAttribut(final AddressBookDAO addressBookDAO) throws Throwable
     {
@@ -479,7 +479,7 @@ public abstract class AbstractDAOTestCase
     /**
      * @param addressBookDAO {@link AddressBookDAO}
      *
-     * @throws Throwable Falls was schief geht.
+     * @throws Throwable Falls was schiefgeht.
      */
     protected void doTest1000DeleteKontakt(final AddressBookDAO addressBookDAO) throws Throwable
     {

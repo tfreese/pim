@@ -62,7 +62,7 @@ class TestSendMail extends AbstractMailTest
     }
 
     /**
-     * @throws Exception Falls was schief geht.
+     * @throws Exception Falls was schiefgeht.
      */
     @Test
     void test000Connect() throws Exception
@@ -71,7 +71,7 @@ class TestSendMail extends AbstractMailTest
     }
 
     /**
-     * @throws Exception Falls was schief geht.
+     * @throws Exception Falls was schiefgeht.
      */
     @Test
     void test100PlainText() throws Exception
@@ -90,7 +90,7 @@ class TestSendMail extends AbstractMailTest
     }
 
     /**
-     * @throws Exception Falls was schief geht.
+     * @throws Exception Falls was schiefgeht.
      */
     @Test
     void test100PlainTextWithAttachment() throws Exception
@@ -115,7 +115,7 @@ class TestSendMail extends AbstractMailTest
     }
 
     /**
-     * @throws Exception Falls was schief geht.
+     * @throws Exception Falls was schiefgeht.
      */
     @Test
     void test200Html() throws Exception
@@ -140,7 +140,7 @@ class TestSendMail extends AbstractMailTest
     }
 
     /**
-     * @throws Exception Falls was schief geht.
+     * @throws Exception Falls was schiefgeht.
      */
     @Test
     void test210HtmlWithAttachment() throws Exception
@@ -166,7 +166,7 @@ class TestSendMail extends AbstractMailTest
     }
 
     /**
-     * @throws Exception Falls was schief geht.
+     * @throws Exception Falls was schiefgeht.
      */
     @Test
     void test220HtmlWithInline() throws Exception

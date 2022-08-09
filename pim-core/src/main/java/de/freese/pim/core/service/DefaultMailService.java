@@ -17,8 +17,8 @@ import javax.annotation.Resource;
 
 import de.freese.pim.core.dao.MailDAO;
 import de.freese.pim.core.mail.MailContent;
-import de.freese.pim.core.mail.api.JavaMailAPI;
-import de.freese.pim.core.mail.api.MailAPI;
+import de.freese.pim.core.mail.api.JavaMailApi;
+import de.freese.pim.core.mail.api.MailApi;
 import de.freese.pim.core.model.mail.Mail;
 import de.freese.pim.core.model.mail.MailAccount;
 import de.freese.pim.core.model.mail.MailFolder;
@@ -86,7 +86,7 @@ public class DefaultMailService extends AbstractService implements MailService, 
             return;
         }
 
-        MailAPI mailAPI = new JavaMailAPI(account);
+        MailApi mailAPI = new JavaMailApi(account);
         mailAPI.setExecutor(getTaskExecutor());
 
         ConfigurableListableBeanFactory bf = (ConfigurableListableBeanFactory) getBeanFactory();
@@ -119,7 +119,7 @@ public class DefaultMailService extends AbstractService implements MailService, 
     }
 
     /**
-     * Schliessen der MailAPI-Verbindung aller MailAccounts.
+     * Schliessen der MailApi-Verbindung aller MailAccounts.
      */
     @PreDestroy
     public void disconnectAccounts()
@@ -142,7 +142,7 @@ public class DefaultMailService extends AbstractService implements MailService, 
         if (ids.isEmpty())
         {
             // Alle schliessen.
-            String[] mailAPINames = getApplicationContext().getBeanNamesForType(MailAPI.class);
+            String[] mailAPINames = getApplicationContext().getBeanNamesForType(MailApi.class);
 
             for (String mailAPIName : mailAPINames)
             {
@@ -201,7 +201,7 @@ public class DefaultMailService extends AbstractService implements MailService, 
     @Transactional
     public List<MailFolder> loadFolder(final long accountID)
     {
-        MailAPI mailAPI = getMailAPI(accountID);
+        MailApi mailAPI = getMailAPI(accountID);
 
         List<MailFolder> folder = getMailDAO().getMailFolder(accountID);
 
@@ -230,7 +230,7 @@ public class DefaultMailService extends AbstractService implements MailService, 
     {
         getLogger().debug("download mail: accountID={}, folderFullName={}, uid={}", accountID, folderFullName, mailUID);
 
-        MailAPI mailAPI = getMailAPI(accountID);
+        MailApi mailAPI = getMailAPI(accountID);
 
         return mailAPI.loadMail(folderFullName, mailUID, monitor);
     }
@@ -244,7 +244,7 @@ public class DefaultMailService extends AbstractService implements MailService, 
     {
         getLogger().info("Load Mails: account={}, folder={}", accountID, folderFullName);
 
-        MailAPI mailAPI = getMailAPI(accountID);
+        MailApi mailAPI = getMailAPI(accountID);
 
         Map<Long, Mail> mailMap = getMailDAO().getMails(folderID).stream().collect(Collectors.toMap(Mail::getUID, Function.identity()));
 
@@ -328,7 +328,7 @@ public class DefaultMailService extends AbstractService implements MailService, 
     {
         List<MailFolder> folder = null;
 
-        MailAPI mailAPI = new JavaMailAPI(account);
+        MailApi mailAPI = new JavaMailApi(account);
 
         try
         {
@@ -383,7 +383,7 @@ public class DefaultMailService extends AbstractService implements MailService, 
     }
 
     /**
-     * Schliessen der MailAPI-Verbindung des MailAccounts
+     * Schliessen der MailApi-Verbindung des MailAccounts
      *
      * @param accountID long
      */
@@ -392,7 +392,7 @@ public class DefaultMailService extends AbstractService implements MailService, 
         String beanName = getAccountBeanName(accountID);
 
         DefaultListableBeanFactory bf = (DefaultListableBeanFactory) getBeanFactory();
-        MailAPI mailAPI = bf.getBean(beanName, MailAPI.class);
+        MailApi mailAPI = bf.getBean(beanName, MailApi.class);
 
         getLogger().info("Close {}", mailAPI.getAccount().getMail());
 
@@ -419,13 +419,13 @@ public class DefaultMailService extends AbstractService implements MailService, 
     /**
      * @param accountID long
      *
-     * @return {@link MailAPI}
+     * @return {@link MailApi}
      */
-    protected MailAPI getMailAPI(final long accountID)
+    protected MailApi getMailAPI(final long accountID)
     {
         String beanName = getAccountBeanName(accountID);
 
-        return getApplicationContext().getBean(beanName, MailAPI.class);
+        return getApplicationContext().getBean(beanName, MailApi.class);
     }
 
     /**

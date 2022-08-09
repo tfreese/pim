@@ -8,13 +8,11 @@ import java.io.OutputStream;
 
 import javax.activation.DataSource;
 
-import org.springframework.util.FastByteArrayOutputStream;
-import org.springframework.util.StreamUtils;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import de.freese.pim.core.utils.io.IOMonitor;
 import de.freese.pim.core.utils.io.MonitorOutputStream;
+import org.springframework.util.FastByteArrayOutputStream;
+import org.springframework.util.StreamUtils;
 
 /**
  * Basis-Implementierung einer {@link DataSource}.
@@ -41,7 +39,7 @@ public abstract class AbstractDataSource implements DataSource
      *
      * @param source {@link DataSource}
      *
-     * @throws IOException Falls was schief geht.
+     * @throws IOException Falls was schiefgeht.
      */
     protected AbstractDataSource(final DataSource source) throws IOException
     {
@@ -54,7 +52,7 @@ public abstract class AbstractDataSource implements DataSource
      * @param source {@link DataSource}
      * @param monitor {@link IOMonitor}; Optional
      *
-     * @throws IOException Falls was schief geht.
+     * @throws IOException Falls was schiefgeht.
      */
     protected AbstractDataSource(final DataSource source, final IOMonitor monitor) throws IOException
     {

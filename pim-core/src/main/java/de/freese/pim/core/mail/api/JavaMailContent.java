@@ -13,7 +13,6 @@ import javax.mail.internet.MimePart;
 import javax.mail.internet.MimeUtility;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import de.freese.pim.core.mail.DefaultMailContent;
 import de.freese.pim.core.mail.datasource.AttachmentDataSource;
 import de.freese.pim.core.mail.datasource.InlineDataSource;
@@ -71,7 +70,7 @@ public class JavaMailContent extends DefaultMailContent
      *
      * @param message {@link MimeMessage}
      *
-     * @throws Exception Falls was schief geht.
+     * @throws Exception Falls was schiefgeht.
      */
     public JavaMailContent(final MimeMessage message) throws Exception
     {
@@ -84,7 +83,7 @@ public class JavaMailContent extends DefaultMailContent
      * @param message {@link MimeMessage}
      * @param monitor {@link IOMonitor}
      *
-     * @throws Exception Falls was schief geht.
+     * @throws Exception Falls was schiefgeht.
      */
     public JavaMailContent(final MimeMessage message, final IOMonitor monitor) throws Exception
     {

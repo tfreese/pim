@@ -36,7 +36,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupp
  * @author Thomas Freese
  */
 @Configuration
-// @Profile("SimpleRestService")
+        // @Profile("SimpleRestService")
 class Config extends WebMvcConfigurationSupport
 {
     // static{
@@ -46,7 +46,7 @@ class Config extends WebMvcConfigurationSupport
 
     /**
      * @see //
-     *      org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport#configureAsyncSupport(org.springframework.web.servlet.config.annotation.AsyncSupportConfigurer)
+     * org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport#configureAsyncSupport(org.springframework.web.servlet.config.annotation.AsyncSupportConfigurer)
      */
     @Override
     protected void configureAsyncSupport(final AsyncSupportConfigurer configurer)
@@ -115,9 +115,9 @@ class Config extends WebMvcConfigurationSupport
      * @return {@link TaskScheduler}
      */
     @Bean(
-    {
-            "taskScheduler", "taskExecutor"
-    })
+            {
+                    "taskScheduler", "taskExecutor"
+            })
     public ConcurrentTaskScheduler taskScheduler()
     {
         ConcurrentTaskScheduler bean = new ConcurrentTaskScheduler(executorService().getObject(), scheduledExecutorService().getObject());
@@ -137,13 +137,13 @@ class Config extends WebMvcConfigurationSupport
 class TestSimpleRestService
 {
     /**
-    *
-    */
+     *
+     */
     @Resource
     private MockMvc mockMvc;
 
     /**
-     * @throws Exception Falls was schief geht.
+     * @throws Exception Falls was schiefgeht.
      */
     @Test
     void test010NoParamGreetingShouldReturnDefaultMessage() throws Exception
@@ -159,7 +159,7 @@ class TestSimpleRestService
     }
 
     /**
-     * @throws Exception Falls was schief geht.
+     * @throws Exception Falls was schiefgeht.
      */
     @Test
     void test020ParamGreetingShouldReturnTailoredMessage() throws Exception
@@ -175,7 +175,7 @@ class TestSimpleRestService
     }
 
     /**
-     * @throws Exception Falls was schief geht.
+     * @throws Exception Falls was schiefgeht.
      */
     @Test
     void test030AsyncDateDeferredResult() throws Exception
@@ -184,7 +184,7 @@ class TestSimpleRestService
     }
 
     /**
-     * @throws Exception Falls was schief geht.
+     * @throws Exception Falls was schiefgeht.
      */
     @Test
     void test040AsyncDateCallable() throws Exception
@@ -193,7 +193,7 @@ class TestSimpleRestService
     }
 
     /**
-     * @throws Exception Falls was schief geht.
+     * @throws Exception Falls was schiefgeht.
      */
     @Test
     void test040AsyncDateWebAsyncTask() throws Exception
@@ -206,7 +206,7 @@ class TestSimpleRestService
      *
      * @param url String
      *
-     * @throws Exception Falls was schief geht.
+     * @throws Exception Falls was schiefgeht.
      */
     private void testAsync(final String url) throws Exception
     {

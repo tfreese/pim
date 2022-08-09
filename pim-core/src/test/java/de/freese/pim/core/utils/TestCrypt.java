@@ -21,7 +21,7 @@ import org.junit.jupiter.api.TestMethodOrder;
 class TestCrypt
 {
     /**
-     * @throws Exception Falls was schief geht.
+     * @throws Exception Falls was schiefgeht.
      */
     @Test
     void testCryptStream() throws Exception
@@ -51,7 +51,7 @@ class TestCrypt
     }
 
     /**
-     * @throws Exception Falls was schief geht.
+     * @throws Exception Falls was schiefgeht.
      */
     @Test
     void testCryptString() throws Exception

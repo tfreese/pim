@@ -8,11 +8,7 @@ import java.util.stream.IntStream;
 
 import javax.annotation.Resource;
 
-import org.springframework.context.annotation.Profile;
-import org.springframework.stereotype.Service;
-
 import com.fasterxml.jackson.databind.JavaType;
-
 import de.freese.pim.core.PIMException;
 import de.freese.pim.core.mail.MailContent;
 import de.freese.pim.core.model.mail.Mail;
@@ -23,6 +19,8 @@ import de.freese.pim.core.utils.io.IOMonitor;
 import de.freese.pim.gui.mail.model.FXMail;
 import de.freese.pim.gui.mail.model.FXMailAccount;
 import de.freese.pim.gui.mail.model.FXMailFolder;
+import org.springframework.context.annotation.Profile;
+import org.springframework.stereotype.Service;
 
 /**
  * Standalone-MailService für JavaFX, wenn es keinen Server gibt.
@@ -76,7 +74,7 @@ public class DefaultStandaloneFXMailService extends AbstractFXMailService
      * @see de.freese.pim.gui.mail.service.FXMailService#disconnectAccounts(long[])
      */
     @Override
-    public void disconnectAccounts(final long...accountIDs)
+    public void disconnectAccounts(final long... accountIDs)
     {
         try
         {
@@ -199,7 +197,7 @@ public class DefaultStandaloneFXMailService extends AbstractFXMailService
 
     /**
      * @see de.freese.pim.gui.mail.service.AbstractFXMailService#loadMailContent(java.nio.file.Path, de.freese.pim.gui.mail.model.FXMailAccount,
-     *      de.freese.pim.gui.mail.model.FXMail, de.freese.pim.core.utils.io.IOMonitor)
+     * de.freese.pim.gui.mail.model.FXMail, de.freese.pim.core.utils.io.IOMonitor)
      */
     @Override
     protected MailContent loadMailContent(final Path mailPath, final FXMailAccount account, final FXMail mail, final IOMonitor monitor) throws Exception
@@ -285,7 +283,7 @@ public class DefaultStandaloneFXMailService extends AbstractFXMailService
      *
      * @return {@link List}
      *
-     * @throws Exception Falls was schief geht.
+     * @throws Exception Falls was schiefgeht.
      */
     private List<FXMailAccount> toFXMailAccounts(final List<MailAccount> accounts) throws Exception
     {
@@ -314,7 +312,7 @@ public class DefaultStandaloneFXMailService extends AbstractFXMailService
      *
      * @return {@link List}
      *
-     * @throws Exception Falls was schief geht.
+     * @throws Exception Falls was schiefgeht.
      */
     private List<FXMailFolder> toFXMailFolders(final List<MailFolder> folders) throws Exception
     {
@@ -339,7 +337,7 @@ public class DefaultStandaloneFXMailService extends AbstractFXMailService
      *
      * @return {@link List}
      *
-     * @throws Exception Falls was schief geht.
+     * @throws Exception Falls was schiefgeht.
      */
     private List<FXMail> toFXMails(final List<Mail> mails) throws Exception
     {
@@ -375,7 +373,7 @@ public class DefaultStandaloneFXMailService extends AbstractFXMailService
      *
      * @return {@link MailAccount}
      *
-     * @throws Exception Falls was schief geht.
+     * @throws Exception Falls was schiefgeht.
      */
     private MailAccount toPojoMailAccount(final FXMailAccount account) throws Exception
     {
@@ -402,7 +400,7 @@ public class DefaultStandaloneFXMailService extends AbstractFXMailService
      *
      * @return {@link List}
      *
-     * @throws Exception Falls was schief geht.
+     * @throws Exception Falls was schiefgeht.
      */
     private List<MailFolder> toPojoMailFolders(final List<FXMailFolder> folders) throws Exception
     {

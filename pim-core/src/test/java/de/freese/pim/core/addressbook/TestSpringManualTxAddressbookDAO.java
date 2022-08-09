@@ -7,6 +7,9 @@ import java.sql.SQLIntegrityConstraintViolationException;
 
 import javax.sql.DataSource;
 
+import de.freese.pim.core.TestConfig;
+import de.freese.pim.core.dao.AddressBookDAO;
+import de.freese.pim.core.dao.DefaultAddressBookDAO;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -17,10 +20,6 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
-
-import de.freese.pim.core.TestConfig;
-import de.freese.pim.core.dao.AddressBookDAO;
-import de.freese.pim.core.dao.DefaultAddressBookDAO;
 
 /**
  * TestCase für die manuelle TX-Steuerung mit Spring.
@@ -53,7 +52,7 @@ class TestSpringManualTxAddressbookDAO extends AbstractDAOTestCase
     }
 
     /**
-     * @throws Exception Falls was schief geht.
+     * @throws Exception Falls was schiefgeht.
      */
     @BeforeAll
     static void beforeAll() throws Exception
@@ -128,7 +127,8 @@ class TestSpringManualTxAddressbookDAO extends AbstractDAOTestCase
         TransactionDefinition transactionDefinition = new DefaultTransactionDefinition();
         TransactionStatus transactionStatus = transactionManager.getTransaction(transactionDefinition);
 
-        Assertions.assertThrows(SQLIntegrityConstraintViolationException.class, () -> {
+        Assertions.assertThrows(SQLIntegrityConstraintViolationException.class, () ->
+        {
             try
             {
                 doTest0120InsertKontaktWithBlankVorname(addressBookDAO);
@@ -153,7 +153,8 @@ class TestSpringManualTxAddressbookDAO extends AbstractDAOTestCase
         TransactionDefinition transactionDefinition = new DefaultTransactionDefinition();
         TransactionStatus transactionStatus = transactionManager.getTransaction(transactionDefinition);
 
-        Assertions.assertThrows(SQLIntegrityConstraintViolationException.class, () -> {
+        Assertions.assertThrows(SQLIntegrityConstraintViolationException.class, () ->
+        {
             try
             {
                 doTest0130InsertKontaktExisting(addressBookDAO);
@@ -228,7 +229,8 @@ class TestSpringManualTxAddressbookDAO extends AbstractDAOTestCase
         TransactionDefinition transactionDefinition = new DefaultTransactionDefinition();
         TransactionStatus transactionStatus = transactionManager.getTransaction(transactionDefinition);
 
-        Assertions.assertThrows(SQLIntegrityConstraintViolationException.class, () -> {
+        Assertions.assertThrows(SQLIntegrityConstraintViolationException.class, () ->
+        {
             try
             {
                 doTest0310InsertInsertAttributWithNullValue(addressBookDAO);
@@ -253,7 +255,8 @@ class TestSpringManualTxAddressbookDAO extends AbstractDAOTestCase
         TransactionDefinition transactionDefinition = new DefaultTransactionDefinition();
         TransactionStatus transactionStatus = transactionManager.getTransaction(transactionDefinition);
 
-        Assertions.assertThrows(SQLIntegrityConstraintViolationException.class, () -> {
+        Assertions.assertThrows(SQLIntegrityConstraintViolationException.class, () ->
+        {
             try
             {
                 doTest0320InsertInsertAttributWithBlankValue(addressBookDAO);
@@ -278,7 +281,8 @@ class TestSpringManualTxAddressbookDAO extends AbstractDAOTestCase
         TransactionDefinition transactionDefinition = new DefaultTransactionDefinition();
         TransactionStatus transactionStatus = transactionManager.getTransaction(transactionDefinition);
 
-        Assertions.assertThrows(SQLIntegrityConstraintViolationException.class, () -> {
+        Assertions.assertThrows(SQLIntegrityConstraintViolationException.class, () ->
+        {
             try
             {
                 doTest0330InsertInsertAttributWithNull(addressBookDAO);
@@ -303,7 +307,8 @@ class TestSpringManualTxAddressbookDAO extends AbstractDAOTestCase
         TransactionDefinition transactionDefinition = new DefaultTransactionDefinition();
         TransactionStatus transactionStatus = transactionManager.getTransaction(transactionDefinition);
 
-        Assertions.assertThrows(SQLIntegrityConstraintViolationException.class, () -> {
+        Assertions.assertThrows(SQLIntegrityConstraintViolationException.class, () ->
+        {
             try
             {
                 doTest0340InsertInsertAttributWithBlank(addressBookDAO);
@@ -328,7 +333,8 @@ class TestSpringManualTxAddressbookDAO extends AbstractDAOTestCase
         TransactionDefinition transactionDefinition = new DefaultTransactionDefinition();
         TransactionStatus transactionStatus = transactionManager.getTransaction(transactionDefinition);
 
-        Assertions.assertThrows(SQLIntegrityConstraintViolationException.class, () -> {
+        Assertions.assertThrows(SQLIntegrityConstraintViolationException.class, () ->
+        {
             try
             {
                 doTest0350InsertAttributExisting(addressBookDAO);

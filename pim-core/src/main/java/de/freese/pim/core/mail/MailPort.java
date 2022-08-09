@@ -48,6 +48,7 @@ public enum MailPort
      * Liefert den passenden ENUM für den Port oder null.
      *
      * @param port int
+     *
      * @return MailPort
      */
     public static MailPort findByPort(final int port)
@@ -58,8 +59,8 @@ public enum MailPort
     }
 
     /**
-    *
-    */
+     *
+     */
     private final int port;
 
     /**
@@ -67,7 +68,7 @@ public enum MailPort
      *
      * @param port int
      */
-    private MailPort(final int port)
+    MailPort(final int port)
     {
         this.port = port;
     }

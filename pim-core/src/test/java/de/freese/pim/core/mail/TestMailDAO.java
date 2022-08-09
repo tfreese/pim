@@ -53,7 +53,7 @@ class TestMailDAO
     private MailDAO mailDAO;
 
     /**
-     * @throws Throwable Falls was schief geht.
+     * @throws Throwable Falls was schiefgeht.
      */
     @Test
     @Rollback
@@ -165,7 +165,7 @@ class TestMailDAO
     }
 
     /**
-     * @throws Throwable Falls was schief geht.
+     * @throws Throwable Falls was schiefgeht.
      */
     @Test
     @Rollback
@@ -258,7 +258,7 @@ class TestMailDAO
     }
 
     /**
-     * @throws Throwable Falls was schief geht.
+     * @throws Throwable Falls was schiefgeht.
      */
     @Test
     @Rollback

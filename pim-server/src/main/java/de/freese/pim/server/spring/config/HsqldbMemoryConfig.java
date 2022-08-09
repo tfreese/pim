@@ -14,7 +14,7 @@ import org.springframework.context.annotation.PropertySource;
 @Profile("HsqldbMemory")
 @PropertySource("classpath:hikari-pool.properties")
 @PropertySource("classpath:database.properties")
-public class HsqldbMemoryConfig extends AbstractHSQLDBConfig
+public class HsqldbMemoryConfig extends AbstractHsqldbConfig
 {
     /**
      * Erstellt ein neues {@link HsqldbMemoryConfig} Object.

@@ -10,15 +10,14 @@ import java.nio.ByteBuffer;
 import java.nio.channels.Channels;
 import java.util.Optional;
 
-import org.junit.jupiter.api.MethodOrderer;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
-
 import de.freese.pim.core.utils.io.IOMonitor;
 import de.freese.pim.core.utils.io.MonitorInputStream;
 import de.freese.pim.core.utils.io.MonitorOutputStream;
 import de.freese.pim.core.utils.io.MonitoringReadableByteChannel;
 import de.freese.pim.core.utils.io.MonitoringWritableByteChannel;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 
 /**
  * @author Thomas Freese
@@ -60,12 +59,12 @@ class TestMonitorIO
      *
      */
     private static final byte[] BYTES =
-    {
-            0, 1, 2, 3, 4, 5, 6, 7, 8, 9
-    };
+            {
+                    0, 1, 2, 3, 4, 5, 6, 7, 8, 9
+            };
 
     /**
-     * @throws Exception Falls was schief geht.
+     * @throws Exception Falls was schiefgeht.
      */
     @Test
     void test010InputStream() throws Exception
@@ -112,7 +111,7 @@ class TestMonitorIO
     }
 
     /**
-     * @throws Exception Falls was schief geht.
+     * @throws Exception Falls was schiefgeht.
      */
     @Test
     void test020OutputStream() throws Exception
@@ -152,7 +151,7 @@ class TestMonitorIO
     }
 
     /**
-     * @throws Exception Falls was schief geht.
+     * @throws Exception Falls was schiefgeht.
      */
     @Test
     void test030ReadableByteChannel() throws Exception
@@ -189,7 +188,7 @@ class TestMonitorIO
     }
 
     /**
-     * @throws Exception Falls was schief geht.
+     * @throws Exception Falls was schiefgeht.
      */
     @Test
     void test040WritableByteChannel() throws Exception

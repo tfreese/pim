@@ -142,7 +142,7 @@ public class JavaMailSender
     /**
      * @param mimeMessages {@link MimeMessage}[]
      *
-     * @throws Exception Falls was schief geht.
+     * @throws Exception Falls was schiefgeht.
      */
     public void send(final MimeMessage... mimeMessages) throws Exception
     {
@@ -201,7 +201,7 @@ public class JavaMailSender
     /**
      * Validate that this instance can connect to the server that it is configured for. Throws a {@link MessagingException} if the connection attempt failed.
      *
-     * @throws MessagingException Falls was schief geht.
+     * @throws MessagingException Falls was schiefgeht.
      */
     public void testConnection() throws MessagingException
     {
@@ -242,7 +242,7 @@ public class JavaMailSender
      * @param originalMessages corresponding original message objects that the MimeMessages have been created from (with same array length and indices as the
      * "mimeMessages" array), if any
      *
-     * @throws Exception Falls was schief geht.
+     * @throws Exception Falls was schiefgeht.
      */
     protected void doSend(final MimeMessage[] mimeMessages, final Object[] originalMessages) throws Exception
     {
@@ -371,7 +371,7 @@ public class JavaMailSender
      *
      * @return {@link Transport}
      *
-     * @throws NoSuchProviderException Falls was schief geht.
+     * @throws NoSuchProviderException Falls was schiefgeht.
      * @see javax.mail.Session#getTransport(String)
      * @see #getSession()
      * @see #getProtocol()

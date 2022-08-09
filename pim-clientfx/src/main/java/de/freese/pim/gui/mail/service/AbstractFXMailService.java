@@ -42,9 +42,9 @@ public abstract class AbstractFXMailService extends AbstractFXService implements
     private Path basePath;
 
     /**
-     * Schliessen der MailAPI-Verbindung aller MailAccounts.
+     * Schliessen der MailApi-Verbindung aller MailAccounts.
      *
-     * @throws Exception Falls was schief geht.
+     * @throws Exception Falls was schiefgeht.
      */
     @PreDestroy
     public void disconnectAccounts() throws Exception
@@ -159,7 +159,7 @@ public abstract class AbstractFXMailService extends AbstractFXService implements
      *
      * @return {@link MailContent}
      *
-     * @throws Exception Falls was schief geht.
+     * @throws Exception Falls was schiefgeht.
      */
     protected abstract MailContent loadMailContent(Path mailPath, final FXMailAccount account, final FXMail mail, IOMonitor monitor) throws Exception;
 
@@ -169,7 +169,7 @@ public abstract class AbstractFXMailService extends AbstractFXService implements
      * @param mailPath {@link Path}
      * @param mailContent {@link MailContent}
      *
-     * @throws Exception Falls was schief geht.
+     * @throws Exception Falls was schiefgeht.
      */
     protected void saveMailContent(final Path mailPath, final MailContent mailContent) throws Exception
     {
@@ -204,7 +204,7 @@ public abstract class AbstractFXMailService extends AbstractFXService implements
      * @param mailPath {@link Path}
      * @param jsonContent String
      *
-     * @throws Exception Falls was schief geht.
+     * @throws Exception Falls was schiefgeht.
      */
     protected void saveMailContent(final Path mailPath, final String jsonContent) throws Exception
     {
