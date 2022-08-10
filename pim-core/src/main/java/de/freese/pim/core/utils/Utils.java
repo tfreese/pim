@@ -458,7 +458,7 @@ public final class Utils
     {
         try
         {
-            Thread.sleep(timeUnit.toMillis(duration));
+            timeUnit.sleep(duration);
         }
         catch (Exception ex)
         {

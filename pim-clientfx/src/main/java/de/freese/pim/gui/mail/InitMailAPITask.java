@@ -199,7 +199,7 @@ public class InitMailAPITask extends Task<List<FXMailFolder>>
 
         for (List<FXMailFolder> partition : partitions)
         {
-            // Utils.executeSafely(() -> Thread.sleep(1000));
+            // Utils.executeSafely(() -> TimeUnit.MILLISECONDS.sleep(1000));
 
             // Laden der Mails.
             taskExecutor.execute(new LoadMailsTask(treeView, partition, this.mailService, this.account));

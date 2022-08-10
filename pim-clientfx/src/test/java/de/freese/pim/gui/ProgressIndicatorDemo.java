@@ -2,6 +2,7 @@
 package de.freese.pim.gui;
 
 import java.util.concurrent.ForkJoinPool;
+import java.util.concurrent.TimeUnit;
 
 import de.freese.pim.gui.utils.FXUtils;
 import javafx.application.Application;
@@ -52,7 +53,7 @@ public class ProgressIndicatorDemo extends Application
                 {
                     updateProgress(++progress, 100);
 
-                    Thread.sleep(40); // 25 Frames/Sekunde
+                    TimeUnit.MILLISECONDS.sleep(40); // 25 Frames/Sekunde
 
                     if (progress == 100)
                     {
