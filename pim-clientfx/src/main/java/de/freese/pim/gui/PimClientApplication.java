@@ -29,7 +29,7 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 
 /**
  * Startklasse der Personal Information Management Anwendung.<br>
- * https://www.iconfinder.com/<br>
+ * <a href="https://www.iconfinder.com">iconfinder</a><br>
  * <br>
  * Geht momentan nicht aus der IDE, sondern nur per Console: mvn compile exec:java<br>
  * <br>

@@ -12,7 +12,7 @@ import org.junit.runners.Parameterized.Parameter;
 import org.junit.runners.Parameterized.Parameters;
 
 /**
- * https://javamail.java.net/nonav/docs/api/com/sun/mail/imap/package-summary.html
+ * <a href="https://javamail.java.net/nonav/docs/api/com/sun/mail/imap/package-summary.html">javamail.java.net</a>
  *
  * @author Thomas Freese
  */

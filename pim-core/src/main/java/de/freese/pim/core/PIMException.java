@@ -1,6 +1,8 @@
 // Created: 21.02.2017
 package de.freese.pim.core;
 
+import java.io.Serial;
+
 /**
  * {@link RuntimeException} für die PIM-Anwendung.
  *
@@ -11,6 +13,7 @@ public class PIMException extends RuntimeException
     /**
      *
      */
+    @Serial
     private static final long serialVersionUID = 5365328556318748263L;
 
     /**

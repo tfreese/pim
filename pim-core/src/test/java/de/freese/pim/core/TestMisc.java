@@ -34,8 +34,8 @@ class TestMisc
     }
 
     /**
-     * http://www.angelikalanger.com/Articles/EffectiveJava/79.Java8.CompletableFuture/79.Java8.CompletableFuture.html<br>
-     * http://www.nurkiewicz.com/2013/05/java-8-definitive-guide-to.html
+     * <a href="http://www.angelikalanger.com/Articles/EffectiveJava/79.Java8.CompletableFuture/79.Java8.CompletableFuture.html">Java8.CompletableFuture</a><br>
+     * <a href="http://www.nurkiewicz.com/2013/05/java-8-definitive-guide-to.html">java-8-definitive-guide-to</a>
      *
      * @throws Exception Falls was schiefgeht.
      */

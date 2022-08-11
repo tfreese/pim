@@ -45,8 +45,7 @@ class Config extends WebMvcConfigurationSupport
     // }
 
     /**
-     * @see //
-     * org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport#configureAsyncSupport(org.springframework.web.servlet.config.annotation.AsyncSupportConfigurer)
+     * @see org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport#configureAsyncSupport(org.springframework.web.servlet.config.annotation.AsyncSupportConfigurer)
      */
     @Override
     protected void configureAsyncSupport(final AsyncSupportConfigurer configurer)

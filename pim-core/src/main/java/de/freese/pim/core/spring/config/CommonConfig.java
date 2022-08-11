@@ -4,13 +4,12 @@ package de.freese.pim.core.spring.config;
 import java.util.Locale;
 import java.util.TimeZone;
 
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
-
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
 
 /**
  * Common Spring-Konfiguration von PIM.
@@ -22,7 +21,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 public class CommonConfig
 {
     /**
-     * https://docs.spring.io/spring-boot/docs/current-SNAPSHOT/reference/htmlsingle/#howto-customize-the-jackson-objectmapper
+     * <a href="https://docs.spring.io/spring-boot/docs/current-SNAPSHOT/reference/htmlsingle/#howto-customize-the-jackson-objectmapper">howto-customize-the-jackson-objectmapper</a>
      *
      * @return {@link ObjectMapper}
      */

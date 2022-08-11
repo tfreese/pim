@@ -28,10 +28,10 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyEmitter
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
 /**
- * https://spring.io/guides/tutorials/bookmarks/<br>
- * https://twilblog.github.io/java/spring/rest/file/stream/2015/08/14/return-a-file-stream-from-spring-rest.html<br>
- * http://stackoverflow.com/questions/5673260/downloading-a-file-from-spring-controllers<br>
- * http://stackoverflow.com/questions/15781885/how-to-forward-large-files-with-resttemplate<br>
+ * <a href="https://spring.io/guides/tutorials/bookmarks/">guides</a><br>
+ * <a href="https://twilblog.github.io/java/spring/rest/file/stream/2015/08/14/return-a-file-stream-from-spring-rest.html">return-a-file-stream-from-spring-rest</a><br>
+ * <a href="http://stackoverflow.com/questions/5673260/downloading-a-file-from-spring-controllers">downloading-a-file-from-spring-controllers</a><br>
+ * <a href="http://stackoverflow.com/questions/15781885/how-to-forward-large-files-with-resttemplate">how-to-forward-large-files-with-resttemplate</a><br>
  * <br>
  * *view-source:http:// localhost:61222/pim/info<br>
  * *

@@ -1,6 +1,7 @@
 // Created: 26.05.2016
 package de.freese.pim.core.utils;
 
+import java.io.Serial;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -18,6 +19,7 @@ public class PreserveOrderOptionGroup extends OptionGroup
     /**
      *
      */
+    @Serial
     private static final long serialVersionUID = 5453910230985427926L;
     /**
      *
