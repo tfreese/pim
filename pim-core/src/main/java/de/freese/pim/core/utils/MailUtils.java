@@ -387,12 +387,10 @@ public final class MailUtils
 
         if (part.isMimeType("text/*") || part.isMimeType("TEXT/*"))
         {
-            if (!(part.getContent() instanceof String))
+            if (!(part.getContent() instanceof String text))
             {
                 return null;
             }
-
-            String text = (String) part.getContent();
 
             if (part.isMimeType("text/plain") || part.isMimeType("TEXT/plain"))
             {
