@@ -256,10 +256,8 @@ class TestReceiveMail extends AbstractMailTest
                 {
                     MimeMessage message = new MimeMessage(null, is);
 
-                    if (message.getContent() instanceof Multipart)
+                    if (message.getContent() instanceof Multipart multiPart)
                     {
-                        Multipart multiPart = (Multipart) message.getContent();
-
                         for (int i = 0; i < multiPart.getCount(); i++)
                         {
                             MimeBodyPart part = (MimeBodyPart) multiPart.getBodyPart(i);

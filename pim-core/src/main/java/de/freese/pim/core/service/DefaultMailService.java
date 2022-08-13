@@ -146,7 +146,7 @@ public class DefaultMailService extends AbstractService implements MailService, 
 
             for (String mailAPIName : mailAPINames)
             {
-                long accountID = Long.parseLong(mailAPIName.split("[-]")[1]);
+                long accountID = Long.parseLong(mailAPIName.split("-")[1]);
 
                 ids.add(accountID);
             }

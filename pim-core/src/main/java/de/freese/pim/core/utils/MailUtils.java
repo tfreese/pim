@@ -224,7 +224,7 @@ public final class MailUtils
 
         for (MimePart inline : inlines)
         {
-            String[] contentIDs = Optional.ofNullable(inline.getHeader(HEADER_CONTENT_ID)).orElse(null);
+            String[] contentIDs = inline.getHeader(HEADER_CONTENT_ID);
 
             if ((contentIDs == null) || (contentIDs.length == 0))
             {

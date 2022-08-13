@@ -564,9 +564,9 @@ public class JavaMailApi extends AbstractMailApi
     protected void populate(final Mail mail, final Message message) throws MessagingException
     {
         InternetAddress from = Optional.ofNullable(message.getFrom()).map(f -> (InternetAddress) f[0]).orElse(null);
-        InternetAddress[] to = (InternetAddress[]) Optional.ofNullable(message.getRecipients(RecipientType.TO)).orElse(null);
-        InternetAddress[] cc = (InternetAddress[]) Optional.ofNullable(message.getRecipients(RecipientType.CC)).orElse(null);
-        InternetAddress[] bcc = (InternetAddress[]) Optional.ofNullable(message.getRecipients(RecipientType.BCC)).orElse(null);
+        InternetAddress[] to = (InternetAddress[]) message.getRecipients(RecipientType.TO);
+        InternetAddress[] cc = (InternetAddress[]) message.getRecipients(RecipientType.CC);
+        InternetAddress[] bcc = (InternetAddress[]) message.getRecipients(RecipientType.BCC);
 
         String subject = message.getSubject();
         Date receivedDate = message.getReceivedDate();

@@ -515,12 +515,10 @@ public class MailController extends AbstractController
     {
         this.tableViewMail.setItems(null);
 
-        if ((treeItem == null) || !(treeItem.getValue() instanceof FXMailFolder))
+        if ((treeItem == null) || !(treeItem.getValue() instanceof FXMailFolder folder))
         {
             return;
         }
-
-        FXMailFolder folder = (FXMailFolder) treeItem.getValue();
 
         if (folder.isSendFolder())
         {

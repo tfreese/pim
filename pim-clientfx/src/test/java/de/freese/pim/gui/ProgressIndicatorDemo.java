@@ -121,54 +121,47 @@ public class ProgressIndicatorDemo extends Application
 
         switch (n)
         {
-            case 0:
+            case 0 ->
             {
                 r = 255;
                 g = t;
                 b = 0;
-                break;
             }
-            case 1:
+            case 1 ->
             {
                 r = 255 - t;
                 g = 255;
                 b = 0;
-                break;
             }
-            case 2:
+            case 2 ->
             {
                 r = 0;
                 g = 255;
                 b = t;
-                break;
             }
-            case 3:
+            case 3 ->
             {
                 r = 0;
                 g = 255 - t;
                 b = 255;
-                break;
             }
-            case 4:
+            case 4 ->
             {
                 r = t;
                 g = 0;
                 b = 255;
-                break;
             }
-            case 5:
+            case 5 ->
             {
                 r = 255;
                 g = 0;
                 b = 255 - t;
-                break;
             }
-            default:
+            default ->
             {
                 r = 255;
                 g = 0;
                 b = 0;
-                break;
             }
         }
 
