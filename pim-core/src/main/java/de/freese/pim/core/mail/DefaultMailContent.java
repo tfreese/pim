@@ -6,13 +6,11 @@ import java.io.InputStreamReader;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import org.slf4j.LoggerFactory;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import de.freese.pim.core.mail.datasource.AttachmentDataSource;
 import de.freese.pim.core.mail.datasource.InlineDataSource;
 import de.freese.pim.core.mail.datasource.MessageDataSource;
+import org.slf4j.LoggerFactory;
 
 /**
  * Container für den Inhalt einer Mail.
@@ -22,8 +20,8 @@ import de.freese.pim.core.mail.datasource.MessageDataSource;
 public class DefaultMailContent implements MailContent
 {
     /**
-    *
-    */
+     *
+     */
     private Map<String, AttachmentDataSource> attachmentMap;
     /**
      *
@@ -34,8 +32,8 @@ public class DefaultMailContent implements MailContent
      */
     private Map<String, InlineDataSource> inlineMap;
     /**
-    *
-    */
+     *
+     */
     private MessageDataSource message;
     /**
      *
@@ -43,8 +41,8 @@ public class DefaultMailContent implements MailContent
     @JsonIgnore
     private transient String messageContent;
     /**
-    *
-    */
+     *
+     */
     private String messageContentType;
 
     /**
@@ -102,7 +100,7 @@ public class DefaultMailContent implements MailContent
             }
             catch (Exception ex)
             {
-                LoggerFactory.getLogger(getClass()).error(null, ex);
+                LoggerFactory.getLogger(getClass()).error(ex.getMessage(), ex);
             }
 
         }

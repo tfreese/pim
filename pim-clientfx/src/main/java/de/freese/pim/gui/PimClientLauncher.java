@@ -1,15 +1,13 @@
 // Created: 04.03.2021
 package de.freese.pim.gui;
 
+import com.sun.javafx.application.LauncherImpl;
+import de.freese.pim.gui.view.ErrorDialog;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
-
-import com.sun.javafx.application.LauncherImpl;
-
-import de.freese.pim.gui.view.ErrorDialog;
 
 /**
  * @author Thomas Freese
@@ -80,9 +78,10 @@ public class PimClientLauncher
 
         // System.setProperty("org.slf4j.simpleLogger.log.de.freese.pim", "DEBUG");
         // SysOutOverSLF4J.sendSystemOutAndErrToSLF4J();
-        Thread.setDefaultUncaughtExceptionHandler((t, ex) -> {
+        Thread.setDefaultUncaughtExceptionHandler((t, ex) ->
+        {
             PimClientApplication.LOGGER.error("***Default exception handler***");
-            PimClientApplication.LOGGER.error(null, ex);
+            PimClientApplication.LOGGER.error(ex.getMessage(), ex);
 
             new ErrorDialog().forThrowable(ex).showAndWait();
         });
@@ -91,8 +90,8 @@ public class PimClientLauncher
     }
 
     /**
-    *
-    */
+     *
+     */
     private static void usage()
     {
         HelpFormatter formatter = new HelpFormatter();

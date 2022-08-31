@@ -82,7 +82,7 @@ public class InitMailAPITask extends Task<List<FXMailFolder>>
         {
             Throwable th = getException();
 
-            LOGGER.error(null, th);
+            LOGGER.error(th.getMessage(), th);
 
             new ErrorDialog().forThrowable(th).showAndWait();
         });
@@ -118,7 +118,7 @@ public class InitMailAPITask extends Task<List<FXMailFolder>>
             , taskExecutor)
             .exceptionally(ex ->
             {
-                LOGGER.error(null, ex);
+                LOGGER.error(ex.getMessage(), ex);
                 new ErrorDialog().forThrowable(ex).showAndWait();
                 return null;
             })

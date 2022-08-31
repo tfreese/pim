@@ -276,7 +276,7 @@ public class ContactController extends AbstractController
                 }
                 catch (Exception ex)
                 {
-                    getLogger().error(null, ex);
+                    getLogger().error(ex.getMessage(), ex);
 
                     new ErrorDialog().forThrowable(ex).showAndWait();
                 }
@@ -303,7 +303,7 @@ public class ContactController extends AbstractController
                 }
                 catch (Exception ex)
                 {
-                    getLogger().error(null, ex);
+                    getLogger().error(ex.getMessage(), ex);
 
                     new ErrorDialog().forThrowable(ex).showAndWait();
                 }
@@ -354,7 +354,7 @@ public class ContactController extends AbstractController
                 }
                 catch (Exception ex)
                 {
-                    getLogger().error(null, ex);
+                    getLogger().error(ex.getMessage(), ex);
 
                     new ErrorDialog().forThrowable(ex).showAndWait();
                 }
@@ -387,9 +387,10 @@ public class ContactController extends AbstractController
 
         task.setOnFailed(event ->
         {
-            getLogger().error(null, task.getException());
+            Throwable throwable = task.getException();
+            getLogger().error(throwable.getMessage(), throwable);
 
-            new ErrorDialog().forThrowable(task.getException()).showAndWait();
+            new ErrorDialog().forThrowable(throwable).showAndWait();
         });
 
         getTaskExecutor().execute(task);

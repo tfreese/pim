@@ -22,8 +22,8 @@ public class PimClientPreloader extends Preloader
      */
     private Label labelStatus;
     /**
-    *
-    */
+     *
+     */
     private boolean noLoadingProgress = true;
     /**
      *
@@ -103,7 +103,7 @@ public class PimClientPreloader extends Preloader
     @Override
     public boolean handleErrorNotification(final ErrorNotification info)
     {
-        PimClientApplication.LOGGER.error(null, info.getCause());
+        PimClientApplication.LOGGER.error(info.getDetails(), info.getCause());
 
         new ErrorDialog().forThrowable(info.getCause()).showAndWait();
 

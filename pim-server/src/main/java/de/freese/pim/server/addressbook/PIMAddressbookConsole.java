@@ -278,7 +278,8 @@ public final class PIMAddressbookConsole
         catch (Exception ex)
         {
             this.transactionManager.rollback(transactionStatus);
-            LOGGER.error(null, Utils.getCause(ex));
+            Exception cause = Utils.getCause(ex);
+            LOGGER.error(cause.getMessage(), cause);
         }
     }
 
@@ -308,7 +309,8 @@ public final class PIMAddressbookConsole
         catch (Exception ex)
         {
             this.transactionManager.rollback(transactionStatus);
-            LOGGER.error(null, Utils.getCause(ex));
+            Exception cause = Utils.getCause(ex);
+            LOGGER.error(cause.getMessage(), cause);
         }
     }
 
@@ -325,7 +327,8 @@ public final class PIMAddressbookConsole
         }
         catch (Exception ex)
         {
-            LOGGER.error(null, Utils.getCause(ex));
+            Exception cause = Utils.getCause(ex);
+            LOGGER.error(cause.getMessage(), cause);
         }
     }
 
@@ -358,7 +361,8 @@ public final class PIMAddressbookConsole
         }
         catch (Exception ex)
         {
-            LOGGER.error(null, Utils.getCause(ex));
+            Exception cause = Utils.getCause(ex);
+            LOGGER.error(cause.getMessage(), cause);
         }
     }
 
@@ -392,7 +396,7 @@ public final class PIMAddressbookConsole
             }
             else
             {
-                LOGGER.error(null, cause);
+                LOGGER.error(cause.getMessage(), cause);
             }
         }
     }
@@ -426,7 +430,7 @@ public final class PIMAddressbookConsole
             }
             else
             {
-                LOGGER.error(null, cause);
+                LOGGER.error(cause.getMessage(), cause);
             }
         }
     }
@@ -500,7 +504,8 @@ public final class PIMAddressbookConsole
         }
         catch (Exception ex)
         {
-            LOGGER.error(null, Utils.getCause(ex));
+            Exception cause = Utils.getCause(ex);
+            LOGGER.error(cause.getMessage(), cause);
         }
     }
 
@@ -558,7 +563,8 @@ public final class PIMAddressbookConsole
         catch (Exception ex)
         {
             this.transactionManager.rollback(transactionStatus);
-            LOGGER.error(null, Utils.getCause(ex));
+            Exception cause = Utils.getCause(ex);
+            LOGGER.error(cause.getMessage(), cause);
         }
     }
 
@@ -592,7 +598,8 @@ public final class PIMAddressbookConsole
         catch (Exception ex)
         {
             this.transactionManager.rollback(transactionStatus);
-            LOGGER.error(null, Utils.getCause(ex));
+            Exception cause = Utils.getCause(ex);
+            LOGGER.error(cause.getMessage(), cause);
         }
     }
 }

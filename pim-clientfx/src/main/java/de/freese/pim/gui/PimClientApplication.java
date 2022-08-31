@@ -264,7 +264,7 @@ public class PimClientApplication extends Application
         }
         catch (Throwable th)
         {
-            LOGGER.error(null, th);
+            LOGGER.error(th.getMessage(), th);
             throw th;
         }
     }

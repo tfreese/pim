@@ -5,9 +5,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.Callable;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import de.freese.pim.gui.mail.model.FXMail;
 import de.freese.pim.gui.mail.model.FXMailAccount;
 import de.freese.pim.gui.mail.model.FXMailFolder;
@@ -16,6 +13,8 @@ import de.freese.pim.gui.view.ErrorDialog;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.scene.control.TreeView;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Laden der Mails pro MailFolder.
@@ -60,10 +59,11 @@ public class LoadMailsTask extends Task<Void> implements Callable<Void>
         this.account = Objects.requireNonNull(account, "account required");
 
         setOnSucceeded(event -> treeView.refresh());
-        setOnFailed(event -> {
+        setOnFailed(event ->
+        {
             Throwable th = getException();
 
-            LOGGER.error(null, th);
+            LOGGER.error(th.getMessage(), th);
 
             new ErrorDialog().forThrowable(th).showAndWait();
         });
@@ -80,7 +80,8 @@ public class LoadMailsTask extends Task<Void> implements Callable<Void>
         {
             List<FXMail> mails = this.mailService.loadMails(this.account, mf);
 
-            Runnable task = () -> {
+            Runnable task = () ->
+            {
 
                 if (mails != null)
                 {

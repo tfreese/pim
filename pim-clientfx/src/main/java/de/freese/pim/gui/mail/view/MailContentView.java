@@ -13,9 +13,6 @@ import java.util.ResourceBundle;
 
 import javax.activation.DataSource;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import de.freese.pim.core.mail.InternetAddress;
 import de.freese.pim.core.mail.MailContent;
 import de.freese.pim.core.spring.SpringContext;
@@ -32,6 +29,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.web.WebView;
 import javafx.stage.FileChooser;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * View für den Inhalt einer Mail.
@@ -41,8 +40,8 @@ import javafx.stage.FileChooser;
 public class MailContentView extends GridPane
 {
     /**
-    *
-    */
+     *
+     */
     public static final Logger LOGGER = LoggerFactory.getLogger(MailContentView.class);
 
     /**
@@ -58,8 +57,8 @@ public class MailContentView extends GridPane
      */
     private final Label an;
     /**
-    *
-    */
+     *
+     */
     private final HBox attachments;
     /**
      *
@@ -78,8 +77,8 @@ public class MailContentView extends GridPane
      */
     private final Label von;
     /**
-    *
-    */
+     *
+     */
     private final WebView webView;
 
     /**
@@ -132,7 +131,8 @@ public class MailContentView extends GridPane
         this.webView = new WebView();
         add(this.webView, 0, 6, 10, 1);
 
-        this.webView.getEngine().locationProperty().addListener((observable, oldValue, newValue) -> {
+        this.webView.getEngine().locationProperty().addListener((observable, oldValue, newValue) ->
+        {
             try
             {
                 URI address = new URI(newValue);
@@ -153,7 +153,7 @@ public class MailContentView extends GridPane
             }
             catch (Exception ex)
             {
-                getLogger().error(null, ex);
+                getLogger().error(ex.getMessage(), ex);
 
                 new ErrorDialog().forThrowable(ex).showAndWait();
             }
@@ -258,7 +258,8 @@ public class MailContentView extends GridPane
 
         Path target = file.toPath();
 
-        Runnable task = () -> {
+        Runnable task = () ->
+        {
             try (InputStream inputStream = dataSource.getInputStream())
             {
                 Files.copy(inputStream, target, StandardCopyOption.REPLACE_EXISTING);
@@ -272,7 +273,7 @@ public class MailContentView extends GridPane
             }
             catch (Exception ex)
             {
-                getLogger().error(null, ex);
+                getLogger().error(ex.getMessage(), ex);
 
                 new ErrorDialog().forThrowable(ex).showAndWait();
             }

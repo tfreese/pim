@@ -261,7 +261,7 @@ public class MailController extends AbstractController
                 }
                 catch (Exception ex)
                 {
-                    getLogger().error(null, ex);
+                    getLogger().error(ex.getMessage(), ex);
 
                     new ErrorDialog().forThrowable(ex).showAndWait();
                 }
@@ -284,7 +284,7 @@ public class MailController extends AbstractController
                 }
                 catch (Exception ex)
                 {
-                    getLogger().error(null, ex);
+                    getLogger().error(ex.getMessage(), ex);
 
                     new ErrorDialog().forThrowable(ex).showAndWait();
                 }
@@ -439,7 +439,7 @@ public class MailController extends AbstractController
         }
         catch (Exception ex)
         {
-            getLogger().error(null, ex);
+            getLogger().error(ex.getMessage(), ex);
 
             new ErrorDialog().forThrowable(ex).showAndWait();
         }
@@ -489,7 +489,7 @@ public class MailController extends AbstractController
             PimClientApplication.unblockGUI();
             Throwable th = loadMailContentTask.getException();
 
-            getLogger().error(null, th);
+            getLogger().error(th.getMessage(), th);
 
             this.mailContentView.displayThrowable(th);
         });
