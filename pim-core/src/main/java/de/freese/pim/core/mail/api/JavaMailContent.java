@@ -91,7 +91,7 @@ public class JavaMailContent extends DefaultMailContent
 
         Objects.requireNonNull(message, "message required");
 
-        // DataSource für die Text-Nachicht.
+        // DataSource für die Text-Nachricht.
         DataSource messageDataSource = MailUtils.getTextDataSource(message);
         setMessage(new MessageDataSource(messageDataSource, monitor));
 

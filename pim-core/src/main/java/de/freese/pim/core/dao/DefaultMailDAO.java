@@ -495,16 +495,16 @@ public class DefaultMailDAO extends AbstractDAO implements MailDAO
                 {
                     from = new javax.mail.internet.InternetAddress(mail.getFrom().getAddress(), mail.getFrom().getPersonal()).toUnicodeString();
                 }
-                catch (UnsupportedEncodingException ueex)
+                catch (UnsupportedEncodingException ex)
                 {
-                    throw new SQLException(ueex);
+                    throw new SQLException(ex);
                 }
             }
 
             String to = Optional.ofNullable(mail.getTo()).map(InternetAddress::toString).orElse(null);
             String cc = Optional.ofNullable(mail.getCc()).map(InternetAddress::toString).orElse(null);
             String bcc = Optional.ofNullable(mail.getBcc()).map(InternetAddress::toString).orElse(null);
-            Timestamp reveicedTimestamp = Optional.ofNullable(mail.getReceivedDate()).map(rd -> new Timestamp(rd.getTime())).orElse(null);
+            Timestamp receivedTimestamp = Optional.ofNullable(mail.getReceivedDate()).map(rd -> new Timestamp(rd.getTime())).orElse(null);
             Timestamp sendTimestamp = Optional.ofNullable(mail.getSendDate()).map(rd -> new Timestamp(rd.getTime())).orElse(null);
 
             Clob clobTo = ps.getConnection().createClob();
@@ -523,7 +523,7 @@ public class DefaultMailDAO extends AbstractDAO implements MailDAO
             ps.setClob(5, clobTo);
             ps.setClob(6, clobCc);
             ps.setClob(7, clobBcc);
-            ps.setTimestamp(8, reveicedTimestamp);
+            ps.setTimestamp(8, receivedTimestamp);
             ps.setTimestamp(9, sendTimestamp);
             ps.setString(10, mail.getSubject());
             ps.setInt(11, mail.getSize());

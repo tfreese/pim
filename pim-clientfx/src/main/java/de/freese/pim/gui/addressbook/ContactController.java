@@ -37,8 +37,6 @@ import javafx.stage.Stage;
 import javafx.util.Pair;
 
 /**
- * Controller des Addressbuchs.
- *
  * @author Thomas Freese
  */
 public class ContactController extends AbstractController
@@ -145,7 +143,7 @@ public class ContactController extends AbstractController
         imageView.getStyleClass().add(imageStyleClass);
         dialog.setGraphic(imageView);
 
-        // Laden des Images antriggern für ImageView#getImage.
+        // Laden des Images triggern für ImageView#getImage.
         imageView.applyCss();
 
         Stage stage = (Stage) dialog.getDialogPane().getScene().getWindow();
@@ -200,7 +198,7 @@ public class ContactController extends AbstractController
     }
 
     /**
-     * @return {@link FXAddressbookService}
+     *
      */
     private FXAddressbookService getAddressbookService()
     {
@@ -217,9 +215,8 @@ public class ContactController extends AbstractController
     {
         SortedList<FXKontakt> sortedList = (SortedList<FXKontakt>) this.tableViewKontakt.getItems();
         FilteredList<FXKontakt> filteredList = (FilteredList<FXKontakt>) sortedList.getSource();
-        ObservableList<FXKontakt> dataList = (ObservableList<FXKontakt>) filteredList.getSource();
 
-        return dataList;
+        return (ObservableList<FXKontakt>) filteredList.getSource();
     }
 
     /**

@@ -34,7 +34,7 @@ public class TreeFolderListChangeListener implements ListChangeListener<FXMailFo
     }
 
     /**
-     * Hinzufügen des Childs zum Parent.
+     * Hinzufügen des Child zum Parent.
      *
      * @param parent {@link TreeItem}
      * @param child {@link FXMailFolder}
@@ -116,15 +116,16 @@ public class TreeFolderListChangeListener implements ListChangeListener<FXMailFo
     }
 
     /**
-     * Hinzufügen des Childs zum Parent.
+     * Hinzufügen des Child zum Parent.
      *
      * @param parent {@link TreeItem}
      * @param child {@link TreeItem}
      */
     private void removeChild(final TreeItem<Object> parent, final TreeItem<Object> child)
     {
-        Runnable runnable = () -> {
-            if (parent.getValue()instanceof FXMailFolder mfParent)
+        Runnable runnable = () ->
+        {
+            if (parent.getValue() instanceof FXMailFolder mfParent)
             {
                 FXMailFolder mfChild = (FXMailFolder) child.getValue();
                 mfParent.removeChild(mfChild);

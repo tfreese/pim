@@ -90,7 +90,7 @@ public final class Utils
     private static final String SYSTEM_USER_NAME = System.getProperty("user.name").toUpperCase();
 
     /**
-     * Fügt am Index 1 der Liste eine Trenn-Linie ein.<br>
+     * Fügt am Index 1 der Liste eine Trennlinie ein.<br>
      * Die Breite pro Spalte orientiert sich am ersten Wert (Header) der Spalte. Ist der Separator Null oder leer wird nichts gemacht.<br>
      *
      * @param <T> Konkreter Typ
@@ -128,11 +128,11 @@ public final class Utils
      *
      * @throws IOException Falls was schiefgeht.
      */
-    public static void deleteDirectoryRecursiv(final Path path) throws IOException
+    public static void deleteDirectoryRecursive(final Path path) throws IOException
     {
         if (!Files.isDirectory(path))
         {
-            throw new IllegalArgumentException("path is not a dirctory: " + path);
+            throw new IllegalArgumentException("path is not a directory: " + path);
         }
 
         Files.walkFileTree(path, new SimpleFileVisitor<>()
@@ -342,7 +342,7 @@ public final class Utils
     }
 
     /**
-     * Ruft die {@link Method#invoke(Object, Object...)} Mehode der Bean auf.
+     * Ruft die {@link Method#invoke(Object, Object...)} Methode der Bean auf.
      *
      * @param method {@link Method}
      * @param bean Object
@@ -439,17 +439,17 @@ public final class Utils
             }
             catch (InterruptedException ie)
             {
-                // Abbruch, wenn laufender Thread interruped ist.
+                // Abbruch, wenn laufender Thread interrupted ist.
                 executorService.shutdownNow();
 
-                // Interruptd Status signalisieren.
+                // Interrupt Status signalisieren.
                 Thread.currentThread().interrupt();
             }
         }
     }
 
     /**
-     * Lässt den aktuellen Thread schlafen.
+     * Lässt den aktuellen Thread einschlafen.
      *
      * @param duration long
      * @param timeUnit {@link TimeUnit}

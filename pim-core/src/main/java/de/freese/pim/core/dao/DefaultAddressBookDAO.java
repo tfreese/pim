@@ -9,18 +9,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.IntStream;
 
+import de.freese.pim.core.model.addressbook.Kontakt;
+import de.freese.pim.core.utils.Utils;
 import org.springframework.context.annotation.Profile;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
-import de.freese.pim.core.model.addressbook.Kontakt;
-import de.freese.pim.core.utils.Utils;
-
 /**
- * DAO-Implementierung für das Addressbuch.<br>
- *
  * @author Thomas Freese
  */
 @Repository("addressBookDAO")
@@ -159,7 +156,7 @@ public class DefaultAddressBookDAO extends AbstractDAO implements AddressBookDAO
      * @see de.freese.pim.core.dao.AddressBookDAO#getKontaktDetails(long[])
      */
     @Override
-    public List<Kontakt> getKontaktDetails(final long...ids)
+    public List<Kontakt> getKontaktDetails(final long... ids)
     {
         String userID = getUserID();
 
@@ -173,7 +170,8 @@ public class DefaultAddressBookDAO extends AbstractDAO implements AddressBookDAO
         {
             whereClause.append(" and id in (");
 
-            IntStream.range(0, ids.length).forEach(index -> {
+            IntStream.range(0, ids.length).forEach(index ->
+            {
                 whereClause.append(ids[index]);
 
                 if (index < (ids.length - 1))

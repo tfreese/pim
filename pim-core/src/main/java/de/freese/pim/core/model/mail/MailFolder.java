@@ -80,7 +80,7 @@ public class MailFolder
     }
 
     /**
-     * Liefert das Flag, um den Folder zu abbonnieren/beobachten.
+     * Liefert das Flag, um den Folder zu abonnieren/beobachten.
      *
      * @return boolean
      */
@@ -100,7 +100,7 @@ public class MailFolder
     }
 
     /**
-     * Setzt das Flag, um den Folder zu abbonnieren/beobachten.
+     * Setzt das Flag, um den Folder zu abonnieren/beobachten.
      *
      * @param abo boolean
      */

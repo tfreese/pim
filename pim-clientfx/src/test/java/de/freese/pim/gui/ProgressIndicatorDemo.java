@@ -81,8 +81,7 @@ public class ProgressIndicatorDemo extends Application
             // int[] rgb = getRGB_3(percent);
             int[] rgb = FXUtils.getProgressRGB(percent, Color.RED, Color.ORANGE, Color.GREEN);
 
-            final String style = String.format("-fx-progress-color: rgb(%d,%d,%d)", rgb[0], rgb[1], rgb[2]);
-            return style;
+            return String.format("-fx-progress-color: rgb(%d,%d,%d)", rgb[0], rgb[1], rgb[2]);
         }, progressIndicator.progressProperty()));
 
         Button button = new Button("Start");

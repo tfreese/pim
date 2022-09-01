@@ -17,7 +17,7 @@ import de.freese.pim.core.mail.datasource.MessageDataSource;
 public interface MailContent
 {
     /**
-     * Liefert die {@link DataSource} der Attachements.<br>
+     * Liefert die {@link DataSource} der Attachments.<br>
      * Key = Filename<br>
      * Value = {@link AttachmentDataSource}<br>
      *
@@ -56,7 +56,7 @@ public interface MailContent
     String getMessageContent();
 
     /**
-     * Liefert den ContetnType für den Text der Mail.
+     * Liefert den ContentType für den Text der Mail.
      *
      * @return String
      */

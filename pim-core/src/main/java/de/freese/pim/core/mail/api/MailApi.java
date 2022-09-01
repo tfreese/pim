@@ -72,7 +72,7 @@ public interface MailApi
      * Die Liste ist null, wenn der Folder nicht mehr existent.
      *
      * @param folderFullName {@link String}
-     * @param uidFrom long; Startindex der zu ladenen Mails
+     * @param uidFrom long; Startindex der zu Ladenen Mails
      *
      * @return {@link List}
      */

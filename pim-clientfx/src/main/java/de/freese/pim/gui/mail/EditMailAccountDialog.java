@@ -193,7 +193,7 @@ public class EditMailAccountDialog
         imageView.getStyleClass().add(imageStyleClass);
         dialog.setGraphic(imageView);
 
-        // Laden des Images antriggern für ImageView#getImage.
+        // Laden des Images triggern für ImageView#getImage.
         imageView.applyCss();
 
         Stage stage = (Stage) dialog.getDialogPane().getScene().getWindow();
@@ -283,7 +283,7 @@ public class EditMailAccountDialog
         this.aboView.setCellFactory(CheckBoxListCell.forListView(FXMailFolder::abonniertProperty, FXUtils.toStringConverter(FXMailFolder::getFullName)));
         this.aboView.setItems(bean.getFolder());
 
-        // Laypout
+        // Layout
         GridPane gridPane = new GridPane();
         gridPane.getStyleClass().addAll("gridpane", "padding");
 

@@ -74,7 +74,7 @@ public class DefaultMailService extends AbstractService implements MailService, 
         // beanDefinition.setLazyInit(true);
         // BeanDefinitionRegistry#registerBeanDefinition("beanName", beanDefinition);
 
-        // BeanFactory per Programmation:
+        // BeanFactory per Programming:
         // GenericApplicationContext#registerBean(Foo.class);
         // GenericApplicationContext#registerBean(Bar.class, () -> new Bar(ctx.getBean(Foo.class));
 
@@ -320,7 +320,6 @@ public class DefaultMailService extends AbstractService implements MailService, 
     }
 
     /**
-     * @Valid
      * @see de.freese.pim.core.service.MailService#test(de.freese.pim.core.model.mail.MailAccount)
      */
     @Override
@@ -353,7 +352,6 @@ public class DefaultMailService extends AbstractService implements MailService, 
     }
 
     /**
-     * @Valid
      * @see de.freese.pim.core.service.MailService#updateAccount(de.freese.pim.core.model.mail.MailAccount)
      */
     @Override

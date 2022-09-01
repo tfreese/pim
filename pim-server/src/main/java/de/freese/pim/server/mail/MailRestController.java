@@ -7,6 +7,13 @@ import java.util.concurrent.CompletableFuture;
 
 import javax.annotation.Resource;
 
+import de.freese.pim.core.mail.MailContent;
+import de.freese.pim.core.model.mail.Mail;
+import de.freese.pim.core.model.mail.MailAccount;
+import de.freese.pim.core.model.mail.MailFolder;
+import de.freese.pim.core.service.AbstractRemoteService;
+import de.freese.pim.core.service.MailService;
+import de.freese.pim.core.utils.io.IOMonitor;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,14 +26,6 @@ import org.springframework.web.context.request.async.DeferredResult;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter;
 
-import de.freese.pim.core.mail.MailContent;
-import de.freese.pim.core.model.mail.Mail;
-import de.freese.pim.core.model.mail.MailAccount;
-import de.freese.pim.core.model.mail.MailFolder;
-import de.freese.pim.core.service.AbstractRemoteService;
-import de.freese.pim.core.service.MailService;
-import de.freese.pim.core.utils.io.IOMonitor;
-
 /**
  * Service für die Mail-API.
  *
@@ -37,8 +36,8 @@ import de.freese.pim.core.utils.io.IOMonitor;
 public class MailRestController extends AbstractRemoteService implements MailService
 {
     /**
-    *
-    */
+     *
+     */
     private MailService mailService;
 
     /**
@@ -66,7 +65,7 @@ public class MailRestController extends AbstractRemoteService implements MailSer
      */
     @Override
     @PostMapping("/account/disconnect")
-    public void disconnectAccounts(@RequestParam("accountIDs") final long...accountIDs)
+    public void disconnectAccounts(@RequestParam("accountIDs") final long... accountIDs)
     {
         getMailService().disconnectAccounts(accountIDs);
     }
@@ -90,8 +89,6 @@ public class MailRestController extends AbstractRemoteService implements MailSer
     }
 
     /**
-     * @Valid
-     *
      * @see de.freese.pim.core.service.MailService#insertAccount(de.freese.pim.core.model.mail.MailAccount)
      */
     @Override
@@ -217,8 +214,6 @@ public class MailRestController extends AbstractRemoteService implements MailSer
     }
 
     /**
-     * @Valid
-     *
      * @see de.freese.pim.core.service.MailService#test(de.freese.pim.core.model.mail.MailAccount)
      */
     @Override
@@ -229,8 +224,6 @@ public class MailRestController extends AbstractRemoteService implements MailSer
     }
 
     /**
-     * @Valid
-     *
      * @see de.freese.pim.core.service.MailService#updateAccount(de.freese.pim.core.model.mail.MailAccount)
      */
     @Override

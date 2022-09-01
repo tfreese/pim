@@ -4,16 +4,16 @@ package de.freese.pim.core.utils.io;
 import java.util.Objects;
 
 /**
- * IO-Monitor für verschiedene Streams, der die gesamt gelesene/geschiebene Anzahl von Bytes aufsummiert und an den Delegate weiterleitet.<br>
+ * IO-Monitor für verschiedene Streams, der die gesamt gelesene/geschriebene Anzahl von Bytes aufsummiert und an den Delegate weiterleitet.<br>
  *
  * @author Thomas Freese
  */
-public class NestendIOMonitor implements IOMonitor
+public class NestedIOMonitor implements IOMonitor
 {
     /**
-    *
-    */
-    private long currentyAccepted;
+     *
+     */
+    private long currentAccepted;
     /**
      *
      */
@@ -24,12 +24,12 @@ public class NestendIOMonitor implements IOMonitor
     private final long size;
 
     /**
-     * Erstellt ein neues {@link NestendIOMonitor} Object.
+     * Erstellt ein neues {@link NestedIOMonitor} Object.
      *
      * @param delegate {@link IOMonitor}
      * @param size long
      */
-    public NestendIOMonitor(final IOMonitor delegate, final long size)
+    public NestedIOMonitor(final IOMonitor delegate, final long size)
     {
         super();
 
@@ -43,9 +43,9 @@ public class NestendIOMonitor implements IOMonitor
     @Override
     public void monitor(final long current, final long size)
     {
-        this.currentyAccepted += current;
+        this.currentAccepted += current;
         // System.out.printf("%d / %d%n", current, this.size);
 
-        this.delegate.monitor(this.currentyAccepted, this.size);
+        this.delegate.monitor(this.currentAccepted, this.size);
     }
 }

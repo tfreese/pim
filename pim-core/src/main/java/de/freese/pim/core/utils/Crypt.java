@@ -28,7 +28,7 @@ public class Crypt
     /**
      *
      */
-    private static final String AES_ALGORYTHM = "AES/CBC/PKCS5Padding";
+    private static final String AES_ALGORITHM = "AES/CBC/PKCS5Padding";
     // /**
     // * 32bit entspricht AES256.
     // */
@@ -91,7 +91,7 @@ public class Crypt
             Path file = Files.createTempFile("pim", ".tmp");
             file.toFile().deleteOnExit();
 
-            Cipher decodeCipher = Cipher.getInstance(AES_ALGORYTHM);
+            Cipher decodeCipher = Cipher.getInstance(AES_ALGORITHM);
             decodeCipher.init(Cipher.DECRYPT_MODE, key, new IvParameterSpec(INIT_VECTOR));
 
             try (OutputStream fileOS = new BufferedOutputStream(Files.newOutputStream(file));
@@ -140,7 +140,7 @@ public class Crypt
 
         try
         {
-            Cipher decodeCipher = Cipher.getInstance(AES_ALGORYTHM);
+            Cipher decodeCipher = Cipher.getInstance(AES_ALGORITHM);
             decodeCipher.init(Cipher.DECRYPT_MODE, key, new IvParameterSpec(INIT_VECTOR));
 
             // byte[] decrypted = decodeCipher.doFinal(Base64.decodeBase64(input));
@@ -216,7 +216,7 @@ public class Crypt
 
         try
         {
-            Cipher encodeCipher = Cipher.getInstance(AES_ALGORYTHM);
+            Cipher encodeCipher = Cipher.getInstance(AES_ALGORITHM);
             encodeCipher.init(Cipher.ENCRYPT_MODE, key, new IvParameterSpec(INIT_VECTOR));
 
             byte[] encrypted = encodeCipher.doFinal(input.getBytes(getCharset()));
@@ -255,12 +255,10 @@ public class Crypt
 
         try
         {
-            Cipher encodeCipher = Cipher.getInstance(AES_ALGORYTHM);
+            Cipher encodeCipher = Cipher.getInstance(AES_ALGORITHM);
             encodeCipher.init(Cipher.ENCRYPT_MODE, key, new IvParameterSpec(INIT_VECTOR));
 
-            CipherOutputStream cipherOS = new CipherOutputStream(output, encodeCipher);
-
-            return cipherOS;
+            return new CipherOutputStream(output, encodeCipher);
         }
         catch (RuntimeException ex)
         {
@@ -283,9 +281,7 @@ public class Crypt
         // SecureRandom secureRandom = new SecureRandom();
         // secureRandom.nextBytes(key);
         //
-        // Key keySpec = new SecretKeySpec(key, "AES");
-        Key keySpec = new PimSecretKey();
-
-        return keySpec;
+        // return new SecretKeySpec(key, "AES");
+        return new PimSecretKey();
     }
 }

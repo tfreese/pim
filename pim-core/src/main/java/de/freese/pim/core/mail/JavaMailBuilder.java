@@ -49,7 +49,7 @@ public final class JavaMailBuilder
     /**
      * @param session {@link Session}
      * @param charset String
-     * @param fileTypeMap {@link FileTypeMap}; optional, wird für Attachements benötigt
+     * @param fileTypeMap {@link FileTypeMap}; optional, wird für Attachments benötigt
      * @param validateAddresses boolean
      *
      * @return {@link JavaMailBuilder}
@@ -121,7 +121,7 @@ public final class JavaMailBuilder
      *
      * @param session {@link Session}
      * @param charset String
-     * @param fileTypeMap {@link FileTypeMap}; optional, wird für Attachements benötigt
+     * @param fileTypeMap {@link FileTypeMap}; optional, wird für Attachments benötigt
      * @param validateAddresses boolean
      */
     private JavaMailBuilder(final Session session, final String charset, final FileTypeMap fileTypeMap, final boolean validateAddresses)
@@ -389,7 +389,7 @@ public final class JavaMailBuilder
             relatedMultipart.addBodyPart(inline);
         }
 
-        // Attachements
+        // Attachments
         for (MimeBodyPart attachment : this.attachments)
         {
             rootMultipart.addBodyPart(attachment);

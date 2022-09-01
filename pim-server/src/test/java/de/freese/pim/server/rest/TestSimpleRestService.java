@@ -119,9 +119,7 @@ class Config extends WebMvcConfigurationSupport
             })
     public ConcurrentTaskScheduler taskScheduler()
     {
-        ConcurrentTaskScheduler bean = new ConcurrentTaskScheduler(executorService().getObject(), scheduledExecutorService().getObject());
-
-        return bean;
+        return new ConcurrentTaskScheduler(executorService().getObject(), scheduledExecutorService().getObject());
     }
 }
 

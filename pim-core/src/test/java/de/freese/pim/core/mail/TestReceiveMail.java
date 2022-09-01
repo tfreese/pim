@@ -246,7 +246,7 @@ class TestReceiveMail extends AbstractMailTest
      * @throws Exception Falls was schiefgeht.
      */
     @Test
-    void test022ReadAttachementsFromSavedMails() throws Exception
+    void test022ReadAttachmentsFromSavedMails() throws Exception
     {
         try (Stream<Path> mailFiles = Files.find(TMP_TEST_PATH, 1, (path, attrs) -> attrs.isRegularFile() && path.toString().endsWith(".eml")))
         {

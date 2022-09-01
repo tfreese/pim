@@ -65,7 +65,7 @@ public class TestService
      * @return {@link Future}
      */
     @GetMapping("/asyncDateCallable")
-    public Callable<String> asycDateCallable()
+    public Callable<String> asyncDateCallable()
     {
         return () ->
         {
@@ -82,7 +82,7 @@ public class TestService
      * @return {@link DeferredResult}
      */
     @GetMapping("/asyncDateDeferredResult")
-    public DeferredResult<String> asycDateDeferredResult()
+    public DeferredResult<String> asyncDateDeferredResult()
     {
         DeferredResult<String> deferredResult = new DeferredResult<>();
 
@@ -122,11 +122,11 @@ public class TestService
      * @return {@link WebAsyncTask}
      */
     @GetMapping("/asyncDateWebAsyncTask")
-    public WebAsyncTask<String> asycDateWebAsyncTask()
+    public WebAsyncTask<String> asyncDateWebAsyncTask()
     {
         Callable<String> callable = () ->
         {
-            getLogger().info("asycDateWebAsyncTask: thread={}", Thread.currentThread().getName());
+            getLogger().info("asyncDateWebAsyncTask: thread={}", Thread.currentThread().getName());
             TimeUnit.SECONDS.sleep(1);
 
             return LocalDateTime.now().toString();

@@ -24,9 +24,7 @@ public class InternetAddress
      */
     public static String toString(final InternetAddress[] addresses)
     {
-        String s = Stream.of(addresses).map(InternetAddress::toString).collect(Collectors.joining(", "));
-
-        return s;
+        return Stream.of(addresses).map(InternetAddress::toString).collect(Collectors.joining(", "));
     }
 
     /**

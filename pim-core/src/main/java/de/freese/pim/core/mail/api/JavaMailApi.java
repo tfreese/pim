@@ -38,7 +38,7 @@ import de.freese.pim.core.model.mail.MailFolder;
 import de.freese.pim.core.utils.MailUtils;
 import de.freese.pim.core.utils.Utils;
 import de.freese.pim.core.utils.io.IOMonitor;
-import de.freese.pim.core.utils.io.NestendIOMonitor;
+import de.freese.pim.core.utils.io.NestedIOMonitor;
 import org.slf4j.LoggerFactory;
 
 /**
@@ -450,7 +450,7 @@ public class JavaMailApi extends AbstractMailApi
                 long sizeAllParts = MailUtils.getSizeOfAllParts(mimeMessage);
                 long size = Math.max(sizeMessage, sizeAllParts);
 
-                NestendIOMonitor nestendIOMonitor = new NestendIOMonitor(monitor, size);
+                NestedIOMonitor nestendIOMonitor = new NestedIOMonitor(monitor, size);
 
                 mailContent = new JavaMailContent(mimeMessage, nestendIOMonitor);
 

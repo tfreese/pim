@@ -281,9 +281,9 @@ class TestMailDAO
         Mail mail = new Mail();
         mail.setFrom(new InternetAddress("a@a.aa"));
         mail.setMsgNum(1);
-        mail.setReceivedDate(java.util.Date.from(LocalDateTime.of(2017, 02, 03, 15, 00).atZone(ZoneId.systemDefault()).toInstant()));
+        mail.setReceivedDate(java.util.Date.from(LocalDateTime.of(2017, 2, 3, 15, 0).atZone(ZoneId.systemDefault()).toInstant()));
         mail.setSeen(false);
-        mail.setSendDate(java.util.Date.from(LocalDateTime.of(2017, 02, 03, 15, 01).atZone(ZoneId.systemDefault()).toInstant()));
+        mail.setSendDate(java.util.Date.from(LocalDateTime.of(2017, 2, 3, 15, 1).atZone(ZoneId.systemDefault()).toInstant()));
         mail.setSize(13);
         mail.setSubject("-TEST-");
         mail.setTo(new InternetAddress[]
@@ -316,8 +316,8 @@ class TestMailDAO
         Assertions.assertNotNull(mails);
         assertEquals(1, mails.size());
 
-        Date dateExpectedReceived = Timestamp.from(LocalDateTime.of(2017, 02, 03, 15, 00).atZone(ZoneId.systemDefault()).toInstant());
-        Date dateExpectedSend = Timestamp.from(LocalDateTime.of(2017, 02, 03, 15, 01).atZone(ZoneId.systemDefault()).toInstant());
+        Date dateExpectedReceived = Timestamp.from(LocalDateTime.of(2017, 2, 3, 15, 0).atZone(ZoneId.systemDefault()).toInstant());
+        Date dateExpectedSend = Timestamp.from(LocalDateTime.of(2017, 2, 3, 15, 1).atZone(ZoneId.systemDefault()).toInstant());
 
         Mail mail = mails.get(0);
         assertEquals("a@a.aa", mail.getFrom().getAddress());
@@ -369,9 +369,9 @@ class TestMailDAO
         Mail mail = mails.get(0);
         assertEquals("a@a.aa", mail.getFrom().getAddress());
         assertEquals(1, mail.getMsgNum());
-        assertEquals(java.util.Date.from(LocalDateTime.of(2017, 02, 03, 15, 00).atZone(ZoneId.systemDefault()).toInstant()), mail.getReceivedDate());
+        assertEquals(java.util.Date.from(LocalDateTime.of(2017, 2, 3, 15, 0).atZone(ZoneId.systemDefault()).toInstant()), mail.getReceivedDate());
         Assertions.assertTrue(mail.isSeen());
-        assertEquals(java.util.Date.from(LocalDateTime.of(2017, 02, 03, 15, 01).atZone(ZoneId.systemDefault()).toInstant()), mail.getSendDate());
+        assertEquals(java.util.Date.from(LocalDateTime.of(2017, 2, 3, 15, 1).atZone(ZoneId.systemDefault()).toInstant()), mail.getSendDate());
         assertEquals(13, mail.getSize());
         assertEquals("-TEST-", mail.getSubject());
         assertEquals("b@b.bb", mail.getTo()[0].getAddress());

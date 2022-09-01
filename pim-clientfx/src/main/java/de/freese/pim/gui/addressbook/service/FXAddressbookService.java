@@ -7,8 +7,6 @@ import de.freese.pim.core.PIMException;
 import de.freese.pim.gui.addressbook.model.FXKontakt;
 
 /**
- * Interface für einen JavaFX-AddressbookService.
- *
  * @author Thomas Freese
  */
 public interface FXAddressbookService

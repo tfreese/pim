@@ -8,8 +8,6 @@ import de.freese.pim.core.model.addressbook.Kontakt;
 import de.freese.pim.core.model.addressbook.KontaktAttribut;
 
 /**
- * DAO-Interface für das Addressbuch.
- *
  * @author Thomas Freese
  */
 public interface AddressBookDAO
@@ -50,7 +48,7 @@ public interface AddressBookDAO
      *
      * @return {@link List}
      */
-    List<Kontakt> getKontaktDetails(long...ids);
+    List<Kontakt> getKontaktDetails(long... ids);
 
     /**
      * Liefert alle Kontakte sortiert nach Vorname und Nachname ohne die KontaktAttribute.

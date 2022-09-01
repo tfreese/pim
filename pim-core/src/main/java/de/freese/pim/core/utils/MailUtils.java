@@ -328,7 +328,7 @@ public final class MailUtils
 
         if (dataSource.isEmpty())
         {
-            // Kein HTML gefunden -> nach Plain-Text suchen.
+            // Kein HTML gefunden, dann nach Plain-Text suchen.
             dataSource = dataSources.stream().filter(ds -> ds.getContentType().toLowerCase().startsWith(CONTENT_TYPE_PLAIN)).findFirst();
         }
 

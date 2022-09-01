@@ -279,7 +279,7 @@ public class PimClientApplication extends Application
 
         // Platform.exit();
 
-        // Verhindert Fehlerdialog, wenn es Probleme beim Start gibt, z.B. fehlende Resourcen.
+        // Verhindert Fehlerdialog, wenn es Probleme beim Start gibt, z.B. fehlende Ressourcen.
         System.exit(0);
     }
 }

@@ -46,7 +46,7 @@ public class MainView extends BorderPane implements View
     /**
      *
      */
-    private VBox vBox;
+    private final VBox vBox;
 
     /**
      * Erzeugt eine neue Instanz von {@link MainView}

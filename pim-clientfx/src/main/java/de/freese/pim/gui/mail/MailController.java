@@ -408,9 +408,7 @@ public class MailController extends AbstractController
 
             int[] rgb = FXUtils.getProgressRGB(percent, Color.RED, Color.ORANGE, Color.YELLOW, Color.GREEN);
 
-            String style = String.format("-fx-progress-color: rgb(%d,%d,%d)", rgb[0], rgb[1], rgb[2]);
-
-            return style;
+            return String.format("-fx-progress-color: rgb(%d,%d,%d)", rgb[0], rgb[1], rgb[2]);
         }, getProgressIndicator().progressProperty()));
     }
 
@@ -472,9 +470,7 @@ public class MailController extends AbstractController
             @Override
             protected MailContent call() throws Exception
             {
-                MailContent mailContent = getMailService().loadMailContent(account, mail, this::updateProgress);
-
-                return mailContent;
+                return getMailService().loadMailContent(account, mail, this::updateProgress);
             }
         };
         loadMailContentTask.setOnSucceeded(event ->

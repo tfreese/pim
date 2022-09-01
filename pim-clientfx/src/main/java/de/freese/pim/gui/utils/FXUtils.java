@@ -438,7 +438,7 @@ public final class FXUtils
                     }
                     catch (ParseException ex)
                     {
-                        ex.printStackTrace();
+                        LOGGER.error(ex.getMessage(), ex);
                     }
                 }
             }
@@ -446,7 +446,7 @@ public final class FXUtils
     }
 
     /**
-     * Laden des Images antriggern für ImageView#getImage.<br>
+     * Laden des Images atriggern für ImageView#getImage.<br>
      * Dies ist nur nötig, wenn das Image der {@link ImageView} VOR dem setzen in einen Parent explizit verwendet werden soll.<br>
      * Beispiel:<br>
      * <code>

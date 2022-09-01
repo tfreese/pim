@@ -120,7 +120,7 @@ public class MailContentView extends GridPane
         this.bcc = new Label();
         add(this.bcc, 1, 3);
 
-        // Attachements
+        // Attachments
         add(new Label(this.bundle.getString("attachments")), 0, 4);
 
         this.attachments = new HBox();

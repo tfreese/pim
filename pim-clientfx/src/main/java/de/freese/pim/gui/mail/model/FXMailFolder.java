@@ -38,7 +38,7 @@ public class FXMailFolder
      *
      */
     @JsonIgnore
-    private final ObservableList<FXMailFolder> childs = FXCollections.observableArrayList();
+    private final ObservableList<FXMailFolder> children = FXCollections.observableArrayList();
     /**
      *
      */
@@ -89,7 +89,7 @@ public class FXMailFolder
         super();
 
         this.unreadMailsCount = new SumUnreadMailsBinding(this.mails);
-        IntegerBinding unreadMailsCountChildFolder = new SumUnreadMailsInChildFolderBinding(this.childs);
+        IntegerBinding unreadMailsCountChildFolder = new SumUnreadMailsInChildFolderBinding(this.children);
 
         this.unreadMailsCountTotal = (IntegerBinding) this.unreadMailsCount.add(unreadMailsCountChildFolder);
         // this.unreadMailsCountTotal = (ObservableIntegerValue) Bindings.add(this.unreadMailsCount, unreadMailsCountChildFolder);
@@ -121,7 +121,7 @@ public class FXMailFolder
      */
     public void addChild(final FXMailFolder child)
     {
-        getChilds().add(child);
+        getChildren().add(child);
         child.setParent(this);
     }
 
@@ -216,7 +216,7 @@ public class FXMailFolder
     }
 
     /**
-     * Liefert das Flag, um den Folder zu abbonnieren/beobachten.
+     * Liefert das Flag, um den Folder zu abonnieren/beobachten.
      *
      * @return boolean
      */
@@ -226,7 +226,7 @@ public class FXMailFolder
     }
 
     /**
-     * Liefert das Flag, um den Folder zu abbonnieren/beobachten.
+     * Liefert das Flag, um den Folder zu abonnieren/beobachten.
      *
      * @return boolean
      */
@@ -268,12 +268,12 @@ public class FXMailFolder
      */
     public void removeChild(final FXMailFolder child)
     {
-        getChilds().remove(child);
+        getChildren().remove(child);
         child.setParent(null);
     }
 
     /**
-     * Setzt das Flag, um den Folder zu abbonnieren/beobachten.
+     * Setzt das Flag, um den Folder zu abonnieren/beobachten.
      *
      * @param abo boolean
      */
@@ -350,9 +350,9 @@ public class FXMailFolder
     /**
      * @return {@link ObservableList}<MailFolder>
      */
-    ObservableList<FXMailFolder> getChilds()
+    ObservableList<FXMailFolder> getChildren()
     {
-        return this.childs;
+        return this.children;
     }
 
     /**
