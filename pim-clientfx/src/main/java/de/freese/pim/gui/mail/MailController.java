@@ -57,13 +57,11 @@ public class MailController extends AbstractController
     /**
      *
      */
-    @FXML
-    private Button buttonAddAccount;
+    private final FXMailService mailService;
     /**
      *
      */
-    @FXML
-    private Button buttonEditAccount;
+    private final ObjectProperty<FXMail> selectedMail = new SimpleObjectProperty<>();
     // /**
     // * DateTimeFormatter formatterDate = DateTimeFormatter.ofPattern("EE dd.MM.yy HH:mm:ss");
     // */
@@ -71,12 +69,22 @@ public class MailController extends AbstractController
     /**
      *
      */
-    @FXML
-    private MailContentView mailContentView;
+    private final ObjectProperty<TreeItem<Object>> selectedTreeItem = new SimpleObjectProperty<>();
     /**
      *
      */
-    private final FXMailService mailService;
+    @FXML
+    private Button buttonAddAccount;
+    /**
+     *
+     */
+    @FXML
+    private Button buttonEditAccount;
+    /**
+     *
+     */
+    @FXML
+    private MailContentView mailContentView;
     /**
      *
      */
@@ -92,14 +100,6 @@ public class MailController extends AbstractController
      */
     @FXML
     private ProgressIndicator progressIndicator;
-    /**
-     *
-     */
-    private final ObjectProperty<FXMail> selectedMail = new SimpleObjectProperty<>();
-    /**
-     *
-     */
-    private final ObjectProperty<TreeItem<Object>> selectedTreeItem = new SimpleObjectProperty<>();
     /**
      * Spalten für die Empfangs-Sicht.
      */
@@ -155,56 +155,6 @@ public class MailController extends AbstractController
     }
 
     /**
-     * Hinzufügen eines MailAccount in die GUI
-     *
-     * @param root {@link TreeItem}
-     * @param account {@link FXMailAccount}
-     */
-    private void addMailAccountToGUI(final TreeItem<Object> root, final FXMailAccount account)
-    {
-        // Path basePath = SettingService.getInstance().getHome();
-        // Path accountPath = basePath.resolve(account.getMail());
-
-        // IMailAPI mailAPI = new JavaMailApi(account, accountPath);
-        // mailAPI.setMailService(this.mailService);
-        // mailAPI.setExecutorService(getExecutorService());
-
-        TreeItem<Object> parent = new TreeItem<>(account);
-        root.getChildren().add(parent);
-        parent.setExpanded(true);
-
-        InitMailAPITask service = new InitMailAPITask(this.treeViewMail, parent, getMailService(), account);
-        getTaskExecutor().execute(service);
-    }
-
-    /**
-     * Liefert den MailAccount.
-     *
-     * @param treeItem {@link TreeItem}
-     *
-     * @return {@link FXMailAccount}
-     */
-    private FXMailAccount getAccount(final TreeItem<Object> treeItem)
-    {
-        TreeItem<Object> ti = treeItem;
-
-        while (!(ti.getValue() instanceof FXMailAccount))
-        {
-            ti = ti.getParent();
-        }
-
-        return (FXMailAccount) ti.getValue();
-    }
-
-    /**
-     * @return {@link FXMailService}
-     */
-    private FXMailService getMailService()
-    {
-        return this.mailService;
-    }
-
-    /**
      * @see de.freese.pim.gui.controller.AbstractController#getMainNode()
      */
     @Override
@@ -220,14 +170,6 @@ public class MailController extends AbstractController
     public Node getNaviNode()
     {
         return this.naviNode;
-    }
-
-    /**
-     * @return {@link ProgressIndicator}
-     */
-    private ProgressIndicator getProgressIndicator()
-    {
-        return this.progressIndicator;
     }
 
     /**
@@ -413,6 +355,64 @@ public class MailController extends AbstractController
     }
 
     /**
+     * Hinzufügen eines MailAccount in die GUI
+     *
+     * @param root {@link TreeItem}
+     * @param account {@link FXMailAccount}
+     */
+    private void addMailAccountToGUI(final TreeItem<Object> root, final FXMailAccount account)
+    {
+        // Path basePath = SettingService.getInstance().getHome();
+        // Path accountPath = basePath.resolve(account.getMail());
+
+        // IMailAPI mailAPI = new JavaMailApi(account, accountPath);
+        // mailAPI.setMailService(this.mailService);
+        // mailAPI.setExecutorService(getExecutorService());
+
+        TreeItem<Object> parent = new TreeItem<>(account);
+        root.getChildren().add(parent);
+        parent.setExpanded(true);
+
+        InitMailAPITask service = new InitMailAPITask(this.treeViewMail, parent, getMailService(), account);
+        getTaskExecutor().execute(service);
+    }
+
+    /**
+     * Liefert den MailAccount.
+     *
+     * @param treeItem {@link TreeItem}
+     *
+     * @return {@link FXMailAccount}
+     */
+    private FXMailAccount getAccount(final TreeItem<Object> treeItem)
+    {
+        TreeItem<Object> ti = treeItem;
+
+        while (!(ti.getValue() instanceof FXMailAccount))
+        {
+            ti = ti.getParent();
+        }
+
+        return (FXMailAccount) ti.getValue();
+    }
+
+    /**
+     * @return {@link FXMailService}
+     */
+    private FXMailService getMailService()
+    {
+        return this.mailService;
+    }
+
+    /**
+     * @return {@link ProgressIndicator}
+     */
+    private ProgressIndicator getProgressIndicator()
+    {
+        return this.progressIndicator;
+    }
+
+    /**
      * Laden der MailAccounts und befüllen des Trees.
      *
      * @param root {@link TreeItem}
@@ -572,8 +572,7 @@ public class MailController extends AbstractController
             columnFrom.setSortable(false);
             columnFrom.setStyle("-fx-alignment: center-left;");
             columnFrom.setCellValueFactory(cell -> cell.getValue().fromProperty()); // Für reine FX-Bean.
-            // columnFrom.setCellValueFactory(new PropertyValueFactory<>("from")); // Updates erfolgen nur, wenn Bean PropertyChangeSupport
-            // hat.
+            // columnFrom.setCellValueFactory(new PropertyValueFactory<>("from")); // Updates erfolgen nur, wenn Bean PropertyChangeSupport hat.
             // columnFrom.setCellValueFactory(cell -> FXUtils.toStringObservable(cell.getValue().fromProperty(), addr ->
             // addr.getAddress()));
             // columnFrom.setCellFactory(new InternetAddressCellFactory<Mail>());

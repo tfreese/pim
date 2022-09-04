@@ -26,7 +26,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 
 /**
- * View des Addressbuchs.
+ * View des Adressbuchs.
  *
  * @author Thomas Freese
  */

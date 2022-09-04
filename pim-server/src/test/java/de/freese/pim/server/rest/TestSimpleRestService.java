@@ -45,14 +45,15 @@ class Config extends WebMvcConfigurationSupport
     // }
 
     /**
-     * @see org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport#configureAsyncSupport(org.springframework.web.servlet.config.annotation.AsyncSupportConfigurer)
+     * @return {@link TaskScheduler}
      */
-    @Override
-    protected void configureAsyncSupport(final AsyncSupportConfigurer configurer)
+    @Bean(
+            {
+                    "taskScheduler", "taskExecutor"
+            })
+    public ConcurrentTaskScheduler taskScheduler()
     {
-        // Verlagert die asynchrone Ausführung von Server-Requests (Callable, WebAsyncTask) in diesen ThreadPool.
-        // Ansonsten würde für jeden Request immer ein neuer Thread erzeugt, siehe TaskExecutor des RequestMappingHandlerAdapter.
-        configurer.setTaskExecutor(taskScheduler());
+        return new ConcurrentTaskScheduler(executorService().getObject(), scheduledExecutorService().getObject());
     }
 
     // /**
@@ -73,6 +74,17 @@ class Config extends WebMvcConfigurationSupport
     //
     // return bean;
     // }
+
+    /**
+     * @see org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport#configureAsyncSupport(org.springframework.web.servlet.config.annotation.AsyncSupportConfigurer)
+     */
+    @Override
+    protected void configureAsyncSupport(final AsyncSupportConfigurer configurer)
+    {
+        // Verlagert die asynchrone Ausführung von Server-Requests (Callable, WebAsyncTask) in diesen ThreadPool.
+        // Ansonsten würde für jeden Request immer ein neuer Thread erzeugt, siehe TaskExecutor des RequestMappingHandlerAdapter.
+        configurer.setTaskExecutor(taskScheduler());
+    }
 
     /**
      * @return {@link ThreadPoolExecutorFactoryBean}
@@ -103,23 +115,11 @@ class Config extends WebMvcConfigurationSupport
         ScheduledExecutorFactoryBean bean = new ScheduledExecutorFactoryBean();
         bean.setPoolSize(4);
         bean.setThreadPriority(5);
-        bean.setThreadNamePrefix("testscheduler-");
+        bean.setThreadNamePrefix("testScheduler-");
         bean.setRejectedExecutionHandler(new ThreadPoolExecutor.AbortPolicy());
         bean.setExposeUnconfigurableExecutor(true);
 
         return bean;
-    }
-
-    /**
-     * @return {@link TaskScheduler}
-     */
-    @Bean(
-            {
-                    "taskScheduler", "taskExecutor"
-            })
-    public ConcurrentTaskScheduler taskScheduler()
-    {
-        return new ConcurrentTaskScheduler(executorService().getObject(), scheduledExecutorService().getObject());
     }
 }
 

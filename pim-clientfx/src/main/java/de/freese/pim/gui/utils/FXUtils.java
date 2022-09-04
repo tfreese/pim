@@ -446,7 +446,7 @@ public final class FXUtils
     }
 
     /**
-     * Laden des Images atriggern für ImageView#getImage.<br>
+     * Laden des Images triggern für ImageView#getImage.<br>
      * Dies ist nur nötig, wenn das Image der {@link ImageView} VOR dem setzen in einen Parent explizit verwendet werden soll.<br>
      * Beispiel:<br>
      * <code>
@@ -471,7 +471,7 @@ public final class FXUtils
     }
 
     /**
-     * Formattiert das Objekt als String.
+     * Formatiert das Objekt als String.
      *
      * @param <T> Konkreter Typ des Values
      * @param converter {@link Function}
@@ -542,7 +542,7 @@ public final class FXUtils
     }
 
     // /**
-    // * Formattiert das Objekt als String.
+    // * Formatiert das Objekt als String.
     // *
     // * @param <T> Konkreter Typ des Values
     // * @param ov {@link ObservableValue}
