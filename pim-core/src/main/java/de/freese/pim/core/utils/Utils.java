@@ -449,8 +449,6 @@ public final class Utils
     }
 
     /**
-     * Lässt den aktuellen Thread einschlafen.
-     *
      * @param duration long
      * @param timeUnit {@link TimeUnit}
      */

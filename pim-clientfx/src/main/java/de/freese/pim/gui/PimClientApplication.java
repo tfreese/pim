@@ -29,7 +29,7 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 
 /**
  * Startklasse der Personal Information Management Anwendung.<br>
- * <a href="https://www.iconfinder.com">iconfinder</a><br>
+ * <a href="https://www.iconfinder.com">iconFinder</a><br>
  * <br>
  * Geht momentan nicht aus der IDE, sondern nur per Console: mvn compile exec:java<br>
  * <br>
@@ -250,13 +250,13 @@ public class PimClientApplication extends Application
             });
 
             // After init is ready, the app is ready to be shown.
-            // Do this before hiding the preloader stage to prevent the app from exiting prematurely.
+            // Do this before hiding the PreLoader stage to prevent the app from exiting prematurely.
             // notifyPreloader(new ProgressNotification(1.0D));
             this.ready.setValue(Boolean.TRUE);
             notifyPreloader(new StateChangeNotification(StateChangeNotification.Type.BEFORE_START));
 
             // // After init is ready, the app is ready to be shown.
-            // // Do this before hiding the preloader stage to prevent the app from exiting prematurely.
+            // // Do this before hiding the PreLoader stage to prevent the app from exiting prematurely.
             // PIMApplication.this.ready.setValue(Boolean.TRUE);
             // notifyPreloader(new StateChangeNotification(StateChangeNotification.Type.BEFORE_START));
             // }).start();
