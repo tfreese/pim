@@ -1,8 +1,24 @@
 // Tasks im SubModul ausführen: gradle MODUL:clean build
+buildscript {
+    // Für Plugins
+    repositories {
+        mavenLocal()
+        mavenCentral()
+        gradlePluginPortal() // maven { url "https://plugins.gradle.org/m2"; name "plugins-gradle" }
+    }
+
+    dependencies {
+        classpath "de.freese.gradle:gradle-plugins:0.0.1-SNAPSHOT"
+        classpath "io.spring.gradle:dependency-management-plugin:$version_springDependencyManagement"
+        classpath "org.springframework.boot:spring-boot-gradle-plugin:$version_springBoot"
+        classpath "org.openjfx:javafx-plugin:$version_javafxPlugin"
+    }
+}
 
 subprojects {
     apply plugin: "java"
     apply plugin: "io.spring.dependency-management"
+    apply plugin: "de.freese.gradle.plugin.conventions"
 
     dependencyManagement {
         imports {
@@ -49,28 +65,28 @@ project("pim-server") {
         testImplementation("org.springframework.boot:spring-boot-starter-test")
     }
     // Start: gradle bootRun --args="--spring.profiles.active=dev"
-	// The archive name. If the name has not been explicitly set, the pattern for the name is:
-	// [archiveBaseName]-[archiveAppendix]-[archiveVersion]-[archiveClassifier].[archiveExtension]
-	// archiveFileName = "my-boot.jar"
+    // The archive name. If the name has not been explicitly set, the pattern for the name is:
+    // [archiveBaseName]-[archiveAppendix]-[archiveVersion]-[archiveClassifier].[archiveExtension]
+    // archiveFileName = "my-boot.jar"
     bootJar {
         mainClass = "de.freese.pim.server.PimServerApplication"
     }
     // gradle bootRun --args="--spring.profiles.active=Server,HsqldbEmbeddedServer --server.port=65111"
     bootRun {
         args = [
-        	  "--spring.profiles.active=Server,HsqldbEmbeddedServer"
-        	, "--server.port=65111"
+                "--spring.profiles.active=Server,HsqldbEmbeddedServer"
+                , "--server.port=65111"
         ]
-	}
-	    
+    }
+
     //Für Platzhalter in application.properties
     ext.artifactId = project.name
-    
+
     processResources {
         filesMatching("application-Server.properties") {
-        	filteringCharset = "UTF-8"
-        	
-        	// Bei Problemen müssen die Platzhalter escaped werden: \${...}
+            filteringCharset = "UTF-8"
+
+            // Bei Problemen müssen die Platzhalter escaped werden: \${...}
             expand(project.properties)
         }
     }
@@ -87,33 +103,33 @@ project("pim-clientfx") {
         implementation(project(":pim-server"))
 
         javafx {
-        	version = "$version_javafxBase"
+            version = "$version_javafxBase"
             modules = ["javafx.controls", "javafx.fxml", "javafx.web"]
         }
     }
     // Start: gradle bootRun --args="--spring.profiles.active=dev"
-	// The archive name. If the name has not been explicitly set, the pattern for the name is:
-	// [archiveBaseName]-[archiveAppendix]-[archiveVersion]-[archiveClassifier].[archiveExtension]
-	// archiveFileName = "test2-boot.jar"      
+    // The archive name. If the name has not been explicitly set, the pattern for the name is:
+    // [archiveBaseName]-[archiveAppendix]-[archiveVersion]-[archiveClassifier].[archiveExtension]
+    // archiveFileName = "test2-boot.jar"
     bootJar {
         mainClass = "de.freese.pim.gui.PimClientLauncher"
-    }    
+    }
     // gradle bootRun --args="--spring.profiles.active=ClientStandalone"
     bootRun {
         args = [
-        	  "--spring.profiles.active=ClientRest"
+                "--spring.profiles.active=ClientRest"
         ]
-	} 
-	
+    }
+
     //Für Platzhalter in application.properties
     ext.artifactId = project.name
 
     processResources {
         filesMatching("application-ClientEmbeddedServer.properties") {
-        		filteringCharset = "UTF-8"
-        		
-        		// Bei Problemen müssen die Platzhalter escaped werden: \${...}
-                expand(project.properties)
-            }
+            filteringCharset = "UTF-8"
+
+            // Bei Problemen müssen die Platzhalter escaped werden: \${...}
+            expand(project.properties)
+        }
     }
 }
