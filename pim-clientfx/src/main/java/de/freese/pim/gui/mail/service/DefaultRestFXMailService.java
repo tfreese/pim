@@ -6,7 +6,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.IntStream;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 import de.freese.pim.core.PIMException;
 import de.freese.pim.core.mail.DefaultMailContent;
@@ -17,11 +17,8 @@ import de.freese.pim.gui.mail.model.FXMailAccount;
 import de.freese.pim.gui.mail.model.FXMailFolder;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Profile;
-import org.springframework.core.task.AsyncListenableTaskExecutor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.util.concurrent.ListenableFuture;
-import org.springframework.web.client.AsyncRestTemplate;
 import org.springframework.web.client.RestTemplate;
 
 /**
@@ -37,13 +34,6 @@ import org.springframework.web.client.RestTemplate;
         })
 public class DefaultRestFXMailService extends AbstractFXMailService
 {
-    /**
-     *
-     */
-    private AsyncRestTemplate asyncRestTemplate;
-    /**
-     *
-     */
     private RestTemplate restTemplate;
 
     /**
@@ -71,14 +61,6 @@ public class DefaultRestFXMailService extends AbstractFXMailService
     public void disconnectAccounts(final long... accountIDs)
     {
         getRestTemplate().postForObject("/mail/account/disconnect", accountIDs, Void.class);
-    }
-
-    /**
-     * @return {@link AsyncRestTemplate}
-     */
-    public AsyncRestTemplate getAsyncRestTemplate()
-    {
-        return this.asyncRestTemplate;
     }
 
     /**
@@ -177,10 +159,10 @@ public class DefaultRestFXMailService extends AbstractFXMailService
                 // String jsonContent = responseJSON.get().getBody();
                 // mails = getJsonMapper().readValue(jsonContent, FXMail[].class);
 
-                ListenableFuture<ResponseEntity<FXMail[]>> response =
-                        getAsyncRestTemplate().getForEntity(restURL, FXMail[].class, account.getID(), folder.getID(), folderName);
+                ResponseEntity<FXMail[]> response =
+                        getRestTemplate().getForEntity(restURL, FXMail[].class, account.getID(), folder.getID(), folderName);
                 // mails = mails.get(10, TimeUnit.SECONDS).getBody();
-                mails = response.get().getBody();
+                mails = response.getBody();
             }
 
             getLogger().info("Load Mails finished: account={}, folder={}", account.getMail(), folder.getFullName());
@@ -193,17 +175,10 @@ public class DefaultRestFXMailService extends AbstractFXMailService
         }
     }
 
-    /**
-     * @param restTemplateBuilder {@link RestTemplateBuilder}
-     */
     @Resource
     public void setRestTemplateBuilder(final RestTemplateBuilder restTemplateBuilder)
     {
         this.restTemplate = restTemplateBuilder.build();
-        this.asyncRestTemplate = new AsyncRestTemplate((AsyncListenableTaskExecutor) getTaskExecutor());
-        // this.asyncRestTemplate = new AsyncRestTemplate(new SimpleClientHttpRequestFactory(), this.restTemplate);
-        this.asyncRestTemplate.setErrorHandler(this.restTemplate.getErrorHandler());
-        this.asyncRestTemplate.setUriTemplateHandler(this.restTemplate.getUriTemplateHandler());
     }
 
     /**
@@ -226,9 +201,6 @@ public class DefaultRestFXMailService extends AbstractFXMailService
         return getRestTemplate().postForObject("/mail/account/update", account, int.class);
     }
 
-    /**
-     * @return {@link RestTemplate}
-     */
     protected RestTemplate getRestTemplate()
     {
         return this.restTemplate;

@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.sql.SQLIntegrityConstraintViolationException;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 import de.freese.pim.core.TestConfig;
 import de.freese.pim.core.dao.AddressBookDAO;
@@ -32,12 +32,9 @@ import org.springframework.transaction.annotation.Transactional;
 @TestMethodOrder(MethodOrderer.MethodName.class)
 @Transactional(transactionManager = "transactionManager")
 @ActiveProfiles("test")
-// @DirtiesContext
+        // @DirtiesContext
 class TestSpringContextAddressbookDAO extends AbstractDAOTestCase
 {
-    /**
-     *
-     */
     @Resource
     private AddressBookDAO addressBookDAO;
 

@@ -6,11 +6,11 @@ import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.TreeMap;
 
-import javax.activation.DataSource;
-import javax.mail.internet.ContentType;
-import javax.mail.internet.MimeMessage;
-import javax.mail.internet.MimePart;
-import javax.mail.internet.MimeUtility;
+import jakarta.activation.DataSource;
+import jakarta.mail.internet.ContentType;
+import jakarta.mail.internet.MimeMessage;
+import jakarta.mail.internet.MimePart;
+import jakarta.mail.internet.MimeUtility;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import de.freese.pim.core.mail.DefaultMailContent;
@@ -28,13 +28,6 @@ import de.freese.pim.core.utils.io.IOMonitor;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class JavaMailContent extends DefaultMailContent
 {
-    // /**
-    // * Erzeugt eine neue Instanz von {@link JavaMailContent}
-    // *
-    // * @param dataSource {@link DataSource}
-    // * @param url {@link URL}
-    // * @throws IOException Falls was schief geht.
-    // */
     // public JavaMailContent(final DataSource dataSource, final URL url) throws IOException
     // {
     // super();
@@ -54,37 +47,16 @@ public class JavaMailContent extends DefaultMailContent
     // }
     // }
 
-    // /**
-    // * Erzeugt eine neue Instanz von {@link JavaMailContent}
-    // *
-    // * @param path {@link Path}
-    // * @throws IOException Falls was schief geht.
-    // */
     // public JavaMailContent(final Path path) throws IOException
     // {
     // this(new FileDataSource(path.toFile()), path.toUri().toURL());
     // }
 
-    /**
-     * Erzeugt eine neue Instanz von {@link JavaMailContent}
-     *
-     * @param message {@link MimeMessage}
-     *
-     * @throws Exception Falls was schiefgeht.
-     */
     public JavaMailContent(final MimeMessage message) throws Exception
     {
         this(message, null);
     }
 
-    /**
-     * Erzeugt eine neue Instanz von {@link JavaMailContent}
-     *
-     * @param message {@link MimeMessage}
-     * @param monitor {@link IOMonitor}
-     *
-     * @throws Exception Falls was schiefgeht.
-     */
     public JavaMailContent(final MimeMessage message, final IOMonitor monitor) throws Exception
     {
         super();

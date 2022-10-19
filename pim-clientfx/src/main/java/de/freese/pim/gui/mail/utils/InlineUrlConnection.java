@@ -6,7 +6,7 @@ import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
 
-import javax.activation.DataSource;
+import jakarta.activation.DataSource;
 
 import de.freese.pim.core.mail.MailContent;
 
@@ -17,23 +17,10 @@ import de.freese.pim.core.mail.MailContent;
  */
 public class InlineUrlConnection extends URLConnection
 {
-    /**
-     *
-     */
     private final DataSource dataSource;
-    /**
-     *
-     */
+
     private final MailContent mailContent;
 
-    /**
-     * Erzeugt eine neue Instanz von {@link InlineUrlConnection}
-     *
-     * @param mailContent {@link MailContent}
-     * @param url {@link URL}
-     *
-     * @throws IOException Falls was schiefgeht.
-     */
     public InlineUrlConnection(final MailContent mailContent, final URL url) throws IOException
     {
         super(url);

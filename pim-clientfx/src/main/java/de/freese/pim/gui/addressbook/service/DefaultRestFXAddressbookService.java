@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 import de.freese.pim.gui.addressbook.model.FXKontakt;
 import org.springframework.boot.web.client.RestTemplateBuilder;
@@ -26,9 +26,6 @@ import org.springframework.web.client.RestTemplate;
         })
 public class DefaultRestFXAddressbookService extends AbstractFXAddressbookService
 {
-    /**
-     *
-     */
     private RestTemplate restTemplate;
 
     /**
@@ -62,9 +59,6 @@ public class DefaultRestFXAddressbookService extends AbstractFXAddressbookServic
         kontakt.setID(primaryKey);
     }
 
-    /**
-     * @param restTemplateBuilder {@link RestTemplateBuilder}
-     */
     @Resource
     public void setRestTemplateBuilder(final RestTemplateBuilder restTemplateBuilder)
     {
@@ -84,9 +78,6 @@ public class DefaultRestFXAddressbookService extends AbstractFXAddressbookServic
         return getRestTemplate().postForObject("/addressBook/contact/update/{contactID}", id, Integer.class, variables);
     }
 
-    /**
-     * @return {@link RestTemplate}
-     */
     protected RestTemplate getRestTemplate()
     {
         return this.restTemplate;

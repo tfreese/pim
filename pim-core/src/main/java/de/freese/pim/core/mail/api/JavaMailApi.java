@@ -11,22 +11,22 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.stream.Stream;
 
-import javax.mail.Authenticator;
-import javax.mail.FetchProfile;
-import javax.mail.Flags;
-import javax.mail.Flags.Flag;
-import javax.mail.Folder;
-import javax.mail.Message;
-import javax.mail.Message.RecipientType;
-import javax.mail.MessagingException;
-import javax.mail.NoSuchProviderException;
-import javax.mail.Service;
-import javax.mail.Session;
-import javax.mail.Store;
-import javax.mail.Transport;
-import javax.mail.UIDFolder;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
+import jakarta.mail.Authenticator;
+import jakarta.mail.FetchProfile;
+import jakarta.mail.Flags;
+import jakarta.mail.Flags.Flag;
+import jakarta.mail.Folder;
+import jakarta.mail.Message;
+import jakarta.mail.Message.RecipientType;
+import jakarta.mail.MessagingException;
+import jakarta.mail.NoSuchProviderException;
+import jakarta.mail.Service;
+import jakarta.mail.Session;
+import jakarta.mail.Store;
+import jakarta.mail.Transport;
+import jakarta.mail.UIDFolder;
+import jakarta.mail.internet.InternetAddress;
+import jakarta.mail.internet.MimeMessage;
 
 import com.sun.mail.imap.IMAPFolder;
 import com.sun.mail.imap.IMAPStore;
@@ -48,97 +48,24 @@ import org.slf4j.LoggerFactory;
  */
 public class JavaMailApi extends AbstractMailApi
 {
-    /**
-     * Generisches Callback-Interface für einen Mail-{@link Folder}.
-     *
-     * @param <T> Konkreter Return-Typ
-     *
-     * @author Thomas Freese
-     */
     @FunctionalInterface
     private interface FolderCallback<T>
     {
-        /**
-         * @param folder {@link IMAPFolder}
-         *
-         * @return Object
-         *
-         * @throws Exception Falls was schiefgeht.
-         */
         T doInFolder(IMAPFolder folder) throws Exception;
     }
 
-    /**
-     *
-     */
-    private Session session;
-    /**
-     *
-     */
-    private int storeIndex;
     /**
      * Für RoundRobin-Pool.
      */
     private final IMAPStore[] stores = new IMAPStore[Math.max(1, 3)];
 
-    /**
-     * Erzeugt eine neue Instanz von {@link JavaMailApi}
-     *
-     * @param account {@link MailAccount}
-     */
+    private Session session;
+
+    private int storeIndex;
+
     public JavaMailApi(final MailAccount account)
     {
         super(account);
-    }
-
-    /**
-     * Stellt sicher, das der {@link Folder} zum Lesen geöffnet ist.
-     *
-     * @param folder {@link Folder}
-     *
-     * @throws MessagingException Falls was schiefgeht.
-     */
-    protected void checkRead(final Folder folder) throws MessagingException
-    {
-        if (!folder.isOpen())
-        {
-            folder.open(Folder.READ_ONLY);
-        }
-    }
-
-    /**
-     * Stellt sicher, das der {@link Folder} zum Schreiben geöffnet ist.
-     *
-     * @param folder {@link Folder}
-     *
-     * @throws MessagingException Falls was schiefgeht.
-     */
-    protected void checkWrite(final Folder folder) throws MessagingException
-    {
-        if (!folder.isOpen() || (folder.getMode() == Folder.READ_ONLY))
-        {
-            folder.open(Folder.READ_WRITE);
-        }
-    }
-
-    /**
-     * Schliesst den {@link Folder} mit close(true).
-     *
-     * @param folder {@link Folder}
-     *
-     * @throws MessagingException Falls was schiefgeht.
-     */
-    protected void closeFolder(final Folder folder) throws MessagingException
-    {
-        if (folder == null)
-        {
-            return;
-        }
-
-        if (folder.isOpen())
-        {
-            folder.close(true);
-        }
     }
 
     /**
@@ -148,103 +75,6 @@ public class JavaMailApi extends AbstractMailApi
     public void connect()
     {
         this.session = Utils.executeSafely(this::createSession);
-    }
-
-    /**
-     * Connecten des {@link Service}.
-     *
-     * @param service {@link Service}
-     *
-     * @throws MessagingException Falls was schiefgeht.
-     */
-    protected void connect(final Service service) throws MessagingException
-    {
-        String host = service instanceof Store ? getAccount().getImapHost() : getAccount().getSmtpHost();
-        int port = service instanceof Store ? getAccount().getImapPort().getPort() : getAccount().getSmtpPort().getPort();
-
-        String mail = getAccount().getMail();
-        String password = getAccount().getPassword();
-
-        service.connect(host, port, mail, password);
-    }
-
-    /**
-     * Erzeugt die Mail-Session.
-     *
-     * @return {@link Session}
-     *
-     * @throws MessagingException Falls was schiefgeht.
-     */
-    protected Session createSession() throws MessagingException
-    {
-        Authenticator authenticator = null;
-
-        Properties properties = new Properties();
-
-        // if (getLogger().isDebugEnabled())
-        if (LoggerFactory.getLogger("javax.mail").isDebugEnabled())
-        {
-            properties.setProperty("mail.debug", "true");
-        }
-
-        // Legitimation für Empfang.
-        if (getAccount().isImapLegitimation())
-        {
-            properties.setProperty("mail.imap.auth", "true");
-            properties.setProperty("mail.imap.starttls.enable", "true");
-        }
-
-        // Legitimation für Versand.
-        if (getAccount().isSmtpLegitimation())
-        {
-            properties.setProperty("mail.smtp.auth", "true");
-            properties.setProperty("mail.smtp.starttls.enable", "true");
-        }
-
-        if (getExecutor() != null)
-        {
-            properties.put("mail.event.executor", getExecutor());
-        }
-
-        properties.setProperty("mail.mime.base64.ignoreerrors", "true");
-
-        // properties.setProperty("mail.imap.connectionpoolsize", "10");
-        properties.setProperty("mail.imap.fetchsize", "1048576"); // 1MB, Long.toString(1024 * 1024)
-        // properties.setProperty("mail.imap.partialfetch", "false");
-
-        // properties.setProperty("mail.imaps.connectionpoolsize", "10");
-        properties.setProperty("mail.imaps.fetchsize", "1048576"); // 1MB, Long.toString(1024 * 1024)
-        // properties.setProperty("mail.imaps.partialfetch", "false");
-
-        return Session.getInstance(properties, authenticator);
-    }
-
-    /**
-     * Erzeugt den {@link Store}.
-     *
-     * @param session {@link Session}
-     *
-     * @return {@link Store}
-     *
-     * @throws NoSuchProviderException Falls was schiefgeht.
-     */
-    protected IMAPStore createStore(final Session session) throws NoSuchProviderException
-    {
-        return (IMAPStore) this.session.getStore("imaps");
-    }
-
-    /**
-     * Erzeugt den {@link Transport}.
-     *
-     * @param session {@link Session}
-     *
-     * @return {@link Transport}
-     *
-     * @throws NoSuchProviderException Falls was schiefgeht.
-     */
-    protected Transport createTransport(final Session session) throws NoSuchProviderException
-    {
-        return this.session.getTransport("smtp");
     }
 
     /**
@@ -290,63 +120,6 @@ public class JavaMailApi extends AbstractMailApi
     }
 
     /**
-     * Schliessen des {@link Service}.
-     *
-     * @param service {@link Service}
-     *
-     * @throws MessagingException Falls was schiefgeht.
-     */
-    protected void disconnect(final Service service) throws MessagingException
-    {
-        if ((service != null) && service.isConnected())
-        {
-            service.close();
-        }
-    }
-
-    /**
-     * Führt die Action in dem Folder aus.
-     *
-     * @param <T> Konkreter Return-Typ
-     * @param folderFullName String
-     * @param action {@link FolderCallback}
-     *
-     * @return Object
-     */
-    protected <T> T executeInFolder(final String folderFullName, final FolderCallback<T> action)
-    {
-        return Utils.executeSafely(() ->
-        {
-            IMAPFolder folder = (IMAPFolder) getStore().getFolder(folderFullName);
-
-            if (folder == null)
-            {
-                getLogger().warn("Folder {} not exist", folderFullName);
-
-                return null;
-            }
-
-            if ((folder.getType() & Folder.HOLDS_MESSAGES) == 0)
-            {
-                getLogger().warn("Folder {} can not contain messges", folderFullName);
-
-                return null;
-            }
-
-            try
-            {
-                checkRead(folder);
-
-                return action.doInFolder(folder);
-            }
-            finally
-            {
-                closeFolder(folder);
-            }
-        });
-    }
-
-    /**
      * @see MailApi#getFolder()
      */
     @Override
@@ -371,45 +144,6 @@ public class JavaMailApi extends AbstractMailApi
 
             // closeFolder(root);
         });
-    }
-
-    /**
-     * @return {@link Session}
-     */
-    protected Session getSession()
-    {
-        return this.session;
-    }
-
-    /**
-     * Liefert einen {@link Store} mit dem Round-Robin Verfahren.
-     *
-     * @return {@link Store}
-     *
-     * @throws MessagingException Falls was schiefgeht.
-     */
-    protected synchronized IMAPStore getStore() throws MessagingException
-    {
-        IMAPStore store = this.stores[this.storeIndex++];
-
-        if ((store != null) && !store.isConnected())
-        {
-            connect(store);
-        }
-
-        if (store == null)
-        {
-            store = createStore(getSession());
-            connect(store);
-            this.stores[this.storeIndex - 1] = store;
-        }
-
-        if (this.storeIndex == this.stores.length)
-        {
-            this.storeIndex = 0;
-        }
-
-        return store;
     }
 
     /**
@@ -492,7 +226,7 @@ public class JavaMailApi extends AbstractMailApi
             // SearchTerm searchTerm = new SearchTerm()
             // {
             // /**
-            // * @see javax.mail.search.SearchTerm#match(javax.mail.Message)
+            // * @see jakarta.mail.search.SearchTerm#match(jakarta.mail.Message)
             // */
             // @Override
             // public boolean match(final Message msg)
@@ -554,13 +288,213 @@ public class JavaMailApi extends AbstractMailApi
     }
 
     /**
-     * Befüllt die {@link Mail} mit den Inhalten der {@link Message}.
-     *
-     * @param mail {@link Mail}
-     * @param message {@link Message}
-     *
-     * @throws MessagingException Falls was schiefgeht.
+     * @see MailApi#setSeen(de.freese.pim.core.model.mail.Mail, boolean)
      */
+    @Override
+    public void setSeen(final Mail mail, final boolean seen)
+    {
+        executeInFolder(mail.getFolderFullName(), folder ->
+        {
+            // Bulk-Operation auf Server.
+            folder.setFlags(new int[]
+                    {
+                            mail.getMsgNum()
+                    }, new Flags(Flags.Flag.SEEN), seen);
+
+            // Einzel-Operation auf Server.
+            // Message message = f.getMessage(mail.getMsgNum());
+            // message.setFlag(Flag.SEEN, seen);
+
+            return null;
+        });
+    }
+
+    /**
+     * @see MailApi#testConnection()
+     */
+    @Override
+    public void testConnection()
+    {
+        Utils.executeSafely(() ->
+        {
+            // Test Connection Empfang.
+            Store s = createStore(this.session);
+            connect(s);
+            disconnect(s);
+            s = null;
+
+            // Test Connection Versand.
+            Transport t = createTransport(this.session);
+            connect(t);
+            disconnect(t);
+            t = null;
+        });
+    }
+
+    protected void checkRead(final Folder folder) throws MessagingException
+    {
+        if (!folder.isOpen())
+        {
+            folder.open(Folder.READ_ONLY);
+        }
+    }
+
+    protected void checkWrite(final Folder folder) throws MessagingException
+    {
+        if (!folder.isOpen() || (folder.getMode() == Folder.READ_ONLY))
+        {
+            folder.open(Folder.READ_WRITE);
+        }
+    }
+
+    protected void closeFolder(final Folder folder) throws MessagingException
+    {
+        if (folder == null)
+        {
+            return;
+        }
+
+        if (folder.isOpen())
+        {
+            folder.close(true);
+        }
+    }
+
+    protected void connect(final Service service) throws MessagingException
+    {
+        String host = service instanceof Store ? getAccount().getImapHost() : getAccount().getSmtpHost();
+        int port = service instanceof Store ? getAccount().getImapPort().getPort() : getAccount().getSmtpPort().getPort();
+
+        String mail = getAccount().getMail();
+        String password = getAccount().getPassword();
+
+        service.connect(host, port, mail, password);
+    }
+
+    protected Session createSession() throws MessagingException
+    {
+        Authenticator authenticator = null;
+
+        Properties properties = new Properties();
+
+        // if (getLogger().isDebugEnabled())
+        if (LoggerFactory.getLogger("jakarta.mail").isDebugEnabled())
+        {
+            properties.setProperty("mail.debug", "true");
+        }
+
+        // Legitimation für Empfang.
+        if (getAccount().isImapLegitimation())
+        {
+            properties.setProperty("mail.imap.auth", "true");
+            properties.setProperty("mail.imap.starttls.enable", "true");
+        }
+
+        // Legitimation für Versand.
+        if (getAccount().isSmtpLegitimation())
+        {
+            properties.setProperty("mail.smtp.auth", "true");
+            properties.setProperty("mail.smtp.starttls.enable", "true");
+        }
+
+        if (getExecutor() != null)
+        {
+            properties.put("mail.event.executor", getExecutor());
+        }
+
+        properties.setProperty("mail.mime.base64.ignoreerrors", "true");
+
+        // properties.setProperty("mail.imap.connectionpoolsize", "10");
+        properties.setProperty("mail.imap.fetchsize", "1048576"); // 1MB, Long.toString(1024 * 1024)
+        // properties.setProperty("mail.imap.partialfetch", "false");
+
+        // properties.setProperty("mail.imaps.connectionpoolsize", "10");
+        properties.setProperty("mail.imaps.fetchsize", "1048576"); // 1MB, Long.toString(1024 * 1024)
+        // properties.setProperty("mail.imaps.partialfetch", "false");
+
+        return Session.getInstance(properties, authenticator);
+    }
+
+    protected IMAPStore createStore(final Session session) throws NoSuchProviderException
+    {
+        return (IMAPStore) this.session.getStore("imaps");
+    }
+
+    protected Transport createTransport(final Session session) throws NoSuchProviderException
+    {
+        return this.session.getTransport("smtp");
+    }
+
+    protected void disconnect(final Service service) throws MessagingException
+    {
+        if ((service != null) && service.isConnected())
+        {
+            service.close();
+        }
+    }
+
+    protected <T> T executeInFolder(final String folderFullName, final FolderCallback<T> action)
+    {
+        return Utils.executeSafely(() ->
+        {
+            IMAPFolder folder = (IMAPFolder) getStore().getFolder(folderFullName);
+
+            if (folder == null)
+            {
+                getLogger().warn("Folder {} not exist", folderFullName);
+
+                return null;
+            }
+
+            if ((folder.getType() & Folder.HOLDS_MESSAGES) == 0)
+            {
+                getLogger().warn("Folder {} can not contain messges", folderFullName);
+
+                return null;
+            }
+
+            try
+            {
+                checkRead(folder);
+
+                return action.doInFolder(folder);
+            }
+            finally
+            {
+                closeFolder(folder);
+            }
+        });
+    }
+
+    protected Session getSession()
+    {
+        return this.session;
+    }
+
+    protected synchronized IMAPStore getStore() throws MessagingException
+    {
+        IMAPStore store = this.stores[this.storeIndex++];
+
+        if ((store != null) && !store.isConnected())
+        {
+            connect(store);
+        }
+
+        if (store == null)
+        {
+            store = createStore(getSession());
+            connect(store);
+            this.stores[this.storeIndex - 1] = store;
+        }
+
+        if (this.storeIndex == this.stores.length)
+        {
+            this.storeIndex = 0;
+        }
+
+        return store;
+    }
+
     protected void populate(final Mail mail, final Message message) throws MessagingException
     {
         InternetAddress from = Optional.ofNullable(message.getFrom()).map(f -> (InternetAddress) f[0]).orElse(null);
@@ -609,14 +543,6 @@ public class JavaMailApi extends AbstractMailApi
         mail.setSize(size);
     }
 
-    /**
-     * Bestimmte Mail-Attribute vorladen.
-     *
-     * @param folder {@link Folder}
-     * @param messages {@link Message}[]
-     *
-     * @throws MessagingException Falls was schiefgeht.
-     */
     private void preFetch(final Folder folder, final Message... messages) throws MessagingException
     {
         FetchProfile fp = new FetchProfile();
@@ -629,49 +555,5 @@ public class JavaMailApi extends AbstractMailApi
         // fp.add("X-Mailer");
 
         folder.fetch(messages, fp);
-    }
-
-    /**
-     * @see MailApi#setSeen(de.freese.pim.core.model.mail.Mail, boolean)
-     */
-    @Override
-    public void setSeen(final Mail mail, final boolean seen)
-    {
-        executeInFolder(mail.getFolderFullName(), folder ->
-        {
-            // Bulk-Operation auf Server.
-            folder.setFlags(new int[]
-                    {
-                            mail.getMsgNum()
-                    }, new Flags(Flags.Flag.SEEN), seen);
-
-            // Einzel-Operation auf Server.
-            // Message message = f.getMessage(mail.getMsgNum());
-            // message.setFlag(Flag.SEEN, seen);
-
-            return null;
-        });
-    }
-
-    /**
-     * @see MailApi#testConnection()
-     */
-    @Override
-    public void testConnection()
-    {
-        Utils.executeSafely(() ->
-        {
-            // Test Connection Empfang.
-            Store s = createStore(this.session);
-            connect(s);
-            disconnect(s);
-            s = null;
-
-            // Test Connection Versand.
-            Transport t = createTransport(this.session);
-            connect(t);
-            disconnect(t);
-            t = null;
-        });
     }
 }

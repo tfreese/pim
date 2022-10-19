@@ -9,12 +9,12 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import javax.activation.DataSource;
-import javax.mail.Message;
-import javax.mail.Multipart;
-import javax.mail.Part;
-import javax.mail.internet.MimePart;
-import javax.mail.internet.MimeUtility;
+import jakarta.activation.DataSource;
+import jakarta.mail.Message;
+import jakarta.mail.Multipart;
+import jakarta.mail.Part;
+import jakarta.mail.internet.MimePart;
+import jakarta.mail.internet.MimeUtility;
 
 import de.freese.pim.core.mail.InternetAddress;
 
@@ -25,33 +25,18 @@ import de.freese.pim.core.mail.InternetAddress;
  */
 public final class MailUtils
 {
-    /**
-     *
-     */
     public static final String CONTENT_TYPE_CHARSET_SUFFIX = ";charset=";
-    /**
-     *
-     */
+
     public static final String CONTENT_TYPE_HTML = "text/html";
-    /**
-     *
-     */
+
     public static final String CONTENT_TYPE_PLAIN = "text/plain";
-    /**
-     *
-     */
+
     public static final String HEADER_CONTENT_ID = "Content-ID";
-    /**
-     *
-     */
+
     public static final String HEADER_MESSAGE_ID = "Message-ID";
-    /**
-     *
-     */
+
     public static final String MULTIPART_SUBTYPE_MIXED = "mixed";
-    /**
-     *
-     */
+
     public static final String MULTIPART_SUBTYPE_RELATED = "related";
 
     /**
@@ -59,21 +44,10 @@ public final class MailUtils
      */
     public abstract static class AbstractTextPart
     {
-        /**
-         *
-         */
         private final String content;
-        /**
-         *
-         */
+
         private final String mimeType;
 
-        /**
-         * Erstellt ein neues {@link AbstractTextPart} Object.
-         *
-         * @param content String
-         * @param mimeType String
-         */
         AbstractTextPart(final String content, final String mimeType)
         {
             super();
@@ -82,17 +56,11 @@ public final class MailUtils
             this.mimeType = Objects.requireNonNull(mimeType, "mimeType required");
         }
 
-        /**
-         * @return String
-         */
         public String getContent()
         {
             return this.content;
         }
 
-        /**
-         * @return String
-         */
         public String getMimeType()
         {
             return this.mimeType;
@@ -113,11 +81,6 @@ public final class MailUtils
      */
     public static final class HTMLTextPart extends AbstractTextPart
     {
-        /**
-         * Erstellt ein neues {@link HTMLTextPart} Object.
-         *
-         * @param text String
-         */
         HTMLTextPart(final String text)
         {
             super(text, CONTENT_TYPE_HTML);
@@ -129,11 +92,6 @@ public final class MailUtils
      */
     public static final class PlainTextPart extends AbstractTextPart
     {
-        /**
-         * Erstellt ein neues {@link PlainTextPart} Object.
-         *
-         * @param text String
-         */
         PlainTextPart(final String text)
         {
             super(text, CONTENT_TYPE_PLAIN);
@@ -421,12 +379,7 @@ public final class MailUtils
         return textParts;
     }
 
-    /**
-     * @param address {@link javax.mail.internet.InternetAddress}
-     *
-     * @return {@link InternetAddress}
-     */
-    public static InternetAddress map(final javax.mail.internet.InternetAddress address)
+    public static InternetAddress map(final jakarta.mail.internet.InternetAddress address)
     {
         if (address == null)
         {
@@ -437,12 +390,7 @@ public final class MailUtils
 
     }
 
-    /**
-     * @param addresses {@link javax.mail.internet.InternetAddress}[]
-     *
-     * @return {@link InternetAddress}[]
-     */
-    public static InternetAddress[] map(final javax.mail.internet.InternetAddress[] addresses)
+    public static InternetAddress[] map(final jakarta.mail.internet.InternetAddress[] addresses)
     {
         if (addresses == null)
         {
@@ -461,9 +409,6 @@ public final class MailUtils
         // return ia;
     }
 
-    /**
-     * Erstellt ein neues {@link MailUtils} Object.
-     */
     private MailUtils()
     {
         super();

@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadPoolExecutor;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.MethodOrderer;
@@ -20,7 +20,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
-import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.concurrent.ConcurrentTaskScheduler;
 import org.springframework.scheduling.concurrent.ScheduledExecutorFactoryBean;
 import org.springframework.scheduling.concurrent.ThreadPoolExecutorFactoryBean;
@@ -44,9 +43,6 @@ class Config extends WebMvcConfigurationSupport
     // System.setProperty("logging.config", "logback-test.xml");
     // }
 
-    /**
-     * @return {@link TaskScheduler}
-     */
     @Bean(
             {
                     "taskScheduler", "taskExecutor"
@@ -56,9 +52,6 @@ class Config extends WebMvcConfigurationSupport
         return new ConcurrentTaskScheduler(executorService().getObject(), scheduledExecutorService().getObject());
     }
 
-    // /**
-    // * @return {@link AsyncTaskExecutor}
-    // */
     // @Bean
     // public AsyncTaskExecutor taskExecutor()
     // {
@@ -86,9 +79,6 @@ class Config extends WebMvcConfigurationSupport
         configurer.setTaskExecutor(taskScheduler());
     }
 
-    /**
-     * @return {@link ThreadPoolExecutorFactoryBean}
-     */
     @Bean
     protected ThreadPoolExecutorFactoryBean executorService()
     {
@@ -106,9 +96,6 @@ class Config extends WebMvcConfigurationSupport
         return bean;
     }
 
-    /**
-     * @return {@link ScheduledExecutorFactoryBean}
-     */
     @Bean
     protected ScheduledExecutorFactoryBean scheduledExecutorService()
     {
@@ -133,15 +120,9 @@ class Config extends WebMvcConfigurationSupport
 @TestMethodOrder(MethodOrderer.MethodName.class)
 class TestSimpleRestService
 {
-    /**
-     *
-     */
     @Resource
     private MockMvc mockMvc;
 
-    /**
-     * @throws Exception Falls was schiefgeht.
-     */
     @Test
     void test010NoParamGreetingShouldReturnDefaultMessage() throws Exception
     {
@@ -155,9 +136,6 @@ class TestSimpleRestService
         // @formatter:on
     }
 
-    /**
-     * @throws Exception Falls was schiefgeht.
-     */
     @Test
     void test020ParamGreetingShouldReturnTailoredMessage() throws Exception
     {
@@ -171,40 +149,24 @@ class TestSimpleRestService
         // @formatter:on
     }
 
-    /**
-     * @throws Exception Falls was schiefgeht.
-     */
     @Test
     void test030AsyncDateDeferredResult() throws Exception
     {
         testAsync("/test/asyncDateDeferredResult");
     }
 
-    /**
-     * @throws Exception Falls was schiefgeht.
-     */
     @Test
     void test040AsyncDateCallable() throws Exception
     {
         testAsync("/test/asyncDateCallable");
     }
 
-    /**
-     * @throws Exception Falls was schiefgeht.
-     */
     @Test
     void test040AsyncDateWebAsyncTask() throws Exception
     {
         testAsync("/test/asyncDateWebAsyncTask");
     }
 
-    /**
-     * Testet die asynchrone Ausführung einer bestimmten URL.
-     *
-     * @param url String
-     *
-     * @throws Exception Falls was schiefgeht.
-     */
     private void testAsync(final String url) throws Exception
     {
         List<MvcResult> results = new ArrayList<>();

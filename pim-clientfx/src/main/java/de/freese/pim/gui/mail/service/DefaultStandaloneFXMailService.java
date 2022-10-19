@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.IntStream;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 import com.fasterxml.jackson.databind.JavaType;
 import de.freese.pim.core.PIMException;
@@ -31,9 +31,6 @@ import org.springframework.stereotype.Service;
 @Profile("ClientStandalone")
 public class DefaultStandaloneFXMailService extends AbstractFXMailService
 {
-    /**
-     *
-     */
     private MailService mailService;
 
     /**
@@ -102,14 +99,6 @@ public class DefaultStandaloneFXMailService extends AbstractFXMailService
         {
             throw new PIMException(ex);
         }
-    }
-
-    /**
-     * @return {@link MailService}
-     */
-    protected MailService getMailService()
-    {
-        return this.mailService;
     }
 
     /**
@@ -196,20 +185,6 @@ public class DefaultStandaloneFXMailService extends AbstractFXMailService
     }
 
     /**
-     * @see de.freese.pim.gui.mail.service.AbstractFXMailService#loadMailContent(java.nio.file.Path, de.freese.pim.gui.mail.model.FXMailAccount,
-     * de.freese.pim.gui.mail.model.FXMail, de.freese.pim.core.utils.io.IOMonitor)
-     */
-    @Override
-    protected MailContent loadMailContent(final Path mailPath, final FXMailAccount account, final FXMail mail, final IOMonitor monitor) throws Exception
-    {
-        MailContent mailContent = getMailService().loadMailContent(account.getID(), mail.getFolderFullName(), mail.getUID(), monitor);
-
-        saveMailContent(mailPath, mailContent);
-
-        return mailContent;
-    }
-
-    /**
      * @see de.freese.pim.gui.mail.service.FXMailService#loadMails(de.freese.pim.gui.mail.model.FXMailAccount, de.freese.pim.gui.mail.model.FXMailFolder)
      */
     @Override
@@ -233,22 +208,6 @@ public class DefaultStandaloneFXMailService extends AbstractFXMailService
         }
     }
 
-    // /**
-    // * @see de.freese.pim.gui.mail.service.FXMailService#loadMails2(long, long, java.lang.String)
-    // */
-    // @Override
-    // public Future<List<FXMail>> loadMails2(final long accountID, final long folderID, final String folderFullName) throws Exception
-    // {
-    // Future<List<Mail>> pojoFuture = getMailService().loadMails2(accountID, folderID, folderFullName);
-    //
-    // List<FXMail> fxBeans = toFXMails(pojoFuture.get().stream().collect(Collectors.toList()));
-    //
-    // return new AsyncResult<>(fxBeans);
-    // }
-
-    /**
-     * @param mailService {@link MailService}
-     */
     @Resource
     public void setMailService(final MailService mailService)
     {
@@ -276,15 +235,56 @@ public class DefaultStandaloneFXMailService extends AbstractFXMailService
         }
     }
 
+    // /**
+    // * @see de.freese.pim.gui.mail.service.FXMailService#loadMails2(long, long, java.lang.String)
+    // */
+    // @Override
+    // public Future<List<FXMail>> loadMails2(final long accountID, final long folderID, final String folderFullName) throws Exception
+    // {
+    // Future<List<Mail>> pojoFuture = getMailService().loadMails2(accountID, folderID, folderFullName);
+    //
+    // List<FXMail> fxBeans = toFXMails(pojoFuture.get().stream().collect(Collectors.toList()));
+    //
+    // return new AsyncResult<>(fxBeans);
+    // }
+
     /**
-     * Konvertiert die POJOs in die FX-Beans.
-     *
-     * @param accounts {@link List}
-     *
-     * @return {@link List}
-     *
-     * @throws Exception Falls was schiefgeht.
+     * @see de.freese.pim.gui.mail.service.FXMailService#updateAccount(de.freese.pim.gui.mail.model.FXMailAccount)
      */
+    @Override
+    public int updateAccount(final FXMailAccount account)
+    {
+        try
+        {
+            MailAccount pojo = toPojoMailAccount(account);
+
+            return getMailService().updateAccount(pojo);
+        }
+        catch (Exception ex)
+        {
+            throw new PIMException(ex);
+        }
+    }
+
+    protected MailService getMailService()
+    {
+        return this.mailService;
+    }
+
+    /**
+     * @see de.freese.pim.gui.mail.service.AbstractFXMailService#loadMailContent(java.nio.file.Path, de.freese.pim.gui.mail.model.FXMailAccount,
+     * de.freese.pim.gui.mail.model.FXMail, de.freese.pim.core.utils.io.IOMonitor)
+     */
+    @Override
+    protected MailContent loadMailContent(final Path mailPath, final FXMailAccount account, final FXMail mail, final IOMonitor monitor) throws Exception
+    {
+        MailContent mailContent = getMailService().loadMailContent(account.getID(), mail.getFolderFullName(), mail.getUID(), monitor);
+
+        saveMailContent(mailPath, mailContent);
+
+        return mailContent;
+    }
+
     private List<FXMailAccount> toFXMailAccounts(final List<MailAccount> accounts) throws Exception
     {
         // FXMailAccount ma = new FXMailAccount();
@@ -305,15 +305,6 @@ public class DefaultStandaloneFXMailService extends AbstractFXMailService
         return getJsonMapper().readValue(jsonBytes, type);
     }
 
-    /**
-     * Konvertiert die POJOs in die FX-Beans.
-     *
-     * @param folders {@link List}
-     *
-     * @return {@link List}
-     *
-     * @throws Exception Falls was schiefgeht.
-     */
     private List<FXMailFolder> toFXMailFolders(final List<MailFolder> folders) throws Exception
     {
         // FXMailFolder mf = new FXMailFolder();
@@ -330,15 +321,6 @@ public class DefaultStandaloneFXMailService extends AbstractFXMailService
         return getJsonMapper().readValue(jsonBytes, type);
     }
 
-    /**
-     * Konvertiert die POJOs in die FX-Beans.
-     *
-     * @param mails {@link List}
-     *
-     * @return {@link List}
-     *
-     * @throws Exception Falls was schiefgeht.
-     */
     private List<FXMail> toFXMails(final List<Mail> mails) throws Exception
     {
         // Mail m = new Mail();
@@ -366,15 +348,6 @@ public class DefaultStandaloneFXMailService extends AbstractFXMailService
         return getJsonMapper().readValue(json, type);
     }
 
-    /**
-     * Konvertiert die FX-Bean in das POJO.
-     *
-     * @param account {@link FXMailAccount}
-     *
-     * @return {@link MailAccount}
-     *
-     * @throws Exception Falls was schiefgeht.
-     */
     private MailAccount toPojoMailAccount(final FXMailAccount account) throws Exception
     {
         // MailAccount ma = new MailAccount();
@@ -393,15 +366,6 @@ public class DefaultStandaloneFXMailService extends AbstractFXMailService
         return getJsonMapper().readValue(jsonBytes, MailAccount.class);
     }
 
-    /**
-     * Konvertiert die FX-Beans in die POJOs.
-     *
-     * @param folders {@link List}
-     *
-     * @return {@link List}
-     *
-     * @throws Exception Falls was schiefgeht.
-     */
     private List<MailFolder> toPojoMailFolders(final List<FXMailFolder> folders) throws Exception
     {
         JavaType type = getJsonMapper().getTypeFactory().constructCollectionType(ArrayList.class, MailFolder.class);
@@ -409,23 +373,5 @@ public class DefaultStandaloneFXMailService extends AbstractFXMailService
         byte[] jsonBytes = getJsonMapper().writer().writeValueAsBytes(folders);
 
         return getJsonMapper().readValue(jsonBytes, type);
-    }
-
-    /**
-     * @see de.freese.pim.gui.mail.service.FXMailService#updateAccount(de.freese.pim.gui.mail.model.FXMailAccount)
-     */
-    @Override
-    public int updateAccount(final FXMailAccount account)
-    {
-        try
-        {
-            MailAccount pojo = toPojoMailAccount(account);
-
-            return getMailService().updateAccount(pojo);
-        }
-        catch (Exception ex)
-        {
-            throw new PIMException(ex);
-        }
     }
 }

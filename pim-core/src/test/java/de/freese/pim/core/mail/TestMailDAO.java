@@ -14,7 +14,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 import de.freese.pim.core.TestConfig;
 import de.freese.pim.core.dao.MailDAO;
@@ -46,15 +46,9 @@ import org.springframework.transaction.annotation.Transactional;
 @ActiveProfiles("test")
 class TestMailDAO
 {
-    /**
-     *
-     */
     @Resource
     private MailDAO mailDAO;
 
-    /**
-     * @throws Throwable Falls was schiefgeht.
-     */
     @Test
     @Rollback
     void test010InsertAccountFail() throws Throwable
@@ -66,9 +60,6 @@ class TestMailDAO
         assertNotNull(exception);
     }
 
-    /**
-     *
-     */
     @Test
     @Commit
     void test011InsertAccount()
@@ -88,9 +79,6 @@ class TestMailDAO
         assertEquals(2, account.getID());
     }
 
-    /**
-     *
-     */
     @Test
     @Transactional(readOnly = true)
     @Rollback
@@ -113,9 +101,6 @@ class TestMailDAO
         assertFalse(account.isSmtpLegitimation());
     }
 
-    /**
-     *
-     */
     @Test
     @Commit
     void test013UpdateAccount()
@@ -139,9 +124,6 @@ class TestMailDAO
         this.mailDAO.updateAccount(account);
     }
 
-    /**
-     *
-     */
     @Test
     @Transactional(readOnly = true)
     @Rollback
@@ -164,9 +146,6 @@ class TestMailDAO
         assertTrue(account.isSmtpLegitimation());
     }
 
-    /**
-     * @throws Throwable Falls was schiefgeht.
-     */
     @Test
     @Rollback
     void test020InsertFolderFail() throws Throwable
@@ -179,9 +158,6 @@ class TestMailDAO
         assertNotNull(exception);
     }
 
-    /**
-     *
-     */
     @Test
     @Commit
     void test021InsertFolder()
@@ -196,9 +172,6 @@ class TestMailDAO
         assertEquals(4, folder.getID());
     }
 
-    /**
-     *
-     */
     @Test
     @Transactional(readOnly = true)
     @Rollback
@@ -216,9 +189,6 @@ class TestMailDAO
         Assertions.assertFalse(folder.isAbonniert());
     }
 
-    /**
-     *
-     */
     @Test
     @Commit
     void test023UpdateFolder()
@@ -237,9 +207,6 @@ class TestMailDAO
         this.mailDAO.updateFolder(folder);
     }
 
-    /**
-     *
-     */
     @Test
     @Transactional(readOnly = true)
     @Rollback
@@ -257,9 +224,6 @@ class TestMailDAO
         Assertions.assertTrue(folder.isAbonniert());
     }
 
-    /**
-     * @throws Throwable Falls was schiefgeht.
-     */
     @Test
     @Rollback
     void test030InsertMailFail() throws Throwable
@@ -271,9 +235,6 @@ class TestMailDAO
         assertNotNull(exception);
     }
 
-    /**
-     *
-     */
     @Test
     @Commit
     void test031InsertMail()
@@ -303,9 +264,6 @@ class TestMailDAO
         this.mailDAO.insertMail(4, Arrays.asList(mail));
     }
 
-    /**
-     *
-     */
     @Test
     @Transactional(readOnly = true)
     @Rollback
@@ -333,9 +291,6 @@ class TestMailDAO
         assertEquals(2, mail.getUID());
     }
 
-    /**
-     *
-     */
     @Test
     @Commit
     void test033UpdateMail()
@@ -353,9 +308,6 @@ class TestMailDAO
         this.mailDAO.updateMail(4, mail);
     }
 
-    /**
-     *
-     */
     @Test
     @Transactional(readOnly = true)
     @Rollback
@@ -380,9 +332,6 @@ class TestMailDAO
         assertEquals(2, mail.getUID());
     }
 
-    /**
-     *
-     */
     @Test
     @Commit
     void test040DeleteMail()
@@ -390,9 +339,6 @@ class TestMailDAO
         this.mailDAO.deleteMail(4, 2);
     }
 
-    /**
-     *
-     */
     @Test
     @Transactional(readOnly = true)
     @Rollback
@@ -404,9 +350,6 @@ class TestMailDAO
         assertEquals(0, mails.size());
     }
 
-    /**
-     *
-     */
     @Test
     @Commit
     void test050DeleteFolder()
@@ -414,9 +357,6 @@ class TestMailDAO
         this.mailDAO.deleteFolder(4);
     }
 
-    /**
-     *
-     */
     @Test
     @Transactional(readOnly = true)
     @Rollback
@@ -428,9 +368,6 @@ class TestMailDAO
         assertEquals(0, folders.size());
     }
 
-    /**
-     *
-     */
     @Test
     @Commit
     void test060DeleteAccount()
@@ -438,9 +375,6 @@ class TestMailDAO
         this.mailDAO.deleteAccount(2);
     }
 
-    /**
-     *
-     */
     @Test
     @Transactional(readOnly = true)
     @Rollback

@@ -15,24 +15,10 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class AbstractMailApi implements MailApi
 {
-    /**
-     *
-     */
     private final MailAccount account;
-    /**
-     *
-     */
-    private Executor executor;
-    /**
-     *
-     */
     private final Logger logger = LoggerFactory.getLogger(getClass());
+    private Executor executor;
 
-    /**
-     * Erzeugt eine neue Instanz von {@link AbstractMailApi}
-     *
-     * @param account {@link MailAccount}
-     */
     protected AbstractMailApi(final MailAccount account)
     {
         super();
@@ -47,24 +33,6 @@ public abstract class AbstractMailApi implements MailApi
     public MailAccount getAccount()
     {
         return this.account;
-    }
-
-    /**
-     * Optionaler {@link Executor} für die Mail-API.
-     *
-     * @return {@link Executor}
-     */
-    protected Executor getExecutor()
-    {
-        return this.executor;
-    }
-
-    /**
-     * @return {@link Logger}
-     */
-    protected Logger getLogger()
-    {
-        return this.logger;
     }
 
     /**
@@ -86,5 +54,20 @@ public abstract class AbstractMailApi implements MailApi
         builder.append("JavaMailApi [").append(getAccount()).append("]");
 
         return builder.toString();
+    }
+
+    /**
+     * Optionaler {@link Executor} für die Mail-API.
+     *
+     * @return {@link Executor}
+     */
+    protected Executor getExecutor()
+    {
+        return this.executor;
+    }
+
+    protected Logger getLogger()
+    {
+        return this.logger;
     }
 }

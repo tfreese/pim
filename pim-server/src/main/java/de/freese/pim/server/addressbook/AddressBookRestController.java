@@ -4,8 +4,11 @@ package de.freese.pim.server.addressbook;
 import java.nio.file.Path;
 import java.util.List;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
+import de.freese.pim.core.model.addressbook.Kontakt;
+import de.freese.pim.core.service.AbstractRemoteService;
+import de.freese.pim.core.service.AddressBookService;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,10 +16,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import de.freese.pim.core.model.addressbook.Kontakt;
-import de.freese.pim.core.service.AbstractRemoteService;
-import de.freese.pim.core.service.AddressBookService;
 
 /**
  * Service für das AddressBook.
@@ -27,9 +26,6 @@ import de.freese.pim.core.service.AddressBookService;
 @RequestMapping(path = "/addressBook", produces = MediaType.APPLICATION_JSON_VALUE)
 public class AddressBookRestController extends AbstractRemoteService implements AddressBookService
 {
-    /**
-     *
-     */
     private AddressBookService addressBookService;
 
     /**
@@ -63,19 +59,11 @@ public class AddressBookRestController extends AbstractRemoteService implements 
     }
 
     /**
-     * @return {@link AddressBookService}
-     */
-    protected AddressBookService getAddressBookService()
-    {
-        return this.addressBookService;
-    }
-
-    /**
      * @see de.freese.pim.core.service.AddressBookService#getKontaktDetails(long[])
      */
     @Override
     @PostMapping("details")
-    public List<Kontakt> getKontaktDetails(@RequestParam("ids") final long...ids)
+    public List<Kontakt> getKontaktDetails(@RequestParam("ids") final long... ids)
     {
         return getAddressBookService().getKontaktDetails(ids);
     }
@@ -121,9 +109,6 @@ public class AddressBookRestController extends AbstractRemoteService implements 
         return getAddressBookService().searchKontakte(name);
     }
 
-    /**
-     * @param addressBookService {@link AddressBookService}
-     */
     @Resource
     public void setAddressBookService(final AddressBookService addressBookService)
     {
@@ -150,5 +135,10 @@ public class AddressBookRestController extends AbstractRemoteService implements 
                              @RequestParam("forename") final String vorname)
     {
         return getAddressBookService().updateKontakt(id, nachname, vorname);
+    }
+
+    protected AddressBookService getAddressBookService()
+    {
+        return this.addressBookService;
     }
 }

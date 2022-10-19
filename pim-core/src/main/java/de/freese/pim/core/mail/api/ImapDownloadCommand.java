@@ -5,15 +5,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
-import javax.mail.MessagingException;
-import javax.mail.Session;
-import javax.mail.internet.MimeMessage;
+import jakarta.mail.MessagingException;
+import jakarta.mail.Session;
+import jakarta.mail.internet.MimeMessage;
 
 import com.sun.mail.iap.Argument;
 import com.sun.mail.iap.ProtocolException;
 import com.sun.mail.iap.Response;
 import com.sun.mail.imap.IMAPFolder.ProtocolCommand;
-import com.sun.mail.imap.IMAPMessage;
 import com.sun.mail.imap.protocol.BODY;
 import com.sun.mail.imap.protocol.FetchResponse;
 import com.sun.mail.imap.protocol.IMAPProtocol;
@@ -29,31 +28,15 @@ import com.sun.mail.imap.protocol.IMAPResponse;
  */
 public class ImapDownloadCommand implements ProtocolCommand
 {
-    /**
-     *
-     */
     private final Session session;
-    /**
-     *
-     */
+
     private final long uid;
 
-    /**
-     * Erzeugt eine neue Instanz von {@link ImapDownloadCommand}
-     *
-     * @param uid long; UID der {@link IMAPMessage}
-     */
     public ImapDownloadCommand(final long uid)
     {
         this(null, uid);
     }
 
-    /**
-     * Erzeugt eine neue Instanz von {@link ImapDownloadCommand}
-     *
-     * @param session {@link Session}
-     * @param uid long; UID der {@link IMAPMessage}
-     */
     public ImapDownloadCommand(final Session session, final long uid)
     {
         super();

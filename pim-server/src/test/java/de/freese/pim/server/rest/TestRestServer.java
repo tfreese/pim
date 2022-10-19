@@ -8,7 +8,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 import de.freese.pim.server.PimServerApplication;
 import org.junit.jupiter.api.Assertions;
@@ -47,20 +47,12 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 @AutoConfigureMockMvc
 class TestRestServer
 {
-    /**
-     *
-     */
     @LocalServerPort
     private String localServerPort;
-    /**
-     *
-     */
+
     @Resource
     private MockMvc mockMvc;
 
-    /**
-     * @throws Exception Falls was schiefgeht.
-     */
     @Test
     void test010NoParamGreetingShouldReturnDefaultMessage() throws Exception
     {
@@ -74,9 +66,6 @@ class TestRestServer
         // @formatter:on
     }
 
-    /**
-     * @throws Exception Falls was schiefgeht.
-     */
     @Test
     void test020ParamGreetingShouldReturnTailoredMessage() throws Exception
     {
@@ -90,40 +79,24 @@ class TestRestServer
         // @formatter:on
     }
 
-    /**
-     * @throws Exception Falls was schiefgeht.
-     */
     @Test
     void test030AsyncDateDeferredResult() throws Exception
     {
         testAsync("/test/asyncDateDeferredResult");
     }
 
-    /**
-     * @throws Exception Falls was schiefgeht.
-     */
     @Test
     void test040AsyncDateCallable() throws Exception
     {
         testAsync("/test/asyncDateCallable");
     }
 
-    /**
-     * @throws Exception Falls was schiefgeht.
-     */
     @Test
     void test040AsyncDateWebAsyncTask() throws Exception
     {
         testAsync("/test/asyncDateWebAsyncTask");
     }
 
-    /**
-     * Testet die asynchrone Ausführung einer bestimmten URL.
-     *
-     * @param url String
-     *
-     * @throws Exception Falls was schiefgeht.
-     */
     private void testAsync(final String url) throws Exception
     {
         List<MvcResult> results = new ArrayList<>();

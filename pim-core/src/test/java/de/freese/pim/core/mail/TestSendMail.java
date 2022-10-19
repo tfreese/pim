@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Properties;
 
-import javax.mail.Session;
+import jakarta.mail.Session;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -22,18 +22,10 @@ import org.springframework.core.io.ClassPathResource;
 @Disabled
 class TestSendMail extends AbstractMailTest
 {
-    /**
-     *
-     */
     private static JavaMailSender sender;
-    /**
-     *
-     */
+
     private static Session session;
 
-    /**
-     *
-     */
     @BeforeAll
     static void beforeAll()
     {
@@ -52,27 +44,18 @@ class TestSendMail extends AbstractMailTest
         session = sender.getSession();
     }
 
-    /**
-     *
-     */
     @BeforeEach
     void beforeEach()
     {
         sender.setAuthentication(this.from, this.password);
     }
 
-    /**
-     * @throws Exception Falls was schiefgeht.
-     */
     @Test
     void test000Connect() throws Exception
     {
         sender.testConnection();
     }
 
-    /**
-     * @throws Exception Falls was schiefgeht.
-     */
     @Test
     void test100PlainText() throws Exception
     {
@@ -89,9 +72,6 @@ class TestSendMail extends AbstractMailTest
         assertTrue(true);
     }
 
-    /**
-     * @throws Exception Falls was schiefgeht.
-     */
     @Test
     void test100PlainTextWithAttachment() throws Exception
     {
@@ -114,9 +94,6 @@ class TestSendMail extends AbstractMailTest
         assertTrue(true);
     }
 
-    /**
-     * @throws Exception Falls was schiefgeht.
-     */
     @Test
     void test200Html() throws Exception
     {
@@ -139,9 +116,6 @@ class TestSendMail extends AbstractMailTest
         assertTrue(true);
     }
 
-    /**
-     * @throws Exception Falls was schiefgeht.
-     */
     @Test
     void test210HtmlWithAttachment() throws Exception
     {
@@ -165,9 +139,6 @@ class TestSendMail extends AbstractMailTest
         assertTrue(true);
     }
 
-    /**
-     * @throws Exception Falls was schiefgeht.
-     */
     @Test
     void test220HtmlWithInline() throws Exception
     {

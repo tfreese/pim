@@ -18,21 +18,21 @@ import java.util.Properties;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import javax.mail.Authenticator;
-import javax.mail.FetchProfile;
-import javax.mail.Flags;
-import javax.mail.Folder;
-import javax.mail.Message;
-import javax.mail.Multipart;
-import javax.mail.Part;
-import javax.mail.Session;
-import javax.mail.Store;
-import javax.mail.UIDFolder;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeBodyPart;
-import javax.mail.internet.MimeMessage;
-import javax.mail.search.FlagTerm;
-import javax.mail.search.SearchTerm;
+import jakarta.mail.Authenticator;
+import jakarta.mail.FetchProfile;
+import jakarta.mail.Flags;
+import jakarta.mail.Folder;
+import jakarta.mail.Message;
+import jakarta.mail.Multipart;
+import jakarta.mail.Part;
+import jakarta.mail.Session;
+import jakarta.mail.Store;
+import jakarta.mail.UIDFolder;
+import jakarta.mail.internet.InternetAddress;
+import jakarta.mail.internet.MimeBodyPart;
+import jakarta.mail.internet.MimeMessage;
+import jakarta.mail.search.FlagTerm;
+import jakarta.mail.search.SearchTerm;
 
 import com.sun.mail.imap.IMAPFolder;
 import com.sun.mail.util.ASCIIUtility;
@@ -56,18 +56,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 @Disabled
 class TestReceiveMail extends AbstractMailTest
 {
-    /**
-     *
-     */
     private static Session session;
-    /**
-     *
-     */
+
     private static Store store;
 
-    /**
-     * @throws Exception Falls was schiefgeht.
-     */
     @AfterAll
     static void afterAll() throws Exception
     {
@@ -77,9 +69,6 @@ class TestReceiveMail extends AbstractMailTest
         }
     }
 
-    /**
-     *
-     */
     @BeforeAll
     static void beforeAll()
     {
@@ -94,18 +83,12 @@ class TestReceiveMail extends AbstractMailTest
         session = Session.getInstance(properties, authenticator);
     }
 
-    // /**
-    // * @throws Exception Falls was schiefgeht.
-    // */
     // @After
     // public void afterMethod() throws Exception
     // {
     // store.close();
     // }
 
-    /**
-     * @throws Exception Falls was schiefgeht.
-     */
     @Test
     void test000Connect() throws Exception
     {
@@ -113,9 +96,6 @@ class TestReceiveMail extends AbstractMailTest
         store.connect(MAIL_IMAP_HOST, MAIL_IMAP_PORT.getPort(), this.from, this.password);
     }
 
-    /**
-     * @throws Exception Falls was schiefgeht.
-     */
     @Test
     void test010ListFolder() throws Exception
     {
@@ -138,9 +118,6 @@ class TestReceiveMail extends AbstractMailTest
         assertTrue(true);
     }
 
-    /**
-     * @throws Exception Falls was schiefgeht.
-     */
     @Test
     void test020SaveNewMails() throws Exception
     {
@@ -214,9 +191,6 @@ class TestReceiveMail extends AbstractMailTest
         }
     }
 
-    /**
-     * @throws Exception Falls was schiefgeht.
-     */
     @Test
     void test021ReadSavedMails() throws Exception
     {
@@ -242,9 +216,6 @@ class TestReceiveMail extends AbstractMailTest
         }
     }
 
-    /**
-     * @throws Exception Falls was schiefgeht.
-     */
     @Test
     void test022ReadAttachmentsFromSavedMails() throws Exception
     {
@@ -278,9 +249,6 @@ class TestReceiveMail extends AbstractMailTest
         }
     }
 
-    /**
-     * @throws Exception Falls was schiefgeht.
-     */
     @Test
     void test023ReadTextFromSavedMails() throws Exception
     {

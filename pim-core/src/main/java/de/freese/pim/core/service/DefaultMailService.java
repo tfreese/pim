@@ -12,8 +12,8 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import javax.annotation.PreDestroy;
-import javax.annotation.Resource;
+import jakarta.annotation.PreDestroy;
+import jakarta.annotation.Resource;
 
 import de.freese.pim.core.dao.MailDAO;
 import de.freese.pim.core.mail.MailContent;
@@ -41,13 +41,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Profile("!ClientREST")
 public class DefaultMailService extends AbstractService implements MailService, BeanFactoryAware
 {
-    /**
-     *
-     */
     private BeanFactory beanFactory;
-    /**
-     *
-     */
+
     private MailDAO mailDAO;
 
     /**
@@ -118,9 +113,6 @@ public class DefaultMailService extends AbstractService implements MailService, 
         return affectedRows;
     }
 
-    /**
-     * Schliessen der MailApi-Verbindung aller MailAccounts.
-     */
     @PreDestroy
     public void disconnectAccounts()
     {
@@ -310,9 +302,6 @@ public class DefaultMailService extends AbstractService implements MailService, 
         this.beanFactory = beanFactory;
     }
 
-    /**
-     * @param mailDAO {@link MailDAO}
-     */
     @Resource
     public void setMailDAO(final MailDAO mailDAO)
     {
@@ -380,11 +369,6 @@ public class DefaultMailService extends AbstractService implements MailService, 
         return affectedRows;
     }
 
-    /**
-     * Schliessen der MailApi-Verbindung des MailAccounts
-     *
-     * @param accountID long
-     */
     protected void disconnectMailAPI(final long accountID)
     {
         String beanName = getAccountBeanName(accountID);
@@ -406,19 +390,11 @@ public class DefaultMailService extends AbstractService implements MailService, 
         bf.destroySingleton(beanName);
     }
 
-    /**
-     * @return {@link BeanFactory}
-     */
     protected BeanFactory getBeanFactory()
     {
         return this.beanFactory;
     }
 
-    /**
-     * @param accountID long
-     *
-     * @return {@link MailApi}
-     */
     protected MailApi getMailAPI(final long accountID)
     {
         String beanName = getAccountBeanName(accountID);
@@ -426,19 +402,11 @@ public class DefaultMailService extends AbstractService implements MailService, 
         return getApplicationContext().getBean(beanName, MailApi.class);
     }
 
-    /**
-     * @return {@link MailDAO}
-     */
     protected MailDAO getMailDAO()
     {
         return this.mailDAO;
     }
 
-    /**
-     * @param accountID long
-     *
-     * @return String
-     */
     private String getAccountBeanName(final long accountID)
     {
         return "mailAPI-" + accountID;

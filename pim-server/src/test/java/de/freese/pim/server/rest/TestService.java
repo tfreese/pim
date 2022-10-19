@@ -6,10 +6,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,9 +47,6 @@ import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBo
 // @MultipartConfig(fileSizeThreshold = 20971520)
 public class TestService
 {
-    /**
-     *
-     */
     private final Logger logger = LoggerFactory.getLogger(TestService.class);
     /**
      * @see ThreadPoolTaskExecutor
@@ -61,8 +57,6 @@ public class TestService
 
     /**
      * Läuft im ThreadPool "MvcAsync" des RequestMappingHandlerAdapter, wenn über {@link WebMvcConfigurationSupport} nicht anders konfiguriert.
-     *
-     * @return {@link Future}
      */
     @GetMapping("/asyncDateCallable")
     public Callable<String> asyncDateCallable()
@@ -78,8 +72,6 @@ public class TestService
 
     /**
      * Läuft im ForkJoin-ThreadPool, wenn kein Executor übergeben.
-     *
-     * @return {@link DeferredResult}
      */
     @GetMapping("/asyncDateDeferredResult")
     public DeferredResult<String> asyncDateDeferredResult()
@@ -118,8 +110,6 @@ public class TestService
 
     /**
      * Läuft im ThreadPool "MvcAsync" des RequestMappingHandlerAdapter, wenn über {@link WebMvcConfigurationSupport} nicht anders konfiguriert.
-     *
-     * @return {@link WebAsyncTask}
      */
     @GetMapping("/asyncDateWebAsyncTask")
     public WebAsyncTask<String> asyncDateWebAsyncTask()
@@ -138,10 +128,6 @@ public class TestService
 
     /**
      * http://localhost:61222/greeter/test/?name=World
-     *
-     * @param name String
-     *
-     * @return {@link Map}
      */
     @GetMapping("/greeting")
     // @RequestMapping(path = "/greeting/{name}", method = RequestMethod.GET);
@@ -154,17 +140,11 @@ public class TestService
         return map;
     }
 
-    /**
-     * @return {@link Logger}
-     */
     protected Logger getLogger()
     {
         return this.logger;
     }
 
-    /**
-     * @return {@link AsyncTaskExecutor}
-     */
     protected AsyncTaskExecutor getTaskExecutor()
     {
         return this.taskExecutor;

@@ -8,14 +8,14 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Properties;
 
-import javax.mail.AuthenticationFailedException;
-import javax.mail.Authenticator;
-import javax.mail.MessagingException;
-import javax.mail.NoSuchProviderException;
-import javax.mail.PasswordAuthentication;
-import javax.mail.Session;
-import javax.mail.Transport;
-import javax.mail.internet.MimeMessage;
+import jakarta.mail.AuthenticationFailedException;
+import jakarta.mail.Authenticator;
+import jakarta.mail.MessagingException;
+import jakarta.mail.NoSuchProviderException;
+import jakarta.mail.PasswordAuthentication;
+import jakarta.mail.Session;
+import jakarta.mail.Transport;
+import jakarta.mail.internet.MimeMessage;
 
 /**
  * Siehe org.springframework.mail.javamail.JavaMailSenderImpl
@@ -24,13 +24,8 @@ import javax.mail.internet.MimeMessage;
  */
 public class JavaMailSender
 {
-    /**
-     *
-     */
     public static final String DEFAULT_PROTOCOL = "smtp";
-    /**
-     *
-     */
+
     private static final String HEADER_MESSAGE_ID = "Message-ID";
 
     /**
@@ -38,17 +33,8 @@ public class JavaMailSender
      */
     private static class MailAuthenticator extends Authenticator
     {
-        /**
-         *
-         */
         private final PasswordAuthentication authentication;
 
-        /**
-         * Erstellt ein neues {@link MailAuthenticator} Object.
-         *
-         * @param userName String
-         * @param password String
-         */
         public MailAuthenticator(final String userName, final String password)
         {
             super();
@@ -60,7 +46,7 @@ public class JavaMailSender
         }
 
         /**
-         * @see javax.mail.Authenticator#getPasswordAuthentication()
+         * @see jakarta.mail.Authenticator#getPasswordAuthentication()
          */
         @Override
         public PasswordAuthentication getPasswordAuthentication()
@@ -69,66 +55,38 @@ public class JavaMailSender
         }
     }
 
-    /**
-     *
-     */
     private MailAuthenticator authenticator;
-    /**
-     *
-     */
+
     private String host;
-    /**
-     *
-     */
+
     private Properties javaMailProperties = new Properties();
-    /**
-     *
-     */
+
     private int port = -1;
-    /**
-     *
-     */
+
     private String protocol = DEFAULT_PROTOCOL;
-    /**
-     *
-     */
+
     private Session session;
 
-    /**
-     * @return String
-     */
     public String getHost()
     {
         return this.host;
     }
 
-    /**
-     * @return {@link Properties}
-     */
     public Properties getJavaMailProperties()
     {
         return this.javaMailProperties;
     }
 
-    /**
-     * @return int
-     */
     public int getPort()
     {
         return this.port;
     }
 
-    /**
-     * @return String
-     */
     public String getProtocol()
     {
         return this.protocol;
     }
 
-    /**
-     * @return {@link Session}
-     */
     public synchronized Session getSession()
     {
         if (this.session == null)
@@ -139,60 +97,36 @@ public class JavaMailSender
         return this.session;
     }
 
-    /**
-     * @param mimeMessages {@link MimeMessage}[]
-     *
-     * @throws Exception Falls was schiefgeht.
-     */
     public void send(final MimeMessage... mimeMessages) throws Exception
     {
         doSend(mimeMessages, null);
     }
 
-    /**
-     * @param userName String
-     * @param password String
-     */
     public void setAuthentication(final String userName, final String password)
     {
         this.authenticator = new MailAuthenticator(userName, password);
     }
 
-    /**
-     * @param host String
-     */
     public void setHost(final String host)
     {
         this.host = Objects.requireNonNull(host, "host required");
     }
 
-    /**
-     * @param javaMailProperties {@link Properties}
-     */
     public void setJavaMailProperties(final Properties javaMailProperties)
     {
         this.javaMailProperties = Objects.requireNonNull(javaMailProperties, "javaMailProperties required");
     }
 
-    /**
-     * @param port int
-     */
     public void setPort(final int port)
     {
         this.port = port;
     }
 
-    /**
-     * @param protocol String
-     */
     public void setProtocol(final String protocol)
     {
         this.protocol = Objects.requireNonNull(protocol, "protocol required");
     }
 
-    /**
-     * @param session {@link Session}
-     */
     public synchronized void setSession(final Session session)
     {
         this.session = Objects.requireNonNull(session, "Session must not be null");
@@ -200,8 +134,6 @@ public class JavaMailSender
 
     /**
      * Validate that this instance can connect to the server that it is configured for. Throws a {@link MessagingException} if the connection attempt failed.
-     *
-     * @throws MessagingException Falls was schiefgeht.
      */
     public void testConnection() throws MessagingException
     {
@@ -214,7 +146,7 @@ public class JavaMailSender
     /**
      * Obtain and connect Transport from the underlying JavaMail Session, passing in the specified host, port, username, and password.
      *
-     * @return the connected Transport object
+     * @return Transport
      *
      * @throws MessagingException if connect attempt failed
      * @see #getTransport
@@ -348,17 +280,11 @@ public class JavaMailSender
         }
     }
 
-    /**
-     * @return {@link MailAuthenticator}
-     */
     protected MailAuthenticator getAuthenticator()
     {
         return this.authenticator;
     }
 
-    /**
-     * @return String
-     */
     protected String getPassword()
     {
         return getAuthenticator().getPasswordAuthentication().getPassword();
@@ -372,7 +298,7 @@ public class JavaMailSender
      * @return {@link Transport}
      *
      * @throws NoSuchProviderException Falls was schiefgeht.
-     * @see javax.mail.Session#getTransport(String)
+     * @see jakarta.mail.Session#getTransport(String)
      * @see #getSession()
      * @see #getProtocol()
      */
@@ -393,9 +319,6 @@ public class JavaMailSender
         return session.getTransport(proto);
     }
 
-    /**
-     * @return String
-     */
     protected String getUsername()
     {
         return getAuthenticator().getPasswordAuthentication().getUserName();

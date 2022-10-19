@@ -16,8 +16,8 @@ import java.util.concurrent.Callable;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
-import javax.annotation.PreDestroy;
-import javax.annotation.Resource;
+import jakarta.annotation.PreDestroy;
+import jakarta.annotation.Resource;
 
 import de.freese.pim.core.PIMException;
 import de.freese.pim.core.mail.DefaultMailContent;
@@ -36,16 +36,8 @@ import de.freese.pim.gui.service.AbstractFXService;
  */
 public abstract class AbstractFXMailService extends AbstractFXService implements FXMailService
 {
-    /**
-     *
-     */
     private Path basePath;
 
-    /**
-     * Schliessen der MailApi-Verbindung aller MailAccounts.
-     *
-     * @throws Exception Falls was schiefgeht.
-     */
     @PreDestroy
     public void disconnectAccounts() throws Exception
     {
@@ -106,22 +98,12 @@ public abstract class AbstractFXMailService extends AbstractFXService implements
         }
     }
 
-    /**
-     * Pfad zum lokalen Speicherort.
-     *
-     * @param basePath {@link Path}
-     */
     @Resource(name = "pimHomePath")
     public void setBasePath(final Path basePath)
     {
         this.basePath = basePath;
     }
 
-    /**
-     * Folder-Hierarchie aufbauen basierend auf Namen.
-     *
-     * @param mailFolders {@link List}
-     */
     protected void buildHierarchie(final List<FXMailFolder> mailFolders)
     {
         // Hierarchie aufbauen basierend auf Namen.
@@ -138,39 +120,13 @@ public abstract class AbstractFXMailService extends AbstractFXService implements
         }
     }
 
-    /**
-     * Pfad zum lokalen Speicherort.
-     *
-     * @return {@link Path}
-     */
     protected Path getBasePath()
     {
         return this.basePath;
     }
 
-    /**
-     * Liefert den Inhalt der Mail im JSON-Format.<br>
-     * Der Monitor dient zur Anzeige des Lade-Fortschritts.
-     *
-     * @param mailPath {@link Path}
-     * @param account {@link FXMailAccount}
-     * @param mail {@link FXMail}
-     * @param monitor {@link IOMonitor}, optional
-     *
-     * @return {@link MailContent}
-     *
-     * @throws Exception Falls was schiefgeht.
-     */
     protected abstract MailContent loadMailContent(Path mailPath, final FXMailAccount account, final FXMail mail, IOMonitor monitor) throws Exception;
 
-    /**
-     * Speichert in einem separaten Thread den Mail-Inhalt im lokalen Cache.
-     *
-     * @param mailPath {@link Path}
-     * @param mailContent {@link MailContent}
-     *
-     * @throws Exception Falls was schiefgeht.
-     */
     protected void saveMailContent(final Path mailPath, final MailContent mailContent) throws Exception
     {
         Callable<Void> task = () ->
@@ -198,14 +154,6 @@ public abstract class AbstractFXMailService extends AbstractFXService implements
         getTaskExecutor().submit(task);
     }
 
-    /**
-     * Speichert in einem separaten Thread den Mail-Inhalt im lokalen Cache.
-     *
-     * @param mailPath {@link Path}
-     * @param jsonContent String
-     *
-     * @throws Exception Falls was schiefgeht.
-     */
     protected void saveMailContent(final Path mailPath, final String jsonContent) throws Exception
     {
         Callable<Void> task = () ->

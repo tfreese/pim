@@ -3,8 +3,9 @@ package de.freese.pim.server.spring.config;
 
 import java.util.List;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -14,8 +15,6 @@ import org.springframework.http.converter.json.MappingJackson2HttpMessageConvert
 import org.springframework.web.servlet.config.annotation.AsyncSupportConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 /**
  * Server Spring-Konfiguration von PIM.
  *
@@ -24,33 +23,16 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @Configuration
 @Profile("Server")
 @ComponentScan(basePackages =
-{
-        "de.freese.pim.server", "de.freese.pim.core"
-})
+        {
+                "de.freese.pim.server", "de.freese.pim.core"
+        })
 public class ServerConfig extends WebMvcConfigurationSupport // implements WebMvcConfigurer
 {
-    /**
-     *
-     */
     @Resource
     private ObjectMapper jsonMapper;
-    /**
-     *
-     */
+
     @Resource
     private AsyncTaskExecutor taskExecutor;
-
-    /**
-     * @see org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport#configureAsyncSupport(org.springframework.web.servlet.config.annotation.AsyncSupportConfigurer)
-     */
-    @Override
-    protected void configureAsyncSupport(final AsyncSupportConfigurer configurer)
-    {
-        // Executer für die Verarbeitung der HTTP-Requests.
-        // Verlagert die asynchrone Ausführung von Server-Requests (Callable, WebAsyncTask) in diesen ThreadPool.
-        // Ansonsten würde für jeden Request immer ein neuer Thread erzeugt, siehe TaskExecutor des RequestMappingHandlerAdapter.
-        configurer.setTaskExecutor(this.taskExecutor);
-    }
 
     /**
      * @see org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport#extendMessageConverters(java.util.List)
@@ -85,11 +67,18 @@ public class ServerConfig extends WebMvcConfigurationSupport // implements WebMv
         }
     }
 
-    // /**
-    // * @param dataSource {@link DataSource}
-    // * @param executorService {@link ExecutorService}
-    // * @return {@link MailService}
-    // */
+    /**
+     * @see org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport#configureAsyncSupport(org.springframework.web.servlet.config.annotation.AsyncSupportConfigurer)
+     */
+    @Override
+    protected void configureAsyncSupport(final AsyncSupportConfigurer configurer)
+    {
+        // Executer für die Verarbeitung der HTTP-Requests.
+        // Verlagert die asynchrone Ausführung von Server-Requests (Callable, WebAsyncTask) in diesen ThreadPool.
+        // Ansonsten würde für jeden Request immer ein neuer Thread erzeugt, siehe TaskExecutor des RequestMappingHandlerAdapter.
+        configurer.setTaskExecutor(this.taskExecutor);
+    }
+
     // @Bean(destroyMethod = "disconnectAccounts")
     // public MailService mailService(final DataSource dataSource, final ExecutorService executorService)
     // {
@@ -103,11 +92,6 @@ public class ServerConfig extends WebMvcConfigurationSupport // implements WebMv
     // // }, new TransactionalInvocationHandler(PIMApplication.getDataSource(), defaultMailService));
     // }
 
-    // /**
-    // * FlywayAutoConfiguration.class
-    // * @param dataSource {@link DataSource}
-    // * @return {@link Flyway}
-    // */
     // @Bean(initMethod = "migrate")
     // // @DependsOn("dataSource")
     // public Flyway flyway(final DataSource dataSource)
@@ -122,9 +106,6 @@ public class ServerConfig extends WebMvcConfigurationSupport // implements WebMv
     // return flyway;
     // }
 
-    // /**
-    // * @return {@link EmbeddedServletContainerCustomizer}
-    // */
     // @Bean
     // public EmbeddedServletContainerCustomizer tomcatCustomizer()
     // {
@@ -136,9 +117,6 @@ public class ServerConfig extends WebMvcConfigurationSupport // implements WebMv
     // };
     // }
 
-    // /**
-    // * @return {@link EmbeddedServletContainerCustomizer}
-    // */
     // @Bean
     // public EmbeddedServletContainerCustomizer jettyCustomizer()
     // {

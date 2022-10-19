@@ -4,7 +4,7 @@ package de.freese.pim.gui.addressbook.service;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 import com.fasterxml.jackson.databind.JavaType;
 import de.freese.pim.core.PIMException;
@@ -23,9 +23,6 @@ import org.springframework.stereotype.Service;
 @Profile("ClientStandalone")
 public class DefaultStandaloneFXAddressbookService extends AbstractFXAddressbookService
 {
-    /**
-     *
-     */
     private AddressBookService addressBookService;
 
     /**
@@ -42,14 +39,6 @@ public class DefaultStandaloneFXAddressbookService extends AbstractFXAddressbook
         {
             throw new PIMException(ex);
         }
-    }
-
-    /**
-     * @return {@link AddressBookService}
-     */
-    protected AddressBookService getAddressBookService()
-    {
-        return this.addressBookService;
     }
 
     /**
@@ -88,31 +77,10 @@ public class DefaultStandaloneFXAddressbookService extends AbstractFXAddressbook
         }
     }
 
-    /**
-     * @param addressBookService {@link AddressBookService}
-     */
     @Resource
     public void setAddressBookService(final AddressBookService addressBookService)
     {
         this.addressBookService = addressBookService;
-    }
-
-    /**
-     * Konvertiert die POJOs in die FX-Beans.
-     *
-     * @param contacts {@link List}
-     *
-     * @return {@link List}
-     *
-     * @throws Exception Falls was schiefgeht.
-     */
-    private List<FXKontakt> toFXContacts(final List<Kontakt> contacts) throws Exception
-    {
-        JavaType type = getJsonMapper().getTypeFactory().constructCollectionType(ArrayList.class, FXKontakt.class);
-
-        byte[] jsonBytes = getJsonMapper().writer().writeValueAsBytes(contacts);
-
-        return getJsonMapper().readValue(jsonBytes, type);
     }
 
     /**
@@ -129,5 +97,19 @@ public class DefaultStandaloneFXAddressbookService extends AbstractFXAddressbook
         {
             throw new PIMException(ex);
         }
+    }
+
+    protected AddressBookService getAddressBookService()
+    {
+        return this.addressBookService;
+    }
+
+    private List<FXKontakt> toFXContacts(final List<Kontakt> contacts) throws Exception
+    {
+        JavaType type = getJsonMapper().getTypeFactory().constructCollectionType(ArrayList.class, FXKontakt.class);
+
+        byte[] jsonBytes = getJsonMapper().writer().writeValueAsBytes(contacts);
+
+        return getJsonMapper().readValue(jsonBytes, type);
     }
 }

@@ -1,7 +1,7 @@
 // Created: 07.02.2017
 package de.freese.pim.core.service;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,41 +17,13 @@ import org.springframework.core.task.AsyncTaskExecutor;
  */
 public abstract class AbstractService implements ApplicationContextAware
 {
-    /**
-     *
-     */
-    private ApplicationContext applicationContext;
-    /**
-    *
-    */
     private final Logger logger = LoggerFactory.getLogger(getClass());
-    /**
-    *
-    */
+    private ApplicationContext applicationContext;
     private AsyncTaskExecutor taskExecutor;
 
-    /**
-     * @return {@link ApplicationContext}
-     */
     public ApplicationContext getApplicationContext()
     {
         return this.applicationContext;
-    }
-
-    /**
-     * @return {@link Logger}
-     */
-    protected Logger getLogger()
-    {
-        return this.logger;
-    }
-
-    /**
-     * @return {@link AsyncTaskExecutor}
-     */
-    protected AsyncTaskExecutor getTaskExecutor()
-    {
-        return this.taskExecutor;
     }
 
     /**
@@ -63,12 +35,19 @@ public abstract class AbstractService implements ApplicationContextAware
         this.applicationContext = applicationContext;
     }
 
-    /**
-     * @param taskExecutor {@link AsyncTaskExecutor}
-     */
     @Resource(name = "taskExecutor")
     public void setTaskExecutor(final AsyncTaskExecutor taskExecutor)
     {
         this.taskExecutor = taskExecutor;
+    }
+
+    protected Logger getLogger()
+    {
+        return this.logger;
+    }
+
+    protected AsyncTaskExecutor getTaskExecutor()
+    {
+        return this.taskExecutor;
     }
 }

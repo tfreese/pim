@@ -11,7 +11,7 @@ import java.nio.file.StandardCopyOption;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
-import javax.activation.DataSource;
+import jakarta.activation.DataSource;
 
 import de.freese.pim.core.mail.InternetAddress;
 import de.freese.pim.core.mail.MailContent;
@@ -39,51 +39,27 @@ import org.slf4j.LoggerFactory;
  */
 public class MailContentView extends GridPane
 {
-    /**
-     *
-     */
     public static final Logger LOGGER = LoggerFactory.getLogger(MailContentView.class);
 
-    /**
-     * @return {@link Logger}
-     */
     public static Logger getLogger()
     {
         return LOGGER;
     }
 
-    /**
-     *
-     */
     private final Label an;
-    /**
-     *
-     */
+
     private final HBox attachments;
-    /**
-     *
-     */
+
     private final Label bcc;
-    /**
-     *
-     */
+
     private final ResourceBundle bundle;
-    /**
-     *
-     */
+
     private final Label cc;
-    /**
-     *
-     */
+
     private final Label von;
-    /**
-     *
-     */
+
     private final WebView webView;
 
-    /**
-     * Erzeugt eine neue Instanz von {@link MailContentView}
-     */
     public MailContentView()
     {
         super();
@@ -160,18 +136,11 @@ public class MailContentView extends GridPane
         });
     }
 
-    /**
-     * @param throwable {@link Throwable}
-     */
     public void displayThrowable(final Throwable throwable)
     {
         this.webView.getEngine().loadContent(ErrorDialog.toString(throwable), "text/plain");
     }
 
-    /**
-     * @param mail {@link FXMail}
-     * @param mailContent {@link MailContent}
-     */
     public void newMailContent(final FXMail mail, final MailContent mailContent)
     {
         // Delete cache for navigate back.
@@ -225,9 +194,6 @@ public class MailContentView extends GridPane
         this.webView.getEngine().loadContent(mailContent.getMessageContent(), mailContent.getMessageContentType());
     }
 
-    /**
-     * @param dataSource {@link DataSource}
-     */
     private void saveDataSource(final DataSource dataSource)
     {
         if (dataSource == null)

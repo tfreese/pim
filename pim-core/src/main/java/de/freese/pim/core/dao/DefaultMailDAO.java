@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-import javax.mail.internet.AddressException;
+import jakarta.mail.internet.AddressException;
 
 import de.freese.pim.core.mail.InternetAddress;
 import de.freese.pim.core.mail.MailPort;
@@ -154,14 +154,6 @@ public class DefaultMailDAO extends AbstractDAO implements MailDAO
             }
         }
 
-        /**
-         * @param clob {@link Clob}
-         *
-         * @return String
-         *
-         * @throws SQLException Falls was schiefgeht.
-         * @throws IOException Falls was schiefgeht.
-         */
         private String clobToString(final Clob clob) throws IOException, SQLException
         {
             String clobString = null;
@@ -201,13 +193,6 @@ public class DefaultMailDAO extends AbstractDAO implements MailDAO
             return clobString;
         }
 
-        /**
-         * @param value String
-         *
-         * @return {@link InternetAddress}
-         *
-         * @throws AddressException Falls was schiefgeht.
-         */
         private InternetAddress[] parseInternetAddress(final String value) throws AddressException
         {
             if ((value == null) || value.isBlank())
@@ -215,7 +200,7 @@ public class DefaultMailDAO extends AbstractDAO implements MailDAO
                 return null;
             }
 
-            return MailUtils.map(javax.mail.internet.InternetAddress.parse(value));
+            return MailUtils.map(jakarta.mail.internet.InternetAddress.parse(value));
         }
     }
 
@@ -294,12 +279,6 @@ public class DefaultMailDAO extends AbstractDAO implements MailDAO
         return getJdbcTemplate().query(sql.toString(), new MailAccountRowMapper(), userID);
     }
 
-    // /**
-    // * Liefert alle MailAccounts aus der lokalen JSON-Datei.
-    // *
-    // * @return {@link List}
-    // * @throws Exception Falls was schief geht.
-    // */
     // protected List<MailAccount> getMailAccountsJSON()
     // {
     // ObjectMapper jsonMapper = new ObjectMapper();
@@ -493,7 +472,7 @@ public class DefaultMailDAO extends AbstractDAO implements MailDAO
             {
                 try
                 {
-                    from = new javax.mail.internet.InternetAddress(mail.getFrom().getAddress(), mail.getFrom().getPersonal()).toUnicodeString();
+                    from = new jakarta.mail.internet.InternetAddress(mail.getFrom().getAddress(), mail.getFrom().getPersonal()).toUnicodeString();
                 }
                 catch (UnsupportedEncodingException ex)
                 {

@@ -3,7 +3,7 @@ package de.freese.pim.core.mail;
 
 import java.util.Map;
 
-import javax.activation.DataSource;
+import jakarta.activation.DataSource;
 
 import de.freese.pim.core.mail.datasource.AttachmentDataSource;
 import de.freese.pim.core.mail.datasource.InlineDataSource;
@@ -25,11 +25,6 @@ public interface MailContent
      */
     Map<String, AttachmentDataSource> getAttachments();
 
-    /**
-     * Liefert das Encoding.
-     *
-     * @return String
-     */
     String getEncoding();
 
     /**
@@ -41,24 +36,9 @@ public interface MailContent
      */
     Map<String, InlineDataSource> getInlines();
 
-    /**
-     * Liefert die {@link DataSource} des Textes der Mail.
-     *
-     * @return {@link MessageDataSource}
-     */
     MessageDataSource getMessage();
 
-    /**
-     * Liefert den Text der Mail.
-     *
-     * @return String
-     */
     String getMessageContent();
 
-    /**
-     * Liefert den ContentType für den Text der Mail.
-     *
-     * @return String
-     */
     String getMessageContentType();
 }

@@ -4,14 +4,13 @@ package de.freese.pim.core.service;
 import java.nio.file.Path;
 import java.util.List;
 
-import javax.annotation.Resource;
-
-import org.springframework.context.annotation.Profile;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import jakarta.annotation.Resource;
 
 import de.freese.pim.core.dao.AddressBookDAO;
 import de.freese.pim.core.model.addressbook.Kontakt;
+import org.springframework.context.annotation.Profile;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Service für das AddressBook.
@@ -22,9 +21,6 @@ import de.freese.pim.core.model.addressbook.Kontakt;
 @Profile("!ClientREST")
 public class DefaultAddressBookService extends AbstractService implements AddressBookService
 {
-    /**
-     *
-     */
     private AddressBookDAO addressBookDAO;
 
     /**
@@ -57,19 +53,11 @@ public class DefaultAddressBookService extends AbstractService implements Addres
     }
 
     /**
-     * @return {@link AddressBookDAO}
-     */
-    protected AddressBookDAO getAddressBookDAO()
-    {
-        return this.addressBookDAO;
-    }
-
-    /**
      * @see de.freese.pim.core.service.AddressBookService#getKontaktDetails(long[])
      */
     @Override
     @Transactional(readOnly = true)
-    public List<Kontakt> getKontaktDetails(final long...ids)
+    public List<Kontakt> getKontaktDetails(final long... ids)
     {
         return this.addressBookDAO.getKontaktDetails(ids);
     }
@@ -114,9 +102,6 @@ public class DefaultAddressBookService extends AbstractService implements Addres
         return this.addressBookDAO.searchKontakte(name);
     }
 
-    /**
-     * @param addressBookDAO {@link AddressBookDAO}
-     */
     @Resource
     public void setAddressBookDAO(final AddressBookDAO addressBookDAO)
     {
@@ -141,5 +126,10 @@ public class DefaultAddressBookService extends AbstractService implements Addres
     public int updateKontakt(final long id, final String nachname, final String vorname)
     {
         return this.addressBookDAO.updateKontakt(id, nachname, vorname);
+    }
+
+    protected AddressBookDAO getAddressBookDAO()
+    {
+        return this.addressBookDAO;
     }
 }

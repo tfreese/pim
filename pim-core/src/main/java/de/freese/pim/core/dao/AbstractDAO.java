@@ -5,8 +5,9 @@ import java.util.Objects;
 import java.util.function.Function;
 import java.util.function.UnaryOperator;
 
-import javax.annotation.Resource;
 import javax.sql.DataSource;
+
+import jakarta.annotation.Resource;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,21 +21,12 @@ import org.springframework.jdbc.core.JdbcTemplate;
  */
 public abstract class AbstractDAO implements InitializingBean
 {
-    /**
-     *
-     */
     private final Logger logger = LoggerFactory.getLogger(getClass());
-    /**
-     *
-     */
+
     private JdbcTemplate jdbcTemplate;
-    // /**
-    // *
-    // */
+
     // private SequenceQueryExecutor sequenceQueryExecutor;
-    /**
-     *
-     */
+
     private Function<String, String> sequenceQuery;
 
     /**
@@ -55,11 +47,6 @@ public abstract class AbstractDAO implements InitializingBean
         // Objects.requireNonNull(this.sequenceQueryExecutor, "sequenceQueryExecutor required");
     }
 
-    /**
-     * Ersetzt ggf. ein vorhandenes {@link JdbcTemplate}.
-     *
-     * @param dataSource {@link DataSource}
-     */
     @Resource
     public void setDataSource(final DataSource dataSource)
     {
@@ -68,40 +55,22 @@ public abstract class AbstractDAO implements InitializingBean
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
-    /**
-     * SQL für Sequenz-Abfragen.
-     *
-     * @param sequenceQuery {@link UnaryOperator}
-     */
     @Resource
     public void setSequenceQuery(final UnaryOperator<String> sequenceQuery)
     {
         this.sequenceQuery = Objects.requireNonNull(sequenceQuery, "sequenceQuery required");
     }
 
-    /**
-     * @return {@link JdbcTemplate}
-     */
     protected JdbcTemplate getJdbcTemplate()
     {
         return this.jdbcTemplate;
     }
 
-    /**
-     * @return {@link Logger}
-     */
     protected Logger getLogger()
     {
         return this.logger;
     }
 
-    /**
-     * Liefert die nächste ID/PK der Sequence/Tabelle.
-     *
-     * @param sequence String
-     *
-     * @return long
-     */
     protected long getNextID(final String sequence)
     {
         String sql = this.sequenceQuery.apply(sequence);

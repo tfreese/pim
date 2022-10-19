@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import javax.activation.DataSource;
+import jakarta.activation.DataSource;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.freese.pim.core.utils.io.IOMonitor;
@@ -21,39 +21,17 @@ import org.springframework.util.StreamUtils;
  */
 public abstract class AbstractDataSource implements DataSource
 {
-    /**
-     *
-     */
     private final String contentType;
-    /**
-     *
-     */
+
     private final byte[] data;
-    /**
-     *
-     */
+
     private final String name;
 
-    /**
-     * Erzeugt eine neue Instanz von {@link AbstractDataSource}
-     *
-     * @param source {@link DataSource}
-     *
-     * @throws IOException Falls was schiefgeht.
-     */
     protected AbstractDataSource(final DataSource source) throws IOException
     {
         this(source, null);
     }
 
-    /**
-     * Erzeugt eine neue Instanz von {@link AbstractDataSource}
-     *
-     * @param source {@link DataSource}
-     * @param monitor {@link IOMonitor}; Optional
-     *
-     * @throws IOException Falls was schiefgeht.
-     */
     protected AbstractDataSource(final DataSource source, final IOMonitor monitor) throws IOException
     {
         super();
@@ -81,13 +59,6 @@ public abstract class AbstractDataSource implements DataSource
         }
     }
 
-    /**
-     * Erzeugt eine neue Instanz von {@link AbstractDataSource}
-     *
-     * @param name String
-     * @param contentType String
-     * @param data byte[]
-     */
     protected AbstractDataSource(final String name, final String contentType, final byte[] data)
     {
         super();
@@ -98,7 +69,7 @@ public abstract class AbstractDataSource implements DataSource
     }
 
     /**
-     * @see javax.activation.DataSource#getContentType()
+     * @see jakarta.activation.DataSource#getContentType()
      */
     @Override
     public String getContentType()
@@ -115,7 +86,7 @@ public abstract class AbstractDataSource implements DataSource
     }
 
     /**
-     * @see javax.activation.DataSource#getInputStream()
+     * @see jakarta.activation.DataSource#getInputStream()
      */
     @Override
     @JsonIgnore
@@ -130,7 +101,7 @@ public abstract class AbstractDataSource implements DataSource
     }
 
     /**
-     * @see javax.activation.DataSource#getName()
+     * @see jakarta.activation.DataSource#getName()
      */
     @Override
     public String getName()
@@ -139,7 +110,7 @@ public abstract class AbstractDataSource implements DataSource
     }
 
     /**
-     * @see javax.activation.DataSource#getOutputStream()
+     * @see jakarta.activation.DataSource#getOutputStream()
      */
     @Override
     @JsonIgnore

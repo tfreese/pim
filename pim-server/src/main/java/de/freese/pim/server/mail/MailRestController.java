@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CompletableFuture;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 import de.freese.pim.core.mail.MailContent;
 import de.freese.pim.core.model.mail.Mail;
@@ -35,9 +35,6 @@ import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandl
 @RequestMapping(path = "/mail", produces = MediaType.APPLICATION_JSON_VALUE)
 public class MailRestController extends AbstractRemoteService implements MailService
 {
-    /**
-     *
-     */
     private MailService mailService;
 
     /**
@@ -78,14 +75,6 @@ public class MailRestController extends AbstractRemoteService implements MailSer
     public List<MailAccount> getMailAccounts()
     {
         return getMailService().getMailAccounts();
-    }
-
-    /**
-     * @return {@link MailService}
-     */
-    protected MailService getMailService()
-    {
-        return this.mailService;
     }
 
     /**
@@ -204,9 +193,6 @@ public class MailRestController extends AbstractRemoteService implements MailSer
         return deferredResult;
     }
 
-    /**
-     * @param mailService {@link MailService}
-     */
     @Resource
     public void setMailService(final MailService mailService)
     {
@@ -241,5 +227,10 @@ public class MailRestController extends AbstractRemoteService implements MailSer
     public int[] updateFolder(@PathVariable("accountID") final long accountID, @RequestBody final List<MailFolder> folders)
     {
         return getMailService().updateFolder(accountID, folders);
+    }
+
+    protected MailService getMailService()
+    {
+        return this.mailService;
     }
 }
