@@ -16,6 +16,33 @@
 
     <name>${project.groupId} - ${project.artifactId}</name>
     <description>Parent for the Personal Information Management.</description>
+    <url>https://github.com/tfreese/pim</url>
+    <inceptionYear>2018</inceptionYear>
+    
+    <organization>
+        <name>Thomas Freese</name>
+        <url>https://github.com/tfreese/pim</url>
+    </organization>
+
+    <scm>
+        <url>${project.url}</url>
+        <connection>scm:git:git://github.com/tfreese/pim.git</connection>
+        <developerConnection>scm:git:https://github.com/pim.git</developerConnection>
+        <tag>HEAD</tag>
+    </scm>
+
+    <developers>
+        <developer>
+            <id>tfreese</id>
+            <name>Thomas Freese</name>
+            <url>${project.organization.url}</url>
+            <roles>
+                <role>architect</role>
+                <role>developer</role>
+            </roles>
+            <timezone>+2</timezone>
+        </developer>
+    </developers>
 
     <dependencies>
         <!-- compile scope -->
