@@ -21,9 +21,6 @@ import javafx.stage.Stage;
  */
 public class ProgressIndicatorDemo extends Application
 {
-    /**
-     * @param args String[]
-     */
     public static void main(final String[] args)
     {
         launch(args);

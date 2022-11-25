@@ -48,13 +48,8 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 // @EnableTransactionManagement // Wird durch Spring-Boot automatisch konfiguriert, wenn DataSource-Bean vorhanden.
 public class PimClientApplication extends Application
 {
-    /**
-     *
-     */
     public static final Logger LOGGER = LoggerFactory.getLogger(PimClientApplication.class);
-    /**
-     *
-     */
+
     private static Window mainWindow;
     /**
      * Bildschirm auf dem PIM läuft.
@@ -69,9 +64,6 @@ public class PimClientApplication extends Application
         FXUtils.blockGUI(getMainWindow());
     }
 
-    /**
-     * @return {@link Window}
-     */
     public static Window getMainWindow()
     {
         return mainWindow;
@@ -79,8 +71,6 @@ public class PimClientApplication extends Application
 
     /**
      * Liefert den Bildschirm, auf dem PIM läuft.
-     *
-     * @return {@link Screen}
      */
     public static Screen getScreen()
     {
@@ -95,9 +85,6 @@ public class PimClientApplication extends Application
         FXUtils.unblockGUI(getMainWindow());
     }
 
-    /**
-     *
-     */
     private final BooleanProperty ready = new SimpleBooleanProperty(false);
 
     /**

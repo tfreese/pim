@@ -14,36 +14,6 @@ import org.apache.commons.cli.Options;
  */
 public class PimClientLauncher
 {
-    /**
-     * Liefert die möglichen Optionen der Kommandozeile.<br>
-     * Dies sind die JRE Programm Argumente.
-     *
-     * @return {@link Options}
-     */
-    private static Options getCommandOptions()
-    {
-        Options options = new Options();
-
-        // --spring.profiles.active=ClientStandalone,HsqldbEmbeddedServer
-        // --spring.profiles.active=ClientREST --server.host=localhost --server.port=61222
-
-        // OptionGroup group = new PreserveOrderOptionGroup();
-        // group.addOption(Option.builder().longOpt("spring.profiles.active").required().desc("=Profile1,Profile2").build());
-        // group.addOption(Option.builder().longOpt("server.host").required().hasArg().argName("=host").desc("Server Name").build());
-        // group.addOption(Option.builder().longOpt("server.port").required().hasArg().argName("=port").desc("Server Port").build());
-        // options.addOptionGroup(group);
-
-        options.addOption(Option.builder().longOpt("spring.profiles.active").required().hasArg().argName("=Profile1,Profile2").valueSeparator('=')
-                .desc("Profiles: [ClientStandalone,HsqldbEmbeddedServer], [ClientEmbeddedServer,HsqldbEmbeddedServer], [ClientREST]").build());
-        options.addOption(Option.builder().longOpt("server.host").hasArg().argName("=host").valueSeparator('=').desc("Server Name").build());
-        options.addOption(Option.builder().longOpt("server.port").hasArg().argName("=port").valueSeparator('=').desc("Server Port").build());
-
-        return options;
-    }
-
-    /**
-     * @param args String[]
-     */
     public static void main(final String[] args)
     {
         if (args.length == 0)
@@ -90,8 +60,30 @@ public class PimClientLauncher
     }
 
     /**
-     *
+     * Liefert die möglichen Optionen der Kommandozeile.<br>
+     * Dies sind die JRE Programm Argumente.
      */
+    private static Options getCommandOptions()
+    {
+        Options options = new Options();
+
+        // --spring.profiles.active=ClientStandalone,HsqldbEmbeddedServer
+        // --spring.profiles.active=ClientREST --server.host=localhost --server.port=61222
+
+        // OptionGroup group = new PreserveOrderOptionGroup();
+        // group.addOption(Option.builder().longOpt("spring.profiles.active").required().desc("=Profile1,Profile2").build());
+        // group.addOption(Option.builder().longOpt("server.host").required().hasArg().argName("=host").desc("Server Name").build());
+        // group.addOption(Option.builder().longOpt("server.port").required().hasArg().argName("=port").desc("Server Port").build());
+        // options.addOptionGroup(group);
+
+        options.addOption(Option.builder().longOpt("spring.profiles.active").required().hasArg().argName("=Profile1,Profile2").valueSeparator('=')
+                .desc("Profiles: [ClientStandalone,HsqldbEmbeddedServer], [ClientEmbeddedServer,HsqldbEmbeddedServer], [ClientREST]").build());
+        options.addOption(Option.builder().longOpt("server.host").hasArg().argName("=host").valueSeparator('=').desc("Server Name").build());
+        options.addOption(Option.builder().longOpt("server.port").hasArg().argName("=port").valueSeparator('=').desc("Server Port").build());
+
+        return options;
+    }
+
     private static void usage()
     {
         HelpFormatter formatter = new HelpFormatter();

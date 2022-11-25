@@ -23,33 +23,8 @@ import org.springframework.scheduling.annotation.EnableAsync;
 // @EnableTransactionManagement // Wird durch Spring-Boot automatisch konfiguriert, wenn DataSource-Bean vorhanden.
 public class PimServerApplication
 {
-    /**
-    *
-    */
     public static final Logger LOGGER = LoggerFactory.getLogger(PimServerApplication.class);
 
-    /**
-     * Liefert die möglichen Optionen der Kommandozeile.<br>
-     * Dies sind die JRE Programm Argumente.
-     *
-     * @return {@link Options}
-     */
-    private static Options getCommandOptions()
-    {
-        Options options = new Options();
-
-        // --spring.profiles.active=Server,HsqldbEmbeddedServer --server.port=61222
-        // --spring.profiles.active=Server,SqliteLocalFile --server.port=61222
-        options.addOption(Option.builder().longOpt("spring.profiles.active").required().hasArg().argName("=Profile1,Profile2").valueSeparator('=')
-                .desc("Profiles: [Server,HsqldbEmbeddedServer]").build());
-        options.addOption(Option.builder().longOpt("server.port").required().hasArg().argName("=port").valueSeparator('=').desc("Server Port").build());
-
-        return options;
-    }
-
-    /**
-     * @param args String[]
-     */
     public static void main(final String[] args)
     {
         if (args.length == 0)
@@ -90,8 +65,22 @@ public class PimServerApplication
     }
 
     /**
-    *
-    */
+     * Liefert die möglichen Optionen der Kommandozeile.<br>
+     * Dies sind die JRE Programm Argumente.
+     */
+    private static Options getCommandOptions()
+    {
+        Options options = new Options();
+
+        // --spring.profiles.active=Server,HsqldbEmbeddedServer --server.port=61222
+        // --spring.profiles.active=Server,SqliteLocalFile --server.port=61222
+        options.addOption(Option.builder().longOpt("spring.profiles.active").required().hasArg().argName("=Profile1,Profile2").valueSeparator('=')
+                .desc("Profiles: [Server,HsqldbEmbeddedServer]").build());
+        options.addOption(Option.builder().longOpt("server.port").required().hasArg().argName("=port").valueSeparator('=').desc("Server Port").build());
+
+        return options;
+    }
+
     private static void usage()
     {
         HelpFormatter formatter = new HelpFormatter();

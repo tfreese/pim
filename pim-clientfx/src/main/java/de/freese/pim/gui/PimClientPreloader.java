@@ -17,50 +17,13 @@ import javafx.stage.Stage;
  */
 public class PimClientPreloader extends Preloader
 {
-    /**
-     *
-     */
     private Label labelStatus;
-    /**
-     *
-     */
+
     private boolean noLoadingProgress = true;
-    /**
-     *
-     */
+
     private ProgressIndicator progress;
-    /**
-     *
-     */
+
     private Stage stage;
-
-    /**
-     * @return {@link Scene}
-     */
-    private Scene createPreloaderScene()
-    {
-        this.labelStatus = new Label();
-        this.progress = new ProgressBar();
-        // this.progress = new ProgressIndicator();
-        // this.progress.setProgress(-1.0D);
-
-        this.progress.setPrefWidth(200);
-
-        GridPane pane = new GridPane();
-        pane.setPadding(new Insets(50));
-        pane.getStyleClass().add("gridpane");
-
-        pane.add(this.labelStatus, 0, 0);
-
-        GridPane.setHgrow(this.progress, Priority.ALWAYS);
-        pane.add(this.progress, 0, 1);
-
-        // Scene scene = new Scene(pane, 300, 100);
-        Scene scene = new Scene(pane);
-        scene.getStylesheets().add("/styles/styles.css");
-
-        return scene;
-    }
 
     /**
      * @see javafx.application.Preloader#handleApplicationNotification(javafx.application.Preloader.PreloaderNotification)
@@ -180,5 +143,30 @@ public class PimClientPreloader extends Preloader
     public void stop() throws Exception
     {
         // Empty
+    }
+
+    private Scene createPreloaderScene()
+    {
+        this.labelStatus = new Label();
+        this.progress = new ProgressBar();
+        // this.progress = new ProgressIndicator();
+        // this.progress.setProgress(-1.0D);
+
+        this.progress.setPrefWidth(200);
+
+        GridPane pane = new GridPane();
+        pane.setPadding(new Insets(50));
+        pane.getStyleClass().add("gridpane");
+
+        pane.add(this.labelStatus, 0, 0);
+
+        GridPane.setHgrow(this.progress, Priority.ALWAYS);
+        pane.add(this.progress, 0, 1);
+
+        // Scene scene = new Scene(pane, 300, 100);
+        Scene scene = new Scene(pane);
+        scene.getStylesheets().add("/styles/styles.css");
+
+        return scene;
     }
 }
