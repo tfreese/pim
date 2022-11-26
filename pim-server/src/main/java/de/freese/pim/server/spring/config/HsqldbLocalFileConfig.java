@@ -16,9 +16,6 @@ import org.springframework.context.annotation.PropertySource;
 @PropertySource("classpath:database.properties")
 public class HsqldbLocalFileConfig extends AbstractHsqldbConfig
 {
-    /**
-     * Erstellt ein neues {@link HsqldbLocalFileConfig} Object.
-     */
     public HsqldbLocalFileConfig()
     {
         super();

@@ -12,9 +12,6 @@ import org.springframework.context.annotation.Bean;
  */
 public abstract class AbstractHsqldbConfig
 {
-    /**
-     * Erstellt ein neues {@link AbstractHsqldbConfig} Object.
-     */
     protected AbstractHsqldbConfig()
     {
         super();
@@ -22,11 +19,6 @@ public abstract class AbstractHsqldbConfig
         System.setProperty("spring.flyway.locations", "classpath:db/hsqldb");
     }
 
-    /**
-     * SQL für Sequenz-Abfragen.
-     *
-     * @return {@link UnaryOperator}
-     */
     @Bean
     public UnaryOperator<String> sequenceQuery()
     {

@@ -33,22 +33,12 @@ import org.springframework.util.Assert;
 @Component
 public final class SpringContext implements ApplicationContextAware, ResourceLoaderAware, EnvironmentAware, InitializingBean
 {
-    /**
-    *
-    */
     private static ApplicationContext applicationContext;
-    /**
-    *
-    */
+
     private static Environment environment;
-    /**
-     *
-     */
+
     private static ResourceLoader resourceLoader;
 
-    /**
-     * @return {@link ApplicationContext}
-     */
     public static ApplicationContext getApplicationContext()
     {
         return applicationContext;
@@ -56,51 +46,23 @@ public final class SpringContext implements ApplicationContextAware, ResourceLoa
 
     /**
      * {@link AsyncTaskExecutor} als Wrapper für einen {@link ExecutorService} oder eigener ThreadPool.
-     *
-     * @return {@link AsyncTaskExecutor}
      */
     public static AsyncTaskExecutor getAsyncTaskExecutor()
     {
         return getApplicationContext().getBean("taskExecutor", AsyncTaskExecutor.class);
     }
 
-    /**
-     * Liefert die Bean mit der betreffenden BeanID.
-     *
-     * @param <T> Konkreter Typ des empfangenen Objects
-     * @param beanID String
-     *
-     * @return Object
-     */
     @SuppressWarnings("unchecked")
     public static <T> T getBean(final String beanID)
     {
         return (T) getApplicationContext().getBean(beanID);
     }
 
-    /**
-     * Liefert die Bean mit der betreffenden BeanID und erwartetem Typ.
-     *
-     * @param <T> Konkreter Typ des empfangenen Objects
-     * @param beanID String
-     * @param requiredType {@link Class}
-     *
-     * @return Object
-     */
     public static <T> T getBean(final String beanID, final Class<T> requiredType)
     {
         return getApplicationContext().getBean(beanID, requiredType);
     }
 
-    /**
-     * Liefert die erste gefundene Bean eines bestimmten Types mit einer bestimmten Annotation.
-     *
-     * @param <T> Konkreter Return-Typ
-     * @param clazz Class
-     * @param annotationType Class
-     *
-     * @return {@link Optional}
-     */
     public static <T> Optional<T> getBeanByTypeAndAnnotation(final Class<T> clazz, final Class<? extends Annotation> annotationType)
     {
         Collection<T> beans = getBeansByTypeAndAnnotation(clazz, annotationType);
@@ -111,33 +73,19 @@ public final class SpringContext implements ApplicationContextAware, ResourceLoa
     /**
      * Liefert die erste gefundene Bean eines bestimmten Types mit einem bestimmten {@link Qualifier}.<br>
      * Die Bean muss die Spring-Annotation {@link Qualifier} mit einem Value verwenden.
-     *
-     * @param <T> Konkreter Return-Typ
-     * @param clazz Class
-     * @param qualifier String
-     *
-     * @return {@link Optional}
      */
     public static <T> Optional<T> getBeanByTypeAndQualifier(final Class<T> clazz, final String qualifier)
     {
         Collection<T> beans = getBeansByTypeAndAnnotation(clazz, Qualifier.class);
 
-        return beans.stream().filter(bean -> {
+        return beans.stream().filter(bean ->
+        {
             Qualifier q = bean.getClass().getAnnotation(Qualifier.class);
 
             return qualifier.equals(q.value());
         }).findFirst();
     }
 
-    /**
-     * Liefert alle Beans eines bestimmten Types mit einer bestimmten Annotation.
-     *
-     * @param <T> Konkreter Return-Typ
-     * @param clazz Class
-     * @param annotationType Class
-     *
-     * @return {@link Collection}
-     */
     public static <T> Collection<T> getBeansByTypeAndAnnotation(final Class<T> clazz, final Class<? extends Annotation> annotationType)
     {
         Map<String, T> typedBeans = getApplicationContext().getBeansOfType(clazz);
@@ -149,51 +97,26 @@ public final class SpringContext implements ApplicationContextAware, ResourceLoa
         return typedBeans.values();
     }
 
-    /**
-     * @return {@link Environment}
-     */
     public static Environment getEnvironment()
     {
         return environment;
     }
 
-    /**
-     * {@link ExecutorService} für die parallele Ausführung von Tasks.
-     *
-     * @return {@link ExecutorService}
-     */
     public static ExecutorService getExecutorService()
     {
         return getApplicationContext().getBean("executorService", ExecutorService.class);
     }
 
-    /**
-     * Liefert die Resource.
-     *
-     * @param location String
-     *
-     * @return {@link Resource}
-     *
-     * @see ResourceLoader#getResource(String)
-     */
     public static Resource getResource(final String location)
     {
         return getResourceLoader().getResource(location);
     }
 
-    /**
-     * @return {@link Resource}
-     */
     public static ResourceLoader getResourceLoader()
     {
         return resourceLoader;
     }
 
-    /**
-     * {@link ScheduledExecutorService} für zeitgesteuerte Ausführung von Tasks.
-     *
-     * @return {@link ScheduledExecutorService}
-     */
     public static ScheduledExecutorService getScheduledExecutorService()
     {
         return getApplicationContext().getBean(ScheduledExecutorService.class);
@@ -201,18 +124,13 @@ public final class SpringContext implements ApplicationContextAware, ResourceLoa
 
     /**
      * {@link TaskScheduler} als Wrapper für einen {@link ScheduledExecutorService} oder eigener ThreadPool.
-     *
-     * @return {@link TaskScheduler}
      */
     public static TaskScheduler getTaskScheduler()
     {
         return getApplicationContext().getBean(TaskScheduler.class);
     }
 
-    /**
-     * Erzeugt eine neue Instanz von {@link SpringContext}
-     */
-    private SpringContext()
+    public SpringContext()
     {
         super();
     }

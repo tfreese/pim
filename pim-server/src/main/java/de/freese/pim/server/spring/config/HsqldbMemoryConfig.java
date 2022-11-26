@@ -16,9 +16,6 @@ import org.springframework.context.annotation.PropertySource;
 @PropertySource("classpath:database.properties")
 public class HsqldbMemoryConfig extends AbstractHsqldbConfig
 {
-    /**
-     * Erstellt ein neues {@link HsqldbMemoryConfig} Object.
-     */
     public HsqldbMemoryConfig()
     {
         super();

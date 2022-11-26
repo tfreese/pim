@@ -42,7 +42,7 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
  *
  * @author Thomas Freese
  */
-@SpringBootApplication()
+@SpringBootApplication//(scanBasePackages = "de.freese.pim")
 // @EnableScheduling
 // @EnableAsync // @Async("executorService")
 // @EnableTransactionManagement // Wird durch Spring-Boot automatisch konfiguriert, wenn DataSource-Bean vorhanden.

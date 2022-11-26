@@ -20,13 +20,6 @@ import org.springframework.context.annotation.PropertySource;
 @PropertySource("classpath:database.properties")
 public class HsqldbEmbeddedServerConfig extends AbstractHsqldbConfig
 {
-    /**
-     * @param pimHome String
-     * @param pimDbName String
-     * @param port int
-     *
-     * @return {@link Server}
-     */
     @Bean(initMethod = "start", destroyMethod = "shutdown")
     public Server hsqldbServer(@Value("${pim.home}") final String pimHome, @Value("${pim.db-name}") final String pimDbName,
                                @Value("${hsqldbPort}") final int port)

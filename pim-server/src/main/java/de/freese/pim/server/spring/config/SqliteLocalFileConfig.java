@@ -25,9 +25,6 @@ import org.sqlite.javax.SQLiteConnectionPoolDataSource;
 @PropertySource("classpath:database.properties")
 public class SqliteLocalFileConfig
 {
-    /**
-     * Erstellt ein neues {@link SqliteLocalFileConfig} Object.
-     */
     public SqliteLocalFileConfig()
     {
         super();
@@ -37,11 +34,6 @@ public class SqliteLocalFileConfig
 
     /**
      * Nicht Hikari nehmen, sondern die SQLite-Implementierung.
-     *
-     * @param pimHome String
-     * @param pimDbName String
-     *
-     * @return {@link DataSource}
      */
     @Bean
     public DataSource dataSource(@Value("${pim.home}") final String pimHome, @Value("${pim.db-name}") final String pimDbName)
@@ -65,11 +57,6 @@ public class SqliteLocalFileConfig
         return dataSource;
     }
 
-    /**
-     * SQL für Sequenz-Abfragen.
-     *
-     * @return {@link UnaryOperator}
-     */
     @Bean
     public UnaryOperator<String> sequenceQuery()
     {

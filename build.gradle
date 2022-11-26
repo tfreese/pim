@@ -5,7 +5,6 @@ buildscript {
         mavenLocal()
         mavenCentral()
         gradlePluginPortal() // maven { url "https://plugins.gradle.org/m2"; name "plugins-gradle" }
-        maven { url "https://teraphim.jfrog.io/artifactory/default-maven-virtual"; name "jfrog" }
     }
 
     dependencies {
@@ -70,7 +69,7 @@ project("pim-server") {
     // The archive name. If the name has not been explicitly set, the pattern for the name is:
     // [archiveBaseName]-[archiveAppendix]-[archiveVersion]-[archiveClassifier].[archiveExtension]
     // archiveFileName = "my-boot.jar"
-    bootJar {
+    springBoot {
         mainClass = "de.freese.pim.server.PimServerApplication"
     }
     // gradle bootRun --args="--spring.profiles.active=Server,HsqldbEmbeddedServer --server.port=65111"
@@ -113,7 +112,7 @@ project("pim-clientfx") {
     // The archive name. If the name has not been explicitly set, the pattern for the name is:
     // [archiveBaseName]-[archiveAppendix]-[archiveVersion]-[archiveClassifier].[archiveExtension]
     // archiveFileName = "test2-boot.jar"
-    bootJar {
+    springBoot {
         mainClass = "de.freese.pim.gui.PimClientLauncher"
     }
     // gradle bootRun --args="--spring.profiles.active=ClientStandalone"
