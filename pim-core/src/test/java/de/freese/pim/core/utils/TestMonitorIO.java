@@ -25,6 +25,11 @@ import org.junit.jupiter.api.TestMethodOrder;
 @TestMethodOrder(MethodOrderer.MethodName.class)
 class TestMonitorIO
 {
+    private static final byte[] BYTES =
+            {
+                    0, 1, 2, 3, 4, 5, 6, 7, 8, 9
+            };
+
     /**
      * BiConsumer<Long, Long> monitor = (size, current) -> System.out.printf("\r%d / %d%n", current, size);
      *
@@ -32,14 +37,8 @@ class TestMonitorIO
      */
     private static class Monitor implements IOMonitor
     {
-        /**
-         *
-         */
         private Long current;
 
-        /**
-         * @return long
-         */
         public long getCurrent()
         {
             return Optional.ofNullable(this.current).orElse(0L);
@@ -55,17 +54,6 @@ class TestMonitorIO
         }
     }
 
-    /**
-     *
-     */
-    private static final byte[] BYTES =
-            {
-                    0, 1, 2, 3, 4, 5, 6, 7, 8, 9
-            };
-
-    /**
-     * @throws Exception Falls was schiefgeht.
-     */
     @Test
     void test010InputStream() throws Exception
     {
@@ -110,9 +98,6 @@ class TestMonitorIO
         }
     }
 
-    /**
-     * @throws Exception Falls was schiefgeht.
-     */
     @Test
     void test020OutputStream() throws Exception
     {
@@ -150,9 +135,6 @@ class TestMonitorIO
         }
     }
 
-    /**
-     * @throws Exception Falls was schiefgeht.
-     */
     @Test
     void test030ReadableByteChannel() throws Exception
     {
@@ -187,9 +169,6 @@ class TestMonitorIO
         }
     }
 
-    /**
-     * @throws Exception Falls was schiefgeht.
-     */
     @Test
     void test040WritableByteChannel() throws Exception
     {

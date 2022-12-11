@@ -9,7 +9,7 @@ import de.freese.pim.gui.addressbook.ContactView;
 import de.freese.pim.gui.controller.AbstractController;
 import de.freese.pim.gui.mail.MailController;
 import de.freese.pim.gui.mail.view.MailView;
-import de.freese.pim.gui.utils.FXUtils;
+import de.freese.pim.gui.utils.FxUtils;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -22,40 +22,24 @@ import javafx.scene.control.ToolBar;
  */
 public class MainController extends AbstractController
 {
-    /**
-     *
-     */
     private final MainView mainView;
-    /**
-     *
-     */
+
     @FXML
     private Button buttonContactView;
-    /**
-     *
-     */
+
     @FXML
     private Button buttonMailView;
-    /**
-     *
-     */
+
     private ContactController contactController;
-    /**
-     *
-     */
+
     private MailController mailController;
 
-    /**
-     * Erzeugt eine neue Instanz von {@link MainController}
-     *
-     * @param resources {@link ResourceBundle}
-     */
     public MainController(final ResourceBundle resources)
     {
         super();
 
         this.mainView = new MainView();
-        FXUtils.bind(this.mainView, this, resources);
+        FxUtils.bind(this.mainView, this, resources);
     }
 
     /**
@@ -101,13 +85,13 @@ public class MainController extends AbstractController
     public void initialize(final URL location, final ResourceBundle resources)
     {
         this.mailController = new MailController();
-        FXUtils.bind(new MailView(), this.mailController, resources);
+        FxUtils.bind(new MailView(), this.mailController, resources);
 
         this.contactController = new ContactController();
-        FXUtils.bind(new ContactView(), this.contactController, resources);
+        FxUtils.bind(new ContactView(), this.contactController, resources);
 
-        FXUtils.translate(this.buttonMailView, resources);
-        FXUtils.translate(this.buttonContactView, resources);
+        FxUtils.translate(this.buttonMailView, resources);
+        FxUtils.translate(this.buttonContactView, resources);
 
         this.buttonMailView.setOnAction(event ->
         {
@@ -126,9 +110,6 @@ public class MainController extends AbstractController
         });
     }
 
-    /**
-     * Selektiert die Default-Ansicht.
-     */
     public void selectDefaultView()
     {
         this.buttonMailView.fire();

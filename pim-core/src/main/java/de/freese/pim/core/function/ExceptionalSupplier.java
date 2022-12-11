@@ -16,9 +16,6 @@ import java.util.function.Supplier;
 public interface ExceptionalSupplier<R, E extends Exception>
 {
     /**
-     * @return Object
-     *
-     * @throws Exception Falls was schiefgeht.
      * @see java.util.function.Supplier#get()
      */
     R get() throws E;

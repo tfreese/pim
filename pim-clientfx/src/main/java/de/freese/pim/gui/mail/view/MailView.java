@@ -1,7 +1,7 @@
 // Created: 13.12.2016
 package de.freese.pim.gui.mail.view;
 
-import de.freese.pim.gui.mail.model.FXMail;
+import de.freese.pim.gui.mail.model.FxMail;
 import de.freese.pim.gui.view.View;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
@@ -26,60 +26,27 @@ import javafx.scene.layout.StackPane;
  */
 public class MailView implements View
 {
-    /**
-     *
-     */
-    @FXML
-    private Button buttonAddAccount;
-    /**
-    *
-    */
-    @FXML
-    private Button buttonEditAccount;
-    // /**
-    // *
-    // */
-    // @FXML
-    // private HTMLEditor editor = null;
-    /**
-    *
-    */
-    @FXML
-    private MailContentView mailContentView;
-    /**
-     *
-     */
     @FXML
     private final Region mainNode;
-    /**
-     *
-     */
     @FXML
     private final Region naviNode;
-    /**
-    *
-    */
+    @FXML
+    private final ToolBar toolBar;
+    // @FXML
+    // private HTMLEditor editor = null;
+    @FXML
+    private Button buttonAddAccount;
+    @FXML
+    private Button buttonEditAccount;
+    @FXML
+    private MailContentView mailContentView;
     @FXML
     private ProgressIndicator progressIndicator;
-    /**
-    *
-    */
     @FXML
-    private TableView<FXMail> tableViewMail;
-    /**
-     *
-     */
-    @FXML
-    private ToolBar toolBar;
-    /**
-    *
-    */
+    private TableView<FxMail> tableViewMail;
     @FXML
     private TreeView<Object> treeViewMail;
 
-    /**
-     * Erzeugt eine neue Instanz von {@link MailView}
-     */
     public MailView()
     {
         super();
@@ -89,9 +56,6 @@ public class MailView implements View
         this.naviNode = createNaviNode();
     }
 
-    /**
-     * @return {@link Region}
-     */
     private Region createMainNode()
     {
         // BorderPane borderPane = new BorderPane();
@@ -138,9 +102,6 @@ public class MailView implements View
         return stackPane;
     }
 
-    /**
-     * @return {@link Region}
-     */
     private Region createNaviNode()
     {
         this.treeViewMail = new TreeView<>();
@@ -157,9 +118,6 @@ public class MailView implements View
         return titledPane;
     }
 
-    /**
-     * @return {@link ToolBar}
-     */
     private ToolBar createToolbar()
     {
         ToolBar tb = new ToolBar();

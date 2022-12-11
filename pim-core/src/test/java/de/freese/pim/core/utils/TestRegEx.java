@@ -16,9 +16,6 @@ import org.junit.jupiter.api.TestMethodOrder;
 @TestMethodOrder(MethodOrderer.MethodName.class)
 class TestRegEx
 {
-    /**
-    *
-    */
     private static final String MAIL_REGEX = Utils.MAIL_REGEX;
 
     /**

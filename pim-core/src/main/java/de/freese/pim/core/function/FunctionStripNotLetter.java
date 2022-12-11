@@ -12,9 +12,6 @@ import java.util.function.UnaryOperator;
  */
 public class FunctionStripNotLetter implements UnaryOperator<String>
 {
-    /**
-     *
-     */
     public static final Function<String, String> INSTANCE = new FunctionStripNotLetter();
 
     /**

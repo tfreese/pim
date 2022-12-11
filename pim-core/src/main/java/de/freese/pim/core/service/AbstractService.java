@@ -18,7 +18,9 @@ import org.springframework.core.task.AsyncTaskExecutor;
 public abstract class AbstractService implements ApplicationContextAware
 {
     private final Logger logger = LoggerFactory.getLogger(getClass());
+    
     private ApplicationContext applicationContext;
+
     private AsyncTaskExecutor taskExecutor;
 
     public ApplicationContext getApplicationContext()

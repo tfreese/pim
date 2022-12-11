@@ -77,9 +77,6 @@ public abstract class AbstractDataSource implements DataSource
         return this.contentType;
     }
 
-    /**
-     * @return byte[]
-     */
     public byte[] getData()
     {
         return this.data;

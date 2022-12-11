@@ -8,17 +8,10 @@ package de.freese.pim.core.model.addressbook;
  */
 public class KontaktAttribut implements Comparable<KontaktAttribut>
 {
-    /**
-    *
-    */
     private String attribut;
-    /**
-    *
-    */
+
     private long kontaktID;
-    /**
-    *
-    */
+
     private String wert;
 
     /**
@@ -42,49 +35,31 @@ public class KontaktAttribut implements Comparable<KontaktAttribut>
         return comp;
     }
 
-    /**
-     * @return String
-     */
     public String getAttribut()
     {
         return this.attribut;
     }
 
-    /**
-     * @return long
-     */
     public long getKontaktID()
     {
         return this.kontaktID;
     }
 
-    /**
-     * @return String
-     */
     public String getWert()
     {
         return this.wert;
     }
 
-    /**
-     * @param attribut String
-     */
     public void setAttribut(final String attribut)
     {
         this.attribut = attribut;
     }
 
-    /**
-     * @param kontaktID long
-     */
     public void setKontaktID(final long kontaktID)
     {
         this.kontaktID = kontaktID;
     }
 
-    /**
-     * @param wert String
-     */
     public void setWert(final String wert)
     {
         this.wert = wert;

@@ -4,7 +4,7 @@ package de.freese.pim.gui;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.TimeUnit;
 
-import de.freese.pim.gui.utils.FXUtils;
+import de.freese.pim.gui.utils.FxUtils;
 import javafx.application.Application;
 import javafx.beans.binding.Bindings;
 import javafx.concurrent.Task;
@@ -76,7 +76,7 @@ public class ProgressIndicatorDemo extends Application
             // int[] rgb = getRGB_1(percent);
             // int[] rgb = getRGB_2(percent);
             // int[] rgb = getRGB_3(percent);
-            int[] rgb = FXUtils.getProgressRGB(percent, Color.RED, Color.ORANGE, Color.GREEN);
+            int[] rgb = FxUtils.getProgressRGB(percent, Color.RED, Color.ORANGE, Color.GREEN);
 
             return String.format("-fx-progress-color: rgb(%d,%d,%d)", rgb[0], rgb[1], rgb[2]);
         }, progressIndicator.progressProperty()));

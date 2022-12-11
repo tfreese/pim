@@ -12,11 +12,6 @@ import java.nio.charset.StandardCharsets;
  */
 public abstract class AbstractRemoteService extends AbstractService
 {
-    /**
-     * @param value String
-     *
-     * @return String
-     */
     protected String urlDecode(final String value)
     {
         if (value == null)
@@ -27,11 +22,6 @@ public abstract class AbstractRemoteService extends AbstractService
         return URLDecoder.decode(value.strip(), StandardCharsets.UTF_8);
     }
 
-    /**
-     * @param value String
-     *
-     * @return String
-     */
     protected String urlEncode(final String value)
     {
         if (value == null)

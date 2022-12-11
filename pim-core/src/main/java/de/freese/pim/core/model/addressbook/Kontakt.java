@@ -12,42 +12,21 @@ import java.util.Objects;
  */
 public class Kontakt implements Comparable<Kontakt>
 {
-    /**
-     *
-     */
     private final List<KontaktAttribut> attribute = new ArrayList<>();
-    /**
-     *
-     */
+
     private long id;
-    /**
-     *
-     */
+
     private String nachname;
-    // /**
-    // *
-    // */
+
     // private final transient PropertyChangeSupport pcs = new PropertyChangeSupport(this);
-    /**
-     *
-     */
+
     private String vorname;
 
-    /**
-     * Erzeugt eine neue Instanz von {@link Kontakt}
-     */
     public Kontakt()
     {
         super();
     }
 
-    /**
-     * Erzeugt eine neue Instanz von {@link Kontakt}
-     *
-     * @param id long
-     * @param nachname String
-     * @param vorname String
-     */
     public Kontakt(final long id, final String nachname, final String vorname)
     {
         super();
@@ -58,31 +37,6 @@ public class Kontakt implements Comparable<Kontakt>
 
     }
 
-    /**
-     * @param attribut {@link KontaktAttribut}
-     */
-    private void addAttribut(final KontaktAttribut attribut)
-    {
-        if (getAttribute().contains(attribut))
-        {
-            throw new RuntimeException("Attribut bereits vorhanden");
-        }
-
-        getAttribute().add(attribut);
-    }
-
-    // /**
-    // * @param listener {@link PropertyChangeListener}
-    // */
-    // public void addPropertyChangeListener(final PropertyChangeListener listener)
-    // {
-    // this.pcs.addPropertyChangeListener(listener);
-    // }
-
-    /**
-     * @param attribut String
-     * @param wert String
-     */
     public void addAttribut(final String attribut, final String wert)
     {
         KontaktAttribut ka = new KontaktAttribut();
@@ -92,6 +46,11 @@ public class Kontakt implements Comparable<Kontakt>
 
         addAttribut(ka);
     }
+
+    // public void addPropertyChangeListener(final PropertyChangeListener listener)
+    // {
+    // this.pcs.addPropertyChangeListener(listener);
+    // }
 
     /**
      * @see java.lang.Comparable#compareTo(java.lang.Object)
@@ -134,35 +93,21 @@ public class Kontakt implements Comparable<Kontakt>
                 && Objects.equals(this.vorname, other.vorname);
     }
 
-    /**
-     * Liefert eine unmodifiable Liste.
-     *
-     * @return {@link List}
-     */
     public List<KontaktAttribut> getAttribute()
     {
         return this.attribute;
     }
 
-    /**
-     * @return long
-     */
     public long getID()
     {
         return this.id;
     }
 
-    /**
-     * @return String
-     */
     public String getNachname()
     {
         return this.nachname;
     }
 
-    /**
-     * @return String
-     */
     public String getVorname()
     {
         return this.vorname;
@@ -177,17 +122,6 @@ public class Kontakt implements Comparable<Kontakt>
         return Objects.hash(this.attribute, this.id, this.nachname, this.vorname);
     }
 
-    // /**
-    // * @param listener {@link PropertyChangeListener}
-    // */
-    // public void removePropertyChangeListener(final PropertyChangeListener listener)
-    // {
-    // this.pcs.removePropertyChangeListener(listener);
-    // }
-
-    /**
-     * @param id long
-     */
     public void setID(final long id)
     {
         // Object old = getID();
@@ -195,9 +129,11 @@ public class Kontakt implements Comparable<Kontakt>
         // this.pcs.firePropertyChange("id", old, getID());
     }
 
-    /**
-     * @param nachname String
-     */
+    // public void removePropertyChangeListener(final PropertyChangeListener listener)
+    // {
+    // this.pcs.removePropertyChangeListener(listener);
+    // }
+
     public void setNachname(final String nachname)
     {
         // Object old = getNachname();
@@ -205,9 +141,6 @@ public class Kontakt implements Comparable<Kontakt>
         // this.pcs.firePropertyChange("nachname", old, getNachname());
     }
 
-    /**
-     * @param vorname String
-     */
     public void setVorname(final String vorname)
     {
         // Object old = getVorname();
@@ -229,5 +162,15 @@ public class Kontakt implements Comparable<Kontakt>
         builder.append("]");
 
         return builder.toString();
+    }
+
+    private void addAttribut(final KontaktAttribut attribut)
+    {
+        if (getAttribute().contains(attribut))
+        {
+            throw new RuntimeException("Attribut bereits vorhanden");
+        }
+
+        getAttribute().add(attribut);
     }
 }

@@ -20,8 +20,6 @@ public interface MailContent
      * Liefert die {@link DataSource} der Attachments.<br>
      * Key = Filename<br>
      * Value = {@link AttachmentDataSource}<br>
-     *
-     * @return {@link Map}
      */
     Map<String, AttachmentDataSource> getAttachments();
 
@@ -31,8 +29,6 @@ public interface MailContent
      * Liefert die {@link DataSource} der Inlines.<br>
      * Key = contentID<br>
      * Value = {@link InlineDataSource}<br>
-     *
-     * @return {@link Map}
      */
     Map<String, InlineDataSource> getInlines();
 

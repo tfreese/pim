@@ -11,10 +11,10 @@ import java.util.concurrent.CompletableFuture;
 import java.util.stream.Stream;
 
 import de.freese.pim.core.spring.SpringContext;
-import de.freese.pim.gui.mail.model.FXMail;
-import de.freese.pim.gui.mail.model.FXMailAccount;
-import de.freese.pim.gui.mail.model.FXMailFolder;
-import de.freese.pim.gui.mail.service.FXMailService;
+import de.freese.pim.gui.mail.model.FxMail;
+import de.freese.pim.gui.mail.model.FxMailAccount;
+import de.freese.pim.gui.mail.model.FxMailFolder;
+import de.freese.pim.gui.mail.service.FxMailService;
 import de.freese.pim.gui.view.ErrorDialog;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
@@ -29,30 +29,15 @@ import org.springframework.core.task.AsyncTaskExecutor;
  *
  * @author Thomas Freese
  */
-public class InitMailAPITask extends Task<List<FXMailFolder>>
+public class InitMailAPITask extends Task<List<FxMailFolder>>
 {
-    /**
-     *
-     */
     public static final Logger LOGGER = LoggerFactory.getLogger(InitMailAPITask.class);
-    /**
-     *
-     */
-    private final FXMailAccount account;
-    /**
-     *
-     */
-    private final FXMailService mailService;
 
-    /**
-     * Erzeugt eine neue Instanz von {@link InitMailAPITask}
-     *
-     * @param treeView {@link TreeView}
-     * @param parent {@link TreeItem}
-     * @param mailService {@link FXMailService}
-     * @param account {@link FXMailAccount}
-     */
-    public InitMailAPITask(final TreeView<Object> treeView, final TreeItem<Object> parent, final FXMailService mailService, final FXMailAccount account)
+    private final FxMailAccount account;
+
+    private final FxMailService mailService;
+
+    public InitMailAPITask(final TreeView<Object> treeView, final TreeItem<Object> parent, final FxMailService mailService, final FxMailAccount account)
     {
         super();
 
@@ -64,7 +49,7 @@ public class InitMailAPITask extends Task<List<FXMailFolder>>
 
         setOnSucceeded(event ->
         {
-            List<FXMailFolder> folders = getValue();
+            List<FxMailFolder> folders = getValue();
 
             account.getFolderSubscribed().addListener(new TreeFolderListChangeListener(parent));
             account.getFolder().addAll(folders);
@@ -92,7 +77,7 @@ public class InitMailAPITask extends Task<List<FXMailFolder>>
      * @see javafx.concurrent.Task#call()
      */
     @Override
-    protected List<FXMailFolder> call() throws Exception
+    protected List<FxMailFolder> call() throws Exception
     {
         LOGGER.info("Init MailAccount {}", this.account.getMail());
 
@@ -101,16 +86,12 @@ public class InitMailAPITask extends Task<List<FXMailFolder>>
         return this.mailService.loadFolder(this.account.getID());
     }
 
-    /**
-     * @param folders {@link List}
-     * @param treeView {@link TreeView}
-     */
-    protected void loadMailsByCompletableFuture(final List<FXMailFolder> folders, final TreeView<Object> treeView)
+    protected void loadMailsByCompletableFuture(final List<FxMailFolder> folders, final TreeView<Object> treeView)
     {
         AsyncTaskExecutor taskExecutor = SpringContext.getAsyncTaskExecutor();
         CompletableFuture<Void> master = CompletableFuture.completedFuture(null);
 
-        for (FXMailFolder mf : folders)
+        for (FxMailFolder mf : folders)
         {
             // @formatter:off
             CompletableFuture<Void> cf = CompletableFuture.supplyAsync(() ->
@@ -144,19 +125,15 @@ public class InitMailAPITask extends Task<List<FXMailFolder>>
         master.thenAccept(result -> Platform.runLater(treeView::refresh));
     }
 
-    /**
-     * @param folders {@link List}
-     * @param treeView {@link TreeView}
-     */
-    protected void loadMailsByParallelStream(final List<FXMailFolder> folders, final TreeView<Object> treeView)
+    protected void loadMailsByParallelStream(final List<FxMailFolder> folders, final TreeView<Object> treeView)
     {
         // @formatter:off
-        try(Stream<FXMailFolder> stream = folders.parallelStream())
+        try(Stream<FxMailFolder> stream = folders.parallelStream())
         {
             stream.onClose(() -> Platform.runLater(treeView::refresh))
             .forEach(mf ->
             {
-                List<FXMail> mails = this.mailService.loadMails(this.account, mf);
+                List<FxMail> mails = this.mailService.loadMails(this.account, mf);
 
                 Runnable task = ()->
                 {
@@ -172,32 +149,28 @@ public class InitMailAPITask extends Task<List<FXMailFolder>>
         // @formatter:on
     }
 
-    /**
-     * @param folders {@link List}
-     * @param treeView {@link TreeView}
-     */
-    protected void loadMailsByPartitions(final List<FXMailFolder> folders, final TreeView<Object> treeView)
+    protected void loadMailsByPartitions(final List<FxMailFolder> folders, final TreeView<Object> treeView)
     {
         AsyncTaskExecutor taskExecutor = SpringContext.getAsyncTaskExecutor();
 
         int partitionSize = Math.max(1, (folders.size() / 3) + 1); // Jeweils 3 Stores pro MailApi.
 
-        // List<List<FXMailFolder>> partitions = ListUtils.partition(folders, partitionSize);
+        // List<List<FxMailFolder>> partitions = ListUtils.partition(folders, partitionSize);
 
         // Nachteil: Die Reihenfolge der Elemente ist hinüber.
-        Map<Integer, List<FXMailFolder>> partitionMap = new HashMap<>();
+        Map<Integer, List<FxMailFolder>> partitionMap = new HashMap<>();
 
         for (int i = 0; i < folders.size(); i++)
         {
-            FXMailFolder value = folders.get(i);
+            FxMailFolder value = folders.get(i);
             int indexToUse = i % partitionSize;
 
             partitionMap.computeIfAbsent(indexToUse, key -> new ArrayList<>()).add(value);
         }
 
-        Collection<List<FXMailFolder>> partitions = partitionMap.values();
+        Collection<List<FxMailFolder>> partitions = partitionMap.values();
 
-        for (List<FXMailFolder> partition : partitions)
+        for (List<FxMailFolder> partition : partitions)
         {
             // Utils.executeSafely(() -> TimeUnit.MILLISECONDS.sleep(1000));
 

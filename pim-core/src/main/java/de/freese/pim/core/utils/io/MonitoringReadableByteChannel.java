@@ -13,13 +13,8 @@ import java.util.Objects;
  */
 public class MonitoringReadableByteChannel implements ReadableByteChannel
 {
-    /**
-     *
-     */
     private final ReadableByteChannel delegate;
-    /**
-     *
-     */
+
     private final IOMonitor monitor;
     /**
      * Anzahl Bytes (Größe) des gesamten Channels.
@@ -31,10 +26,6 @@ public class MonitoringReadableByteChannel implements ReadableByteChannel
     private long sizeRead;
 
     /**
-     * Erzeugt eine neue Instanz von {@link MonitoringReadableByteChannel}
-     *
-     * @param delegate {@link ReadableByteChannel}
-     * @param monitor {@link IOMonitor}
      * @param size long; Anzahl Bytes (Größe) des gesamten Channels
      */
     public MonitoringReadableByteChannel(final ReadableByteChannel delegate, final IOMonitor monitor, final long size)

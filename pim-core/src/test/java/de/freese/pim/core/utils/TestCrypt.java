@@ -20,9 +20,6 @@ import org.junit.jupiter.api.TestMethodOrder;
 @TestMethodOrder(MethodOrderer.MethodName.class)
 class TestCrypt
 {
-    /**
-     * @throws Exception Falls was schiefgeht.
-     */
     @Test
     void testCryptStream() throws Exception
     {
@@ -50,9 +47,6 @@ class TestCrypt
         // Reader isr = new InputStreamReader(decryptedStream, StandardCharsets.UTF_8);
     }
 
-    /**
-     * @throws Exception Falls was schiefgeht.
-     */
     @Test
     void testCryptString() throws Exception
     {

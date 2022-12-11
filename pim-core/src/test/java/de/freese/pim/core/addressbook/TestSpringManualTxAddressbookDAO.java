@@ -29,31 +29,18 @@ import org.springframework.transaction.support.DefaultTransactionDefinition;
 @TestMethodOrder(MethodOrderer.MethodName.class)
 class TestSpringManualTxAddressbookDAO extends AbstractDAOTestCase
 {
-    /**
-     *
-     */
     private static AddressBookDAO addressBookDAO;
-    /**
-     *
-     */
+
     private static DataSource dataSource;
-    /**
-     *
-     */
+
     private static PlatformTransactionManager transactionManager;
 
-    /**
-     *
-     */
     @AfterAll
     static void afterAll()
     {
         closeDataSource(dataSource);
     }
 
-    /**
-     * @throws Exception Falls was schiefgeht.
-     */
     @BeforeAll
     static void beforeAll() throws Exception
     {

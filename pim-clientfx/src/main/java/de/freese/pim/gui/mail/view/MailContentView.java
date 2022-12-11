@@ -17,7 +17,7 @@ import de.freese.pim.core.mail.InternetAddress;
 import de.freese.pim.core.mail.MailContent;
 import de.freese.pim.core.spring.SpringContext;
 import de.freese.pim.gui.PimClientApplication;
-import de.freese.pim.gui.mail.model.FXMail;
+import de.freese.pim.gui.mail.model.FxMail;
 import de.freese.pim.gui.mail.utils.InlineUrlStreamHandler;
 import de.freese.pim.gui.view.ErrorDialog;
 import javafx.application.Platform;
@@ -141,7 +141,7 @@ public class MailContentView extends GridPane
         this.webView.getEngine().loadContent(ErrorDialog.toString(throwable), "text/plain");
     }
 
-    public void newMailContent(final FXMail mail, final MailContent mailContent)
+    public void newMailContent(final FxMail mail, final MailContent mailContent)
     {
         // Delete cache for navigate back.
         this.webView.getEngine().load("about:blank");

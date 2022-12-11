@@ -26,7 +26,7 @@ public class PimClientRestConfig extends AbstractPimClientConfig
         super();
 
         System.setProperty("spring.main.web-application-type", "NONE");
-        System.setProperty("flyway.enabled", Boolean.toString(false));
+        System.setProperty("spring.flyway.enabled", Boolean.toString(false));
     }
 
     @Bean

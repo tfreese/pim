@@ -1,7 +1,7 @@
 // Created: 13.12.2016
 package de.freese.pim.gui.addressbook;
 
-import de.freese.pim.gui.addressbook.model.FXKontakt;
+import de.freese.pim.gui.addressbook.model.FxKontakt;
 import de.freese.pim.gui.view.View;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
@@ -32,65 +32,39 @@ import javafx.scene.layout.Region;
  */
 public class ContactView implements View
 {
-    /**
-     *
-     */
     @FXML
     private final Region mainNode;
-    /**
-     *
-     */
+
     @FXML
     private final Region naviNode;
-    /**
-     *
-     */
+
     @FXML
     private Button buttonAddContact;
-    /**
-     *
-     */
+
     @FXML
     private Button buttonDeleteContact;
-    /**
-     *
-     */
+
     @FXML
     private Button buttonEditContact;
-    /**
-     *
-     */
+
     @FXML
     private Label labelFilter;
-    /**
-     *
-     */
+
     @FXML
     private Label labelNachname;
-    /**
-     *
-     */
+
     @FXML
     private Label labelVorname;
-    /**
-     *
-     */
+
     @FXML
-    private TableView<FXKontakt> tableViewKontakt;
-    /**
-     *
-     */
+    private TableView<FxKontakt> tableViewKontakt;
+
     @FXML
     private TextField textFieldNachname;
-    /**
-     *
-     */
+
     @FXML
     private TextField textFieldVorname;
 
-    /**
-     * Erzeugt eine neue Instanz von {@link ContactView}
-     */
     public ContactView()
     {
         super();
@@ -99,9 +73,6 @@ public class ContactView implements View
         this.naviNode = createNaviNode();
     }
 
-    /**
-     * @return {@link Region}
-     */
     private Region createMainNode()
     {
         GridPane gridPane = new GridPane();
@@ -134,9 +105,6 @@ public class ContactView implements View
         return titledPane;
     }
 
-    /**
-     * @return {@link Region}
-     */
     private Region createNaviNode()
     {
         GridPane gridPane = new GridPane();
@@ -196,14 +164,9 @@ public class ContactView implements View
         return titledPane;
     }
 
-    /**
-     * @param propertyKontaktFilter {@link StringProperty}
-     *
-     * @return {@link TableView}
-     */
-    private TableView<FXKontakt> createTableViewKontakt(final StringProperty propertyKontaktFilter)
+    private TableView<FxKontakt> createTableViewKontakt(final StringProperty propertyKontaktFilter)
     {
-        TableView<FXKontakt> tableView = new TableView<>();
+        TableView<FxKontakt> tableView = new TableView<>();
         tableView.setEditable(false);
         tableView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
         tableView.setTableMenuButtonVisible(true);
@@ -216,9 +179,9 @@ public class ContactView implements View
 
         // tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
-        TableColumn<FXKontakt, Number> columnID = new TableColumn<>("%id");
-        TableColumn<FXKontakt, String> columnNachname = new TableColumn<>("%nachname");
-        TableColumn<FXKontakt, String> columnVorname = new TableColumn<>("%vorname");
+        TableColumn<FxKontakt, Number> columnID = new TableColumn<>("%id");
+        TableColumn<FxKontakt, String> columnNachname = new TableColumn<>("%nachname");
+        TableColumn<FxKontakt, String> columnVorname = new TableColumn<>("%vorname");
 
         columnID.prefWidthProperty().bind(tableView.widthProperty().multiply(0.1D)); // 10 % Breite
 
@@ -235,7 +198,7 @@ public class ContactView implements View
         tableView.getColumns().add(columnVorname);
 
         // Für Filter
-        FilteredList<FXKontakt> filteredData = new FilteredList<>(FXCollections.observableArrayList());
+        FilteredList<FxKontakt> filteredData = new FilteredList<>(FXCollections.observableArrayList());
 
         // Filter-Textfeld mit FilteredList verbinden.
         propertyKontaktFilter.addListener((observable, oldValue, newValue) -> filteredData.setPredicate(kontakt ->
@@ -251,7 +214,7 @@ public class ContactView implements View
         }));
 
         // Da die ObservableList der TableItems neu gesetzt wird, muss auch die Sortierung neu gemacht werden.
-        SortedList<FXKontakt> sortedData = new SortedList<>(filteredData);
+        SortedList<FxKontakt> sortedData = new SortedList<>(filteredData);
         sortedData.comparatorProperty().bind(tableView.comparatorProperty());
 
         tableView.setItems(sortedData);

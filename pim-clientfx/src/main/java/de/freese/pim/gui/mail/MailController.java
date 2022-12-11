@@ -15,13 +15,13 @@ import de.freese.pim.core.mail.MailContent;
 import de.freese.pim.core.spring.SpringContext;
 import de.freese.pim.gui.PimClientApplication;
 import de.freese.pim.gui.controller.AbstractController;
-import de.freese.pim.gui.mail.model.FXMail;
-import de.freese.pim.gui.mail.model.FXMailAccount;
-import de.freese.pim.gui.mail.model.FXMailFolder;
-import de.freese.pim.gui.mail.service.FXMailService;
+import de.freese.pim.gui.mail.model.FxMail;
+import de.freese.pim.gui.mail.model.FxMailAccount;
+import de.freese.pim.gui.mail.model.FxMailFolder;
+import de.freese.pim.gui.mail.service.FxMailService;
 import de.freese.pim.gui.mail.utils.MailUrlStreamHandlerFactory;
 import de.freese.pim.gui.mail.view.MailContentView;
-import de.freese.pim.gui.utils.FXUtils;
+import de.freese.pim.gui.utils.FxUtils;
 import de.freese.pim.gui.view.ErrorDialog;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
@@ -50,88 +50,54 @@ import javafx.scene.paint.Color;
  */
 public class MailController extends AbstractController
 {
-    /**
-     *
-     */
     private static final String FORMAT_DATE = "%1$ta %1$td.%1$tm.%1$ty %1$tH:%1$tM:%1$tS";
-    /**
-     *
-     */
-    private final FXMailService mailService;
-    /**
-     *
-     */
-    private final ObjectProperty<FXMail> selectedMail = new SimpleObjectProperty<>();
+
+    private final FxMailService mailService;
+
+    private final ObjectProperty<FxMail> selectedMail = new SimpleObjectProperty<>();
     // /**
     // * DateTimeFormatter formatterDate = DateTimeFormatter.ofPattern("EE dd.MM.yy HH:mm:ss");
     // */
     // private final DateFormat formatterDate = new SimpleDateFormat("EE dd.MM.yy HH:mm:ss");
-    /**
-     *
-     */
+
     private final ObjectProperty<TreeItem<Object>> selectedTreeItem = new SimpleObjectProperty<>();
-    /**
-     *
-     */
+
     @FXML
     private Button buttonAddAccount;
-    /**
-     *
-     */
+
     @FXML
     private Button buttonEditAccount;
-    /**
-     *
-     */
+
     @FXML
     private MailContentView mailContentView;
-    /**
-     *
-     */
+
     @FXML
     private Node mainNode;
-    /**
-     *
-     */
+
     @FXML
     private Node naviNode;
-    /**
-     *
-     */
+
     @FXML
     private ProgressIndicator progressIndicator;
-    /**
-     * Spalten für die Empfangs-Sicht.
-     */
-    private List<TableColumn<FXMail, ?>> tableColumnsReceived;
-    /**
-     * Spalten für die Sende-Sicht.
-     */
-    private List<TableColumn<FXMail, ?>> tableColumnsSend;
-    /**
-     *
-     */
+
+    private List<TableColumn<FxMail, ?>> tableColumnsReceived;
+
+    private List<TableColumn<FxMail, ?>> tableColumnsSend;
+
     @FXML
-    private TableView<FXMail> tableViewMail;
-    /**
-     *
-     */
+    private TableView<FxMail> tableViewMail;
+
     @FXML
     private ToolBar toolBar;
-    /**
-     *
-     */
+
     @FXML
     private TreeView<Object> treeViewMail;
 
-    /**
-     * Erzeugt eine neue Instanz von {@link MailController}
-     */
     public MailController()
     {
         super();
 
-        this.mailService = SpringContext.getBean("clientMailService", FXMailService.class);
+        this.mailService = SpringContext.getBean("clientMailService", FxMailService.class);
     }
 
     /**
@@ -191,7 +157,7 @@ public class MailController extends AbstractController
         this.buttonAddAccount.setOnAction(event ->
         {
             EditMailAccountDialog dialog = new EditMailAccountDialog();
-            Optional<FXMailAccount> result = dialog.addAccount(getMailService(), resources);
+            Optional<FxMailAccount> result = dialog.addAccount(getMailService(), resources);
             result.ifPresent(account ->
             {
                 try
@@ -213,10 +179,10 @@ public class MailController extends AbstractController
         this.buttonEditAccount.disableProperty().bind(this.selectedTreeItem.isNull());
         this.buttonEditAccount.setOnAction(event ->
         {
-            FXMailAccount ma = getAccount(this.selectedTreeItem.get());
+            FxMailAccount ma = getAccount(this.selectedTreeItem.get());
 
             EditMailAccountDialog dialog = new EditMailAccountDialog();
-            Optional<FXMailAccount> result = dialog.editAccount(getMailService(), resources, ma);
+            Optional<FxMailAccount> result = dialog.editAccount(getMailService(), resources, ma);
             result.ifPresent(account ->
             {
                 try
@@ -240,11 +206,11 @@ public class MailController extends AbstractController
         this.tableViewMail.setRowFactory(tableView -> new TableRow<>()
         {
             /**
-             * @param item {@link FXMail}
+             * @param item {@link FxMail}
              * @param empty boolean
              */
             @Override
-            public void updateItem(final FXMail item, final boolean empty)
+            public void updateItem(final FxMail item, final boolean empty)
             {
                 super.updateItem(item, empty);
 
@@ -294,12 +260,12 @@ public class MailController extends AbstractController
                 String text = null;
                 int newMails = 0;
 
-                if (item instanceof FXMailAccount ma)
+                if (item instanceof FxMailAccount ma)
                 {
                     text = ma.getMail();
                     newMails = ma.getUnreadMailsCount();
                 }
-                else if (item instanceof FXMailFolder mf)
+                else if (item instanceof FxMailFolder mf)
                 {
                     text = mf.getName();
                     newMails = mf.getUnreadMailsCountTotal();
@@ -348,19 +314,13 @@ public class MailController extends AbstractController
                 return null;
             }
 
-            int[] rgb = FXUtils.getProgressRGB(percent, Color.RED, Color.ORANGE, Color.YELLOW, Color.GREEN);
+            int[] rgb = FxUtils.getProgressRGB(percent, Color.RED, Color.ORANGE, Color.YELLOW, Color.GREEN);
 
             return String.format("-fx-progress-color: rgb(%d,%d,%d)", rgb[0], rgb[1], rgb[2]);
         }, getProgressIndicator().progressProperty()));
     }
 
-    /**
-     * Hinzufügen eines MailAccount in die GUI
-     *
-     * @param root {@link TreeItem}
-     * @param account {@link FXMailAccount}
-     */
-    private void addMailAccountToGUI(final TreeItem<Object> root, final FXMailAccount account)
+    private void addMailAccountToGUI(final TreeItem<Object> root, final FxMailAccount account)
     {
         // Path basePath = SettingService.getInstance().getHome();
         // Path accountPath = basePath.resolve(account.getMail());
@@ -377,46 +337,28 @@ public class MailController extends AbstractController
         getTaskExecutor().execute(service);
     }
 
-    /**
-     * Liefert den MailAccount.
-     *
-     * @param treeItem {@link TreeItem}
-     *
-     * @return {@link FXMailAccount}
-     */
-    private FXMailAccount getAccount(final TreeItem<Object> treeItem)
+    private FxMailAccount getAccount(final TreeItem<Object> treeItem)
     {
         TreeItem<Object> ti = treeItem;
 
-        while (!(ti.getValue() instanceof FXMailAccount))
+        while (!(ti.getValue() instanceof FxMailAccount))
         {
             ti = ti.getParent();
         }
 
-        return (FXMailAccount) ti.getValue();
+        return (FxMailAccount) ti.getValue();
     }
 
-    /**
-     * @return {@link FXMailService}
-     */
-    private FXMailService getMailService()
+    private FxMailService getMailService()
     {
         return this.mailService;
     }
 
-    /**
-     * @return {@link ProgressIndicator}
-     */
     private ProgressIndicator getProgressIndicator()
     {
         return this.progressIndicator;
     }
 
-    /**
-     * Laden der MailAccounts und befüllen des Trees.
-     *
-     * @param root {@link TreeItem}
-     */
     private void loadMailAccounts(final TreeItem<Object> root)
     {
         getLogger().debug("Load MailAccounts");
@@ -427,10 +369,10 @@ public class MailController extends AbstractController
         // .otherwise((ContextMenu)null));
         try
         {
-            List<FXMailAccount> accountList = getMailService().getMailAccounts();
+            List<FxMailAccount> accountList = getMailService().getMailAccounts();
             // Collections.reverse(accountList);
 
-            for (FXMailAccount account : accountList)
+            for (FxMailAccount account : accountList)
             {
                 addMailAccountToGUI(root, account);
             }
@@ -443,12 +385,7 @@ public class MailController extends AbstractController
         }
     }
 
-    /**
-     * Listener Methode.
-     *
-     * @param mail {@link FXMail}
-     */
-    private void selectedMail(final FXMail mail)
+    private void selectedMail(final FxMail mail)
     {
         this.mailContentView.newMailContent(null, null);
 
@@ -460,7 +397,7 @@ public class MailController extends AbstractController
         }
 
         PimClientApplication.blockGUI();
-        FXMailAccount account = getAccount(this.selectedTreeItem.get());
+        FxMailAccount account = getAccount(this.selectedTreeItem.get());
 
         Task<MailContent> loadMailContentTask = new Task<>()
         {
@@ -501,17 +438,11 @@ public class MailController extends AbstractController
         getTaskExecutor().execute(loadMailContentTask);
     }
 
-    /**
-     * Listener Methode.
-     *
-     * @param treeItem {@link TreeItem}
-     * @param resources {@link ResourceBundle}
-     */
     private void selectedTreeItem(final TreeItem<Object> treeItem, final ResourceBundle resources)
     {
         this.tableViewMail.setItems(null);
 
-        if ((treeItem == null) || !(treeItem.getValue() instanceof FXMailFolder folder))
+        if ((treeItem == null) || !(treeItem.getValue() instanceof FxMailFolder folder))
         {
             return;
         }
@@ -525,7 +456,7 @@ public class MailController extends AbstractController
             setReceivedTableColumns(resources);
         }
 
-        SortedList<FXMail> mailsSorted = folder.getMailsSorted();
+        SortedList<FxMail> mailsSorted = folder.getMailsSorted();
 
         // Damit ColumnsSortierung funktioniert, da ich schon eine SortedList verwende.
         // mailsSorted.comparatorProperty().unbind();
@@ -548,20 +479,15 @@ public class MailController extends AbstractController
         getTaskExecutor().execute(loadMailsTask);
     }
 
-    /**
-     * Setzte die Spalten für die Empfangs-Sicht der Tabelle.
-     *
-     * @param resources {@link ResourceBundle}
-     */
     private void setReceivedTableColumns(final ResourceBundle resources)
     {
         if (this.tableColumnsReceived == null)
         {
             this.tableColumnsReceived = new ArrayList<>();
 
-            TableColumn<FXMail, InternetAddress> columnFrom = new TableColumn<>(resources.getString("mail.from"));
-            TableColumn<FXMail, String> columnSubject = new TableColumn<>(resources.getString("mail.subject"));
-            TableColumn<FXMail, String> columnReceived = new TableColumn<>(resources.getString("mail.received"));
+            TableColumn<FxMail, InternetAddress> columnFrom = new TableColumn<>(resources.getString("mail.from"));
+            TableColumn<FxMail, String> columnSubject = new TableColumn<>(resources.getString("mail.subject"));
+            TableColumn<FxMail, String> columnReceived = new TableColumn<>(resources.getString("mail.received"));
 
             // columnFrom.prefWidthProperty().bind(this.tableViewMail.widthProperty().multiply(0.30D)); // 30% Breite
             columnFrom.setPrefWidth(300);
@@ -573,7 +499,7 @@ public class MailController extends AbstractController
             columnFrom.setStyle("-fx-alignment: center-left;");
             columnFrom.setCellValueFactory(cell -> cell.getValue().fromProperty()); // Für reine FX-Bean.
             // columnFrom.setCellValueFactory(new PropertyValueFactory<>("from")); // Updates erfolgen nur, wenn Bean PropertyChangeSupport hat.
-            // columnFrom.setCellValueFactory(cell -> FXUtils.toStringObservable(cell.getValue().fromProperty(), addr ->
+            // columnFrom.setCellValueFactory(cell -> FxUtils.toStringObservable(cell.getValue().fromProperty(), addr ->
             // addr.getAddress()));
             // columnFrom.setCellFactory(new InternetAddressCellFactory<Mail>());
 
@@ -616,20 +542,15 @@ public class MailController extends AbstractController
         this.tableViewMail.getColumns().addAll(this.tableColumnsReceived);
     }
 
-    /**
-     * Setzte die Spalten für die Sende-Sicht der Tabelle.
-     *
-     * @param resources {@link ResourceBundle}
-     */
     private void setSendTableColumns(final ResourceBundle resources)
     {
         if (this.tableColumnsSend == null)
         {
             this.tableColumnsSend = new ArrayList<>();
 
-            TableColumn<FXMail, InternetAddress[]> columnTo = new TableColumn<>(resources.getString("mail.to"));
-            TableColumn<FXMail, String> columnSubject = new TableColumn<>(resources.getString("mail.subject"));
-            TableColumn<FXMail, String> columnSend = new TableColumn<>(resources.getString("mail.send"));
+            TableColumn<FxMail, InternetAddress[]> columnTo = new TableColumn<>(resources.getString("mail.to"));
+            TableColumn<FxMail, String> columnSubject = new TableColumn<>(resources.getString("mail.subject"));
+            TableColumn<FxMail, String> columnSend = new TableColumn<>(resources.getString("mail.send"));
 
             columnTo.setPrefWidth(300);
             columnSend.setPrefWidth(180);

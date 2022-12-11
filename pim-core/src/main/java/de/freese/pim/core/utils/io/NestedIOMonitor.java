@@ -10,25 +10,10 @@ import java.util.Objects;
  */
 public class NestedIOMonitor implements IOMonitor
 {
-    /**
-     *
-     */
-    private long currentAccepted;
-    /**
-     *
-     */
     private final IOMonitor delegate;
-    /**
-     *
-     */
     private final long size;
+    private long currentAccepted;
 
-    /**
-     * Erstellt ein neues {@link NestedIOMonitor} Object.
-     *
-     * @param delegate {@link IOMonitor}
-     * @param size long
-     */
     public NestedIOMonitor(final IOMonitor delegate, final long size)
     {
         super();

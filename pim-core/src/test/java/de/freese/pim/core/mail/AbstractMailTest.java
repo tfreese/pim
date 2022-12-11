@@ -18,36 +18,13 @@ import org.junit.runners.Parameterized.Parameters;
  */
 public abstract class AbstractMailTest
 {
-    /**
-     *
-     */
-    protected static final Boolean DEBUG = Boolean.FALSE;
-    /**
-     *
-     */
     public static final String MAIL_IMAP_HOST = getMailProvider().getImapHost();
-    /**
-     *
-     */
     public static final MailPort MAIL_IMAP_PORT = getMailProvider().getImapPort();
-    /**
-     *
-     */
     public static final String MAIL_SMPT_HOST = getMailProvider().getSmtpHost();
-    /**
-     *
-     */
     public static final MailPort MAIL_SMPT_PORT = getMailProvider().getSmtpPort();
-    /**
-     * {@link Path} für TMP-Dateien.
-     */
     public static final Path TMP_TEST_PATH = Paths.get(System.getProperty("user.dir"), "test");
+    protected static final Boolean DEBUG = Boolean.FALSE;
 
-    /**
-     * @return {@link Iterable}
-     *
-     * @throws Exception Falls was schiefgeht.
-     */
     @Parameters(name = "Account: {0}") // {index}
     public static Iterable<Object[]> accounts() throws Exception
     {
@@ -77,27 +54,17 @@ public abstract class AbstractMailTest
                 });
     }
 
-    /**
-     * @return {@link MailProvider}
-     */
     private static MailProvider getMailProvider()
     {
         return MailProvider.EinsUndEins;
     }
 
-    /**
-     *
-     */
     @Parameter(value = 0)
     public String from;
-    /**
-     *
-     */
+
     @Parameter(value = 2)
     public String password;
-    /**
-     *
-     */
+
     @Parameter(value = 1)
     public String to;
 }

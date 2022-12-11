@@ -21,13 +21,6 @@ import javafx.stage.Modality;
  */
 public class ErrorDialog
 {
-    /**
-     * Konvertiert den StackTrace.
-     *
-     * @param throwable {@link Throwable}
-     *
-     * @return String
-     */
     public static String toString(final Throwable throwable)
     {
         StringWriter stringWriter = new StringWriter();
@@ -38,14 +31,8 @@ public class ErrorDialog
         return stringWriter.toString();
     }
 
-    /**
-     *
-     */
     private final Alert alert;
 
-    /**
-     * Erzeugt eine neue Instanz von {@link ErrorDialog}
-     */
     public ErrorDialog()
     {
         super();
@@ -59,11 +46,6 @@ public class ErrorDialog
         title("Error");
     }
 
-    /**
-     * @param text String
-     *
-     * @return {@link ErrorDialog}
-     */
     public ErrorDialog contentText(final String text)
     {
         this.alert.setContentText(text);
@@ -73,10 +55,6 @@ public class ErrorDialog
 
     /**
      * Ersetzt den Header- und Content-Text.
-     *
-     * @param throwable {@link Throwable}
-     *
-     * @return {@link ErrorDialog}
      */
     public ErrorDialog forThrowable(final Throwable throwable)
     {
@@ -117,11 +95,6 @@ public class ErrorDialog
         return this;
     }
 
-    /**
-     * @param text String
-     *
-     * @return {@link ErrorDialog}
-     */
     public ErrorDialog headerText(final String text)
     {
         this.alert.setHeaderText(text);
@@ -138,11 +111,6 @@ public class ErrorDialog
         this.alert.showAndWait();
     }
 
-    /**
-     * @param title String
-     *
-     * @return {@link ErrorDialog}
-     */
     public ErrorDialog title(final String title)
     {
         this.alert.setTitle(title);

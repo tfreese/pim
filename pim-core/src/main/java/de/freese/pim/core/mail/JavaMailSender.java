@@ -146,8 +146,6 @@ public class JavaMailSender
     /**
      * Obtain and connect Transport from the underlying JavaMail Session, passing in the specified host, port, username, and password.
      *
-     * @return Transport
-     *
      * @throws MessagingException if connect attempt failed
      * @see #getTransport
      * @see #getHost()
@@ -173,8 +171,6 @@ public class JavaMailSender
      * @param mimeMessages MimeMessage objects to send
      * @param originalMessages corresponding original message objects that the MimeMessages have been created from (with same array length and indices as the
      * "mimeMessages" array), if any
-     *
-     * @throws Exception Falls was schiefgeht.
      */
     protected void doSend(final MimeMessage[] mimeMessages, final Object[] originalMessages) throws Exception
     {
@@ -293,11 +289,6 @@ public class JavaMailSender
     /**
      * Obtain a Transport object from the given JavaMail Session, using the configured protocol.
      *
-     * @param session {@link Session}
-     *
-     * @return {@link Transport}
-     *
-     * @throws NoSuchProviderException Falls was schiefgeht.
      * @see jakarta.mail.Session#getTransport(String)
      * @see #getSession()
      * @see #getProtocol()

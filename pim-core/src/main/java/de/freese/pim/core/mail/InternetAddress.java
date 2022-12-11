@@ -17,41 +17,20 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class InternetAddress
 {
-    /**
-     * @param addresses {@link InternetAddress}[]
-     *
-     * @return String
-     */
     public static String toString(final InternetAddress[] addresses)
     {
         return Stream.of(addresses).map(InternetAddress::toString).collect(Collectors.joining(", "));
     }
 
-    /**
-     *
-     */
     private final String address;
-    /**
-     *
-     */
+
     private final String personal;
 
-    /**
-     * Erzeugt eine neue Instanz von {@link InternetAddress}
-     *
-     * @param address String
-     */
     public InternetAddress(@JsonProperty("address") final String address)
     {
         this(address, null);
     }
 
-    /**
-     * Erzeugt eine neue Instanz von {@link InternetAddress}
-     *
-     * @param address String
-     * @param personal String
-     */
     @JsonCreator
     public InternetAddress(@JsonProperty("address") final String address, @JsonProperty("personal") final String personal)
     {
@@ -61,33 +40,21 @@ public class InternetAddress
         this.personal = personal;
     }
 
-    /**
-     * @return String
-     */
     public String getAddress()
     {
         return this.address;
     }
 
-    /**
-     * @return String
-     */
     public String getPersonal()
     {
         return this.personal;
     }
 
-    // /**
-    // * @param address String
-    // */
     // public void setAddress(final String address)
     // {
     // this.address = address;
     // }
 
-    // /**
-    // * @param personal String
-    // */
     // public void setPersonal(final String personal)
     // {
     // this.personal = personal;

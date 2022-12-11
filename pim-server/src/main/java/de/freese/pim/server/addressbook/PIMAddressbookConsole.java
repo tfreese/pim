@@ -39,79 +39,10 @@ import org.springframework.transaction.support.DefaultTransactionDefinition;
  */
 public final class PIMAddressbookConsole
 {
-    /**
-     *
-     */
     public static final Logger LOGGER = LoggerFactory.getLogger(PIMAddressbookConsole.class);
-    /**
-     *
-     */
+
     public static final PrintStream PRINT_STREAM = System.out;
 
-    /**
-     * Liefert die möglichen Optionen der Kommandozeile.<br>
-     * Dies sind die JRE Programm Argumente.
-     *
-     * @return {@link Options}
-     */
-    private static Options getCommandOptions()
-    {
-        OptionGroup group = new PreserveOrderOptionGroup();
-
-        Option option = new Option("ik", "insert-kontakt", true, "Hinzufügen eines Kontakts");
-        option.setArgs(2);
-        option.setArgName("NACHNAME VORNAME");
-        group.addOption(option);
-
-        option = new Option("uk", "update-kontakt", true, "Aktualisieren eines Kontakts");
-        option.setArgs(3);
-        option.setArgName("ID NACHNAME VORNAME");
-        group.addOption(option);
-
-        option = new Option("dk", "delete-kontakt", true, "Löscht einen Kontakt");
-        option.setArgs(1);
-        option.setArgName("ID");
-        group.addOption(option);
-
-        option = new Option("ia", "insert-attribut", true, "Hinzufügen eines Kontaktattributs");
-        option.setArgs(3);
-        option.setArgName("ID ATTRIBUT WERT");
-        group.addOption(option);
-
-        option = new Option("ua", "update-attribut", true, "Aktualisieren eines Kontaktattributs");
-        option.setArgs(3);
-        option.setArgName("ID ATTRIBUT WERT");
-        group.addOption(option);
-
-        option = new Option("da", "delete-attribut", true, "Löschen eines Kontaktattributs");
-        option.setArgs(2);
-        option.setArgName("ID ATTRIBUT");
-        group.addOption(option);
-
-        option = new Option("lk", "list-kontakte", false, "Auflisten aller Kontakte");
-        group.addOption(option);
-
-        option = new Option("vk", "view-kontakt", true, "Liefert Details eines Kontakts");
-        option.setArgs(1);
-        option.setArgName("ID");
-        group.addOption(option);
-
-        option = new Option("s", "search", true, "Suchen nach Kontakten");
-        option.setArgs(1);
-        option.setArgName("Pattern");
-        group.addOption(option);
-
-        Options options = new Options();
-        options.addOptionGroup(group);
-
-        return options;
-    }
-
-    /**
-     * @param args String[]
-     *
-     * @throws Exception Falls was schiefgeht.
-     */
     public static void main(String[] args) throws Exception
     {
         if (args.length == 0)
@@ -218,8 +149,62 @@ public final class PIMAddressbookConsole
     }
 
     /**
-     *
+     * Liefert die möglichen Optionen der Kommandozeile.<br>
+     * Dies sind die JRE Programm Argumente.
      */
+    private static Options getCommandOptions()
+    {
+        OptionGroup group = new PreserveOrderOptionGroup();
+
+        Option option = new Option("ik", "insert-kontakt", true, "Hinzufügen eines Kontakts");
+        option.setArgs(2);
+        option.setArgName("NACHNAME VORNAME");
+        group.addOption(option);
+
+        option = new Option("uk", "update-kontakt", true, "Aktualisieren eines Kontakts");
+        option.setArgs(3);
+        option.setArgName("ID NACHNAME VORNAME");
+        group.addOption(option);
+
+        option = new Option("dk", "delete-kontakt", true, "Löscht einen Kontakt");
+        option.setArgs(1);
+        option.setArgName("ID");
+        group.addOption(option);
+
+        option = new Option("ia", "insert-attribut", true, "Hinzufügen eines Kontaktattributs");
+        option.setArgs(3);
+        option.setArgName("ID ATTRIBUT WERT");
+        group.addOption(option);
+
+        option = new Option("ua", "update-attribut", true, "Aktualisieren eines Kontaktattributs");
+        option.setArgs(3);
+        option.setArgName("ID ATTRIBUT WERT");
+        group.addOption(option);
+
+        option = new Option("da", "delete-attribut", true, "Löschen eines Kontaktattributs");
+        option.setArgs(2);
+        option.setArgName("ID ATTRIBUT");
+        group.addOption(option);
+
+        option = new Option("lk", "list-kontakte", false, "Auflisten aller Kontakte");
+        group.addOption(option);
+
+        option = new Option("vk", "view-kontakt", true, "Liefert Details eines Kontakts");
+        option.setArgs(1);
+        option.setArgName("ID");
+        group.addOption(option);
+
+        option = new Option("s", "search", true, "Suchen nach Kontakten");
+        option.setArgs(1);
+        option.setArgName("Pattern");
+        group.addOption(option);
+
+        Options options = new Options();
+        options.addOptionGroup(group);
+
+        return options;
+    }
+
     private static void usage()
     {
         HelpFormatter formatter = new HelpFormatter();
@@ -236,23 +221,12 @@ public final class PIMAddressbookConsole
         System.exit(-1);
     }
 
-    /**
-     *
-     */
     private AddressBookDAO addressBookDAO;
-    /**
-     *
-     */
+
     private PrintStream printStream = System.out;
-    /**
-     *
-     */
+
     private PlatformTransactionManager transactionManager;
 
-    /**
-     * @param kontakt_id long
-     * @param attribut String
-     */
     private void deleteAttribut(final long kontakt_id, final String attribut)
     {
         TransactionDefinition transactionDefinition = new DefaultTransactionDefinition();
@@ -283,9 +257,6 @@ public final class PIMAddressbookConsole
         }
     }
 
-    /**
-     * @param id long
-     */
     private void deleteKontakt(final long id)
     {
         TransactionDefinition transactionDefinition = new DefaultTransactionDefinition();
@@ -314,9 +285,6 @@ public final class PIMAddressbookConsole
         }
     }
 
-    /**
-     * @param id long
-     */
     private void getKontaktDetails(final long id)
     {
         try
@@ -332,9 +300,6 @@ public final class PIMAddressbookConsole
         }
     }
 
-    /**
-     *
-     */
     private void getKontakte()
     {
         try
@@ -366,11 +331,6 @@ public final class PIMAddressbookConsole
         }
     }
 
-    /**
-     * @param kontakt_id long
-     * @param attribut String
-     * @param wert String
-     */
     private void insertAttribut(final long kontakt_id, final String attribut, final String wert)
     {
         TransactionDefinition transactionDefinition = new DefaultTransactionDefinition();
@@ -401,10 +361,6 @@ public final class PIMAddressbookConsole
         }
     }
 
-    /**
-     * @param nachname String
-     * @param vorname String
-     */
     private void insertKontakt(final String nachname, final String vorname)
     {
         TransactionDefinition transactionDefinition = new DefaultTransactionDefinition();
@@ -435,10 +391,6 @@ public final class PIMAddressbookConsole
         }
     }
 
-    /**
-     * @param rows {@link List}
-     * @param printStream {@link PrintStream}
-     */
     private void print(final List<String[]> rows, final PrintStream printStream)
     {
         Utils.padding(rows, " ");
@@ -446,9 +398,6 @@ public final class PIMAddressbookConsole
         Utils.write(rows, printStream, " | ");
     }
 
-    /**
-     * @param kontakte {@link List}
-     */
     private void printDetails(final List<Kontakt> kontakte)
     {
         List<String[]> rows = new ArrayList<>();
@@ -491,9 +440,6 @@ public final class PIMAddressbookConsole
         print(rows, this.printStream);
     }
 
-    /**
-     * @param name String
-     */
     private void search(final String name)
     {
         try
@@ -509,35 +455,21 @@ public final class PIMAddressbookConsole
         }
     }
 
-    /**
-     * @param addressBookDAO {@link AddressBookDAO}
-     */
     private void setAddressBookDAO(final AddressBookDAO addressBookDAO)
     {
         this.addressBookDAO = addressBookDAO;
     }
 
-    /**
-     * @param printStream {@link PrintStream}
-     */
     private void setPrintStream(final PrintStream printStream)
     {
         this.printStream = printStream;
     }
 
-    /**
-     * @param transactionManager {@link PlatformTransactionManager}
-     */
     private void setTransactionManager(final PlatformTransactionManager transactionManager)
     {
         this.transactionManager = transactionManager;
     }
 
-    /**
-     * @param kontakt_id long
-     * @param attribut String
-     * @param wert String
-     */
     private void updateAttribut(final long kontakt_id, final String attribut, final String wert)
     {
         TransactionDefinition transactionDefinition = new DefaultTransactionDefinition();
@@ -568,11 +500,6 @@ public final class PIMAddressbookConsole
         }
     }
 
-    /**
-     * @param id long
-     * @param nachname String
-     * @param vorname String
-     */
     private void updateKontakt(final long id, final String nachname, final String vorname)
     {
         TransactionDefinition transactionDefinition = new DefaultTransactionDefinition();

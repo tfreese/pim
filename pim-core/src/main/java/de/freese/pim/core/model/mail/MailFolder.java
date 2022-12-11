@@ -10,42 +10,26 @@ import java.util.function.Predicate;
  */
 public class MailFolder
 {
-    /**
-     *
-     */
     // @NotNull
     private boolean abonniert = true;
-    /**
-     *
-     */
+
     // @NotNull
     private long accountID;
-    /**
-     *
-     */
+
     // @NotNull
     // @Size(min = 0, max = 100)
     private String fullName;
-    /**
-     *
-     */
+
     // @NotNull
     private long id;
-    /**
-     *
-     */
+
     // @NotNull
     // @Size(min = 0, max = 100)
     private String name;
-    /**
-     *
-     */
+
     // @NotNull
     private boolean sendFolder;
 
-    /**
-     * @return long
-     */
     public long getAccountID()
     {
         return this.accountID;
@@ -53,65 +37,37 @@ public class MailFolder
 
     /**
      * Liefert den vollen Hierarchie-Namen, z.B. PARENT_NAME/FOLDER_NAME.
-     *
-     * @return String
      */
     public String getFullName()
     {
         return this.fullName;
     }
 
-    /**
-     * @return long
-     */
     public long getID()
     {
         return this.id;
     }
 
-    /**
-     * Liefert den Namen des Folders.
-     *
-     * @return String
-     */
     public String getName()
     {
         return this.name;
     }
 
-    /**
-     * Liefert das Flag, um den Folder zu abonnieren/beobachten.
-     *
-     * @return boolean
-     */
     public boolean isAbonniert()
     {
         return this.abonniert;
     }
 
-    /**
-     * Liefert true, wenn dieser Folder die gesendeten Mails enthält.
-     *
-     * @return boolean
-     */
     public boolean isSendFolder()
     {
         return this.sendFolder;
     }
 
-    /**
-     * Setzt das Flag, um den Folder zu abonnieren/beobachten.
-     *
-     * @param abo boolean
-     */
     public void setAbonniert(final boolean abo)
     {
         this.abonniert = abo;
     }
 
-    /**
-     * @param accountID long
-     */
     public void setAccountID(final long accountID)
     {
         this.accountID = accountID;
@@ -119,27 +75,17 @@ public class MailFolder
 
     /**
      * Setzt den vollen Hierarchie-Namen, z.B. PARENT_NAME/FOLDER_NAME.
-     *
-     * @param fullName String
      */
     public void setFullName(final String fullName)
     {
         this.fullName = fullName;
     }
 
-    /**
-     * @param id long
-     */
     public void setID(final long id)
     {
         this.id = id;
     }
 
-    /**
-     * Setzt den Namen des Folders.
-     *
-     * @param name String
-     */
     public void setName(final String name)
     {
         this.name = name;

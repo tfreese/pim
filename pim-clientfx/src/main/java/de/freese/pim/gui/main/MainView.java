@@ -25,32 +25,14 @@ import javafx.scene.layout.VBox;
  */
 public class MainView extends BorderPane implements View
 {
-    /**
-     *
-     */
     public static final TextArea LOG_TEXT_AREA = new TextArea();
-    /**
-     *
-     */
-    @FXML
-    private Button buttonContactView;
-    /**
-     *
-     */
-    @FXML
-    private Button buttonMailView;
-    /**
-     *
-     */
     private final SplitPane splitPane;
-    /**
-     *
-     */
     private final VBox vBox;
+    @FXML
+    private final Button buttonContactView;
+    @FXML
+    private final Button buttonMailView;
 
-    /**
-     * Erzeugt eine neue Instanz von {@link MainView}
-     */
     public MainView()
     {
         super();
@@ -126,11 +108,6 @@ public class MainView extends BorderPane implements View
         // setBottom(titledPane);
     }
 
-    /**
-     * Setzt den {@link Node} der Haupt-Ansicht.
-     *
-     * @param node {@link Node}
-     */
     public void setMainNode(final Node node)
     {
         this.splitPane.getItems().set(1, node);
@@ -140,11 +117,6 @@ public class MainView extends BorderPane implements View
         // layout();
     }
 
-    /**
-     * Setzt den {@link Node} der Navigations-Ansicht.
-     *
-     * @param node {@link Pane}
-     */
     public void setNavNode(final Node node)
     {
         // VBox.setVgrow(node, Priority.ALWAYS);
@@ -155,11 +127,6 @@ public class MainView extends BorderPane implements View
         // layout();
     }
 
-    /**
-     * Setzt die {@link ToolBar} der Haupt-Ansicht.
-     *
-     * @param toolBar {@link ToolBar}
-     */
     public void setToolbar(final ToolBar toolBar)
     {
         setTop(toolBar);

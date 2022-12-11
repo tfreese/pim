@@ -5,10 +5,10 @@ import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.Callable;
 
-import de.freese.pim.gui.mail.model.FXMail;
-import de.freese.pim.gui.mail.model.FXMailAccount;
-import de.freese.pim.gui.mail.model.FXMailFolder;
-import de.freese.pim.gui.mail.service.FXMailService;
+import de.freese.pim.gui.mail.model.FxMail;
+import de.freese.pim.gui.mail.model.FxMailAccount;
+import de.freese.pim.gui.mail.model.FxMailFolder;
+import de.freese.pim.gui.mail.service.FxMailService;
 import de.freese.pim.gui.view.ErrorDialog;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
@@ -23,32 +23,15 @@ import org.slf4j.LoggerFactory;
  */
 public class LoadMailsTask extends Task<Void> implements Callable<Void>
 {
-    /**
-     *
-     */
     public static final Logger LOGGER = LoggerFactory.getLogger(LoadMailsTask.class);
-    /**
-     *
-     */
-    private final FXMailAccount account;
-    /**
-     *
-     */
-    private final List<FXMailFolder> folders;
-    /**
-     *
-     */
-    private final FXMailService mailService;
 
-    /**
-     * Erzeugt eine neue Instanz von {@link LoadMailsTask}
-     *
-     * @param treeView {@link TreeView}
-     * @param folders {@link List}
-     * @param mailService {@link FXMailService}
-     * @param account {@link FXMailAccount}
-     */
-    public LoadMailsTask(final TreeView<Object> treeView, final List<FXMailFolder> folders, final FXMailService mailService, final FXMailAccount account)
+    private final FxMailAccount account;
+
+    private final List<FxMailFolder> folders;
+
+    private final FxMailService mailService;
+
+    public LoadMailsTask(final TreeView<Object> treeView, final List<FxMailFolder> folders, final FxMailService mailService, final FxMailAccount account)
     {
         super();
 
@@ -76,9 +59,9 @@ public class LoadMailsTask extends Task<Void> implements Callable<Void>
     @Override
     public Void call() throws Exception
     {
-        for (FXMailFolder mf : this.folders)
+        for (FxMailFolder mf : this.folders)
         {
-            List<FXMail> mails = this.mailService.loadMails(this.account, mf);
+            List<FxMail> mails = this.mailService.loadMails(this.account, mf);
 
             Runnable task = () ->
             {

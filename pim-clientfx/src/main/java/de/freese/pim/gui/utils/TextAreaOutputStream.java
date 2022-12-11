@@ -24,16 +24,8 @@ public class TextAreaOutputStream extends OutputStream
      */
     private static class LimitedTextArea extends TextArea
     {
-        /**
-         *
-         */
         private final int keepLastNLines;
 
-        /**
-         * Erzeugt eine neue Instanz von {@link LimitedTextArea}
-         *
-         * @param keepLastNLines int
-         */
         public LimitedTextArea(final int keepLastNLines)
         {
             super();
@@ -64,11 +56,6 @@ public class TextAreaOutputStream extends OutputStream
 
     /**
      * Verhindert, das mehr als n Zeilen eingefügt werden können.
-     *
-     * @param <T> Konkreter Typ
-     * @param maxLines int
-     *
-     * @return {@link TextFormatter}
      */
     static <T> TextFormatter<T> createLimitedTextFormatter(final int maxLines)
     {
@@ -92,24 +79,13 @@ public class TextAreaOutputStream extends OutputStream
         });
     }
 
-    /**
-     *
-     */
     private final TextArea textArea;
 
-    /**
-     * Erzeugt eine neue Instanz von {@link TextAreaOutputStream}
-     */
     public TextAreaOutputStream()
     {
         this(new LimitedTextArea(20));
     }
 
-    /**
-     * Erzeugt eine neue Instanz von {@link TextAreaOutputStream}
-     *
-     * @param textArea {@link TextArea}
-     */
     public TextAreaOutputStream(final TextArea textArea)
     {
         super();
@@ -118,9 +94,6 @@ public class TextAreaOutputStream extends OutputStream
         // this.textArea.setTextFormatter(createTextFormatter());
     }
 
-    /**
-     * @return {@link TextArea}
-     */
     public TextArea getTextArea()
     {
         return this.textArea;

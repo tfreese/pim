@@ -11,10 +11,5 @@ package de.freese.pim.core.function;
 @FunctionalInterface
 public interface ExceptionalRunnable<E extends Exception>
 {
-    /**
-     * Performs this operation.
-     *
-     * @throws E Falls was schiefgeht.
-     */
     void run() throws E;
 }

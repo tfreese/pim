@@ -31,9 +31,6 @@ public class DefaultAddressBookDAO extends AbstractDAO implements AddressBookDAO
      */
     private static class KontaktDetailsResultSetExtractor implements ResultSetExtractor<List<Kontakt>>
     {
-        /**
-         *
-         */
         private final RowMapper<Kontakt> kontaktRowMapper = new KontaktRowMapper();
 
         /**
@@ -211,14 +208,6 @@ public class DefaultAddressBookDAO extends AbstractDAO implements AddressBookDAO
     }
 
     /**
-     * @return String
-     */
-    protected String getUserID()
-    {
-        return Utils.getSystemUserName();
-    }
-
-    /**
      * @see de.freese.pim.core.dao.AddressBookDAO#insertAttribut(long, java.lang.String, java.lang.String)
      */
     @Override
@@ -286,5 +275,10 @@ public class DefaultAddressBookDAO extends AbstractDAO implements AddressBookDAO
         String sql = "update KONTAKT set nachname = ?, vorname = ? where user_id = ? and id = ?";
 
         return getJdbcTemplate().update(sql, nachname, vorname, userID, id);
+    }
+
+    protected String getUserID()
+    {
+        return Utils.getSystemUserName();
     }
 }

@@ -42,12 +42,7 @@ public final class JavaMailBuilder
     }
 
     /**
-     * @param session {@link Session}
-     * @param charset String
      * @param fileTypeMap {@link FileTypeMap}; optional, wird für Attachments benötigt
-     * @param validateAddresses boolean
-     *
-     * @return {@link JavaMailBuilder}
      */
     public static JavaMailBuilder create(final Session session, final String charset, final FileTypeMap fileTypeMap, final boolean validateAddresses)
     {
@@ -83,12 +78,7 @@ public final class JavaMailBuilder
     private String text;
 
     /**
-     * Erzeugt eine neue Instanz von {@link JavaMailBuilder}
-     *
-     * @param session {@link Session}
-     * @param charset String
      * @param fileTypeMap {@link FileTypeMap}; optional, wird für Attachments benötigt
-     * @param validateAddresses boolean
      */
     private JavaMailBuilder(final Session session, final String charset, final FileTypeMap fileTypeMap, final boolean validateAddresses)
     {
@@ -576,9 +566,6 @@ public final class JavaMailBuilder
      * <p>
      * Note that this method will just work on JavaMail >= 1.3. You can override it for validation on older JavaMail versions or for custom validation.
      *
-     * @param address {@link InternetAddress}
-     *
-     * @throws AddressException if validation failed
      * @see jakarta.mail.internet.InternetAddress#validate()
      */
     private void validateAddress(final InternetAddress address) throws AddressException

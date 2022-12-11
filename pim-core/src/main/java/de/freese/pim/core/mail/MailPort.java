@@ -44,13 +44,6 @@ public enum MailPort
      */
     UNKNOWN(-1);
 
-    /**
-     * Liefert den passenden ENUM für den Port oder null.
-     *
-     * @param port int
-     *
-     * @return MailPort
-     */
     public static MailPort findByPort(final int port)
     {
         Optional<MailPort> result = Stream.of(values()).filter(mp -> mp.getPort() == port).findFirst();
@@ -58,24 +51,13 @@ public enum MailPort
         return result.orElseThrow(() -> new IllegalArgumentException("port not found: " + port));
     }
 
-    /**
-     *
-     */
     private final int port;
 
-    /**
-     * Erzeugt eine neue Instanz von {@link MailPort}
-     *
-     * @param port int
-     */
     MailPort(final int port)
     {
         this.port = port;
     }
 
-    /**
-     * @return int
-     */
     public int getPort()
     {
         return this.port;

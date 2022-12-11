@@ -22,9 +22,6 @@ import org.junit.jupiter.api.TestMethodOrder;
 @Disabled("Funktioniert nur in der IDE")
 class TestMisc
 {
-    /**
-     *
-     */
     @BeforeAll
     static void beforeAll()
     {
@@ -36,8 +33,6 @@ class TestMisc
     /**
      * <a href="http://www.angelikalanger.com/Articles/EffectiveJava/79.Java8.CompletableFuture/79.Java8.CompletableFuture.html">Java8.CompletableFuture</a><br>
      * <a href="http://www.nurkiewicz.com/2013/05/java-8-definitive-guide-to.html">java-8-definitive-guide-to</a>
-     *
-     * @throws Exception Falls was schiefgeht.
      */
     @Test
     void test010CompletableFuture() throws Exception

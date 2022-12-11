@@ -15,13 +15,8 @@ import javax.swing.ProgressMonitorInputStream;
  */
 public class MonitorInputStream extends InputStream
 {
-    /**
-     *
-     */
     private final InputStream delegate;
-    /**
-     *
-     */
+
     private final IOMonitor monitor;
     /**
      * Anzahl Bytes (Größe) des gesamten Channels.
@@ -33,10 +28,6 @@ public class MonitorInputStream extends InputStream
     private long sizeRead;
 
     /**
-     * Erzeugt eine neue Instanz von {@link MonitorInputStream}
-     *
-     * @param delegate {@link InputStream}
-     * @param monitor {@link IOMonitor};
      * @param size long; Anzahl Bytes (Größe) des gesamten Channels
      */
     public MonitorInputStream(final InputStream delegate, final IOMonitor monitor, final long size)

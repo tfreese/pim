@@ -18,29 +18,16 @@ public class PIMForkJoinWorkerThreadFactory implements ForkJoinWorkerThreadFacto
      */
     private static class PIMForkJoinWorkerThread extends ForkJoinWorkerThread
     {
-        /**
-         * Erzeugt eine neue Instanz von {@link PIMForkJoinWorkerThread}
-         *
-         * @param pool {@link ForkJoinPool}
-         */
         public PIMForkJoinWorkerThread(final ForkJoinPool pool)
         {
             super(pool);
         }
     }
 
-    /**
-     *
-     */
     private final AtomicInteger counter = new AtomicInteger(1);
-    /**
-     *
-     */
+
     private final String namePrefix;
 
-    /**
-     * Erzeugt eine neue Instanz von {@link PIMForkJoinWorkerThreadFactory}
-     */
     public PIMForkJoinWorkerThreadFactory()
     {
         super();

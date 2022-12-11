@@ -58,8 +58,6 @@ public abstract class AbstractMailApi implements MailApi
 
     /**
      * Optionaler {@link Executor} für die Mail-API.
-     *
-     * @return {@link Executor}
      */
     protected Executor getExecutor()
     {

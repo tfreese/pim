@@ -12,13 +12,8 @@ import java.util.Objects;
  */
 public class MonitorOutputStream extends OutputStream
 {
-    /**
-     *
-     */
     private final OutputStream delegate;
-    /**
-     *
-     */
+
     private final IOMonitor monitor;
     /**
      * Anzahl Bytes (Größe) des gesamten Channels.
@@ -30,10 +25,6 @@ public class MonitorOutputStream extends OutputStream
     private long sizeWritten;
 
     /**
-     * Erzeugt eine neue Instanz von {@link MonitorOutputStream}
-     *
-     * @param delegate {@link OutputStream}
-     * @param monitor {@link IOMonitor}
      * @param size long; Anzahl Bytes (Größe) des gesamten Channels
      */
     public MonitorOutputStream(final OutputStream delegate, final IOMonitor monitor, final long size)

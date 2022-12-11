@@ -18,15 +18,11 @@ import org.slf4j.LoggerFactory;
  * </pre>
  *
  * @author Thomas Freese
- *
  * @see InlineUrlStreamHandler
  * @see InlineUrlConnection
  */
 public class MailUrlStreamHandlerFactory implements URLStreamHandlerFactory
 {
-    /**
-    *
-    */
     private static final Logger LOGGER = LoggerFactory.getLogger(MailUrlStreamHandlerFactory.class);
 
     /**

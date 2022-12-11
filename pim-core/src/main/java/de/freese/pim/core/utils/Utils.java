@@ -42,13 +42,9 @@ public final class Utils
      * ^(.+)@(.+)\\.\\w{2,3}$
      */
     public static final String MAIL_REGEX = "^(.+)@(.+)\\.[a-zA-Z]{2,3}$";
-    /**
-     *
-     */
+
     public static final Predicate<Path> PREDICATE_IS_DIR = Files::isDirectory;
-    /**
-     *
-     */
+
     public static final Predicate<Path> PREDICATE_IS_DIR_NOT = PREDICATE_IS_DIR.negate();
     /**
      * p -> p.getFileName().toString().startsWith(".");
@@ -64,38 +60,22 @@ public final class Utils
             return false;
         }
     };
-    /**
-     *
-     */
+
     public static final Predicate<Path> PREDICATE_IS_HIDDEN_NOT = PREDICATE_IS_HIDDEN.negate();
-    /**
-     *
-     */
+
     public static final Predicate<Path> PREDICATE_MAIL_FOLDER = PREDICATE_IS_DIR_NOT.or(PREDICATE_IS_HIDDEN_NOT);
-    /**
-     *
-     */
+
     public static final Predicate<Path> PREDICATE_MAIL_FOLDER_LEAF = p -> ".leaf".equals(p.getFileName().toString());
-    /**
-     *
-     */
+
     public static final Predicate<Path> PREDICATE_MAIL_FOLDER_LEAF_NOT = PREDICATE_MAIL_FOLDER_LEAF.negate();
-    /**
-     *
-     */
+
     private static final Logger LOGGER = LoggerFactory.getLogger(Utils.class);
-    /**
-     *
-     */
+
     private static final String SYSTEM_USER_NAME = System.getProperty("user.name").toUpperCase();
 
     /**
      * Fügt am Index 1 der Liste eine Trennlinie ein.<br>
      * Die Breite pro Spalte orientiert sich am ersten Wert (Header) der Spalte. Ist der Separator Null oder leer wird nichts gemacht.<br>
-     *
-     * @param <T> Konkreter Typ
-     * @param rows {@link List}
-     * @param separator String
      */
     @SuppressWarnings("unchecked")
     public static <T extends CharSequence> void addHeaderSeparator(final List<T[]> rows, final String separator)
@@ -123,10 +103,6 @@ public final class Utils
 
     /**
      * Löscht das Verzeichnis rekursiv inklusive Dateien und Unterverzeichnisse.
-     *
-     * @param path {@link Path}
-     *
-     * @throws IOException Falls was schiefgeht.
      */
     public static void deleteDirectoryRecursive(final Path path) throws IOException
     {
@@ -161,8 +137,6 @@ public final class Utils
 
     /**
      * Führt den {@link ExceptionalRunnable} in einem try-catch aus, der im Fehlerfall eine {@link RuntimeException} wirft.
-     *
-     * @param task {@link ExceptionalRunnable}
      */
     public static void executeSafely(final ExceptionalRunnable<?> task)
     {
@@ -182,11 +156,6 @@ public final class Utils
 
     /**
      * Führt den {@link ExceptionalSupplier} in einem try-catch aus, der im Fehlerfall eine {@link RuntimeException} wirft.
-     *
-     * @param <R> Konkreter Return-Typ
-     * @param supplier {@link ExceptionalSupplier}
-     *
-     * @return Object
      */
     public static <R> R executeSafely(final ExceptionalSupplier<R, ?> supplier)
     {
@@ -206,11 +175,6 @@ public final class Utils
 
     /**
      * Liefert alle Attribute einer Klasse, die annotiert sind.
-     *
-     * @param object Object
-     * @param annotation Class
-     *
-     * @return {@link Set}
      */
     public static Set<Field> getAnnotatedFields(final Object object, final Class<? extends Annotation> annotation)
     {
@@ -224,10 +188,6 @@ public final class Utils
 
     /**
      * Liefert die eigentliche {@link Exception}, falls diese z.b. noch in einer {@link RuntimeException} verpackt ist.
-     *
-     * @param exception {@link Exception}
-     *
-     * @return {@link Exception}
      */
     public static Exception getCause(final Exception exception)
     {
@@ -241,9 +201,6 @@ public final class Utils
         return (Exception) th;
     }
 
-    /**
-     * @return {@link ClassLoader}
-     */
     public static ClassLoader getDefaultClassLoader()
     {
         ClassLoader cl = null;
@@ -286,14 +243,6 @@ public final class Utils
 
     /**
      * Liefert die {@link Method} aus der Bean.<br>
-     *
-     * @param bean Object
-     * @param name String
-     * @param parameterTypes Class[]
-     *
-     * @return {@link Method}
-     *
-     * @throws RuntimeException Falls was schiefgeht.
      */
     public static Method getMethod(final Object bean, final String name, final Class<?>... parameterTypes) throws RuntimeException
     {
@@ -310,8 +259,6 @@ public final class Utils
 
     /**
      * Liefert den Namen des angemeldeten Systemusers für HSQLDB Function SYSTEM_USER_NAME.
-     *
-     * @return String
      */
     public static String getSystemUserName()
     {
@@ -320,13 +267,6 @@ public final class Utils
 
     /**
      * Liefert den Wert aus dem {@link Field} der Bean.<br>
-     *
-     * @param field {@link Field}
-     * @param bean Object
-     *
-     * @return Object
-     *
-     * @throws RuntimeException Falls was schiefgeht.
      */
     public static Object getValue(final Field field, final Object bean) throws RuntimeException
     {
@@ -343,12 +283,6 @@ public final class Utils
 
     /**
      * Ruft die {@link Method#invoke(Object, Object...)} Methode der Bean auf.
-     *
-     * @param method {@link Method}
-     * @param bean Object
-     * @param args Object[]
-     *
-     * @return Object
      */
     public static Object invokeMethod(final Method method, final Object bean, final Object... args)
     {
@@ -367,10 +301,6 @@ public final class Utils
      * Die Spaltenbreite der Elemente wird auf den breitesten Wert durch das Padding aufgefüllt.<br>
      * Ist das Padding null oder leer wird nichts gemacht.<br>
      * Beim Padding werden die CharSequences durch Strings ersetzt.
-     *
-     * @param <T> Konkreter Typ
-     * @param rows {@link List}
-     * @param padding String
      *
      * @see #write(List, PrintStream, String)
      */
@@ -410,11 +340,6 @@ public final class Utils
         });
     }
 
-    /**
-     * Shutdown eines {@link ExecutorService}.
-     *
-     * @param executorService {@link ExecutorService}
-     */
     public static void shutdown(final ExecutorService executorService)
     {
         executorService.shutdown();
@@ -448,10 +373,6 @@ public final class Utils
         }
     }
 
-    /**
-     * @param duration long
-     * @param timeUnit {@link TimeUnit}
-     */
     public static void sleep(final long duration, final TimeUnit timeUnit)
     {
         try
@@ -467,12 +388,6 @@ public final class Utils
     /**
      * Erzeugt aus dem {@link ResultSet} eine Liste mit den Column-Namen in der ersten Zeile und den Daten.<br>
      * Wenn das ResultSet einen Typ != ResultSet.TYPE_FORWARD_ONLY besitzt, wird {@link ResultSet#first()} aufgerufen und kann weiter verwendet werden.
-     *
-     * @param resultSet {@link ResultSet}
-     *
-     * @return {@link List}
-     *
-     * @throws SQLException Falls was schiefgeht.
      */
     public static List<String[]> toList(final ResultSet resultSet) throws SQLException
     {
@@ -517,11 +432,6 @@ public final class Utils
      * Schreibt die Liste in den PrintStream.<br>
      * Der Stream wird nicht geschlossen.
      *
-     * @param <T> Konkreter Typ von CharSequence
-     * @param rows {@link List}
-     * @param ps {@link PrintStream}
-     * @param delimiter String
-     *
      * @see #padding(List, String)
      */
     public static <T extends CharSequence> void write(final List<T[]> rows, final PrintStream ps, final String delimiter)
@@ -560,11 +470,6 @@ public final class Utils
      * Dabei wird die Spaltenbreite auf den breitesten Wert angepasst.<br>
      * Der Stream wird nicht geschlossen.<br>
      * Wenn das ResultSet einen Typ != ResultSet.TYPE_FORWARD_ONLY besitzt, wird {@link ResultSet#first()} aufgerufen und kann weiter verwendet werden.
-     *
-     * @param resultSet {@link ResultSet}
-     * @param ps {@link PrintStream}
-     *
-     * @throws SQLException Falls was schiefgeht.
      */
     public static void write(final ResultSet resultSet, final PrintStream ps) throws SQLException
     {
@@ -580,9 +485,6 @@ public final class Utils
         }
     }
 
-    /**
-     * Erzeugt eine neue Instanz von {@link Utils}
-     */
     private Utils()
     {
         super();

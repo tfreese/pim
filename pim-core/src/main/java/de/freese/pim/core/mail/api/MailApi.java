@@ -32,38 +32,23 @@ public interface MailApi
 
     /**
      * Liefert den Account des Services.
-     *
-     * @return {@link MailAccount}
      */
     MailAccount getAccount();
 
     /**
      * Liefert alle Folder des Accounts.
-     *
-     * @return {@link List}
      */
     List<MailFolder> getFolder();
 
     /**
      * Holt die Mail vom Provider und übergibt sie in dem {@link ExceptionalConsumer}.<br>
-     *
-     * @param <T> Konkreter Return-Typ
-     * @param folderFullName String
-     * @param uid long
-     * @param function {@link ExceptionalFunction}
-     *
-     * @return Object
      */
     <T> T loadMail(String folderFullName, long uid, ExceptionalFunction<Object, T, Exception> function);
 
     /**
      * Holt die Mail vom Provider und übergibt sie in dem {@link ExceptionalConsumer}.<br>
      *
-     * @param folderFullName String
-     * @param uid long
      * @param monitor {@link IOMonitor}, optional
-     *
-     * @return {@link MailContent}
      */
     MailContent loadMail(String folderFullName, long uid, IOMonitor monitor);
 
@@ -71,34 +56,22 @@ public interface MailApi
      * Lädt die Mails des Folders vom Provider ab der definierten UID.<br>
      * Die Liste ist null, wenn der Folder nicht mehr existent.
      *
-     * @param folderFullName {@link String}
      * @param uidFrom long; Startindex der zu Ladenen Mails
-     *
-     * @return {@link List}
      */
     List<Mail> loadMails(String folderFullName, long uidFrom);
 
     /**
      * Liefert die aktuellen Message-UIDs im Folder.<br>
-     *
-     * @param folderFullName String
-     *
-     * @return {@link Set}
      */
     Set<Long> loadMessageIDs(String folderFullName);
 
     /**
      * Optionaler {@link Executor} für die Mail-API.
-     *
-     * @param executor {@link Executor}
      */
     void setExecutor(final Executor executor);
 
     /**
      * Setzt das SEEN-Flag einer Mail.
-     *
-     * @param mail {@link Mail}
-     * @param seen boolean
      */
     void setSeen(Mail mail, boolean seen);
 

@@ -13,13 +13,8 @@ import java.util.Objects;
  */
 public class MonitoringWritableByteChannel implements WritableByteChannel
 {
-    /**
-     *
-     */
     private final WritableByteChannel delegate;
-    /**
-     *
-     */
+
     private final IOMonitor monitor;
     /**
      * Anzahl Bytes (Größe) des gesamten Channels.
@@ -31,10 +26,6 @@ public class MonitoringWritableByteChannel implements WritableByteChannel
     private long sizeWritten;
 
     /**
-     * Erzeugt eine neue Instanz von {@link MonitoringWritableByteChannel}
-     *
-     * @param delegate {@link WritableByteChannel}
-     * @param monitor {@link IOMonitor}
      * @param size long; Anzahl Bytes (Größe) des gesamten Channels
      */
     public MonitoringWritableByteChannel(final WritableByteChannel delegate, final IOMonitor monitor, final long size)

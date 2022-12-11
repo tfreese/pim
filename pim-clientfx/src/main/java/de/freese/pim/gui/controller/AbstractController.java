@@ -1,11 +1,6 @@
 // Created: 29.11.2016
 package de.freese.pim.gui.controller;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.core.task.AsyncTaskExecutor;
-import org.springframework.scheduling.TaskScheduler;
-
 import de.freese.pim.core.spring.SpringContext;
 import de.freese.pim.gui.PimClientApplication;
 import de.freese.pim.gui.main.MainController;
@@ -13,6 +8,10 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.ToolBar;
 import javafx.stage.Window;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.core.task.AsyncTaskExecutor;
+import org.springframework.scheduling.TaskScheduler;
 
 /**
  * Abstract Implementierung eines Controllers.
@@ -21,26 +20,11 @@ import javafx.stage.Window;
  */
 public abstract class AbstractController implements Initializable
 {
-    /**
-    *
-    */
-    private boolean activated;
-    /**
-    *
-    */
     public final Logger logger = LoggerFactory.getLogger(getClass());
-    /**
-     *
-     */
     private final AsyncTaskExecutor taskExecutor;
-    /**
-     *
-     */
     private final TaskScheduler taskScheduler;
+    private boolean activated;
 
-    /**
-     * Erzeugt eine neue Instanz von {@link AbstractController}
-     */
     protected AbstractController()
     {
         super();
@@ -54,9 +38,6 @@ public abstract class AbstractController implements Initializable
      */
     public abstract void activate();
 
-    /**
-     * @return {@link Logger}
-     */
     public Logger getLogger()
     {
         return this.logger;
@@ -64,17 +45,12 @@ public abstract class AbstractController implements Initializable
 
     /**
      * Liefert den {@link Node} der Ansicht.
-     *
-     * @return {@link Node}
      */
     public Node getMainNode()
     {
         return null;
     }
 
-    /**
-     * @return {@link Window}
-     */
     public Window getMainWindow()
     {
         return PimClientApplication.getMainWindow();
@@ -82,25 +58,17 @@ public abstract class AbstractController implements Initializable
 
     /**
      * Liefert den {@link Node} der Ansicht.
-     *
-     * @return {@link Node}
      */
     public Node getNaviNode()
     {
         return null;
     }
 
-    /**
-     * @return {@link AsyncTaskExecutor}
-     */
     public AsyncTaskExecutor getTaskExecutor()
     {
         return this.taskExecutor;
     }
 
-    /**
-     * @return {@link TaskScheduler}
-     */
     public TaskScheduler getTaskScheduler()
     {
         return this.taskScheduler;
@@ -108,8 +76,6 @@ public abstract class AbstractController implements Initializable
 
     /**
      * Liefert die {@link ToolBar} der Ansicht.
-     *
-     * @return {@link ToolBar}
      */
     public ToolBar getToolBar()
     {
@@ -118,8 +84,6 @@ public abstract class AbstractController implements Initializable
 
     /**
      * Liefert true, wenn der Controller bereits aktiviert wurde.
-     *
-     * @return boolean
      */
     protected boolean isActivated()
     {
@@ -128,8 +92,6 @@ public abstract class AbstractController implements Initializable
 
     /**
      * Setzt true, wenn der Controller bereits aktiviert wurde.
-     *
-     * @param activated boolean
      */
     protected void setActivated(final boolean activated)
     {

@@ -7,7 +7,7 @@ import java.util.ResourceBundle;
 
 import de.freese.pim.core.spring.SpringContext;
 import de.freese.pim.gui.main.MainController;
-import de.freese.pim.gui.utils.FXUtils;
+import de.freese.pim.gui.utils.FxUtils;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.application.Preloader.StateChangeNotification;
@@ -61,7 +61,7 @@ public class PimClientApplication extends Application
      */
     public static void blockGUI()
     {
-        FXUtils.blockGUI(getMainWindow());
+        FxUtils.blockGUI(getMainWindow());
     }
 
     public static Window getMainWindow()
@@ -82,7 +82,7 @@ public class PimClientApplication extends Application
      */
     public static void unblockGUI()
     {
-        FXUtils.unblockGUI(getMainWindow());
+        FxUtils.unblockGUI(getMainWindow());
     }
 
     private final BooleanProperty ready = new SimpleBooleanProperty(false);
@@ -166,7 +166,7 @@ public class PimClientApplication extends Application
         }
 
         // getHostServices().showDocument("https://eclipse.org");
-        FXUtils.tooltipBehaviorHack();
+        FxUtils.tooltipBehaviorHack();
     }
 
     /**

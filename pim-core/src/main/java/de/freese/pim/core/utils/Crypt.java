@@ -25,17 +25,12 @@ import de.freese.pim.core.PIMException;
  */
 public class Crypt
 {
-    /**
-     *
-     */
     private static final String AES_ALGORITHM = "AES/CBC/PKCS5Padding";
     // /**
     // * 32bit entspricht AES256.
     // */
     // private static final int AES_KEY_SIZE = 32;
-    /**
-     *
-     */
+
     private static final int BUFFER_SIZE = 4096;
 
     /**
@@ -47,9 +42,6 @@ public class Crypt
                     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
             };
 
-    /**
-     *
-     */
     private static final Crypt INSTANCE = new Crypt(StandardCharsets.UTF_8);
 
     /**
@@ -60,14 +52,9 @@ public class Crypt
         return INSTANCE;
     }
 
-    /**
-     *
-     */
     private final Charset charset;
 
     /**
-     * Erzeugt eine neue Instanz von {@link Crypt}
-     *
      * @param charset {@link Charset}; wird nur für die Strings benötigt, nicht für die Streams
      */
     public Crypt(final Charset charset)
@@ -79,12 +66,10 @@ public class Crypt
 
     /**
      * @param input Verschlüsselter {@link InputStream}, dieser wird geschlossen.
-     *
-     * @return Entschlüsselter {@link InputStream}
      */
     public InputStream decrypt(final InputStream input)
     {
-        Key key = getKey();
+        Key key = getSecretKey();
 
         try
         {
@@ -124,11 +109,6 @@ public class Crypt
         }
     }
 
-    /**
-     * @param input Verschlüsselter String
-     *
-     * @return Klartext
-     */
     public String decrypt(final String input)
     {
         if ((input == null) || input.isBlank())
@@ -136,7 +116,7 @@ public class Crypt
             return null;
         }
 
-        Key key = getKey();
+        Key key = getSecretKey();
 
         try
         {
@@ -160,8 +140,6 @@ public class Crypt
 
     /**
      * @param input Der {@link InputStream} wird geschlossen.
-     *
-     * @return Entschlüsselter {@link InputStream}
      */
     public InputStream encrypt(final InputStream input)
     {
@@ -200,11 +178,6 @@ public class Crypt
         }
     }
 
-    /**
-     * @param input Klartext
-     *
-     * @return Verschlüsselter String
-     */
     public String encrypt(final String input)
     {
         if ((input == null) || input.isBlank())
@@ -212,7 +185,7 @@ public class Crypt
             return null;
         }
 
-        Key key = getKey();
+        Key key = getSecretKey();
 
         try
         {
@@ -234,24 +207,14 @@ public class Crypt
         }
     }
 
-    /**
-     * @return {@link Charset}
-     */
     public Charset getCharset()
     {
         return this.charset;
     }
 
-    /**
-     * Liefert den {@link OutputStream} zum Verschlüsseln.
-     *
-     * @param output {@link OutputStream}
-     *
-     * @return {@link OutputStream}
-     */
     public OutputStream getCipherOutputStream(final OutputStream output)
     {
-        Key key = getKey();
+        Key key = getSecretKey();
 
         try
         {
@@ -270,12 +233,7 @@ public class Crypt
         }
     }
 
-    /**
-     * Liefert den {@link Key}.
-     *
-     * @return {@link Key}
-     */
-    private Key getKey()
+    private Key getSecretKey()
     {
         // byte[] key = new byte[AES_KEY_SIZE];
         // SecureRandom secureRandom = new SecureRandom();

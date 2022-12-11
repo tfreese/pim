@@ -17,17 +17,12 @@ import java.util.function.Consumer;
 public interface ExceptionalConsumer<T, E extends Exception>
 {
     /**
-     * @param t Object
-     *
-     * @throws Exception Falls was schiefgeht.
      * @see java.util.function.Consumer#accept(Object)
      */
     void accept(T t) throws E;
 
     // /**
     // * @see java.util.function.Consumer#andThen(Consumer)
-    // * @param after {@link Consumer}
-    // * @return {@link ExceptionalConsumer}
     // */
     // public default ExceptionalConsumer<T, E> andThen(final Consumer<T> after)
     // {
@@ -41,10 +36,6 @@ public interface ExceptionalConsumer<T, E extends Exception>
     // }
 
     /**
-     * @param after {@link ExceptionalConsumer}
-     *
-     * @return {@link ExceptionalConsumer}
-     *
      * @see java.util.function.Consumer#andThen(Consumer)
      */
     default ExceptionalConsumer<T, E> andThen(final ExceptionalConsumer<T, E> after)

@@ -106,8 +106,6 @@ public final class MailUtils
      * @param part {@link Part}, @see {@link Message}
      *
      * @return {@link Map}; ist niemals null
-     *
-     * @throws Exception Falls was schiefgeht.
      */
     public static Map<String, MimePart> getAttachmentMap(final Part part) throws Exception
     {
@@ -132,8 +130,6 @@ public final class MailUtils
      * @param part {@link Part}, @see {@link Message}
      *
      * @return {@link List}; ist niemals null
-     *
-     * @throws Exception Falls was schiefgeht.
      */
     public static List<MimePart> getAttachments(final Part part) throws Exception
     {
@@ -171,8 +167,6 @@ public final class MailUtils
      * @param part {@link Part}, @see {@link Message}
      *
      * @return {@link Map}; ist niemals null
-     *
-     * @throws Exception Falls was schiefgeht.
      */
     public static Map<String, MimePart> getInlineMap(final Part part) throws Exception
     {
@@ -184,7 +178,7 @@ public final class MailUtils
         {
             String[] contentIDs = inline.getHeader(HEADER_CONTENT_ID);
 
-            if ((contentIDs == null) || (contentIDs.length == 0))
+            if (contentIDs == null)
             {
                 continue;
             }
@@ -206,8 +200,6 @@ public final class MailUtils
      * @param part {@link Part}, @see {@link Message}
      *
      * @return {@link List}; ist niemals null
-     *
-     * @throws Exception Falls was schiefgeht.
      */
     public static List<MimePart> getInlines(final Part part) throws Exception
     {
@@ -241,10 +233,6 @@ public final class MailUtils
      * Liefert die Gesamtgröße aller einzelnen Parts.
      *
      * @param part {@link Part}, @see {@link Message}
-     *
-     * @return long
-     *
-     * @throws Exception Falls was schiefgeht.
      */
     public static long getSizeOfAllParts(final Part part) throws Exception
     {
@@ -275,8 +263,6 @@ public final class MailUtils
      * @param part {@link Part}, @see {@link Message}
      *
      * @return {@link List}; ist niemals null
-     *
-     * @throws Exception Falls was schiefgeht.
      */
     public static DataSource getTextDataSource(final Part part) throws Exception
     {
@@ -299,8 +285,6 @@ public final class MailUtils
      * @param part {@link Part}, @see {@link Message}
      *
      * @return {@link List}; ist niemals null
-     *
-     * @throws Exception Falls was schiefgeht.
      */
     public static List<DataSource> getTextDataSources(final Part part) throws Exception
     {
@@ -336,8 +320,6 @@ public final class MailUtils
      * @param part {@link Part}, @see {@link Message}
      *
      * @return {@link List}; ist niemals null
-     *
-     * @throws Exception Falls was schiefgeht.
      */
     public static List<AbstractTextPart> getTextParts(final Part part) throws Exception
     {

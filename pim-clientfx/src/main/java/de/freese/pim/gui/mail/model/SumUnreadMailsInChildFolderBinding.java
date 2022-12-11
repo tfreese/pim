@@ -19,12 +19,12 @@ public class SumUnreadMailsInChildFolderBinding extends IntegerBinding
     /**
      * Listener that has to call rebinding in response of any change in observable list.
      */
-    private final ListChangeListener<FXMailFolder> BOUND_LIST_CHANGE_LISTENER =
-            (final ListChangeListener.Change<? extends FXMailFolder> change) -> refreshBinding();
+    private final ListChangeListener<FxMailFolder> BOUND_LIST_CHANGE_LISTENER =
+            (final ListChangeListener.Change<? extends FxMailFolder> change) -> refreshBinding();
     /**
      * Reference to our observable list.
      */
-    private final ObservableList<FXMailFolder> boundList;
+    private final ObservableList<FxMailFolder> boundList;
     /**
      * Array of currently observed properties of elements of our list.
      */
@@ -32,16 +32,24 @@ public class SumUnreadMailsInChildFolderBinding extends IntegerBinding
 
     /**
      * Erzeugt eine neue Instanz von {@link SumUnreadMailsInChildFolderBinding}
-     *
-     * @param boundList {@link ObservableList}
      */
-    public SumUnreadMailsInChildFolderBinding(final ObservableList<FXMailFolder> boundList)
+    public SumUnreadMailsInChildFolderBinding(final ObservableList<FxMailFolder> boundList)
     {
         super();
 
         this.boundList = Objects.requireNonNull(boundList, "boundList required");
         this.boundList.addListener(this.BOUND_LIST_CHANGE_LISTENER);
         refreshBinding();
+    }
+
+    /**
+     * @see javafx.beans.binding.IntegerBinding#dispose()
+     */
+    @Override
+    public void dispose()
+    {
+        this.boundList.removeListener(this.BOUND_LIST_CHANGE_LISTENER);
+        unbind(this.observedProperties);
     }
 
     /**
@@ -60,19 +68,6 @@ public class SumUnreadMailsInChildFolderBinding extends IntegerBinding
         return sum;
     }
 
-    /**
-     * @see javafx.beans.binding.IntegerBinding#dispose()
-     */
-    @Override
-    public void dispose()
-    {
-        this.boundList.removeListener(this.BOUND_LIST_CHANGE_LISTENER);
-        unbind(this.observedProperties);
-    }
-
-    /**
-     *
-     */
     private void refreshBinding()
     {
         // Clean old properties from IntegerBinding's inner listener
@@ -83,7 +78,7 @@ public class SumUnreadMailsInChildFolderBinding extends IntegerBinding
 
         if (!this.boundList.isEmpty())
         {
-            this.observedProperties = this.boundList.parallelStream().map(FXMailFolder::unreadMailsCountTotalBinding).toArray(ObservableIntegerValue[]::new);
+            this.observedProperties = this.boundList.parallelStream().map(FxMailFolder::unreadMailsCountTotalBinding).toArray(ObservableIntegerValue[]::new);
         }
 
         // Bind IntegerBinding's inner listener to all new properties

@@ -144,12 +144,6 @@ public class MailRestController extends AbstractRemoteService implements MailSer
      * Lädt die Mails des Folders vom Provider und aus der DB.<br>
      * Das {@link Callable} entkoppelt den Server Thread von der Ausführung und verlagert<br>
      * ihn den ThreadPool des {@link RequestMappingHandlerAdapter}, siehe {@link WebMvcConfigurationSupport#configureAsyncSupport}.
-     *
-     * @param accountID long
-     * @param folderID long
-     * @param folderFullName String
-     *
-     * @return {@link List}
      */
     @GetMapping("/mailsAsyncCallable/{accountID}/{folderID}/{folderFullName}")
     public Callable<List<Mail>> loadMailsAsyncCallable(@PathVariable("accountID") final long accountID, @PathVariable("folderID") final long folderID,
@@ -161,12 +155,6 @@ public class MailRestController extends AbstractRemoteService implements MailSer
     /**
      * Lädt die Mails des Folders vom Provider und aus der DB.<br>
      * Das {@link DeferredResult} entkoppelt den Server Thread von der Ausführung.
-     *
-     * @param accountID long
-     * @param folderID long
-     * @param folderFullName String
-     *
-     * @return {@link List}
      */
     @GetMapping("/mailsAsyncDeferredResult/{accountID}/{folderID}/{folderFullName}")
     public DeferredResult<List<Mail>> loadMailsAsyncDeferredResult(@PathVariable("accountID") final long accountID,
