@@ -38,7 +38,6 @@ project("pim-core") {
     description = "Core Components for PIM"
     dependencies {
         api("commons-cli:commons-cli")
-        api("org.flywaydb:flyway-core")
         api("org.hsqldb:hsqldb")
         api("org.springframework.boot:spring-boot-starter-jdbc")
         api("org.springframework.boot:spring-boot-starter-json")
