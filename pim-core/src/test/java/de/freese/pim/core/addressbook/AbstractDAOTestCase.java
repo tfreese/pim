@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.fail;
 
+import java.io.Closeable;
 import java.util.List;
 
 import javax.sql.DataSource;
@@ -16,15 +17,20 @@ import org.junit.jupiter.api.Assertions;
 import org.springframework.jdbc.datasource.SingleConnectionDataSource;
 
 /**
- * Basis-TestCase für die DAO-Implementierungen.
- *
  * @author Thomas Freese
  */
 public abstract class AbstractDAOTestCase
 {
-    protected static void closeDataSource(final DataSource dataSource)
+    protected static void closeDataSource(final DataSource dataSource) throws Exception
     {
-        ((SingleConnectionDataSource) dataSource).destroy();
+        if (dataSource instanceof SingleConnectionDataSource ds)
+        {
+            ds.destroy();
+        }
+        else if (dataSource instanceof Closeable ds)
+        {
+            ds.close();
+        }
     }
 
     abstract void test0100InsertKontakts() throws Throwable;

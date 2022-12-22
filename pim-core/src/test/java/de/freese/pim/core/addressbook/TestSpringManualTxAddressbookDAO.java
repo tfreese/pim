@@ -36,7 +36,7 @@ class TestSpringManualTxAddressbookDAO extends AbstractDAOTestCase
     private static PlatformTransactionManager transactionManager;
 
     @AfterAll
-    static void afterAll()
+    static void afterAll() throws Exception
     {
         closeDataSource(dataSource);
     }

@@ -1,10 +1,13 @@
 // Created: 10.07.2016
 package de.freese.pim.core;
 
+import java.util.UUID;
 import java.util.function.UnaryOperator;
 
 import javax.sql.DataSource;
 
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
 import de.freese.pim.core.dao.AddressBookDAO;
 import de.freese.pim.core.dao.DefaultAddressBookDAO;
 import de.freese.pim.core.dao.DefaultMailDAO;
@@ -14,7 +17,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
-import org.springframework.jdbc.datasource.SingleConnectionDataSource;
 import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
@@ -37,17 +39,25 @@ public class TestConfig
         return dao;
     }
 
-    @Bean(destroyMethod = "destroy")
+    @Bean(destroyMethod = "close")
     // @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
     public DataSource dataSource()
     {
         // DataSource dataSource = new JndiDataSourceLookup().getDataSource("jdbc/spring/manualTX"); // Wird in AllTests definiert.
 
-        SingleConnectionDataSource dataSource = new SingleConnectionDataSource();
-        dataSource.setDriverClassName("org.hsqldb.jdbc.JDBCDriver");
-        dataSource.setUrl("jdbc:hsqldb:mem:" + System.currentTimeMillis());
-        dataSource.setAutoCommit(true);
-        dataSource.setSuppressClose(true);
+        String id = UUID.randomUUID().toString();
+
+        HikariConfig hikariConfig = new HikariConfig();
+        hikariConfig.setDriverClassName("org.hsqldb.jdbc.JDBCDriver");
+        hikariConfig.setJdbcUrl("jdbc:hsqldb:mem:" + id + ";shutdown=true");
+        hikariConfig.setUsername("sa");
+        hikariConfig.setPassword("");
+        hikariConfig.setPoolName("hikari-" + id);
+        hikariConfig.setMinimumIdle(1);
+        hikariConfig.setMaximumPoolSize(8);
+        hikariConfig.setAutoCommit(false);
+
+        HikariDataSource dataSource = new HikariDataSource(hikariConfig);
 
         try
         {
