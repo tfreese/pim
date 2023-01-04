@@ -35,7 +35,7 @@ public class JavaMailSender
     {
         private final PasswordAuthentication authentication;
 
-        public MailAuthenticator(final String userName, final String password)
+        MailAuthenticator(final String userName, final String password)
         {
             super();
 

@@ -102,7 +102,7 @@ public class ProgressIndicatorDemo extends Application
      *
      * @return int[], RGB
      */
-    int[] getRGB_1(final double progress)
+    int[] getRGB1(final double progress)
     {
         int r = 0;
         int g = 0;
@@ -174,7 +174,7 @@ public class ProgressIndicatorDemo extends Application
      *
      * @return int[], RGB
      */
-    int[] getRGB_2(final double progress)
+    int[] getRGB2(final double progress)
     {
         int r;
         int g;
@@ -196,7 +196,7 @@ public class ProgressIndicatorDemo extends Application
      *
      * @return int[], RGB
      */
-    int[] getRGB_3(final double progress)
+    int[] getRGB3(final double progress)
     {
         int r;
         int g;

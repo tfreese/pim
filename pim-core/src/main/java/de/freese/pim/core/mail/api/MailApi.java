@@ -68,7 +68,7 @@ public interface MailApi
     /**
      * Optionaler {@link Executor} für die Mail-API.
      */
-    void setExecutor(final Executor executor);
+    void setExecutor(Executor executor);
 
     /**
      * Setzt das SEEN-Flag einer Mail.

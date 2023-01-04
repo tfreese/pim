@@ -26,7 +26,7 @@ public class TextAreaOutputStream extends OutputStream
     {
         private final int keepLastNLines;
 
-        public LimitedTextArea(final int keepLastNLines)
+        LimitedTextArea(int keepLastNLines)
         {
             super();
 

@@ -18,7 +18,7 @@ public class PIMForkJoinWorkerThreadFactory implements ForkJoinWorkerThreadFacto
      */
     private static class PIMForkJoinWorkerThread extends ForkJoinWorkerThread
     {
-        public PIMForkJoinWorkerThread(final ForkJoinPool pool)
+        PIMForkJoinWorkerThread(final ForkJoinPool pool)
         {
             super(pool);
         }

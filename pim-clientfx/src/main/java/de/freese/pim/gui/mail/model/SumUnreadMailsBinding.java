@@ -17,13 +17,13 @@ import javafx.collections.ObservableList;
 public class SumUnreadMailsBinding extends IntegerBinding
 {
     /**
-     * Listener that has to call rebinding in response of any change in observable list.
-     */
-    private final ListChangeListener<FxMail> BOUND_LIST_CHANGE_LISTENER = (final ListChangeListener.Change<? extends FxMail> change) -> refreshBinding();
-    /**
      * Reference to our observable list.
      */
     private final ObservableList<FxMail> boundList;
+    /**
+     * Listener that has to call rebinding in response of any change in observable list.
+     */
+    private final ListChangeListener<FxMail> boundListChangeListener = (final ListChangeListener.Change<? extends FxMail> change) -> refreshBinding();
     /**
      * Array of currently observed properties of elements of our list.
      */
@@ -37,7 +37,7 @@ public class SumUnreadMailsBinding extends IntegerBinding
         super();
 
         this.boundList = Objects.requireNonNull(boundList, "boundList required");
-        this.boundList.addListener(this.BOUND_LIST_CHANGE_LISTENER);
+        this.boundList.addListener(this.boundListChangeListener);
         refreshBinding();
     }
 
@@ -47,7 +47,7 @@ public class SumUnreadMailsBinding extends IntegerBinding
     @Override
     public void dispose()
     {
-        this.boundList.removeListener(this.BOUND_LIST_CHANGE_LISTENER);
+        this.boundList.removeListener(this.boundListChangeListener);
         unbind(this.observedProperties);
     }
 

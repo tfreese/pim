@@ -227,14 +227,14 @@ public final class PIMAddressbookConsole
 
     private PlatformTransactionManager transactionManager;
 
-    private void deleteAttribut(final long kontakt_id, final String attribut)
+    private void deleteAttribut(final long kontaktId, final String attribut)
     {
         TransactionDefinition transactionDefinition = new DefaultTransactionDefinition();
         TransactionStatus transactionStatus = this.transactionManager.getTransaction(transactionDefinition);
 
         try
         {
-            int affectedRows = this.addressBookDAO.deleteAttribut(kontakt_id, attribut);
+            int affectedRows = this.addressBookDAO.deleteAttribut(kontaktId, attribut);
 
             if (affectedRows > 0)
             {
@@ -245,7 +245,7 @@ public final class PIMAddressbookConsole
                 this.printStream.printf("%nKein Attribut gefunden%n");
             }
 
-            getKontaktDetails(kontakt_id);
+            getKontaktDetails(kontaktId);
 
             this.transactionManager.commit(transactionStatus);
         }
@@ -331,7 +331,7 @@ public final class PIMAddressbookConsole
         }
     }
 
-    private void insertAttribut(final long kontakt_id, final String attribut, final String wert)
+    private void insertAttribut(final long kontaktId, final String attribut, final String wert)
     {
         TransactionDefinition transactionDefinition = new DefaultTransactionDefinition();
         TransactionStatus transactionStatus = this.transactionManager.getTransaction(transactionDefinition);
@@ -339,9 +339,9 @@ public final class PIMAddressbookConsole
         try
         {
             // boolean success =
-            this.addressBookDAO.insertAttribut(kontakt_id, attribut, wert);
+            this.addressBookDAO.insertAttribut(kontaktId, attribut, wert);
 
-            getKontaktDetails(kontakt_id);
+            getKontaktDetails(kontaktId);
 
             this.transactionManager.commit(transactionStatus);
         }
@@ -470,14 +470,14 @@ public final class PIMAddressbookConsole
         this.transactionManager = transactionManager;
     }
 
-    private void updateAttribut(final long kontakt_id, final String attribut, final String wert)
+    private void updateAttribut(final long kontaktId, final String attribut, final String wert)
     {
         TransactionDefinition transactionDefinition = new DefaultTransactionDefinition();
         TransactionStatus transactionStatus = this.transactionManager.getTransaction(transactionDefinition);
 
         try
         {
-            int affectedRows = this.addressBookDAO.updateAttribut(kontakt_id, attribut, wert);
+            int affectedRows = this.addressBookDAO.updateAttribut(kontaktId, attribut, wert);
 
             if (affectedRows > 0)
             {
@@ -488,7 +488,7 @@ public final class PIMAddressbookConsole
                 this.printStream.printf("%nKein Attribut gefunden%n");
             }
 
-            getKontaktDetails(kontakt_id);
+            getKontaktDetails(kontaktId);
 
             this.transactionManager.commit(transactionStatus);
         }
