@@ -93,7 +93,7 @@ class TestReceiveMail extends AbstractMailTest
     void test000Connect() throws Exception
     {
         store = session.getStore("imaps");
-        store.connect(MAIL_IMAP_HOST, MAIL_IMAP_PORT.getPort(), this.from, this.password);
+        store.connect(MAIL_IMAP_HOST, MAIL_IMAP_PORT.getPort(), this.getFrom(), this.getPassword());
     }
 
     @Test

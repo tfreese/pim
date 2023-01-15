@@ -60,11 +60,26 @@ public abstract class AbstractMailTest
     }
 
     @Parameter(value = 0)
-    public String from;
+    private String from;
 
     @Parameter(value = 2)
-    public String password;
+    private String password;
 
     @Parameter(value = 1)
-    public String to;
+    private String to;
+
+    protected String getFrom()
+    {
+        return from;
+    }
+
+    protected String getPassword()
+    {
+        return password;
+    }
+
+    protected String getTo()
+    {
+        return to;
+    }
 }

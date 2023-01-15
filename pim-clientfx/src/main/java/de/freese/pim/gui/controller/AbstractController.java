@@ -20,7 +20,7 @@ import org.springframework.scheduling.TaskScheduler;
  */
 public abstract class AbstractController implements Initializable
 {
-    public final Logger logger = LoggerFactory.getLogger(getClass());
+    private final Logger logger = LoggerFactory.getLogger(getClass());
     private final AsyncTaskExecutor taskExecutor;
     private final TaskScheduler taskScheduler;
     private boolean activated;

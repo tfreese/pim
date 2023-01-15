@@ -47,7 +47,7 @@ class TestSendMail extends AbstractMailTest
     @BeforeEach
     void beforeEach()
     {
-        sender.setAuthentication(this.from, this.password);
+        sender.setAuthentication(getFrom(), getPassword());
     }
 
     @Test
@@ -61,8 +61,8 @@ class TestSendMail extends AbstractMailTest
     {
         // @formatter:off
         JavaMailBuilder.create(session)
-                .from(this.from)
-                .to(this.to)
+                .from(getFrom())
+                .to(getTo())
                 .subject("test100PlainText")
                 .text("test100PlainText", false)
                 .buildAndSend(sender)
@@ -82,8 +82,8 @@ class TestSendMail extends AbstractMailTest
         // InputStream inputStream = new ByteArrayInputStream(bytes);
         // @formatter:off
         JavaMailBuilder.create( session)
-                .from(this.from)
-                .to(this.to)
+                .from(getFrom())
+                .to(getTo())
                 .subject("test100PlainTextWithAttachment")
                 .text("test100PlainTextWithAttachment", false)
                 .attachment("text.txt", new ClassPathResource("mail/text.txt").getFile())
@@ -105,8 +105,8 @@ class TestSendMail extends AbstractMailTest
 
         // @formatter:off
         JavaMailBuilder.create( session)
-                .from(this.from)
-                .to(this.to)
+                .from(getFrom())
+                .to(getTo())
                 .subject("test200Html")
                 .text(html.toString(), true)
                 .buildAndSend(sender)
@@ -127,8 +127,8 @@ class TestSendMail extends AbstractMailTest
 
         // @formatter:off
         JavaMailBuilder.create(session)
-                .from(this.from)
-                .to(this.to)
+                .from(getFrom())
+                .to(getTo())
                 .subject("test210HtmlWithAttachment")
                 .text(html.toString(), true)
                 .attachment("text.txt", new ClassPathResource("mail/text.txt").getFile())
@@ -152,8 +152,8 @@ class TestSendMail extends AbstractMailTest
 
         // @formatter:off
         JavaMailBuilder.create(session)
-                .from(this.from)
-                .to(this.to)
+                .from(getFrom())
+                .to(getTo())
                 .subject("test220HtmlWithInline")
                 .text(html.toString(), true)
                 .inline("image1", new ClassPathResource("mail/pim.png").getFile())

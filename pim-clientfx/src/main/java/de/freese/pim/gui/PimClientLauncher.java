@@ -12,7 +12,7 @@ import org.apache.commons.cli.Options;
 /**
  * @author Thomas Freese
  */
-public class PimClientLauncher
+public final class PimClientLauncher
 {
     public static void main(final String[] args)
     {
@@ -98,5 +98,10 @@ public class PimClientLauncher
         formatter.printHelp(120, "P.I.M. Client\n", "\nParameter:", getCommandOptions(), footer.toString(), true);
 
         System.exit(-1);
+    }
+
+    private PimClientLauncher()
+    {
+        super();
     }
 }

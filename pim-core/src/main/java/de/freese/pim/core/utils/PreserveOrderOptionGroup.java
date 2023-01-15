@@ -19,7 +19,7 @@ public class PreserveOrderOptionGroup extends OptionGroup
     @Serial
     private static final long serialVersionUID = 5453910230985427926L;
 
-    private final Map<String, Option> optionMap = new LinkedHashMap<>();
+    private final transient Map<String, Option> optionMap = new LinkedHashMap<>();
 
     /**
      * @see org.apache.commons.cli.OptionGroup#addOption(org.apache.commons.cli.Option)
