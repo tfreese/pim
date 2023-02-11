@@ -10,8 +10,7 @@ import java.util.Objects;
  *
  * @author Thomas Freese
  */
-public class Kontakt implements Comparable<Kontakt>
-{
+public class Kontakt implements Comparable<Kontakt> {
     private final List<KontaktAttribut> attribute = new ArrayList<>();
 
     private long id;
@@ -22,13 +21,11 @@ public class Kontakt implements Comparable<Kontakt>
 
     private String vorname;
 
-    public Kontakt()
-    {
+    public Kontakt() {
         super();
     }
 
-    public Kontakt(final long id, final String nachname, final String vorname)
-    {
+    public Kontakt(final long id, final String nachname, final String vorname) {
         super();
 
         this.id = id;
@@ -37,8 +34,7 @@ public class Kontakt implements Comparable<Kontakt>
 
     }
 
-    public void addAttribut(final String attribut, final String wert)
-    {
+    public void addAttribut(final String attribut, final String wert) {
         KontaktAttribut ka = new KontaktAttribut();
         ka.setKontaktID(getID());
         ka.setAttribut(attribut);
@@ -56,17 +52,14 @@ public class Kontakt implements Comparable<Kontakt>
      * @see java.lang.Comparable#compareTo(java.lang.Object)
      */
     @Override
-    public int compareTo(final Kontakt k)
-    {
-        if (k == null)
-        {
+    public int compareTo(final Kontakt k) {
+        if (k == null) {
             return 0;
         }
 
         int comp = getNachname().compareTo(k.getNachname());
 
-        if (comp == 0)
-        {
+        if (comp == 0) {
             comp = getVorname().compareTo(k.getVorname());
         }
 
@@ -77,39 +70,31 @@ public class Kontakt implements Comparable<Kontakt>
      * @see java.lang.Object#equals(java.lang.Object)
      */
     @Override
-    public boolean equals(final Object obj)
-    {
-        if (this == obj)
-        {
+    public boolean equals(final Object obj) {
+        if (this == obj) {
             return true;
         }
 
-        if (!(obj instanceof Kontakt other))
-        {
+        if (!(obj instanceof Kontakt other)) {
             return false;
         }
 
-        return Objects.equals(this.attribute, other.attribute) && (this.id == other.id) && Objects.equals(this.nachname, other.nachname)
-                && Objects.equals(this.vorname, other.vorname);
+        return Objects.equals(this.attribute, other.attribute) && (this.id == other.id) && Objects.equals(this.nachname, other.nachname) && Objects.equals(this.vorname, other.vorname);
     }
 
-    public List<KontaktAttribut> getAttribute()
-    {
+    public List<KontaktAttribut> getAttribute() {
         return this.attribute;
     }
 
-    public long getID()
-    {
+    public long getID() {
         return this.id;
     }
 
-    public String getNachname()
-    {
+    public String getNachname() {
         return this.nachname;
     }
 
-    public String getVorname()
-    {
+    public String getVorname() {
         return this.vorname;
     }
 
@@ -117,13 +102,11 @@ public class Kontakt implements Comparable<Kontakt>
      * @see java.lang.Object#hashCode()
      */
     @Override
-    public int hashCode()
-    {
+    public int hashCode() {
         return Objects.hash(this.attribute, this.id, this.nachname, this.vorname);
     }
 
-    public void setID(final long id)
-    {
+    public void setID(final long id) {
         // Object old = getID();
         this.id = id;
         // this.pcs.firePropertyChange("id", old, getID());
@@ -134,15 +117,13 @@ public class Kontakt implements Comparable<Kontakt>
     // this.pcs.removePropertyChangeListener(listener);
     // }
 
-    public void setNachname(final String nachname)
-    {
+    public void setNachname(final String nachname) {
         // Object old = getNachname();
         this.nachname = nachname;
         // this.pcs.firePropertyChange("nachname", old, getNachname());
     }
 
-    public void setVorname(final String vorname)
-    {
+    public void setVorname(final String vorname) {
         // Object old = getVorname();
         this.vorname = vorname;
         // this.pcs.firePropertyChange("vorname", old, getVorname());
@@ -152,8 +133,7 @@ public class Kontakt implements Comparable<Kontakt>
      * @see java.lang.Object#toString()
      */
     @Override
-    public String toString()
-    {
+    public String toString() {
         StringBuilder builder = new StringBuilder();
         builder.append("Kontakt [attribute=").append(getAttribute());
         builder.append(", id=").append(getID());
@@ -164,10 +144,8 @@ public class Kontakt implements Comparable<Kontakt>
         return builder.toString();
     }
 
-    private void addAttribut(final KontaktAttribut attribut)
-    {
-        if (getAttribute().contains(attribut))
-        {
+    private void addAttribut(final KontaktAttribut attribut) {
+        if (getAttribute().contains(attribut)) {
             throw new RuntimeException("Attribut bereits vorhanden");
         }
 

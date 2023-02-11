@@ -15,8 +15,7 @@ import de.freese.pim.core.utils.io.IOMonitor;
  *
  * @author Thomas Freese
  */
-public interface MailService
-{
+public interface MailService {
     /**
      * Erstellt für den Account eine Instanz von Typ {@link MailApi} und stellt die Verbindung her.<br>
      */

@@ -6,8 +6,7 @@ package de.freese.pim.core.mail;
  *
  * @author Thomas Freese
  */
-public enum MailProvider
-{
+public enum MailProvider {
     EinsUndEins("1&1", "imap.1und1.de", MailPort.IMAPS, "smtp.1und1.de", MailPort.SMTPS),
 
     GMX("GMX", "imap.gmx.net", MailPort.IMAPS, "mail.gmx.net", MailPort.SMTPS),
@@ -26,8 +25,7 @@ public enum MailProvider
 
     private final MailPort smtpPort;
 
-    MailProvider(final String displayName, final String imapHost, final MailPort imapPort, final String smtpHost, final MailPort smtpPort)
-    {
+    MailProvider(final String displayName, final String imapHost, final MailPort imapPort, final String smtpHost, final MailPort smtpPort) {
         this.displayName = displayName;
         this.imapHost = imapHost;
         this.imapPort = imapPort;
@@ -35,28 +33,23 @@ public enum MailProvider
         this.smtpPort = smtpPort;
     }
 
-    public String getDisplayName()
-    {
+    public String getDisplayName() {
         return this.displayName;
     }
 
-    public String getImapHost()
-    {
+    public String getImapHost() {
         return this.imapHost;
     }
 
-    public MailPort getImapPort()
-    {
+    public MailPort getImapPort() {
         return this.imapPort;
     }
 
-    public String getSmtpHost()
-    {
+    public String getSmtpHost() {
         return this.smtpHost;
     }
 
-    public MailPort getSmtpPort()
-    {
+    public MailPort getSmtpPort() {
         return this.smtpPort;
     }
 
@@ -64,8 +57,7 @@ public enum MailProvider
      * @see java.lang.Enum#toString()
      */
     @Override
-    public String toString()
-    {
+    public String toString() {
         return getDisplayName();
     }
 }

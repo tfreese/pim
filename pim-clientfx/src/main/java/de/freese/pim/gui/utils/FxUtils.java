@@ -18,10 +18,6 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-import de.freese.pim.core.utils.Utils;
-import de.freese.pim.gui.PimClientApplication;
-import de.freese.pim.gui.controller.AbstractController;
-import de.freese.pim.gui.view.View;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.property.adapter.JavaBeanLongProperty;
@@ -60,13 +56,17 @@ import javafx.util.StringConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import de.freese.pim.core.utils.Utils;
+import de.freese.pim.gui.PimClientApplication;
+import de.freese.pim.gui.controller.AbstractController;
+import de.freese.pim.gui.view.View;
+
 /**
  * JavaFX-Utils.
  *
  * @author Thomas Freese
  */
-public final class FxUtils
-{
+public final class FxUtils {
     private static final EventHandler<InputEvent> EVENT_HANDLER_CONSUME_ALL = Event::consume;
 
     private static final KeyCodeCombination KEYCODE_COPY = new KeyCodeCombination(KeyCode.C, KeyCombination.CONTROL_ANY);
@@ -84,8 +84,7 @@ public final class FxUtils
      * <li>Ausgabe der nicht passenden/kopierten Attribute von View und Controller
      * </ol>
      */
-    public static void bind(final View view, final AbstractController controller, final ResourceBundle resources)
-    {
+    public static void bind(final View view, final AbstractController controller, final ResourceBundle resources) {
         Set<Field> viewSet = Utils.getAnnotatedFields(view, FXML.class);
         Set<Field> controllerSet = Utils.getAnnotatedFields(controller, FXML.class);
 
@@ -99,22 +98,18 @@ public final class FxUtils
         controller.initialize(null, resources);
 
         // Prüfung ob Komponenten im Controller nicht in View.
-        if (!controllerMap.isEmpty())
-        {
+        if (!controllerMap.isEmpty()) {
             controllerMap.forEach((k, v) -> LOGGER.warn("Controller-Component not bind: {} / {}", k, v));
         }
 
         // Prüfung ob Komponenten in View nicht im Controller.
-        if (!viewMap.isEmpty())
-        {
+        if (!viewMap.isEmpty()) {
             controllerMap.forEach((k, v) -> LOGGER.warn("View-Component not bind: {} / {}", k, v));
         }
     }
 
-    public static void blockGUI(final Window window)
-    {
-        if (window == null)
-        {
+    public static void blockGUI(final Window window) {
+        if (window == null) {
             return;
         }
 
@@ -125,25 +120,19 @@ public final class FxUtils
      * Kopieren der mit {@link FXML} annotierten Attribute der View in den Controller.<br>
      * Die übereinstimmenden Attribute werden aus den Maps entfernt.
      */
-    public static void copyFields(final View view, final Map<String, Field> viewMap, final AbstractController controller,
-                                  final Map<String, Field> controllerMap)
-    {
-        for (Field viewField : new HashSet<>(viewMap.values()))
-        {
+    public static void copyFields(final View view, final Map<String, Field> viewMap, final AbstractController controller, final Map<String, Field> controllerMap) {
+        for (Field viewField : new HashSet<>(viewMap.values())) {
             String name = viewField.getName();
             Field controllerField = controllerMap.get(name);
 
-            if (controllerField != null)
-            {
-                try
-                {
+            if (controllerField != null) {
+                try {
                     controllerField.set(controller, viewField.get(view));
 
                     viewMap.remove(name);
                     controllerMap.remove(name);
                 }
-                catch (IllegalAccessException ex)
-                {
+                catch (IllegalAccessException ex) {
                     LOGGER.error(ex.getMessage());
                     throw new RuntimeException(ex);
                 }
@@ -151,25 +140,21 @@ public final class FxUtils
         }
     }
 
-    public static void copySelectionToClipboard(final TableView<?> table)
-    {
+    public static void copySelectionToClipboard(final TableView<?> table) {
         StringBuilder clipboardString = new StringBuilder();
 
-        for (Iterator<?> iteratorPosition = table.getSelectionModel().getSelectedCells().iterator(); iteratorPosition.hasNext(); )
-        {
+        for (Iterator<?> iteratorPosition = table.getSelectionModel().getSelectedCells().iterator(); iteratorPosition.hasNext(); ) {
             TablePosition<?, ?> position = (TablePosition<?, ?>) iteratorPosition.next();
 
             int row = position.getRow();
 
             // Ganze Zeile kopieren.
-            for (Iterator<?> iteratorCell = table.getColumns().iterator(); iteratorCell.hasNext(); )
-            {
+            for (Iterator<?> iteratorCell = table.getColumns().iterator(); iteratorCell.hasNext(); ) {
                 TableColumn<?, ?> column = (TableColumn<?, ?>) iteratorCell.next();
 
                 Object cell = column.getCellData(row);
 
-                if (cell == null)
-                {
+                if (cell == null) {
                     cell = "";
                 }
 
@@ -177,14 +162,12 @@ public final class FxUtils
 
                 clipboardString.append(text);
 
-                if (iteratorCell.hasNext())
-                {
+                if (iteratorCell.hasNext()) {
                     clipboardString.append('\t');
                 }
             }
 
-            if (iteratorPosition.hasNext())
-            {
+            if (iteratorPosition.hasNext()) {
                 clipboardString.append('\n');
             }
         }
@@ -195,36 +178,26 @@ public final class FxUtils
         Clipboard.getSystemClipboard().setContent(clipboardContent);
     }
 
-    public static JavaBeanLongProperty createLongProperty(final Object bean, final String method)
-
-    {
-        try
-        {
+    public static JavaBeanLongProperty createLongProperty(final Object bean, final String method) {
+        try {
             return JavaBeanLongPropertyBuilder.create().bean(bean).name(method).build();
         }
-        catch (RuntimeException ex)
-        {
+        catch (RuntimeException ex) {
             throw ex;
         }
-        catch (Exception ex)
-        {
+        catch (Exception ex) {
             throw new RuntimeException(ex);
         }
     }
 
-    public static JavaBeanStringProperty createStringProperty(final Object bean, final String method)
-
-    {
-        try
-        {
+    public static JavaBeanStringProperty createStringProperty(final Object bean, final String method) {
+        try {
             return JavaBeanStringPropertyBuilder.create().bean(bean).name(method).build();
         }
-        catch (RuntimeException ex)
-        {
+        catch (RuntimeException ex) {
             throw ex;
         }
-        catch (Exception ex)
-        {
+        catch (Exception ex) {
             throw new RuntimeException(ex);
         }
     }
@@ -238,24 +211,15 @@ public final class FxUtils
      *
      * @return int[], RGB
      */
-    public static int[] getProgressRGB(final double progress, final Color... colors)
-    {
-        if ((progress < 0D) || (progress > 1D) || (colors.length < 2))
-        {
-            return new int[]
-                    {
-                            0, 0, 0
-                    };
+    public static int[] getProgressRGB(final double progress, final Color... colors) {
+        if ((progress < 0D) || (progress > 1D) || (colors.length < 2)) {
+            return new int[]{0, 0, 0};
         }
 
-        if (progress == 1D)
-        {
+        if (progress == 1D) {
             Color c = colors[colors.length - 1];
 
-            return new int[]
-                    {
-                            (int) (c.getRed() * 255), (int) (c.getGreen() * 255), (int) (c.getBlue() * 255)
-                    };
+            return new int[]{(int) (c.getRed() * 255), (int) (c.getGreen() * 255), (int) (c.getBlue() * 255)};
         }
 
         int r;
@@ -275,24 +239,16 @@ public final class FxUtils
         g = (int) (color.getGreen() * 255);
         b = (int) (color.getBlue() * 255);
 
-        return new int[]
-                {
-                        r, g, b
-                };
+        return new int[]{r, g, b};
     }
 
-    public static void installCopyHandler(final Node node)
-    {
-        node.setOnKeyPressed(event ->
-        {
-            if (KEYCODE_COPY.match(event))
-            {
-                if (event.getSource() instanceof TableView)
-                {
+    public static void installCopyHandler(final Node node) {
+        node.setOnKeyPressed(event -> {
+            if (KEYCODE_COPY.match(event)) {
+                if (event.getSource() instanceof TableView) {
                     copySelectionToClipboard((TableView<?>) event.getSource());
                 }
-                else
-                {
+                else {
                     LOGGER.warn("No implementation for #copySelectionToClipboard found for {}", event.getSource().getClass().getSimpleName());
                 }
 
@@ -301,18 +257,13 @@ public final class FxUtils
         });
     }
 
-    public static void installPasteHandler(final Node node)
-    {
-        node.setOnKeyPressed(event ->
-        {
-            if (KEYCODE_PASTE.match(event))
-            {
-                if (event.getSource() instanceof TableView)
-                {
+    public static void installPasteHandler(final Node node) {
+        node.setOnKeyPressed(event -> {
+            if (KEYCODE_PASTE.match(event)) {
+                if (event.getSource() instanceof TableView) {
                     pasteClipboard((TableView<?>) event.getSource());
                 }
-                else
-                {
+                else {
                     LOGGER.warn("No implementation for #pasteClipboard found for {}", event.getSource().getClass().getSimpleName());
                 }
 
@@ -321,11 +272,9 @@ public final class FxUtils
         });
     }
 
-    public static void pasteClipboard(final TableView<?> table)
-    {
+    public static void pasteClipboard(final TableView<?> table) {
         // abort if there's no cell selected to start with
-        if (table.getSelectionModel().getSelectedCells().isEmpty())
-        {
+        if (table.getSelectionModel().getSelectedCells().isEmpty()) {
             return;
         }
 
@@ -338,8 +287,7 @@ public final class FxUtils
 
         StringTokenizer rowTokenizer = new StringTokenizer(pasteString, "\n");
 
-        while (rowTokenizer.hasMoreTokens())
-        {
+        while (rowTokenizer.hasMoreTokens()) {
             rowClipboard++;
 
             String rowString = rowTokenizer.nextToken();
@@ -348,8 +296,7 @@ public final class FxUtils
 
             int colClipboard = -1;
 
-            while (columnTokenizer.hasMoreTokens())
-            {
+            while (columnTokenizer.hasMoreTokens()) {
                 colClipboard++;
 
                 // calculate the position in the table cell
@@ -357,8 +304,7 @@ public final class FxUtils
                 int colTable = pasteCellPosition.getColumn() + colClipboard;
 
                 // skip if we reached the end of the table
-                if ((rowTable >= table.getItems().size()) || (colTable >= table.getColumns().size()))
-                {
+                if ((rowTable >= table.getItems().size()) || (colTable >= table.getColumns().size())) {
                     continue;
                 }
 
@@ -369,21 +315,17 @@ public final class FxUtils
                 ObservableValue<?> observableValue = tableColumn.getCellObservableValue(rowTable);
 
                 // TODO: handle double, etc
-                if (observableValue instanceof StringProperty sp)
-                {
+                if (observableValue instanceof StringProperty sp) {
                     sp.set(clipboardCellContent);
                 }
-                else if (observableValue instanceof IntegerProperty ip)
-                {
+                else if (observableValue instanceof IntegerProperty ip) {
                     int value = 0;
 
-                    try
-                    {
+                    try {
                         value = NumberFormat.getInstance().parse(clipboardCellContent).intValue();
                         ip.set(value);
                     }
-                    catch (ParseException ex)
-                    {
+                    catch (ParseException ex) {
                         LOGGER.error(ex.getMessage(), ex);
                     }
                 }
@@ -401,8 +343,7 @@ public final class FxUtils
      * stage.setScene(scene);<br>
      * </code>
      */
-    public static void preloadImage(final ImageView imageView)
-    {
+    public static void preloadImage(final ImageView imageView) {
         Dialog<?> dialog = new Dialog<>();
         dialog.initOwner(PimClientApplication.getMainWindow());
         dialog.setGraphic(imageView);
@@ -417,18 +358,15 @@ public final class FxUtils
     /**
      * Formatiert das Objekt als String.
      */
-    public static <T> StringConverter<T> toStringConverter(final Function<T, String> converter)
-    {
+    public static <T> StringConverter<T> toStringConverter(final Function<T, String> converter) {
         Objects.requireNonNull(converter, "converter required");
 
-        return new StringConverter<>()
-        {
+        return new StringConverter<>() {
             /**
              * @see javafx.util.StringConverter#fromString(java.lang.String)
              */
             @Override
-            public T fromString(final String string)
-            {
+            public T fromString(final String string) {
                 throw new UnsupportedOperationException("Not supported yet.");
             }
 
@@ -436,8 +374,7 @@ public final class FxUtils
              * @see javafx.util.StringConverter#toString(java.lang.Object)
              */
             @Override
-            public String toString(final T object)
-            {
+            public String toString(final T object) {
                 return converter.apply(object);
             }
         };
@@ -446,16 +383,13 @@ public final class FxUtils
     /**
      * Ändern der Display-Zeiten im Tooltip, da diese Möglichkeit noch nicht besteht.
      */
-    public static void tooltipBehaviorHack()
-    {
+    public static void tooltipBehaviorHack() {
         Tooltip tooltip = new Tooltip();
         Constructor<?> constructor = null;
 
         // Versuchen die Klasse TooltipBehavior zu finden.
-        for (Class<?> behaviorClass : tooltip.getClass().getDeclaredClasses())
-        {
-            try
-            {
+        for (Class<?> behaviorClass : tooltip.getClass().getDeclaredClasses()) {
+            try {
                 constructor = behaviorClass.getDeclaredConstructor(Duration.class, Duration.class, Duration.class, boolean.class);
                 constructor.setAccessible(true);
 
@@ -473,8 +407,7 @@ public final class FxUtils
 
                 break;
             }
-            catch (Exception ex)
-            {
+            catch (Exception ex) {
                 // Falsche interne Klasse des Tooltips
             }
         }
@@ -531,43 +464,34 @@ public final class FxUtils
     // return stringFormatter;
     // }
 
-    public static void translate(final Control control, final ResourceBundle resources)
-    {
+    public static void translate(final Control control, final ResourceBundle resources) {
         Tooltip tooltip = control.getTooltip();
 
-        if (tooltip == null)
-        {
+        if (tooltip == null) {
             return;
         }
 
-        if (tooltip.getText().startsWith("%"))
-        {
+        if (tooltip.getText().startsWith("%")) {
             tooltip.setText(resources.getString(tooltip.getText().substring(1)));
         }
     }
 
-    public static void translate(final Labeled labeled, final ResourceBundle resources)
-    {
-        if (labeled.getText().startsWith("%"))
-        {
+    public static void translate(final Labeled labeled, final ResourceBundle resources) {
+        if (labeled.getText().startsWith("%")) {
             labeled.setText(resources.getString(labeled.getText().substring(1)));
         }
 
         translate((Control) labeled, resources);
     }
 
-    public static void translate(final TableColumnBase<?, ?> tableColumn, final ResourceBundle resources)
-    {
-        if (tableColumn.getText().startsWith("%"))
-        {
+    public static void translate(final TableColumnBase<?, ?> tableColumn, final ResourceBundle resources) {
+        if (tableColumn.getText().startsWith("%")) {
             tableColumn.setText(resources.getString(tableColumn.getText().substring(1)));
         }
     }
 
-    public static void translate(final Text text, final ResourceBundle resources)
-    {
-        if (text.getText().startsWith("%"))
-        {
+    public static void translate(final Text text, final ResourceBundle resources) {
+        if (text.getText().startsWith("%")) {
             text.setText(resources.getString(text.getText().substring(1)));
         }
     }
@@ -575,8 +499,7 @@ public final class FxUtils
     /**
      * Übersetzen der Komponenten mit SceneBuilder-Prefix (%).
      */
-    public static void translate(final View view, final Collection<Field> components, final ResourceBundle resources)
-    {
+    public static void translate(final View view, final Collection<Field> components, final ResourceBundle resources) {
         // Set aus allen erreichbaren Nodes der Komponenten bauen, alles was Übersetzt werden kann.
 
         // @formatter:off
@@ -671,18 +594,15 @@ public final class FxUtils
         // @formatter:on
     }
 
-    public static void unblockGUI(final Window window)
-    {
-        if (window == null)
-        {
+    public static void unblockGUI(final Window window) {
+        if (window == null) {
             return;
         }
 
         window.removeEventFilter(InputEvent.ANY, EVENT_HANDLER_CONSUME_ALL);
     }
 
-    private FxUtils()
-    {
+    private FxUtils() {
         super();
     }
 }

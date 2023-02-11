@@ -4,14 +4,6 @@ package de.freese.pim.gui.mail;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
-import de.freese.pim.core.mail.MailPort;
-import de.freese.pim.core.mail.MailProvider;
-import de.freese.pim.core.utils.Utils;
-import de.freese.pim.gui.PimClientApplication;
-import de.freese.pim.gui.mail.model.FxMailAccount;
-import de.freese.pim.gui.mail.model.FxMailFolder;
-import de.freese.pim.gui.mail.service.FxMailService;
-import de.freese.pim.gui.utils.FxUtils;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.geometry.VPos;
@@ -32,13 +24,21 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+import de.freese.pim.core.mail.MailPort;
+import de.freese.pim.core.mail.MailProvider;
+import de.freese.pim.core.utils.Utils;
+import de.freese.pim.gui.PimClientApplication;
+import de.freese.pim.gui.mail.model.FxMailAccount;
+import de.freese.pim.gui.mail.model.FxMailFolder;
+import de.freese.pim.gui.mail.service.FxMailService;
+import de.freese.pim.gui.utils.FxUtils;
+
 /**
  * Dialog zum Anlegen eines neuen {@link FxMailAccount}.
  *
  * @author Thomas Freese
  */
-public class EditMailAccountDialog
-{
+public class EditMailAccountDialog {
     private final ListView<FxMailFolder> aboView = new ListView<>();
 
     private final Button buttonTest = new Button("Test");
@@ -61,64 +61,52 @@ public class EditMailAccountDialog
 
     private final ComboBox<MailPort> smtpPort = new ComboBox<>();
 
-    public Optional<FxMailAccount> addAccount(final FxMailService mailService, final ResourceBundle bundle)
-    {
+    public Optional<FxMailAccount> addAccount(final FxMailService mailService, final ResourceBundle bundle) {
         return openDialog(mailService, bundle, null, "mailaccount.add", "imageview-add");
     }
 
-    public Optional<FxMailAccount> editAccount(final FxMailService mailService, final ResourceBundle bundle, final FxMailAccount account)
-    {
+    public Optional<FxMailAccount> editAccount(final FxMailService mailService, final ResourceBundle bundle, final FxMailAccount account) {
         return openDialog(mailService, bundle, account, "mailaccount.edit", "imageview-edit");
     }
 
-    private void checkValidConfig(final ActionEvent event, final ResourceBundle bundle)
-    {
+    private void checkValidConfig(final ActionEvent event, final ResourceBundle bundle) {
         StringBuilder message = new StringBuilder();
 
-        if (!this.mail.getText().matches(Utils.MAIL_REGEX))
-        {
+        if (!this.mail.getText().matches(Utils.MAIL_REGEX)) {
             message.append(bundle.getString("mail.format.invalid")).append("\n");
         }
 
         String pw1 = this.password1.getText();
         String pw2 = this.password2.getText();
 
-        if ((pw1 == null) || pw1.isBlank())
-        {
+        if ((pw1 == null) || pw1.isBlank()) {
             message.append(bundle.getString("passwoerter.nicht_ausgefuellt")).append("\n");
         }
-        else if (!pw1.equals(pw2))
-        {
+        else if (!pw1.equals(pw2)) {
             message.append(bundle.getString("passwoerter.nicht_identisch")).append("\n");
         }
 
-        if ((this.aboView.getItems() != null) && (this.aboView.getItems().stream().noneMatch(FxMailFolder::isAbonniert)))
-        {
+        if ((this.aboView.getItems() != null) && (this.aboView.getItems().stream().noneMatch(FxMailFolder::isAbonniert))) {
             message.append(bundle.getString("mail.folder.abonniert.nicht")).append("\n");
         }
 
-        if (message.length() > 0)
-        {
+        if (message.length() > 0) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setHeaderText(message.toString());
             alert.showAndWait();
 
-            if (event != null)
-            {
+            if (event != null) {
                 event.consume();
             }
         }
     }
 
-    private Optional<FxMailAccount> openDialog(final FxMailService mailService, final ResourceBundle bundle, final FxMailAccount account, final String titleKey,
-                                               final String imageStyleClass)
-    {
+    private Optional<FxMailAccount> openDialog(final FxMailService mailService, final ResourceBundle bundle, final FxMailAccount account, final String titleKey, final String imageStyleClass) {
         // DialogObject
         FxMailAccount bean = new FxMailAccount();
 
         // Attribute kopieren.
-        if (account != null)
-        {
+        if (account != null) {
             bean.copyFrom(account);
         }
 
@@ -194,31 +182,26 @@ public class EditMailAccountDialog
         okButton.addEventFilter(ActionEvent.ACTION, event -> checkValidConfig(event, bundle));
 
         // OK-Button disablen, wenn eines dieser Felder leer ist.
-        this.mail.textProperty().addListener((observable, oldValue, newValue) ->
-        {
+        this.mail.textProperty().addListener((observable, oldValue, newValue) -> {
             okButton.setDisable(newValue.isEmpty());
 
             this.labelTestResult.setText(null);
             this.labelTestResult.setStyle(null);
         });
-        this.imapHost.textProperty().addListener((observable, oldValue, newValue) ->
-        {
+        this.imapHost.textProperty().addListener((observable, oldValue, newValue) -> {
             this.labelTestResult.setText(null);
             this.labelTestResult.setStyle(null);
         });
-        this.smtpHost.textProperty().addListener((observable, oldValue, newValue) ->
-        {
+        this.smtpHost.textProperty().addListener((observable, oldValue, newValue) -> {
             this.labelTestResult.setText(null);
             this.labelTestResult.setStyle(null);
         });
-        this.password1.textProperty().addListener((observable, oldValue, newValue) ->
-        {
+        this.password1.textProperty().addListener((observable, oldValue, newValue) -> {
             this.labelTestResult.setText(null);
             this.labelTestResult.setStyle(null);
             this.password2.clear();
         });
-        this.password2.textProperty().addListener((observable, oldValue, newValue) ->
-        {
+        this.password2.textProperty().addListener((observable, oldValue, newValue) -> {
             this.labelTestResult.setText(null);
             this.labelTestResult.setStyle(null);
         });
@@ -232,14 +215,11 @@ public class EditMailAccountDialog
 
         int row = -1;
 
-        if (account == null)
-        {
+        if (account == null) {
             okButton.setDisable(true);
 
-            this.provider.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) ->
-            {
-                if (newValue == null)
-                {
+            this.provider.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+                if (newValue == null) {
                     return;
                 }
 
@@ -286,14 +266,12 @@ public class EditMailAccountDialog
 
         Optional<ButtonType> result = dialog.showAndWait();
 
-        if (result.filter(response -> response != ButtonType.OK).isPresent())
-        {
+        if (result.filter(response -> response != ButtonType.OK).isPresent()) {
             return Optional.empty();
         }
 
         // Attribute kopieren.
-        if (account != null)
-        {
+        if (account != null) {
             account.copyFrom(bean);
 
             return Optional.ofNullable(account);
@@ -302,16 +280,14 @@ public class EditMailAccountDialog
         return Optional.ofNullable(bean);
     }
 
-    private void test(final FxMailService mailService, final FxMailAccount bean, final ResourceBundle bundle)
-    {
+    private void test(final FxMailService mailService, final FxMailAccount bean, final ResourceBundle bundle) {
         PimClientApplication.getMainWindow().getScene().setCursor(Cursor.WAIT);
 
         this.labelTestResult.setText(null);
         this.labelTestResult.setStyle(null);
         this.aboView.setItems(null);
 
-        try
-        {
+        try {
             checkValidConfig(null, bundle);
 
             bean.getFolder().clear();
@@ -322,13 +298,11 @@ public class EditMailAccountDialog
 
             this.aboView.setItems(bean.getFolder());
         }
-        catch (Exception ex)
-        {
+        catch (Exception ex) {
             this.labelTestResult.setText(ex.getMessage());
             this.labelTestResult.setStyle("-fx-text-fill: red;"); // fx-text-inner-color
         }
-        finally
-        {
+        finally {
             PimClientApplication.getMainWindow().getScene().setCursor(Cursor.DEFAULT);
         }
     }

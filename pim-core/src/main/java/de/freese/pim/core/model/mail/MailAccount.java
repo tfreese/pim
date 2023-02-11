@@ -8,8 +8,7 @@ import de.freese.pim.core.mail.MailPort;
  *
  * @author Thomas Freese
  */
-public class MailAccount
-{
+public class MailAccount {
     private long id;
 
     // @NotNull
@@ -39,20 +38,17 @@ public class MailAccount
     // @NotNull
     private MailPort smtpPort = MailPort.SMTPS;
 
-    public MailAccount()
-    {
+    public MailAccount() {
         super();
     }
 
-    public MailAccount(final MailAccount src)
-    {
+    public MailAccount(final MailAccount src) {
         this();
 
         copyFrom(src);
     }
 
-    public void copyFrom(final MailAccount src)
-    {
+    public void copyFrom(final MailAccount src) {
         setID(src.getID());
         setImapHost(src.getImapHost());
         setImapLegitimation(src.isImapLegitimation());
@@ -64,93 +60,75 @@ public class MailAccount
         setSmtpPort(src.getSmtpPort());
     }
 
-    public long getID()
-    {
+    public long getID() {
         return this.id;
     }
 
-    public String getImapHost()
-    {
+    public String getImapHost() {
         return this.imapHost;
     }
 
-    public MailPort getImapPort()
-    {
+    public MailPort getImapPort() {
         return this.imapPort;
     }
 
-    public String getMail()
-    {
+    public String getMail() {
         return this.mail;
     }
 
-    public String getPassword()
-    {
+    public String getPassword() {
         return this.password;
     }
 
-    public String getSmtpHost()
-    {
+    public String getSmtpHost() {
         return this.smtpHost;
     }
 
-    public MailPort getSmtpPort()
-    {
+    public MailPort getSmtpPort() {
         return this.smtpPort;
     }
 
-    public boolean isImapLegitimation()
-    {
+    public boolean isImapLegitimation() {
         return this.imapLegitimation;
     }
 
-    public boolean isSmtpLegitimation()
-    {
+    public boolean isSmtpLegitimation() {
         return this.smtpLegitimation;
     }
 
-    public void setID(final long id)
-    {
+    public void setID(final long id) {
         this.id = id;
     }
 
-    public void setImapHost(final String host)
-    {
+    public void setImapHost(final String host) {
         this.imapHost = host;
     }
 
-    public void setImapLegitimation(final boolean legitimation)
-    {
+    public void setImapLegitimation(final boolean legitimation) {
         this.imapLegitimation = legitimation;
     }
 
-    public void setImapPort(final MailPort port)
-    {
+    public void setImapPort(final MailPort port) {
         this.imapPort = port;
     }
 
-    public void setMail(final String mail)
-    {
+    public void setMail(final String mail) {
         this.mail = mail;
     }
 
-    public void setPassword(final String password)
-    {
+    public void setPassword(final String password) {
         this.password = password;
     }
 
-    public void setSmtpHost(final String host)
-    {
+    public void setSmtpHost(final String host) {
         this.smtpHost = host;
     }
 
-    public void setSmtpLegitimation(final boolean legitimation)
-    {
+    public void setSmtpLegitimation(final boolean legitimation) {
         this.smtpLegitimation = legitimation;
     }
 
-    public void setSmtpPort(final MailPort port)
-    {
+    public void setSmtpPort(final MailPort port) {
         this.smtpPort = port;
     }
 
@@ -158,8 +136,7 @@ public class MailAccount
      * @see java.lang.Object#toString()
      */
     @Override
-    public String toString()
-    {
+    public String toString() {
         StringBuilder builder = new StringBuilder();
         builder.append("MailAccount [id=").append(getID());
         builder.append(", mail=").append(getMail());

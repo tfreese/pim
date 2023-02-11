@@ -6,12 +6,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
-import de.freese.pim.core.spring.SpringContext;
-import de.freese.pim.gui.addressbook.model.FxKontakt;
-import de.freese.pim.gui.addressbook.service.FxAddressbookService;
-import de.freese.pim.gui.controller.AbstractController;
-import de.freese.pim.gui.utils.FxUtils;
-import de.freese.pim.gui.view.ErrorDialog;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
@@ -36,11 +30,17 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Pair;
 
+import de.freese.pim.core.spring.SpringContext;
+import de.freese.pim.gui.addressbook.model.FxKontakt;
+import de.freese.pim.gui.addressbook.service.FxAddressbookService;
+import de.freese.pim.gui.controller.AbstractController;
+import de.freese.pim.gui.utils.FxUtils;
+import de.freese.pim.gui.view.ErrorDialog;
+
 /**
  * @author Thomas Freese
  */
-public class ContactController extends AbstractController
-{
+public class ContactController extends AbstractController {
     private final FxAddressbookService addressbookService;
     private final ObjectProperty<FxKontakt> selectedKontakt = new SimpleObjectProperty<>();
     @FXML
@@ -62,8 +62,7 @@ public class ContactController extends AbstractController
     @FXML
     private TextField textFieldVorname;
 
-    public ContactController()
-    {
+    public ContactController() {
         super();
 
         this.addressbookService = SpringContext.getBean("clientAddressBookService", FxAddressbookService.class);
@@ -73,10 +72,8 @@ public class ContactController extends AbstractController
      * @see de.freese.pim.gui.controller.AbstractController#activate()
      */
     @Override
-    public void activate()
-    {
-        if (isActivated())
-        {
+    public void activate() {
+        if (isActivated()) {
             return;
         }
 
@@ -90,8 +87,7 @@ public class ContactController extends AbstractController
      * @see de.freese.pim.gui.controller.AbstractController#getMainNode()
      */
     @Override
-    public Node getMainNode()
-    {
+    public Node getMainNode() {
         return this.mainNode;
     }
 
@@ -99,8 +95,7 @@ public class ContactController extends AbstractController
      * @see de.freese.pim.gui.controller.AbstractController#getNaviNode()
      */
     @Override
-    public Node getNaviNode()
-    {
+    public Node getNaviNode() {
         return this.naviNode;
     }
 
@@ -108,28 +103,22 @@ public class ContactController extends AbstractController
      * @see javafx.fxml.Initializable#initialize(java.net.URL, java.util.ResourceBundle)
      */
     @Override
-    public void initialize(final URL location, final ResourceBundle resources)
-    {
+    public void initialize(final URL location, final ResourceBundle resources) {
         this.selectedKontakt.bind(this.tableViewKontakt.getSelectionModel().selectedItemProperty());
 
         // Workaround um Bind-Warnings "Exception while evaluating select-binding" zu verhindern.
         getKontakteList().add(new FxKontakt("", ""));
         this.tableViewKontakt.getSelectionModel().select(0);
 
-        this.textFieldNachname.textProperty()
-                .bind(Bindings.when(this.selectedKontakt.isNull()).then("").otherwise(Bindings.selectString(this.selectedKontakt, "nachname")));
-        this.textFieldVorname.textProperty()
-                .bind(Bindings.when(this.selectedKontakt.isNull()).then("").otherwise(Bindings.selectString(this.selectedKontakt, "vorname")));
+        this.textFieldNachname.textProperty().bind(Bindings.when(this.selectedKontakt.isNull()).then("").otherwise(Bindings.selectString(this.selectedKontakt, "nachname")));
+        this.textFieldVorname.textProperty().bind(Bindings.when(this.selectedKontakt.isNull()).then("").otherwise(Bindings.selectString(this.selectedKontakt, "vorname")));
 
-        this.buttonAddContact.setOnAction(event ->
-        {
+        this.buttonAddContact.setOnAction(event -> {
             Dialog<Pair<String, String>> dialog = createAddEditKontaktDialog("contact.add", "contact.add", "imageview-add", null, resources);
 
             Optional<Pair<String, String>> result = dialog.showAndWait();
-            result.ifPresent(pair ->
-            {
-                try
-                {
+            result.ifPresent(pair -> {
+                try {
                     FxKontakt kontakt = new FxKontakt(pair.getKey(), pair.getValue());
 
                     getAddressbookService().insertKontakt(kontakt);
@@ -138,8 +127,7 @@ public class ContactController extends AbstractController
 
                     this.tableViewKontakt.getSelectionModel().select(kontakt);
                 }
-                catch (Exception ex)
-                {
+                catch (Exception ex) {
                     getLogger().error(ex.getMessage(), ex);
 
                     new ErrorDialog().forThrowable(ex).showAndWait();
@@ -147,16 +135,12 @@ public class ContactController extends AbstractController
             });
         });
 
-        this.buttonEditContact.setOnAction(event ->
-        {
-            Dialog<Pair<String, String>> dialog =
-                    createAddEditKontaktDialog("contact.edit", "contact.edit", "imageview-edit", this.selectedKontakt.getValue(), resources);
+        this.buttonEditContact.setOnAction(event -> {
+            Dialog<Pair<String, String>> dialog = createAddEditKontaktDialog("contact.edit", "contact.edit", "imageview-edit", this.selectedKontakt.getValue(), resources);
 
             Optional<Pair<String, String>> result = dialog.showAndWait();
-            result.ifPresent(pair ->
-            {
-                try
-                {
+            result.ifPresent(pair -> {
+                try {
                     String nachname = pair.getKey();
                     String vorname = pair.getValue();
 
@@ -165,8 +149,7 @@ public class ContactController extends AbstractController
                     this.selectedKontakt.getValue().setNachname(nachname);
                     this.selectedKontakt.getValue().setVorname(vorname);
                 }
-                catch (Exception ex)
-                {
+                catch (Exception ex) {
                     getLogger().error(ex.getMessage(), ex);
 
                     new ErrorDialog().forThrowable(ex).showAndWait();
@@ -174,8 +157,7 @@ public class ContactController extends AbstractController
             });
         });
 
-        this.buttonDeleteContact.setOnAction(event ->
-        {
+        this.buttonDeleteContact.setOnAction(event -> {
             Alert alert = new Alert(AlertType.WARNING);
             alert.getDialogPane().getStylesheets().add("styles/styles.css");
             alert.setTitle(resources.getString("contact.delete"));
@@ -209,15 +191,12 @@ public class ContactController extends AbstractController
 
             Optional<ButtonType> result = alert.showAndWait();
 
-            if (result.get() == ButtonType.YES)
-            {
-                try
-                {
+            if (result.get() == ButtonType.YES) {
+                try {
                     getAddressbookService().deleteKontakt(this.selectedKontakt.getValue().getID());
                     getKontakteList().remove(this.selectedKontakt.getValue());
                 }
-                catch (Exception ex)
-                {
+                catch (Exception ex) {
                     getLogger().error(ex.getMessage(), ex);
 
                     new ErrorDialog().forThrowable(ex).showAndWait();
@@ -229,9 +208,7 @@ public class ContactController extends AbstractController
     /**
      * <a href="http://code.makery.ch/blog/javafx-dialogs-official/">Dialog Tutorial</a>
      */
-    private Dialog<Pair<String, String>> createAddEditKontaktDialog(final String titleKey, final String textKey, final String imageStyleClass,
-                                                                    final FxKontakt kontakt, final ResourceBundle resources)
-    {
+    private Dialog<Pair<String, String>> createAddEditKontaktDialog(final String titleKey, final String textKey, final String imageStyleClass, final FxKontakt kontakt, final ResourceBundle resources) {
         Dialog<Pair<String, String>> dialog = new Dialog<>();
         dialog.initOwner(getMainWindow());
         dialog.initModality(Modality.APPLICATION_MODAL);
@@ -259,16 +236,14 @@ public class ContactController extends AbstractController
         TextField vorname = new TextField();
         vorname.setPromptText(resources.getString("vorname"));
 
-        if (kontakt != null)
-        {
+        if (kontakt != null) {
             nachname.setText(kontakt.getNachname());
             vorname.setText(kontakt.getVorname());
         }
 
         Node okButton = dialog.getDialogPane().lookupButton(ButtonType.OK);
 
-        if ((nachname.getText() == null) || nachname.getText().isBlank())
-        {
+        if ((nachname.getText() == null) || nachname.getText().isBlank()) {
             okButton.setDisable(true);
         }
 
@@ -285,10 +260,8 @@ public class ContactController extends AbstractController
 
         Platform.runLater(nachname::requestFocus);
 
-        dialog.setResultConverter(buttonType ->
-        {
-            if (buttonType == ButtonType.OK)
-            {
+        dialog.setResultConverter(buttonType -> {
+            if (buttonType == ButtonType.OK) {
                 return new Pair<>(nachname.getText(), vorname.getText());
             }
 
@@ -298,8 +271,7 @@ public class ContactController extends AbstractController
         return dialog;
     }
 
-    private FxAddressbookService getAddressbookService()
-    {
+    private FxAddressbookService getAddressbookService() {
         return this.addressbookService;
     }
 
@@ -307,36 +279,31 @@ public class ContactController extends AbstractController
      * Als veränderbare Liste muss die Original-ObservableList zurückgegeben werden.
      */
     @SuppressWarnings("unchecked")
-    private ObservableList<FxKontakt> getKontakteList()
-    {
+    private ObservableList<FxKontakt> getKontakteList() {
         SortedList<FxKontakt> sortedList = (SortedList<FxKontakt>) this.tableViewKontakt.getItems();
         FilteredList<FxKontakt> filteredList = (FilteredList<FxKontakt>) sortedList.getSource();
 
         return (ObservableList<FxKontakt>) filteredList.getSource();
     }
 
-    private void loadKontakte()
-    {
+    private void loadKontakte() {
         getLogger().debug("Load Kontakte");
 
         getKontakteList().clear();
 
-        Task<List<FxKontakt>> task = new Task<>()
-        {
+        Task<List<FxKontakt>> task = new Task<>() {
             /**
              * @see javafx.concurrent.Task#call()
              */
             @Override
-            protected List<FxKontakt> call() throws Exception
-            {
+            private List<FxKontakt> call() throws Exception {
                 return getAddressbookService().getKontaktDetails();
             }
         };
 
         task.setOnSucceeded(event -> getKontakteList().addAll(task.getValue()));
 
-        task.setOnFailed(event ->
-        {
+        task.setOnFailed(event -> {
             Throwable throwable = task.getException();
             getLogger().error(throwable.getMessage(), throwable);
 

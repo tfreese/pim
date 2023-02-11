@@ -14,17 +14,14 @@ import de.freese.pim.core.mail.MailContent;
  * @author Thomas Freese
  * @see InlineUrlConnection
  */
-public class InlineUrlStreamHandler extends URLStreamHandler
-{
+public class InlineUrlStreamHandler extends URLStreamHandler {
     private static MailContent mailContent;
 
-    public static MailContent getMailContent()
-    {
+    public static MailContent getMailContent() {
         return mailContent;
     }
 
-    public static void setMailContent(final MailContent mailContent)
-    {
+    public static void setMailContent(final MailContent mailContent) {
         InlineUrlStreamHandler.mailContent = mailContent;
     }
 
@@ -32,8 +29,7 @@ public class InlineUrlStreamHandler extends URLStreamHandler
      * @see java.net.URLStreamHandler#openConnection(java.net.URL)
      */
     @Override
-    protected URLConnection openConnection(final URL url) throws IOException
-    {
+    protected URLConnection openConnection(final URL url) throws IOException {
         return new InlineUrlConnection(InlineUrlStreamHandler.mailContent, url);
     }
 }

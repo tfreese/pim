@@ -16,11 +16,6 @@ import java.util.List;
 
 import jakarta.annotation.Resource;
 
-import de.freese.pim.core.TestConfig;
-import de.freese.pim.core.dao.MailDAO;
-import de.freese.pim.core.model.mail.Mail;
-import de.freese.pim.core.model.mail.MailAccount;
-import de.freese.pim.core.model.mail.MailFolder;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
@@ -33,29 +28,30 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
+import de.freese.pim.core.TestConfig;
+import de.freese.pim.core.dao.MailDAO;
+import de.freese.pim.core.model.mail.Mail;
+import de.freese.pim.core.model.mail.MailAccount;
+import de.freese.pim.core.model.mail.MailFolder;
+
 /**
  * TestCase für das {@link MailDAO}.
  *
  * @author Thomas Freese
  */
-@SpringBootTest(classes =
-        {
-                TestConfig.class
-        })
+@SpringBootTest(classes = {TestConfig.class})
 @TestMethodOrder(MethodOrderer.MethodName.class)
 @Transactional(transactionManager = "transactionManager")
 @ActiveProfiles("test")
 @DirtiesContext
         //@Disabled
-class TestMailDAO
-{
+class TestMailDAO {
     @Resource
     private MailDAO mailDAO;
 
     @Test
     @Rollback
-    void test010InsertAccountFail() throws Throwable
-    {
+    void test010InsertAccountFail() throws Throwable {
         MailAccount account = new MailAccount();
 
         DataIntegrityViolationException exception = assertThrows(DataIntegrityViolationException.class, () -> this.mailDAO.insertAccount(account));
@@ -65,8 +61,7 @@ class TestMailDAO
 
     @Test
     @Commit
-    void test011InsertAccount()
-    {
+    void test011InsertAccount() {
         MailAccount account = new MailAccount();
         account.setMail("a@b.de");
         account.setPassword("gehaim");
@@ -85,8 +80,7 @@ class TestMailDAO
     @Test
     @Transactional(readOnly = true)
     @Rollback
-    void test012SelectAccount()
-    {
+    void test012SelectAccount() {
         List<MailAccount> accounts = this.mailDAO.getMailAccounts();
 
         Assertions.assertNotNull(accounts);
@@ -106,8 +100,7 @@ class TestMailDAO
 
     @Test
     @Commit
-    void test013UpdateAccount()
-    {
+    void test013UpdateAccount() {
         List<MailAccount> accounts = this.mailDAO.getMailAccounts();
 
         Assertions.assertNotNull(accounts);
@@ -130,8 +123,7 @@ class TestMailDAO
     @Test
     @Transactional(readOnly = true)
     @Rollback
-    void test014UpdateAccountCheck()
-    {
+    void test014UpdateAccountCheck() {
         List<MailAccount> accounts = this.mailDAO.getMailAccounts();
 
         Assertions.assertNotNull(accounts);
@@ -151,20 +143,17 @@ class TestMailDAO
 
     @Test
     @Rollback
-    void test020InsertFolderFail() throws Throwable
-    {
+    void test020InsertFolderFail() throws Throwable {
         MailFolder folder = new MailFolder();
 
-        DataIntegrityViolationException exception =
-                assertThrows(DataIntegrityViolationException.class, () -> this.mailDAO.insertFolder(2, Arrays.asList(folder)));
+        DataIntegrityViolationException exception = assertThrows(DataIntegrityViolationException.class, () -> this.mailDAO.insertFolder(2, Arrays.asList(folder)));
 
         assertNotNull(exception);
     }
 
     @Test
     @Commit
-    void test021InsertFolder()
-    {
+    void test021InsertFolder() {
         MailFolder folder = new MailFolder();
         folder.setFullName("a/b");
         folder.setName("b");
@@ -178,8 +167,7 @@ class TestMailDAO
     @Test
     @Transactional(readOnly = true)
     @Rollback
-    void test022SelectFolder()
-    {
+    void test022SelectFolder() {
         List<MailFolder> folders = this.mailDAO.getMailFolder(2);
 
         Assertions.assertNotNull(folders);
@@ -194,8 +182,7 @@ class TestMailDAO
 
     @Test
     @Commit
-    void test023UpdateFolder()
-    {
+    void test023UpdateFolder() {
         List<MailFolder> folders = this.mailDAO.getMailFolder(2);
 
         Assertions.assertNotNull(folders);
@@ -213,8 +200,7 @@ class TestMailDAO
     @Test
     @Transactional(readOnly = true)
     @Rollback
-    void test024UpdateFolderCheck()
-    {
+    void test024UpdateFolderCheck() {
         List<MailFolder> folders = this.mailDAO.getMailFolder(2);
 
         Assertions.assertNotNull(folders);
@@ -229,8 +215,7 @@ class TestMailDAO
 
     @Test
     @Rollback
-    void test030InsertMailFail() throws Throwable
-    {
+    void test030InsertMailFail() throws Throwable {
         Mail mail = new Mail();
 
         DataIntegrityViolationException exception = assertThrows(DataIntegrityViolationException.class, () -> this.mailDAO.insertMail(4, Arrays.asList(mail)));
@@ -240,8 +225,7 @@ class TestMailDAO
 
     @Test
     @Commit
-    void test031InsertMail()
-    {
+    void test031InsertMail() {
         Mail mail = new Mail();
         mail.setFrom(new InternetAddress("a@a.aa"));
         mail.setMsgNum(1);
@@ -250,18 +234,9 @@ class TestMailDAO
         mail.setSendDate(java.util.Date.from(LocalDateTime.of(2017, 2, 3, 15, 1).atZone(ZoneId.systemDefault()).toInstant()));
         mail.setSize(13);
         mail.setSubject("-TEST-");
-        mail.setTo(new InternetAddress[]
-                {
-                        new InternetAddress("b@b.bb")
-                });
-        mail.setCc(new InternetAddress[]
-                {
-                        new InternetAddress("c@c.cc")
-                });
-        mail.setBcc(new InternetAddress[]
-                {
-                        new InternetAddress("d@d.dd")
-                });
+        mail.setTo(new InternetAddress[]{new InternetAddress("b@b.bb")});
+        mail.setCc(new InternetAddress[]{new InternetAddress("c@c.cc")});
+        mail.setBcc(new InternetAddress[]{new InternetAddress("d@d.dd")});
         mail.setUID(2);
 
         this.mailDAO.insertMail(4, Arrays.asList(mail));
@@ -270,8 +245,7 @@ class TestMailDAO
     @Test
     @Transactional(readOnly = true)
     @Rollback
-    void test032SelectMail()
-    {
+    void test032SelectMail() {
         List<Mail> mails = this.mailDAO.getMails(4);
 
         Assertions.assertNotNull(mails);
@@ -296,8 +270,7 @@ class TestMailDAO
 
     @Test
     @Commit
-    void test033UpdateMail()
-    {
+    void test033UpdateMail() {
         List<Mail> mails = this.mailDAO.getMails(4);
 
         Assertions.assertNotNull(mails);
@@ -314,8 +287,7 @@ class TestMailDAO
     @Test
     @Transactional(readOnly = true)
     @Rollback
-    void test034UpdateMailCheck()
-    {
+    void test034UpdateMailCheck() {
         List<Mail> mails = this.mailDAO.getMails(4);
 
         Assertions.assertNotNull(mails);
@@ -337,16 +309,14 @@ class TestMailDAO
 
     @Test
     @Commit
-    void test040DeleteMail()
-    {
+    void test040DeleteMail() {
         this.mailDAO.deleteMail(4, 2);
     }
 
     @Test
     @Transactional(readOnly = true)
     @Rollback
-    void test041DeleteMailCheck()
-    {
+    void test041DeleteMailCheck() {
         List<Mail> mails = this.mailDAO.getMails(4);
 
         Assertions.assertNotNull(mails);
@@ -355,16 +325,14 @@ class TestMailDAO
 
     @Test
     @Commit
-    void test050DeleteFolder()
-    {
+    void test050DeleteFolder() {
         this.mailDAO.deleteFolder(4);
     }
 
     @Test
     @Transactional(readOnly = true)
     @Rollback
-    void test051DeleteFolderCheck()
-    {
+    void test051DeleteFolderCheck() {
         List<MailFolder> folders = this.mailDAO.getMailFolder(2);
 
         Assertions.assertNotNull(folders);
@@ -373,16 +341,14 @@ class TestMailDAO
 
     @Test
     @Commit
-    void test060DeleteAccount()
-    {
+    void test060DeleteAccount() {
         this.mailDAO.deleteAccount(2);
     }
 
     @Test
     @Transactional(readOnly = true)
     @Rollback
-    void test061DeleteAccountCheck()
-    {
+    void test061DeleteAccountCheck() {
         List<MailFolder> folders = this.mailDAO.getMailFolder(2);
 
         Assertions.assertNotNull(folders);

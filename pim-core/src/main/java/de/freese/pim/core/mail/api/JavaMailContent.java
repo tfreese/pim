@@ -13,6 +13,7 @@ import jakarta.mail.internet.MimePart;
 import jakarta.mail.internet.MimeUtility;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import de.freese.pim.core.mail.DefaultMailContent;
 import de.freese.pim.core.mail.datasource.AttachmentDataSource;
 import de.freese.pim.core.mail.datasource.InlineDataSource;
@@ -26,8 +27,7 @@ import de.freese.pim.core.utils.io.IOMonitor;
  * @author Thomas Freese
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class JavaMailContent extends DefaultMailContent
-{
+public class JavaMailContent extends DefaultMailContent {
     // public JavaMailContent(final DataSource dataSource, final URL url) throws IOException
     // {
     // super();
@@ -52,13 +52,11 @@ public class JavaMailContent extends DefaultMailContent
     // this(new FileDataSource(path.toFile()), path.toUri().toURL());
     // }
 
-    public JavaMailContent(final MimeMessage message) throws Exception
-    {
+    public JavaMailContent(final MimeMessage message) throws Exception {
         this(message, null);
     }
 
-    public JavaMailContent(final MimeMessage message, final IOMonitor monitor) throws Exception
-    {
+    public JavaMailContent(final MimeMessage message, final IOMonitor monitor) throws Exception {
         super();
 
         Objects.requireNonNull(message, "message required");
@@ -74,13 +72,11 @@ public class JavaMailContent extends DefaultMailContent
         ContentType ct = new ContentType(messageDataSource.getContentType());
         setMessageContentType(ct.getBaseType().toLowerCase());
 
-        if ((encoding == null) || encoding.isBlank())
-        {
+        if ((encoding == null) || encoding.isBlank()) {
             encoding = MimeUtility.javaCharset(ct.getParameter("charset"));
         }
 
-        if ((encoding == null) || encoding.isBlank())
-        {
+        if ((encoding == null) || encoding.isBlank()) {
             encoding = "UTF-8";
         }
 
@@ -89,8 +85,7 @@ public class JavaMailContent extends DefaultMailContent
         // Inline-DataSources
         Map<String, InlineDataSource> mapInlines = new TreeMap<>();
 
-        for (Entry<String, MimePart> entry : MailUtils.getInlineMap(message).entrySet())
-        {
+        for (Entry<String, MimePart> entry : MailUtils.getInlineMap(message).entrySet()) {
             mapInlines.put(entry.getKey(), new InlineDataSource(entry.getValue().getDataHandler().getDataSource(), monitor));
         }
 
@@ -99,8 +94,7 @@ public class JavaMailContent extends DefaultMailContent
         // Attachment-DataSources
         Map<String, AttachmentDataSource> mapAttachments = new TreeMap<>();
 
-        for (Entry<String, MimePart> entry : MailUtils.getAttachmentMap(message).entrySet())
-        {
+        for (Entry<String, MimePart> entry : MailUtils.getAttachmentMap(message).entrySet()) {
             mapAttachments.put(entry.getKey(), new AttachmentDataSource(entry.getValue().getDataHandler().getDataSource(), monitor));
 
             // Test

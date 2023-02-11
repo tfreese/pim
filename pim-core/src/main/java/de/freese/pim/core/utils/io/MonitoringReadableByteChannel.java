@@ -11,8 +11,7 @@ import java.util.Objects;
  *
  * @author Thomas Freese
  */
-public class MonitoringReadableByteChannel implements ReadableByteChannel
-{
+public class MonitoringReadableByteChannel implements ReadableByteChannel {
     private final ReadableByteChannel delegate;
 
     private final IOMonitor monitor;
@@ -28,8 +27,7 @@ public class MonitoringReadableByteChannel implements ReadableByteChannel
     /**
      * @param size long; Anzahl Bytes (Größe) des gesamten Channels
      */
-    public MonitoringReadableByteChannel(final ReadableByteChannel delegate, final IOMonitor monitor, final long size)
-    {
+    public MonitoringReadableByteChannel(final ReadableByteChannel delegate, final IOMonitor monitor, final long size) {
         super();
 
         this.delegate = Objects.requireNonNull(delegate, "delegate required");
@@ -41,8 +39,7 @@ public class MonitoringReadableByteChannel implements ReadableByteChannel
      * @see java.nio.channels.Channel#close()
      */
     @Override
-    public void close() throws IOException
-    {
+    public void close() throws IOException {
         this.delegate.close();
     }
 
@@ -50,8 +47,7 @@ public class MonitoringReadableByteChannel implements ReadableByteChannel
      * @see java.nio.channels.Channel#isOpen()
      */
     @Override
-    public boolean isOpen()
-    {
+    public boolean isOpen() {
         return this.delegate.isOpen();
     }
 
@@ -59,12 +55,10 @@ public class MonitoringReadableByteChannel implements ReadableByteChannel
      * @see java.nio.channels.ReadableByteChannel#read(java.nio.ByteBuffer)
      */
     @Override
-    public int read(final ByteBuffer dst) throws IOException
-    {
+    public int read(final ByteBuffer dst) throws IOException {
         int readCount = this.delegate.read(dst);
 
-        if (readCount > 0)
-        {
+        if (readCount > 0) {
             this.sizeRead += readCount;
 
             this.monitor.monitor(this.sizeRead, this.size);

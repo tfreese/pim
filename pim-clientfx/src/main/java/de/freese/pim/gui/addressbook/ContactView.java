@@ -1,8 +1,6 @@
 // Created: 13.12.2016
 package de.freese.pim.gui.addressbook;
 
-import de.freese.pim.gui.addressbook.model.FxKontakt;
-import de.freese.pim.gui.view.View;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.transformation.FilteredList;
@@ -25,13 +23,15 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 
+import de.freese.pim.gui.addressbook.model.FxKontakt;
+import de.freese.pim.gui.view.View;
+
 /**
  * View des Adressbuchs.
  *
  * @author Thomas Freese
  */
-public class ContactView implements View
-{
+public class ContactView implements View {
     @FXML
     private final Region mainNode;
 
@@ -65,16 +65,14 @@ public class ContactView implements View
     @FXML
     private TextField textFieldVorname;
 
-    public ContactView()
-    {
+    public ContactView() {
         super();
 
         this.mainNode = createMainNode();
         this.naviNode = createNaviNode();
     }
 
-    private Region createMainNode()
-    {
+    private Region createMainNode() {
         GridPane gridPane = new GridPane();
         gridPane.getStyleClass().add("gridpane");
 
@@ -105,8 +103,7 @@ public class ContactView implements View
         return titledPane;
     }
 
-    private Region createNaviNode()
-    {
+    private Region createNaviNode() {
         GridPane gridPane = new GridPane();
         gridPane.getStyleClass().addAll("gridpane", "padding");
 
@@ -164,8 +161,7 @@ public class ContactView implements View
         return titledPane;
     }
 
-    private TableView<FxKontakt> createTableViewKontakt(final StringProperty propertyKontaktFilter)
-    {
+    private TableView<FxKontakt> createTableViewKontakt(final StringProperty propertyKontaktFilter) {
         TableView<FxKontakt> tableView = new TableView<>();
         tableView.setEditable(false);
         tableView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
@@ -201,10 +197,8 @@ public class ContactView implements View
         FilteredList<FxKontakt> filteredData = new FilteredList<>(FXCollections.observableArrayList());
 
         // Filter-Textfeld mit FilteredList verbinden.
-        propertyKontaktFilter.addListener((observable, oldValue, newValue) -> filteredData.setPredicate(kontakt ->
-        {
-            if ((newValue == null) || newValue.isBlank())
-            {
+        propertyKontaktFilter.addListener((observable, oldValue, newValue) -> filteredData.setPredicate(kontakt -> {
+            if ((newValue == null) || newValue.isBlank()) {
                 return true;
             }
 

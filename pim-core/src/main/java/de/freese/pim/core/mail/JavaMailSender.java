@@ -22,8 +22,7 @@ import jakarta.mail.internet.MimeMessage;
  *
  * @author Thomas Freese
  */
-public class JavaMailSender
-{
+public class JavaMailSender {
     public static final String DEFAULT_PROTOCOL = "smtp";
 
     private static final String HEADER_MESSAGE_ID = "Message-ID";
@@ -31,12 +30,10 @@ public class JavaMailSender
     /**
      * @author Thomas Freese
      */
-    private static class MailAuthenticator extends Authenticator
-    {
+    private static class MailAuthenticator extends Authenticator {
         private final PasswordAuthentication authentication;
 
-        MailAuthenticator(final String userName, final String password)
-        {
+        MailAuthenticator(final String userName, final String password) {
             super();
 
             Objects.requireNonNull(userName, "userName required");
@@ -49,8 +46,7 @@ public class JavaMailSender
          * @see jakarta.mail.Authenticator#getPasswordAuthentication()
          */
         @Override
-        public PasswordAuthentication getPasswordAuthentication()
-        {
+        public PasswordAuthentication getPasswordAuthentication() {
             return this.authentication;
         }
     }
@@ -67,78 +63,63 @@ public class JavaMailSender
 
     private Session session;
 
-    public String getHost()
-    {
+    public String getHost() {
         return this.host;
     }
 
-    public Properties getJavaMailProperties()
-    {
+    public Properties getJavaMailProperties() {
         return this.javaMailProperties;
     }
 
-    public int getPort()
-    {
+    public int getPort() {
         return this.port;
     }
 
-    public String getProtocol()
-    {
+    public String getProtocol() {
         return this.protocol;
     }
 
-    public synchronized Session getSession()
-    {
-        if (this.session == null)
-        {
+    public synchronized Session getSession() {
+        if (this.session == null) {
             this.session = Session.getInstance(getJavaMailProperties(), getAuthenticator());
         }
 
         return this.session;
     }
 
-    public void send(final MimeMessage... mimeMessages) throws Exception
-    {
+    public void send(final MimeMessage... mimeMessages) throws Exception {
         doSend(mimeMessages, null);
     }
 
-    public void setAuthentication(final String userName, final String password)
-    {
+    public void setAuthentication(final String userName, final String password) {
         this.authenticator = new MailAuthenticator(userName, password);
     }
 
-    public void setHost(final String host)
-    {
+    public void setHost(final String host) {
         this.host = Objects.requireNonNull(host, "host required");
     }
 
-    public void setJavaMailProperties(final Properties javaMailProperties)
-    {
+    public void setJavaMailProperties(final Properties javaMailProperties) {
         this.javaMailProperties = Objects.requireNonNull(javaMailProperties, "javaMailProperties required");
     }
 
-    public void setPort(final int port)
-    {
+    public void setPort(final int port) {
         this.port = port;
     }
 
-    public void setProtocol(final String protocol)
-    {
+    public void setProtocol(final String protocol) {
         this.protocol = Objects.requireNonNull(protocol, "protocol required");
     }
 
-    public synchronized void setSession(final Session session)
-    {
+    public synchronized void setSession(final Session session) {
         this.session = Objects.requireNonNull(session, "Session must not be null");
     }
 
     /**
      * Validate that this instance can connect to the server that it is configured for. Throws a {@link MessagingException} if the connection attempt failed.
      */
-    public void testConnection() throws MessagingException
-    {
-        try (Transport transport = connectTransport())
-        {
+    public void testConnection() throws MessagingException {
+        try (Transport transport = connectTransport()) {
             transport.isConnected();
         }
     }
@@ -154,8 +135,7 @@ public class JavaMailSender
      * @see #getPassword()
      * @since 4.1.2
      */
-    protected Transport connectTransport() throws MessagingException
-    {
+    protected Transport connectTransport() throws MessagingException {
         String username = Optional.ofNullable(getUsername()).filter(s -> !s.isBlank()).orElse(null);
         String password = Optional.ofNullable(getPassword()).filter(s -> !s.isBlank()).orElse(null);
 
@@ -172,45 +152,34 @@ public class JavaMailSender
      * @param originalMessages corresponding original message objects that the MimeMessages have been created from (with same array length and indices as the
      * "mimeMessages" array), if any
      */
-    protected void doSend(final MimeMessage[] mimeMessages, final Object[] originalMessages) throws Exception
-    {
+    protected void doSend(final MimeMessage[] mimeMessages, final Object[] originalMessages) throws Exception {
         Map<Object, Exception> failedMessages = new LinkedHashMap<>();
         Transport transport = null;
 
-        try
-        {
-            for (int i = 0; i < mimeMessages.length; i++)
-            {
+        try {
+            for (int i = 0; i < mimeMessages.length; i++) {
                 // Check transport connection first...
-                if ((transport == null) || !transport.isConnected())
-                {
-                    if (transport != null)
-                    {
-                        try
-                        {
+                if ((transport == null) || !transport.isConnected()) {
+                    if (transport != null) {
+                        try {
                             transport.close();
                         }
-                        catch (Exception ex)
-                        {
+                        catch (Exception ex) {
                             // Ignore
                         }
 
                         transport = null;
                     }
 
-                    try
-                    {
+                    try {
                         transport = connectTransport();
                     }
-                    catch (AuthenticationFailedException ex)
-                    {
+                    catch (AuthenticationFailedException ex) {
                         throw ex;
                     }
-                    catch (Exception ex)
-                    {
+                    catch (Exception ex) {
                         // Effectively, all remaining messages failed...
-                        for (int j = i; j < mimeMessages.length; j++)
-                        {
+                        for (int j = i; j < mimeMessages.length; j++) {
                             Object original = (originalMessages != null ? originalMessages[j] : mimeMessages[j]);
                             failedMessages.put(original, ex);
                         }
@@ -222,10 +191,8 @@ public class JavaMailSender
 
                 MimeMessage mimeMessage = mimeMessages[i];
 
-                try
-                {
-                    if (mimeMessage.getSentDate() == null)
-                    {
+                try {
+                    if (mimeMessage.getSentDate() == null) {
                         mimeMessage.setSentDate(new Date());
                     }
 
@@ -233,33 +200,26 @@ public class JavaMailSender
 
                     mimeMessage.saveChanges();
 
-                    if (messageID != null)
-                    {
+                    if (messageID != null) {
                         mimeMessage.setHeader(HEADER_MESSAGE_ID, messageID);
                     }
 
                     transport.sendMessage(mimeMessage, mimeMessage.getAllRecipients());
                 }
-                catch (Exception ex)
-                {
+                catch (Exception ex) {
                     Object original = (originalMessages != null ? originalMessages[i] : mimeMessage);
                     failedMessages.put(original, ex);
                 }
             }
         }
-        finally
-        {
-            try
-            {
-                if (transport != null)
-                {
+        finally {
+            try {
+                if (transport != null) {
                     transport.close();
                 }
             }
-            catch (Exception ex)
-            {
-                if (!failedMessages.isEmpty())
-                {
+            catch (Exception ex) {
+                if (!failedMessages.isEmpty()) {
                     // throw new MailSendException("Failed to close server connection after message failures", ex, failedMessages);
                     throw new MessagingException("Failed to close server connection after message failures", ex);
                 }
@@ -269,20 +229,17 @@ public class JavaMailSender
             }
         }
 
-        if (!failedMessages.isEmpty())
-        {
+        if (!failedMessages.isEmpty()) {
             // throw new MailSendException(failedMessages);
             throw new Exception(failedMessages.values().toString());
         }
     }
 
-    protected MailAuthenticator getAuthenticator()
-    {
+    protected MailAuthenticator getAuthenticator() {
         return this.authenticator;
     }
 
-    protected String getPassword()
-    {
+    protected String getPassword() {
         return getAuthenticator().getPasswordAuthentication().getPassword();
     }
 
@@ -293,25 +250,21 @@ public class JavaMailSender
      * @see #getSession()
      * @see #getProtocol()
      */
-    protected Transport getTransport(final Session session) throws NoSuchProviderException
-    {
+    protected Transport getTransport(final Session session) throws NoSuchProviderException {
         String proto = getProtocol();
 
-        if (proto == null)
-        {
+        if (proto == null) {
             proto = session.getProperty("mail.transport.protocol");
         }
 
-        if (proto == null)
-        {
+        if (proto == null) {
             proto = DEFAULT_PROTOCOL;
         }
 
         return session.getTransport(proto);
     }
 
-    protected String getUsername()
-    {
+    protected String getUsername() {
         return getAuthenticator().getPasswordAuthentication().getUserName();
     }
 }

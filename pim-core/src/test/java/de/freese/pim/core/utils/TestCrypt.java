@@ -18,11 +18,9 @@ import org.junit.jupiter.api.TestMethodOrder;
  * @author Thomas Freese
  */
 @TestMethodOrder(MethodOrderer.MethodName.class)
-class TestCrypt
-{
+class TestCrypt {
     @Test
-    void testCryptStream() throws Exception
-    {
+    void testCryptStream() throws Exception {
         String clearText = "testABC123,.öäü#+";
 
         Crypt crypt = Crypt.getUTF8Instance();
@@ -34,11 +32,9 @@ class TestCrypt
         // Assert.assertEquals(clearText, decrypted);
         // }
 
-        try (InputStream isClear = new ByteArrayInputStream(clearText.getBytes(StandardCharsets.UTF_8));
-             InputStream isEncrypted = crypt.encrypt(isClear); // Verschlüsseln
+        try (InputStream isClear = new ByteArrayInputStream(clearText.getBytes(StandardCharsets.UTF_8)); InputStream isEncrypted = crypt.encrypt(isClear); // Verschlüsseln
              InputStream decryptedStream = crypt.decrypt(isEncrypted); // Entschlüsseln
-             BufferedReader buffer = new BufferedReader(new InputStreamReader(decryptedStream, StandardCharsets.UTF_8)))
-        {
+             BufferedReader buffer = new BufferedReader(new InputStreamReader(decryptedStream, StandardCharsets.UTF_8))) {
             String decrypted = buffer.lines().collect(Collectors.joining("\n"));
             Assertions.assertEquals(clearText, decrypted);
         }
@@ -48,8 +44,7 @@ class TestCrypt
     }
 
     @Test
-    void testCryptString() throws Exception
-    {
+    void testCryptString() throws Exception {
         String clearText = "testABC123,.öäü#+";
 
         Crypt crypt = Crypt.getUTF8Instance();

@@ -4,24 +4,24 @@ package de.freese.pim.gui.main;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import javafx.fxml.FXML;
+import javafx.scene.Node;
+import javafx.scene.control.Button;
+import javafx.scene.control.ToolBar;
+
 import de.freese.pim.gui.addressbook.ContactController;
 import de.freese.pim.gui.addressbook.ContactView;
 import de.freese.pim.gui.controller.AbstractController;
 import de.freese.pim.gui.mail.MailController;
 import de.freese.pim.gui.mail.view.MailView;
 import de.freese.pim.gui.utils.FxUtils;
-import javafx.fxml.FXML;
-import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.ToolBar;
 
 /**
  * Main-Controller.
  *
  * @author Thomas Freese
  */
-public class MainController extends AbstractController
-{
+public class MainController extends AbstractController {
     private final MainView mainView;
 
     @FXML
@@ -34,8 +34,7 @@ public class MainController extends AbstractController
 
     private MailController mailController;
 
-    public MainController(final ResourceBundle resources)
-    {
+    public MainController(final ResourceBundle resources) {
         super();
 
         this.mainView = new MainView();
@@ -46,8 +45,7 @@ public class MainController extends AbstractController
      * @see de.freese.pim.gui.controller.AbstractController#activate()
      */
     @Override
-    public void activate()
-    {
+    public void activate() {
         throw new UnsupportedOperationException();
     }
 
@@ -55,8 +53,7 @@ public class MainController extends AbstractController
      * @see de.freese.pim.gui.controller.AbstractController#getMainNode()
      */
     @Override
-    public Node getMainNode()
-    {
+    public Node getMainNode() {
         return this.mainView;
     }
 
@@ -64,8 +61,7 @@ public class MainController extends AbstractController
      * @see de.freese.pim.gui.controller.AbstractController#getNaviNode()
      */
     @Override
-    public Node getNaviNode()
-    {
+    public Node getNaviNode() {
         throw new UnsupportedOperationException();
     }
 
@@ -73,8 +69,7 @@ public class MainController extends AbstractController
      * @see de.freese.pim.gui.controller.AbstractController#getToolBar()
      */
     @Override
-    public ToolBar getToolBar()
-    {
+    public ToolBar getToolBar() {
         throw new UnsupportedOperationException();
     }
 
@@ -82,8 +77,7 @@ public class MainController extends AbstractController
      * @see javafx.fxml.Initializable#initialize(java.net.URL, java.util.ResourceBundle)
      */
     @Override
-    public void initialize(final URL location, final ResourceBundle resources)
-    {
+    public void initialize(final URL location, final ResourceBundle resources) {
         this.mailController = new MailController();
         FxUtils.bind(new MailView(), this.mailController, resources);
 
@@ -93,16 +87,14 @@ public class MainController extends AbstractController
         FxUtils.translate(this.buttonMailView, resources);
         FxUtils.translate(this.buttonContactView, resources);
 
-        this.buttonMailView.setOnAction(event ->
-        {
+        this.buttonMailView.setOnAction(event -> {
             this.mainView.setToolbar(this.mailController.getToolBar());
             this.mainView.setNavNode(this.mailController.getNaviNode());
             this.mainView.setMainNode(this.mailController.getMainNode());
             this.mailController.activate();
         });
 
-        this.buttonContactView.setOnAction(event ->
-        {
+        this.buttonContactView.setOnAction(event -> {
             this.mainView.setToolbar(this.contactController.getToolBar());
             this.mainView.setNavNode(this.contactController.getNaviNode());
             this.mainView.setMainNode(this.contactController.getMainNode());
@@ -110,8 +102,7 @@ public class MainController extends AbstractController
         });
     }
 
-    public void selectDefaultView()
-    {
+    public void selectDefaultView() {
         this.buttonMailView.fire();
         // this.buttonContactView.fire();
     }

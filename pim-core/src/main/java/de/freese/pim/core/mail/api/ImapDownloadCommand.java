@@ -26,19 +26,16 @@ import com.sun.mail.imap.protocol.IMAPResponse;
  *
  * @author Thomas Freese
  */
-public class ImapDownloadCommand implements ProtocolCommand
-{
+public class ImapDownloadCommand implements ProtocolCommand {
     private final Session session;
 
     private final long uid;
 
-    public ImapDownloadCommand(final long uid)
-    {
+    public ImapDownloadCommand(final long uid) {
         this(null, uid);
     }
 
-    public ImapDownloadCommand(final Session session, final long uid)
-    {
+    public ImapDownloadCommand(final Session session, final long uid) {
         super();
 
         this.session = session;
@@ -49,8 +46,7 @@ public class ImapDownloadCommand implements ProtocolCommand
      * @see com.sun.mail.imap.IMAPFolder.ProtocolCommand#doCommand(com.sun.mail.imap.protocol.IMAPProtocol)
      */
     @Override
-    public Object doCommand(final IMAPProtocol protocol) throws ProtocolException
-    {
+    public Object doCommand(final IMAPProtocol protocol) throws ProtocolException {
         // UID fetch 234789 bodystructure followed by b uid fetch 234789 (body.peek[1.1] body.peek[2])
 
         Argument args = new Argument();
@@ -59,12 +55,10 @@ public class ImapDownloadCommand implements ProtocolCommand
         Response[] r = protocol.command("UID FETCH", args);
         Response response = r[r.length - 1];
 
-        if (response.isOK())
-        {
+        if (response.isOK()) {
             Session s = this.session;
 
-            if (s == null)
-            {
+            if (s == null) {
                 Properties props = new Properties();
                 props.setProperty("mail.store.protocol", "imap");
                 props.setProperty("mail.mime.base64.ignoreerrors", "true");
@@ -75,27 +69,21 @@ public class ImapDownloadCommand implements ProtocolCommand
             }
 
             // last response is only result summary: not contents
-            for (int i = 0; i < (r.length - 1); i++)
-            {
-                if (r[i] instanceof IMAPResponse)
-                {
+            for (int i = 0; i < (r.length - 1); i++) {
+                if (r[i] instanceof IMAPResponse) {
                     FetchResponse fetch = (FetchResponse) r[i];
                     BODY body = (BODY) fetch.getItem(0);
 
-                    try
-                    {
-                        try (InputStream is = body.getByteArrayInputStream())
-                        {
+                    try {
+                        try (InputStream is = body.getByteArrayInputStream()) {
 
-                            @SuppressWarnings("unused")
-                            MimeMessage mm = new MimeMessage(this.session, is);
+                            @SuppressWarnings("unused") MimeMessage mm = new MimeMessage(this.session, is);
 
                             // TODO Save Mail
                             // Contents.getContents(mm, i);
                         }
                     }
-                    catch (MessagingException | IOException ex)
-                    {
+                    catch (MessagingException | IOException ex) {
                         ex.printStackTrace();
                     }
                 }

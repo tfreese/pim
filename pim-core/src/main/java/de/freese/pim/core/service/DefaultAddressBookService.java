@@ -6,11 +6,12 @@ import java.util.List;
 
 import jakarta.annotation.Resource;
 
-import de.freese.pim.core.dao.AddressBookDAO;
-import de.freese.pim.core.model.addressbook.Kontakt;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import de.freese.pim.core.dao.AddressBookDAO;
+import de.freese.pim.core.model.addressbook.Kontakt;
 
 /**
  * Service für das AddressBook.
@@ -19,16 +20,14 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service("addressBookService")
 @Profile("!ClientREST")
-public class DefaultAddressBookService extends AbstractService implements AddressBookService
-{
+public class DefaultAddressBookService extends AbstractService implements AddressBookService {
     private AddressBookDAO addressBookDAO;
 
     /**
      * @see de.freese.pim.core.service.AddressBookService#backup(java.nio.file.Path)
      */
     @Override
-    public boolean backup(final Path directory)
-    {
+    public boolean backup(final Path directory) {
         return this.addressBookDAO.backup(directory);
     }
 
@@ -37,8 +36,7 @@ public class DefaultAddressBookService extends AbstractService implements Addres
      */
     @Override
     @Transactional
-    public int deleteAttribut(final long kontaktID, final String attribut)
-    {
+    public int deleteAttribut(final long kontaktID, final String attribut) {
         return this.addressBookDAO.deleteAttribut(kontaktID, attribut);
     }
 
@@ -47,8 +45,7 @@ public class DefaultAddressBookService extends AbstractService implements Addres
      */
     @Override
     @Transactional
-    public int deleteKontakt(final long id)
-    {
+    public int deleteKontakt(final long id) {
         return this.addressBookDAO.deleteKontakt(id);
     }
 
@@ -57,8 +54,7 @@ public class DefaultAddressBookService extends AbstractService implements Addres
      */
     @Override
     @Transactional(readOnly = true)
-    public List<Kontakt> getKontaktDetails(final long... ids)
-    {
+    public List<Kontakt> getKontaktDetails(final long... ids) {
         return this.addressBookDAO.getKontaktDetails(ids);
     }
 
@@ -67,8 +63,7 @@ public class DefaultAddressBookService extends AbstractService implements Addres
      */
     @Override
     @Transactional(readOnly = true)
-    public List<Kontakt> getKontakte()
-    {
+    public List<Kontakt> getKontakte() {
         return this.addressBookDAO.getKontakte();
     }
 
@@ -77,8 +72,7 @@ public class DefaultAddressBookService extends AbstractService implements Addres
      */
     @Override
     @Transactional
-    public int insertAttribut(final long kontaktID, final String attribut, final String wert)
-    {
+    public int insertAttribut(final long kontaktID, final String attribut, final String wert) {
         return this.addressBookDAO.insertAttribut(kontaktID, attribut, wert);
     }
 
@@ -87,8 +81,7 @@ public class DefaultAddressBookService extends AbstractService implements Addres
      */
     @Override
     @Transactional
-    public long insertKontakt(final String nachname, final String vorname)
-    {
+    public long insertKontakt(final String nachname, final String vorname) {
         return this.addressBookDAO.insertKontakt(nachname, vorname);
     }
 
@@ -97,14 +90,12 @@ public class DefaultAddressBookService extends AbstractService implements Addres
      */
     @Override
     @Transactional(readOnly = true)
-    public List<Kontakt> searchKontakte(final String name)
-    {
+    public List<Kontakt> searchKontakte(final String name) {
         return this.addressBookDAO.searchKontakte(name);
     }
 
     @Resource
-    public void setAddressBookDAO(final AddressBookDAO addressBookDAO)
-    {
+    public void setAddressBookDAO(final AddressBookDAO addressBookDAO) {
         this.addressBookDAO = addressBookDAO;
     }
 
@@ -113,8 +104,7 @@ public class DefaultAddressBookService extends AbstractService implements Addres
      */
     @Override
     @Transactional
-    public int updateAttribut(final long kontaktID, final String attribut, final String wert)
-    {
+    public int updateAttribut(final long kontaktID, final String attribut, final String wert) {
         return this.addressBookDAO.updateAttribut(kontaktID, attribut, wert);
     }
 
@@ -123,13 +113,11 @@ public class DefaultAddressBookService extends AbstractService implements Addres
      */
     @Override
     @Transactional
-    public int updateKontakt(final long id, final String nachname, final String vorname)
-    {
+    public int updateKontakt(final long id, final String nachname, final String vorname) {
         return this.addressBookDAO.updateKontakt(id, nachname, vorname);
     }
 
-    protected AddressBookDAO getAddressBookDAO()
-    {
+    protected AddressBookDAO getAddressBookDAO() {
         return this.addressBookDAO;
     }
 }

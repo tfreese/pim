@@ -18,16 +18,14 @@ import org.springframework.context.annotation.PropertySource;
  */
 @Configuration
 @PropertySource("classpath:application-common.properties")
-public class CommonConfig
-{
+public class CommonConfig {
     /**
      * <a href="https://docs.spring.io/spring-boot/docs/current-SNAPSHOT/reference/htmlsingle/#howto-customize-the-jackson-objectmapper">howto-customize-the-jackson-objectmapper</a>
      *
      * @return {@link ObjectMapper}
      */
     @Bean
-    public ObjectMapper jsonMapper()
-    {
+    public ObjectMapper jsonMapper() {
         ObjectMapper jsonMapper = new ObjectMapper();
         jsonMapper.enable(SerializationFeature.INDENT_OUTPUT);
         jsonMapper.enable(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT);

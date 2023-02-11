@@ -16,8 +16,7 @@ import org.junit.runners.Parameterized.Parameters;
  *
  * @author Thomas Freese
  */
-public abstract class AbstractMailTest
-{
+public abstract class AbstractMailTest {
     public static final String MAIL_IMAP_HOST = getMailProvider().getImapHost();
     public static final MailPort MAIL_IMAP_PORT = getMailProvider().getImapPort();
     public static final String MAIL_SMPT_HOST = getMailProvider().getSmtpHost();
@@ -26,14 +25,12 @@ public abstract class AbstractMailTest
     protected static final Boolean DEBUG = Boolean.FALSE;
 
     @Parameters(name = "Account: {0}") // {index}
-    public static Iterable<Object[]> accounts() throws Exception
-    {
+    public static Iterable<Object[]> accounts() throws Exception {
         Path path = TMP_TEST_PATH.resolve("testMail.properties");
 
         Files.createDirectories(path.getParent());
 
-        if (Files.notExists(path))
-        {
+        if (Files.notExists(path)) {
             System.err.println("need property file with from, to and password: " + path);
 
             return Arrays.asList(new Object[][]{});
@@ -41,21 +38,14 @@ public abstract class AbstractMailTest
 
         Properties properties = new Properties();
 
-        try (InputStream is = Files.newInputStream(path))
-        {
+        try (InputStream is = Files.newInputStream(path)) {
             properties.load(is);
         }
 
-        return Arrays.asList(new Object[][]
-                {
-                        {
-                                properties.getProperty("from"), properties.getProperty("to"), properties.getProperty("password")
-                        }
-                });
+        return Arrays.asList(new Object[][]{{properties.getProperty("from"), properties.getProperty("to"), properties.getProperty("password")}});
     }
 
-    private static MailProvider getMailProvider()
-    {
+    private static MailProvider getMailProvider() {
         return MailProvider.EinsUndEins;
     }
 
@@ -68,18 +58,15 @@ public abstract class AbstractMailTest
     @Parameter(value = 1)
     private String to;
 
-    protected String getFrom()
-    {
+    protected String getFrom() {
         return from;
     }
 
-    protected String getPassword()
-    {
+    protected String getPassword() {
         return password;
     }
 
-    protected String getTo()
-    {
+    protected String getTo() {
         return to;
     }
 }

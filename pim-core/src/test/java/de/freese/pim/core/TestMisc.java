@@ -5,13 +5,14 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 
-import de.freese.pim.core.concurrent.PIMForkJoinWorkerThreadFactory;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
+
+import de.freese.pim.core.concurrent.PIMForkJoinWorkerThreadFactory;
 
 /**
  * Testklasse für Sonstiges.
@@ -20,11 +21,9 @@ import org.junit.jupiter.api.TestMethodOrder;
  */
 @TestMethodOrder(MethodOrderer.MethodName.class)
 @Disabled("Funktioniert nur in der IDE")
-class TestMisc
-{
+class TestMisc {
     @BeforeAll
-    static void beforeAll()
-    {
+    static void beforeAll() {
         System.setProperty("java.util.concurrent.ForkJoinPool.common.parallelism", Integer.toString(Runtime.getRuntime().availableProcessors() * 2));
 
         System.setProperty("java.util.concurrent.ForkJoinPool.common.threadFactory", PIMForkJoinWorkerThreadFactory.class.getName());
@@ -35,8 +34,7 @@ class TestMisc
      * <a href="http://www.nurkiewicz.com/2013/05/java-8-definitive-guide-to.html">java-8-definitive-guide-to</a>
      */
     @Test
-    void test010CompletableFuture() throws Exception
-    {
+    void test010CompletableFuture() throws Exception {
         List<String> results = new ArrayList<>();
 
         // @formatter:off

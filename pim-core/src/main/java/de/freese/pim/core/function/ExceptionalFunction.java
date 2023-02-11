@@ -15,21 +15,18 @@ import java.util.function.Function;
  * @see java.util.function.Function
  */
 @FunctionalInterface
-public interface ExceptionalFunction<T, R, E extends Exception>
-{
+public interface ExceptionalFunction<T, R, E extends Exception> {
     /**
      * @see java.util.function.Function#identity()
      */
-    static <T> Function<T, T> identity()
-    {
+    static <T> Function<T, T> identity() {
         return t -> t;
     }
 
     /**
      * @see java.util.function.Function#andThen(Function)
      */
-    default <V> ExceptionalFunction<T, V, E> andThen(final ExceptionalFunction<R, V, E> after)
-    {
+    default <V> ExceptionalFunction<T, V, E> andThen(final ExceptionalFunction<R, V, E> after) {
         Objects.requireNonNull(after);
 
         return t -> after.apply(apply(t));
@@ -53,8 +50,7 @@ public interface ExceptionalFunction<T, R, E extends Exception>
     /**
      * @see java.util.function.Function#compose(Function)
      */
-    default <V> ExceptionalFunction<V, R, E> compose(final ExceptionalFunction<V, T, E> before)
-    {
+    default <V> ExceptionalFunction<V, R, E> compose(final ExceptionalFunction<V, T, E> before) {
         Objects.requireNonNull(before);
 
         return v -> apply(before.apply(v));

@@ -3,7 +3,6 @@ package de.freese.pim.gui.mail.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import de.freese.pim.core.mail.MailPort;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.LongProperty;
 import javafx.beans.property.ObjectProperty;
@@ -17,6 +16,8 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 
+import de.freese.pim.core.mail.MailPort;
+
 /**
  * FX-Bean für einen Mail-Account.
  *
@@ -25,8 +26,7 @@ import javafx.collections.transformation.FilteredList;
 // @SuppressWarnings("restriction")
 // @JsonRootName("mailAccount")
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class FxMailAccount
-{
+public class FxMailAccount {
     @JsonIgnore
     private final FilteredList<FxMailFolder> abonnierteFolder;
 
@@ -57,8 +57,7 @@ public class FxMailAccount
     @JsonIgnore
     private final ObservableIntegerValue unreadMailsCount;
 
-    public FxMailAccount()
-    {
+    public FxMailAccount() {
         super();
 
         this.abonnierteFolder = new FilteredList<>(getFolder(), FxMailFolder::isAbonniert);
@@ -68,15 +67,13 @@ public class FxMailAccount
         this.unreadMailsCount = new SumUnreadMailsInChildFolderBinding(this.rootFolder);
     }
 
-    public FxMailAccount(final FxMailAccount src)
-    {
+    public FxMailAccount(final FxMailAccount src) {
         this();
 
         copyFrom(src);
     }
 
-    public void copyFrom(final FxMailAccount src)
-    {
+    public void copyFrom(final FxMailAccount src) {
         setID(src.getID());
         setImapHost(src.getImapHost());
         setImapLegitimation(src.isImapLegitimation());
@@ -91,154 +88,124 @@ public class FxMailAccount
         getFolder().addAll(src.getFolder());
     }
 
-    public ObservableList<FxMailFolder> getFolder()
-    {
+    public ObservableList<FxMailFolder> getFolder() {
         return this.folder;
     }
 
     @JsonIgnore
-    public FilteredList<FxMailFolder> getFolderSubscribed()
-    {
+    public FilteredList<FxMailFolder> getFolderSubscribed() {
         return this.abonnierteFolder;
     }
 
-    public long getID()
-    {
+    public long getID() {
         return idProperty().get();
     }
 
-    public String getImapHost()
-    {
+    public String getImapHost() {
         return imapHostProperty().get();
     }
 
-    public MailPort getImapPort()
-    {
+    public MailPort getImapPort() {
         return imapPortProperty().get();
     }
 
-    public String getMail()
-    {
+    public String getMail() {
         return mailProperty().get();
     }
 
-    public String getPassword()
-    {
+    public String getPassword() {
         return passwordProperty().get();
     }
 
-    public String getSmtpHost()
-    {
+    public String getSmtpHost() {
         return smtpHostProperty().get();
     }
 
-    public MailPort getSmtpPort()
-    {
+    public MailPort getSmtpPort() {
         return smtpPortProperty().get();
     }
 
-    public int getUnreadMailsCount()
-    {
+    public int getUnreadMailsCount() {
         return this.unreadMailsCount.intValue();
     }
 
-    public LongProperty idProperty()
-    {
+    public LongProperty idProperty() {
         return this.idProperty;
     }
 
-    public StringProperty imapHostProperty()
-    {
+    public StringProperty imapHostProperty() {
         return this.imapHostProperty;
     }
 
-    public BooleanProperty imapLegitimationProperty()
-    {
+    public BooleanProperty imapLegitimationProperty() {
         return this.imapLegitimationProperty;
     }
 
-    public ObjectProperty<MailPort> imapPortProperty()
-    {
+    public ObjectProperty<MailPort> imapPortProperty() {
         return this.imapPortProperty;
     }
 
-    public boolean isImapLegitimation()
-    {
+    public boolean isImapLegitimation() {
         return imapLegitimationProperty().get();
     }
 
-    public boolean isSmtpLegitimation()
-    {
+    public boolean isSmtpLegitimation() {
         return smtpLegitimationProperty().get();
     }
 
-    public StringProperty mailProperty()
-    {
+    public StringProperty mailProperty() {
         return this.mailProperty;
     }
 
-    public StringProperty passwordProperty()
-    {
+    public StringProperty passwordProperty() {
         return this.passwordProperty;
     }
 
-    public void setID(final long id)
-    {
+    public void setID(final long id) {
         idProperty().set(id);
     }
 
-    public void setImapHost(final String host)
-    {
+    public void setImapHost(final String host) {
         imapHostProperty().set(host);
     }
 
-    public void setImapLegitimation(final boolean legitimation)
-    {
+    public void setImapLegitimation(final boolean legitimation) {
         imapLegitimationProperty().set(legitimation);
     }
 
-    public void setImapPort(final MailPort port)
-    {
+    public void setImapPort(final MailPort port) {
         imapPortProperty().set(port);
     }
 
-    public void setMail(final String mail)
-    {
+    public void setMail(final String mail) {
         mailProperty().set(mail);
     }
 
-    public void setPassword(final String password)
-    {
+    public void setPassword(final String password) {
         passwordProperty().set(password);
     }
 
-    public void setSmtpHost(final String host)
-    {
+    public void setSmtpHost(final String host) {
         smtpHostProperty().set(host);
     }
 
-    public void setSmtpLegitimation(final boolean legitimation)
-    {
+    public void setSmtpLegitimation(final boolean legitimation) {
         smtpLegitimationProperty().set(legitimation);
     }
 
-    public void setSmtpPort(final MailPort port)
-    {
+    public void setSmtpPort(final MailPort port) {
         smtpPortProperty().set(port);
     }
 
-    public StringProperty smtpHostProperty()
-    {
+    public StringProperty smtpHostProperty() {
         return this.smtpHostProperty;
     }
 
-    public BooleanProperty smtpLegitimationProperty()
-    {
+    public BooleanProperty smtpLegitimationProperty() {
         return this.smtpLegitimationProperty;
     }
 
-    public ObjectProperty<MailPort> smtpPortProperty()
-    {
+    public ObjectProperty<MailPort> smtpPortProperty() {
         return this.smtpPortProperty;
     }
 
@@ -246,8 +213,7 @@ public class FxMailAccount
      * @see java.lang.Object#toString()
      */
     @Override
-    public String toString()
-    {
+    public String toString() {
         StringBuilder builder = new StringBuilder();
         builder.append("MailAccount [id=").append(getID());
         builder.append(", mail=").append(getMail());

@@ -18,20 +18,15 @@ import org.springframework.context.annotation.PropertySource;
 @Profile("HsqldbEmbeddedServer")
 @PropertySource("classpath:hikari-pool.properties")
 @PropertySource("classpath:database.properties")
-public class HsqldbEmbeddedServerConfig extends AbstractHsqldbConfig
-{
+public class HsqldbEmbeddedServerConfig extends AbstractHsqldbConfig {
     @Bean(initMethod = "start", destroyMethod = "shutdown")
-    public Server hsqldbServer(@Value("${pim.home}") final String pimHome, @Value("${pim.db-name}") final String pimDbName,
-                               @Value("${hsqldbPort}") final int port)
-    {
-        Server server = new Server()
-        {
+    public Server hsqldbServer(@Value("${pim.home}") final String pimHome, @Value("${pim.db-name}") final String pimDbName, @Value("${hsqldbPort}") final int port) {
+        Server server = new Server() {
             /**
              * @see org.hsqldb.server.Server#shutdown()
              */
             @Override
-            public void shutdown()
-            {
+            public void shutdown() {
                 // "SHUTDOWN COMPACT"
                 super.shutdownWithCatalogs(Database.CLOSEMODE_COMPACT);
             }

@@ -5,24 +5,24 @@ import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.Callable;
 
-import de.freese.pim.gui.mail.model.FxMail;
-import de.freese.pim.gui.mail.model.FxMailAccount;
-import de.freese.pim.gui.mail.model.FxMailFolder;
-import de.freese.pim.gui.mail.service.FxMailService;
-import de.freese.pim.gui.view.ErrorDialog;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.scene.control.TreeView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import de.freese.pim.gui.mail.model.FxMail;
+import de.freese.pim.gui.mail.model.FxMailAccount;
+import de.freese.pim.gui.mail.model.FxMailFolder;
+import de.freese.pim.gui.mail.service.FxMailService;
+import de.freese.pim.gui.view.ErrorDialog;
+
 /**
  * Laden der Mails pro MailFolder.
  *
  * @author Thomas Freese
  */
-public class LoadMailsTask extends Task<Void> implements Callable<Void>
-{
+public class LoadMailsTask extends Task<Void> implements Callable<Void> {
     public static final Logger LOGGER = LoggerFactory.getLogger(LoadMailsTask.class);
 
     private final FxMailAccount account;
@@ -31,8 +31,7 @@ public class LoadMailsTask extends Task<Void> implements Callable<Void>
 
     private final FxMailService mailService;
 
-    public LoadMailsTask(final TreeView<Object> treeView, final List<FxMailFolder> folders, final FxMailService mailService, final FxMailAccount account)
-    {
+    public LoadMailsTask(final TreeView<Object> treeView, final List<FxMailFolder> folders, final FxMailService mailService, final FxMailAccount account) {
         super();
 
         Objects.requireNonNull(treeView, "treeView required");
@@ -42,8 +41,7 @@ public class LoadMailsTask extends Task<Void> implements Callable<Void>
         this.account = Objects.requireNonNull(account, "account required");
 
         setOnSucceeded(event -> treeView.refresh());
-        setOnFailed(event ->
-        {
+        setOnFailed(event -> {
             Throwable th = getException();
 
             LOGGER.error(th.getMessage(), th);
@@ -57,17 +55,13 @@ public class LoadMailsTask extends Task<Void> implements Callable<Void>
      * @see Callable
      */
     @Override
-    public Void call() throws Exception
-    {
-        for (FxMailFolder mf : this.folders)
-        {
+    public Void call() throws Exception {
+        for (FxMailFolder mf : this.folders) {
             List<FxMail> mails = this.mailService.loadMails(this.account, mf);
 
-            Runnable task = () ->
-            {
+            Runnable task = () -> {
 
-                if (mails != null)
-                {
+                if (mails != null) {
                     mf.getMails().addAll(mails);
                 }
             };

@@ -9,7 +9,6 @@ package de.freese.pim.core.function;
  * @author Thomas Freese
  */
 @FunctionalInterface
-public interface ExceptionalRunnable<E extends Exception>
-{
+public interface ExceptionalRunnable<E extends Exception> {
     void run() throws E;
 }

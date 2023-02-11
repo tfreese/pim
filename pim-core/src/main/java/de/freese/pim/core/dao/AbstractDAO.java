@@ -19,8 +19,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
  *
  * @author Thomas Freese
  */
-public abstract class AbstractDAO implements InitializingBean
-{
+public abstract class AbstractDAO implements InitializingBean {
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     private JdbcTemplate jdbcTemplate;
@@ -33,8 +32,7 @@ public abstract class AbstractDAO implements InitializingBean
      * @see org.springframework.beans.factory.InitializingBean#afterPropertiesSet()
      */
     @Override
-    public void afterPropertiesSet() throws Exception
-    {
+    public void afterPropertiesSet() throws Exception {
         Objects.requireNonNull(this.jdbcTemplate, "jdbcTemplate required");
         Objects.requireNonNull(this.sequenceQuery, "sequenceQuery required");
 
@@ -48,35 +46,29 @@ public abstract class AbstractDAO implements InitializingBean
     }
 
     @Resource
-    public void setDataSource(final DataSource dataSource)
-    {
+    public void setDataSource(final DataSource dataSource) {
         Objects.requireNonNull(dataSource, "dataSource required");
 
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
     @Resource
-    public void setSequenceQuery(final UnaryOperator<String> sequenceQuery)
-    {
+    public void setSequenceQuery(final UnaryOperator<String> sequenceQuery) {
         this.sequenceQuery = Objects.requireNonNull(sequenceQuery, "sequenceQuery required");
     }
 
-    protected JdbcTemplate getJdbcTemplate()
-    {
+    protected JdbcTemplate getJdbcTemplate() {
         return this.jdbcTemplate;
     }
 
-    protected Logger getLogger()
-    {
+    protected Logger getLogger() {
         return this.logger;
     }
 
-    protected long getNextID(final String sequence)
-    {
+    protected long getNextID(final String sequence) {
         String sql = this.sequenceQuery.apply(sequence);
 
-        return getJdbcTemplate().query(sql, rs ->
-        {
+        return getJdbcTemplate().query(sql, rs -> {
             rs.next();
             return rs.getLong(1);
         });

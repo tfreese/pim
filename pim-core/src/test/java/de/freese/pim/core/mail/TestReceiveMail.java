@@ -36,8 +36,6 @@ import jakarta.mail.search.SearchTerm;
 
 import com.sun.mail.imap.IMAPFolder;
 import com.sun.mail.util.ASCIIUtility;
-import de.freese.pim.core.function.FunctionStripNotLetter;
-import de.freese.pim.core.mail.api.JavaMailContent;
 import org.jsoup.Jsoup;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
@@ -48,30 +46,29 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import de.freese.pim.core.function.FunctionStripNotLetter;
+import de.freese.pim.core.mail.api.JavaMailContent;
+
 /**
  * @author Thomas Freese
  */
 @SpringBootTest
 @TestMethodOrder(MethodOrderer.MethodName.class)
 @Disabled
-class TestReceiveMail extends AbstractMailTest
-{
+class TestReceiveMail extends AbstractMailTest {
     private static Session session;
 
     private static Store store;
 
     @AfterAll
-    static void afterAll() throws Exception
-    {
-        if (store != null)
-        {
+    static void afterAll() throws Exception {
+        if (store != null) {
             store.close();
         }
     }
 
     @BeforeAll
-    static void beforeAll()
-    {
+    static void beforeAll() {
         Authenticator authenticator = null;
 
         // Legitimation für Empfang.
@@ -90,27 +87,22 @@ class TestReceiveMail extends AbstractMailTest
     // }
 
     @Test
-    void test000Connect() throws Exception
-    {
+    void test000Connect() throws Exception {
         store = session.getStore("imaps");
         store.connect(MAIL_IMAP_HOST, MAIL_IMAP_PORT.getPort(), this.getFrom(), this.getPassword());
     }
 
     @Test
-    void test010ListFolder() throws Exception
-    {
+    void test010ListFolder() throws Exception {
         Folder defaultFolder = null;
 
-        try
-        {
+        try {
             defaultFolder = store.getDefaultFolder();
 
             Stream.of(defaultFolder.list("*")).map(Folder::getFullName).forEach(System.out::println);
         }
-        finally
-        {
-            if ((defaultFolder != null) && defaultFolder.isOpen())
-            {
+        finally {
+            if ((defaultFolder != null) && defaultFolder.isOpen()) {
                 defaultFolder.close(false);
             }
         }
@@ -119,12 +111,10 @@ class TestReceiveMail extends AbstractMailTest
     }
 
     @Test
-    void test020SaveNewMails() throws Exception
-    {
+    void test020SaveNewMails() throws Exception {
         Folder inboxFolder = null;
 
-        try
-        {
+        try {
             // defaultFolder = store.getDefaultFolder();
             // inboxFolder = defaultFolder.getFolder("INBOX");
             inboxFolder = store.getFolder("INBOX");
@@ -145,17 +135,14 @@ class TestReceiveMail extends AbstractMailTest
 
             Assertions.assertNotNull(messages);
 
-            for (Message message : messages)
-            {
+            for (Message message : messages) {
                 int messageNumber = message.getMessageNumber();
                 String id = null;
 
-                if (inboxFolder instanceof IMAPFolder)
-                {
+                if (inboxFolder instanceof IMAPFolder) {
                     id = Long.toString(((IMAPFolder) inboxFolder).getUID(message));
                 }
-                else
-                {
+                else {
                     id = message.getHeader("Message-ID")[0];
                 }
 
@@ -166,8 +153,7 @@ class TestReceiveMail extends AbstractMailTest
                 System.out.printf("From: %s; Size: %d%n", Arrays.toString(message.getFrom()), message.getSize());
                 System.out.printf("%02d | %s | %tc | %s | %s%n", messageNumber, id, receivedDate, subject, from);
 
-                try (OutputStream os = Files.newOutputStream(TMP_TEST_PATH.resolve(id + ".eml")))
-                {
+                try (OutputStream os = Files.newOutputStream(TMP_TEST_PATH.resolve(id + ".eml"))) {
                     // ReceivedDate merken, da nicht im HEADER vorkommt und IMAPMessage read-only ist.
                     byte[] bytes = ASCIIUtility.getBytes("RECEIVED-DATE: " + receivedDate.toInstant().toString() + "\r\n");
                     os.write(bytes);
@@ -176,32 +162,25 @@ class TestReceiveMail extends AbstractMailTest
                 }
 
                 // Nur den Content speichern.
-                try (InputStream is = message.getInputStream())
-                {
+                try (InputStream is = message.getInputStream()) {
                     Files.copy(is, TMP_TEST_PATH.resolve(id + ".content"), StandardCopyOption.REPLACE_EXISTING);
                 }
             }
         }
-        finally
-        {
-            if ((inboxFolder != null) && inboxFolder.isOpen())
-            {
+        finally {
+            if ((inboxFolder != null) && inboxFolder.isOpen()) {
                 inboxFolder.close(false);
             }
         }
     }
 
     @Test
-    void test021ReadSavedMails() throws Exception
-    {
+    void test021ReadSavedMails() throws Exception {
         // Files.newDirectoryStream(Paths.get("."), path -> path.toString().endsWith(".msg")).forEach(System.out::println);
 
-        try (Stream<Path> mailFiles = Files.find(TMP_TEST_PATH, Integer.MAX_VALUE, (path, attrs) -> attrs.isRegularFile() && path.toString().endsWith(".eml")))
-        {
-            for (Path mail : mailFiles.toList())
-            {
-                try (InputStream is = new BufferedInputStream(Files.newInputStream(mail)))
-                {
+        try (Stream<Path> mailFiles = Files.find(TMP_TEST_PATH, Integer.MAX_VALUE, (path, attrs) -> attrs.isRegularFile() && path.toString().endsWith(".eml"))) {
+            for (Path mail : mailFiles.toList()) {
+                try (InputStream is = new BufferedInputStream(Files.newInputStream(mail))) {
                     MimeMessage message = new MimeMessage(null, is);
 
                     int messageNumber = message.getMessageNumber();
@@ -217,28 +196,20 @@ class TestReceiveMail extends AbstractMailTest
     }
 
     @Test
-    void test022ReadAttachmentsFromSavedMails() throws Exception
-    {
-        try (Stream<Path> mailFiles = Files.find(TMP_TEST_PATH, 1, (path, attrs) -> attrs.isRegularFile() && path.toString().endsWith(".eml")))
-        {
-            for (Path mailPath : mailFiles.toList())
-            {
-                try (InputStream is = new BufferedInputStream(Files.newInputStream(mailPath)))
-                {
+    void test022ReadAttachmentsFromSavedMails() throws Exception {
+        try (Stream<Path> mailFiles = Files.find(TMP_TEST_PATH, 1, (path, attrs) -> attrs.isRegularFile() && path.toString().endsWith(".eml"))) {
+            for (Path mailPath : mailFiles.toList()) {
+                try (InputStream is = new BufferedInputStream(Files.newInputStream(mailPath))) {
                     MimeMessage message = new MimeMessage(null, is);
 
-                    if (message.getContent() instanceof Multipart multiPart)
-                    {
-                        for (int i = 0; i < multiPart.getCount(); i++)
-                        {
+                    if (message.getContent() instanceof Multipart multiPart) {
+                        for (int i = 0; i < multiPart.getCount(); i++) {
                             MimeBodyPart part = (MimeBodyPart) multiPart.getBodyPart(i);
 
-                            if (Part.ATTACHMENT.equalsIgnoreCase(part.getDisposition()))
-                            {
+                            if (Part.ATTACHMENT.equalsIgnoreCase(part.getDisposition())) {
                                 Path attachment = mailPath.getParent().resolve(mailPath.getFileName().toString() + "_attachment");
 
-                                try (InputStream attIS = part.getInputStream())
-                                {
+                                try (InputStream attIS = part.getInputStream()) {
                                     Files.copy(attIS, attachment, StandardCopyOption.REPLACE_EXISTING);
                                 }
                             }
@@ -250,14 +221,10 @@ class TestReceiveMail extends AbstractMailTest
     }
 
     @Test
-    void test023ReadTextFromSavedMails() throws Exception
-    {
-        try (Stream<Path> mailFiles = Files.find(TMP_TEST_PATH, 1, (path, attrs) -> attrs.isRegularFile() && path.toString().endsWith(".eml")))
-        {
-            for (Path mail : mailFiles.toList())
-            {
-                try (InputStream is = new BufferedInputStream(Files.newInputStream(mail)))
-                {
+    void test023ReadTextFromSavedMails() throws Exception {
+        try (Stream<Path> mailFiles = Files.find(TMP_TEST_PATH, 1, (path, attrs) -> attrs.isRegularFile() && path.toString().endsWith(".eml"))) {
+            for (Path mail : mailFiles.toList()) {
+                try (InputStream is = new BufferedInputStream(Files.newInputStream(mail))) {
                     MimeMessage message = new MimeMessage(null, is);
 
                     MailContent mailContent = new JavaMailContent(message);

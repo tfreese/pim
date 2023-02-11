@@ -4,7 +4,6 @@ package de.freese.pim.gui;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.TimeUnit;
 
-import de.freese.pim.gui.utils.FxUtils;
 import javafx.application.Application;
 import javafx.beans.binding.Bindings;
 import javafx.concurrent.Task;
@@ -16,13 +15,13 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
+import de.freese.pim.gui.utils.FxUtils;
+
 /**
  * @author Thomas Freese
  */
-public class ProgressIndicatorDemo extends Application
-{
-    public static void main(final String[] args)
-    {
+public class ProgressIndicatorDemo extends Application {
+    public static void main(final String[] args) {
         launch(args);
     }
 
@@ -30,30 +29,25 @@ public class ProgressIndicatorDemo extends Application
      * @see javafx.application.Application#start(javafx.stage.Stage)
      */
     @Override
-    public void start(final Stage primaryStage) throws Exception
-    {
+    public void start(final Stage primaryStage) throws Exception {
         ProgressIndicator progressIndicator = new ProgressIndicator();
         progressIndicator.setVisible(false);
         // progressIndicator.setMaxSize(250D, 250D);
 
-        Task<Void> task = new Task<>()
-        {
+        Task<Void> task = new Task<>() {
             /**
              * @see javafx.concurrent.Task#call()
              */
             @Override
-            protected Void call() throws Exception
-            {
+            private Void call() throws Exception {
                 int progress = 0;
 
-                while (progress <= 100)
-                {
+                while (progress <= 100) {
                     updateProgress(++progress, 100);
 
                     TimeUnit.MILLISECONDS.sleep(40); // 25 Frames/Sekunde
 
-                    if (progress == 100)
-                    {
+                    if (progress == 100) {
                         progress = 0;
                     }
                 }
@@ -64,11 +58,9 @@ public class ProgressIndicatorDemo extends Application
 
         progressIndicator.progressProperty().bind(task.progressProperty());
         progressIndicator.visibleProperty().bind(task.runningProperty());
-        progressIndicator.styleProperty().bind(Bindings.createStringBinding(() ->
-        {
+        progressIndicator.styleProperty().bind(Bindings.createStringBinding(() -> {
             final double percent = progressIndicator.getProgress();
-            if (percent < 0)
-            {
+            if (percent < 0) {
                 // indeterminate
                 return null;
             }
@@ -102,8 +94,7 @@ public class ProgressIndicatorDemo extends Application
      *
      * @return int[], RGB
      */
-    int[] getRGB1(final double progress)
-    {
+    int[] getRGB1(final double progress) {
         int r = 0;
         int g = 0;
         int b = 0;
@@ -115,56 +106,45 @@ public class ProgressIndicatorDemo extends Application
         final double f = m - n; // fraction of m
         final int t = (int) (255 * f);
 
-        switch (n)
-        {
-            case 0 ->
-            {
+        switch (n) {
+            case 0 -> {
                 r = 255;
                 g = t;
                 b = 0;
             }
-            case 1 ->
-            {
+            case 1 -> {
                 r = 255 - t;
                 g = 255;
                 b = 0;
             }
-            case 2 ->
-            {
+            case 2 -> {
                 r = 0;
                 g = 255;
                 b = t;
             }
-            case 3 ->
-            {
+            case 3 -> {
                 r = 0;
                 g = 255 - t;
                 b = 255;
             }
-            case 4 ->
-            {
+            case 4 -> {
                 r = t;
                 g = 0;
                 b = 255;
             }
-            case 5 ->
-            {
+            case 5 -> {
                 r = 255;
                 g = 0;
                 b = 255 - t;
             }
-            default ->
-            {
+            default -> {
                 r = 255;
                 g = 0;
                 b = 0;
             }
         }
 
-        return new int[]
-                {
-                        r, g, b
-                };
+        return new int[]{r, g, b};
     }
 
     /**
@@ -174,8 +154,7 @@ public class ProgressIndicatorDemo extends Application
      *
      * @return int[], RGB
      */
-    int[] getRGB2(final double progress)
-    {
+    int[] getRGB2(final double progress) {
         int r;
         int g;
         int b = 0;
@@ -183,10 +162,7 @@ public class ProgressIndicatorDemo extends Application
         g = (int) (progress * 255);
         r = 255 - g;
 
-        return new int[]
-                {
-                        r, g, b
-                };
+        return new int[]{r, g, b};
     }
 
     /**
@@ -196,8 +172,7 @@ public class ProgressIndicatorDemo extends Application
      *
      * @return int[], RGB
      */
-    int[] getRGB3(final double progress)
-    {
+    int[] getRGB3(final double progress) {
         int r;
         int g;
         int b;
@@ -207,9 +182,6 @@ public class ProgressIndicatorDemo extends Application
         g = (int) (color.getGreen() * 255);
         b = (int) (color.getBlue() * 255);
 
-        return new int[]
-                {
-                        r, g, b
-                };
+        return new int[]{r, g, b};
     }
 }

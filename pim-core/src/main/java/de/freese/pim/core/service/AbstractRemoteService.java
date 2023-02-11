@@ -10,22 +10,17 @@ import java.nio.charset.StandardCharsets;
  *
  * @author Thomas Freese
  */
-public abstract class AbstractRemoteService extends AbstractService
-{
-    protected String urlDecode(final String value)
-    {
-        if (value == null)
-        {
+public abstract class AbstractRemoteService extends AbstractService {
+    protected String urlDecode(final String value) {
+        if (value == null) {
             return null;
         }
 
         return URLDecoder.decode(value.strip(), StandardCharsets.UTF_8);
     }
 
-    protected String urlEncode(final String value)
-    {
-        if (value == null)
-        {
+    protected String urlEncode(final String value) {
+        if (value == null) {
             return null;
         }
 

@@ -22,27 +22,22 @@ import org.springframework.scheduling.annotation.EnableAsync;
 @EnableAsync
 // @EnableTransactionManagement // Wird durch Spring-Boot automatisch konfiguriert, wenn DataSource-Bean vorhanden.
 @SuppressWarnings("checkstyle:HideUtilityClassConstructor")
-public class PimServerApplication
-{
+public class PimServerApplication {
     public static final Logger LOGGER = LoggerFactory.getLogger(PimServerApplication.class);
 
-    public static void main(final String[] args)
-    {
-        if (args.length == 0)
-        {
+    public static void main(final String[] args) {
+        if (args.length == 0) {
             usage();
         }
 
         // CommandLine line = null;
 
-        try
-        {
+        try {
             CommandLineParser parser = new DefaultParser();
             parser.parse(getCommandOptions(), args);
             // line = parser.parse(getCommandOptions(), args);
         }
-        catch (Exception ex)
-        {
+        catch (Exception ex) {
             LOGGER.error(ex.getMessage());
 
             usage();
@@ -69,21 +64,18 @@ public class PimServerApplication
      * Liefert die möglichen Optionen der Kommandozeile.<br>
      * Dies sind die JRE Programm Argumente.
      */
-    private static Options getCommandOptions()
-    {
+    private static Options getCommandOptions() {
         Options options = new Options();
 
         // --spring.profiles.active=Server,HsqldbEmbeddedServer --server.port=61222
         // --spring.profiles.active=Server,SqliteLocalFile --server.port=61222
-        options.addOption(Option.builder().longOpt("spring.profiles.active").required().hasArg().argName("Profile1,Profile2").valueSeparator('=')
-                .desc("Profiles: [Server,HsqldbEmbeddedServer]").build());
+        options.addOption(Option.builder().longOpt("spring.profiles.active").required().hasArg().argName("Profile1,Profile2").valueSeparator('=').desc("Profiles: [Server,HsqldbEmbeddedServer]").build());
         options.addOption(Option.builder().longOpt("server.port").required().hasArg().argName("port").valueSeparator('=').desc("Server Port").build());
 
         return options;
     }
 
-    private static void usage()
-    {
+    private static void usage() {
         HelpFormatter formatter = new HelpFormatter();
         formatter.setOptionComparator(null);
         // formatter.setWidth(120);

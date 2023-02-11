@@ -10,18 +10,15 @@ import org.springframework.context.annotation.Bean;
  *
  * @author Thomas Freese
  */
-public abstract class AbstractHsqldbConfig
-{
-    protected AbstractHsqldbConfig()
-    {
+public abstract class AbstractHsqldbConfig {
+    protected AbstractHsqldbConfig() {
         super();
 
         System.setProperty("spring.flyway.locations", "classpath:db/hsqldb");
     }
 
     @Bean
-    public UnaryOperator<String> sequenceQuery()
-    {
+    public UnaryOperator<String> sequenceQuery() {
         return seq -> "call next value for " + seq;
     }
 }

@@ -15,14 +15,9 @@ import org.springframework.context.annotation.Profile;
  */
 @Configuration
 @Profile("ClientRest")
-@ComponentScan(basePackages =
-        {
-                "de.freese.pim.gui", "de.freese.pim.core"
-        })
-public class PimClientRestConfig extends AbstractPimClientConfig
-{
-    public PimClientRestConfig()
-    {
+@ComponentScan(basePackages = {"de.freese.pim.gui", "de.freese.pim.core"})
+public class PimClientRestConfig extends AbstractPimClientConfig {
+    public PimClientRestConfig() {
         super();
 
         System.setProperty("spring.main.web-application-type", "NONE");
@@ -30,8 +25,7 @@ public class PimClientRestConfig extends AbstractPimClientConfig
     }
 
     @Bean
-    public RestTemplateBuilder restTemplateBuilder(@Value("${server.host}") final String serverHost, @Value("${server.port}") final int serverPort)
-    {
+    public RestTemplateBuilder restTemplateBuilder(@Value("${server.host}") final String serverHost, @Value("${server.port}") final int serverPort) {
         // RestTemplateBuilder bean = new RestTemplateBuilder().rootUri(rootUri).basicAuthorization(username, password);
         String url = String.format("http://%s:%d/pim", serverHost, serverPort);
 

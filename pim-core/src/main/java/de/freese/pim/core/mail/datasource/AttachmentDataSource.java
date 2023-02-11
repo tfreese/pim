@@ -7,6 +7,7 @@ import jakarta.activation.DataSource;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+
 import de.freese.pim.core.utils.io.IOMonitor;
 
 /**
@@ -14,22 +15,17 @@ import de.freese.pim.core.utils.io.IOMonitor;
  *
  * @author Thomas Freese
  */
-public class AttachmentDataSource extends AbstractDataSource
-{
-    public AttachmentDataSource(final DataSource source) throws IOException
-    {
+public class AttachmentDataSource extends AbstractDataSource {
+    public AttachmentDataSource(final DataSource source) throws IOException {
         super(source);
     }
 
-    public AttachmentDataSource(final DataSource source, final IOMonitor monitor) throws IOException
-    {
+    public AttachmentDataSource(final DataSource source, final IOMonitor monitor) throws IOException {
         super(source, monitor);
     }
 
     @JsonCreator
-    public AttachmentDataSource(@JsonProperty("name") final String name, @JsonProperty("contentType") final String contentType,
-                                @JsonProperty("data") final byte[] data)
-    {
+    public AttachmentDataSource(@JsonProperty("name") final String name, @JsonProperty("contentType") final String contentType, @JsonProperty("data") final byte[] data) {
         super(name, contentType, data);
     }
 }

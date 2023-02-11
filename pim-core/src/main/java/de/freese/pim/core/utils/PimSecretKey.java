@@ -10,21 +10,16 @@ import javax.crypto.spec.SecretKeySpec;
  *
  * @author Thomas Freese
  */
-class PimSecretKey extends SecretKeySpec
-{
+class PimSecretKey extends SecretKeySpec {
     /**
      * Konstante für Ver- und Entschlüsselung.
      */
-    private static final byte[] KEY =
-            {
-                    0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1
-            };
+    private static final byte[] KEY = {0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1};
 
     @Serial
     private static final long serialVersionUID = -7021783843804998439L;
 
-    PimSecretKey()
-    {
+    PimSecretKey() {
         super(KEY, "AES");
     }
 }

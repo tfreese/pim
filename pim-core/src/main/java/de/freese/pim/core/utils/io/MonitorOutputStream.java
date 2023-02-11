@@ -10,8 +10,7 @@ import java.util.Objects;
  *
  * @author Thomas Freese
  */
-public class MonitorOutputStream extends OutputStream
-{
+public class MonitorOutputStream extends OutputStream {
     private final OutputStream delegate;
 
     private final IOMonitor monitor;
@@ -27,8 +26,7 @@ public class MonitorOutputStream extends OutputStream
     /**
      * @param size long; Anzahl Bytes (Größe) des gesamten Channels
      */
-    public MonitorOutputStream(final OutputStream delegate, final IOMonitor monitor, final long size)
-    {
+    public MonitorOutputStream(final OutputStream delegate, final IOMonitor monitor, final long size) {
         super();
 
         this.delegate = Objects.requireNonNull(delegate, "delegate required");
@@ -40,8 +38,7 @@ public class MonitorOutputStream extends OutputStream
      * @see java.io.OutputStream#close()
      */
     @Override
-    public void close() throws IOException
-    {
+    public void close() throws IOException {
         this.delegate.close();
     }
 
@@ -49,8 +46,7 @@ public class MonitorOutputStream extends OutputStream
      * @see java.io.OutputStream#flush()
      */
     @Override
-    public void flush() throws IOException
-    {
+    public void flush() throws IOException {
         this.delegate.flush();
     }
 
@@ -58,8 +54,7 @@ public class MonitorOutputStream extends OutputStream
      * @see java.io.OutputStream#write(byte[])
      */
     @Override
-    public void write(final byte[] b) throws IOException
-    {
+    public void write(final byte[] b) throws IOException {
         this.delegate.write(b);
 
         this.sizeWritten += b.length;
@@ -71,8 +66,7 @@ public class MonitorOutputStream extends OutputStream
      * @see java.io.OutputStream#write(byte[], int, int)
      */
     @Override
-    public void write(final byte[] b, final int off, final int len) throws IOException
-    {
+    public void write(final byte[] b, final int off, final int len) throws IOException {
         this.delegate.write(b, off, len);
 
         this.sizeWritten += len;
@@ -84,8 +78,7 @@ public class MonitorOutputStream extends OutputStream
      * @see java.io.OutputStream#write(int)
      */
     @Override
-    public void write(final int b) throws IOException
-    {
+    public void write(final int b) throws IOException {
         this.delegate.write(b);
 
         this.sizeWritten++;

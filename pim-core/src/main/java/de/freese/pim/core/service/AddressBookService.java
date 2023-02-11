@@ -12,8 +12,7 @@ import de.freese.pim.core.model.addressbook.KontaktAttribut;
  *
  * @author Thomas Freese
  */
-public interface AddressBookService
-{
+public interface AddressBookService {
     /**
      * Erstellt ein Backup der DB im Verzeichnis.<br>
      * Funktioniert nicht im HSQLDB-Memory Mode.

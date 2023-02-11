@@ -6,8 +6,7 @@ package de.freese.pim.core.spring.config;
  *
  * @author Thomas Freese
  */
-public enum PIMProfile
-{
+public enum PIMProfile {
     /**
      * Client für REST-Server.
      */

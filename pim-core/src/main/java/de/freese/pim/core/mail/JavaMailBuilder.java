@@ -34,18 +34,15 @@ import de.freese.pim.core.utils.MailUtils;
  *
  * @author Thomas Freese
  */
-public final class JavaMailBuilder
-{
-    public static JavaMailBuilder create(final Session session)
-    {
+public final class JavaMailBuilder {
+    public static JavaMailBuilder create(final Session session) {
         return new JavaMailBuilder(session, StandardCharsets.UTF_8.name(), FileTypeMap.getDefaultFileTypeMap(), true);
     }
 
     /**
      * @param fileTypeMap {@link FileTypeMap}; optional, wird für Attachments benötigt
      */
-    public static JavaMailBuilder create(final Session session, final String charset, final FileTypeMap fileTypeMap, final boolean validateAddresses)
-    {
+    public static JavaMailBuilder create(final Session session, final String charset, final FileTypeMap fileTypeMap, final boolean validateAddresses) {
         return new JavaMailBuilder(session, charset, fileTypeMap, validateAddresses);
     }
 
@@ -80,8 +77,7 @@ public final class JavaMailBuilder
     /**
      * @param fileTypeMap {@link FileTypeMap}; optional, wird für Attachments benötigt
      */
-    private JavaMailBuilder(final Session session, final String charset, final FileTypeMap fileTypeMap, final boolean validateAddresses)
-    {
+    private JavaMailBuilder(final Session session, final String charset, final FileTypeMap fileTypeMap, final boolean validateAddresses) {
         super();
 
         this.session = Objects.requireNonNull(session, "session required");
@@ -90,13 +86,11 @@ public final class JavaMailBuilder
         this.validateAddresses = validateAddresses;
     }
 
-    public JavaMailBuilder attachment(final String attachmentFilename, final DataSource dataSource) throws MessagingException
-    {
+    public JavaMailBuilder attachment(final String attachmentFilename, final DataSource dataSource) throws MessagingException {
         Objects.requireNonNull(attachmentFilename, "Attachment filename must not be null");
         Objects.requireNonNull(dataSource, "DataSource must not be null");
 
-        try
-        {
+        try {
             MimeBodyPart mimeBodyPart = new MimeBodyPart();
             mimeBodyPart.setDisposition(Part.ATTACHMENT);
             mimeBodyPart.setFileName(MimeUtility.encodeText(attachmentFilename));
@@ -104,16 +98,14 @@ public final class JavaMailBuilder
 
             this.attachments.add(mimeBodyPart);
         }
-        catch (UnsupportedEncodingException ex)
-        {
+        catch (UnsupportedEncodingException ex) {
             throw new MessagingException("Failed to encode attachment filename", ex);
         }
 
         return this;
     }
 
-    public JavaMailBuilder attachment(final String attachmentFilename, final File file) throws MessagingException
-    {
+    public JavaMailBuilder attachment(final String attachmentFilename, final File file) throws MessagingException {
         Objects.requireNonNull(attachmentFilename, "Attachment filename must not be null");
         Objects.requireNonNull(file, "File must not be null");
 
@@ -124,8 +116,7 @@ public final class JavaMailBuilder
         return this;
     }
 
-    public JavaMailBuilder attachment(final String attachmentFilename, final InputStream inputStream) throws MessagingException
-    {
+    public JavaMailBuilder attachment(final String attachmentFilename, final InputStream inputStream) throws MessagingException {
         Objects.requireNonNull(attachmentFilename, "Attachment filename must not be null");
         Objects.requireNonNull(inputStream, "InputStream must not be null");
 
@@ -136,8 +127,7 @@ public final class JavaMailBuilder
         return this;
     }
 
-    public JavaMailBuilder bcc(final InternetAddress bcc) throws MessagingException
-    {
+    public JavaMailBuilder bcc(final InternetAddress bcc) throws MessagingException {
         Objects.requireNonNull(bcc, "BCC address must not be null");
 
         validateAddress(bcc);
@@ -147,10 +137,8 @@ public final class JavaMailBuilder
         return this;
     }
 
-    public JavaMailBuilder bcc(final InternetAddress... bcc) throws MessagingException
-    {
-        for (InternetAddress internetAddress : bcc)
-        {
+    public JavaMailBuilder bcc(final InternetAddress... bcc) throws MessagingException {
+        for (InternetAddress internetAddress : bcc) {
             Objects.requireNonNull(internetAddress, "BCC address must not be null");
 
             validateAddress(internetAddress);
@@ -161,8 +149,7 @@ public final class JavaMailBuilder
         return this;
     }
 
-    public JavaMailBuilder bcc(final String bcc) throws MessagingException
-    {
+    public JavaMailBuilder bcc(final String bcc) throws MessagingException {
         Objects.requireNonNull(bcc, "BCC address must not be null");
 
         bcc(parseAddress(bcc));
@@ -170,8 +157,7 @@ public final class JavaMailBuilder
         return this;
     }
 
-    public JavaMailBuilder bcc(final String bcc, final String personal) throws Exception
-    {
+    public JavaMailBuilder bcc(final String bcc, final String personal) throws Exception {
         Objects.requireNonNull(bcc, "BCC address must not be null");
 
         bcc(getCharset() != null ? new InternetAddress(bcc, personal, getCharset()) : new InternetAddress(bcc, personal));
@@ -179,54 +165,44 @@ public final class JavaMailBuilder
         return this;
     }
 
-    public MimeMessage build() throws MessagingException
-    {
+    public MimeMessage build() throws MessagingException {
         return build(null);
     }
 
-    public MimeMessage build(final InputStream contentStream) throws MessagingException
-    {
+    public MimeMessage build(final InputStream contentStream) throws MessagingException {
         MimeMessage mail = null;
 
-        if (contentStream == null)
-        {
+        if (contentStream == null) {
             mail = new MimeMessage(getSession());
         }
-        else
-        {
+        else {
             mail = new MimeMessage(getSession(), contentStream);
         }
 
         mail.setFrom(this.from);
 
-        if (!this.recipientsTo.isEmpty())
-        {
+        if (!this.recipientsTo.isEmpty()) {
             mail.setRecipients(Message.RecipientType.TO, this.recipientsTo.toArray(new InternetAddress[0]));
         }
 
-        if (!this.recipientsCc.isEmpty())
-        {
+        if (!this.recipientsCc.isEmpty()) {
             mail.setRecipients(Message.RecipientType.CC, this.recipientsCc.toArray(new InternetAddress[0]));
         }
 
-        if (!this.recipientsBcc.isEmpty())
-        {
+        if (!this.recipientsBcc.isEmpty()) {
             mail.setRecipients(Message.RecipientType.BCC, this.recipientsBcc.toArray(new InternetAddress[0]));
         }
 
-        if (getCharset() != null)
-        {
+        if (getCharset() != null) {
             mail.setSubject(this.subject, getCharset());
         }
-        else
-        {
+        else {
             mail.setSubject(this.subject);
         }
 
         mail.setSentDate(new Date());
 
-        if (this.messageID != null)
-        {
+        if (this.messageID != null) {
             mail.setHeader(MailUtils.HEADER_MESSAGE_ID, this.messageID);
         }
 
@@ -241,24 +217,20 @@ public final class JavaMailBuilder
         rootMultipart.addBodyPart(relatedBodyPart);
 
         // Text
-        if ((this.text != null) && (this.text.strip().length() > 0))
-        {
+        if ((this.text != null) && (this.text.strip().length() > 0)) {
             MimeBodyPart textBodyPart = new MimeBodyPart();
             relatedMultipart.addBodyPart(textBodyPart);
 
             String contentType = MailUtils.CONTENT_TYPE_PLAIN;
 
-            if (this.isHTML)
-            {
+            if (this.isHTML) {
                 contentType = MailUtils.CONTENT_TYPE_HTML;
             }
 
-            if (getCharset() != null)
-            {
+            if (getCharset() != null) {
                 textBodyPart.setContent(this.text, contentType + MailUtils.CONTENT_TYPE_CHARSET_SUFFIX + getCharset());
             }
-            else
-            {
+            else {
                 textBodyPart.setContent(this.text, contentType);
             }
 
@@ -275,27 +247,23 @@ public final class JavaMailBuilder
         }
 
         // Inlines
-        for (MimeBodyPart inline : this.inlines)
-        {
+        for (MimeBodyPart inline : this.inlines) {
             relatedMultipart.addBodyPart(inline);
         }
 
         // Attachments
-        for (MimeBodyPart attachment : this.attachments)
-        {
+        for (MimeBodyPart attachment : this.attachments) {
             rootMultipart.addBodyPart(attachment);
         }
 
         return mail;
     }
 
-    public void buildAndSend(final JavaMailSender mailSender) throws Exception
-    {
+    public void buildAndSend(final JavaMailSender mailSender) throws Exception {
         buildAndSend(mailSender, null);
     }
 
-    public void buildAndSend(final JavaMailSender mailSender, final InputStream contentStream) throws Exception
-    {
+    public void buildAndSend(final JavaMailSender mailSender, final InputStream contentStream) throws Exception {
         Objects.requireNonNull(mailSender, "sender required");
 
         MimeMessage mail = build(contentStream);
@@ -303,8 +271,7 @@ public final class JavaMailBuilder
         mailSender.send(mail);
     }
 
-    public JavaMailBuilder cc(final InternetAddress cc) throws MessagingException
-    {
+    public JavaMailBuilder cc(final InternetAddress cc) throws MessagingException {
         Objects.requireNonNull(cc, "CC address must not be null");
 
         validateAddress(cc);
@@ -314,10 +281,8 @@ public final class JavaMailBuilder
         return this;
     }
 
-    public JavaMailBuilder cc(final InternetAddress... cc) throws MessagingException
-    {
-        for (InternetAddress internetAddress : cc)
-        {
+    public JavaMailBuilder cc(final InternetAddress... cc) throws MessagingException {
+        for (InternetAddress internetAddress : cc) {
             Objects.requireNonNull(internetAddress, "CC address must not be null");
 
             validateAddress(internetAddress);
@@ -328,8 +293,7 @@ public final class JavaMailBuilder
         return this;
     }
 
-    public JavaMailBuilder cc(final String cc) throws MessagingException
-    {
+    public JavaMailBuilder cc(final String cc) throws MessagingException {
         Objects.requireNonNull(cc, "CC address must not be null");
 
         cc(parseAddress(cc));
@@ -337,8 +301,7 @@ public final class JavaMailBuilder
         return this;
     }
 
-    public JavaMailBuilder cc(final String cc, final String personal) throws Exception
-    {
+    public JavaMailBuilder cc(final String cc, final String personal) throws Exception {
         Objects.requireNonNull(cc, "CC address must not be null");
 
         cc(getCharset() != null ? new InternetAddress(cc, personal, getCharset()) : new InternetAddress(cc, personal));
@@ -346,8 +309,7 @@ public final class JavaMailBuilder
         return this;
     }
 
-    public JavaMailBuilder from(final InternetAddress from) throws MessagingException
-    {
+    public JavaMailBuilder from(final InternetAddress from) throws MessagingException {
         Objects.requireNonNull(from, "From address must not be null");
 
         validateAddress(from);
@@ -357,8 +319,7 @@ public final class JavaMailBuilder
         return this;
     }
 
-    public JavaMailBuilder from(final String from) throws MessagingException
-    {
+    public JavaMailBuilder from(final String from) throws MessagingException {
         Objects.requireNonNull(from, "From address must not be null");
 
         from(parseAddress(from));
@@ -366,8 +327,7 @@ public final class JavaMailBuilder
         return this;
     }
 
-    public JavaMailBuilder from(final String from, final String personal) throws Exception
-    {
+    public JavaMailBuilder from(final String from, final String personal) throws Exception {
         Objects.requireNonNull(from, "From address must not be null");
 
         from(getCharset() != null ? new InternetAddress(from, personal, getCharset()) : new InternetAddress(from, personal));
@@ -375,8 +335,7 @@ public final class JavaMailBuilder
         return this;
     }
 
-    public JavaMailBuilder inline(final String contentID, final DataSource dataSource) throws MessagingException
-    {
+    public JavaMailBuilder inline(final String contentID, final DataSource dataSource) throws MessagingException {
         Objects.requireNonNull(contentID, "Content ID must not be null");
         Objects.requireNonNull(dataSource, "DataSource must not be null");
 
@@ -392,8 +351,7 @@ public final class JavaMailBuilder
         return this;
     }
 
-    public JavaMailBuilder inline(final String contentID, final File file) throws MessagingException
-    {
+    public JavaMailBuilder inline(final String contentID, final File file) throws MessagingException {
         Objects.requireNonNull(contentID, "Content ID must not be null");
         Objects.requireNonNull(file, "File must not be null");
 
@@ -404,8 +362,7 @@ public final class JavaMailBuilder
         return this;
     }
 
-    public JavaMailBuilder inline(final String contentID, final InputStream inputStream, final String mimeType) throws MessagingException
-    {
+    public JavaMailBuilder inline(final String contentID, final InputStream inputStream, final String mimeType) throws MessagingException {
         Objects.requireNonNull(contentID, "Content ID must not be null");
         Objects.requireNonNull(inputStream, "InputStreamSource must not be null");
 
@@ -416,30 +373,26 @@ public final class JavaMailBuilder
         return this;
     }
 
-    public JavaMailBuilder messageID(final String messageID)
-    {
+    public JavaMailBuilder messageID(final String messageID) {
         this.messageID = Objects.requireNonNull(messageID, "messageID required");
 
         return this;
     }
 
-    public JavaMailBuilder subject(final String subject)
-    {
+    public JavaMailBuilder subject(final String subject) {
         this.subject = Objects.requireNonNull(subject, "subject required");
 
         return this;
     }
 
-    public JavaMailBuilder text(final String text, final boolean isHTML)
-    {
+    public JavaMailBuilder text(final String text, final boolean isHTML) {
         this.text = Objects.requireNonNull(text, "Text must not be null");
         this.isHTML = isHTML;
 
         return this;
     }
 
-    public JavaMailBuilder to(final InternetAddress to) throws MessagingException
-    {
+    public JavaMailBuilder to(final InternetAddress to) throws MessagingException {
         Objects.requireNonNull(to, "To address must not be null");
 
         validateAddress(to);
@@ -449,10 +402,8 @@ public final class JavaMailBuilder
         return this;
     }
 
-    public JavaMailBuilder to(final InternetAddress... to) throws MessagingException
-    {
-        for (InternetAddress internetAddress : to)
-        {
+    public JavaMailBuilder to(final InternetAddress... to) throws MessagingException {
+        for (InternetAddress internetAddress : to) {
             Objects.requireNonNull(internetAddress, "To address must not be null");
 
             validateAddress(internetAddress);
@@ -463,8 +414,7 @@ public final class JavaMailBuilder
         return this;
     }
 
-    public JavaMailBuilder to(final String to) throws MessagingException
-    {
+    public JavaMailBuilder to(final String to) throws MessagingException {
         Objects.requireNonNull(to, "To address must not be null");
 
         to(parseAddress(to));
@@ -472,8 +422,7 @@ public final class JavaMailBuilder
         return this;
     }
 
-    public JavaMailBuilder to(final String to, final String personal) throws Exception
-    {
+    public JavaMailBuilder to(final String to, final String personal) throws Exception {
         Objects.requireNonNull(to, "To address must not be null");
 
         to(getCharset() != null ? new InternetAddress(to, personal, getCharset()) : new InternetAddress(to, personal));
@@ -481,16 +430,13 @@ public final class JavaMailBuilder
         return this;
     }
 
-    private DataSource createDataSource(final InputStream inputStream, final String contentType, final String name)
-    {
-        return new DataSource()
-        {
+    private DataSource createDataSource(final InputStream inputStream, final String contentType, final String name) {
+        return new DataSource() {
             /**
              * @see jakarta.activation.DataSource#getContentType()
              */
             @Override
-            public String getContentType()
-            {
+            public String getContentType() {
                 return contentType;
             }
 
@@ -498,8 +444,7 @@ public final class JavaMailBuilder
              * @see jakarta.activation.DataSource#getInputStream()
              */
             @Override
-            public InputStream getInputStream() throws IOException
-            {
+            public InputStream getInputStream() throws IOException {
                 return inputStream;
             }
 
@@ -507,8 +452,7 @@ public final class JavaMailBuilder
              * @see jakarta.activation.DataSource#getName()
              */
             @Override
-            public String getName()
-            {
+            public String getName() {
                 return name;
             }
 
@@ -516,45 +460,37 @@ public final class JavaMailBuilder
              * @see jakarta.activation.DataSource#getOutputStream()
              */
             @Override
-            public OutputStream getOutputStream()
-            {
+            public OutputStream getOutputStream() {
                 throw new UnsupportedOperationException("Read-only jakarta.activation.DataSource");
             }
         };
     }
 
-    private String getCharset()
-    {
+    private String getCharset() {
         return this.charset;
     }
 
-    private FileTypeMap getFileTypeMap()
-    {
+    private FileTypeMap getFileTypeMap() {
         return this.fileTypeMap;
     }
 
-    private Session getSession()
-    {
+    private Session getSession() {
         return this.session;
     }
 
-    private InternetAddress parseAddress(final String address) throws MessagingException
-    {
+    private InternetAddress parseAddress(final String address) throws MessagingException {
         InternetAddress[] parsed = InternetAddress.parse(address);
 
-        if (parsed.length != 1)
-        {
+        if (parsed.length != 1) {
             throw new AddressException("Illegal address", address);
         }
 
         InternetAddress raw = parsed[0];
 
-        try
-        {
+        try {
             return (getCharset() != null ? new InternetAddress(raw.getAddress(), raw.getPersonal(), getCharset()) : raw);
         }
-        catch (UnsupportedEncodingException ex)
-        {
+        catch (UnsupportedEncodingException ex) {
             throw new MessagingException("Failed to parse embedded personal name to correct encoding", ex);
         }
     }
@@ -568,10 +504,8 @@ public final class JavaMailBuilder
      *
      * @see jakarta.mail.internet.InternetAddress#validate()
      */
-    private void validateAddress(final InternetAddress address) throws AddressException
-    {
-        if (this.validateAddresses)
-        {
+    private void validateAddress(final InternetAddress address) throws AddressException {
+        if (this.validateAddresses) {
             address.validate();
         }
     }

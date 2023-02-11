@@ -5,21 +5,20 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import de.freese.pim.gui.mail.model.FxMailFolder;
 import javafx.collections.ListChangeListener;
 import javafx.scene.control.TreeItem;
+
+import de.freese.pim.gui.mail.model.FxMailFolder;
 
 /**
  * {@link ListChangeListener} für eine Liste aus MailFolder zum Aufbau des Trees.
  *
  * @author Thomas Freese
  */
-public class TreeFolderListChangeListener implements ListChangeListener<FxMailFolder>
-{
+public class TreeFolderListChangeListener implements ListChangeListener<FxMailFolder> {
     private final TreeItem<Object> parent;
 
-    public TreeFolderListChangeListener(final TreeItem<Object> parent)
-    {
+    public TreeFolderListChangeListener(final TreeItem<Object> parent) {
         super();
 
         this.parent = Objects.requireNonNull(parent, "parent required");
@@ -29,14 +28,10 @@ public class TreeFolderListChangeListener implements ListChangeListener<FxMailFo
      * @see javafx.collections.ListChangeListener#onChanged(javafx.collections.ListChangeListener.Change)
      */
     @Override
-    public void onChanged(final ListChangeListener.Change<? extends FxMailFolder> change)
-    {
-        while (change.next())
-        {
-            if (change.wasAdded())
-            {
-                for (FxMailFolder mf : change.getAddedSubList())
-                {
+    public void onChanged(final ListChangeListener.Change<? extends FxMailFolder> change) {
+        while (change.next()) {
+            if (change.wasAdded()) {
+                for (FxMailFolder mf : change.getAddedSubList()) {
                     // @formatter:off
                     Optional<TreeItem<Object>> parentItem = getFlattenedStream(getParent())
                             //.peek(System.out::println)
@@ -45,20 +40,16 @@ public class TreeFolderListChangeListener implements ListChangeListener<FxMailFo
                             .findFirst();
                     // @formatter:on
 
-                    if (parentItem.isPresent())
-                    {
+                    if (parentItem.isPresent()) {
                         addChild(parentItem.get(), mf);
                     }
-                    else
-                    {
+                    else {
                         addChild(getParent(), mf);
                     }
                 }
             }
-            else if (change.wasRemoved())
-            {
-                for (FxMailFolder mf : change.getRemoved())
-                {
+            else if (change.wasRemoved()) {
+                for (FxMailFolder mf : change.getRemoved()) {
                     // Knoten suchen.
                     // @formatter:off
                     Optional<TreeItem<Object>> treeItem = getFlattenedStream(getParent())
@@ -73,30 +64,24 @@ public class TreeFolderListChangeListener implements ListChangeListener<FxMailFo
         }
     }
 
-    private void addChild(final TreeItem<Object> parent, final FxMailFolder child)
-    {
+    private void addChild(final TreeItem<Object> parent, final FxMailFolder child) {
         Runnable runnable = () -> parent.getChildren().add(new TreeItem<>(child));
 
         runnable.run();
         // Platform.runLater(runnable;
     }
 
-    private Stream<TreeItem<Object>> getFlattenedStream(final TreeItem<Object> treeItem)
-    {
+    private Stream<TreeItem<Object>> getFlattenedStream(final TreeItem<Object> treeItem) {
         return Stream.concat(Stream.of(treeItem), treeItem.getChildren().stream().flatMap(this::getFlattenedStream));
     }
 
-    private TreeItem<Object> getParent()
-    {
+    private TreeItem<Object> getParent() {
         return this.parent;
     }
 
-    private void removeChild(final TreeItem<Object> parent, final TreeItem<Object> child)
-    {
-        Runnable runnable = () ->
-        {
-            if (parent.getValue() instanceof FxMailFolder mfParent)
-            {
+    private void removeChild(final TreeItem<Object> parent, final TreeItem<Object> child) {
+        Runnable runnable = () -> {
+            if (parent.getValue() instanceof FxMailFolder mfParent) {
                 FxMailFolder mfChild = (FxMailFolder) child.getValue();
                 mfParent.removeChild(mfChild);
             }

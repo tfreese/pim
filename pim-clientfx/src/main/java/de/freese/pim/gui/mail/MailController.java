@@ -10,19 +10,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
-import de.freese.pim.core.mail.InternetAddress;
-import de.freese.pim.core.mail.MailContent;
-import de.freese.pim.core.spring.SpringContext;
-import de.freese.pim.gui.PimClientApplication;
-import de.freese.pim.gui.controller.AbstractController;
-import de.freese.pim.gui.mail.model.FxMail;
-import de.freese.pim.gui.mail.model.FxMailAccount;
-import de.freese.pim.gui.mail.model.FxMailFolder;
-import de.freese.pim.gui.mail.service.FxMailService;
-import de.freese.pim.gui.mail.utils.MailUrlStreamHandlerFactory;
-import de.freese.pim.gui.mail.view.MailContentView;
-import de.freese.pim.gui.utils.FxUtils;
-import de.freese.pim.gui.view.ErrorDialog;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyBooleanProperty;
@@ -43,13 +30,26 @@ import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.paint.Color;
 
+import de.freese.pim.core.mail.InternetAddress;
+import de.freese.pim.core.mail.MailContent;
+import de.freese.pim.core.spring.SpringContext;
+import de.freese.pim.gui.PimClientApplication;
+import de.freese.pim.gui.controller.AbstractController;
+import de.freese.pim.gui.mail.model.FxMail;
+import de.freese.pim.gui.mail.model.FxMailAccount;
+import de.freese.pim.gui.mail.model.FxMailFolder;
+import de.freese.pim.gui.mail.service.FxMailService;
+import de.freese.pim.gui.mail.utils.MailUrlStreamHandlerFactory;
+import de.freese.pim.gui.mail.view.MailContentView;
+import de.freese.pim.gui.utils.FxUtils;
+import de.freese.pim.gui.view.ErrorDialog;
+
 /**
  * Controller des Mail-Clients.
  *
  * @author Thomas Freese
  */
-public class MailController extends AbstractController
-{
+public class MailController extends AbstractController {
     private static final String FORMAT_DATE = "%1$ta %1$td.%1$tm.%1$ty %1$tH:%1$tM:%1$tS";
 
     private final FxMailService mailService;
@@ -93,8 +93,7 @@ public class MailController extends AbstractController
     @FXML
     private TreeView<Object> treeViewMail;
 
-    public MailController()
-    {
+    public MailController() {
         super();
 
         this.mailService = SpringContext.getBean("clientMailService", FxMailService.class);
@@ -104,10 +103,8 @@ public class MailController extends AbstractController
      * @see de.freese.pim.gui.controller.AbstractController#activate()
      */
     @Override
-    public void activate()
-    {
-        if (isActivated())
-        {
+    public void activate() {
+        if (isActivated()) {
             return;
         }
 
@@ -124,8 +121,7 @@ public class MailController extends AbstractController
      * @see de.freese.pim.gui.controller.AbstractController#getMainNode()
      */
     @Override
-    public Node getMainNode()
-    {
+    public Node getMainNode() {
         return this.mainNode;
     }
 
@@ -133,8 +129,7 @@ public class MailController extends AbstractController
      * @see de.freese.pim.gui.controller.AbstractController#getNaviNode()
      */
     @Override
-    public Node getNaviNode()
-    {
+    public Node getNaviNode() {
         return this.naviNode;
     }
 
@@ -142,8 +137,7 @@ public class MailController extends AbstractController
      * @see de.freese.pim.gui.controller.AbstractController#getToolBar()
      */
     @Override
-    public ToolBar getToolBar()
-    {
+    public ToolBar getToolBar() {
         return this.toolBar;
     }
 
@@ -151,24 +145,19 @@ public class MailController extends AbstractController
      * @see javafx.fxml.Initializable#initialize(java.net.URL, java.util.ResourceBundle)
      */
     @Override
-    public void initialize(final URL location, final ResourceBundle resources)
-    {
+    public void initialize(final URL location, final ResourceBundle resources) {
         // Buttons
-        this.buttonAddAccount.setOnAction(event ->
-        {
+        this.buttonAddAccount.setOnAction(event -> {
             EditMailAccountDialog dialog = new EditMailAccountDialog();
             Optional<FxMailAccount> result = dialog.addAccount(getMailService(), resources);
-            result.ifPresent(account ->
-            {
-                try
-                {
+            result.ifPresent(account -> {
+                try {
                     getMailService().insertAccount(account);
                     getMailService().insertOrUpdateFolder(account.getID(), account.getFolder());
 
                     addMailAccountToGUI(this.treeViewMail.getRoot(), account);
                 }
-                catch (Exception ex)
-                {
+                catch (Exception ex) {
                     getLogger().error(ex.getMessage(), ex);
 
                     new ErrorDialog().forThrowable(ex).showAndWait();
@@ -177,21 +166,17 @@ public class MailController extends AbstractController
         });
 
         this.buttonEditAccount.disableProperty().bind(this.selectedTreeItem.isNull());
-        this.buttonEditAccount.setOnAction(event ->
-        {
+        this.buttonEditAccount.setOnAction(event -> {
             FxMailAccount ma = getAccount(this.selectedTreeItem.get());
 
             EditMailAccountDialog dialog = new EditMailAccountDialog();
             Optional<FxMailAccount> result = dialog.editAccount(getMailService(), resources, ma);
-            result.ifPresent(account ->
-            {
-                try
-                {
+            result.ifPresent(account -> {
+                try {
                     getMailService().updateAccount(account);
                     getMailService().insertOrUpdateFolder(account.getID(), account.getFolder());
                 }
-                catch (Exception ex)
-                {
+                catch (Exception ex) {
                     getLogger().error(ex.getMessage(), ex);
 
                     new ErrorDialog().forThrowable(ex).showAndWait();
@@ -203,29 +188,24 @@ public class MailController extends AbstractController
         this.selectedMail.bind(this.tableViewMail.getSelectionModel().selectedItemProperty());
         this.selectedMail.addListener((observable, oldValue, newValue) -> selectedMail(newValue));
 
-        this.tableViewMail.setRowFactory(tableView -> new TableRow<>()
-        {
+        this.tableViewMail.setRowFactory(tableView -> new TableRow<>() {
             /**
              * @param item {@link FxMail}
              * @param empty boolean
              */
             @Override
-            public void updateItem(final FxMail item, final boolean empty)
-            {
+            public void updateItem(final FxMail item, final boolean empty) {
                 super.updateItem(item, empty);
 
-                if ((item == null) || empty)
-                {
+                if ((item == null) || empty) {
                     setStyle(null);
                     return;
                 }
 
-                if (!item.isSeen())
-                {
+                if (!item.isSeen()) {
                     setStyle("-fx-font-weight: bold;");
                 }
-                else
-                {
+                else {
                     setStyle(null);
                 }
             }
@@ -237,21 +217,18 @@ public class MailController extends AbstractController
 
         this.treeViewMail.setShowRoot(false);
         this.treeViewMail.setRoot(null);
-        this.treeViewMail.setCellFactory(v -> new TreeCell<>()
-        {
+        this.treeViewMail.setCellFactory(v -> new TreeCell<>() {
             /**
              * @param item Object
              * @param empty boolean
              */
             @Override
-            public void updateItem(final Object item, final boolean empty)
-            {
+            public void updateItem(final Object item, final boolean empty) {
                 super.updateItem(item, empty);
 
                 setStyle(null);
 
-                if ((item == null) || empty)
-                {
+                if ((item == null) || empty) {
                     setText(null);
 
                     return;
@@ -260,19 +237,16 @@ public class MailController extends AbstractController
                 String text = null;
                 int newMails = 0;
 
-                if (item instanceof FxMailAccount ma)
-                {
+                if (item instanceof FxMailAccount ma) {
                     text = ma.getMail();
                     newMails = ma.getUnreadMailsCount();
                 }
-                else if (item instanceof FxMailFolder mf)
-                {
+                else if (item instanceof FxMailFolder mf) {
                     text = mf.getName();
                     newMails = mf.getUnreadMailsCountTotal();
                 }
 
-                if (newMails > 0)
-                {
+                if (newMails > 0) {
                     text += " (" + newMails + ")";
                     setStyle("-fx-font-weight: bold;");
                 }
@@ -281,16 +255,13 @@ public class MailController extends AbstractController
             }
         });
 
-        try
-        {
+        try {
             URL.setURLStreamHandlerFactory(new MailUrlStreamHandlerFactory());
         }
-        catch (Error er)
-        {
+        catch (Error er) {
             // Wenn Tomcat der EmbeddedServer ist, war die Default URLStreamHandlerFactory hier schon gesetzt.
             // TomcatURLStreamHandlerFactory.getInstance().addUserFactory(new MailUrlStreamHandlerFactory());
-            try
-            {
+            try {
                 Class<?> tomcatClazz = Class.forName("org.apache.catalina.webresources.TomcatURLStreamHandlerFactory");
                 Method method = tomcatClazz.getMethod("getInstance");
                 Object ref = method.invoke(null);
@@ -298,18 +269,15 @@ public class MailController extends AbstractController
                 method = tomcatClazz.getMethod("addUserFactory", URLStreamHandlerFactory.class);
                 method.invoke(ref, new MailUrlStreamHandlerFactory());
             }
-            catch (Exception ex)
-            {
+            catch (Exception ex) {
                 getLogger().warn(ex.getMessage());
             }
         }
 
-        getProgressIndicator().styleProperty().bind(Bindings.createStringBinding(() ->
-        {
+        getProgressIndicator().styleProperty().bind(Bindings.createStringBinding(() -> {
             double percent = getProgressIndicator().getProgress();
 
-            if (percent < 0)
-            {
+            if (percent < 0) {
                 // indeterminate
                 return null;
             }
@@ -320,8 +288,7 @@ public class MailController extends AbstractController
         }, getProgressIndicator().progressProperty()));
     }
 
-    private void addMailAccountToGUI(final TreeItem<Object> root, final FxMailAccount account)
-    {
+    private void addMailAccountToGUI(final TreeItem<Object> root, final FxMailAccount account) {
         // Path basePath = SettingService.getInstance().getHome();
         // Path accountPath = basePath.resolve(account.getMail());
 
@@ -337,60 +304,50 @@ public class MailController extends AbstractController
         getTaskExecutor().execute(service);
     }
 
-    private FxMailAccount getAccount(final TreeItem<Object> treeItem)
-    {
+    private FxMailAccount getAccount(final TreeItem<Object> treeItem) {
         TreeItem<Object> ti = treeItem;
 
-        while (!(ti.getValue() instanceof FxMailAccount))
-        {
+        while (!(ti.getValue() instanceof FxMailAccount)) {
             ti = ti.getParent();
         }
 
         return (FxMailAccount) ti.getValue();
     }
 
-    private FxMailService getMailService()
-    {
+    private FxMailService getMailService() {
         return this.mailService;
     }
 
-    private ProgressIndicator getProgressIndicator()
-    {
+    private ProgressIndicator getProgressIndicator() {
         return this.progressIndicator;
     }
 
-    private void loadMailAccounts(final TreeItem<Object> root)
-    {
+    private void loadMailAccounts(final TreeItem<Object> root) {
         getLogger().debug("Load MailAccounts");
 
         // contextMenuProperty().bind(
         // Bindings.when(Bindings.equal(itemProperty(),"TABS"))
         // .then(addMenu)
         // .otherwise((ContextMenu)null));
-        try
-        {
+        try {
             List<FxMailAccount> accountList = getMailService().getMailAccounts();
             // Collections.reverse(accountList);
 
-            for (FxMailAccount account : accountList)
-            {
+            for (FxMailAccount account : accountList) {
                 addMailAccountToGUI(root, account);
             }
         }
-        catch (Exception ex)
-        {
+        catch (Exception ex) {
             getLogger().error(ex.getMessage(), ex);
 
             new ErrorDialog().forThrowable(ex).showAndWait();
         }
     }
 
-    private void selectedMail(final FxMail mail)
-    {
+    private void selectedMail(final FxMail mail) {
         this.mailContentView.newMailContent(null, null);
 
-        if (mail == null)
-        {
+        if (mail == null) {
             getLogger().debug("no mail selected");
 
             return;
@@ -399,26 +356,22 @@ public class MailController extends AbstractController
         PimClientApplication.blockGUI();
         FxMailAccount account = getAccount(this.selectedTreeItem.get());
 
-        Task<MailContent> loadMailContentTask = new Task<>()
-        {
+        Task<MailContent> loadMailContentTask = new Task<>() {
             /**
              * @see javafx.concurrent.Task#call()
              */
             @Override
-            protected MailContent call() throws Exception
-            {
+            protected MailContent call() throws Exception {
                 return getMailService().loadMailContent(account, mail, this::updateProgress);
             }
         };
-        loadMailContentTask.setOnSucceeded(event ->
-        {
+        loadMailContentTask.setOnSucceeded(event -> {
             PimClientApplication.unblockGUI();
             MailContent mailContent = loadMailContentTask.getValue();
 
             this.mailContentView.newMailContent(mail, mailContent);
         });
-        loadMailContentTask.setOnFailed(event ->
-        {
+        loadMailContentTask.setOnFailed(event -> {
             PimClientApplication.unblockGUI();
             Throwable th = loadMailContentTask.getException();
 
@@ -438,21 +391,17 @@ public class MailController extends AbstractController
         getTaskExecutor().execute(loadMailContentTask);
     }
 
-    private void selectedTreeItem(final TreeItem<Object> treeItem, final ResourceBundle resources)
-    {
+    private void selectedTreeItem(final TreeItem<Object> treeItem, final ResourceBundle resources) {
         this.tableViewMail.setItems(null);
 
-        if ((treeItem == null) || !(treeItem.getValue() instanceof FxMailFolder folder))
-        {
+        if ((treeItem == null) || !(treeItem.getValue() instanceof FxMailFolder folder)) {
             return;
         }
 
-        if (folder.isSendFolder())
-        {
+        if (folder.isSendFolder()) {
             setSendTableColumns(resources);
         }
-        else
-        {
+        else {
             setReceivedTableColumns(resources);
         }
 
@@ -463,8 +412,7 @@ public class MailController extends AbstractController
         // mailsSorted.comparatorProperty().bind(this.tableViewMail.comparatorProperty());
         this.tableViewMail.setItems(mailsSorted);
 
-        if (!mailsSorted.isEmpty())
-        {
+        if (!mailsSorted.isEmpty()) {
             return;
         }
 
@@ -479,10 +427,8 @@ public class MailController extends AbstractController
         getTaskExecutor().execute(loadMailsTask);
     }
 
-    private void setReceivedTableColumns(final ResourceBundle resources)
-    {
-        if (this.tableColumnsReceived == null)
-        {
+    private void setReceivedTableColumns(final ResourceBundle resources) {
+        if (this.tableColumnsReceived == null) {
             this.tableColumnsReceived = new ArrayList<>();
 
             TableColumn<FxMail, InternetAddress> columnFrom = new TableColumn<>(resources.getString("mail.from"));
@@ -492,8 +438,7 @@ public class MailController extends AbstractController
             // columnFrom.prefWidthProperty().bind(this.tableViewMail.widthProperty().multiply(0.30D)); // 30% Breite
             columnFrom.setPrefWidth(300);
             columnReceived.setPrefWidth(180);
-            columnSubject.prefWidthProperty()
-                    .bind(this.tableViewMail.widthProperty().subtract(columnFrom.widthProperty().add(columnReceived.widthProperty()).add(2)));
+            columnSubject.prefWidthProperty().bind(this.tableViewMail.widthProperty().subtract(columnFrom.widthProperty().add(columnReceived.widthProperty()).add(2)));
 
             columnFrom.setSortable(false);
             columnFrom.setStyle("-fx-alignment: center-left;");
@@ -542,10 +487,8 @@ public class MailController extends AbstractController
         this.tableViewMail.getColumns().addAll(this.tableColumnsReceived);
     }
 
-    private void setSendTableColumns(final ResourceBundle resources)
-    {
-        if (this.tableColumnsSend == null)
-        {
+    private void setSendTableColumns(final ResourceBundle resources) {
+        if (this.tableColumnsSend == null) {
             this.tableColumnsSend = new ArrayList<>();
 
             TableColumn<FxMail, InternetAddress[]> columnTo = new TableColumn<>(resources.getString("mail.to"));
@@ -554,8 +497,7 @@ public class MailController extends AbstractController
 
             columnTo.setPrefWidth(300);
             columnSend.setPrefWidth(180);
-            columnSubject.prefWidthProperty()
-                    .bind(this.tableViewMail.widthProperty().subtract(columnTo.widthProperty().add(columnSend.widthProperty()).add(2)));
+            columnSubject.prefWidthProperty().bind(this.tableViewMail.widthProperty().subtract(columnTo.widthProperty().add(columnSend.widthProperty()).add(2)));
 
             columnTo.setSortable(false);
             columnTo.setStyle("-fx-alignment: center-left;");

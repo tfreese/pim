@@ -8,33 +8,27 @@ import java.io.Serial;
  *
  * @author Thomas Freese
  */
-public class PIMException extends RuntimeException
-{
+public class PIMException extends RuntimeException {
     @Serial
     private static final long serialVersionUID = 5365328556318748263L;
 
-    public PIMException()
-    {
+    public PIMException() {
         super();
     }
 
-    public PIMException(final String message)
-    {
+    public PIMException(final String message) {
         super(message);
     }
 
-    public PIMException(final String message, final Throwable cause)
-    {
+    public PIMException(final String message, final Throwable cause) {
         super(message, cause);
     }
 
-    public PIMException(final String message, final Throwable cause, final boolean enableSuppression, final boolean writableStackTrace)
-    {
+    public PIMException(final String message, final Throwable cause, final boolean enableSuppression, final boolean writableStackTrace) {
         super(message, cause, enableSuppression, writableStackTrace);
     }
 
-    public PIMException(final Throwable cause)
-    {
+    public PIMException(final Throwable cause) {
         super(cause);
     }
 }

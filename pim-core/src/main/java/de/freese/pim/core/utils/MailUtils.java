@@ -23,8 +23,7 @@ import de.freese.pim.core.mail.InternetAddress;
  *
  * @author Thomas Freese
  */
-public final class MailUtils
-{
+public final class MailUtils {
     public static final String CONTENT_TYPE_CHARSET_SUFFIX = ";charset=";
 
     public static final String CONTENT_TYPE_HTML = "text/html";
@@ -42,27 +41,23 @@ public final class MailUtils
     /**
      * @author Thomas Freese
      */
-    public abstract static class AbstractTextPart
-    {
+    public abstract static class AbstractTextPart {
         private final String content;
 
         private final String mimeType;
 
-        AbstractTextPart(final String content, final String mimeType)
-        {
+        AbstractTextPart(final String content, final String mimeType) {
             super();
 
             this.content = Objects.requireNonNull(content, "content required");
             this.mimeType = Objects.requireNonNull(mimeType, "mimeType required");
         }
 
-        public String getContent()
-        {
+        public String getContent() {
             return this.content;
         }
 
-        public String getMimeType()
-        {
+        public String getMimeType() {
             return this.mimeType;
         }
 
@@ -70,8 +65,7 @@ public final class MailUtils
          * @see java.lang.Object#toString()
          */
         @Override
-        public String toString()
-        {
+        public String toString() {
             return getMimeType() + ": " + getContent();
         }
     }
@@ -79,10 +73,8 @@ public final class MailUtils
     /**
      * @author Thomas Freese
      */
-    public static final class HTMLTextPart extends AbstractTextPart
-    {
-        HTMLTextPart(final String text)
-        {
+    public static final class HTMLTextPart extends AbstractTextPart {
+        HTMLTextPart(final String text) {
             super(text, CONTENT_TYPE_HTML);
         }
     }
@@ -90,10 +82,8 @@ public final class MailUtils
     /**
      * @author Thomas Freese
      */
-    public static final class PlainTextPart extends AbstractTextPart
-    {
-        PlainTextPart(final String text)
-        {
+    public static final class PlainTextPart extends AbstractTextPart {
+        PlainTextPart(final String text) {
             super(text, CONTENT_TYPE_PLAIN);
         }
     }
@@ -107,14 +97,12 @@ public final class MailUtils
      *
      * @return {@link Map}; ist niemals null
      */
-    public static Map<String, MimePart> getAttachmentMap(final Part part) throws Exception
-    {
+    public static Map<String, MimePart> getAttachmentMap(final Part part) throws Exception {
         Map<String, MimePart> map = new HashMap<>();
 
         List<MimePart> attachments = getAttachments(part);
 
-        for (MimePart attachment : attachments)
-        {
+        for (MimePart attachment : attachments) {
             String fileName = Optional.ofNullable(attachment.getFileName()).orElse("Mail");
             fileName = MimeUtility.decodeText(fileName);
 
@@ -131,26 +119,21 @@ public final class MailUtils
      *
      * @return {@link List}; ist niemals null
      */
-    public static List<MimePart> getAttachments(final Part part) throws Exception
-    {
+    public static List<MimePart> getAttachments(final Part part) throws Exception {
         List<MimePart> bodyParts = new ArrayList<>();
 
-        if (Part.ATTACHMENT.equalsIgnoreCase(part.getDisposition()))
-        {
+        if (Part.ATTACHMENT.equalsIgnoreCase(part.getDisposition())) {
             bodyParts.add((MimePart) part);
         }
-        else if (part.isMimeType("multipart/*") || part.isMimeType("MULTIPART/*"))
-        {
+        else if (part.isMimeType("multipart/*") || part.isMimeType("MULTIPART/*")) {
             Multipart mp = (Multipart) part.getContent();
 
-            for (int i = 0; i < mp.getCount(); i++)
-            {
+            for (int i = 0; i < mp.getCount(); i++) {
                 Part bp = mp.getBodyPart(i);
 
                 List<MimePart> list = getAttachments(bp);
 
-                if ((list != null) && !list.isEmpty())
-                {
+                if ((list != null) && !list.isEmpty()) {
                     bodyParts.addAll(list);
                 }
             }
@@ -168,23 +151,19 @@ public final class MailUtils
      *
      * @return {@link Map}; ist niemals null
      */
-    public static Map<String, MimePart> getInlineMap(final Part part) throws Exception
-    {
+    public static Map<String, MimePart> getInlineMap(final Part part) throws Exception {
         Map<String, MimePart> map = new HashMap<>();
 
         List<MimePart> inlines = getInlines(part);
 
-        for (MimePart inline : inlines)
-        {
+        for (MimePart inline : inlines) {
             String[] contentIDs = inline.getHeader(HEADER_CONTENT_ID);
 
-            if (contentIDs == null)
-            {
+            if (contentIDs == null) {
                 continue;
             }
 
-            for (String contentID : contentIDs)
-            {
+            for (String contentID : contentIDs) {
                 contentID = contentID.replace("<", "").replace(">", "");
 
                 map.put(contentID, inline);
@@ -201,26 +180,21 @@ public final class MailUtils
      *
      * @return {@link List}; ist niemals null
      */
-    public static List<MimePart> getInlines(final Part part) throws Exception
-    {
+    public static List<MimePart> getInlines(final Part part) throws Exception {
         List<MimePart> bodyParts = new ArrayList<>();
 
-        if (Part.INLINE.equalsIgnoreCase(part.getDisposition()))
-        {
+        if (Part.INLINE.equalsIgnoreCase(part.getDisposition())) {
             bodyParts.add((MimePart) part);
         }
-        else if (part.isMimeType("multipart/*") || part.isMimeType("MULTIPART/*"))
-        {
+        else if (part.isMimeType("multipart/*") || part.isMimeType("MULTIPART/*")) {
             Multipart mp = (Multipart) part.getContent();
 
-            for (int i = 0; i < mp.getCount(); i++)
-            {
+            for (int i = 0; i < mp.getCount(); i++) {
                 Part bp = mp.getBodyPart(i);
 
                 List<MimePart> list = getInlines(bp);
 
-                if ((list != null) && !list.isEmpty())
-                {
+                if ((list != null) && !list.isEmpty()) {
                     bodyParts.addAll(list);
                 }
             }
@@ -234,19 +208,15 @@ public final class MailUtils
      *
      * @param part {@link Part}, @see {@link Message}
      */
-    public static long getSizeOfAllParts(final Part part) throws Exception
-    {
+    public static long getSizeOfAllParts(final Part part) throws Exception {
         long size = part.getSize();
 
-        if (size < 0)
-        {
+        if (size < 0) {
             size = 0;
         }
 
-        if (part.getContent() instanceof Multipart mp)
-        {
-            for (int i = 0; i < mp.getCount(); i++)
-            {
+        if (part.getContent() instanceof Multipart mp) {
+            for (int i = 0; i < mp.getCount(); i++) {
                 Part bp = mp.getBodyPart(i);
 
                 size += getSizeOfAllParts(bp);
@@ -264,14 +234,12 @@ public final class MailUtils
      *
      * @return {@link List}; ist niemals null
      */
-    public static DataSource getTextDataSource(final Part part) throws Exception
-    {
+    public static DataSource getTextDataSource(final Part part) throws Exception {
         List<DataSource> dataSources = getTextDataSources(part);
 
         Optional<DataSource> dataSource = dataSources.stream().filter(ds -> ds.getContentType().toLowerCase().startsWith(CONTENT_TYPE_HTML)).findFirst();
 
-        if (dataSource.isEmpty())
-        {
+        if (dataSource.isEmpty()) {
             // Kein HTML gefunden, dann nach Plain-Text suchen.
             dataSource = dataSources.stream().filter(ds -> ds.getContentType().toLowerCase().startsWith(CONTENT_TYPE_PLAIN)).findFirst();
         }
@@ -286,26 +254,21 @@ public final class MailUtils
      *
      * @return {@link List}; ist niemals null
      */
-    public static List<DataSource> getTextDataSources(final Part part) throws Exception
-    {
+    public static List<DataSource> getTextDataSources(final Part part) throws Exception {
         List<DataSource> dataSources = new ArrayList<>();
 
-        if (part.isMimeType("text/plain") || part.isMimeType("TEXT/plain") || part.isMimeType("text/html") || part.isMimeType("TEXT/html"))
-        {
+        if (part.isMimeType("text/plain") || part.isMimeType("TEXT/plain") || part.isMimeType("text/html") || part.isMimeType("TEXT/html")) {
             dataSources.add(part.getDataHandler().getDataSource());
         }
-        else if (part.isMimeType("multipart/*") || part.isMimeType("MULTIPART/*"))
-        {
+        else if (part.isMimeType("multipart/*") || part.isMimeType("MULTIPART/*")) {
             Multipart mp = (Multipart) part.getContent();
 
-            for (int i = 0; i < mp.getCount(); i++)
-            {
+            for (int i = 0; i < mp.getCount(); i++) {
                 Part bp = mp.getBodyPart(i);
 
                 List<DataSource> ds = getTextDataSources(bp);
 
-                if ((ds != null) && !ds.isEmpty())
-                {
+                if ((ds != null) && !ds.isEmpty()) {
                     dataSources.addAll(ds);
                 }
             }
@@ -321,38 +284,30 @@ public final class MailUtils
      *
      * @return {@link List}; ist niemals null
      */
-    public static List<AbstractTextPart> getTextParts(final Part part) throws Exception
-    {
+    public static List<AbstractTextPart> getTextParts(final Part part) throws Exception {
         List<AbstractTextPart> textParts = new ArrayList<>();
 
-        if (part.isMimeType("text/*") || part.isMimeType("TEXT/*"))
-        {
-            if (!(part.getContent() instanceof String text))
-            {
+        if (part.isMimeType("text/*") || part.isMimeType("TEXT/*")) {
+            if (!(part.getContent() instanceof String text)) {
                 return null;
             }
 
-            if (part.isMimeType("text/plain") || part.isMimeType("TEXT/plain"))
-            {
+            if (part.isMimeType("text/plain") || part.isMimeType("TEXT/plain")) {
                 textParts.add(new PlainTextPart(text));
             }
-            else if (part.isMimeType("text/html") || part.isMimeType("TEXT/html"))
-            {
+            else if (part.isMimeType("text/html") || part.isMimeType("TEXT/html")) {
                 textParts.add(new HTMLTextPart(text));
             }
         }
-        else if (part.isMimeType("multipart/*"))
-        {
+        else if (part.isMimeType("multipart/*")) {
             Multipart mp = (Multipart) part.getContent();
 
-            for (int i = 0; i < mp.getCount(); i++)
-            {
+            for (int i = 0; i < mp.getCount(); i++) {
                 Part bp = mp.getBodyPart(i);
 
                 List<AbstractTextPart> tp = getTextParts(bp);
 
-                if ((tp != null) && !tp.isEmpty())
-                {
+                if ((tp != null) && !tp.isEmpty()) {
                     textParts.addAll(tp);
                 }
             }
@@ -361,10 +316,8 @@ public final class MailUtils
         return textParts;
     }
 
-    public static InternetAddress map(final jakarta.mail.internet.InternetAddress address)
-    {
-        if (address == null)
-        {
+    public static InternetAddress map(final jakarta.mail.internet.InternetAddress address) {
+        if (address == null) {
             return null;
         }
 
@@ -372,10 +325,8 @@ public final class MailUtils
 
     }
 
-    public static InternetAddress[] map(final jakarta.mail.internet.InternetAddress[] addresses)
-    {
-        if (addresses == null)
-        {
+    public static InternetAddress[] map(final jakarta.mail.internet.InternetAddress[] addresses) {
+        if (addresses == null) {
             return null;
         }
 
@@ -391,8 +342,7 @@ public final class MailUtils
         // return ia;
     }
 
-    private MailUtils()
-    {
+    private MailUtils() {
         super();
     }
 }

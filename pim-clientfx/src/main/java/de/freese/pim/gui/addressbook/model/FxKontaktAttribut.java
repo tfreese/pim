@@ -13,16 +13,14 @@ import javafx.beans.property.StringProperty;
  * @author Thomas Freese
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class FxKontaktAttribut implements Comparable<FxKontaktAttribut>
-{
+public class FxKontaktAttribut implements Comparable<FxKontaktAttribut> {
     private final StringProperty attributProperty = new SimpleStringProperty(this, "attribut", null);
 
     private final LongProperty kontaktIDProperty = new SimpleLongProperty(this, "kontaktID", 0);
 
     private final StringProperty wertProperty = new SimpleStringProperty(this, "wert", null);
 
-    public StringProperty attributProperty()
-    {
+    public StringProperty attributProperty() {
         return this.attributProperty;
     }
 
@@ -30,55 +28,45 @@ public class FxKontaktAttribut implements Comparable<FxKontaktAttribut>
      * @see java.lang.Comparable#compareTo(java.lang.Object)
      */
     @Override
-    public int compareTo(final FxKontaktAttribut ka)
-    {
-        if (ka == null)
-        {
+    public int compareTo(final FxKontaktAttribut ka) {
+        if (ka == null) {
             return 0;
         }
 
         int comp = getAttribut().compareTo(ka.getAttribut());
 
-        if (comp == 0)
-        {
+        if (comp == 0) {
             comp = getWert().compareTo(ka.getWert());
         }
 
         return comp;
     }
 
-    public String getAttribut()
-    {
+    public String getAttribut() {
         return attributProperty().get();
     }
 
-    public long getKontaktID()
-    {
+    public long getKontaktID() {
         return kontaktIDProperty().get();
     }
 
-    public String getWert()
-    {
+    public String getWert() {
         return wertProperty().get();
     }
 
-    public LongProperty kontaktIDProperty()
-    {
+    public LongProperty kontaktIDProperty() {
         return this.kontaktIDProperty;
     }
 
-    public void setAttribut(final String attribut)
-    {
+    public void setAttribut(final String attribut) {
         attributProperty().set(attribut);
     }
 
-    public void setKontaktID(final long kontaktID)
-    {
+    public void setKontaktID(final long kontaktID) {
         kontaktIDProperty().set(kontaktID);
     }
 
-    public void setWert(final String wert)
-    {
+    public void setWert(final String wert) {
         wertProperty().set(wert);
     }
 
@@ -86,8 +74,7 @@ public class FxKontaktAttribut implements Comparable<FxKontaktAttribut>
      * @see java.lang.Object#toString()
      */
     @Override
-    public String toString()
-    {
+    public String toString() {
         StringBuilder builder = new StringBuilder();
         builder.append("KontaktAttribut [kontaktID=").append(getKontaktID());
         builder.append(", attribut=").append(getAttribut());
@@ -97,8 +84,7 @@ public class FxKontaktAttribut implements Comparable<FxKontaktAttribut>
         return builder.toString();
     }
 
-    public StringProperty wertProperty()
-    {
+    public StringProperty wertProperty() {
         return this.wertProperty;
     }
 }

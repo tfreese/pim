@@ -4,8 +4,6 @@ package de.freese.pim.gui.view;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
-import de.freese.pim.core.PIMException;
-import de.freese.pim.gui.PimClientApplication;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Label;
@@ -14,15 +12,16 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import javafx.stage.Modality;
 
+import de.freese.pim.core.PIMException;
+import de.freese.pim.gui.PimClientApplication;
+
 /**
  * Allgemeiner Fehler-Dialog.
  *
  * @author Thomas Freese
  */
-public class ErrorDialog
-{
-    public static String toString(final Throwable throwable)
-    {
+public class ErrorDialog {
+    public static String toString(final Throwable throwable) {
         StringWriter stringWriter = new StringWriter();
         PrintWriter printWriter = new PrintWriter(stringWriter);
 
@@ -33,8 +32,7 @@ public class ErrorDialog
 
     private final Alert alert;
 
-    public ErrorDialog()
-    {
+    public ErrorDialog() {
         super();
 
         this.alert = new Alert(AlertType.ERROR);
@@ -46,8 +44,7 @@ public class ErrorDialog
         title("Error");
     }
 
-    public ErrorDialog contentText(final String text)
-    {
+    public ErrorDialog contentText(final String text) {
         this.alert.setContentText(text);
 
         return this;
@@ -56,14 +53,11 @@ public class ErrorDialog
     /**
      * Ersetzt den Header- und Content-Text.
      */
-    public ErrorDialog forThrowable(final Throwable throwable)
-    {
+    public ErrorDialog forThrowable(final Throwable throwable) {
         Throwable th = throwable;
 
-        if (th instanceof PIMException pex)
-        {
-            if (pex.getCause() != null)
-            {
+        if (th instanceof PIMException pex) {
+            if (pex.getCause() != null) {
                 th = pex.getCause();
             }
         }
@@ -95,8 +89,7 @@ public class ErrorDialog
         return this;
     }
 
-    public ErrorDialog headerText(final String text)
-    {
+    public ErrorDialog headerText(final String text) {
         this.alert.setHeaderText(text);
 
         return this;
@@ -105,14 +98,12 @@ public class ErrorDialog
     /**
      * @see javafx.scene.control.Dialog#showAndWait()
      */
-    public void showAndWait()
-    {
+    public void showAndWait() {
         PimClientApplication.unblockGUI();
         this.alert.showAndWait();
     }
 
-    public ErrorDialog title(final String title)
-    {
+    public ErrorDialog title(final String title) {
         this.alert.setTitle(title);
 
         return this;

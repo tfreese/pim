@@ -9,8 +9,7 @@ import java.util.stream.Stream;
  *
  * @author Thomas Freese
  */
-public enum MailPort
-{
+public enum MailPort {
     /**
      * 143
      */
@@ -44,8 +43,7 @@ public enum MailPort
      */
     UNKNOWN(-1);
 
-    public static MailPort findByPort(final int port)
-    {
+    public static MailPort findByPort(final int port) {
         Optional<MailPort> result = Stream.of(values()).filter(mp -> mp.getPort() == port).findFirst();
 
         return result.orElseThrow(() -> new IllegalArgumentException("port not found: " + port));
@@ -53,13 +51,11 @@ public enum MailPort
 
     private final int port;
 
-    MailPort(final int port)
-    {
+    MailPort(final int port) {
         this.port = port;
     }
 
-    public int getPort()
-    {
+    public int getPort() {
         return this.port;
     }
 
@@ -67,8 +63,7 @@ public enum MailPort
      * @see java.lang.Enum#toString()
      */
     @Override
-    public String toString()
-    {
+    public String toString() {
         return String.format("%s (%d)", name(), getPort());
     }
 }

@@ -14,10 +14,8 @@ import org.springframework.context.annotation.PropertySource;
 @Profile("HsqldbLocalFile")
 @PropertySource("classpath:hikari-pool.properties")
 @PropertySource("classpath:database.properties")
-public class HsqldbLocalFileConfig extends AbstractHsqldbConfig
-{
-    public HsqldbLocalFileConfig()
-    {
+public class HsqldbLocalFileConfig extends AbstractHsqldbConfig {
+    public HsqldbLocalFileConfig() {
         super();
     }
 }

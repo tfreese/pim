@@ -4,6 +4,7 @@ package de.freese.pim.gui.service;
 import jakarta.annotation.Resource;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import de.freese.pim.core.service.AbstractRemoteService;
 
 /**
@@ -11,18 +12,15 @@ import de.freese.pim.core.service.AbstractRemoteService;
  *
  * @author Thomas Freese
  */
-public abstract class AbstractFxService extends AbstractRemoteService
-{
+public abstract class AbstractFxService extends AbstractRemoteService {
     private ObjectMapper jsonMapper;
 
     @Resource
-    public void setJsonMapper(final ObjectMapper jsonMapper)
-    {
+    public void setJsonMapper(final ObjectMapper jsonMapper) {
         this.jsonMapper = jsonMapper;
     }
 
-    protected ObjectMapper getJsonMapper()
-    {
+    protected ObjectMapper getJsonMapper() {
         return this.jsonMapper;
     }
 }

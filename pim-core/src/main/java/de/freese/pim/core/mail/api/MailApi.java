@@ -18,8 +18,7 @@ import de.freese.pim.core.utils.io.IOMonitor;
  *
  * @author Thomas Freese
  */
-public interface MailApi
-{
+public interface MailApi {
     /**
      * Initialisiert den Service mit der konkreten Mail-API.
      */

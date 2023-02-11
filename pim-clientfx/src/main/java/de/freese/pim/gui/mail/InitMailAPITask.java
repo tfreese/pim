@@ -10,12 +10,6 @@ import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Stream;
 
-import de.freese.pim.core.spring.SpringContext;
-import de.freese.pim.gui.mail.model.FxMail;
-import de.freese.pim.gui.mail.model.FxMailAccount;
-import de.freese.pim.gui.mail.model.FxMailFolder;
-import de.freese.pim.gui.mail.service.FxMailService;
-import de.freese.pim.gui.view.ErrorDialog;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.scene.control.TreeItem;
@@ -24,21 +18,26 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.task.AsyncTaskExecutor;
 
+import de.freese.pim.core.spring.SpringContext;
+import de.freese.pim.gui.mail.model.FxMail;
+import de.freese.pim.gui.mail.model.FxMailAccount;
+import de.freese.pim.gui.mail.model.FxMailFolder;
+import de.freese.pim.gui.mail.service.FxMailService;
+import de.freese.pim.gui.view.ErrorDialog;
+
 /**
  * Initialisierung der MailApi pro MailAccount.
  *
  * @author Thomas Freese
  */
-public class InitMailAPITask extends Task<List<FxMailFolder>>
-{
+public class InitMailAPITask extends Task<List<FxMailFolder>> {
     public static final Logger LOGGER = LoggerFactory.getLogger(InitMailAPITask.class);
 
     private final FxMailAccount account;
 
     private final FxMailService mailService;
 
-    public InitMailAPITask(final TreeView<Object> treeView, final TreeItem<Object> parent, final FxMailService mailService, final FxMailAccount account)
-    {
+    public InitMailAPITask(final TreeView<Object> treeView, final TreeItem<Object> parent, final FxMailService mailService, final FxMailAccount account) {
         super();
 
         Objects.requireNonNull(treeView, "treeView required");
@@ -47,8 +46,7 @@ public class InitMailAPITask extends Task<List<FxMailFolder>>
         this.mailService = Objects.requireNonNull(mailService, "mailService required");
         this.account = Objects.requireNonNull(account, "account required");
 
-        setOnSucceeded(event ->
-        {
+        setOnSucceeded(event -> {
             List<FxMailFolder> folders = getValue();
 
             account.getFolderSubscribed().addListener(new TreeFolderListChangeListener(parent));
@@ -63,8 +61,7 @@ public class InitMailAPITask extends Task<List<FxMailFolder>>
             // loadMailsByParallelStream(account.getFolderSubscribed(), treeView);
         });
 
-        setOnFailed(event ->
-        {
+        setOnFailed(event -> {
             Throwable th = getException();
 
             LOGGER.error(th.getMessage(), th);
@@ -77,8 +74,7 @@ public class InitMailAPITask extends Task<List<FxMailFolder>>
      * @see javafx.concurrent.Task#call()
      */
     @Override
-    protected List<FxMailFolder> call() throws Exception
-    {
+    protected List<FxMailFolder> call() throws Exception {
         LOGGER.info("Init MailAccount {}", this.account.getMail());
 
         this.mailService.connectAccount(this.account);
@@ -86,13 +82,11 @@ public class InitMailAPITask extends Task<List<FxMailFolder>>
         return this.mailService.loadFolder(this.account.getID());
     }
 
-    protected void loadMailsByCompletableFuture(final List<FxMailFolder> folders, final TreeView<Object> treeView)
-    {
+    protected void loadMailsByCompletableFuture(final List<FxMailFolder> folders, final TreeView<Object> treeView) {
         AsyncTaskExecutor taskExecutor = SpringContext.getAsyncTaskExecutor();
         CompletableFuture<Void> master = CompletableFuture.completedFuture(null);
 
-        for (FxMailFolder mf : folders)
-        {
+        for (FxMailFolder mf : folders) {
             // @formatter:off
             CompletableFuture<Void> cf = CompletableFuture.supplyAsync(() ->
                 this.mailService.loadMails(this.account, mf)
@@ -125,8 +119,7 @@ public class InitMailAPITask extends Task<List<FxMailFolder>>
         master.thenAccept(result -> Platform.runLater(treeView::refresh));
     }
 
-    protected void loadMailsByParallelStream(final List<FxMailFolder> folders, final TreeView<Object> treeView)
-    {
+    protected void loadMailsByParallelStream(final List<FxMailFolder> folders, final TreeView<Object> treeView) {
         // @formatter:off
         try(Stream<FxMailFolder> stream = folders.parallelStream())
         {
@@ -149,8 +142,7 @@ public class InitMailAPITask extends Task<List<FxMailFolder>>
         // @formatter:on
     }
 
-    protected void loadMailsByPartitions(final List<FxMailFolder> folders, final TreeView<Object> treeView)
-    {
+    protected void loadMailsByPartitions(final List<FxMailFolder> folders, final TreeView<Object> treeView) {
         AsyncTaskExecutor taskExecutor = SpringContext.getAsyncTaskExecutor();
 
         int partitionSize = Math.max(1, (folders.size() / 3) + 1); // Jeweils 3 Stores pro MailApi.
@@ -160,8 +152,7 @@ public class InitMailAPITask extends Task<List<FxMailFolder>>
         // Nachteil: Die Reihenfolge der Elemente ist hinüber.
         Map<Integer, List<FxMailFolder>> partitionMap = new HashMap<>();
 
-        for (int i = 0; i < folders.size(); i++)
-        {
+        for (int i = 0; i < folders.size(); i++) {
             FxMailFolder value = folders.get(i);
             int indexToUse = i % partitionSize;
 
@@ -170,8 +161,7 @@ public class InitMailAPITask extends Task<List<FxMailFolder>>
 
         Collection<List<FxMailFolder>> partitions = partitionMap.values();
 
-        for (List<FxMailFolder> partition : partitions)
-        {
+        for (List<FxMailFolder> partition : partitions) {
             // Utils.executeSafely(() -> TimeUnit.MILLISECONDS.sleep(1000));
 
             // Laden der Mails.

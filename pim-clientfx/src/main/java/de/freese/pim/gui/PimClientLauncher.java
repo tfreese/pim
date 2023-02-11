@@ -2,35 +2,31 @@
 package de.freese.pim.gui;
 
 import com.sun.javafx.application.LauncherImpl;
-import de.freese.pim.gui.view.ErrorDialog;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 
+import de.freese.pim.gui.view.ErrorDialog;
+
 /**
  * @author Thomas Freese
  */
-public final class PimClientLauncher
-{
-    public static void main(final String[] args)
-    {
-        if (args.length == 0)
-        {
+public final class PimClientLauncher {
+    public static void main(final String[] args) {
+        if (args.length == 0) {
             usage();
         }
 
         // CommandLine line = null;
 
-        try
-        {
+        try {
             CommandLineParser parser = new DefaultParser();
             parser.parse(getCommandOptions(), args);
             // line = parser.parse(getCommandOptions(), args);
         }
-        catch (Exception ex)
-        {
+        catch (Exception ex) {
             PimClientApplication.LOGGER.error(ex.getMessage());
 
             usage();
@@ -48,8 +44,7 @@ public final class PimClientLauncher
 
         // System.setProperty("org.slf4j.simpleLogger.log.de.freese.pim", "DEBUG");
         // SysOutOverSLF4J.sendSystemOutAndErrToSLF4J();
-        Thread.setDefaultUncaughtExceptionHandler((t, ex) ->
-        {
+        Thread.setDefaultUncaughtExceptionHandler((t, ex) -> {
             PimClientApplication.LOGGER.error("***Default exception handler***");
             PimClientApplication.LOGGER.error(ex.getMessage(), ex);
 
@@ -63,8 +58,7 @@ public final class PimClientLauncher
      * Liefert die möglichen Optionen der Kommandozeile.<br>
      * Dies sind die JRE Programm Argumente.
      */
-    private static Options getCommandOptions()
-    {
+    private static Options getCommandOptions() {
         Options options = new Options();
 
         // --spring.profiles.active=ClientStandalone,HsqldbEmbeddedServer
@@ -76,16 +70,14 @@ public final class PimClientLauncher
         // group.addOption(Option.builder().longOpt("server.port").required().hasArg().argName("=port").desc("Server Port").build());
         // options.addOptionGroup(group);
 
-        options.addOption(Option.builder().longOpt("spring.profiles.active").required().hasArg().argName("Profile1,Profile2").valueSeparator('=')
-                .desc("Profiles: [ClientStandalone,HsqldbEmbeddedServer], [ClientEmbeddedServer,HsqldbEmbeddedServer], [ClientRest]").build());
+        options.addOption(Option.builder().longOpt("spring.profiles.active").required().hasArg().argName("Profile1,Profile2").valueSeparator('=').desc("Profiles: [ClientStandalone,HsqldbEmbeddedServer], [ClientEmbeddedServer,HsqldbEmbeddedServer], [ClientRest]").build());
         options.addOption(Option.builder().longOpt("server.host").hasArg().argName("=host").valueSeparator('=').desc("Server Name").build());
         options.addOption(Option.builder().longOpt("server.port").hasArg().argName("=port").valueSeparator('=').desc("Server Port").build());
 
         return options;
     }
 
-    private static void usage()
-    {
+    private static void usage() {
         HelpFormatter formatter = new HelpFormatter();
         formatter.setOptionComparator(null);
         // formatter.setWidth(120);
@@ -100,8 +92,7 @@ public final class PimClientLauncher
         System.exit(-1);
     }
 
-    private PimClientLauncher()
-    {
+    private PimClientLauncher() {
         super();
     }
 }

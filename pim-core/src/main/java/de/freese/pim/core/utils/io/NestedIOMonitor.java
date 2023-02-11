@@ -8,14 +8,12 @@ import java.util.Objects;
  *
  * @author Thomas Freese
  */
-public class NestedIOMonitor implements IOMonitor
-{
+public class NestedIOMonitor implements IOMonitor {
     private final IOMonitor delegate;
     private final long size;
     private long currentAccepted;
 
-    public NestedIOMonitor(final IOMonitor delegate, final long size)
-    {
+    public NestedIOMonitor(final IOMonitor delegate, final long size) {
         super();
 
         this.delegate = Objects.requireNonNull(delegate, "delegate required");
@@ -26,8 +24,7 @@ public class NestedIOMonitor implements IOMonitor
      * @see de.freese.pim.core.utils.io.IOMonitor#monitor(long, long)
      */
     @Override
-    public void monitor(final long current, final long size)
-    {
+    public void monitor(final long current, final long size) {
         this.currentAccepted += current;
         // System.out.printf("%d / %d%n", current, this.size);
 

@@ -13,13 +13,6 @@ import java.util.ResourceBundle;
 
 import jakarta.activation.DataSource;
 
-import de.freese.pim.core.mail.InternetAddress;
-import de.freese.pim.core.mail.MailContent;
-import de.freese.pim.core.spring.SpringContext;
-import de.freese.pim.gui.PimClientApplication;
-import de.freese.pim.gui.mail.model.FxMail;
-import de.freese.pim.gui.mail.utils.InlineUrlStreamHandler;
-import de.freese.pim.gui.view.ErrorDialog;
 import javafx.application.Platform;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
@@ -32,17 +25,23 @@ import javafx.stage.FileChooser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import de.freese.pim.core.mail.InternetAddress;
+import de.freese.pim.core.mail.MailContent;
+import de.freese.pim.core.spring.SpringContext;
+import de.freese.pim.gui.PimClientApplication;
+import de.freese.pim.gui.mail.model.FxMail;
+import de.freese.pim.gui.mail.utils.InlineUrlStreamHandler;
+import de.freese.pim.gui.view.ErrorDialog;
+
 /**
  * View für den Inhalt einer Mail.
  *
  * @author Thomas Freese
  */
-public class MailContentView extends GridPane
-{
+public class MailContentView extends GridPane {
     public static final Logger LOGGER = LoggerFactory.getLogger(MailContentView.class);
 
-    public static Logger getLogger()
-    {
+    public static Logger getLogger() {
         return LOGGER;
     }
 
@@ -60,8 +59,7 @@ public class MailContentView extends GridPane
 
     private final WebView webView;
 
-    public MailContentView()
-    {
+    public MailContentView() {
         super();
 
         this.bundle = ResourceBundle.getBundle("bundles/pim");
@@ -107,18 +105,15 @@ public class MailContentView extends GridPane
         this.webView = new WebView();
         add(this.webView, 0, 6, 10, 1);
 
-        this.webView.getEngine().locationProperty().addListener((observable, oldValue, newValue) ->
-        {
-            try
-            {
+        this.webView.getEngine().locationProperty().addListener((observable, oldValue, newValue) -> {
+            try {
                 URI address = new URI(newValue);
                 // getLogger().info(address.toString());
 
                 // Desktop.getDesktop().browse(address);
                 Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
 
-                if ((desktop != null) && desktop.isSupported(Desktop.Action.BROWSE))
-                {
+                if ((desktop != null) && desktop.isSupported(Desktop.Action.BROWSE)) {
                     desktop.browse(address);
 
                     Platform.runLater(() -> this.webView.getEngine().load(oldValue));
@@ -127,8 +122,7 @@ public class MailContentView extends GridPane
                 // Ansonsten wird der Link in der WebEngine geladen.
                 // if ((address.getQuery() + "").indexOf("_openmodal=true") > -1)
             }
-            catch (Exception ex)
-            {
+            catch (Exception ex) {
                 getLogger().error(ex.getMessage(), ex);
 
                 new ErrorDialog().forThrowable(ex).showAndWait();
@@ -136,13 +130,11 @@ public class MailContentView extends GridPane
         });
     }
 
-    public void displayThrowable(final Throwable throwable)
-    {
+    public void displayThrowable(final Throwable throwable) {
         this.webView.getEngine().loadContent(ErrorDialog.toString(throwable), "text/plain");
     }
 
-    public void newMailContent(final FxMail mail, final MailContent mailContent)
-    {
+    public void newMailContent(final FxMail mail, final MailContent mailContent) {
         // Delete cache for navigate back.
         this.webView.getEngine().load("about:blank");
         // this.webView.getEngine().loadContent("");
@@ -156,8 +148,7 @@ public class MailContentView extends GridPane
         this.bcc.setText(null);
         this.attachments.getChildren().clear();
 
-        if (mail == null)
-        {
+        if (mail == null) {
             return;
         }
 
@@ -166,8 +157,7 @@ public class MailContentView extends GridPane
         this.cc.setText(Optional.ofNullable(mail.getCc()).map(InternetAddress::toString).orElse(null));
         this.bcc.setText(Optional.ofNullable(mail.getBcc()).map(InternetAddress::toString).orElse(null));
 
-        if (mailContent == null)
-        {
+        if (mailContent == null) {
             // String msg = String.format("no content: %s/%s%n", mail.getFolder().getFullName(), mail.getSubject());
             // getLogger().error(msg);
             // new ErrorDialog().headerText(msg).showAndWait();
@@ -180,8 +170,7 @@ public class MailContentView extends GridPane
 
         InlineUrlStreamHandler.setMailContent(mailContent);
 
-        for (DataSource dataSource : mailContent.getAttachments().values())
-        {
+        for (DataSource dataSource : mailContent.getAttachments().values()) {
             Hyperlink hyperlink = new Hyperlink(dataSource.getName());
             hyperlink.setStyle("-fx-font-size: 75%");
             hyperlink.setOnAction(event -> saveDataSource(dataSource));
@@ -194,10 +183,8 @@ public class MailContentView extends GridPane
         this.webView.getEngine().loadContent(mailContent.getMessageContent(), mailContent.getMessageContentType());
     }
 
-    private void saveDataSource(final DataSource dataSource)
-    {
-        if (dataSource == null)
-        {
+    private void saveDataSource(final DataSource dataSource) {
+        if (dataSource == null) {
             return;
         }
 
@@ -217,17 +204,14 @@ public class MailContentView extends GridPane
 
         final File file = fileChooser.showSaveDialog(PimClientApplication.getMainWindow());
 
-        if (file == null)
-        {
+        if (file == null) {
             return;
         }
 
         Path target = file.toPath();
 
-        Runnable task = () ->
-        {
-            try (InputStream inputStream = dataSource.getInputStream())
-            {
+        Runnable task = () -> {
+            try (InputStream inputStream = dataSource.getInputStream()) {
                 Files.copy(inputStream, target, StandardCopyOption.REPLACE_EXISTING);
 
                 // Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
@@ -237,8 +221,7 @@ public class MailContentView extends GridPane
                 // desktop.open(file);
                 // }
             }
-            catch (Exception ex)
-            {
+            catch (Exception ex) {
                 getLogger().error(ex.getMessage(), ex);
 
                 new ErrorDialog().forThrowable(ex).showAndWait();

@@ -4,7 +4,6 @@ package de.freese.pim.gui.mail.model;
 import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import de.freese.pim.core.mail.InternetAddress;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.LongProperty;
@@ -16,14 +15,15 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
+import de.freese.pim.core.mail.InternetAddress;
+
 /**
  * FX-Bean für eine Mail.
  *
  * @author Thomas Freese
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class FxMail
-{
+public class FxMail {
     private final ObjectProperty<InternetAddress[]> bccProperty = new SimpleObjectProperty<>(this, "to", null);
 
     private final ObjectProperty<InternetAddress[]> ccProperty = new SimpleObjectProperty<>(this, "to", null);
@@ -54,210 +54,171 @@ public class FxMail
 
     private final LongProperty uidProperty = new SimpleLongProperty(this, "uid", 0L);
 
-    public ObjectProperty<InternetAddress[]> bccProperty()
-    {
+    public ObjectProperty<InternetAddress[]> bccProperty() {
         return this.bccProperty;
     }
 
-    public ObjectProperty<InternetAddress[]> ccProperty()
-    {
+    public ObjectProperty<InternetAddress[]> ccProperty() {
         return this.ccProperty;
     }
 
-    public StringProperty folderFullNameProperty()
-    {
+    public StringProperty folderFullNameProperty() {
         return this.folderFullNameProperty;
     }
 
-    public LongProperty folderIDProperty()
-    {
+    public LongProperty folderIDProperty() {
         return this.folderIDProperty;
     }
 
-    public ObjectProperty<InternetAddress> fromProperty()
-    {
+    public ObjectProperty<InternetAddress> fromProperty() {
         return this.fromProperty;
     }
 
-    public InternetAddress[] getBcc()
-    {
+    public InternetAddress[] getBcc() {
         return bccProperty().get();
     }
 
-    public InternetAddress[] getCc()
-    {
+    public InternetAddress[] getCc() {
         return ccProperty().get();
     }
 
-    public String getFolderFullName()
-    {
+    public String getFolderFullName() {
         return folderFullNameProperty().get();
     }
 
-    public long getFolderID()
-    {
+    public long getFolderID() {
         return folderIDProperty().get();
     }
 
-    public InternetAddress getFrom()
-    {
+    public InternetAddress getFrom() {
         return fromProperty().get();
     }
 
     /**
      * Ist immer größer als 0.
      */
-    public int getMsgNum()
-    {
+    public int getMsgNum() {
         return msgNumProperty().get();
     }
 
-    public Date getReceivedDate()
-    {
+    public Date getReceivedDate() {
         return receivedDateProperty().get();
     }
 
-    public Date getSendDate()
-    {
+    public Date getSendDate() {
         return this.sendDateProperty.get();
     }
 
-    public int getSize()
-    {
+    public int getSize() {
         return sizeProperty().get();
     }
 
-    public String getSubject()
-    {
+    public String getSubject() {
         return subjectProperty().get();
     }
 
-    public InternetAddress[] getTo()
-    {
+    public InternetAddress[] getTo() {
         return toProperty().get();
     }
 
     /**
      * Bildet mit dem Folder den PrimaryKey.
      */
-    public long getUID()
-    {
+    public long getUID() {
         return uidProperty().get();
     }
 
-    public boolean isSeen()
-    {
+    public boolean isSeen() {
         return seenProperty().get();
     }
 
-    public IntegerProperty msgNumProperty()
-    {
+    public IntegerProperty msgNumProperty() {
         return this.msgNumProperty;
     }
 
-    public ObjectProperty<Date> receivedDateProperty()
-    {
+    public ObjectProperty<Date> receivedDateProperty() {
         return this.receivedDateProperty;
     }
 
-    public BooleanProperty seenProperty()
-    {
+    public BooleanProperty seenProperty() {
         return this.seenProperty;
     }
 
-    public ObjectProperty<Date> sendDateProperty()
-    {
+    public ObjectProperty<Date> sendDateProperty() {
         return this.sendDateProperty;
     }
 
-    public void setBcc(final InternetAddress[] bcc)
-    {
+    public void setBcc(final InternetAddress[] bcc) {
         bccProperty().set(bcc);
     }
 
-    public void setCc(final InternetAddress[] cc)
-    {
+    public void setCc(final InternetAddress[] cc) {
         ccProperty().set(cc);
     }
 
-    public void setFolderFullName(final String folderFullName)
-    {
+    public void setFolderFullName(final String folderFullName) {
         folderFullNameProperty().set(folderFullName);
     }
 
-    public void setFolderID(final long folderID)
-    {
+    public void setFolderID(final long folderID) {
         folderIDProperty().set(folderID);
     }
 
-    public void setFrom(final InternetAddress from)
-    {
+    public void setFrom(final InternetAddress from) {
         fromProperty().set(from);
     }
 
     /**
      * Ist immer größer als 0.
      */
-    public void setMsgNum(final int msgNum)
-    {
+    public void setMsgNum(final int msgNum) {
         msgNumProperty().set(msgNum);
     }
 
-    public void setReceivedDate(final Date date)
-    {
+    public void setReceivedDate(final Date date) {
         receivedDateProperty().set(date);
     }
 
-    public void setSeen(final boolean seen)
-    {
+    public void setSeen(final boolean seen) {
         seenProperty().set(seen);
     }
 
-    public void setSendDate(final Date date)
-    {
+    public void setSendDate(final Date date) {
         sendDateProperty().set(date);
     }
 
-    public void setSize(final int size)
-    {
+    public void setSize(final int size) {
         sizeProperty().set(size);
     }
 
-    public void setSubject(final String subject)
-    {
+    public void setSubject(final String subject) {
         subjectProperty().set(subject);
     }
 
-    public void setTo(final InternetAddress[] to)
-    {
+    public void setTo(final InternetAddress[] to) {
         toProperty().set(to);
     }
 
     /**
      * Bildet mit dem Folder den PrimaryKey.
      */
-    public void setUID(final long uid)
-    {
+    public void setUID(final long uid) {
         uidProperty().set(uid);
     }
 
-    public IntegerProperty sizeProperty()
-    {
+    public IntegerProperty sizeProperty() {
         return this.sizeProperty;
     }
 
-    public StringProperty subjectProperty()
-    {
+    public StringProperty subjectProperty() {
         return this.subjectProperty;
     }
 
-    public ObjectProperty<InternetAddress[]> toProperty()
-    {
+    public ObjectProperty<InternetAddress[]> toProperty() {
         return this.toProperty;
     }
 
-    public LongProperty uidProperty()
-    {
+    public LongProperty uidProperty() {
         return this.uidProperty;
     }
 }

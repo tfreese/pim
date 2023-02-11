@@ -15,16 +15,14 @@ import org.springframework.core.task.AsyncTaskExecutor;
  *
  * @author Thomas Freese
  */
-public abstract class AbstractService implements ApplicationContextAware
-{
+public abstract class AbstractService implements ApplicationContextAware {
     private final Logger logger = LoggerFactory.getLogger(getClass());
-    
+
     private ApplicationContext applicationContext;
 
     private AsyncTaskExecutor taskExecutor;
 
-    public ApplicationContext getApplicationContext()
-    {
+    public ApplicationContext getApplicationContext() {
         return this.applicationContext;
     }
 
@@ -32,24 +30,20 @@ public abstract class AbstractService implements ApplicationContextAware
      * @see org.springframework.context.ApplicationContextAware#setApplicationContext(org.springframework.context.ApplicationContext)
      */
     @Override
-    public void setApplicationContext(final ApplicationContext applicationContext) throws BeansException
-    {
+    public void setApplicationContext(final ApplicationContext applicationContext) throws BeansException {
         this.applicationContext = applicationContext;
     }
 
     @Resource(name = "taskExecutor")
-    public void setTaskExecutor(final AsyncTaskExecutor taskExecutor)
-    {
+    public void setTaskExecutor(final AsyncTaskExecutor taskExecutor) {
         this.taskExecutor = taskExecutor;
     }
 
-    protected Logger getLogger()
-    {
+    protected Logger getLogger() {
         return this.logger;
     }
 
-    protected AsyncTaskExecutor getTaskExecutor()
-    {
+    protected AsyncTaskExecutor getTaskExecutor() {
         return this.taskExecutor;
     }
 }

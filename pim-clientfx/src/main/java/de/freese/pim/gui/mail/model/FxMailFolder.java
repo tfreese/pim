@@ -24,8 +24,7 @@ import javafx.collections.transformation.SortedList;
  * @author Thomas Freese
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class FxMailFolder
-{
+public class FxMailFolder {
     private final BooleanProperty abonniertProperty = new SimpleBooleanProperty(this, "abonniert", true);
 
     private final LongProperty accountIDProperty = new SimpleLongProperty(this, "accountID", 0L);
@@ -56,8 +55,7 @@ public class FxMailFolder
     @JsonIgnore
     private FxMailFolder parent;
 
-    public FxMailFolder()
-    {
+    public FxMailFolder() {
         super();
 
         this.unreadMailsCount = new SumUnreadMailsBinding(this.mails);
@@ -70,125 +68,101 @@ public class FxMailFolder
         // this.mails.addListener((final ListChangeListener.Change<? extends Mail> change) -> this.unreadMailsCountTmp = 0);
     }
 
-    public BooleanProperty abonniertProperty()
-    {
+    public BooleanProperty abonniertProperty() {
         return this.abonniertProperty;
     }
 
-    public LongProperty accountIDProperty()
-    {
+    public LongProperty accountIDProperty() {
         return this.accountIDProperty;
     }
 
-    public void addChild(final FxMailFolder child)
-    {
+    public void addChild(final FxMailFolder child) {
         getChildren().add(child);
         child.setParent(this);
     }
 
-    public StringProperty fullNameProperty()
-    {
+    public StringProperty fullNameProperty() {
         return this.fullNameProperty;
     }
 
-    public long getAccountID()
-    {
+    public long getAccountID() {
         return accountIDProperty().get();
     }
 
-    public String getFullName()
-    {
+    public String getFullName() {
         return fullNameProperty().get();
     }
 
-    public long getID()
-    {
+    public long getID() {
         return idProperty().get();
     }
 
-    public ObservableList<FxMail> getMails()
-    {
+    public ObservableList<FxMail> getMails() {
         return this.mails;
     }
 
-    public SortedList<FxMail> getMailsSorted()
-    {
+    public SortedList<FxMail> getMailsSorted() {
         return this.mailsSorted;
     }
 
-    public String getName()
-    {
+    public String getName() {
         return nameProperty().get();
     }
 
-    public int getUnreadMailsCount()
-    {
+    public int getUnreadMailsCount() {
         return this.unreadMailsCount.get();
     }
 
-    public int getUnreadMailsCountTotal()
-    {
+    public int getUnreadMailsCountTotal() {
         return unreadMailsCountTotalBinding().intValue();
     }
 
-    public LongProperty idProperty()
-    {
+    public LongProperty idProperty() {
         return this.idProperty;
     }
 
-    public boolean isAbonniert()
-    {
+    public boolean isAbonniert() {
         return abonniertProperty().get();
     }
 
-    public boolean isParent()
-    {
+    public boolean isParent() {
         return getParent() == null;
     }
 
-    public boolean isSendFolder()
-    {
+    public boolean isSendFolder() {
         return isSendFolderProperty().get();
     }
 
-    public BooleanProperty isSendFolderProperty()
-    {
+    public BooleanProperty isSendFolderProperty() {
         return this.isSendFolderProperty;
     }
 
-    public StringProperty nameProperty()
-    {
+    public StringProperty nameProperty() {
         return this.nameProperty;
     }
 
-    public void removeChild(final FxMailFolder child)
-    {
+    public void removeChild(final FxMailFolder child) {
         getChildren().remove(child);
         child.setParent(null);
     }
 
-    public void setAbonniert(final boolean abo)
-    {
+    public void setAbonniert(final boolean abo) {
         abonniertProperty().set(abo);
     }
 
-    public void setAccountID(final long accountID)
-    {
+    public void setAccountID(final long accountID) {
         accountIDProperty().set(accountID);
     }
 
-    public void setFullName(final String fullName)
-    {
+    public void setFullName(final String fullName) {
         fullNameProperty().set(fullName);
     }
 
-    public void setID(final long id)
-    {
+    public void setID(final long id) {
         idProperty().set(id);
     }
 
-    public void setName(final String name)
-    {
+    public void setName(final String name) {
         nameProperty().set(name);
 
         Predicate<String> predicate = "send"::equals;
@@ -197,12 +171,10 @@ public class FxMailFolder
 
         isSendFolderProperty().set(predicate.test(name.toLowerCase()));
 
-        if (isSendFolder())
-        {
+        if (isSendFolder()) {
             this.mailsSorted.setComparator(Comparator.comparing(FxMail::getSendDate).reversed());
         }
-        else
-        {
+        else {
             this.mailsSorted.setComparator(Comparator.comparing(FxMail::getReceivedDate).reversed());
         }
     }
@@ -211,8 +183,7 @@ public class FxMailFolder
      * @see java.lang.Object#toString()
      */
     @Override
-    public String toString()
-    {
+    public String toString() {
         StringBuilder builder = new StringBuilder();
         builder.append("MailFolder [fullName=");
         builder.append(getFullName());
@@ -221,23 +192,19 @@ public class FxMailFolder
         return builder.toString();
     }
 
-    ObservableList<FxMailFolder> getChildren()
-    {
+    ObservableList<FxMailFolder> getChildren() {
         return this.children;
     }
 
-    FxMailFolder getParent()
-    {
+    FxMailFolder getParent() {
         return this.parent;
     }
 
-    void setParent(final FxMailFolder parent)
-    {
+    void setParent(final FxMailFolder parent) {
         this.parent = parent;
     }
 
-    ObservableIntegerValue unreadMailsCountTotalBinding()
-    {
+    ObservableIntegerValue unreadMailsCountTotalBinding() {
         return this.unreadMailsCountTotal;
     }
 }

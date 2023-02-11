@@ -5,9 +5,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ResourceBundle;
 
-import de.freese.pim.core.spring.SpringContext;
-import de.freese.pim.gui.main.MainController;
-import de.freese.pim.gui.utils.FxUtils;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.application.Preloader.StateChangeNotification;
@@ -26,6 +23,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
+
+import de.freese.pim.core.spring.SpringContext;
+import de.freese.pim.gui.main.MainController;
+import de.freese.pim.gui.utils.FxUtils;
 
 /**
  * Startklasse der Personal Information Management Anwendung.<br>
@@ -46,8 +47,7 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 // @EnableScheduling
 // @EnableAsync // @Async("executorService")
 // @EnableTransactionManagement // Wird durch Spring-Boot automatisch konfiguriert, wenn DataSource-Bean vorhanden.
-public class PimClientApplication extends Application
-{
+public class PimClientApplication extends Application {
     public static final Logger LOGGER = LoggerFactory.getLogger(PimClientApplication.class);
 
     private static Window mainWindow;
@@ -59,29 +59,25 @@ public class PimClientApplication extends Application
     /**
      * Blockiert die GUI.
      */
-    public static void blockGUI()
-    {
+    public static void blockGUI() {
         FxUtils.blockGUI(getMainWindow());
     }
 
-    public static Window getMainWindow()
-    {
+    public static Window getMainWindow() {
         return mainWindow;
     }
 
     /**
      * Liefert den Bildschirm, auf dem PIM läuft.
      */
-    public static Screen getScreen()
-    {
+    public static Screen getScreen() {
         return screen;
     }
 
     /**
      * Hebt die GUI Blockade wieder auf..
      */
-    public static void unblockGUI()
-    {
+    public static void unblockGUI() {
         FxUtils.unblockGUI(getMainWindow());
     }
 
@@ -91,8 +87,7 @@ public class PimClientApplication extends Application
      * @see javafx.application.Application#init()
      */
     @Override
-    public void init() throws Exception
-    {
+    public void init() throws Exception {
         // "JavaFX-Launcher" umbenennen.
         Thread.currentThread().setName("JavaFX-Init.");
 
@@ -160,8 +155,7 @@ public class PimClientApplication extends Application
         String pimHome = SpringContext.getEnvironment().getProperty("pim.home");
         Path homePath = Paths.get(pimHome);
 
-        if (!Files.exists(homePath))
-        {
+        if (!Files.exists(homePath)) {
             Files.createDirectories(homePath);
         }
 
@@ -173,10 +167,8 @@ public class PimClientApplication extends Application
      * @see javafx.application.Application#start(javafx.stage.Stage)
      */
     @Override
-    public void start(final Stage primaryStage) throws Exception
-    {
-        try
-        {
+    public void start(final Stage primaryStage) throws Exception {
+        try {
             // "JavaFX Application Thread" umbenennen.
             Thread.currentThread().setName("JavaFX-Appl.");
 
@@ -203,12 +195,10 @@ public class PimClientApplication extends Application
             // Default: GUI auf 2. Monitor, wenn vorhanden.
             ObservableList<Screen> screens = Screen.getScreens();
 
-            if (screens.size() > 1)
-            {
+            if (screens.size() > 1) {
                 screen = screens.get(1);
             }
-            else
-            {
+            else {
                 screen = screens.get(0);
             }
 
@@ -221,12 +211,9 @@ public class PimClientApplication extends Application
             primaryStage.setHeight(screenBounds.getHeight() - 200);
 
             // After the app is ready, show the stage
-            this.ready.addListener((observable, oldValue, newValue) ->
-            {
-                if (Boolean.TRUE.equals(newValue))
-                {
-                    Platform.runLater(() ->
-                    {
+            this.ready.addListener((observable, oldValue, newValue) -> {
+                if (Boolean.TRUE.equals(newValue)) {
+                    Platform.runLater(() -> {
                         primaryStage.show();
 
                         // System.setOut(new PrintStream(new TextAreaOutputStream(MainView.LOG_TEXT_AREA)));
@@ -249,8 +236,7 @@ public class PimClientApplication extends Application
             // }).start();
             // getScheduledExecutorService().scheduleWithFixedDelay(() -> LOGGER.info(""), 1L, 3L, TimeUnit.SECONDS);
         }
-        catch (Throwable th)
-        {
+        catch (Throwable th) {
             LOGGER.error(th.getMessage(), th);
             throw th;
         }
@@ -260,8 +246,7 @@ public class PimClientApplication extends Application
      * @see javafx.application.Application#stop()
      */
     @Override
-    public void stop() throws Exception
-    {
+    public void stop() throws Exception {
         LOGGER.info("Stop P.I.M.");
 
         // Platform.exit();

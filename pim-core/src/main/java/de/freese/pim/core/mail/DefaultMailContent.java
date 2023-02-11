@@ -7,18 +7,18 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.slf4j.LoggerFactory;
+
 import de.freese.pim.core.mail.datasource.AttachmentDataSource;
 import de.freese.pim.core.mail.datasource.InlineDataSource;
 import de.freese.pim.core.mail.datasource.MessageDataSource;
-import org.slf4j.LoggerFactory;
 
 /**
  * Container für den Inhalt einer Mail.
  *
  * @author Thomas Freese
  */
-public class DefaultMailContent implements MailContent
-{
+public class DefaultMailContent implements MailContent {
     private Map<String, AttachmentDataSource> attachmentMap;
 
     private String encoding;
@@ -36,8 +36,7 @@ public class DefaultMailContent implements MailContent
      * @see de.freese.pim.core.mail.MailContent#getAttachments()
      */
     @Override
-    public Map<String, AttachmentDataSource> getAttachments()
-    {
+    public Map<String, AttachmentDataSource> getAttachments() {
         return this.attachmentMap;
     }
 
@@ -45,8 +44,7 @@ public class DefaultMailContent implements MailContent
      * @see de.freese.pim.core.mail.MailContent#getEncoding()
      */
     @Override
-    public String getEncoding()
-    {
+    public String getEncoding() {
         return this.encoding;
     }
 
@@ -54,14 +52,12 @@ public class DefaultMailContent implements MailContent
      * @see de.freese.pim.core.mail.MailContent#getInlines()
      */
     @Override
-    public Map<String, InlineDataSource> getInlines()
-    {
+    public Map<String, InlineDataSource> getInlines() {
         return this.inlineMap;
     }
 
     @Override
-    public MessageDataSource getMessage()
-    {
+    public MessageDataSource getMessage() {
         return this.message;
     }
 
@@ -71,19 +67,14 @@ public class DefaultMailContent implements MailContent
      * @see de.freese.pim.core.mail.MailContent#getMessageContent()
      */
     @Override
-    public String getMessageContent()
-    {
-        if (this.messageContent == null)
-        {
-            try
-            {
-                try (BufferedReader buffer = new BufferedReader(new InputStreamReader(getMessage().getInputStream(), getEncoding())))
-                {
+    public String getMessageContent() {
+        if (this.messageContent == null) {
+            try {
+                try (BufferedReader buffer = new BufferedReader(new InputStreamReader(getMessage().getInputStream(), getEncoding()))) {
                     this.messageContent = buffer.lines().collect(Collectors.joining("\n"));
                 }
             }
-            catch (Exception ex)
-            {
+            catch (Exception ex) {
                 LoggerFactory.getLogger(getClass()).error(ex.getMessage(), ex);
             }
 
@@ -98,44 +89,37 @@ public class DefaultMailContent implements MailContent
      * @see de.freese.pim.core.mail.MailContent#getMessageContentType()
      */
     @Override
-    public String getMessageContentType()
-    {
+    public String getMessageContentType() {
         return this.messageContentType;
     }
 
-    public void setAttachments(final Map<String, AttachmentDataSource> attachments)
-    {
+    public void setAttachments(final Map<String, AttachmentDataSource> attachments) {
         this.attachmentMap = attachments;
     }
 
-    public void setEncoding(final String encoding)
-    {
+    public void setEncoding(final String encoding) {
         this.encoding = encoding;
     }
 
-    public void setInlines(final Map<String, InlineDataSource> inlines)
-    {
+    public void setInlines(final Map<String, InlineDataSource> inlines) {
         this.inlineMap = inlines;
     }
 
-    public void setMessage(final MessageDataSource message)
-    {
+    public void setMessage(final MessageDataSource message) {
         this.message = message;
     }
 
     /**
      * Text-Nachricht: text/plain, text/html
      */
-    public void setMessageContent(final String messageContent)
-    {
+    public void setMessageContent(final String messageContent) {
         this.messageContent = messageContent;
     }
 
     /**
      * "text/plain; charset=UTF-8", "text/html; charset=UTF-8"
      */
-    public void setMessageContentType(final String messageContentType)
-    {
+    public void setMessageContentType(final String messageContentType) {
         this.messageContentType = messageContentType;
     }
 }

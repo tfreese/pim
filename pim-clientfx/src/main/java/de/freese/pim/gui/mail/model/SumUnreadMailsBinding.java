@@ -14,8 +14,7 @@ import javafx.collections.ObservableList;
  *
  * @author Thomas Freese
  */
-public class SumUnreadMailsBinding extends IntegerBinding
-{
+public class SumUnreadMailsBinding extends IntegerBinding {
     /**
      * Reference to our observable list.
      */
@@ -32,8 +31,7 @@ public class SumUnreadMailsBinding extends IntegerBinding
     /**
      * Erzeugt eine neue Instanz von {@link SumUnreadMailsBinding}
      */
-    public SumUnreadMailsBinding(final ObservableList<FxMail> boundList)
-    {
+    public SumUnreadMailsBinding(final ObservableList<FxMail> boundList) {
         super();
 
         this.boundList = Objects.requireNonNull(boundList, "boundList required");
@@ -45,8 +43,7 @@ public class SumUnreadMailsBinding extends IntegerBinding
      * @see javafx.beans.binding.IntegerBinding#dispose()
      */
     @Override
-    public void dispose()
-    {
+    public void dispose() {
         this.boundList.removeListener(this.boundListChangeListener);
         unbind(this.observedProperties);
     }
@@ -55,28 +52,24 @@ public class SumUnreadMailsBinding extends IntegerBinding
      * @see javafx.beans.binding.IntegerBinding#computeValue()
      */
     @Override
-    protected int computeValue()
-    {
+    protected int computeValue() {
         int sum = 0;
 
-        if (this.observedProperties != null)
-        {
+        if (this.observedProperties != null) {
             sum = Stream.of(this.observedProperties).parallel().mapToInt(op -> op.get() ? 0 : 1).sum();
         }
 
         return sum;
     }
 
-    private void refreshBinding()
-    {
+    private void refreshBinding() {
         // Clean old properties from IntegerBinding's inner listener
         unbind(this.observedProperties);
 
         // Load new properties
         this.observedProperties = null;
 
-        if (!this.boundList.isEmpty())
-        {
+        if (!this.boundList.isEmpty()) {
             this.observedProperties = this.boundList.parallelStream().map(FxMail::seenProperty).toArray(BooleanProperty[]::new);
         }
 

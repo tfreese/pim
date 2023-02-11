@@ -22,10 +22,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupp
  */
 @Configuration
 @Profile("Server")
-@ComponentScan(basePackages =
-        {
-                "de.freese.pim.server", "de.freese.pim.core"
-        })
+@ComponentScan(basePackages = {"de.freese.pim.server", "de.freese.pim.core"})
 public class ServerConfig extends WebMvcConfigurationSupport // implements WebMvcConfigurer
 {
     @Resource
@@ -38,13 +35,10 @@ public class ServerConfig extends WebMvcConfigurationSupport // implements WebMv
      * @see org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport#extendMessageConverters(java.util.List)
      */
     @Override
-    public void extendMessageConverters(final List<HttpMessageConverter<?>> converters)
-    {
+    public void extendMessageConverters(final List<HttpMessageConverter<?>> converters) {
         // Make sure dates are serialised in ISO-8601 format instead as timestamps
-        for (HttpMessageConverter<?> converter : converters)
-        {
-            if (converter instanceof MappingJackson2HttpMessageConverter jsonMessageConverter)
-            {
+        for (HttpMessageConverter<?> converter : converters) {
+            if (converter instanceof MappingJackson2HttpMessageConverter jsonMessageConverter) {
                 jsonMessageConverter.setObjectMapper(this.jsonMapper);
                 // ObjectMapper objectMapper = jsonMessageConverter.getObjectMapper();
                 // objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
@@ -71,8 +65,7 @@ public class ServerConfig extends WebMvcConfigurationSupport // implements WebMv
      * @see org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport#configureAsyncSupport(org.springframework.web.servlet.config.annotation.AsyncSupportConfigurer)
      */
     @Override
-    protected void configureAsyncSupport(final AsyncSupportConfigurer configurer)
-    {
+    protected void configureAsyncSupport(final AsyncSupportConfigurer configurer) {
         // Executer für die Verarbeitung der HTTP-Requests.
         // Verlagert die asynchrone Ausführung von Server-Requests (Callable, WebAsyncTask) in diesen ThreadPool.
         // Ansonsten würde für jeden Request immer ein neuer Thread erzeugt, siehe TaskExecutor des RequestMappingHandlerAdapter.

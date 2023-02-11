@@ -11,15 +11,12 @@ import java.util.concurrent.atomic.AtomicInteger;
  *
  * @author Thomas Freese
  */
-public class PIMForkJoinWorkerThreadFactory implements ForkJoinWorkerThreadFactory
-{
+public class PIMForkJoinWorkerThreadFactory implements ForkJoinWorkerThreadFactory {
     /**
      * @author Thomas Freese
      */
-    private static class PIMForkJoinWorkerThread extends ForkJoinWorkerThread
-    {
-        PIMForkJoinWorkerThread(final ForkJoinPool pool)
-        {
+    private static class PIMForkJoinWorkerThread extends ForkJoinWorkerThread {
+        PIMForkJoinWorkerThread(final ForkJoinPool pool) {
             super(pool);
         }
     }
@@ -28,8 +25,7 @@ public class PIMForkJoinWorkerThreadFactory implements ForkJoinWorkerThreadFacto
 
     private final String namePrefix;
 
-    public PIMForkJoinWorkerThreadFactory()
-    {
+    public PIMForkJoinWorkerThreadFactory() {
         super();
 
         this.namePrefix = "fork-join";
@@ -39,8 +35,7 @@ public class PIMForkJoinWorkerThreadFactory implements ForkJoinWorkerThreadFacto
      * @see java.util.concurrent.ForkJoinPool.ForkJoinWorkerThreadFactory#newThread(java.util.concurrent.ForkJoinPool)
      */
     @Override
-    public ForkJoinWorkerThread newThread(final ForkJoinPool pool)
-    {
+    public ForkJoinWorkerThread newThread(final ForkJoinPool pool) {
         ForkJoinWorkerThread thread = new PIMForkJoinWorkerThread(pool);
 
         String threadName = String.format("%s-%02d", this.namePrefix, this.counter.getAndIncrement());

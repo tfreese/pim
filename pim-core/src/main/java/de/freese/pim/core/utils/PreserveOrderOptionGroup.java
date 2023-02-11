@@ -14,8 +14,7 @@ import org.apache.commons.cli.OptionGroup;
  *
  * @author Thomas Freese
  */
-public class PreserveOrderOptionGroup extends OptionGroup
-{
+public class PreserveOrderOptionGroup extends OptionGroup {
     @Serial
     private static final long serialVersionUID = 5453910230985427926L;
 
@@ -25,8 +24,7 @@ public class PreserveOrderOptionGroup extends OptionGroup
      * @see org.apache.commons.cli.OptionGroup#addOption(org.apache.commons.cli.Option)
      */
     @Override
-    public OptionGroup addOption(final Option option)
-    {
+    public OptionGroup addOption(final Option option) {
         this.optionMap.put(option.getOpt() == null ? option.getLongOpt() : option.getOpt(), option);
 
         return this;
@@ -36,8 +34,7 @@ public class PreserveOrderOptionGroup extends OptionGroup
      * @see org.apache.commons.cli.OptionGroup#getNames()
      */
     @Override
-    public Collection<String> getNames()
-    {
+    public Collection<String> getNames() {
         return this.optionMap.keySet();
     }
 
@@ -45,8 +42,7 @@ public class PreserveOrderOptionGroup extends OptionGroup
      * @see org.apache.commons.cli.OptionGroup#getOptions()
      */
     @Override
-    public Collection<Option> getOptions()
-    {
+    public Collection<Option> getOptions() {
         return this.optionMap.values();
     }
 }

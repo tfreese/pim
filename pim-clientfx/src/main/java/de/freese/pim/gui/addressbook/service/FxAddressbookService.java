@@ -8,8 +8,7 @@ import de.freese.pim.gui.addressbook.model.FxKontakt;
 /**
  * @author Thomas Freese
  */
-public interface FxAddressbookService
-{
+public interface FxAddressbookService {
     /**
      * @return int; affectedRows
      */

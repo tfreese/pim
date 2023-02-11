@@ -11,8 +11,7 @@ import java.util.Objects;
  *
  * @author Thomas Freese
  */
-public class MonitoringWritableByteChannel implements WritableByteChannel
-{
+public class MonitoringWritableByteChannel implements WritableByteChannel {
     private final WritableByteChannel delegate;
 
     private final IOMonitor monitor;
@@ -28,8 +27,7 @@ public class MonitoringWritableByteChannel implements WritableByteChannel
     /**
      * @param size long; Anzahl Bytes (Größe) des gesamten Channels
      */
-    public MonitoringWritableByteChannel(final WritableByteChannel delegate, final IOMonitor monitor, final long size)
-    {
+    public MonitoringWritableByteChannel(final WritableByteChannel delegate, final IOMonitor monitor, final long size) {
         super();
 
         this.delegate = Objects.requireNonNull(delegate, "delegate required");
@@ -41,8 +39,7 @@ public class MonitoringWritableByteChannel implements WritableByteChannel
      * @see java.nio.channels.Channel#close()
      */
     @Override
-    public void close() throws IOException
-    {
+    public void close() throws IOException {
         this.delegate.close();
     }
 
@@ -50,8 +47,7 @@ public class MonitoringWritableByteChannel implements WritableByteChannel
      * @see java.nio.channels.Channel#isOpen()
      */
     @Override
-    public boolean isOpen()
-    {
+    public boolean isOpen() {
         return this.delegate.isOpen();
     }
 
@@ -59,12 +55,10 @@ public class MonitoringWritableByteChannel implements WritableByteChannel
      * @see java.nio.channels.WritableByteChannel#write(java.nio.ByteBuffer)
      */
     @Override
-    public int write(final ByteBuffer src) throws IOException
-    {
+    public int write(final ByteBuffer src) throws IOException {
         int writeCount = this.delegate.write(src);
 
-        if (writeCount > 0)
-        {
+        if (writeCount > 0) {
             this.sizeWritten += writeCount;
 
             this.monitor.monitor(this.sizeWritten, this.size);

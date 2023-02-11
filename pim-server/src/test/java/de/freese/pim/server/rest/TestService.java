@@ -40,13 +40,9 @@ import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBo
  * @see StreamingResponseBody
  */
 @RestController
-@RequestMapping(path = "/test", produces =
-        {
-                MediaType.APPLICATION_JSON_VALUE
-        }, headers = "Accept=application/json")
+@RequestMapping(path = "/test", produces = {MediaType.APPLICATION_JSON_VALUE}, headers = "Accept=application/json")
 // @MultipartConfig(fileSizeThreshold = 20971520)
-public class TestService
-{
+public class TestService {
     private final Logger logger = LoggerFactory.getLogger(TestService.class);
     /**
      * @see ThreadPoolTaskExecutor
@@ -59,10 +55,8 @@ public class TestService
      * Läuft im ThreadPool "MvcAsync" des RequestMappingHandlerAdapter, wenn über {@link WebMvcConfigurationSupport} nicht anders konfiguriert.
      */
     @GetMapping("/asyncDateCallable")
-    public Callable<String> asyncDateCallable()
-    {
-        return () ->
-        {
+    public Callable<String> asyncDateCallable() {
+        return () -> {
             getLogger().info("asyncDateCallable: thread={}", Thread.currentThread().getName());
             TimeUnit.SECONDS.sleep(1);
 
@@ -74,33 +68,26 @@ public class TestService
      * Läuft im ForkJoin-ThreadPool, wenn kein Executor übergeben.
      */
     @GetMapping("/asyncDateDeferredResult")
-    public DeferredResult<String> asyncDateDeferredResult()
-    {
+    public DeferredResult<String> asyncDateDeferredResult() {
         DeferredResult<String> deferredResult = new DeferredResult<>();
 
-        CompletableFuture.supplyAsync(() ->
-        {
-            try
-            {
+        CompletableFuture.supplyAsync(() -> {
+            try {
                 getLogger().info("supplyAsync: thread={}", Thread.currentThread().getName());
                 TimeUnit.SECONDS.sleep(1);
 
                 return LocalDateTime.now().toString();
             }
-            catch (Exception ex)
-            {
+            catch (Exception ex) {
                 throw new RuntimeException(ex);
             }
-        }, getTaskExecutor()).whenCompleteAsync((result, throwable) ->
-        {
+        }, getTaskExecutor()).whenCompleteAsync((result, throwable) -> {
             getLogger().info("whenCompleteAsync: thread={}", Thread.currentThread().getName());
 
-            if (throwable != null)
-            {
+            if (throwable != null) {
                 deferredResult.setErrorResult(throwable);
             }
-            else
-            {
+            else {
                 deferredResult.setResult(result);
             }
         }, getTaskExecutor());
@@ -112,10 +99,8 @@ public class TestService
      * Läuft im ThreadPool "MvcAsync" des RequestMappingHandlerAdapter, wenn über {@link WebMvcConfigurationSupport} nicht anders konfiguriert.
      */
     @GetMapping("/asyncDateWebAsyncTask")
-    public WebAsyncTask<String> asyncDateWebAsyncTask()
-    {
-        Callable<String> callable = () ->
-        {
+    public WebAsyncTask<String> asyncDateWebAsyncTask() {
+        Callable<String> callable = () -> {
             getLogger().info("asyncDateWebAsyncTask: thread={}", Thread.currentThread().getName());
             TimeUnit.SECONDS.sleep(1);
 
@@ -132,21 +117,18 @@ public class TestService
     @GetMapping("/greeting")
     // @RequestMapping(path = "/greeting/{name}", method = RequestMethod.GET);
     // @PathVariable("name")
-    public Map<String, String> greeting(@RequestParam(value = "name", defaultValue = "World") final String name)
-    {
+    public Map<String, String> greeting(@RequestParam(value = "name", defaultValue = "World") final String name) {
         Map<String, String> map = new HashMap<>();
         map.put("hello", name);
 
         return map;
     }
 
-    protected Logger getLogger()
-    {
+    protected Logger getLogger() {
         return this.logger;
     }
 
-    protected AsyncTaskExecutor getTaskExecutor()
-    {
+    protected AsyncTaskExecutor getTaskExecutor() {
         return this.taskExecutor;
     }
 }

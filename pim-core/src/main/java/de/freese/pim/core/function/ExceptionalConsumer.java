@@ -14,8 +14,7 @@ import java.util.function.Consumer;
  * @see java.util.function.Consumer
  */
 @FunctionalInterface
-public interface ExceptionalConsumer<T, E extends Exception>
-{
+public interface ExceptionalConsumer<T, E extends Exception> {
     /**
      * @see java.util.function.Consumer#accept(Object)
      */
@@ -38,12 +37,10 @@ public interface ExceptionalConsumer<T, E extends Exception>
     /**
      * @see java.util.function.Consumer#andThen(Consumer)
      */
-    default ExceptionalConsumer<T, E> andThen(final ExceptionalConsumer<T, E> after)
-    {
+    default ExceptionalConsumer<T, E> andThen(final ExceptionalConsumer<T, E> after) {
         Objects.requireNonNull(after);
 
-        return t ->
-        {
+        return t -> {
             accept(t);
             after.accept(t);
         };

@@ -15,14 +15,12 @@ import de.freese.pim.core.mail.MailContent;
  *
  * @author Thomas Freese
  */
-public class InlineUrlConnection extends URLConnection
-{
+public class InlineUrlConnection extends URLConnection {
     private final DataSource dataSource;
 
     private final MailContent mailContent;
 
-    public InlineUrlConnection(final MailContent mailContent, final URL url) throws IOException
-    {
+    public InlineUrlConnection(final MailContent mailContent, final URL url) throws IOException {
         super(url);
 
         this.mailContent = mailContent;
@@ -33,8 +31,7 @@ public class InlineUrlConnection extends URLConnection
      * @see java.net.URLConnection#connect()
      */
     @Override
-    public void connect() throws IOException
-    {
+    public void connect() throws IOException {
         this.connected = true;
     }
 
@@ -42,8 +39,7 @@ public class InlineUrlConnection extends URLConnection
      * @see java.net.URLConnection#getContentEncoding()
      */
     @Override
-    public String getContentEncoding()
-    {
+    public String getContentEncoding() {
         return this.mailContent.getEncoding();
     }
 
@@ -51,10 +47,8 @@ public class InlineUrlConnection extends URLConnection
      * @see java.net.URLConnection#getContentType()
      */
     @Override
-    public String getContentType()
-    {
-        if (this.dataSource == null)
-        {
+    public String getContentType() {
+        if (this.dataSource == null) {
             return "";
         }
 
@@ -65,10 +59,8 @@ public class InlineUrlConnection extends URLConnection
      * @see java.net.URLConnection#getInputStream()
      */
     @Override
-    public InputStream getInputStream() throws IOException
-    {
-        if (this.dataSource == null)
-        {
+    public InputStream getInputStream() throws IOException {
+        if (this.dataSource == null) {
             return InputStream.nullInputStream();
         }
 

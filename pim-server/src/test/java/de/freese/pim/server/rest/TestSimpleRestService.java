@@ -36,19 +36,14 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupp
  */
 @Configuration
         // @Profile("SimpleRestService")
-class Config extends WebMvcConfigurationSupport
-{
+class Config extends WebMvcConfigurationSupport {
     // static{
     // System.setProperty("spring.main.banner-mode", "OFF");
     // System.setProperty("logging.config", "logback-test.xml");
     // }
 
-    @Bean(
-            {
-                    "taskScheduler", "taskExecutor"
-            })
-    public ConcurrentTaskScheduler taskScheduler()
-    {
+    @Bean({"taskScheduler", "taskExecutor"})
+    public ConcurrentTaskScheduler taskScheduler() {
         return new ConcurrentTaskScheduler(executorService().getObject(), scheduledExecutorService().getObject());
     }
 
@@ -72,16 +67,14 @@ class Config extends WebMvcConfigurationSupport
      * @see org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport#configureAsyncSupport(org.springframework.web.servlet.config.annotation.AsyncSupportConfigurer)
      */
     @Override
-    protected void configureAsyncSupport(final AsyncSupportConfigurer configurer)
-    {
+    protected void configureAsyncSupport(final AsyncSupportConfigurer configurer) {
         // Verlagert die asynchrone Ausführung von Server-Requests (Callable, WebAsyncTask) in diesen ThreadPool.
         // Ansonsten würde für jeden Request immer ein neuer Thread erzeugt, siehe TaskExecutor des RequestMappingHandlerAdapter.
         configurer.setTaskExecutor(taskScheduler());
     }
 
     @Bean
-    protected ThreadPoolExecutorFactoryBean executorService()
-    {
+    protected ThreadPoolExecutorFactoryBean executorService() {
         ThreadPoolExecutorFactoryBean bean = new ThreadPoolExecutorFactoryBean();
         bean.setCorePoolSize(8);
         bean.setMaxPoolSize(8);
@@ -97,8 +90,7 @@ class Config extends WebMvcConfigurationSupport
     }
 
     @Bean
-    protected ScheduledExecutorFactoryBean scheduledExecutorService()
-    {
+    protected ScheduledExecutorFactoryBean scheduledExecutorService() {
         ScheduledExecutorFactoryBean bean = new ScheduledExecutorFactoryBean();
         bean.setPoolSize(4);
         bean.setThreadPriority(5);
@@ -118,14 +110,12 @@ class Config extends WebMvcConfigurationSupport
 @Import(Config.class)
 @ActiveProfiles("SimpleRestService")
 @TestMethodOrder(MethodOrderer.MethodName.class)
-class TestSimpleRestService
-{
+class TestSimpleRestService {
     @Resource
     private MockMvc mockMvc;
 
     @Test
-    void test010NoParamGreetingShouldReturnDefaultMessage() throws Exception
-    {
+    void test010NoParamGreetingShouldReturnDefaultMessage() throws Exception {
         // .andDo(print()).andExpect(jsonPath("$.content").value("Hello, Spring Community!"));
 
         // @formatter:off
@@ -137,8 +127,7 @@ class TestSimpleRestService
     }
 
     @Test
-    void test020ParamGreetingShouldReturnTailoredMessage() throws Exception
-    {
+    void test020ParamGreetingShouldReturnTailoredMessage() throws Exception {
         // .andDo(print()).andExpect(jsonPath("$.content").value("Hello, Spring Community!"));
 
         // @formatter:off
@@ -150,29 +139,24 @@ class TestSimpleRestService
     }
 
     @Test
-    void test030AsyncDateDeferredResult() throws Exception
-    {
+    void test030AsyncDateDeferredResult() throws Exception {
         testAsync("/test/asyncDateDeferredResult");
     }
 
     @Test
-    void test040AsyncDateCallable() throws Exception
-    {
+    void test040AsyncDateCallable() throws Exception {
         testAsync("/test/asyncDateCallable");
     }
 
     @Test
-    void test040AsyncDateWebAsyncTask() throws Exception
-    {
+    void test040AsyncDateWebAsyncTask() throws Exception {
         testAsync("/test/asyncDateWebAsyncTask");
     }
 
-    private void testAsync(final String url) throws Exception
-    {
+    private void testAsync(final String url) throws Exception {
         List<MvcResult> results = new ArrayList<>();
 
-        for (int i = 0; i < 20; i++)
-        {
+        for (int i = 0; i < 20; i++) {
             // @formatter:off
             MvcResult mvcResult = this.mockMvc.perform(get(url))
                     .andExpect(MockMvcResultMatchers.request().asyncStarted())
@@ -182,8 +166,7 @@ class TestSimpleRestService
             results.add(mvcResult);
         }
 
-        for (MvcResult mvcResult : results)
-        {
+        for (MvcResult mvcResult : results) {
             // @formatter:off
             this.mockMvc.perform(MockMvcRequestBuilders.asyncDispatch(mvcResult))
                 .andExpect(status().is2xxSuccessful());

@@ -6,7 +6,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ThreadPoolExecutor;
 
-import de.freese.pim.core.concurrent.PIMForkJoinWorkerThreadFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,6 +22,8 @@ import org.springframework.scheduling.concurrent.ConcurrentTaskScheduler;
 import org.springframework.scheduling.concurrent.ScheduledExecutorFactoryBean;
 import org.springframework.scheduling.concurrent.ThreadPoolExecutorFactoryBean;
 
+import de.freese.pim.core.concurrent.PIMForkJoinWorkerThreadFactory;
+
 /**
  * @author Thomas Freese
  * @see AsyncConfigurer
@@ -30,10 +31,8 @@ import org.springframework.scheduling.concurrent.ThreadPoolExecutorFactoryBean;
  * @see SchedulingConfigurer
  */
 @Configuration
-public class ExecutorConfig
-{
-    public ExecutorConfig()
-    {
+public class ExecutorConfig {
+    public ExecutorConfig() {
         super();
 
         // System.setProperty("java.util.concurrent.ForkJoinPool.common.parallelism",
@@ -42,12 +41,8 @@ public class ExecutorConfig
     }
 
     @Bean
-    @ConditionalOnMissingBean(
-            {
-                    Executor.class, ExecutorService.class
-            })
-    public ThreadPoolExecutorFactoryBean executorService()
-    {
+    @ConditionalOnMissingBean({Executor.class, ExecutorService.class})
+    public ThreadPoolExecutorFactoryBean executorService() {
         int coreSize = Math.max(8, Runtime.getRuntime().availableProcessors());
         int maxSize = coreSize * 2;
         int queueSize = maxSize * 2;
@@ -69,8 +64,7 @@ public class ExecutorConfig
 
     @Bean
     @ConditionalOnMissingBean(ScheduledExecutorService.class)
-    public ScheduledExecutorFactoryBean scheduledExecutorService()
-    {
+    public ScheduledExecutorFactoryBean scheduledExecutorService() {
         int poolSize = Math.max(2, Runtime.getRuntime().availableProcessors() / 4);
 
         ScheduledExecutorFactoryBean bean = new ScheduledExecutorFactoryBean();
@@ -89,16 +83,9 @@ public class ExecutorConfig
      * @see AsyncConfigurer
      * @see AsyncConfigurerSupport
      */
-    @Bean(
-            {
-                    "taskExecutor", "asyncTaskExecutor"
-            })
-    @ConditionalOnMissingBean(
-            {
-                    TaskExecutor.class, AsyncTaskExecutor.class
-            })
-    public AsyncTaskExecutor springTaskExecutor(final ExecutorService executorService)
-    {
+    @Bean({"taskExecutor", "asyncTaskExecutor"})
+    @ConditionalOnMissingBean({TaskExecutor.class, AsyncTaskExecutor.class})
+    public AsyncTaskExecutor springTaskExecutor(final ExecutorService executorService) {
         return new ConcurrentTaskExecutor(executorService);
     }
 
@@ -109,8 +96,7 @@ public class ExecutorConfig
      */
     @Bean("taskScheduler")
     @ConditionalOnMissingBean(TaskScheduler.class)
-    public TaskScheduler springTaskScheduler(final ExecutorService executorService, final ScheduledExecutorService scheduledExecutorService)
-    {
+    public TaskScheduler springTaskScheduler(final ExecutorService executorService, final ScheduledExecutorService scheduledExecutorService) {
         return new ConcurrentTaskScheduler(executorService, scheduledExecutorService);
     }
 }

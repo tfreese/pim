@@ -31,40 +31,34 @@ import org.springframework.util.Assert;
  * @author Thomas Freese
  */
 @Component
-public final class SpringContext implements ApplicationContextAware, ResourceLoaderAware, EnvironmentAware, InitializingBean
-{
+public final class SpringContext implements ApplicationContextAware, ResourceLoaderAware, EnvironmentAware, InitializingBean {
     private static ApplicationContext applicationContext;
 
     private static Environment environment;
 
     private static ResourceLoader resourceLoader;
 
-    public static ApplicationContext getApplicationContext()
-    {
+    public static ApplicationContext getApplicationContext() {
         return applicationContext;
     }
 
     /**
      * {@link AsyncTaskExecutor} als Wrapper für einen {@link ExecutorService} oder eigener ThreadPool.
      */
-    public static AsyncTaskExecutor getAsyncTaskExecutor()
-    {
+    public static AsyncTaskExecutor getAsyncTaskExecutor() {
         return getApplicationContext().getBean("taskExecutor", AsyncTaskExecutor.class);
     }
 
     @SuppressWarnings("unchecked")
-    public static <T> T getBean(final String beanID)
-    {
+    public static <T> T getBean(final String beanID) {
         return (T) getApplicationContext().getBean(beanID);
     }
 
-    public static <T> T getBean(final String beanID, final Class<T> requiredType)
-    {
+    public static <T> T getBean(final String beanID, final Class<T> requiredType) {
         return getApplicationContext().getBean(beanID, requiredType);
     }
 
-    public static <T> Optional<T> getBeanByTypeAndAnnotation(final Class<T> clazz, final Class<? extends Annotation> annotationType)
-    {
+    public static <T> Optional<T> getBeanByTypeAndAnnotation(final Class<T> clazz, final Class<? extends Annotation> annotationType) {
         Collection<T> beans = getBeansByTypeAndAnnotation(clazz, annotationType);
 
         return beans.stream().findFirst();
@@ -74,20 +68,17 @@ public final class SpringContext implements ApplicationContextAware, ResourceLoa
      * Liefert die erste gefundene Bean eines bestimmten Types mit einem bestimmten {@link Qualifier}.<br>
      * Die Bean muss die Spring-Annotation {@link Qualifier} mit einem Value verwenden.
      */
-    public static <T> Optional<T> getBeanByTypeAndQualifier(final Class<T> clazz, final String qualifier)
-    {
+    public static <T> Optional<T> getBeanByTypeAndQualifier(final Class<T> clazz, final String qualifier) {
         Collection<T> beans = getBeansByTypeAndAnnotation(clazz, Qualifier.class);
 
-        return beans.stream().filter(bean ->
-        {
+        return beans.stream().filter(bean -> {
             Qualifier q = bean.getClass().getAnnotation(Qualifier.class);
 
             return qualifier.equals(q.value());
         }).findFirst();
     }
 
-    public static <T> Collection<T> getBeansByTypeAndAnnotation(final Class<T> clazz, final Class<? extends Annotation> annotationType)
-    {
+    public static <T> Collection<T> getBeansByTypeAndAnnotation(final Class<T> clazz, final Class<? extends Annotation> annotationType) {
         Map<String, T> typedBeans = getApplicationContext().getBeansOfType(clazz);
         Map<String, Object> annotatedBeans = getApplicationContext().getBeansWithAnnotation(annotationType);
 
@@ -97,41 +88,34 @@ public final class SpringContext implements ApplicationContextAware, ResourceLoa
         return typedBeans.values();
     }
 
-    public static Environment getEnvironment()
-    {
+    public static Environment getEnvironment() {
         return environment;
     }
 
-    public static ExecutorService getExecutorService()
-    {
+    public static ExecutorService getExecutorService() {
         return getApplicationContext().getBean("executorService", ExecutorService.class);
     }
 
-    public static Resource getResource(final String location)
-    {
+    public static Resource getResource(final String location) {
         return getResourceLoader().getResource(location);
     }
 
-    public static ResourceLoader getResourceLoader()
-    {
+    public static ResourceLoader getResourceLoader() {
         return resourceLoader;
     }
 
-    public static ScheduledExecutorService getScheduledExecutorService()
-    {
+    public static ScheduledExecutorService getScheduledExecutorService() {
         return getApplicationContext().getBean(ScheduledExecutorService.class);
     }
 
     /**
      * {@link TaskScheduler} als Wrapper für einen {@link ScheduledExecutorService} oder eigener ThreadPool.
      */
-    public static TaskScheduler getTaskScheduler()
-    {
+    public static TaskScheduler getTaskScheduler() {
         return getApplicationContext().getBean(TaskScheduler.class);
     }
 
-    public SpringContext()
-    {
+    public SpringContext() {
         super();
     }
 
@@ -139,10 +123,8 @@ public final class SpringContext implements ApplicationContextAware, ResourceLoa
      * @see org.springframework.beans.factory.InitializingBean#afterPropertiesSet()
      */
     @Override
-    public void afterPropertiesSet() throws Exception
-    {
-        Assert.notNull(applicationContext,
-                "An ApplicationContext is required. Use setApplicationContext(org.springframework.context.ApplicationContext) to provide one.");
+    public void afterPropertiesSet() throws Exception {
+        Assert.notNull(applicationContext, "An ApplicationContext is required. Use setApplicationContext(org.springframework.context.ApplicationContext) to provide one.");
         Assert.notNull(resourceLoader, "A ResourceLoader is required. Use setResourceLoader(org.springframework.core.io.ResourceLoader) to provide one.");
         Assert.notNull(environment, "An Environment is required. Use setEnvironment(org.springframework.core.env.Environment) to provide one.");
     }
@@ -151,17 +133,14 @@ public final class SpringContext implements ApplicationContextAware, ResourceLoa
      * @see org.springframework.context.ApplicationContextAware#setApplicationContext(org.springframework.context.ApplicationContext)
      */
     @Override
-    public void setApplicationContext(final ApplicationContext applicationContext) throws BeansException
-    {
-        if (SpringContext.applicationContext != null)
-        {
+    public void setApplicationContext(final ApplicationContext applicationContext) throws BeansException {
+        if (SpringContext.applicationContext != null) {
             throw new IllegalStateException("ApplicationContext already set !");
         }
 
         SpringContext.applicationContext = Objects.requireNonNull(applicationContext, "applicationContext required");
 
-        if (SpringContext.applicationContext instanceof AbstractApplicationContext ac)
-        {
+        if (SpringContext.applicationContext instanceof AbstractApplicationContext ac) {
             ac.registerShutdownHook();
         }
     }
@@ -170,10 +149,8 @@ public final class SpringContext implements ApplicationContextAware, ResourceLoa
      * @see org.springframework.context.EnvironmentAware#setEnvironment(org.springframework.core.env.Environment)
      */
     @Override
-    public void setEnvironment(final Environment environment)
-    {
-        if (SpringContext.environment != null)
-        {
+    public void setEnvironment(final Environment environment) {
+        if (SpringContext.environment != null) {
             throw new IllegalStateException("Environment already set !");
         }
 
@@ -184,10 +161,8 @@ public final class SpringContext implements ApplicationContextAware, ResourceLoa
      * @see org.springframework.context.ResourceLoaderAware#setResourceLoader(org.springframework.core.io.ResourceLoader)
      */
     @Override
-    public void setResourceLoader(final ResourceLoader resourceLoader)
-    {
-        if (SpringContext.resourceLoader != null)
-        {
+    public void setResourceLoader(final ResourceLoader resourceLoader) {
+        if (SpringContext.resourceLoader != null) {
             throw new IllegalStateException("ResourceLoader already set !");
         }
 

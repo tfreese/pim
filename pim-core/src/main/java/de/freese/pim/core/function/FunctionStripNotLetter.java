@@ -10,26 +10,22 @@ import java.util.function.UnaryOperator;
  *
  * @author Thomas Freese
  */
-public class FunctionStripNotLetter implements UnaryOperator<String>
-{
+public class FunctionStripNotLetter implements UnaryOperator<String> {
     public static final Function<String, String> INSTANCE = new FunctionStripNotLetter();
 
     /**
      * @see java.util.function.Function#apply(java.lang.Object)
      */
     @Override
-    public String apply(final String text)
-    {
+    public String apply(final String text) {
         StringBuilder sb = new StringBuilder();
 
-        for (int i = 0; i < text.length(); i++)
-        {
+        for (int i = 0; i < text.length(); i++) {
             char c = text.charAt(i);
 
             // A-Z a-z
             // if (((c >= 65) && (c <= 90)) || ((c >= 97) && (c <= 122)))
-            if (Character.isLetter(c))
-            {
+            if (Character.isLetter(c)) {
                 sb.append(c);
             }
         }

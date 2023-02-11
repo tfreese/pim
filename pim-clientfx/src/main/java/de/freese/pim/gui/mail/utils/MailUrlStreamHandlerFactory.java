@@ -21,18 +21,15 @@ import org.slf4j.LoggerFactory;
  * @see InlineUrlStreamHandler
  * @see InlineUrlConnection
  */
-public class MailUrlStreamHandlerFactory implements URLStreamHandlerFactory
-{
+public class MailUrlStreamHandlerFactory implements URLStreamHandlerFactory {
     private static final Logger LOGGER = LoggerFactory.getLogger(MailUrlStreamHandlerFactory.class);
 
     /**
      * @see java.net.URLStreamHandlerFactory#createURLStreamHandler(java.lang.String)
      */
     @Override
-    public URLStreamHandler createURLStreamHandler(final String protocol)
-    {
-        if ("cid".equals(protocol))
-        {
+    public URLStreamHandler createURLStreamHandler(final String protocol) {
+        if ("cid".equals(protocol)) {
             // Find Inline
             return new InlineUrlStreamHandler();
         }
@@ -40,14 +37,12 @@ public class MailUrlStreamHandlerFactory implements URLStreamHandlerFactory
         // Kopie von java.net.URL.DefaultFactory
         String name = "sun.net.www.protocol." + protocol + ".Handler";
 
-        try
-        {
+        try {
             Class<?> clazz = Class.forName(name);
 
             return (URLStreamHandler) clazz.getDeclaredConstructor().newInstance();
         }
-        catch (Exception ex)
-        {
+        catch (Exception ex) {
             LOGGER.error(ex.getMessage());
         }
 

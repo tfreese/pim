@@ -20,8 +20,7 @@ import javafx.collections.ObservableList;
  * @author Thomas Freese
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class FxKontakt implements Comparable<FxKontakt>
-{
+public class FxKontakt implements Comparable<FxKontakt> {
     @JsonIgnore
     private final ObservableList<FxKontaktAttribut> attribute = FXCollections.observableArrayList();
 
@@ -35,13 +34,11 @@ public class FxKontakt implements Comparable<FxKontakt>
 
     private final StringProperty vornameProperty = new SimpleStringProperty(this, "vorname", null);
 
-    public FxKontakt()
-    {
+    public FxKontakt() {
         this(null, null);
     }
 
-    public FxKontakt(final String nachname, final String vorname)
-    {
+    public FxKontakt(final String nachname, final String vorname) {
         super();
 
         this.nachnameProperty.set(nachname);
@@ -50,8 +47,7 @@ public class FxKontakt implements Comparable<FxKontakt>
         this.toStringExpression = Bindings.format("Kontakt [nachname=%s, vorname=%s]", nachnameProperty(), vornameProperty());
     }
 
-    public void addAttribut(final String attribut, final String wert)
-    {
+    public void addAttribut(final String attribut, final String wert) {
         FxKontaktAttribut ka = new FxKontaktAttribut();
         ka.setKontaktID(getID());
         ka.setAttribut(attribut);
@@ -69,17 +65,14 @@ public class FxKontakt implements Comparable<FxKontakt>
      * @see java.lang.Comparable#compareTo(java.lang.Object)
      */
     @Override
-    public int compareTo(final FxKontakt k)
-    {
-        if (k == null)
-        {
+    public int compareTo(final FxKontakt k) {
+        if (k == null) {
             return 0;
         }
 
         int comp = getNachname().compareTo(k.getNachname());
 
-        if (comp == 0)
-        {
+        if (comp == 0) {
             comp = getVorname().compareTo(k.getVorname());
         }
 
@@ -90,39 +83,31 @@ public class FxKontakt implements Comparable<FxKontakt>
      * @see java.lang.Object#equals(java.lang.Object)
      */
     @Override
-    public boolean equals(final Object obj)
-    {
-        if (this == obj)
-        {
+    public boolean equals(final Object obj) {
+        if (this == obj) {
             return true;
         }
 
-        if (!(obj instanceof FxKontakt other))
-        {
+        if (!(obj instanceof FxKontakt other)) {
             return false;
         }
 
-        return Objects.equals(getAttribute(), other.getAttribute()) && Objects.equals(getID(), other.getID())
-                && Objects.equals(getNachname(), other.getNachname()) && Objects.equals(getVorname(), other.getVorname());
+        return Objects.equals(getAttribute(), other.getAttribute()) && Objects.equals(getID(), other.getID()) && Objects.equals(getNachname(), other.getNachname()) && Objects.equals(getVorname(), other.getVorname());
     }
 
-    public ObservableList<FxKontaktAttribut> getAttribute()
-    {
+    public ObservableList<FxKontaktAttribut> getAttribute() {
         return this.attribute;
     }
 
-    public long getID()
-    {
+    public long getID() {
         return idProperty().get();
     }
 
-    public String getNachname()
-    {
+    public String getNachname() {
         return nachnameProperty().get();
     }
 
-    public String getVorname()
-    {
+    public String getVorname() {
         return vornameProperty().get();
     }
 
@@ -130,18 +115,15 @@ public class FxKontakt implements Comparable<FxKontakt>
      * @see java.lang.Object#hashCode()
      */
     @Override
-    public int hashCode()
-    {
+    public int hashCode() {
         return Objects.hash(getAttribute(), getID(), getNachname(), getVorname());
     }
 
-    public LongProperty idProperty()
-    {
+    public LongProperty idProperty() {
         return this.idProperty;
     }
 
-    public StringProperty nachnameProperty()
-    {
+    public StringProperty nachnameProperty() {
         return this.nachnameProperty;
     }
 
@@ -153,22 +135,19 @@ public class FxKontakt implements Comparable<FxKontakt>
     // this.pcs.removePropertyChangeListener(listener);
     // }
 
-    public void setID(final long id)
-    {
+    public void setID(final long id) {
         // Object old = getID();
         idProperty().set(id);
         // this.pcs.firePropertyChange("id", old, getID());
     }
 
-    public void setNachname(final String nachname)
-    {
+    public void setNachname(final String nachname) {
         // Object old = getNachname();
         nachnameProperty().set(nachname);
         // this.pcs.firePropertyChange("nachname", old, getNachname());
     }
 
-    public void setVorname(final String vorname)
-    {
+    public void setVorname(final String vorname) {
         // Object old = getVorname();
         vornameProperty().set(vorname);
         // this.pcs.firePropertyChange("vorname", old, getVorname());
@@ -178,8 +157,7 @@ public class FxKontakt implements Comparable<FxKontakt>
      * @see java.lang.Object#toString()
      */
     @Override
-    public String toString()
-    {
+    public String toString() {
         // StringBuilder builder = new StringBuilder();
         // builder.append("Kontakt [attribute=").append(getAttribute());
         // builder.append(", id=").append(getID());
@@ -191,15 +169,12 @@ public class FxKontakt implements Comparable<FxKontakt>
         return this.toStringExpression.get();
     }
 
-    public StringProperty vornameProperty()
-    {
+    public StringProperty vornameProperty() {
         return this.vornameProperty;
     }
 
-    private void addAttribut(final FxKontaktAttribut attribut)
-    {
-        if (getAttribute().contains(attribut))
-        {
+    private void addAttribut(final FxKontaktAttribut attribut) {
+        if (getAttribute().contains(attribut)) {
             throw new RuntimeException("Attribut bereits vorhanden");
         }
 

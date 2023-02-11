@@ -1,7 +1,6 @@
 // Created: 29.11.2016
 package de.freese.pim.gui.main;
 
-import de.freese.pim.gui.view.View;
 import javafx.fxml.FXML;
 import javafx.geometry.Orientation;
 import javafx.scene.Node;
@@ -18,23 +17,23 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 
+import de.freese.pim.gui.view.View;
+
 /**
  * Main View.
  *
  * @author Thomas Freese
  */
-public class MainView extends BorderPane implements View
-{
+public class MainView extends BorderPane implements View {
     public static final TextArea LOG_TEXT_AREA = new TextArea();
-    private final SplitPane splitPane;
-    private final VBox vBox;
     @FXML
     private final Button buttonContactView;
     @FXML
     private final Button buttonMailView;
+    private final SplitPane splitPane;
+    private final VBox vBox;
 
-    public MainView()
-    {
+    public MainView() {
         super();
 
         this.splitPane = new SplitPane();
@@ -108,8 +107,7 @@ public class MainView extends BorderPane implements View
         // setBottom(titledPane);
     }
 
-    public void setMainNode(final Node node)
-    {
+    public void setMainNode(final Node node) {
         this.splitPane.getItems().set(1, node);
         // this.splitPane.layout();
 
@@ -117,8 +115,7 @@ public class MainView extends BorderPane implements View
         // layout();
     }
 
-    public void setNavNode(final Node node)
-    {
+    public void setNavNode(final Node node) {
         // VBox.setVgrow(node, Priority.ALWAYS);
         this.vBox.getChildren().set(0, node);
         // this.vBox.layout();
@@ -127,8 +124,7 @@ public class MainView extends BorderPane implements View
         // layout();
     }
 
-    public void setToolbar(final ToolBar toolBar)
-    {
+    public void setToolbar(final ToolBar toolBar) {
         setTop(toolBar);
     }
 }

@@ -1,6 +1,5 @@
 package de.freese.pim.gui;
 
-import de.freese.pim.gui.view.ErrorDialog;
 import javafx.application.Preloader;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -12,11 +11,12 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import javafx.stage.Stage;
 
+import de.freese.pim.gui.view.ErrorDialog;
+
 /**
  * @author Thomas Freese
  */
-public class PimClientPreloader extends Preloader
-{
+public class PimClientPreloader extends Preloader {
     private Label labelStatus;
 
     private boolean noLoadingProgress = true;
@@ -29,10 +29,8 @@ public class PimClientPreloader extends Preloader
      * @see javafx.application.Preloader#handleApplicationNotification(javafx.application.Preloader.PreloaderNotification)
      */
     @Override
-    public void handleApplicationNotification(final PreloaderNotification info)
-    {
-        if (info instanceof PimClientPreloaderNotification noti)
-        {
+    public void handleApplicationNotification(final PreloaderNotification info) {
+        if (info instanceof PimClientPreloaderNotification noti) {
             double progress = noti.getProgress();
             String status = noti.getStatus();
 
@@ -53,8 +51,7 @@ public class PimClientPreloader extends Preloader
             //
             // // this.progress.setProgress(v);
         }
-        else if (info instanceof StateChangeNotification)
-        {
+        else if (info instanceof StateChangeNotification) {
             // hide after get any state update from application
             this.stage.hide();
         }
@@ -64,8 +61,7 @@ public class PimClientPreloader extends Preloader
      * @see javafx.application.Preloader#handleErrorNotification(javafx.application.Preloader.ErrorNotification)
      */
     @Override
-    public boolean handleErrorNotification(final ErrorNotification info)
-    {
+    public boolean handleErrorNotification(final ErrorNotification info) {
         PimClientApplication.LOGGER.error(info.getDetails(), info.getCause());
 
         new ErrorDialog().forThrowable(info.getCause()).showAndWait();
@@ -80,19 +76,16 @@ public class PimClientPreloader extends Preloader
      * @see javafx.application.Preloader#handleProgressNotification(javafx.application.Preloader.ProgressNotification)
      */
     @Override
-    public void handleProgressNotification(final ProgressNotification info)
-    {
+    public void handleProgressNotification(final ProgressNotification info) {
         // this.bar.setProgress(pn.getProgress());
 
         // application loading progress is rescaled to be first 50%
         // Even if there is nothing to load 0% and 100% events can be
         // delivered
-        if ((info.getProgress() != 1.0D) || !this.noLoadingProgress)
-        {
+        if ((info.getProgress() != 1.0D) || !this.noLoadingProgress) {
             // this.progress.setProgress(info.getProgress() / 2);
 
-            if (info.getProgress() > 0D)
-            {
+            if (info.getProgress() > 0D) {
                 this.noLoadingProgress = false;
             }
         }
@@ -102,8 +95,7 @@ public class PimClientPreloader extends Preloader
      * @see javafx.application.Preloader#handleStateChangeNotification(javafx.application.Preloader.StateChangeNotification)
      */
     @Override
-    public void handleStateChangeNotification(final StateChangeNotification info)
-    {
+    public void handleStateChangeNotification(final StateChangeNotification info) {
         // ignore, hide after application signals it is ready
         // System.out.println(info);
 
@@ -117,8 +109,7 @@ public class PimClientPreloader extends Preloader
      * @see javafx.application.Application#init()
      */
     @Override
-    public void init() throws Exception
-    {
+    public void init() throws Exception {
         // Empty
     }
 
@@ -126,8 +117,7 @@ public class PimClientPreloader extends Preloader
      * @see javafx.application.Application#start(javafx.stage.Stage)
      */
     @Override
-    public void start(final Stage stage) throws Exception
-    {
+    public void start(final Stage stage) throws Exception {
         this.stage = stage;
         stage.setTitle("Start P.I.M.");
         stage.getIcons().add(new Image("images/pim.png"));
@@ -140,13 +130,11 @@ public class PimClientPreloader extends Preloader
      * @see javafx.application.Application#stop()
      */
     @Override
-    public void stop() throws Exception
-    {
+    public void stop() throws Exception {
         // Empty
     }
 
-    private Scene createPreloaderScene()
-    {
+    private Scene createPreloaderScene() {
         this.labelStatus = new Label();
         this.progress = new ProgressBar();
         // this.progress = new ProgressIndicator();

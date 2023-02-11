@@ -13,12 +13,10 @@ import org.springframework.context.annotation.Primary;
  *
  * @author Thomas Freese
  */
-public abstract class AbstractPimClientConfig
-{
+public abstract class AbstractPimClientConfig {
     @Bean
     @Primary
-    public Path pimHomePath(@Value("${pim.home}") final String pimHome)
-    {
+    public Path pimHomePath(@Value("${pim.home}") final String pimHome) {
         return Paths.get(pimHome);
     }
 }

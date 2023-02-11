@@ -14,8 +14,7 @@ import de.freese.pim.gui.mail.model.FxMailFolder;
  *
  * @author Thomas Freese
  */
-public interface FxMailService
-{
+public interface FxMailService {
     /**
      * Erstellt für den Account eine Instanz von Typ der MailApi und stellt die Verbindung her.<br>
      */

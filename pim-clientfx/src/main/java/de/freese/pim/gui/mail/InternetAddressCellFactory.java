@@ -1,37 +1,33 @@
 // Created: 25.01.2017
 package de.freese.pim.gui.mail;
 
-import de.freese.pim.core.mail.InternetAddress;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.util.Callback;
 
+import de.freese.pim.core.mail.InternetAddress;
+
 /**
- * @author Thomas Freese
- *
  * @param <S> Konkreter Typ des Row-Objektes
+ *
+ * @author Thomas Freese
  */
-public class InternetAddressCellFactory<S> implements Callback<TableColumn<S, InternetAddress[]>, TableCell<S, InternetAddress[]>>
-{
+public class InternetAddressCellFactory<S> implements Callback<TableColumn<S, InternetAddress[]>, TableCell<S, InternetAddress[]>> {
     /**
      * @see javafx.util.Callback#call(java.lang.Object)
      */
     @Override
-    public TableCell<S, InternetAddress[]> call(final TableColumn<S, InternetAddress[]> param)
-    {
-        return new TableCell<>()
-        {
+    public TableCell<S, InternetAddress[]> call(final TableColumn<S, InternetAddress[]> param) {
+        return new TableCell<>() {
             /**
              * @param item Date
              * @param empty boolean
              */
             @Override
-            protected void updateItem(final InternetAddress[] item, final boolean empty)
-            {
+            protected void updateItem(final InternetAddress[] item, final boolean empty) {
                 super.updateItem(item, empty);
 
-                if ((item == null) || empty)
-                {
+                if ((item == null) || empty) {
                     setText(null);
                     return;
                 }

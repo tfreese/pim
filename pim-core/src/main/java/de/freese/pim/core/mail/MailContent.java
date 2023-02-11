@@ -14,8 +14,7 @@ import de.freese.pim.core.mail.datasource.MessageDataSource;
  *
  * @author Thomas Freese
  */
-public interface MailContent
-{
+public interface MailContent {
     /**
      * Liefert die {@link DataSource} der Attachments.<br>
      * Key = Filename<br>

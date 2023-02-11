@@ -15,19 +15,16 @@ import javafx.scene.control.TextFormatter;
  *
  * @author Thomas Freese
  */
-public class TextAreaOutputStream extends OutputStream
-{
+public class TextAreaOutputStream extends OutputStream {
     /**
      * Behält nur die letzten n Zeilen in der {@link TextArea}.
      *
      * @author Thomas Freese
      */
-    private static class LimitedTextArea extends TextArea
-    {
+    private static class LimitedTextArea extends TextArea {
         private final int keepLastNLines;
 
-        LimitedTextArea(int keepLastNLines)
-        {
+        LimitedTextArea(int keepLastNLines) {
             super();
 
             this.keepLastNLines = keepLastNLines;
@@ -37,14 +34,12 @@ public class TextAreaOutputStream extends OutputStream
          * @see javafx.scene.control.TextInputControl#replaceText(int, int, java.lang.String)
          */
         @Override
-        public void replaceText(final int start, final int end, final String text)
-        {
+        public void replaceText(final int start, final int end, final String text) {
             super.replaceText(start, end, text);
 
             String[] splits = getText().split("\n", -1);
 
-            while (splits.length > this.keepLastNLines)
-            {
+            while (splits.length > this.keepLastNLines) {
                 int index = getText().indexOf('\n');
 
                 super.replaceText(0, index + 1, "");
@@ -57,21 +52,16 @@ public class TextAreaOutputStream extends OutputStream
     /**
      * Verhindert, das mehr als n Zeilen eingefügt werden können.
      */
-    static <T> TextFormatter<T> createLimitedTextFormatter(final int maxLines)
-    {
+    static <T> TextFormatter<T> createLimitedTextFormatter(final int maxLines) {
         final IntegerProperty lines = new SimpleIntegerProperty(1);
 
-        return new TextFormatter<>(change ->
-        {
-            if (change.isAdded())
-            {
-                if (change.getText().indexOf('\n') > -1)
-                {
+        return new TextFormatter<>(change -> {
+            if (change.isAdded()) {
+                if (change.getText().indexOf('\n') > -1) {
                     lines.set(lines.get() + 1);
                 }
 
-                if (lines.get() > maxLines)
-                {
+                if (lines.get() > maxLines) {
                     change.setText("");
                 }
             }
@@ -81,21 +71,18 @@ public class TextAreaOutputStream extends OutputStream
 
     private final TextArea textArea;
 
-    public TextAreaOutputStream()
-    {
+    public TextAreaOutputStream() {
         this(new LimitedTextArea(20));
     }
 
-    public TextAreaOutputStream(final TextArea textArea)
-    {
+    public TextAreaOutputStream(final TextArea textArea) {
         super();
 
         this.textArea = Objects.requireNonNull(textArea, "textArea required");
         // this.textArea.setTextFormatter(createTextFormatter());
     }
 
-    public TextArea getTextArea()
-    {
+    public TextArea getTextArea() {
         return this.textArea;
     }
 
@@ -103,8 +90,7 @@ public class TextAreaOutputStream extends OutputStream
      * @see java.io.OutputStream#write(int)
      */
     @Override
-    public void write(final int b) throws IOException
-    {
+    public void write(final int b) throws IOException {
         getTextArea().appendText(String.valueOf((char) b));
     }
 }

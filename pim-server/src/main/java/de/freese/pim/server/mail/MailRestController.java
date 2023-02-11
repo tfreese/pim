@@ -7,13 +7,6 @@ import java.util.concurrent.CompletableFuture;
 
 import jakarta.annotation.Resource;
 
-import de.freese.pim.core.mail.MailContent;
-import de.freese.pim.core.model.mail.Mail;
-import de.freese.pim.core.model.mail.MailAccount;
-import de.freese.pim.core.model.mail.MailFolder;
-import de.freese.pim.core.service.AbstractRemoteService;
-import de.freese.pim.core.service.MailService;
-import de.freese.pim.core.utils.io.IOMonitor;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,6 +19,14 @@ import org.springframework.web.context.request.async.DeferredResult;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter;
 
+import de.freese.pim.core.mail.MailContent;
+import de.freese.pim.core.model.mail.Mail;
+import de.freese.pim.core.model.mail.MailAccount;
+import de.freese.pim.core.model.mail.MailFolder;
+import de.freese.pim.core.service.AbstractRemoteService;
+import de.freese.pim.core.service.MailService;
+import de.freese.pim.core.utils.io.IOMonitor;
+
 /**
  * Service für die Mail-API.
  *
@@ -33,8 +34,7 @@ import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandl
  */
 @RestController()
 @RequestMapping(path = "/mail", produces = MediaType.APPLICATION_JSON_VALUE)
-public class MailRestController extends AbstractRemoteService implements MailService
-{
+public class MailRestController extends AbstractRemoteService implements MailService {
     private MailService mailService;
 
     /**
@@ -42,8 +42,7 @@ public class MailRestController extends AbstractRemoteService implements MailSer
      */
     @Override
     @PostMapping("/connect")
-    public void connectAccount(@RequestBody final MailAccount account)
-    {
+    public void connectAccount(@RequestBody final MailAccount account) {
         getMailService().connectAccount(account);
     }
 
@@ -52,8 +51,7 @@ public class MailRestController extends AbstractRemoteService implements MailSer
      */
     @Override
     @PostMapping("/account/delete/{id}")
-    public int deleteAccount(@PathVariable("id") final long accountID)
-    {
+    public int deleteAccount(@PathVariable("id") final long accountID) {
         return getMailService().deleteAccount(accountID);
     }
 
@@ -62,8 +60,7 @@ public class MailRestController extends AbstractRemoteService implements MailSer
      */
     @Override
     @PostMapping("/account/disconnect")
-    public void disconnectAccounts(@RequestParam("accountIDs") final long... accountIDs)
-    {
+    public void disconnectAccounts(@RequestParam("accountIDs") final long... accountIDs) {
         getMailService().disconnectAccounts(accountIDs);
     }
 
@@ -72,8 +69,7 @@ public class MailRestController extends AbstractRemoteService implements MailSer
      */
     @Override
     @GetMapping("/accounts")
-    public List<MailAccount> getMailAccounts()
-    {
+    public List<MailAccount> getMailAccounts() {
         return getMailService().getMailAccounts();
     }
 
@@ -82,8 +78,7 @@ public class MailRestController extends AbstractRemoteService implements MailSer
      */
     @Override
     @PostMapping("/account/insert")
-    public long insertAccount(@RequestBody final MailAccount account)
-    {
+    public long insertAccount(@RequestBody final MailAccount account) {
         return getMailService().insertAccount(account);
     }
 
@@ -92,8 +87,7 @@ public class MailRestController extends AbstractRemoteService implements MailSer
      */
     @Override
     @PostMapping("/folder/insert/{accountID}")
-    public long[] insertFolder(@PathVariable("accountID") final long accountID, @RequestBody final List<MailFolder> folders)
-    {
+    public long[] insertFolder(@PathVariable("accountID") final long accountID, @RequestBody final List<MailFolder> folders) {
         return getMailService().insertFolder(accountID, folders);
     }
 
@@ -102,8 +96,7 @@ public class MailRestController extends AbstractRemoteService implements MailSer
      */
     @Override
     @GetMapping("/folder/{accountID}")
-    public List<MailFolder> loadFolder(@PathVariable("accountID") final long accountID)
-    {
+    public List<MailFolder> loadFolder(@PathVariable("accountID") final long accountID) {
         return getMailService().loadFolder(accountID);
     }
 
@@ -112,9 +105,7 @@ public class MailRestController extends AbstractRemoteService implements MailSer
      */
     @Override
     @GetMapping("/content/{accountID}/{folderFullName}/{mailUID}")
-    public MailContent loadMailContent(@PathVariable("accountID") final long accountID, @PathVariable("folderFullName") final String folderFullName,
-                                       @PathVariable("mailUID") final long mailUID, final @RequestBody(required = false) IOMonitor monitor)
-    {
+    public MailContent loadMailContent(@PathVariable("accountID") final long accountID, @PathVariable("folderFullName") final String folderFullName, @PathVariable("mailUID") final long mailUID, final @RequestBody(required = false) IOMonitor monitor) {
         String folderName = urlDecode(urlDecode(folderFullName));
 
         return getMailService().loadMailContent(accountID, folderName, mailUID, monitor);
@@ -125,9 +116,7 @@ public class MailRestController extends AbstractRemoteService implements MailSer
      */
     @Override
     @GetMapping("/mails/{accountID}/{folderID}/{folderFullName}")
-    public List<Mail> loadMails(@PathVariable("accountID") final long accountID, @PathVariable("folderID") final long folderID,
-                                @PathVariable("folderFullName") final String folderFullName)
-    {
+    public List<Mail> loadMails(@PathVariable("accountID") final long accountID, @PathVariable("folderID") final long folderID, @PathVariable("folderFullName") final String folderFullName) {
         String folderName = urlDecode(urlDecode(folderFullName));
 
         return getMailService().loadMails(accountID, folderID, folderName);
@@ -146,9 +135,7 @@ public class MailRestController extends AbstractRemoteService implements MailSer
      * ihn den ThreadPool des {@link RequestMappingHandlerAdapter}, siehe {@link WebMvcConfigurationSupport#configureAsyncSupport}.
      */
     @GetMapping("/mailsAsyncCallable/{accountID}/{folderID}/{folderFullName}")
-    public Callable<List<Mail>> loadMailsAsyncCallable(@PathVariable("accountID") final long accountID, @PathVariable("folderID") final long folderID,
-                                                       @PathVariable("folderFullName") final String folderFullName)
-    {
+    public Callable<List<Mail>> loadMailsAsyncCallable(@PathVariable("accountID") final long accountID, @PathVariable("folderID") final long folderID, @PathVariable("folderFullName") final String folderFullName) {
         return () -> getMailService().loadMails(accountID, folderID, folderFullName);
     }
 
@@ -157,10 +144,7 @@ public class MailRestController extends AbstractRemoteService implements MailSer
      * Das {@link DeferredResult} entkoppelt den Server Thread von der Ausführung.
      */
     @GetMapping("/mailsAsyncDeferredResult/{accountID}/{folderID}/{folderFullName}")
-    public DeferredResult<List<Mail>> loadMailsAsyncDeferredResult(@PathVariable("accountID") final long accountID,
-                                                                   @PathVariable("folderID") final long folderID,
-                                                                   @PathVariable("folderFullName") final String folderFullName)
-    {
+    public DeferredResult<List<Mail>> loadMailsAsyncDeferredResult(@PathVariable("accountID") final long accountID, @PathVariable("folderID") final long folderID, @PathVariable("folderFullName") final String folderFullName) {
         DeferredResult<List<Mail>> deferredResult = new DeferredResult<>();
 
         // @formatter:off
@@ -182,8 +166,7 @@ public class MailRestController extends AbstractRemoteService implements MailSer
     }
 
     @Resource
-    public void setMailService(final MailService mailService)
-    {
+    public void setMailService(final MailService mailService) {
         this.mailService = mailService;
     }
 
@@ -192,8 +175,7 @@ public class MailRestController extends AbstractRemoteService implements MailSer
      */
     @Override
     @PostMapping("/test")
-    public List<MailFolder> test(@RequestBody final MailAccount account)
-    {
+    public List<MailFolder> test(@RequestBody final MailAccount account) {
         return getMailService().test(account);
     }
 
@@ -202,8 +184,7 @@ public class MailRestController extends AbstractRemoteService implements MailSer
      */
     @Override
     @PostMapping("/account/update")
-    public int updateAccount(@RequestBody final MailAccount account)
-    {
+    public int updateAccount(@RequestBody final MailAccount account) {
         return getMailService().updateAccount(account);
     }
 
@@ -212,13 +193,11 @@ public class MailRestController extends AbstractRemoteService implements MailSer
      */
     @Override
     @PostMapping("/folder/update/{accountID}")
-    public int[] updateFolder(@PathVariable("accountID") final long accountID, @RequestBody final List<MailFolder> folders)
-    {
+    public int[] updateFolder(@PathVariable("accountID") final long accountID, @RequestBody final List<MailFolder> folders) {
         return getMailService().updateFolder(accountID, folders);
     }
 
-    protected MailService getMailService()
-    {
+    protected MailService getMailService() {
         return this.mailService;
     }
 }

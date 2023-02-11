@@ -14,16 +14,14 @@ import org.junit.jupiter.api.TestMethodOrder;
  * @author Thomas Freese
  */
 @TestMethodOrder(MethodOrderer.MethodName.class)
-class TestRegEx
-{
+class TestRegEx {
     private static final String MAIL_REGEX = Utils.MAIL_REGEX;
 
     /**
      * Falsche Mail-Formate.
      */
     @Test
-    void test010ThreadName()
-    {
+    void test010ThreadName() {
         // \\d{1,}$
 
         String[] splits = "a-1".split("[-_]");
@@ -57,8 +55,7 @@ class TestRegEx
      * Falsche Mail-Formate.
      */
     @Test
-    void test020MailFalse()
-    {
+    void test020MailFalse() {
         Assertions.assertFalse("a".matches(MAIL_REGEX));
         Assertions.assertFalse("a@".matches(MAIL_REGEX));
         Assertions.assertFalse("a@b".matches(MAIL_REGEX));
@@ -70,8 +67,7 @@ class TestRegEx
      * Richtige Mail-Formate.
      */
     @Test
-    void test020MailTrue()
-    {
+    void test020MailTrue() {
         Assertions.assertTrue("a@b.de".matches(MAIL_REGEX));
         Assertions.assertTrue("a@b.com".matches(MAIL_REGEX));
         Assertions.assertTrue("a.c@b.de".matches(MAIL_REGEX));
@@ -82,8 +78,7 @@ class TestRegEx
      * Richtige Mail-Formate.
      */
     @Test
-    void test030Misc()
-    {
+    void test030Misc() {
         Assertions.assertTrue("20040117.000000".matches(".*\\d{6}.*"));
     }
 }

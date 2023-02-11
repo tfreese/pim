@@ -3,10 +3,9 @@ package de.freese.pim.gui.view;
 
 /**
  * Interface einer View.
- * 
+ *
  * @author Thomas Freese
  */
-public interface View
-{
+public interface View {
 
 }

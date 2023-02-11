@@ -23,10 +23,8 @@ import org.sqlite.javax.SQLiteConnectionPoolDataSource;
 @Profile("SqliteLocalFile")
 @PropertySource("classpath:hikari-pool.properties")
 @PropertySource("classpath:database.properties")
-public class SqliteLocalFileConfig
-{
-    public SqliteLocalFileConfig()
-    {
+public class SqliteLocalFileConfig {
+    public SqliteLocalFileConfig() {
         super();
 
         System.setProperty("spring.flyway.locations", "classpath:db/sqlite");
@@ -36,8 +34,7 @@ public class SqliteLocalFileConfig
      * Nicht Hikari nehmen, sondern die SQLite-Implementierung.
      */
     @Bean
-    public DataSource dataSource(@Value("${pim.home}") final String pimHome, @Value("${pim.db-name}") final String pimDbName)
-    {
+    public DataSource dataSource(@Value("${pim.home}") final String pimHome, @Value("${pim.db-name}") final String pimDbName) {
         // Native Libraries deaktivieren für den Zugriff auf die Dateien.
         System.setProperty("sqlite.purejava", "true");
 
@@ -58,8 +55,7 @@ public class SqliteLocalFileConfig
     }
 
     @Bean
-    public UnaryOperator<String> sequenceQuery()
-    {
+    public UnaryOperator<String> sequenceQuery() {
         return seq -> "select random()";
     }
 }

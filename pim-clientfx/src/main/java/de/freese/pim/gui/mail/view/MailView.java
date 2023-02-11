@@ -1,8 +1,6 @@
 // Created: 13.12.2016
 package de.freese.pim.gui.mail.view;
 
-import de.freese.pim.gui.mail.model.FxMail;
-import de.freese.pim.gui.view.View;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
@@ -19,13 +17,15 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 
+import de.freese.pim.gui.mail.model.FxMail;
+import de.freese.pim.gui.view.View;
+
 /**
  * View des Mail-Clients.
  *
  * @author Thomas Freese
  */
-public class MailView implements View
-{
+public class MailView implements View {
     @FXML
     private final Region mainNode;
     @FXML
@@ -47,8 +47,7 @@ public class MailView implements View
     @FXML
     private TreeView<Object> treeViewMail;
 
-    public MailView()
-    {
+    public MailView() {
         super();
 
         this.toolBar = createToolbar();
@@ -56,8 +55,7 @@ public class MailView implements View
         this.naviNode = createNaviNode();
     }
 
-    private Region createMainNode()
-    {
+    private Region createMainNode() {
         // BorderPane borderPane = new BorderPane();
         // borderPane.setCenter(new Label("Mails"));
         //
@@ -102,8 +100,7 @@ public class MailView implements View
         return stackPane;
     }
 
-    private Region createNaviNode()
-    {
+    private Region createNaviNode() {
         this.treeViewMail = new TreeView<>();
         this.treeViewMail.setEditable(false);
         this.treeViewMail.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
@@ -118,8 +115,7 @@ public class MailView implements View
         return titledPane;
     }
 
-    private ToolBar createToolbar()
-    {
+    private ToolBar createToolbar() {
         ToolBar tb = new ToolBar();
 
         // Image image = new Image("images/mail.png", 16, 16, true, true);

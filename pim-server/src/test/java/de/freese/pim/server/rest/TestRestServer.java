@@ -10,7 +10,6 @@ import java.util.List;
 
 import jakarta.annotation.Resource;
 
-import de.freese.pim.server.PimServerApplication;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
@@ -26,27 +25,20 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import de.freese.pim.server.PimServerApplication;
+
 /**
  * Vollständiger Test der gesamten Server-Anwendung.
  *
  * @author Thomas Freese
  */
 // @ExtendWith(SpringExtension.class) // Ist bereits in SpringBootTest enthalten
-@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT, classes =
-        {
-                PimServerApplication.class
-        }, properties =
-        {
-                "spring.main.banner-mode=OFF", "logging.config=classpath:logback-server.xml" // , "spring.config.name=application-Server"
-        })
+@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT, classes = {PimServerApplication.class}, properties = {"spring.main.banner-mode=OFF", "logging.config=classpath:logback-server.xml" // , "spring.config.name=application-Server"
+})
 @TestMethodOrder(MethodOrderer.MethodName.class)
-@ActiveProfiles(
-        {
-                "Server", "HsqldbMemory"
-        })
+@ActiveProfiles({"Server", "HsqldbMemory"})
 @AutoConfigureMockMvc
-class TestRestServer
-{
+class TestRestServer {
     @LocalServerPort
     private String localServerPort;
 
@@ -54,8 +46,7 @@ class TestRestServer
     private MockMvc mockMvc;
 
     @Test
-    void test010NoParamGreetingShouldReturnDefaultMessage() throws Exception
-    {
+    void test010NoParamGreetingShouldReturnDefaultMessage() throws Exception {
         // .andDo(print()).andExpect(jsonPath("$.content").value("Hello, Spring Community!"));
 
         // @formatter:off
@@ -67,8 +58,7 @@ class TestRestServer
     }
 
     @Test
-    void test020ParamGreetingShouldReturnTailoredMessage() throws Exception
-    {
+    void test020ParamGreetingShouldReturnTailoredMessage() throws Exception {
         // .andDo(print()).andExpect(jsonPath("$.content").value("Hello, Spring Community!"));
 
         // @formatter:off
@@ -80,29 +70,24 @@ class TestRestServer
     }
 
     @Test
-    void test030AsyncDateDeferredResult() throws Exception
-    {
+    void test030AsyncDateDeferredResult() throws Exception {
         testAsync("/test/asyncDateDeferredResult");
     }
 
     @Test
-    void test040AsyncDateCallable() throws Exception
-    {
+    void test040AsyncDateCallable() throws Exception {
         testAsync("/test/asyncDateCallable");
     }
 
     @Test
-    void test040AsyncDateWebAsyncTask() throws Exception
-    {
+    void test040AsyncDateWebAsyncTask() throws Exception {
         testAsync("/test/asyncDateWebAsyncTask");
     }
 
-    private void testAsync(final String url) throws Exception
-    {
+    private void testAsync(final String url) throws Exception {
         List<MvcResult> results = new ArrayList<>();
 
-        for (int i = 0; i < 20; i++)
-        {
+        for (int i = 0; i < 20; i++) {
             // @formatter:off
             MvcResult mvcResult = this.mockMvc.perform(get(url))
                     .andExpect(MockMvcResultMatchers.request().asyncStarted())
@@ -112,8 +97,7 @@ class TestRestServer
             results.add(mvcResult);
         }
 
-        for (MvcResult mvcResult : results)
-        {
+        for (MvcResult mvcResult : results) {
             // @formatter:off
             this.mockMvc.perform(MockMvcRequestBuilders.asyncDispatch(mvcResult))
                 .andExpect(status().is2xxSuccessful());

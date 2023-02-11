@@ -10,8 +10,7 @@ import de.freese.pim.core.mail.InternetAddress;
  *
  * @author Thomas Freese
  */
-public class Mail
-{
+public class Mail {
     private InternetAddress[] bcc;
 
     private InternetAddress[] cc;
@@ -49,58 +48,47 @@ public class Mail
     // @NotNull
     private long uid;
 
-    public InternetAddress[] getBcc()
-    {
+    public InternetAddress[] getBcc() {
         return this.bcc;
     }
 
-    public InternetAddress[] getCc()
-    {
+    public InternetAddress[] getCc() {
         return this.cc;
     }
 
-    public String getFolderFullName()
-    {
+    public String getFolderFullName() {
         return this.folderFullName;
     }
 
-    public long getFolderID()
-    {
+    public long getFolderID() {
         return this.folderID;
     }
 
-    public InternetAddress getFrom()
-    {
+    public InternetAddress getFrom() {
         return this.from;
     }
 
-    public int getMsgNum()
-    {
+    public int getMsgNum() {
         return this.msgNum;
     }
 
-    public Date getReceivedDate()
-    {
+    public Date getReceivedDate() {
         return this.receivedDate;
     }
 
-    public Date getSendDate()
-    {
+    public Date getSendDate() {
         return this.sendDate;
     }
 
-    public int getSize()
-    {
+    public int getSize() {
         return this.size;
     }
 
-    public String getSubject()
-    {
+    public String getSubject() {
         return this.subject;
     }
 
-    public InternetAddress[] getTo()
-    {
+    public InternetAddress[] getTo() {
         return this.to;
     }
 
@@ -110,76 +98,62 @@ public class Mail
      *
      * @return long
      */
-    public long getUID()
-    {
+    public long getUID() {
         return this.uid;
     }
 
-    public boolean isSeen()
-    {
+    public boolean isSeen() {
         return this.seen;
     }
 
-    public void setBcc(final InternetAddress[] bcc)
-    {
+    public void setBcc(final InternetAddress[] bcc) {
         this.bcc = bcc;
     }
 
-    public void setCc(final InternetAddress[] cc)
-    {
+    public void setCc(final InternetAddress[] cc) {
         this.cc = cc;
     }
 
-    public void setFolderFullName(final String folderFullName)
-    {
+    public void setFolderFullName(final String folderFullName) {
         this.folderFullName = folderFullName;
     }
 
-    public void setFolderID(final long folderID)
-    {
+    public void setFolderID(final long folderID) {
         this.folderID = folderID;
     }
 
-    public void setFrom(final InternetAddress from)
-    {
+    public void setFrom(final InternetAddress from) {
         this.from = from;
     }
 
     /**
      * Ist immer größer als 0.
      */
-    public void setMsgNum(final int msgNum)
-    {
+    public void setMsgNum(final int msgNum) {
         this.msgNum = msgNum;
     }
 
-    public void setReceivedDate(final Date date)
-    {
+    public void setReceivedDate(final Date date) {
         this.receivedDate = date;
     }
 
-    public void setSeen(final boolean seen)
-    {
+    public void setSeen(final boolean seen) {
         this.seen = seen;
     }
 
-    public void setSendDate(final Date date)
-    {
+    public void setSendDate(final Date date) {
         this.sendDate = date;
     }
 
-    public void setSize(final int size)
-    {
+    public void setSize(final int size) {
         this.size = size;
     }
 
-    public void setSubject(final String subject)
-    {
+    public void setSubject(final String subject) {
         this.subject = subject;
     }
 
-    public void setTo(final InternetAddress[] to)
-    {
+    public void setTo(final InternetAddress[] to) {
         this.to = to;
     }
 
@@ -187,8 +161,7 @@ public class Mail
      * Setzt die UID.<br>
      * Bildet mit dem Folder den PrimaryKey.
      */
-    public void setUID(final long uid)
-    {
+    public void setUID(final long uid) {
         this.uid = uid;
     }
 }

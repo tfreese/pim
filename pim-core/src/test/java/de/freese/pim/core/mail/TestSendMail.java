@@ -20,15 +20,13 @@ import org.springframework.core.io.ClassPathResource;
  */
 @TestMethodOrder(MethodOrderer.MethodName.class)
 @Disabled
-class TestSendMail extends AbstractMailTest
-{
+class TestSendMail extends AbstractMailTest {
     private static JavaMailSender sender;
 
     private static Session session;
 
     @BeforeAll
-    static void beforeAll()
-    {
+    static void beforeAll() {
         sender = new JavaMailSender();
         sender.setHost(MAIL_SMPT_HOST);
         sender.setPort(MAIL_SMPT_PORT.getPort());
@@ -45,20 +43,17 @@ class TestSendMail extends AbstractMailTest
     }
 
     @BeforeEach
-    void beforeEach()
-    {
+    void beforeEach() {
         sender.setAuthentication(getFrom(), getPassword());
     }
 
     @Test
-    void test000Connect() throws Exception
-    {
+    void test000Connect() throws Exception {
         sender.testConnection();
     }
 
     @Test
-    void test100PlainText() throws Exception
-    {
+    void test100PlainText() throws Exception {
         // @formatter:off
         JavaMailBuilder.create(session)
                 .from(getFrom())
@@ -73,8 +68,7 @@ class TestSendMail extends AbstractMailTest
     }
 
     @Test
-    void test100PlainTextWithAttachment() throws Exception
-    {
+    void test100PlainTextWithAttachment() throws Exception {
         // Resource resource = new ClassPathResource("mail/text.txt");
         // InputStream inputStream = resource.getInputStream();
 
@@ -95,8 +89,7 @@ class TestSendMail extends AbstractMailTest
     }
 
     @Test
-    void test200Html() throws Exception
-    {
+    void test200Html() throws Exception {
         StringBuilder html = new StringBuilder();
         html.append("<!DOCTYPE html><html lang=\"de\"><head></head><body>");
         html.append("<h1>test200Html</h1><br>");
@@ -117,8 +110,7 @@ class TestSendMail extends AbstractMailTest
     }
 
     @Test
-    void test210HtmlWithAttachment() throws Exception
-    {
+    void test210HtmlWithAttachment() throws Exception {
         StringBuilder html = new StringBuilder();
         html.append("<!DOCTYPE html><html lang=\"de\"><head></head><body>");
         html.append("<h1>test210HtmlWithAttachment</h1><br>");
@@ -140,8 +132,7 @@ class TestSendMail extends AbstractMailTest
     }
 
     @Test
-    void test220HtmlWithInline() throws Exception
-    {
+    void test220HtmlWithInline() throws Exception {
         StringBuilder html = new StringBuilder();
         html.append("<!DOCTYPE html><html lang=\"de\"><head></head><body>");
         html.append("<h1>test220HtmlWithInline</h1><br>");

@@ -8,8 +8,7 @@ import java.util.function.Predicate;
  *
  * @author Thomas Freese
  */
-public class MailFolder
-{
+public class MailFolder {
     // @NotNull
     private boolean abonniert = true;
 
@@ -30,64 +29,53 @@ public class MailFolder
     // @NotNull
     private boolean sendFolder;
 
-    public long getAccountID()
-    {
+    public long getAccountID() {
         return this.accountID;
     }
 
     /**
      * Liefert den vollen Hierarchie-Namen, z.B. PARENT_NAME/FOLDER_NAME.
      */
-    public String getFullName()
-    {
+    public String getFullName() {
         return this.fullName;
     }
 
-    public long getID()
-    {
+    public long getID() {
         return this.id;
     }
 
-    public String getName()
-    {
+    public String getName() {
         return this.name;
     }
 
-    public boolean isAbonniert()
-    {
+    public boolean isAbonniert() {
         return this.abonniert;
     }
 
-    public boolean isSendFolder()
-    {
+    public boolean isSendFolder() {
         return this.sendFolder;
     }
 
-    public void setAbonniert(final boolean abo)
-    {
+    public void setAbonniert(final boolean abo) {
         this.abonniert = abo;
     }
 
-    public void setAccountID(final long accountID)
-    {
+    public void setAccountID(final long accountID) {
         this.accountID = accountID;
     }
 
     /**
      * Setzt den vollen Hierarchie-Namen, z.B. PARENT_NAME/FOLDER_NAME.
      */
-    public void setFullName(final String fullName)
-    {
+    public void setFullName(final String fullName) {
         this.fullName = fullName;
     }
 
-    public void setID(final long id)
-    {
+    public void setID(final long id) {
         this.id = id;
     }
 
-    public void setName(final String name)
-    {
+    public void setName(final String name) {
         this.name = name;
 
         Predicate<String> predicate = "send"::equals;
@@ -101,8 +89,7 @@ public class MailFolder
      * @see java.lang.Object#toString()
      */
     @Override
-    public String toString()
-    {
+    public String toString() {
         StringBuilder builder = new StringBuilder();
         builder.append("MailFolder [fullName=").append(getFullName());
         builder.append("]");

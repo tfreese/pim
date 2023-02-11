@@ -6,35 +6,30 @@ import javafx.application.Preloader.PreloaderNotification;
 /**
  * @author Thomas Freese
  */
-public class PimClientPreloaderNotification implements PreloaderNotification
-{
+public class PimClientPreloaderNotification implements PreloaderNotification {
     private final double progress;
 
     private final String status;
 
-    public PimClientPreloaderNotification(final double progress, final String status)
-    {
+    public PimClientPreloaderNotification(final double progress, final String status) {
         super();
 
         this.progress = progress;
         this.status = status;
     }
 
-    public PimClientPreloaderNotification(final String status)
-    {
+    public PimClientPreloaderNotification(final String status) {
         super();
 
         this.progress = -1;
         this.status = status;
     }
 
-    public double getProgress()
-    {
+    public double getProgress() {
         return this.progress;
     }
 
-    public String getStatus()
-    {
+    public String getStatus() {
         return this.status;
     }
 }

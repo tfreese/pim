@@ -15,10 +15,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * @author Thomas Freese
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class InternetAddress
-{
-    public static String toString(final InternetAddress[] addresses)
-    {
+public class InternetAddress {
+    public static String toString(final InternetAddress[] addresses) {
         return Stream.of(addresses).map(InternetAddress::toString).collect(Collectors.joining(", "));
     }
 
@@ -26,27 +24,23 @@ public class InternetAddress
 
     private final String personal;
 
-    public InternetAddress(@JsonProperty("address") final String address)
-    {
+    public InternetAddress(@JsonProperty("address") final String address) {
         this(address, null);
     }
 
     @JsonCreator
-    public InternetAddress(@JsonProperty("address") final String address, @JsonProperty("personal") final String personal)
-    {
+    public InternetAddress(@JsonProperty("address") final String address, @JsonProperty("personal") final String personal) {
         super();
 
         this.address = address;
         this.personal = personal;
     }
 
-    public String getAddress()
-    {
+    public String getAddress() {
         return this.address;
     }
 
-    public String getPersonal()
-    {
+    public String getPersonal() {
         return this.personal;
     }
 
@@ -64,10 +58,8 @@ public class InternetAddress
      * @see java.lang.Object#toString()
      */
     @Override
-    public String toString()
-    {
-        if ((this.personal == null) || (this.personal.length() == 0))
-        {
+    public String toString() {
+        if ((this.personal == null) || (this.personal.length() == 0)) {
             return getAddress();
         }
 
