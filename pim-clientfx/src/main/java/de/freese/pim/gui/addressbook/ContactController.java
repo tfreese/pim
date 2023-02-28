@@ -296,7 +296,7 @@ public class ContactController extends AbstractController {
              * @see javafx.concurrent.Task#call()
              */
             @Override
-            private List<FxKontakt> call() throws Exception {
+            protected List<FxKontakt> call() throws Exception {
                 return getAddressbookService().getKontaktDetails();
             }
         };
