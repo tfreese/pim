@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.async.DeferredResult;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter;
 
 import de.freese.pim.core.mail.MailContent;
@@ -132,7 +131,7 @@ public class MailRestController extends AbstractRemoteService implements MailSer
     /**
      * Lädt die Mails des Folders vom Provider und aus der DB.<br>
      * Das {@link Callable} entkoppelt den Server Thread von der Ausführung und verlagert<br>
-     * ihn den ThreadPool des {@link RequestMappingHandlerAdapter}, siehe {@link WebMvcConfigurationSupport#configureAsyncSupport}.
+     * ihn den ThreadPool des {@link RequestMappingHandlerAdapter}.
      */
     @GetMapping("/mailsAsyncCallable/{accountID}/{folderID}/{folderFullName}")
     public Callable<List<Mail>> loadMailsAsyncCallable(@PathVariable("accountID") final long accountID, @PathVariable("folderID") final long folderID, @PathVariable("folderFullName") final String folderFullName) {

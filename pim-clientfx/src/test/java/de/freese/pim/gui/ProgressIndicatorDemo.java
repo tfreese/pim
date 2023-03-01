@@ -39,7 +39,7 @@ public class ProgressIndicatorDemo extends Application {
              * @see javafx.concurrent.Task#call()
              */
             @Override
-            private Void call() throws Exception {
+            protected Void call() throws Exception {
                 int progress = 0;
 
                 while (progress <= 100) {

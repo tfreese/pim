@@ -13,7 +13,6 @@ import org.springframework.core.task.AsyncTaskExecutor;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.annotation.AsyncConfigurer;
-import org.springframework.scheduling.annotation.AsyncConfigurerSupport;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.SchedulingConfigurer;
@@ -27,7 +26,6 @@ import de.freese.pim.core.concurrent.PIMForkJoinWorkerThreadFactory;
 /**
  * @author Thomas Freese
  * @see AsyncConfigurer
- * @see AsyncConfigurerSupport
  * @see SchedulingConfigurer
  */
 @Configuration
@@ -81,7 +79,6 @@ public class ExecutorConfig {
      * Wird für {@link EnableAsync} benötigt.<br>
      *
      * @see AsyncConfigurer
-     * @see AsyncConfigurerSupport
      */
     @Bean({"taskExecutor", "asyncTaskExecutor"})
     @ConditionalOnMissingBean({TaskExecutor.class, AsyncTaskExecutor.class})

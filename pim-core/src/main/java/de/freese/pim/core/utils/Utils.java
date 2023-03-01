@@ -271,7 +271,7 @@ public final class Utils {
 
         int columnCount = rows.get(0).length;
 
-        // Breite pro Spalte rausfinden.
+        // Breite pro Spalte herausfinden.
         int[] columnWidth = new int[columnCount];
 
         // @formatter:off
