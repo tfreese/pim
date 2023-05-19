@@ -167,7 +167,7 @@ public class ContactView implements View {
         tableView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
         tableView.setTableMenuButtonVisible(true);
         // tableView.setColumnResizePolicy(param -> true);
-        tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN);
         // tableView.setColumnResizePolicy(TableView.UNCONSTRAINED_RESIZE_POLICY);
 
         this.buttonEditContact.disableProperty().bind(tableView.getSelectionModel().selectedItemProperty().isNull());
