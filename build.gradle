@@ -61,7 +61,6 @@ project("pim-server") {
 
         runtimeOnly("org.springframework.boot:spring-boot-starter-actuator")
 
-        testImplementation("org.junit.platform:junit-platform-runner")
         testImplementation("org.springframework.boot:spring-boot-starter-test")
     }
     // Start: gradle bootRun --args="--spring.profiles.active=dev"
