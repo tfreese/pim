@@ -40,33 +40,30 @@
         </resources>
 
         <plugins>
-            <!-- spring-boot:run, clean package spring-boot:repackage für executable
-                jar -->
+            <!-- spring-boot:run, clean package spring-boot:repackage für executable jar -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                <configuration>
-                    <mainClass>de.freese.pim.server.PimServerApplication</mainClass>
-                    <!--jvmArguments>
-                        -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5005
-                        </jvmArguments -->
-                    <layout>ZIP</layout>
-                    <classifier>jar-with-dependencies</classifier>
-                </configuration>
                 <executions>
                     <execution>
-                        <goals>
-                            <goal>repackage</goal>
-                        </goals>
-                    </execution>
-                    <!--execution>
-                        <id>package</id>
+                        <id>repackage</id>
                         <phase>package</phase>
                         <goals>
                             <goal>repackage</goal>
                         </goals>
-                    </execution-->
+                    </execution>
                 </executions>
+                <configuration>
+                    <mainClass>de.freese.pim.server.PimServerApplication</mainClass>
+                    <classifier>spring</classifier>
+                    <jvmArguments>
+                        -Xms64m
+                        -Xmx128m
+                        -XX:TieredStopAtLevel=1
+                        -Djava.security.egd=file:/dev/./urandom
+                        -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=5005
+                    </jvmArguments>
+                </configuration>
             </plugin>
         </plugins>
     </build>
