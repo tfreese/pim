@@ -15,9 +15,6 @@
     <name>${project.groupId} - ${project.artifactId}</name>
     <description>GUI for PIM</description>
 
-    <properties>
-    </properties>
-
     <!-- ${java.io.tmpdir} -->
     <build>
         <!--directory>${java.io.tmpdir}/maven/${project.parent.artifactId}/${project.artifactId}</directory-->

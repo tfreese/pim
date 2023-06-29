@@ -15,9 +15,6 @@
     <name>${project.groupId} - ${project.artifactId}</name>
     <description>Server for PIM</description>
 
-    <properties>
-    </properties>
-
     <build>
         <resources>
             <resource>
