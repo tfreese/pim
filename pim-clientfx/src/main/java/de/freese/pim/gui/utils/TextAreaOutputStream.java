@@ -86,9 +86,6 @@ public class TextAreaOutputStream extends OutputStream {
         return this.textArea;
     }
 
-    /**
-     * @see java.io.OutputStream#write(int)
-     */
     @Override
     public void write(final int b) throws IOException {
         getTextArea().appendText(String.valueOf((char) b));

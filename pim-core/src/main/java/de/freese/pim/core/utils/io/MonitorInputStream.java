@@ -1,6 +1,7 @@
 // Created: 11.01.2017
 package de.freese.pim.core.utils.io;
 
+import java.io.FilterInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Objects;
@@ -8,19 +9,18 @@ import java.util.Objects;
 import javax.swing.ProgressMonitorInputStream;
 
 /**
- * {@link InputStream} mit der Möglichkeit zur Überwachung durch einen Monitor.<br>
- *
  * @author Thomas Freese
  * @see ProgressMonitorInputStream
  */
-public class MonitorInputStream extends InputStream {
-    private final InputStream delegate;
+public class MonitorInputStream extends FilterInputStream {
 
     private final IOMonitor monitor;
+
     /**
      * Anzahl Bytes (Größe) des gesamten Channels.
      */
     private final long size;
+
     /**
      * Anzahl gelesener Bytes.
      */
@@ -30,43 +30,10 @@ public class MonitorInputStream extends InputStream {
      * @param size long; Anzahl Bytes (Größe) des gesamten Channels
      */
     public MonitorInputStream(final InputStream delegate, final IOMonitor monitor, final long size) {
-        super();
+        super(delegate);
 
-        this.delegate = Objects.requireNonNull(delegate, "delegate required");
         this.monitor = Objects.requireNonNull(monitor, "monitor required");
         this.size = size;
-    }
-
-    /**
-     * @see java.io.InputStream#available()
-     */
-    @Override
-    public int available() throws IOException {
-        return this.delegate.available();
-    }
-
-    /**
-     * @see java.io.InputStream#close()
-     */
-    @Override
-    public void close() throws IOException {
-        this.delegate.close();
-    }
-
-    /**
-     * @see java.io.InputStream#mark(int)
-     */
-    @Override
-    public synchronized void mark(final int readLimit) {
-        this.delegate.mark(readLimit);
-    }
-
-    /**
-     * @see java.io.InputStream#markSupported()
-     */
-    @Override
-    public boolean markSupported() {
-        return this.delegate.markSupported();
     }
 
     /**
@@ -74,7 +41,7 @@ public class MonitorInputStream extends InputStream {
      */
     @Override
     public int read() throws IOException {
-        int read = this.delegate.read();
+        int read = super.read();
 
         this.sizeRead++;
 
@@ -83,28 +50,9 @@ public class MonitorInputStream extends InputStream {
         return read;
     }
 
-    /**
-     * @see java.io.InputStream#read(byte[])
-     */
-    @Override
-    public int read(final byte[] b) throws IOException {
-        int readCount = this.delegate.read(b);
-
-        if (readCount > 0) {
-            this.sizeRead += readCount;
-
-            this.monitor.monitor(this.sizeRead, this.size);
-        }
-
-        return readCount;
-    }
-
-    /**
-     * @see java.io.InputStream#read(byte[], int, int)
-     */
     @Override
     public int read(final byte[] b, final int off, final int len) throws IOException {
-        int readCount = this.delegate.read(b, off, len);
+        int readCount = super.read(b, off, len);
 
         if (readCount > 0) {
             this.sizeRead += readCount;
@@ -115,24 +63,18 @@ public class MonitorInputStream extends InputStream {
         return readCount;
     }
 
-    /**
-     * @see java.io.InputStream#reset()
-     */
     @Override
     public synchronized void reset() throws IOException {
-        this.delegate.reset();
+        super.reset();
 
-        this.sizeRead = this.size - this.delegate.available();
+        this.sizeRead = this.size - super.available();
 
         this.monitor.monitor(this.sizeRead, this.size);
     }
 
-    /**
-     * @see java.io.InputStream#skip(long)
-     */
     @Override
     public long skip(final long n) throws IOException {
-        long readCount = this.delegate.skip(n);
+        long readCount = super.skip(n);
 
         if (readCount > 0) {
             this.sizeRead += readCount;
