@@ -45,10 +45,7 @@ public class DefaultMailDAO extends AbstractDAO implements MailDAO {
     /**
      * @author Thomas Freese
      */
-    private static class MailAccountRowMapper implements RowMapper<MailAccount> {
-        /**
-         * @see org.springframework.jdbc.core.RowMapper#mapRow(java.sql.ResultSet, int)
-         */
+    private static final class MailAccountRowMapper implements RowMapper<MailAccount> {
         @Override
         public MailAccount mapRow(final ResultSet rs, final int rowNum) throws SQLException {
             MailAccount account = new MailAccount();
@@ -80,10 +77,7 @@ public class DefaultMailDAO extends AbstractDAO implements MailDAO {
     /**
      * @author Thomas Freese
      */
-    private static class MailFolderRowMapper implements RowMapper<MailFolder> {
-        /**
-         * @see org.springframework.jdbc.core.RowMapper#mapRow(java.sql.ResultSet, int)
-         */
+    private static final class MailFolderRowMapper implements RowMapper<MailFolder> {
         @Override
         public MailFolder mapRow(final ResultSet rs, final int rowNum) throws SQLException {
             MailFolder folder = new MailFolder();
@@ -101,10 +95,7 @@ public class DefaultMailDAO extends AbstractDAO implements MailDAO {
     /**
      * @author Thomas Freese
      */
-    private static class MailRowMapper implements RowMapper<Mail> {
-        /**
-         * @see org.springframework.jdbc.core.RowMapper#mapRow(java.sql.ResultSet, int)
-         */
+    private static final class MailRowMapper implements RowMapper<Mail> {
         @Override
         public Mail mapRow(final ResultSet rs, final int rowNum) throws SQLException {
             Mail mail = new Mail();
@@ -190,9 +181,6 @@ public class DefaultMailDAO extends AbstractDAO implements MailDAO {
         }
     }
 
-    /**
-     * @see de.freese.pim.core.dao.MailDAO#deleteAccount(long)
-     */
     @Override
     public int deleteAccount(final long accountID) {
         StringBuilder sql = new StringBuilder();
@@ -201,9 +189,6 @@ public class DefaultMailDAO extends AbstractDAO implements MailDAO {
         return getJdbcTemplate().update(sql.toString(), accountID);
     }
 
-    /**
-     * @see de.freese.pim.core.dao.MailDAO#deleteFolder(long)
-     */
     @Override
     public int deleteFolder(final long folderID) {
         StringBuilder sql = new StringBuilder();
@@ -212,9 +197,6 @@ public class DefaultMailDAO extends AbstractDAO implements MailDAO {
         return getJdbcTemplate().update(sql.toString(), folderID);
     }
 
-    /**
-     * @see de.freese.pim.core.dao.MailDAO#deleteFolders(long)
-     */
     @Override
     public int deleteFolders(final long accountID) {
         StringBuilder sql = new StringBuilder();
@@ -223,9 +205,6 @@ public class DefaultMailDAO extends AbstractDAO implements MailDAO {
         return getJdbcTemplate().update(sql.toString(), accountID);
     }
 
-    /**
-     * @see de.freese.pim.core.dao.MailDAO#deleteMail(long, long)
-     */
     @Override
     public int deleteMail(final long folderID, final long uid) {
         StringBuilder sql = new StringBuilder();
@@ -234,9 +213,6 @@ public class DefaultMailDAO extends AbstractDAO implements MailDAO {
         return getJdbcTemplate().update(sql.toString(), folderID, uid);
     }
 
-    /**
-     * @see de.freese.pim.core.dao.MailDAO#deleteMails(long)
-     */
     @Override
     public int deleteMails(final long folderID) {
         StringBuilder sql = new StringBuilder();
@@ -245,9 +221,6 @@ public class DefaultMailDAO extends AbstractDAO implements MailDAO {
         return getJdbcTemplate().update(sql.toString(), folderID);
     }
 
-    /**
-     * @see de.freese.pim.core.dao.MailDAO#getMailAccounts()
-     */
     @Override
     public List<MailAccount> getMailAccounts() {
         String userID = getUserID();
@@ -302,9 +275,6 @@ public class DefaultMailDAO extends AbstractDAO implements MailDAO {
     // return accountList;
     // }
 
-    /**
-     * @see de.freese.pim.core.dao.MailDAO#getMailFolder(long)
-     */
     @Override
     public List<MailFolder> getMailFolder(final long accountID) {
         StringBuilder sql = new StringBuilder();
@@ -313,9 +283,6 @@ public class DefaultMailDAO extends AbstractDAO implements MailDAO {
         return getJdbcTemplate().query(sql.toString(), new MailFolderRowMapper(), accountID);
     }
 
-    /**
-     * @see de.freese.pim.core.dao.MailDAO#getMails(long)
-     */
     @Override
     public List<Mail> getMails(final long folderID) {
         StringBuilder sql = new StringBuilder();
@@ -324,9 +291,6 @@ public class DefaultMailDAO extends AbstractDAO implements MailDAO {
         return getJdbcTemplate().query(sql.toString(), new MailRowMapper(), folderID);
     }
 
-    /**
-     * @see de.freese.pim.core.dao.MailDAO#insertAccount(de.freese.pim.core.model.mail.MailAccount)
-     */
     @Override
     public int insertAccount(final MailAccount account) {
         String userID = getUserID();
@@ -365,9 +329,6 @@ public class DefaultMailDAO extends AbstractDAO implements MailDAO {
         return affectedRows;
     }
 
-    /**
-     * @see de.freese.pim.core.dao.MailDAO#insertFolder(long, java.util.Collection)
-     */
     @Override
     public int[] insertFolder(final long accountID, final Collection<MailFolder> folders) {
         if (folders.isEmpty()) {
@@ -386,17 +347,11 @@ public class DefaultMailDAO extends AbstractDAO implements MailDAO {
         final List<MailFolder> list = (List<MailFolder>) folders;
 
         return getJdbcTemplate().batchUpdate(sql, new BatchPreparedStatementSetter() {
-            /**
-             * @see org.springframework.jdbc.core.BatchPreparedStatementSetter#getBatchSize()
-             */
             @Override
             public int getBatchSize() {
                 return list.size();
             }
 
-            /**
-             * @see org.springframework.jdbc.core.BatchPreparedStatementSetter#setValues(java.sql.PreparedStatement, int)
-             */
             @Override
             public void setValues(final PreparedStatement ps, final int i) throws SQLException {
                 long id = getNextID("MAIL_SEQ");
@@ -415,9 +370,6 @@ public class DefaultMailDAO extends AbstractDAO implements MailDAO {
         });
     }
 
-    /**
-     * @see de.freese.pim.core.dao.MailDAO#insertMail(long, java.util.Collection)
-     */
     @Override
     public int[] insertMail(final long folderID, final Collection<Mail> mails) {
         if (mails.isEmpty()) {
@@ -488,9 +440,6 @@ public class DefaultMailDAO extends AbstractDAO implements MailDAO {
         // }
     }
 
-    /**
-     * @see de.freese.pim.core.dao.MailDAO#updateAccount(de.freese.pim.core.model.mail.MailAccount)
-     */
     @Override
     public int updateAccount(final MailAccount account) {
         String password = account.getPassword();
@@ -522,9 +471,6 @@ public class DefaultMailDAO extends AbstractDAO implements MailDAO {
         });
     }
 
-    /**
-     * @see de.freese.pim.core.dao.MailDAO#updateFolder(de.freese.pim.core.model.mail.MailFolder)
-     */
     @Override
     public int updateFolder(final MailFolder folder) {
         StringBuilder sql = new StringBuilder();
@@ -543,9 +489,6 @@ public class DefaultMailDAO extends AbstractDAO implements MailDAO {
         });
     }
 
-    /**
-     * @see de.freese.pim.core.dao.MailDAO#updateMail(long, de.freese.pim.core.model.mail.Mail)
-     */
     @Override
     public int updateMail(final long folderID, final Mail mail) {
         StringBuilder sql = new StringBuilder();
@@ -563,9 +506,6 @@ public class DefaultMailDAO extends AbstractDAO implements MailDAO {
         });
     }
 
-    /**
-     * @return String
-     */
     protected String getUserID() {
         return Utils.getSystemUserName();
     }

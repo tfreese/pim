@@ -51,6 +51,7 @@
                     </execution>
                 </executions>
                 <configuration>
+                    <skip>true</skip>
                     <mainClass>de.freese.pim.server.PimServerApplication</mainClass>
                     <classifier>spring</classifier>
                     <jvmArguments>

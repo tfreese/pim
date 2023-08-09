@@ -32,16 +32,13 @@ class TestMonitorIO {
      *
      * @author Thomas Freese
      */
-    private static class Monitor implements IOMonitor {
+    private static final class Monitor implements IOMonitor {
         private Long current;
 
         public long getCurrent() {
             return Optional.ofNullable(this.current).orElse(0L);
         }
 
-        /**
-         * @see de.freese.pim.core.utils.io.IOMonitor#monitor(long, long)
-         */
         @Override
         public void monitor(final long current, final long size) {
             this.current = current;

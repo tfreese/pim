@@ -29,12 +29,10 @@ public class DefaultAddressBookDAO extends AbstractDAO implements AddressBookDAO
      *
      * @author Thomas Freese
      */
-    private static class KontaktDetailsResultSetExtractor implements ResultSetExtractor<List<Kontakt>> {
+    private static final class KontaktDetailsResultSetExtractor implements ResultSetExtractor<List<Kontakt>> {
+
         private final RowMapper<Kontakt> kontaktRowMapper = new KontaktRowMapper();
 
-        /**
-         * @see org.springframework.jdbc.core.ResultSetExtractor#extractData(java.sql.ResultSet)
-         */
         @Override
         public List<Kontakt> extractData(final ResultSet rs) throws SQLException, DataAccessException {
             List<Kontakt> kontakte = new ArrayList<>();
@@ -68,10 +66,7 @@ public class DefaultAddressBookDAO extends AbstractDAO implements AddressBookDAO
      *
      * @author Thomas Freese
      */
-    private static class KontaktRowMapper implements RowMapper<Kontakt> {
-        /**
-         * @see org.springframework.jdbc.core.RowMapper#mapRow(java.sql.ResultSet, int)
-         */
+    private static final class KontaktRowMapper implements RowMapper<Kontakt> {
         @Override
         public Kontakt mapRow(final ResultSet rs, final int rowNum) throws SQLException {
             Kontakt kontakt = new Kontakt();
@@ -84,9 +79,6 @@ public class DefaultAddressBookDAO extends AbstractDAO implements AddressBookDAO
         }
     }
 
-    /**
-     * @see de.freese.pim.core.dao.AddressBookDAO#backup(java.nio.file.Path)
-     */
     @Override
     public boolean backup(final Path directory) {
         if (!Files.isWritable(directory)) {
@@ -110,9 +102,6 @@ public class DefaultAddressBookDAO extends AbstractDAO implements AddressBookDAO
         return true;
     }
 
-    /**
-     * @see de.freese.pim.core.dao.AddressBookDAO#deleteAttribut(long, java.lang.String)
-     */
     @Override
     public int deleteAttribut(final long kontaktID, final String attribut) {
         String sql = "delete from KONTAKT_ATTRIBUT where kontakt_id = ? and attribut = ?";
@@ -120,9 +109,6 @@ public class DefaultAddressBookDAO extends AbstractDAO implements AddressBookDAO
         return getJdbcTemplate().update(sql, kontaktID, attribut.toUpperCase());
     }
 
-    /**
-     * @see de.freese.pim.core.dao.AddressBookDAO#deleteKontakt(long)
-     */
     @Override
     public int deleteKontakt(final long id) {
         String userID = getUserID();
@@ -135,9 +121,6 @@ public class DefaultAddressBookDAO extends AbstractDAO implements AddressBookDAO
         return getJdbcTemplate().update(sqlKontakt, userID, id);
     }
 
-    /**
-     * @see de.freese.pim.core.dao.AddressBookDAO#getKontaktDetails(long[])
-     */
     @Override
     public List<Kontakt> getKontaktDetails(final long... ids) {
         String userID = getUserID();
@@ -171,9 +154,6 @@ public class DefaultAddressBookDAO extends AbstractDAO implements AddressBookDAO
         return getJdbcTemplate().query(sql.toString(), new KontaktDetailsResultSetExtractor(), userID);
     }
 
-    /**
-     * @see de.freese.pim.core.dao.AddressBookDAO#getKontakte()
-     */
     @Override
     public List<Kontakt> getKontakte() {
         String userID = getUserID();
@@ -187,9 +167,6 @@ public class DefaultAddressBookDAO extends AbstractDAO implements AddressBookDAO
         return getJdbcTemplate().query(sql.toString(), new KontaktRowMapper(), userID);
     }
 
-    /**
-     * @see de.freese.pim.core.dao.AddressBookDAO#insertAttribut(long, java.lang.String, java.lang.String)
-     */
     @Override
     public int insertAttribut(final long kontaktID, final String attribut, final String wert) {
         String sql = "insert into KONTAKT_ATTRIBUT (kontakt_id, attribut, wert) values (?, ?, ?)";
@@ -197,9 +174,6 @@ public class DefaultAddressBookDAO extends AbstractDAO implements AddressBookDAO
         return getJdbcTemplate().update(sql, kontaktID, attribut == null ? null : attribut.toUpperCase(), wert);
     }
 
-    /**
-     * @see de.freese.pim.core.dao.AddressBookDAO#insertKontakt(java.lang.String, java.lang.String)
-     */
     @Override
     public long insertKontakt(final String nachname, final String vorname) {
         String userID = getUserID();
@@ -212,9 +186,6 @@ public class DefaultAddressBookDAO extends AbstractDAO implements AddressBookDAO
         return id;
     }
 
-    /**
-     * @see de.freese.pim.core.dao.AddressBookDAO#searchKontakte(java.lang.String)
-     */
     @Override
     public List<Kontakt> searchKontakte(final String name) {
         String userID = getUserID();
@@ -229,9 +200,6 @@ public class DefaultAddressBookDAO extends AbstractDAO implements AddressBookDAO
         return getJdbcTemplate().query(sql.toString(), new KontaktDetailsResultSetExtractor(), userID, "%" + name.toLowerCase() + "%", "%" + name.toLowerCase() + "%");
     }
 
-    /**
-     * @see de.freese.pim.core.dao.AddressBookDAO#updateAttribut(long, java.lang.String, java.lang.String)
-     */
     @Override
     public int updateAttribut(final long kontaktID, final String attribut, final String wert) {
         String sql = "update KONTAKT_ATTRIBUT set wert = ? where kontakt_id = ? and attribut = ?";
@@ -239,9 +207,6 @@ public class DefaultAddressBookDAO extends AbstractDAO implements AddressBookDAO
         return getJdbcTemplate().update(sql, wert, kontaktID, attribut.toUpperCase());
     }
 
-    /**
-     * @see de.freese.pim.core.dao.AddressBookDAO#updateKontakt(long, java.lang.String, java.lang.String)
-     */
     @Override
     public int updateKontakt(final long id, final String nachname, final String vorname) {
         String userID = getUserID();
