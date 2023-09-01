@@ -59,9 +59,6 @@ public enum MailPort {
         return this.port;
     }
 
-    /**
-     * @see java.lang.Enum#toString()
-     */
     @Override
     public String toString() {
         return String.format("%s (%d)", name(), getPort());

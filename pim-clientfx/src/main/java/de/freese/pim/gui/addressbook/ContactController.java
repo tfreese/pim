@@ -68,9 +68,6 @@ public class ContactController extends AbstractController {
         this.addressbookService = SpringContext.getBean("clientAddressBookService", FxAddressbookService.class);
     }
 
-    /**
-     * @see de.freese.pim.gui.controller.AbstractController#activate()
-     */
     @Override
     public void activate() {
         if (isActivated()) {
@@ -83,25 +80,16 @@ public class ContactController extends AbstractController {
         loadKontakte();
     }
 
-    /**
-     * @see de.freese.pim.gui.controller.AbstractController#getMainNode()
-     */
     @Override
     public Node getMainNode() {
         return this.mainNode;
     }
 
-    /**
-     * @see de.freese.pim.gui.controller.AbstractController#getNaviNode()
-     */
     @Override
     public Node getNaviNode() {
         return this.naviNode;
     }
 
-    /**
-     * @see javafx.fxml.Initializable#initialize(java.net.URL, java.util.ResourceBundle)
-     */
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
         this.selectedKontakt.bind(this.tableViewKontakt.getSelectionModel().selectedItemProperty());
@@ -292,9 +280,6 @@ public class ContactController extends AbstractController {
         getKontakteList().clear();
 
         Task<List<FxKontakt>> task = new Task<>() {
-            /**
-             * @see javafx.concurrent.Task#call()
-             */
             @Override
             protected List<FxKontakt> call() throws Exception {
                 return getAddressbookService().getKontaktDetails();

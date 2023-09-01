@@ -432,33 +432,21 @@ public final class JavaMailBuilder {
 
     private DataSource createDataSource(final InputStream inputStream, final String contentType, final String name) {
         return new DataSource() {
-            /**
-             * @see jakarta.activation.DataSource#getContentType()
-             */
             @Override
             public String getContentType() {
                 return contentType;
             }
 
-            /**
-             * @see jakarta.activation.DataSource#getInputStream()
-             */
             @Override
             public InputStream getInputStream() throws IOException {
                 return inputStream;
             }
 
-            /**
-             * @see jakarta.activation.DataSource#getName()
-             */
             @Override
             public String getName() {
                 return name;
             }
 
-            /**
-             * @see jakarta.activation.DataSource#getOutputStream()
-             */
             @Override
             public OutputStream getOutputStream() {
                 throw new UnsupportedOperationException("Read-only jakarta.activation.DataSource");
@@ -501,8 +489,6 @@ public final class JavaMailBuilder {
      * Default implementation invokes {@code InternetAddress.validate()}, provided that address validation is activated for the helper instance.
      * <p>
      * Note that this method will just work on JavaMail >= 1.3. You can override it for validation on older JavaMail versions or for custom validation.
-     *
-     * @see jakarta.mail.internet.InternetAddress#validate()
      */
     private void validateAddress(final InternetAddress address) throws AddressException {
         if (this.validateAddresses) {

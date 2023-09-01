@@ -39,18 +39,12 @@ public class SumUnreadMailsBinding extends IntegerBinding {
         refreshBinding();
     }
 
-    /**
-     * @see javafx.beans.binding.IntegerBinding#dispose()
-     */
     @Override
     public void dispose() {
         this.boundList.removeListener(this.boundListChangeListener);
         unbind(this.observedProperties);
     }
 
-    /**
-     * @see javafx.beans.binding.IntegerBinding#computeValue()
-     */
     @Override
     protected int computeValue() {
         int sum = 0;

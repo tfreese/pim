@@ -6,11 +6,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Objects;
 
-import javax.swing.ProgressMonitorInputStream;
-
 /**
  * @author Thomas Freese
- * @see ProgressMonitorInputStream
  */
 public class MonitorInputStream extends FilterInputStream {
 
@@ -36,9 +33,6 @@ public class MonitorInputStream extends FilterInputStream {
         this.size = size;
     }
 
-    /**
-     * @see java.io.InputStream#read()
-     */
     @Override
     public int read() throws IOException {
         int read = super.read();

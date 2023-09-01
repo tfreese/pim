@@ -31,9 +31,6 @@ public class PIMForkJoinWorkerThreadFactory implements ForkJoinWorkerThreadFacto
         this.namePrefix = "fork-join";
     }
 
-    /**
-     * @see java.util.concurrent.ForkJoinPool.ForkJoinWorkerThreadFactory#newThread(java.util.concurrent.ForkJoinPool)
-     */
     @Override
     public ForkJoinWorkerThread newThread(final ForkJoinPool pool) {
         ForkJoinWorkerThread thread = new PIMForkJoinWorkerThread(pool);

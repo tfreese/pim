@@ -25,9 +25,6 @@ public class PimClientPreloader extends Preloader {
 
     private Stage stage;
 
-    /**
-     * @see javafx.application.Preloader#handleApplicationNotification(javafx.application.Preloader.PreloaderNotification)
-     */
     @Override
     public void handleApplicationNotification(final PreloaderNotification info) {
         if (info instanceof PimClientPreloaderNotification noti) {
@@ -57,9 +54,6 @@ public class PimClientPreloader extends Preloader {
         }
     }
 
-    /**
-     * @see javafx.application.Preloader#handleErrorNotification(javafx.application.Preloader.ErrorNotification)
-     */
     @Override
     public boolean handleErrorNotification(final ErrorNotification info) {
         PimClientApplication.LOGGER.error(info.getDetails(), info.getCause());
@@ -72,9 +66,6 @@ public class PimClientPreloader extends Preloader {
         return true;
     }
 
-    /**
-     * @see javafx.application.Preloader#handleProgressNotification(javafx.application.Preloader.ProgressNotification)
-     */
     @Override
     public void handleProgressNotification(final ProgressNotification info) {
         // this.bar.setProgress(pn.getProgress());
@@ -91,9 +82,6 @@ public class PimClientPreloader extends Preloader {
         }
     }
 
-    /**
-     * @see javafx.application.Preloader#handleStateChangeNotification(javafx.application.Preloader.StateChangeNotification)
-     */
     @Override
     public void handleStateChangeNotification(final StateChangeNotification info) {
         // ignore, hide after application signals it is ready
@@ -105,17 +93,11 @@ public class PimClientPreloader extends Preloader {
         // }
     }
 
-    /**
-     * @see javafx.application.Application#init()
-     */
     @Override
     public void init() throws Exception {
         // Empty
     }
 
-    /**
-     * @see javafx.application.Application#start(javafx.stage.Stage)
-     */
     @Override
     public void start(final Stage stage) throws Exception {
         this.stage = stage;
@@ -126,9 +108,6 @@ public class PimClientPreloader extends Preloader {
         stage.show();
     }
 
-    /**
-     * @see javafx.application.Application#stop()
-     */
     @Override
     public void stop() throws Exception {
         // Empty

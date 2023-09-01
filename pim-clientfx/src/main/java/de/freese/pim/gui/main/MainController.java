@@ -41,41 +41,26 @@ public class MainController extends AbstractController {
         FxUtils.bind(this.mainView, this, resources);
     }
 
-    /**
-     * @see de.freese.pim.gui.controller.AbstractController#activate()
-     */
     @Override
     public void activate() {
         throw new UnsupportedOperationException();
     }
 
-    /**
-     * @see de.freese.pim.gui.controller.AbstractController#getMainNode()
-     */
     @Override
     public Node getMainNode() {
         return this.mainView;
     }
 
-    /**
-     * @see de.freese.pim.gui.controller.AbstractController#getNaviNode()
-     */
     @Override
     public Node getNaviNode() {
         throw new UnsupportedOperationException();
     }
 
-    /**
-     * @see de.freese.pim.gui.controller.AbstractController#getToolBar()
-     */
     @Override
     public ToolBar getToolBar() {
         throw new UnsupportedOperationException();
     }
 
-    /**
-     * @see javafx.fxml.Initializable#initialize(java.net.URL, java.util.ResourceBundle)
-     */
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
         this.mailController = new MailController();

@@ -70,9 +70,6 @@ public class InitMailAPITask extends Task<List<FxMailFolder>> {
         });
     }
 
-    /**
-     * @see javafx.concurrent.Task#call()
-     */
     @Override
     protected List<FxMailFolder> call() throws Exception {
         LOGGER.info("Init MailAccount {}", this.account.getMail());

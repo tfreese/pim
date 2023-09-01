@@ -83,9 +83,6 @@ public class PimClientApplication extends Application {
 
     private final BooleanProperty ready = new SimpleBooleanProperty(false);
 
-    /**
-     * @see javafx.application.Application#init()
-     */
     @Override
     public void init() throws Exception {
         // "JavaFX-Launcher" umbenennen.
@@ -163,9 +160,6 @@ public class PimClientApplication extends Application {
         FxUtils.tooltipBehaviorHack();
     }
 
-    /**
-     * @see javafx.application.Application#start(javafx.stage.Stage)
-     */
     @Override
     public void start(final Stage primaryStage) throws Exception {
         try {
@@ -242,9 +236,6 @@ public class PimClientApplication extends Application {
         }
     }
 
-    /**
-     * @see javafx.application.Application#stop()
-     */
     @Override
     public void stop() throws Exception {
         LOGGER.info("Stop P.I.M.");

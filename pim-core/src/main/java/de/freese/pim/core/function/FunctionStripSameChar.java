@@ -12,9 +12,6 @@ import java.util.function.UnaryOperator;
 public class FunctionStripSameChar implements UnaryOperator<String> {
     public static final UnaryOperator<String> INSTANCE = new FunctionStripSameChar();
 
-    /**
-     * @see java.util.function.Function#apply(java.lang.Object)
-     */
     @Override
     public String apply(final String text) {
         String str = "";

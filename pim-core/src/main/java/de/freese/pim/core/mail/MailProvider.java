@@ -53,9 +53,6 @@ public enum MailProvider {
         return this.smtpPort;
     }
 
-    /**
-     * @see java.lang.Enum#toString()
-     */
     @Override
     public String toString() {
         return getDisplayName();

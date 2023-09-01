@@ -25,8 +25,6 @@ import de.freese.pim.core.concurrent.PIMForkJoinWorkerThreadFactory;
 
 /**
  * @author Thomas Freese
- * @see AsyncConfigurer
- * @see SchedulingConfigurer
  */
 @Configuration
 public class ExecutorConfig {

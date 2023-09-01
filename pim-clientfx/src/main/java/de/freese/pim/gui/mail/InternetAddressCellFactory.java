@@ -13,9 +13,6 @@ import de.freese.pim.core.mail.InternetAddress;
  * @author Thomas Freese
  */
 public class InternetAddressCellFactory<S> implements Callback<TableColumn<S, InternetAddress[]>, TableCell<S, InternetAddress[]>> {
-    /**
-     * @see javafx.util.Callback#call(java.lang.Object)
-     */
     @Override
     public TableCell<S, InternetAddress[]> call(final TableColumn<S, InternetAddress[]> param) {
         return new TableCell<>() {

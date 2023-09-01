@@ -61,9 +61,6 @@ public abstract class AbstractDataSource implements DataSource {
         this.data = data;
     }
 
-    /**
-     * @see jakarta.activation.DataSource#getContentType()
-     */
     @Override
     public String getContentType() {
         return this.contentType;
@@ -73,9 +70,6 @@ public abstract class AbstractDataSource implements DataSource {
         return this.data;
     }
 
-    /**
-     * @see jakarta.activation.DataSource#getInputStream()
-     */
     @Override
     @JsonIgnore
     public InputStream getInputStream() throws IOException {
@@ -86,17 +80,11 @@ public abstract class AbstractDataSource implements DataSource {
         return new ByteArrayInputStream(this.data);
     }
 
-    /**
-     * @see jakarta.activation.DataSource#getName()
-     */
     @Override
     public String getName() {
         return this.name;
     }
 
-    /**
-     * @see jakarta.activation.DataSource#getOutputStream()
-     */
     @Override
     @JsonIgnore
     public OutputStream getOutputStream() throws IOException {

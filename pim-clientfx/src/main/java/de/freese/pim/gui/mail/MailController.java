@@ -99,9 +99,6 @@ public class MailController extends AbstractController {
         this.mailService = SpringContext.getBean("clientMailService", FxMailService.class);
     }
 
-    /**
-     * @see de.freese.pim.gui.controller.AbstractController#activate()
-     */
     @Override
     public void activate() {
         if (isActivated()) {
@@ -117,33 +114,21 @@ public class MailController extends AbstractController {
         loadMailAccounts(root);
     }
 
-    /**
-     * @see de.freese.pim.gui.controller.AbstractController#getMainNode()
-     */
     @Override
     public Node getMainNode() {
         return this.mainNode;
     }
 
-    /**
-     * @see de.freese.pim.gui.controller.AbstractController#getNaviNode()
-     */
     @Override
     public Node getNaviNode() {
         return this.naviNode;
     }
 
-    /**
-     * @see de.freese.pim.gui.controller.AbstractController#getToolBar()
-     */
     @Override
     public ToolBar getToolBar() {
         return this.toolBar;
     }
 
-    /**
-     * @see javafx.fxml.Initializable#initialize(java.net.URL, java.util.ResourceBundle)
-     */
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
         // Buttons
@@ -357,9 +342,6 @@ public class MailController extends AbstractController {
         FxMailAccount account = getAccount(this.selectedTreeItem.get());
 
         Task<MailContent> loadMailContentTask = new Task<>() {
-            /**
-             * @see javafx.concurrent.Task#call()
-             */
             @Override
             protected MailContent call() throws Exception {
                 return getMailService().loadMailContent(account, mail, this::updateProgress);

@@ -12,7 +12,6 @@ import de.freese.pim.core.mail.MailContent;
  * {@link URLStreamHandler} für ein Inline einer HTML-Mail.
  *
  * @author Thomas Freese
- * @see InlineUrlConnection
  */
 public class InlineUrlStreamHandler extends URLStreamHandler {
     private static MailContent mailContent;
@@ -25,9 +24,6 @@ public class InlineUrlStreamHandler extends URLStreamHandler {
         InlineUrlStreamHandler.mailContent = mailContent;
     }
 
-    /**
-     * @see java.net.URLStreamHandler#openConnection(java.net.URL)
-     */
     @Override
     protected URLConnection openConnection(final URL url) throws IOException {
         return new InlineUrlConnection(InlineUrlStreamHandler.mailContent, url);

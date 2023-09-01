@@ -61,9 +61,6 @@ public class FxKontakt implements Comparable<FxKontakt> {
     // this.pcs.addPropertyChangeListener(listener);
     // }
 
-    /**
-     * @see java.lang.Comparable#compareTo(java.lang.Object)
-     */
     @Override
     public int compareTo(final FxKontakt k) {
         if (k == null) {
@@ -79,9 +76,6 @@ public class FxKontakt implements Comparable<FxKontakt> {
         return comp;
     }
 
-    /**
-     * @see java.lang.Object#equals(java.lang.Object)
-     */
     @Override
     public boolean equals(final Object obj) {
         if (this == obj) {
@@ -111,9 +105,6 @@ public class FxKontakt implements Comparable<FxKontakt> {
         return vornameProperty().get();
     }
 
-    /**
-     * @see java.lang.Object#hashCode()
-     */
     @Override
     public int hashCode() {
         return Objects.hash(getAttribute(), getID(), getNachname(), getVorname());
@@ -153,9 +144,6 @@ public class FxKontakt implements Comparable<FxKontakt> {
         // this.pcs.firePropertyChange("vorname", old, getVorname());
     }
 
-    /**
-     * @see java.lang.Object#toString()
-     */
     @Override
     public String toString() {
         // StringBuilder builder = new StringBuilder();

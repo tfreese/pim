@@ -33,9 +33,6 @@ import de.freese.pim.gui.mail.model.FxMailFolder;
 public class DefaultStandaloneFxMailService extends AbstractFxMailService {
     private MailService mailService;
 
-    /**
-     * @see FxMailService#connectAccount(FxMailAccount)
-     */
     @Override
     public void connectAccount(final FxMailAccount account) {
         try {
@@ -48,9 +45,6 @@ public class DefaultStandaloneFxMailService extends AbstractFxMailService {
         }
     }
 
-    /**
-     * @see FxMailService#deleteAccount(long)
-     */
     @Override
     public int deleteAccount(final long accountID) {
         try {
@@ -61,9 +55,6 @@ public class DefaultStandaloneFxMailService extends AbstractFxMailService {
         }
     }
 
-    /**
-     * @see FxMailService#disconnectAccounts(long[])
-     */
     @Override
     public void disconnectAccounts(final long... accountIDs) {
         try {
@@ -74,9 +65,6 @@ public class DefaultStandaloneFxMailService extends AbstractFxMailService {
         }
     }
 
-    /**
-     * @see FxMailService#getMailAccounts()
-     */
     @Override
     public List<FxMailAccount> getMailAccounts() {
         try {
@@ -89,9 +77,6 @@ public class DefaultStandaloneFxMailService extends AbstractFxMailService {
         }
     }
 
-    /**
-     * @see FxMailService#insertAccount(FxMailAccount)
-     */
     @Override
     public void insertAccount(final FxMailAccount account) {
         try {
@@ -105,9 +90,6 @@ public class DefaultStandaloneFxMailService extends AbstractFxMailService {
         }
     }
 
-    /**
-     * @see FxMailService#insertOrUpdateFolder(long, java.util.List)
-     */
     @Override
     public int insertOrUpdateFolder(final long accountID, final List<FxMailFolder> folders) {
         try {
@@ -141,9 +123,6 @@ public class DefaultStandaloneFxMailService extends AbstractFxMailService {
         }
     }
 
-    /**
-     * @see FxMailService#loadFolder(long)
-     */
     @Override
     public List<FxMailFolder> loadFolder(final long accountID) {
         try {
@@ -160,9 +139,6 @@ public class DefaultStandaloneFxMailService extends AbstractFxMailService {
         }
     }
 
-    /**
-     * @see FxMailService#loadMails(FxMailAccount, FxMailFolder)
-     */
     @Override
     public List<FxMail> loadMails(final FxMailAccount account, final FxMailFolder folder) {
         getLogger().info("Load Mails: account={}, folder={}", account.getMail(), folder.getFullName());
@@ -186,9 +162,6 @@ public class DefaultStandaloneFxMailService extends AbstractFxMailService {
         this.mailService = mailService;
     }
 
-    /**
-     * @see FxMailService#test(FxMailAccount)
-     */
     @Override
     public List<FxMailFolder> test(final FxMailAccount account) {
         try {
@@ -204,9 +177,6 @@ public class DefaultStandaloneFxMailService extends AbstractFxMailService {
         }
     }
 
-    // /**
-    // * @see de.freese.pim.gui.mail.service.FxMailService#loadMails2(long, long, java.lang.String)
-    // */
     // @Override
     // public Future<List<FxMail>> loadMails2(final long accountID, final long folderID, final String folderFullName) throws Exception
     // {
@@ -217,9 +187,6 @@ public class DefaultStandaloneFxMailService extends AbstractFxMailService {
     // return new AsyncResult<>(fxBeans);
     // }
 
-    /**
-     * @see FxMailService#updateAccount(FxMailAccount)
-     */
     @Override
     public int updateAccount(final FxMailAccount account) {
         try {
@@ -236,10 +203,6 @@ public class DefaultStandaloneFxMailService extends AbstractFxMailService {
         return this.mailService;
     }
 
-    /**
-     * @see AbstractFxMailService#loadMailContent(java.nio.file.Path, FxMailAccount,
-     * FxMail, de.freese.pim.core.utils.io.IOMonitor)
-     */
     @Override
     protected MailContent loadMailContent(final Path mailPath, final FxMailAccount account, final FxMail mail, final IOMonitor monitor) throws Exception {
         MailContent mailContent = getMailService().loadMailContent(account.getID(), mail.getFolderFullName(), mail.getUID(), monitor);

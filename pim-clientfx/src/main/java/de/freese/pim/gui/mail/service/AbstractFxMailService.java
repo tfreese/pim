@@ -42,10 +42,6 @@ public abstract class AbstractFxMailService extends AbstractFxService implements
         disconnectAccounts(new long[0]);
     }
 
-    /**
-     * @see FxMailService#loadMailContent(FxMailAccount, FxMail,
-     * de.freese.pim.core.utils.io.IOMonitor)
-     */
     @Override
     public MailContent loadMailContent(final FxMailAccount account, final FxMail mail, final IOMonitor monitor) {
         try {
@@ -73,7 +69,10 @@ public abstract class AbstractFxMailService extends AbstractFxService implements
             }
             else {
                 // Lokal gespeicherte Mail laden.
-                try (InputStream is = Files.newInputStream(mailPath); InputStream bis = new BufferedInputStream(is); InputStream gis = new GZIPInputStream(bis); InputStream mos = new MonitorInputStream(gis, monitor, mail.getSize())) {
+                try (InputStream is = Files.newInputStream(mailPath);
+                     InputStream bis = new BufferedInputStream(is);
+                     InputStream gis = new GZIPInputStream(bis);
+                     InputStream mos = new MonitorInputStream(gis, monitor, mail.getSize())) {
                     mailContent = getJsonMapper().readValue(mos, DefaultMailContent.class);
                 }
             }
@@ -114,7 +113,9 @@ public abstract class AbstractFxMailService extends AbstractFxService implements
         Callable<Void> task = () -> {
             getLogger().info("Save Mail: {}", mailPath);
 
-            try (OutputStream os = Files.newOutputStream(mailPath); OutputStream bos = new BufferedOutputStream(os); OutputStream gos = new GZIPOutputStream(bos)) {
+            try (OutputStream os = Files.newOutputStream(mailPath);
+                 OutputStream bos = new BufferedOutputStream(os);
+                 OutputStream gos = new GZIPOutputStream(bos)) {
                 getJsonMapper().writeValue(gos, mailContent);
 
                 gos.flush();
@@ -135,7 +136,10 @@ public abstract class AbstractFxMailService extends AbstractFxService implements
         Callable<Void> task = () -> {
             getLogger().info("Save Mail: {}", mailPath);
 
-            try (OutputStream os = Files.newOutputStream(mailPath); OutputStream bos = new BufferedOutputStream(os); OutputStream gos = new GZIPOutputStream(bos); PrintWriter pw = new PrintWriter(gos, true, StandardCharsets.UTF_8)) {
+            try (OutputStream os = Files.newOutputStream(mailPath);
+                 OutputStream bos = new BufferedOutputStream(os);
+                 OutputStream gos = new GZIPOutputStream(bos);
+                 PrintWriter pw = new PrintWriter(gos, true, StandardCharsets.UTF_8)) {
                 pw.write(jsonContent);
 
                 pw.flush();

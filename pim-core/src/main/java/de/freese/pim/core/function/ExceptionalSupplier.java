@@ -10,12 +10,8 @@ import java.util.function.Supplier;
  * @param <E> Konkreter Exception-Typ
  *
  * @author Thomas Freese
- * @see java.util.function.Supplier
  */
 @FunctionalInterface
 public interface ExceptionalSupplier<R, E extends Exception> {
-    /**
-     * @see java.util.function.Supplier#get()
-     */
     R get() throws E;
 }

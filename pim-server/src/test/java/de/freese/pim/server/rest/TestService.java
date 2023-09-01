@@ -14,8 +14,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.task.AsyncTaskExecutor;
 import org.springframework.http.MediaType;
-import org.springframework.scheduling.concurrent.ConcurrentTaskExecutor;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -23,8 +21,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.async.DeferredResult;
 import org.springframework.web.context.request.async.WebAsyncTask;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
-import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyEmitter;
-import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
 /**
  * <a href="https://spring.io/guides/tutorials/bookmarks/">guides</a><br>
@@ -36,18 +32,13 @@ import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBo
  * *
  *
  * @author Thomas Freese
- * @see ResponseBodyEmitter
- * @see StreamingResponseBody
  */
 @RestController
 @RequestMapping(path = "/test", produces = {MediaType.APPLICATION_JSON_VALUE}, headers = "Accept=application/json")
 // @MultipartConfig(fileSizeThreshold = 20971520)
 public class TestService {
     private final Logger logger = LoggerFactory.getLogger(TestService.class);
-    /**
-     * @see ThreadPoolTaskExecutor
-     * @see ConcurrentTaskExecutor
-     */
+
     @Resource
     private AsyncTaskExecutor taskExecutor;
 

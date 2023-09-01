@@ -31,9 +31,6 @@ public class ServerConfig extends WebMvcConfigurationSupport // implements WebMv
     @Resource
     private AsyncTaskExecutor taskExecutor;
 
-    /**
-     * @see org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport#extendMessageConverters(java.util.List)
-     */
     @Override
     public void extendMessageConverters(final List<HttpMessageConverter<?>> converters) {
         // Make sure dates are serialised in ISO-8601 format instead as timestamps
@@ -61,9 +58,6 @@ public class ServerConfig extends WebMvcConfigurationSupport // implements WebMv
         }
     }
 
-    /**
-     * @see org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport#configureAsyncSupport(org.springframework.web.servlet.config.annotation.AsyncSupportConfigurer)
-     */
     @Override
     protected void configureAsyncSupport(final AsyncSupportConfigurer configurer) {
         // Executer für die Verarbeitung der HTTP-Requests.

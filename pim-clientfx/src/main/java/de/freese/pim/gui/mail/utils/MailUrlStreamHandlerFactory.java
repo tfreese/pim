@@ -18,15 +18,10 @@ import org.slf4j.LoggerFactory;
  * </pre>
  *
  * @author Thomas Freese
- * @see InlineUrlStreamHandler
- * @see InlineUrlConnection
  */
 public class MailUrlStreamHandlerFactory implements URLStreamHandlerFactory {
     private static final Logger LOGGER = LoggerFactory.getLogger(MailUrlStreamHandlerFactory.class);
 
-    /**
-     * @see java.net.URLStreamHandlerFactory#createURLStreamHandler(java.lang.String)
-     */
     @Override
     public URLStreamHandler createURLStreamHandler(final String protocol) {
         if ("cid".equals(protocol)) {

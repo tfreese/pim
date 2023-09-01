@@ -85,9 +85,6 @@ public class MailFolder {
         this.sendFolder = predicate.test(name.toLowerCase());
     }
 
-    /**
-     * @see java.lang.Object#toString()
-     */
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();

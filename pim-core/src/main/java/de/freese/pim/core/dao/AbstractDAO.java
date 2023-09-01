@@ -28,9 +28,6 @@ public abstract class AbstractDAO implements InitializingBean {
 
     private Function<String, String> sequenceQuery;
 
-    /**
-     * @see org.springframework.beans.factory.InitializingBean#afterPropertiesSet()
-     */
     @Override
     public void afterPropertiesSet() throws Exception {
         Objects.requireNonNull(this.jdbcTemplate, "jdbcTemplate required");

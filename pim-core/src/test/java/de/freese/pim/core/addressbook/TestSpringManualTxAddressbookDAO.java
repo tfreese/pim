@@ -52,9 +52,6 @@ class TestSpringManualTxAddressbookDAO extends AbstractDAOTestCase {
         ((DefaultAddressBookDAO) addressBookDAO).afterPropertiesSet();
     }
 
-    /**
-     * @see de.freese.pim.core.addressbook.AbstractDAOTestCase#test0100InsertKontakts()
-     */
     @Override
     @Test
     void test0100InsertKontakts() throws Throwable {
@@ -74,9 +71,6 @@ class TestSpringManualTxAddressbookDAO extends AbstractDAOTestCase {
         assertTrue(true);
     }
 
-    /**
-     * @see de.freese.pim.core.addressbook.AbstractDAOTestCase#test0110InsertKontaktWithNullVorname()
-     */
     @Override
     @Test
     void test0110InsertKontaktWithNullVorname() throws Throwable {
@@ -96,9 +90,6 @@ class TestSpringManualTxAddressbookDAO extends AbstractDAOTestCase {
         assertTrue(true);
     }
 
-    /**
-     * @see de.freese.pim.core.addressbook.AbstractDAOTestCase#test0120InsertKontaktWithBlankVorname()
-     */
     @Override
     @Test
     void test0120InsertKontaktWithBlankVorname() throws Throwable {
@@ -118,9 +109,6 @@ class TestSpringManualTxAddressbookDAO extends AbstractDAOTestCase {
         });
     }
 
-    /**
-     * @see de.freese.pim.core.addressbook.AbstractDAOTestCase#test0130InsertKontaktExisting()
-     */
     @Override
     @Test
     void test0130InsertKontaktExisting() throws Throwable {
@@ -140,9 +128,6 @@ class TestSpringManualTxAddressbookDAO extends AbstractDAOTestCase {
         });
     }
 
-    /**
-     * @see de.freese.pim.core.addressbook.AbstractDAOTestCase#test0200UpdateKontakt()
-     */
     @Override
     @Test
     void test0200UpdateKontakt() throws Throwable {
@@ -162,9 +147,6 @@ class TestSpringManualTxAddressbookDAO extends AbstractDAOTestCase {
         assertTrue(true);
     }
 
-    /**
-     * @see de.freese.pim.core.addressbook.AbstractDAOTestCase#test0300InsertAttribut()
-     */
     @Override
     @Test
     void test0300InsertAttribut() throws Throwable {
@@ -184,9 +166,6 @@ class TestSpringManualTxAddressbookDAO extends AbstractDAOTestCase {
         assertTrue(true);
     }
 
-    /**
-     * @see de.freese.pim.core.addressbook.AbstractDAOTestCase#test0310InsertInsertAttributWithNullValue()
-     */
     @Override
     @Test
     void test0310InsertInsertAttributWithNullValue() throws Throwable {
@@ -206,9 +185,6 @@ class TestSpringManualTxAddressbookDAO extends AbstractDAOTestCase {
         });
     }
 
-    /**
-     * @see de.freese.pim.core.addressbook.AbstractDAOTestCase#test0320InsertInsertAttributWithBlankValue()
-     */
     @Override
     @Test
     void test0320InsertInsertAttributWithBlankValue() throws Throwable {
@@ -228,9 +204,6 @@ class TestSpringManualTxAddressbookDAO extends AbstractDAOTestCase {
         });
     }
 
-    /**
-     * @see de.freese.pim.core.addressbook.AbstractDAOTestCase#test0330InsertInsertAttributWithNull()
-     */
     @Override
     @Test
     void test0330InsertInsertAttributWithNull() throws Throwable {
@@ -250,9 +223,6 @@ class TestSpringManualTxAddressbookDAO extends AbstractDAOTestCase {
         });
     }
 
-    /**
-     * @see de.freese.pim.core.addressbook.AbstractDAOTestCase#test0340InsertInsertAttributWithBlank()
-     */
     @Override
     @Test
     void test0340InsertInsertAttributWithBlank() throws Throwable {
@@ -272,9 +242,6 @@ class TestSpringManualTxAddressbookDAO extends AbstractDAOTestCase {
         });
     }
 
-    /**
-     * @see de.freese.pim.core.addressbook.AbstractDAOTestCase#test0350InsertAttributExisting()
-     */
     @Override
     @Test
     void test0350InsertAttributExisting() throws Throwable {
@@ -294,9 +261,6 @@ class TestSpringManualTxAddressbookDAO extends AbstractDAOTestCase {
         });
     }
 
-    /**
-     * @see de.freese.pim.core.addressbook.AbstractDAOTestCase#test0400UpdateAttribut()
-     */
     @Override
     @Test
     void test0400UpdateAttribut() throws Throwable {
@@ -316,9 +280,6 @@ class TestSpringManualTxAddressbookDAO extends AbstractDAOTestCase {
         assertTrue(true);
     }
 
-    /**
-     * @see de.freese.pim.core.addressbook.AbstractDAOTestCase#test0500GetKontaktDetailsAll()
-     */
     @Override
     @Test
     void test0500GetKontaktDetailsAll() throws Throwable {
@@ -340,9 +301,6 @@ class TestSpringManualTxAddressbookDAO extends AbstractDAOTestCase {
         assertTrue(true);
     }
 
-    /**
-     * @see de.freese.pim.core.addressbook.AbstractDAOTestCase#test0510GetKontaktDetailsWithID()
-     */
     @Override
     @Test
     void test0510GetKontaktDetailsWithID() throws Throwable {
@@ -364,9 +322,6 @@ class TestSpringManualTxAddressbookDAO extends AbstractDAOTestCase {
         assertTrue(true);
     }
 
-    /**
-     * @see de.freese.pim.core.addressbook.AbstractDAOTestCase#test0520GetKontaktDetailsWithIDs()
-     */
     @Override
     @Test
     void test0520GetKontaktDetailsWithIDs() throws Throwable {
@@ -388,9 +343,6 @@ class TestSpringManualTxAddressbookDAO extends AbstractDAOTestCase {
         assertTrue(true);
     }
 
-    /**
-     * @see de.freese.pim.core.addressbook.AbstractDAOTestCase#test0600GetKontakte()
-     */
     @Override
     @Test
     void test0600GetKontakte() throws Throwable {
@@ -412,9 +364,6 @@ class TestSpringManualTxAddressbookDAO extends AbstractDAOTestCase {
         assertTrue(true);
     }
 
-    /**
-     * @see de.freese.pim.core.addressbook.AbstractDAOTestCase#test0700SearchKontakts()
-     */
     @Override
     @Test
     void test0700SearchKontakts() throws Throwable {
@@ -436,9 +385,6 @@ class TestSpringManualTxAddressbookDAO extends AbstractDAOTestCase {
         assertTrue(true);
     }
 
-    /**
-     * @see de.freese.pim.core.addressbook.AbstractDAOTestCase#test0900DeleteAttribut()
-     */
     @Override
     @Test
     void test0900DeleteAttribut() throws Throwable {
@@ -458,9 +404,6 @@ class TestSpringManualTxAddressbookDAO extends AbstractDAOTestCase {
         assertTrue(true);
     }
 
-    /**
-     * @see de.freese.pim.core.addressbook.AbstractDAOTestCase#test1000DeleteKontakt()
-     */
     @Override
     @Test
     void test1000DeleteKontakt() throws Throwable {

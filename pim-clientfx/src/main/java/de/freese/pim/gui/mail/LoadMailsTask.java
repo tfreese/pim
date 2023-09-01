@@ -50,10 +50,6 @@ public class LoadMailsTask extends Task<Void> implements Callable<Void> {
         });
     }
 
-    /**
-     * @see javafx.concurrent.Task#call()
-     * @see Callable
-     */
     @Override
     public Void call() throws Exception {
         for (FxMailFolder mf : this.folders) {

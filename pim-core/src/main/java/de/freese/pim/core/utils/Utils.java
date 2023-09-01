@@ -104,18 +104,12 @@ public final class Utils {
         }
 
         Files.walkFileTree(path, new SimpleFileVisitor<>() {
-            /**
-             * @see java.nio.file.SimpleFileVisitor#postVisitDirectory(java.lang.Object, java.io.IOException)
-             */
             @Override
             public FileVisitResult postVisitDirectory(final Path dir, final IOException exc) throws IOException {
                 Files.delete(dir);
                 return FileVisitResult.CONTINUE;
             }
 
-            /**
-             * @see java.nio.file.SimpleFileVisitor#visitFile(java.lang.Object, java.nio.file.attribute.BasicFileAttributes)
-             */
             @Override
             public FileVisitResult visitFile(final Path file, final BasicFileAttributes attrs) throws IOException {
                 Files.delete(file);
@@ -260,8 +254,6 @@ public final class Utils {
      * Die Spaltenbreite der Elemente wird auf den breitesten Wert durch das Padding aufgefüllt.<br>
      * Ist das Padding null oder leer wird nichts gemacht.<br>
      * Beim Padding werden die CharSequences durch Strings ersetzt.
-     *
-     * @see #write(List, PrintStream, String)
      */
     @SuppressWarnings("unchecked")
     public static <T extends CharSequence> void padding(final List<T[]> rows, final String padding) {
@@ -372,8 +364,6 @@ public final class Utils {
     /**
      * Schreibt die Liste in den PrintStream.<br>
      * Der Stream wird nicht geschlossen.
-     *
-     * @see #padding(List, String)
      */
     public static <T extends CharSequence> void write(final List<T[]> rows, final PrintStream ps, final String delimiter) {
         Objects.requireNonNull(rows, "rows required");

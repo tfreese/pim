@@ -30,9 +30,6 @@ public class TextAreaOutputStream extends OutputStream {
             this.keepLastNLines = keepLastNLines;
         }
 
-        /**
-         * @see javafx.scene.control.TextInputControl#replaceText(int, int, java.lang.String)
-         */
         @Override
         public void replaceText(final int start, final int end, final String text) {
             super.replaceText(start, end, text);

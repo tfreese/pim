@@ -48,9 +48,6 @@ public class Kontakt implements Comparable<Kontakt> {
     // this.pcs.addPropertyChangeListener(listener);
     // }
 
-    /**
-     * @see java.lang.Comparable#compareTo(java.lang.Object)
-     */
     @Override
     public int compareTo(final Kontakt k) {
         if (k == null) {
@@ -66,9 +63,6 @@ public class Kontakt implements Comparable<Kontakt> {
         return comp;
     }
 
-    /**
-     * @see java.lang.Object#equals(java.lang.Object)
-     */
     @Override
     public boolean equals(final Object obj) {
         if (this == obj) {
@@ -98,9 +92,6 @@ public class Kontakt implements Comparable<Kontakt> {
         return this.vorname;
     }
 
-    /**
-     * @see java.lang.Object#hashCode()
-     */
     @Override
     public int hashCode() {
         return Objects.hash(this.attribute, this.id, this.nachname, this.vorname);
@@ -129,9 +120,6 @@ public class Kontakt implements Comparable<Kontakt> {
         // this.pcs.firePropertyChange("vorname", old, getVorname());
     }
 
-    /**
-     * @see java.lang.Object#toString()
-     */
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();

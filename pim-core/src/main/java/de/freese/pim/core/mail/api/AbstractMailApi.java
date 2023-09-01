@@ -25,25 +25,16 @@ public abstract class AbstractMailApi implements MailApi {
         this.account = Objects.requireNonNull(account, "account required");
     }
 
-    /**
-     * @see MailApi#getAccount()
-     */
     @Override
     public MailAccount getAccount() {
         return this.account;
     }
 
-    /**
-     * @see MailApi#setExecutor(java.util.concurrent.Executor)
-     */
     @Override
     public void setExecutor(final Executor executor) {
         this.executor = executor;
     }
 
-    /**
-     * @see java.lang.Object#toString()
-     */
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();

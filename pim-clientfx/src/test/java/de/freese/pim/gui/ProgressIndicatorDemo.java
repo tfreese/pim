@@ -25,9 +25,6 @@ public class ProgressIndicatorDemo extends Application {
         launch(args);
     }
 
-    /**
-     * @see javafx.application.Application#start(javafx.stage.Stage)
-     */
     @Override
     public void start(final Stage primaryStage) throws Exception {
         ProgressIndicator progressIndicator = new ProgressIndicator();
@@ -35,9 +32,6 @@ public class ProgressIndicatorDemo extends Application {
         // progressIndicator.setMaxSize(250D, 250D);
 
         Task<Void> task = new Task<>() {
-            /**
-             * @see javafx.concurrent.Task#call()
-             */
             @Override
             protected Void call() throws Exception {
                 int progress = 0;

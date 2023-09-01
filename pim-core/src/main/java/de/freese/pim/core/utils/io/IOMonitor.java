@@ -9,15 +9,8 @@ import java.util.function.BiConsumer;
  * Er implementiert ebenfalls BiConsumer(Long, Long).
  *
  * @author Thomas Freese
- * @see MonitoringReadableByteChannel
- * @see MonitoringWritableByteChannel
- * @see MonitorInputStream
- * @see MonitorOutputStream
  */
 public interface IOMonitor extends BiConsumer<Long, Long> {
-    /**
-     * @see java.util.function.BiConsumer#accept(java.lang.Object, java.lang.Object)
-     */
     @Override
     default void accept(final Long t, final Long u) {
         monitor(t, u);

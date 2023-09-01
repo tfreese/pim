@@ -27,25 +27,16 @@ public class InlineUrlConnection extends URLConnection {
         this.dataSource = mailContent.getInlines().get(url.getPath());
     }
 
-    /**
-     * @see java.net.URLConnection#connect()
-     */
     @Override
     public void connect() throws IOException {
         this.connected = true;
     }
 
-    /**
-     * @see java.net.URLConnection#getContentEncoding()
-     */
     @Override
     public String getContentEncoding() {
         return this.mailContent.getEncoding();
     }
 
-    /**
-     * @see java.net.URLConnection#getContentType()
-     */
     @Override
     public String getContentType() {
         if (this.dataSource == null) {
@@ -55,9 +46,6 @@ public class InlineUrlConnection extends URLConnection {
         return this.dataSource.getContentType();
     }
 
-    /**
-     * @see java.net.URLConnection#getInputStream()
-     */
     @Override
     public InputStream getInputStream() throws IOException {
         if (this.dataSource == null) {

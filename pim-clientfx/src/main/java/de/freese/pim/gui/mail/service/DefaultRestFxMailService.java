@@ -33,33 +33,21 @@ import de.freese.pim.gui.mail.model.FxMailFolder;
 public class DefaultRestFxMailService extends AbstractFxMailService {
     private RestTemplate restTemplate;
 
-    /**
-     * @see FxMailService#connectAccount(FxMailAccount)
-     */
     @Override
     public void connectAccount(final FxMailAccount account) {
         getRestTemplate().postForObject("/mail/connect", account, Void.class);
     }
 
-    /**
-     * @see FxMailService#deleteAccount(long)
-     */
     @Override
     public int deleteAccount(final long accountID) {
         return getRestTemplate().postForObject("/mail/account/delete/{id}", accountID, Integer.class);
     }
 
-    /**
-     * @see FxMailService#disconnectAccounts(long[])
-     */
     @Override
     public void disconnectAccounts(final long... accountIDs) {
         getRestTemplate().postForObject("/mail/account/disconnect", accountIDs, Void.class);
     }
 
-    /**
-     * @see FxMailService#getMailAccounts()
-     */
     @Override
     public List<FxMailAccount> getMailAccounts() {
         FxMailAccount[] accounts = getRestTemplate().getForObject("/mail/accounts", FxMailAccount[].class);
@@ -67,9 +55,6 @@ public class DefaultRestFxMailService extends AbstractFxMailService {
         return Arrays.asList(accounts);
     }
 
-    /**
-     * @see FxMailService#insertAccount(FxMailAccount)
-     */
     @Override
     public void insertAccount(final FxMailAccount account) {
         long primaryKey = getRestTemplate().postForObject("/mail/account/insert", account, Long.class);
@@ -77,9 +62,6 @@ public class DefaultRestFxMailService extends AbstractFxMailService {
         account.setID(primaryKey);
     }
 
-    /**
-     * @see FxMailService#insertOrUpdateFolder(long, java.util.List)
-     */
     @Override
     public int insertOrUpdateFolder(final long accountID, final List<FxMailFolder> folders) {
         int affectedRows = 0;
@@ -108,9 +90,6 @@ public class DefaultRestFxMailService extends AbstractFxMailService {
         return affectedRows;
     }
 
-    /**
-     * @see FxMailService#loadFolder(long)
-     */
     @Override
     public List<FxMailFolder> loadFolder(final long accountID) {
         FxMailFolder[] folders = getRestTemplate().getForObject("/mail/folder/{accountID}", FxMailFolder[].class, accountID);
@@ -118,9 +97,6 @@ public class DefaultRestFxMailService extends AbstractFxMailService {
         return Arrays.asList(folders);
     }
 
-    /**
-     * @see FxMailService#loadMails(FxMailAccount, FxMailFolder)
-     */
     @Override
     public List<FxMail> loadMails(final FxMailAccount account, final FxMailFolder folder) {
         getLogger().info("Load Mails: account={}, folder={}", account.getMail(), folder.getFullName());
@@ -161,9 +137,6 @@ public class DefaultRestFxMailService extends AbstractFxMailService {
         this.restTemplate = restTemplateBuilder.build();
     }
 
-    /**
-     * @see FxMailService#test(FxMailAccount)
-     */
     @Override
     public List<FxMailFolder> test(final FxMailAccount account) {
         FxMailFolder[] folders = getRestTemplate().postForObject("/mail/test", account, FxMailFolder[].class);
@@ -171,9 +144,6 @@ public class DefaultRestFxMailService extends AbstractFxMailService {
         return Arrays.asList(folders);
     }
 
-    /**
-     * @see FxMailService#updateAccount(FxMailAccount)
-     */
     @Override
     public int updateAccount(final FxMailAccount account) {
         return getRestTemplate().postForObject("/mail/account/update", account, int.class);
@@ -183,10 +153,6 @@ public class DefaultRestFxMailService extends AbstractFxMailService {
         return this.restTemplate;
     }
 
-    /**
-     * @see AbstractFxMailService#loadMailContent(java.nio.file.Path, FxMailAccount,
-     * FxMail, de.freese.pim.core.utils.io.IOMonitor)
-     */
     @Override
     protected MailContent loadMailContent(final Path mailPath, final FxMailAccount account, final FxMail mail, final IOMonitor monitor) throws Exception {
         ResponseEntity<String> jsonContent = getRestTemplate().getForEntity("/mail/content/{accountID}/{folderFullName}/{mailUID}", String.class, account.getID(), urlEncode(urlEncode(mail.getFolderFullName())), mail.getUID());

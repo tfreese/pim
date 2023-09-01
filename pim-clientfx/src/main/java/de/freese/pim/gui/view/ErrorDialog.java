@@ -95,9 +95,6 @@ public class ErrorDialog {
         return this;
     }
 
-    /**
-     * @see javafx.scene.control.Dialog#showAndWait()
-     */
     public void showAndWait() {
         PimClientApplication.unblockGUI();
         this.alert.showAndWait();

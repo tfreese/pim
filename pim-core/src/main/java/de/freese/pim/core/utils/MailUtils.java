@@ -61,9 +61,6 @@ public final class MailUtils {
             return this.mimeType;
         }
 
-        /**
-         * @see java.lang.Object#toString()
-         */
         @Override
         public String toString() {
             return getMimeType() + ": " + getContent();
@@ -93,7 +90,7 @@ public final class MailUtils {
      * Key = Filename<br>
      * Value = {@link MimePart}<br>
      *
-     * @param part {@link Part}, @see {@link Message}
+     * @param part {@link Part}
      *
      * @return {@link Map}; ist niemals null
      */
@@ -115,7 +112,7 @@ public final class MailUtils {
     /**
      * Liefert alle vorhandenen Attachments-MimeParts einer {@link Message}.
      *
-     * @param part {@link Part}, @see {@link Message}
+     * @param part {@link Part}
      *
      * @return {@link List}; ist niemals null
      */
@@ -147,7 +144,7 @@ public final class MailUtils {
      * Key = ContentID<br>
      * Value = {@link MimePart}<br>
      *
-     * @param part {@link Part}, @see {@link Message}
+     * @param part {@link Part}
      *
      * @return {@link Map}; ist niemals null
      */
@@ -176,7 +173,7 @@ public final class MailUtils {
     /**
      * Liefert alle vorhandenen Inline-MimeParts einer {@link Message}.
      *
-     * @param part {@link Part}, @see {@link Message}
+     * @param part {@link Part}
      *
      * @return {@link List}; ist niemals null
      */
@@ -206,7 +203,7 @@ public final class MailUtils {
     /**
      * Liefert die Gesamtgröße aller einzelnen Parts.
      *
-     * @param part {@link Part}, @see {@link Message}
+     * @param part {@link Part}
      */
     public static long getSizeOfAllParts(final Part part) throws Exception {
         long size = part.getSize();
@@ -230,7 +227,7 @@ public final class MailUtils {
      * Liefert die {@link DataSource} für den Text (text/plain, text/html) einer {@link Message}.<br>
      * Dabei wird zuerst nach HTML gesucht, dann nach Plain-Text.
      *
-     * @param part {@link Part}, @see {@link Message}
+     * @param part {@link Part}
      *
      * @return {@link List}; ist niemals null
      */
@@ -250,7 +247,7 @@ public final class MailUtils {
     /**
      * Liefert alle vorhandenen Text-DataSources (text/plain, text/html) einer {@link Message}.
      *
-     * @param part {@link Part}, @see {@link Message}
+     * @param part {@link Part}
      *
      * @return {@link List}; ist niemals null
      */
@@ -280,7 +277,7 @@ public final class MailUtils {
     /**
      * Liefert alle vorhandenen Text-Parts (text/plain, text/html) einer {@link Message}.
      *
-     * @param part {@link Part}, @see {@link Message}
+     * @param part {@link Part}
      *
      * @return {@link List}; ist niemals null
      */

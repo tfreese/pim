@@ -54,9 +54,6 @@ public class InternetAddress {
     // this.personal = personal;
     // }
 
-    /**
-     * @see java.lang.Object#toString()
-     */
     @Override
     public String toString() {
         if ((this.personal == null) || (this.personal.length() == 0)) {

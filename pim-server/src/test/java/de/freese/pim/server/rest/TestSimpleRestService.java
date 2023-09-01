@@ -63,9 +63,6 @@ class Config extends WebMvcConfigurationSupport {
     // return bean;
     // }
 
-    /**
-     * @see org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport#configureAsyncSupport(org.springframework.web.servlet.config.annotation.AsyncSupportConfigurer)
-     */
     @Override
     protected void configureAsyncSupport(final AsyncSupportConfigurer configurer) {
         // Verlagert die asynchrone Ausführung von Server-Requests (Callable, WebAsyncTask) in diesen ThreadPool.

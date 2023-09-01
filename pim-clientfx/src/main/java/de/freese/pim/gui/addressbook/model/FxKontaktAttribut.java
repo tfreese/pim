@@ -24,9 +24,6 @@ public class FxKontaktAttribut implements Comparable<FxKontaktAttribut> {
         return this.attributProperty;
     }
 
-    /**
-     * @see java.lang.Comparable#compareTo(java.lang.Object)
-     */
     @Override
     public int compareTo(final FxKontaktAttribut ka) {
         if (ka == null) {
@@ -70,9 +67,6 @@ public class FxKontaktAttribut implements Comparable<FxKontaktAttribut> {
         wertProperty().set(wert);
     }
 
-    /**
-     * @see java.lang.Object#toString()
-     */
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();

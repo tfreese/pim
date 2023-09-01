@@ -35,25 +35,16 @@ public class MonitoringReadableByteChannel implements ReadableByteChannel {
         this.size = size;
     }
 
-    /**
-     * @see java.nio.channels.Channel#close()
-     */
     @Override
     public void close() throws IOException {
         this.delegate.close();
     }
 
-    /**
-     * @see java.nio.channels.Channel#isOpen()
-     */
     @Override
     public boolean isOpen() {
         return this.delegate.isOpen();
     }
 
-    /**
-     * @see java.nio.channels.ReadableByteChannel#read(java.nio.ByteBuffer)
-     */
     @Override
     public int read(final ByteBuffer dst) throws IOException {
         int readCount = this.delegate.read(dst);

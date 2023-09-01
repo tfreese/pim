@@ -25,9 +25,6 @@ import de.freese.pim.gui.addressbook.model.FxKontakt;
 public class DefaultStandaloneFxAddressbookService extends AbstractFxAddressbookService {
     private AddressBookService addressBookService;
 
-    /**
-     * @see FxAddressbookService#deleteKontakt(long)
-     */
     @Override
     public int deleteKontakt(final long id) {
         try {
@@ -38,9 +35,6 @@ public class DefaultStandaloneFxAddressbookService extends AbstractFxAddressbook
         }
     }
 
-    /**
-     * @see FxAddressbookService#getKontaktDetails(long[])
-     */
     @Override
     public List<FxKontakt> getKontaktDetails(final long... ids) {
         try {
@@ -53,9 +47,6 @@ public class DefaultStandaloneFxAddressbookService extends AbstractFxAddressbook
         }
     }
 
-    /**
-     * @see FxAddressbookService#insertKontakt(FxKontakt)
-     */
     @Override
     public void insertKontakt(final FxKontakt kontakt) {
         try {
@@ -73,9 +64,6 @@ public class DefaultStandaloneFxAddressbookService extends AbstractFxAddressbook
         this.addressBookService = addressBookService;
     }
 
-    /**
-     * @see FxAddressbookService#updateKontakt(long, java.lang.String, java.lang.String)
-     */
     @Override
     public int updateKontakt(final long id, final String nachname, final String vorname) {
         try {

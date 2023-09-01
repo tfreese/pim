@@ -13,9 +13,6 @@ public class KontaktAttribut implements Comparable<KontaktAttribut> {
 
     private String wert;
 
-    /**
-     * @see java.lang.Comparable#compareTo(java.lang.Object)
-     */
     @Override
     public int compareTo(final KontaktAttribut ka) {
         if (ka == null) {
@@ -55,9 +52,6 @@ public class KontaktAttribut implements Comparable<KontaktAttribut> {
         this.wert = wert;
     }
 
-    /**
-     * @see java.lang.Object#toString()
-     */
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();

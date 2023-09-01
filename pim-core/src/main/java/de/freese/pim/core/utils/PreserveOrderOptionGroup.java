@@ -20,9 +20,6 @@ public class PreserveOrderOptionGroup extends OptionGroup {
 
     private final transient Map<String, Option> optionMap = new LinkedHashMap<>();
 
-    /**
-     * @see org.apache.commons.cli.OptionGroup#addOption(org.apache.commons.cli.Option)
-     */
     @Override
     public OptionGroup addOption(final Option option) {
         this.optionMap.put(option.getOpt() == null ? option.getLongOpt() : option.getOpt(), option);
@@ -30,17 +27,11 @@ public class PreserveOrderOptionGroup extends OptionGroup {
         return this;
     }
 
-    /**
-     * @see org.apache.commons.cli.OptionGroup#getNames()
-     */
     @Override
     public Collection<String> getNames() {
         return this.optionMap.keySet();
     }
 
-    /**
-     * @see org.apache.commons.cli.OptionGroup#getOptions()
-     */
     @Override
     public Collection<Option> getOptions() {
         return this.optionMap.values();

@@ -132,9 +132,6 @@ public class MailAccount {
         this.smtpPort = port;
     }
 
-    /**
-     * @see java.lang.Object#toString()
-     */
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();

@@ -119,9 +119,6 @@ public final class SpringContext implements ApplicationContextAware, ResourceLoa
         super();
     }
 
-    /**
-     * @see org.springframework.beans.factory.InitializingBean#afterPropertiesSet()
-     */
     @Override
     public void afterPropertiesSet() throws Exception {
         Assert.notNull(applicationContext, "An ApplicationContext is required. Use setApplicationContext(org.springframework.context.ApplicationContext) to provide one.");
@@ -129,9 +126,6 @@ public final class SpringContext implements ApplicationContextAware, ResourceLoa
         Assert.notNull(environment, "An Environment is required. Use setEnvironment(org.springframework.core.env.Environment) to provide one.");
     }
 
-    /**
-     * @see org.springframework.context.ApplicationContextAware#setApplicationContext(org.springframework.context.ApplicationContext)
-     */
     @Override
     public void setApplicationContext(final ApplicationContext applicationContext) throws BeansException {
         if (SpringContext.applicationContext != null) {
@@ -145,9 +139,6 @@ public final class SpringContext implements ApplicationContextAware, ResourceLoa
         }
     }
 
-    /**
-     * @see org.springframework.context.EnvironmentAware#setEnvironment(org.springframework.core.env.Environment)
-     */
     @Override
     public void setEnvironment(final Environment environment) {
         if (SpringContext.environment != null) {
@@ -157,9 +148,6 @@ public final class SpringContext implements ApplicationContextAware, ResourceLoa
         SpringContext.environment = Objects.requireNonNull(environment, "environment required");
     }
 
-    /**
-     * @see org.springframework.context.ResourceLoaderAware#setResourceLoader(org.springframework.core.io.ResourceLoader)
-     */
     @Override
     public void setResourceLoader(final ResourceLoader resourceLoader) {
         if (SpringContext.resourceLoader != null) {

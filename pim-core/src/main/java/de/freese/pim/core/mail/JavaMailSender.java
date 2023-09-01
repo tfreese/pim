@@ -42,9 +42,6 @@ public class JavaMailSender {
             this.authentication = new PasswordAuthentication(userName, password);
         }
 
-        /**
-         * @see jakarta.mail.Authenticator#getPasswordAuthentication()
-         */
         @Override
         public PasswordAuthentication getPasswordAuthentication() {
             return this.authentication;
@@ -128,12 +125,6 @@ public class JavaMailSender {
      * Obtain and connect Transport from the underlying JavaMail Session, passing in the specified host, port, username, and password.
      *
      * @throws MessagingException if connect attempt failed
-     * @see #getTransport
-     * @see #getHost()
-     * @see #getPort()
-     * @see #getUsername()
-     * @see #getPassword()
-     * @since 4.1.2
      */
     protected Transport connectTransport() throws MessagingException {
         String username = Optional.ofNullable(getUsername()).filter(s -> !s.isBlank()).orElse(null);
@@ -245,10 +236,6 @@ public class JavaMailSender {
 
     /**
      * Obtain a Transport object from the given JavaMail Session, using the configured protocol.
-     *
-     * @see jakarta.mail.Session#getTransport(String)
-     * @see #getSession()
-     * @see #getProtocol()
      */
     protected Transport getTransport(final Session session) throws NoSuchProviderException {
         String proto = getProtocol();

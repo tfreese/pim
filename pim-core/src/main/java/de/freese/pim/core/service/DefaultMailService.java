@@ -45,9 +45,6 @@ public class DefaultMailService extends AbstractService implements MailService, 
 
     private MailDAO mailDAO;
 
-    /**
-     * @see de.freese.pim.core.service.MailService#connectAccount(de.freese.pim.core.model.mail.MailAccount)
-     */
     @Override
     public void connectAccount(final MailAccount account) {
         getLogger().info("connect {}", account.getMail());
@@ -88,9 +85,6 @@ public class DefaultMailService extends AbstractService implements MailService, 
         mailAPI.connect();
     }
 
-    /**
-     * @see de.freese.pim.core.service.MailService#deleteAccount(long)
-     */
     @Override
     @Transactional
     public int deleteAccount(final long accountID) {
@@ -114,9 +108,6 @@ public class DefaultMailService extends AbstractService implements MailService, 
         disconnectAccounts(new long[0]);
     }
 
-    /**
-     * @see de.freese.pim.core.service.MailService#disconnectAccounts(long[])
-     */
     @Override
     public void disconnectAccounts(final long... accountIDs) {
         getLogger().info("Disconnect Accounts");
@@ -141,9 +132,6 @@ public class DefaultMailService extends AbstractService implements MailService, 
         }
     }
 
-    /**
-     * @see de.freese.pim.core.service.MailService#getMailAccounts()
-     */
     @Override
     @Transactional(readOnly = true)
     public List<MailAccount> getMailAccounts() {
@@ -152,9 +140,6 @@ public class DefaultMailService extends AbstractService implements MailService, 
         return getMailDAO().getMailAccounts();
     }
 
-    /**
-     * @see de.freese.pim.core.service.MailService#insertAccount(de.freese.pim.core.model.mail.MailAccount)
-     */
     @Override
     @Transactional
     public long insertAccount(final MailAccount account) {
@@ -163,9 +148,6 @@ public class DefaultMailService extends AbstractService implements MailService, 
         return account.getID();
     }
 
-    /**
-     * @see de.freese.pim.core.service.MailService#insertFolder(long, java.util.List)
-     */
     @Override
     @Transactional
     public long[] insertFolder(final long accountID, final List<MailFolder> folders) {
@@ -174,9 +156,6 @@ public class DefaultMailService extends AbstractService implements MailService, 
         return folders.stream().mapToLong(MailFolder::getID).toArray();
     }
 
-    /**
-     * @see de.freese.pim.core.service.MailService#loadFolder(long)
-     */
     @Override
     @Transactional
     public List<MailFolder> loadFolder(final long accountID) {
@@ -199,9 +178,6 @@ public class DefaultMailService extends AbstractService implements MailService, 
         return folder;
     }
 
-    /**
-     * @see de.freese.pim.core.service.MailService#loadMailContent(long, java.lang.String, long, de.freese.pim.core.utils.io.IOMonitor)
-     */
     @Override
     public MailContent loadMailContent(final long accountID, final String folderFullName, final long mailUID, final IOMonitor monitor) {
         getLogger().debug("download mail: accountID={}, folderFullName={}, uid={}", accountID, folderFullName, mailUID);
@@ -211,9 +187,6 @@ public class DefaultMailService extends AbstractService implements MailService, 
         return mailAPI.loadMail(folderFullName, mailUID, monitor);
     }
 
-    /**
-     * @see de.freese.pim.core.service.MailService#loadMails(long, long, java.lang.String)
-     */
     @Override
     @Transactional
     public List<Mail> loadMails(final long accountID, final long folderID, final String folderFullName) {
@@ -272,9 +245,6 @@ public class DefaultMailService extends AbstractService implements MailService, 
         return mails;
     }
 
-    /**
-     * @see org.springframework.beans.factory.BeanFactoryAware#setBeanFactory(org.springframework.beans.factory.BeanFactory)
-     */
     @Override
     public void setBeanFactory(final BeanFactory beanFactory) throws BeansException {
         this.beanFactory = beanFactory;
@@ -285,9 +255,6 @@ public class DefaultMailService extends AbstractService implements MailService, 
         this.mailDAO = mailDAO;
     }
 
-    /**
-     * @see de.freese.pim.core.service.MailService#test(de.freese.pim.core.model.mail.MailAccount)
-     */
     @Override
     public List<MailFolder> test(final MailAccount account) {
         List<MailFolder> folder = null;
@@ -312,18 +279,12 @@ public class DefaultMailService extends AbstractService implements MailService, 
         return folder;
     }
 
-    /**
-     * @see de.freese.pim.core.service.MailService#updateAccount(de.freese.pim.core.model.mail.MailAccount)
-     */
     @Override
     @Transactional
     public int updateAccount(final MailAccount account) {
         return getMailDAO().updateAccount(account);
     }
 
-    /**
-     * @see de.freese.pim.core.service.MailService#updateFolder(long, java.util.List)
-     */
     @Override
     @Transactional
     public int[] updateFolder(final long accountID, final List<MailFolder> folders) {

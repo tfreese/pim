@@ -26,9 +26,6 @@ public abstract class AbstractService implements ApplicationContextAware {
         return this.applicationContext;
     }
 
-    /**
-     * @see org.springframework.context.ApplicationContextAware#setApplicationContext(org.springframework.context.ApplicationContext)
-     */
     @Override
     public void setApplicationContext(final ApplicationContext applicationContext) throws BeansException {
         this.applicationContext = applicationContext;

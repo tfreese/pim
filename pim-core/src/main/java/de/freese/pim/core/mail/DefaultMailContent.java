@@ -32,25 +32,16 @@ public class DefaultMailContent implements MailContent {
 
     private String messageContentType;
 
-    /**
-     * @see de.freese.pim.core.mail.MailContent#getAttachments()
-     */
     @Override
     public Map<String, AttachmentDataSource> getAttachments() {
         return this.attachmentMap;
     }
 
-    /**
-     * @see de.freese.pim.core.mail.MailContent#getEncoding()
-     */
     @Override
     public String getEncoding() {
         return this.encoding;
     }
 
-    /**
-     * @see de.freese.pim.core.mail.MailContent#getInlines()
-     */
     @Override
     public Map<String, InlineDataSource> getInlines() {
         return this.inlineMap;
@@ -63,8 +54,6 @@ public class DefaultMailContent implements MailContent {
 
     /**
      * Text-Nachricht: text/plain, text/html
-     *
-     * @see de.freese.pim.core.mail.MailContent#getMessageContent()
      */
     @Override
     public String getMessageContent() {
@@ -85,8 +74,6 @@ public class DefaultMailContent implements MailContent {
 
     /**
      * "text/plain; charset=UTF-8", "text/html; charset=UTF-8"
-     *
-     * @see de.freese.pim.core.mail.MailContent#getMessageContentType()
      */
     @Override
     public String getMessageContentType() {

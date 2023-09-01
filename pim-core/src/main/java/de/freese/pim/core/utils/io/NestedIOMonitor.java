@@ -20,9 +20,6 @@ public class NestedIOMonitor implements IOMonitor {
         this.size = size;
     }
 
-    /**
-     * @see de.freese.pim.core.utils.io.IOMonitor#monitor(long, long)
-     */
     @Override
     public void monitor(final long current, final long size) {
         this.currentAccepted += current;

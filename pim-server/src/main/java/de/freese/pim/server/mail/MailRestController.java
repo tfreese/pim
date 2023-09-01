@@ -36,72 +36,48 @@ import de.freese.pim.core.utils.io.IOMonitor;
 public class MailRestController extends AbstractRemoteService implements MailService {
     private MailService mailService;
 
-    /**
-     * @see de.freese.pim.core.service.MailService#connectAccount(de.freese.pim.core.model.mail.MailAccount)
-     */
     @Override
     @PostMapping("/connect")
     public void connectAccount(@RequestBody final MailAccount account) {
         getMailService().connectAccount(account);
     }
 
-    /**
-     * @see de.freese.pim.core.service.MailService#deleteAccount(long)
-     */
     @Override
     @PostMapping("/account/delete/{id}")
     public int deleteAccount(@PathVariable("id") final long accountID) {
         return getMailService().deleteAccount(accountID);
     }
 
-    /**
-     * @see de.freese.pim.core.service.MailService#disconnectAccounts(long[])
-     */
     @Override
     @PostMapping("/account/disconnect")
     public void disconnectAccounts(@RequestParam("accountIDs") final long... accountIDs) {
         getMailService().disconnectAccounts(accountIDs);
     }
 
-    /**
-     * @see de.freese.pim.core.service.MailService#getMailAccounts()
-     */
     @Override
     @GetMapping("/accounts")
     public List<MailAccount> getMailAccounts() {
         return getMailService().getMailAccounts();
     }
 
-    /**
-     * @see de.freese.pim.core.service.MailService#insertAccount(de.freese.pim.core.model.mail.MailAccount)
-     */
     @Override
     @PostMapping("/account/insert")
     public long insertAccount(@RequestBody final MailAccount account) {
         return getMailService().insertAccount(account);
     }
 
-    /**
-     * @see de.freese.pim.core.service.MailService#insertFolder(long, java.util.List)
-     */
     @Override
     @PostMapping("/folder/insert/{accountID}")
     public long[] insertFolder(@PathVariable("accountID") final long accountID, @RequestBody final List<MailFolder> folders) {
         return getMailService().insertFolder(accountID, folders);
     }
 
-    /**
-     * @see de.freese.pim.core.service.MailService#loadFolder(long)
-     */
     @Override
     @GetMapping("/folder/{accountID}")
     public List<MailFolder> loadFolder(@PathVariable("accountID") final long accountID) {
         return getMailService().loadFolder(accountID);
     }
 
-    /**
-     * @see de.freese.pim.core.service.MailService#loadMailContent(long, java.lang.String, long, de.freese.pim.core.utils.io.IOMonitor)
-     */
     @Override
     @GetMapping("/content/{accountID}/{folderFullName}/{mailUID}")
     public MailContent loadMailContent(@PathVariable("accountID") final long accountID, @PathVariable("folderFullName") final String folderFullName, @PathVariable("mailUID") final long mailUID, final @RequestBody(required = false) IOMonitor monitor) {
@@ -110,9 +86,6 @@ public class MailRestController extends AbstractRemoteService implements MailSer
         return getMailService().loadMailContent(accountID, folderName, mailUID, monitor);
     }
 
-    /**
-     * @see de.freese.pim.core.service.MailService#loadMails(long, long, java.lang.String)
-     */
     @Override
     @GetMapping("/mails/{accountID}/{folderID}/{folderFullName}")
     public List<Mail> loadMails(@PathVariable("accountID") final long accountID, @PathVariable("folderID") final long folderID, @PathVariable("folderFullName") final String folderFullName) {
@@ -169,27 +142,18 @@ public class MailRestController extends AbstractRemoteService implements MailSer
         this.mailService = mailService;
     }
 
-    /**
-     * @see de.freese.pim.core.service.MailService#test(de.freese.pim.core.model.mail.MailAccount)
-     */
     @Override
     @PostMapping("/test")
     public List<MailFolder> test(@RequestBody final MailAccount account) {
         return getMailService().test(account);
     }
 
-    /**
-     * @see de.freese.pim.core.service.MailService#updateAccount(de.freese.pim.core.model.mail.MailAccount)
-     */
     @Override
     @PostMapping("/account/update")
     public int updateAccount(@RequestBody final MailAccount account) {
         return getMailService().updateAccount(account);
     }
 
-    /**
-     * @see de.freese.pim.core.service.MailService#updateFolder(long, java.util.List)
-     */
     @Override
     @PostMapping("/folder/update/{accountID}")
     public int[] updateFolder(@PathVariable("accountID") final long accountID, @RequestBody final List<MailFolder> folders) {

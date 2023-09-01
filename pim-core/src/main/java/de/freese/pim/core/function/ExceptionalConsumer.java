@@ -11,18 +11,11 @@ import java.util.function.Consumer;
  * @param <E> Konkreter Exception-Typ
  *
  * @author Thomas Freese
- * @see java.util.function.Consumer
  */
 @FunctionalInterface
 public interface ExceptionalConsumer<T, E extends Exception> {
-    /**
-     * @see java.util.function.Consumer#accept(Object)
-     */
     void accept(T t) throws E;
 
-    // /**
-    // * @see java.util.function.Consumer#andThen(Consumer)
-    // */
     // public default ExceptionalConsumer<T, E> andThen(final Consumer<T> after)
     // {
     // Objects.requireNonNull(after);
@@ -34,9 +27,6 @@ public interface ExceptionalConsumer<T, E extends Exception> {
     // };
     // }
 
-    /**
-     * @see java.util.function.Consumer#andThen(Consumer)
-     */
     default ExceptionalConsumer<T, E> andThen(final ExceptionalConsumer<T, E> after) {
         Objects.requireNonNull(after);
 

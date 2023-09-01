@@ -35,25 +35,16 @@ public class MonitoringWritableByteChannel implements WritableByteChannel {
         this.size = size;
     }
 
-    /**
-     * @see java.nio.channels.Channel#close()
-     */
     @Override
     public void close() throws IOException {
         this.delegate.close();
     }
 
-    /**
-     * @see java.nio.channels.Channel#isOpen()
-     */
     @Override
     public boolean isOpen() {
         return this.delegate.isOpen();
     }
 
-    /**
-     * @see java.nio.channels.WritableByteChannel#write(java.nio.ByteBuffer)
-     */
     @Override
     public int write(final ByteBuffer src) throws IOException {
         int writeCount = this.delegate.write(src);

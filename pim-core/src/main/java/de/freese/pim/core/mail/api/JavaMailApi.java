@@ -66,17 +66,11 @@ public class JavaMailApi extends AbstractMailApi {
         super(account);
     }
 
-    /**
-     * @see MailApi#connect()
-     */
     @Override
     public void connect() {
         this.session = Utils.executeSafely(this::createSession);
     }
 
-    /**
-     * @see MailApi#disconnect()
-     */
     @Override
     public void disconnect() {
         // Folder schliessen.
@@ -112,9 +106,6 @@ public class JavaMailApi extends AbstractMailApi {
         this.session = null;
     }
 
-    /**
-     * @see MailApi#getFolder()
-     */
     @Override
     public List<MailFolder> getFolder() {
         return Utils.executeSafely(() -> {
@@ -137,9 +128,6 @@ public class JavaMailApi extends AbstractMailApi {
         });
     }
 
-    /**
-     * @see MailApi#loadMail(java.lang.String, long, de.freese.pim.core.function.ExceptionalFunction)
-     */
     @Override
     public <T> T loadMail(final String folderFullName, final long uid, final ExceptionalFunction<Object, T, Exception> function) {
         return executeInFolder(folderFullName, folder -> {
@@ -150,9 +138,6 @@ public class JavaMailApi extends AbstractMailApi {
         });
     }
 
-    /**
-     * @see MailApi#loadMail(java.lang.String, long, de.freese.pim.core.utils.io.IOMonitor)
-     */
     @Override
     public MailContent loadMail(final String folderFullName, final long uid, final IOMonitor monitor) {
         return executeInFolder(folderFullName, folder -> {
@@ -199,18 +184,12 @@ public class JavaMailApi extends AbstractMailApi {
         });
     }
 
-    /**
-     * @see MailApi#loadMails(java.lang.String, long)
-     */
     @Override
     public List<Mail> loadMails(final String folderFullName, final long uidFrom) {
         List<Mail> mails = executeInFolder(folderFullName, folder -> {
             long uidTo = folder.getUIDNext();
             // SearchTerm searchTerm = new SearchTerm()
             // {
-            // /**
-            // * @see jakarta.mail.search.SearchTerm#match(jakarta.mail.Message)
-            // */
             // @Override
             // public boolean match(final Message msg)
             // {
@@ -242,9 +221,6 @@ public class JavaMailApi extends AbstractMailApi {
         return mails != null ? mails : Collections.emptyList();
     }
 
-    /**
-     * @see MailApi#loadMessageIDs(java.lang.String)
-     */
     @Override
     public Set<Long> loadMessageIDs(final String folderFullName) {
         Set<Long> ids = executeInFolder(folderFullName, folder -> {
@@ -266,9 +242,6 @@ public class JavaMailApi extends AbstractMailApi {
         return ids != null ? ids : Collections.emptySet();
     }
 
-    /**
-     * @see MailApi#setSeen(de.freese.pim.core.model.mail.Mail, boolean)
-     */
     @Override
     public void setSeen(final Mail mail, final boolean seen) {
         executeInFolder(mail.getFolderFullName(), folder -> {
@@ -283,9 +256,6 @@ public class JavaMailApi extends AbstractMailApi {
         });
     }
 
-    /**
-     * @see MailApi#testConnection()
-     */
     @Override
     public void testConnection() {
         Utils.executeSafely(() -> {

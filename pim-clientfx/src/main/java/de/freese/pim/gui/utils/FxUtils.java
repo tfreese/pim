@@ -362,17 +362,11 @@ public final class FxUtils {
         Objects.requireNonNull(converter, "converter required");
 
         return new StringConverter<>() {
-            /**
-             * @see javafx.util.StringConverter#fromString(java.lang.String)
-             */
             @Override
             public T fromString(final String string) {
                 throw new UnsupportedOperationException("Not supported yet.");
             }
 
-            /**
-             * @see javafx.util.StringConverter#toString(java.lang.Object)
-             */
             @Override
             public String toString(final T object) {
                 return converter.apply(object);
@@ -427,27 +421,18 @@ public final class FxUtils {
     // super.bind(ov);
     // }
     //
-    // /**
-    // * @see javafx.beans.binding.StringBinding#computeValue()
-    // */
     // @Override
     // protected String computeValue()
     // {
     // return formatter.apply(ov.getValue());
     // }
     //
-    // /**
-    // * @see javafx.beans.binding.StringBinding#dispose()
-    // */
     // @Override
     // public void dispose()
     // {
     // super.unbind(ov);
     // }
     //
-    // /**
-    // * @see javafx.beans.binding.StringBinding#getDependencies()
-    // */
     // @Override
     // public ObservableList<ObservableValue<?>> getDependencies()
     // {

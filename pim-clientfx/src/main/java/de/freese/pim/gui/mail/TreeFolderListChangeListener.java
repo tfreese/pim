@@ -24,9 +24,6 @@ public class TreeFolderListChangeListener implements ListChangeListener<FxMailFo
         this.parent = Objects.requireNonNull(parent, "parent required");
     }
 
-    /**
-     * @see javafx.collections.ListChangeListener#onChanged(javafx.collections.ListChangeListener.Change)
-     */
     @Override
     public void onChanged(final ListChangeListener.Change<? extends FxMailFolder> change) {
         while (change.next()) {

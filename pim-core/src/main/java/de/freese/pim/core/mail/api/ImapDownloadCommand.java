@@ -42,9 +42,6 @@ public class ImapDownloadCommand implements ProtocolCommand {
         this.uid = uid;
     }
 
-    /**
-     * @see com.sun.mail.imap.IMAPFolder.ProtocolCommand#doCommand(com.sun.mail.imap.protocol.IMAPProtocol)
-     */
     @Override
     public Object doCommand(final IMAPProtocol protocol) throws ProtocolException {
         // UID fetch 234789 bodystructure followed by b uid fetch 234789 (body.peek[1.1] body.peek[2])

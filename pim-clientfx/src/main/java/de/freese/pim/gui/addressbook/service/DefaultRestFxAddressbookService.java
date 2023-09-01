@@ -25,17 +25,11 @@ import de.freese.pim.gui.addressbook.model.FxKontakt;
 public class DefaultRestFxAddressbookService extends AbstractFxAddressbookService {
     private RestTemplate restTemplate;
 
-    /**
-     * @see FxAddressbookService#deleteKontakt(long)
-     */
     @Override
     public int deleteKontakt(final long id) {
         return getRestTemplate().postForObject("/addressBook/contact/delete/{contactID}", id, Integer.class);
     }
 
-    /**
-     * @see FxAddressbookService#getKontaktDetails(long[])
-     */
     @Override
     public List<FxKontakt> getKontaktDetails(final long... ids) {
         FxKontakt[] details = getRestTemplate().postForObject("/addressBook/details", ids, FxKontakt[].class);
@@ -43,9 +37,6 @@ public class DefaultRestFxAddressbookService extends AbstractFxAddressbookServic
         return Arrays.asList(details);
     }
 
-    /**
-     * @see FxAddressbookService#insertKontakt(FxKontakt)
-     */
     @Override
     public void insertKontakt(final FxKontakt kontakt) {
         long primaryKey = getRestTemplate().postForObject("/addressBook/contact/insert", kontakt, Long.class);
@@ -58,9 +49,6 @@ public class DefaultRestFxAddressbookService extends AbstractFxAddressbookServic
         this.restTemplate = restTemplateBuilder.build();
     }
 
-    /**
-     * @see FxAddressbookService#updateKontakt(long, java.lang.String, java.lang.String)
-     */
     @Override
     public int updateKontakt(final long id, final String nachname, final String vorname) {
         Map<String, String> variables = new HashMap<>();
