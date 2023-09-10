@@ -37,8 +37,6 @@ public class MonitorOutputStream extends FilterOutputStream {
     public void write(final byte[] b, final int off, final int len) throws IOException {
         super.write(b, off, len);
 
-        this.sizeWritten += len;
-
         this.monitor.monitor(this.sizeWritten, this.size);
     }
 
