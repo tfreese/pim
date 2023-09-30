@@ -7,28 +7,33 @@ buildscript {
     }
 
     dependencies {
-        classpath "de.freese.gradle:gradle-plugins:0.0.1-SNAPSHOT"
-        classpath "io.spring.gradle:dependency-management-plugin:$version_springDependencyManagement"
-        classpath "org.springframework.boot:spring-boot-gradle-plugin:$version_springBoot"
-        classpath "org.openjfx:javafx-plugin:$version_javafxPlugin"
+        classpath("de.freese.gradle:gradle-plugins:$version_myConventionPlugin")
+        classpath("io.spring.gradle:dependency-management-plugin:$version_springDependencyManagement")
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:$version_springBoot")
+        classpath("org.openjfx:javafx-plugin:$version_javafxPlugin")
     }
 }
 
 subprojects {
     apply plugin: "java"
-    apply plugin: "maven-publish"
+//    apply plugin: "maven-publish"
     apply plugin: "io.spring.dependency-management"
     apply plugin: "de.freese.gradle.plugin.conventions"
 
     dependencyManagement {
         imports {
-            mavenBom "org.springframework.boot:spring-boot-dependencies:$version_springBoot"
+            mavenBom("org.springframework.boot:spring-boot-dependencies:$version_springBoot")
         }
 
         dependencies {
-            dependency "commons-cli:commons-cli:$version_commonsCli"
-            dependency "org.jsoup:jsoup:$version_jsoup"
+            dependency("commons-cli:commons-cli:$version_commonsCli")
+            dependency("org.jsoup:jsoup:$version_jsoup")
         }
+    }
+
+    dependencies {
+        testImplementation("org.junit.jupiter:junit-jupiter")
+        testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     }
 }
 
@@ -46,7 +51,6 @@ project("pim-core") {
         testImplementation("org.jsoup:jsoup")
         testImplementation("org.junit.platform:junit-platform-runner")
         testImplementation("org.springframework.boot:spring-boot-starter-test")
-        testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     }
 }
 
@@ -62,7 +66,6 @@ project("pim-server") {
         runtimeOnly("org.springframework.boot:spring-boot-starter-actuator")
 
         testImplementation("org.springframework.boot:spring-boot-starter-test")
-        testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     }
     // Start: gradle bootRun --args="--spring.profiles.active=dev"
     // The archive name. If the name has not been explicitly set, the pattern for the name is:
