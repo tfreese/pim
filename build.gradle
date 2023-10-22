@@ -77,14 +77,14 @@ project("pim-server") {
         ]
     }
 
-    //Für Platzhalter in application.properties
+    // For Placeholder in application.properties/application.yml
     ext.artifactId = project.name
 
     processResources {
         filesMatching("application-Server.properties") {
             filteringCharset = "UTF-8"
 
-            // Bei Problemen müssen die Platzhalter escaped werden: \${...}
+            // During Problems escape Placeholder: \${...}
             expand(project.properties)
         }
     }
@@ -119,14 +119,14 @@ project("pim-clientfx") {
         ]
     }
 
-    //Für Platzhalter in application.properties
+    // For Placeholder in application.properties/application.yml
     ext.artifactId = project.name
 
     processResources {
         filesMatching("application-ClientEmbeddedServer.properties") {
             filteringCharset = "UTF-8"
 
-            // Bei Problemen müssen die Platzhalter escaped werden: \${...}
+            /// During Problems escape Placeholder: \${...}
             expand(project.properties)
         }
     }
