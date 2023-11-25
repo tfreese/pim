@@ -9,14 +9,14 @@ import jakarta.mail.MessagingException;
 import jakarta.mail.Session;
 import jakarta.mail.internet.MimeMessage;
 
-import com.sun.mail.iap.Argument;
-import com.sun.mail.iap.ProtocolException;
-import com.sun.mail.iap.Response;
-import com.sun.mail.imap.IMAPFolder.ProtocolCommand;
-import com.sun.mail.imap.protocol.BODY;
-import com.sun.mail.imap.protocol.FetchResponse;
-import com.sun.mail.imap.protocol.IMAPProtocol;
-import com.sun.mail.imap.protocol.IMAPResponse;
+import org.eclipse.angus.mail.iap.Argument;
+import org.eclipse.angus.mail.iap.ProtocolException;
+import org.eclipse.angus.mail.iap.Response;
+import org.eclipse.angus.mail.imap.IMAPFolder;
+import org.eclipse.angus.mail.imap.protocol.BODY;
+import org.eclipse.angus.mail.imap.protocol.FetchResponse;
+import org.eclipse.angus.mail.imap.protocol.IMAPProtocol;
+import org.eclipse.angus.mail.imap.protocol.IMAPResponse;
 
 /**
  * Eigener IMAP-Befehl für Performance-Optimierung beim Download einer Mail.<br>
@@ -26,7 +26,7 @@ import com.sun.mail.imap.protocol.IMAPResponse;
  *
  * @author Thomas Freese
  */
-public class ImapDownloadCommand implements ProtocolCommand {
+public class ImapDownloadCommand implements IMAPFolder.ProtocolCommand {
     private final Session session;
 
     private final long uid;

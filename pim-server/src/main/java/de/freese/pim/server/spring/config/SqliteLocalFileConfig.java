@@ -46,7 +46,7 @@ public class SqliteLocalFileConfig {
 
         SQLiteConfig config = new SQLiteConfig();
         config.setReadOnly(false);
-        config.setReadUncommited(true);
+        config.setReadUncommitted(true);
 
         SQLiteDataSource dataSource = new SQLiteConnectionPoolDataSource(config);
         dataSource.setUrl("jdbc:sqlite:" + pimHome + "/" + pimDbName + ".sqlite");

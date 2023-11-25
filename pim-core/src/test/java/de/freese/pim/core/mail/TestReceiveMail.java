@@ -34,8 +34,8 @@ import jakarta.mail.internet.MimeMessage;
 import jakarta.mail.search.FlagTerm;
 import jakarta.mail.search.SearchTerm;
 
-import com.sun.mail.imap.IMAPFolder;
-import com.sun.mail.util.ASCIIUtility;
+import org.eclipse.angus.mail.imap.IMAPFolder;
+import org.eclipse.angus.mail.util.ASCIIUtility;
 import org.jsoup.Jsoup;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
@@ -139,8 +139,8 @@ class TestReceiveMail extends AbstractMailTest {
                 int messageNumber = message.getMessageNumber();
                 String id = null;
 
-                if (inboxFolder instanceof IMAPFolder) {
-                    id = Long.toString(((IMAPFolder) inboxFolder).getUID(message));
+                if (inboxFolder instanceof IMAPFolder f) {
+                    id = Long.toString(f.getUID(message));
                 }
                 else {
                     id = message.getHeader("Message-ID")[0];
