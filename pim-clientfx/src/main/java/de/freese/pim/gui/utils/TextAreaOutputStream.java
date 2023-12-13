@@ -24,7 +24,7 @@ public class TextAreaOutputStream extends OutputStream {
     private static class LimitedTextArea extends TextArea {
         private final int keepLastNLines;
 
-        LimitedTextArea(int keepLastNLines) {
+        LimitedTextArea(final int keepLastNLines) {
             super();
 
             this.keepLastNLines = keepLastNLines;
