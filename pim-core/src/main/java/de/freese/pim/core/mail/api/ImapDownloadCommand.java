@@ -27,7 +27,6 @@ import org.eclipse.angus.mail.imap.protocol.IMAPResponse;
  */
 public class ImapDownloadCommand implements IMAPFolder.ProtocolCommand {
     private final Session session;
-
     private final long uid;
 
     public ImapDownloadCommand(final long uid) {
@@ -45,17 +44,17 @@ public class ImapDownloadCommand implements IMAPFolder.ProtocolCommand {
     public Object doCommand(final IMAPProtocol protocol) throws ProtocolException {
         // UID fetch 234789 bodystructure followed by b uid fetch 234789 (body.peek[1.1] body.peek[2])
 
-        Argument args = new Argument();
+        final Argument args = new Argument();
         args.writeNumber(this.uid).writeString("BODY[]");
 
-        Response[] r = protocol.command("UID FETCH", args);
-        Response response = r[r.length - 1];
+        final Response[] r = protocol.command("UID FETCH", args);
+        final Response response = r[r.length - 1];
 
         if (response.isOK()) {
             Session s = this.session;
 
             if (s == null) {
-                Properties props = new Properties();
+                final Properties props = new Properties();
                 props.setProperty("mail.store.protocol", "imap");
                 props.setProperty("mail.mime.base64.ignoreerrors", "true");
                 props.setProperty("mail.imap.partialfetch", "false");
@@ -67,8 +66,8 @@ public class ImapDownloadCommand implements IMAPFolder.ProtocolCommand {
             // last response is only result summary: not contents
             for (int i = 0; i < (r.length - 1); i++) {
                 if (r[i] instanceof IMAPResponse) {
-                    FetchResponse fetch = (FetchResponse) r[i];
-                    BODY body = (BODY) fetch.getItem(0);
+                    final FetchResponse fetch = (FetchResponse) r[i];
+                    final BODY body = (BODY) fetch.getItem(0);
 
                     try {
                         try (InputStream is = body.getByteArrayInputStream()) {

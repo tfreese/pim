@@ -20,7 +20,7 @@ public class FunctionStripSameChar implements UnaryOperator<String> {
             return str;
         }
 
-        char c = text.charAt(0);
+        final char c = text.charAt(0);
 
         for (int i = 0; i < text.length(); i++) {
             if (c != text.charAt(i)) {

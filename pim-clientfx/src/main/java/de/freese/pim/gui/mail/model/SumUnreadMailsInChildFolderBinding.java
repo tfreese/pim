@@ -36,12 +36,14 @@ public class SumUnreadMailsInChildFolderBinding extends IntegerBinding {
 
         this.boundList = Objects.requireNonNull(boundList, "boundList required");
         this.boundList.addListener(this.boundListChangeListener);
+
         refreshBinding();
     }
 
     @Override
     public void dispose() {
         this.boundList.removeListener(this.boundListChangeListener);
+        
         unbind(this.observedProperties);
     }
 

@@ -34,10 +34,10 @@ public class TextAreaOutputStream extends OutputStream {
         public void replaceText(final int start, final int end, final String text) {
             super.replaceText(start, end, text);
 
-            String[] splits = getText().split("\n", -1);
+            final String[] splits = getText().split("\n", -1);
 
             while (splits.length > this.keepLastNLines) {
-                int index = getText().indexOf('\n');
+                final int index = getText().indexOf('\n');
 
                 super.replaceText(0, index + 1, "");
             }

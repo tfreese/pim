@@ -89,7 +89,6 @@ class TestMonitorIO {
 
     @Test
     void test020OutputStream() throws Exception {
-
         // Pro Byte
         Monitor monitor = new Monitor();
         try (MonitorOutputStream mos = new MonitorOutputStream(new ByteArrayOutputStream(), monitor, BYTES.length)) {
@@ -122,11 +121,10 @@ class TestMonitorIO {
 
     @Test
     void test030ReadableByteChannel() throws Exception {
-
         // Pro Byte
         Monitor monitor = new Monitor();
         try (MonitoringReadableByteChannel mrc = new MonitoringReadableByteChannel(Channels.newChannel(new ByteArrayInputStream(BYTES)), monitor, BYTES.length)) {
-            ByteBuffer buffer = ByteBuffer.allocateDirect(1);
+            final ByteBuffer buffer = ByteBuffer.allocateDirect(1);
 
             for (int i = 0; i < BYTES.length; i++) {
                 mrc.read(buffer);
@@ -153,11 +151,10 @@ class TestMonitorIO {
 
     @Test
     void test040WritableByteChannel() throws Exception {
-
         // Pro Byte
         Monitor monitor = new Monitor();
         try (MonitoringWritableByteChannel mwc = new MonitoringWritableByteChannel(Channels.newChannel(new ByteArrayOutputStream()), monitor, BYTES.length)) {
-            ByteBuffer buffer = ByteBuffer.allocateDirect(1);
+            final ByteBuffer buffer = ByteBuffer.allocateDirect(1);
 
             for (int i = 0; i < BYTES.length; i++) {
                 mwc.write(buffer);

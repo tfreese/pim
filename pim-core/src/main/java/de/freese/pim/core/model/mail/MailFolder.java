@@ -11,21 +11,16 @@ import java.util.function.Predicate;
 public class MailFolder {
     // @NotNull
     private boolean abonniert = true;
-
     // @NotNull
     private long accountID;
-
     // @NotNull
     // @Size(min = 0, max = 100)
     private String fullName;
-
     // @NotNull
     private long id;
-
     // @NotNull
     // @Size(min = 0, max = 100)
     private String name;
-
     // @NotNull
     private boolean sendFolder;
 
@@ -87,7 +82,7 @@ public class MailFolder {
 
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder();
+        final StringBuilder builder = new StringBuilder();
         builder.append("MailFolder [fullName=").append(getFullName());
         builder.append("]");
 

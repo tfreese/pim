@@ -25,17 +25,11 @@ import de.freese.pim.core.mail.InternetAddress;
  */
 public final class MailUtils {
     public static final String CONTENT_TYPE_CHARSET_SUFFIX = ";charset=";
-
     public static final String CONTENT_TYPE_HTML = "text/html";
-
     public static final String CONTENT_TYPE_PLAIN = "text/plain";
-
     public static final String HEADER_CONTENT_ID = "Content-ID";
-
     public static final String HEADER_MESSAGE_ID = "Message-ID";
-
     public static final String MULTIPART_SUBTYPE_MIXED = "mixed";
-
     public static final String MULTIPART_SUBTYPE_RELATED = "related";
 
     /**
@@ -95,9 +89,9 @@ public final class MailUtils {
      * @return {@link Map}; ist niemals null
      */
     public static Map<String, MimePart> getAttachmentMap(final Part part) throws Exception {
-        Map<String, MimePart> map = new HashMap<>();
+        final Map<String, MimePart> map = new HashMap<>();
 
-        List<MimePart> attachments = getAttachments(part);
+        final List<MimePart> attachments = getAttachments(part);
 
         for (MimePart attachment : attachments) {
             String fileName = Optional.ofNullable(attachment.getFileName()).orElse("Mail");
@@ -117,18 +111,18 @@ public final class MailUtils {
      * @return {@link List}; ist niemals null
      */
     public static List<MimePart> getAttachments(final Part part) throws Exception {
-        List<MimePart> bodyParts = new ArrayList<>();
+        final List<MimePart> bodyParts = new ArrayList<>();
 
         if (Part.ATTACHMENT.equalsIgnoreCase(part.getDisposition())) {
             bodyParts.add((MimePart) part);
         }
         else if (part.isMimeType("multipart/*") || part.isMimeType("MULTIPART/*")) {
-            Multipart mp = (Multipart) part.getContent();
+            final Multipart mp = (Multipart) part.getContent();
 
             for (int i = 0; i < mp.getCount(); i++) {
-                Part bp = mp.getBodyPart(i);
+                final Part bp = mp.getBodyPart(i);
 
-                List<MimePart> list = getAttachments(bp);
+                final List<MimePart> list = getAttachments(bp);
 
                 if ((list != null) && !list.isEmpty()) {
                     bodyParts.addAll(list);
@@ -149,12 +143,12 @@ public final class MailUtils {
      * @return {@link Map}; ist niemals null
      */
     public static Map<String, MimePart> getInlineMap(final Part part) throws Exception {
-        Map<String, MimePart> map = new HashMap<>();
+        final Map<String, MimePart> map = new HashMap<>();
 
-        List<MimePart> inlines = getInlines(part);
+        final List<MimePart> inlines = getInlines(part);
 
         for (MimePart inline : inlines) {
-            String[] contentIDs = inline.getHeader(HEADER_CONTENT_ID);
+            final String[] contentIDs = inline.getHeader(HEADER_CONTENT_ID);
 
             if (contentIDs == null) {
                 continue;
@@ -178,18 +172,18 @@ public final class MailUtils {
      * @return {@link List}; ist niemals null
      */
     public static List<MimePart> getInlines(final Part part) throws Exception {
-        List<MimePart> bodyParts = new ArrayList<>();
+        final List<MimePart> bodyParts = new ArrayList<>();
 
         if (Part.INLINE.equalsIgnoreCase(part.getDisposition())) {
             bodyParts.add((MimePart) part);
         }
         else if (part.isMimeType("multipart/*") || part.isMimeType("MULTIPART/*")) {
-            Multipart mp = (Multipart) part.getContent();
+            final Multipart mp = (Multipart) part.getContent();
 
             for (int i = 0; i < mp.getCount(); i++) {
-                Part bp = mp.getBodyPart(i);
+                final Part bp = mp.getBodyPart(i);
 
-                List<MimePart> list = getInlines(bp);
+                final List<MimePart> list = getInlines(bp);
 
                 if ((list != null) && !list.isEmpty()) {
                     bodyParts.addAll(list);
@@ -214,7 +208,7 @@ public final class MailUtils {
 
         if (part.getContent() instanceof Multipart mp) {
             for (int i = 0; i < mp.getCount(); i++) {
-                Part bp = mp.getBodyPart(i);
+                final Part bp = mp.getBodyPart(i);
 
                 size += getSizeOfAllParts(bp);
             }
@@ -232,7 +226,7 @@ public final class MailUtils {
      * @return {@link List}; ist niemals null
      */
     public static DataSource getTextDataSource(final Part part) throws Exception {
-        List<DataSource> dataSources = getTextDataSources(part);
+        final List<DataSource> dataSources = getTextDataSources(part);
 
         Optional<DataSource> dataSource = dataSources.stream().filter(ds -> ds.getContentType().toLowerCase().startsWith(CONTENT_TYPE_HTML)).findFirst();
 
@@ -252,18 +246,18 @@ public final class MailUtils {
      * @return {@link List}; ist niemals null
      */
     public static List<DataSource> getTextDataSources(final Part part) throws Exception {
-        List<DataSource> dataSources = new ArrayList<>();
+        final List<DataSource> dataSources = new ArrayList<>();
 
         if (part.isMimeType("text/plain") || part.isMimeType("TEXT/plain") || part.isMimeType("text/html") || part.isMimeType("TEXT/html")) {
             dataSources.add(part.getDataHandler().getDataSource());
         }
         else if (part.isMimeType("multipart/*") || part.isMimeType("MULTIPART/*")) {
-            Multipart mp = (Multipart) part.getContent();
+            final Multipart mp = (Multipart) part.getContent();
 
             for (int i = 0; i < mp.getCount(); i++) {
-                Part bp = mp.getBodyPart(i);
+                final Part bp = mp.getBodyPart(i);
 
-                List<DataSource> ds = getTextDataSources(bp);
+                final List<DataSource> ds = getTextDataSources(bp);
 
                 if ((ds != null) && !ds.isEmpty()) {
                     dataSources.addAll(ds);
@@ -282,7 +276,7 @@ public final class MailUtils {
      * @return {@link List}; ist niemals null
      */
     public static List<AbstractTextPart> getTextParts(final Part part) throws Exception {
-        List<AbstractTextPart> textParts = new ArrayList<>();
+        final List<AbstractTextPart> textParts = new ArrayList<>();
 
         if (part.isMimeType("text/*") || part.isMimeType("TEXT/*")) {
             if (!(part.getContent() instanceof String text)) {
@@ -297,12 +291,12 @@ public final class MailUtils {
             }
         }
         else if (part.isMimeType("multipart/*")) {
-            Multipart mp = (Multipart) part.getContent();
+            final Multipart mp = (Multipart) part.getContent();
 
             for (int i = 0; i < mp.getCount(); i++) {
-                Part bp = mp.getBodyPart(i);
+                final Part bp = mp.getBodyPart(i);
 
-                List<AbstractTextPart> tp = getTextParts(bp);
+                final List<AbstractTextPart> tp = getTextParts(bp);
 
                 if ((tp != null) && !tp.isEmpty()) {
                     textParts.addAll(tp);

@@ -15,10 +15,10 @@ public class FunctionStripNotLetter implements UnaryOperator<String> {
 
     @Override
     public String apply(final String text) {
-        StringBuilder sb = new StringBuilder();
+        final StringBuilder sb = new StringBuilder();
 
         for (int i = 0; i < text.length(); i++) {
-            char c = text.charAt(i);
+            final char c = text.charAt(i);
 
             // A-Z a-z
             // if (((c >= 65) && (c <= 90)) || ((c >= 97) && (c <= 122)))

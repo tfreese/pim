@@ -29,15 +29,12 @@ public class Crypt {
     // * 32bit entspricht AES256.
     // */
     // private static final int AES_KEY_SIZE = 32;
-
     private static final int BUFFER_SIZE = 4096;
-
     /**
      * 16bit<br>
      * AES Initialisierungsvektor, muss dem Empfänger bekannt sein !
      */
     private static final byte[] INIT_VECTOR = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-
     private static final Crypt INSTANCE = new Crypt(StandardCharsets.UTF_8);
 
     /**
@@ -62,18 +59,19 @@ public class Crypt {
      * @param input Verschlüsselter {@link InputStream}, dieser wird geschlossen.
      */
     public InputStream decrypt(final InputStream input) {
-        Key key = getSecretKey();
+        final Key key = getSecretKey();
 
         try {
-            Path file = Files.createTempFile("pim", ".tmp");
+            final Path file = Files.createTempFile("pim", ".tmp");
             file.toFile().deleteOnExit();
 
-            Cipher decodeCipher = Cipher.getInstance(AES_ALGORITHM);
+            final Cipher decodeCipher = Cipher.getInstance(AES_ALGORITHM);
             decodeCipher.init(Cipher.DECRYPT_MODE, key, new IvParameterSpec(INIT_VECTOR));
 
-            try (OutputStream fileOS = new BufferedOutputStream(Files.newOutputStream(file)); OutputStream cipherOS = new CipherOutputStream(fileOS, decodeCipher)) {
+            try (OutputStream fileOS = new BufferedOutputStream(Files.newOutputStream(file));
+                 OutputStream cipherOS = new CipherOutputStream(fileOS, decodeCipher)) {
                 // IOUtils.copy(input, cipherOS);
-                byte[] buffer = new byte[BUFFER_SIZE];
+                final byte[] buffer = new byte[BUFFER_SIZE];
                 int numRead = 0;
 
                 while ((numRead = input.read(buffer)) >= 0) {
@@ -101,14 +99,14 @@ public class Crypt {
             return null;
         }
 
-        Key key = getSecretKey();
+        final Key key = getSecretKey();
 
         try {
-            Cipher decodeCipher = Cipher.getInstance(AES_ALGORITHM);
+            final Cipher decodeCipher = Cipher.getInstance(AES_ALGORITHM);
             decodeCipher.init(Cipher.DECRYPT_MODE, key, new IvParameterSpec(INIT_VECTOR));
 
             // byte[] decrypted = decodeCipher.doFinal(Base64.decodeBase64(input));
-            byte[] decrypted = decodeCipher.doFinal(Base64.getDecoder().decode(input));
+            final byte[] decrypted = decodeCipher.doFinal(Base64.getDecoder().decode(input));
 
             return new String(decrypted, getCharset());
         }
@@ -125,12 +123,13 @@ public class Crypt {
      */
     public InputStream encrypt(final InputStream input) {
         try {
-            Path file = Files.createTempFile("pim", ".tmp");
+            final Path file = Files.createTempFile("pim", ".tmp");
             file.toFile().deleteOnExit();
 
-            try (OutputStream fileOS = new BufferedOutputStream(Files.newOutputStream(file)); OutputStream cipherOS = getCipherOutputStream(fileOS)) {
+            try (OutputStream fileOS = new BufferedOutputStream(Files.newOutputStream(file));
+                 OutputStream cipherOS = getCipherOutputStream(fileOS)) {
                 // IOUtils.copy(input, cipherOS);
-                byte[] buffer = new byte[BUFFER_SIZE];
+                final byte[] buffer = new byte[BUFFER_SIZE];
                 int numRead = 0;
 
                 while ((numRead = input.read(buffer)) >= 0) {
@@ -158,13 +157,13 @@ public class Crypt {
             return null;
         }
 
-        Key key = getSecretKey();
+        final Key key = getSecretKey();
 
         try {
-            Cipher encodeCipher = Cipher.getInstance(AES_ALGORITHM);
+            final Cipher encodeCipher = Cipher.getInstance(AES_ALGORITHM);
             encodeCipher.init(Cipher.ENCRYPT_MODE, key, new IvParameterSpec(INIT_VECTOR));
 
-            byte[] encrypted = encodeCipher.doFinal(input.getBytes(getCharset()));
+            final byte[] encrypted = encodeCipher.doFinal(input.getBytes(getCharset()));
 
             // return Base64.encodeBase64String(encrypted);
             return new String(Base64.getEncoder().encode(encrypted), getCharset());
@@ -182,10 +181,10 @@ public class Crypt {
     }
 
     public OutputStream getCipherOutputStream(final OutputStream output) {
-        Key key = getSecretKey();
+        final Key key = getSecretKey();
 
         try {
-            Cipher encodeCipher = Cipher.getInstance(AES_ALGORITHM);
+            final Cipher encodeCipher = Cipher.getInstance(AES_ALGORITHM);
             encodeCipher.init(Cipher.ENCRYPT_MODE, key, new IvParameterSpec(INIT_VECTOR));
 
             return new CipherOutputStream(output, encodeCipher);

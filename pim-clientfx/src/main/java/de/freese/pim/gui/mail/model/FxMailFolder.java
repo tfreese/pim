@@ -26,32 +26,21 @@ import javafx.collections.transformation.SortedList;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class FxMailFolder {
     private final BooleanProperty abonniertProperty = new SimpleBooleanProperty(this, "abonniert", true);
-
     private final LongProperty accountIDProperty = new SimpleLongProperty(this, "accountID", 0L);
-
     @JsonIgnore
     private final ObservableList<FxMailFolder> children = FXCollections.observableArrayList();
-
     private final StringProperty fullNameProperty = new SimpleStringProperty(this, "fullName", null);
-
     private final LongProperty idProperty = new SimpleLongProperty(this, "id", 0L);
-
     private final BooleanProperty isSendFolderProperty = new SimpleBooleanProperty(this, "isSendFolder", false);
-
     @JsonIgnore
     private final ObservableList<FxMail> mails = FXCollections.observableArrayList();
-
     @JsonIgnore
     private final SortedList<FxMail> mailsSorted = new SortedList<>(this.mails);
-
     private final StringProperty nameProperty = new SimpleStringProperty(this, "name", null);
-
     @JsonIgnore
     private final IntegerBinding unreadMailsCount;
-
     @JsonIgnore
     private final IntegerBinding unreadMailsCountTotal;
-
     @JsonIgnore
     private FxMailFolder parent;
 
@@ -59,7 +48,7 @@ public class FxMailFolder {
         super();
 
         this.unreadMailsCount = new SumUnreadMailsBinding(this.mails);
-        IntegerBinding unreadMailsCountChildFolder = new SumUnreadMailsInChildFolderBinding(this.children);
+        final IntegerBinding unreadMailsCountChildFolder = new SumUnreadMailsInChildFolderBinding(this.children);
 
         this.unreadMailsCountTotal = (IntegerBinding) this.unreadMailsCount.add(unreadMailsCountChildFolder);
         // this.unreadMailsCountTotal = (ObservableIntegerValue) Bindings.add(this.unreadMailsCount, unreadMailsCountChildFolder);
@@ -181,7 +170,7 @@ public class FxMailFolder {
 
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder();
+        final StringBuilder builder = new StringBuilder();
         builder.append("MailFolder [fullName=");
         builder.append(getFullName());
         builder.append("]");

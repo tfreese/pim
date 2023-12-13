@@ -85,11 +85,11 @@ class TestRestServer {
     }
 
     private void testAsync(final String url) throws Exception {
-        List<MvcResult> results = new ArrayList<>();
+        final List<MvcResult> results = new ArrayList<>();
 
         for (int i = 0; i < 20; i++) {
             // @formatter:off
-            MvcResult mvcResult = this.mockMvc.perform(get(url))
+            final MvcResult mvcResult = this.mockMvc.perform(get(url))
                     .andExpect(MockMvcResultMatchers.request().asyncStarted())
                     .andReturn();
             //  @formatter:on

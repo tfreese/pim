@@ -11,7 +11,7 @@ import de.freese.pim.core.model.mail.MailFolder;
 /**
  * @author Thomas Freese
  */
-public interface MailDAO {
+public interface MailDao {
     /**
      * @return int; affectedRows
      */

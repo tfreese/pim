@@ -47,8 +47,8 @@ public abstract class AbstractFxMailService extends AbstractFxService implements
         try {
             getLogger().debug("load mail: msgnum={}; uid={}; size={}; subject={}", mail.getMsgNum(), mail.getUID(), mail.getSize(), mail.getSubject());
 
-            Path folderPath = getBasePath().resolve(account.getMail()).resolve(mail.getFolderFullName());
-            Path mailPath = folderPath.resolve(Long.toString(mail.getUID())).resolve(mail.getUID() + ".json.zip");
+            final Path folderPath = getBasePath().resolve(account.getMail()).resolve(mail.getFolderFullName());
+            final Path mailPath = folderPath.resolve(Long.toString(mail.getUID())).resolve(mail.getUID() + ".json.zip");
 
             MailContent mailContent = null;
 
@@ -93,7 +93,7 @@ public abstract class AbstractFxMailService extends AbstractFxService implements
         // Hierarchie aufbauen basierend auf Namen.
         for (FxMailFolder folder : mailFolders) {
             // @formatter:off
-            Optional<FxMailFolder> parent = mailFolders.stream()
+            final Optional<FxMailFolder> parent = mailFolders.stream()
                 .filter(mf -> !Objects.equals(mf, folder))
                 .filter(mf -> folder.getFullName().startsWith(mf.getFullName()))
                 .findFirst();
@@ -110,7 +110,7 @@ public abstract class AbstractFxMailService extends AbstractFxService implements
     protected abstract MailContent loadMailContent(Path mailPath, FxMailAccount account, FxMail mail, IOMonitor monitor) throws Exception;
 
     protected void saveMailContent(final Path mailPath, final MailContent mailContent) throws Exception {
-        Callable<Void> task = () -> {
+        final Callable<Void> task = () -> {
             getLogger().info("Save Mail: {}", mailPath);
 
             try (OutputStream os = Files.newOutputStream(mailPath);
@@ -133,7 +133,7 @@ public abstract class AbstractFxMailService extends AbstractFxService implements
     }
 
     protected void saveMailContent(final Path mailPath, final String jsonContent) throws Exception {
-        Callable<Void> task = () -> {
+        final Callable<Void> task = () -> {
             getLogger().info("Save Mail: {}", mailPath);
 
             try (OutputStream os = Files.newOutputStream(mailPath);

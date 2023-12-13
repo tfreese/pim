@@ -32,14 +32,14 @@ public class DefaultRestFxAddressbookService extends AbstractFxAddressbookServic
 
     @Override
     public List<FxKontakt> getKontaktDetails(final long... ids) {
-        FxKontakt[] details = getRestTemplate().postForObject("/addressBook/details", ids, FxKontakt[].class);
+        final FxKontakt[] details = getRestTemplate().postForObject("/addressBook/details", ids, FxKontakt[].class);
 
         return Arrays.asList(details);
     }
 
     @Override
     public void insertKontakt(final FxKontakt kontakt) {
-        long primaryKey = getRestTemplate().postForObject("/addressBook/contact/insert", kontakt, Long.class);
+        final long primaryKey = getRestTemplate().postForObject("/addressBook/contact/insert", kontakt, Long.class);
 
         kontakt.setID(primaryKey);
     }
@@ -51,7 +51,7 @@ public class DefaultRestFxAddressbookService extends AbstractFxAddressbookServic
 
     @Override
     public int updateKontakt(final long id, final String nachname, final String vorname) {
-        Map<String, String> variables = new HashMap<>();
+        final Map<String, String> variables = new HashMap<>();
         variables.put("surname", nachname);
         variables.put("forename", vorname);
 

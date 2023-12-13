@@ -10,31 +10,23 @@ import de.freese.pim.core.mail.MailPort;
  */
 public class MailAccount {
     private long id;
-
     // @NotNull
     // @Size(min = 0, max = 50)
     private String imapHost;
-
     private boolean imapLegitimation = true;
-
     // @NotNull
     private MailPort imapPort = MailPort.IMAPS;
-
     // @NotNull
     // @Pattern(regexp = Utils.MAIL_REGEX)
     // @Size(min = 0, max = 50)
     private String mail;
-
     // @NotNull
     // @Size(min = 0, max = 100)
     private String password;
-
     // @NotNull
     // @Size(min = 0, max = 50)
     private String smtpHost;
-
     private boolean smtpLegitimation = true;
-
     // @NotNull
     private MailPort smtpPort = MailPort.SMTPS;
 
@@ -134,7 +126,7 @@ public class MailAccount {
 
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder();
+        final StringBuilder builder = new StringBuilder();
         builder.append("MailAccount [id=").append(getID());
         builder.append(", mail=").append(getMail());
         builder.append("]");

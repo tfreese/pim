@@ -44,11 +44,11 @@ public class SqliteLocalFileConfig {
 
         // DriverManager.setLogWriter(new PrintWriter(System.out, true));
 
-        SQLiteConfig config = new SQLiteConfig();
+        final SQLiteConfig config = new SQLiteConfig();
         config.setReadOnly(false);
         config.setReadUncommitted(true);
 
-        SQLiteDataSource dataSource = new SQLiteConnectionPoolDataSource(config);
+        final SQLiteDataSource dataSource = new SQLiteConnectionPoolDataSource(config);
         dataSource.setUrl("jdbc:sqlite:" + pimHome + "/" + pimDbName + ".sqlite");
 
         return dataSource;

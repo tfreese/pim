@@ -49,7 +49,7 @@ public class MainView extends BorderPane implements View {
         setNavNode(new ListView<>());
 
         // Image image = new Image("images/mail.png", 16, 16, true, true);
-        ImageView imageViewMail = new ImageView();
+        final ImageView imageViewMail = new ImageView();
         imageViewMail.setFitHeight(32);
         imageViewMail.setFitWidth(32);
         imageViewMail.getStyleClass().add("imageview-mail");
@@ -60,7 +60,7 @@ public class MainView extends BorderPane implements View {
         this.buttonMailView.setGraphic(imageViewMail);
         this.buttonMailView.setTooltip(new Tooltip("%mails"));
 
-        ImageView imageViewContact = new ImageView();
+        final ImageView imageViewContact = new ImageView();
         imageViewContact.setFitHeight(32);
         imageViewContact.setFitWidth(32);
         imageViewContact.getStyleClass().add("imageview-contact");
@@ -70,7 +70,7 @@ public class MainView extends BorderPane implements View {
         this.buttonContactView.setGraphic(imageViewContact);
         this.buttonContactView.setTooltip(new Tooltip("%contacts"));
 
-        HBox hBox = new HBox();
+        final HBox hBox = new HBox();
         hBox.getStyleClass().add("hbox");
         hBox.getChildren().addAll(this.buttonMailView, this.buttonContactView);
 

@@ -60,7 +60,7 @@ public class TestService {
      */
     @GetMapping("/asyncDateDeferredResult")
     public DeferredResult<String> asyncDateDeferredResult() {
-        DeferredResult<String> deferredResult = new DeferredResult<>();
+        final DeferredResult<String> deferredResult = new DeferredResult<>();
 
         CompletableFuture.supplyAsync(() -> {
             try {
@@ -91,7 +91,7 @@ public class TestService {
      */
     @GetMapping("/asyncDateWebAsyncTask")
     public WebAsyncTask<String> asyncDateWebAsyncTask() {
-        Callable<String> callable = () -> {
+        final Callable<String> callable = () -> {
             getLogger().info("asyncDateWebAsyncTask: thread={}", Thread.currentThread().getName());
             TimeUnit.SECONDS.sleep(1);
 
@@ -109,7 +109,7 @@ public class TestService {
     // @RequestMapping(path = "/greeting/{name}", method = RequestMethod.GET);
     // @PathVariable("name")
     public Map<String, String> greeting(@RequestParam(value = "name", defaultValue = "World") final String name) {
-        Map<String, String> map = new HashMap<>();
+        final Map<String, String> map = new HashMap<>();
         map.put("hello", name);
 
         return map;

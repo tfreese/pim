@@ -24,7 +24,6 @@ import jakarta.mail.internet.MimeMessage;
  */
 public class JavaMailSender {
     public static final String DEFAULT_PROTOCOL = "smtp";
-
     private static final String HEADER_MESSAGE_ID = "Message-ID";
 
     /**
@@ -49,15 +48,10 @@ public class JavaMailSender {
     }
 
     private MailAuthenticator authenticator;
-
     private String host;
-
     private Properties javaMailProperties = new Properties();
-
     private int port = -1;
-
     private String protocol = DEFAULT_PROTOCOL;
-
     private Session session;
 
     public String getHost() {
@@ -127,10 +121,10 @@ public class JavaMailSender {
      * @throws MessagingException if connect attempt failed
      */
     protected Transport connectTransport() throws MessagingException {
-        String username = Optional.ofNullable(getUsername()).filter(s -> !s.isBlank()).orElse(null);
-        String password = Optional.ofNullable(getPassword()).filter(s -> !s.isBlank()).orElse(null);
+        final String username = Optional.ofNullable(getUsername()).filter(s -> !s.isBlank()).orElse(null);
+        final String password = Optional.ofNullable(getPassword()).filter(s -> !s.isBlank()).orElse(null);
 
-        Transport transport = getTransport(getSession());
+        final Transport transport = getTransport(getSession());
         transport.connect(getHost(), getPort(), username, password);
 
         return transport;
@@ -144,7 +138,7 @@ public class JavaMailSender {
      * "mimeMessages" array), if any
      */
     protected void doSend(final MimeMessage[] mimeMessages, final Object[] originalMessages) throws Exception {
-        Map<Object, Exception> failedMessages = new LinkedHashMap<>();
+        final Map<Object, Exception> failedMessages = new LinkedHashMap<>();
         Transport transport = null;
 
         try {
@@ -171,7 +165,7 @@ public class JavaMailSender {
                     catch (Exception ex) {
                         // Effectively, all remaining messages failed...
                         for (int j = i; j < mimeMessages.length; j++) {
-                            Object original = (originalMessages != null ? originalMessages[j] : mimeMessages[j]);
+                            final Object original = (originalMessages != null ? originalMessages[j] : mimeMessages[j]);
                             failedMessages.put(original, ex);
                         }
 
@@ -180,14 +174,14 @@ public class JavaMailSender {
                     }
                 }
 
-                MimeMessage mimeMessage = mimeMessages[i];
+                final MimeMessage mimeMessage = mimeMessages[i];
 
                 try {
                     if (mimeMessage.getSentDate() == null) {
                         mimeMessage.setSentDate(new Date());
                     }
 
-                    String messageID = mimeMessage.getMessageID();
+                    final String messageID = mimeMessage.getMessageID();
 
                     mimeMessage.saveChanges();
 
@@ -198,7 +192,7 @@ public class JavaMailSender {
                     transport.sendMessage(mimeMessage, mimeMessage.getAllRecipients());
                 }
                 catch (Exception ex) {
-                    Object original = (originalMessages != null ? originalMessages[i] : mimeMessage);
+                    final Object original = (originalMessages != null ? originalMessages[i] : mimeMessage);
                     failedMessages.put(original, ex);
                 }
             }

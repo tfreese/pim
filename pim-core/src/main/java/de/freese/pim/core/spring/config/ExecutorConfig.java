@@ -39,12 +39,12 @@ public class ExecutorConfig {
     @Bean
     @ConditionalOnMissingBean({Executor.class, ExecutorService.class})
     public ThreadPoolExecutorFactoryBean executorService() {
-        int coreSize = Math.max(8, Runtime.getRuntime().availableProcessors());
-        int maxSize = coreSize * 2;
-        int queueSize = maxSize * 2;
-        int keepAliveSeconds = 60;
+        final int coreSize = Math.max(8, Runtime.getRuntime().availableProcessors());
+        final int maxSize = coreSize * 2;
+        final int queueSize = maxSize * 2;
+        final int keepAliveSeconds = 60;
 
-        ThreadPoolExecutorFactoryBean bean = new ThreadPoolExecutorFactoryBean();
+        final ThreadPoolExecutorFactoryBean bean = new ThreadPoolExecutorFactoryBean();
         bean.setCorePoolSize(coreSize);
         bean.setMaxPoolSize(maxSize);
         bean.setQueueCapacity(queueSize);
@@ -61,9 +61,9 @@ public class ExecutorConfig {
     @Bean
     @ConditionalOnMissingBean(ScheduledExecutorService.class)
     public ScheduledExecutorFactoryBean scheduledExecutorService() {
-        int poolSize = Math.max(2, Runtime.getRuntime().availableProcessors() / 4);
+        final int poolSize = Math.max(2, Runtime.getRuntime().availableProcessors() / 4);
 
-        ScheduledExecutorFactoryBean bean = new ScheduledExecutorFactoryBean();
+        final ScheduledExecutorFactoryBean bean = new ScheduledExecutorFactoryBean();
         bean.setPoolSize(poolSize);
         bean.setThreadPriority(Thread.NORM_PRIORITY);
         bean.setThreadNamePrefix("scheduler-");

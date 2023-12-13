@@ -12,39 +12,28 @@ import de.freese.pim.core.mail.InternetAddress;
  */
 public class Mail {
     private InternetAddress[] bcc;
-
     private InternetAddress[] cc;
-
     // @NotNull
     private String folderFullName;
-
     // @NotNull
     private long folderID;
-
     private InternetAddress from;
     /**
      * Ist immer größer als 0.
      */
     // @NotNull
     private int msgNum;
-
     // @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date receivedDate;
-
     // @NotNull
     private boolean seen;
-
     // @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date sendDate;
-
     // @NotNull
     private int size;
-
     // @Size(max = 400)
     private String subject;
-
     private InternetAddress[] to;
-
     // @NotNull
     private long uid;
 

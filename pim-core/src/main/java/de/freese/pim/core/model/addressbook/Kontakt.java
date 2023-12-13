@@ -14,10 +14,7 @@ public class Kontakt implements Comparable<Kontakt> {
     private final List<KontaktAttribut> attribute = new ArrayList<>();
 
     private long id;
-
     private String nachname;
-
-    // private final transient PropertyChangeSupport pcs = new PropertyChangeSupport(this);
 
     private String vorname;
 
@@ -35,7 +32,7 @@ public class Kontakt implements Comparable<Kontakt> {
     }
 
     public void addAttribut(final String attribut, final String wert) {
-        KontaktAttribut ka = new KontaktAttribut();
+        final KontaktAttribut ka = new KontaktAttribut();
         ka.setKontaktID(getID());
         ka.setAttribut(attribut);
         ka.setWert(wert);
@@ -122,7 +119,7 @@ public class Kontakt implements Comparable<Kontakt> {
 
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder();
+        final StringBuilder builder = new StringBuilder();
         builder.append("Kontakt [attribute=").append(getAttribute());
         builder.append(", id=").append(getID());
         builder.append(", nachname=").append(getNachname());

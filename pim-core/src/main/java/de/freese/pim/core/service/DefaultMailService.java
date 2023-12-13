@@ -24,7 +24,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import de.freese.pim.core.dao.MailDAO;
+import de.freese.pim.core.dao.MailDao;
 import de.freese.pim.core.mail.MailContent;
 import de.freese.pim.core.mail.api.JavaMailApi;
 import de.freese.pim.core.mail.api.MailApi;
@@ -42,8 +42,7 @@ import de.freese.pim.core.utils.io.IOMonitor;
 @Profile("!ClientREST")
 public class DefaultMailService extends AbstractService implements MailService, BeanFactoryAware {
     private BeanFactory beanFactory;
-
-    private MailDAO mailDAO;
+    private MailDao mailDAO;
 
     @Override
     public void connectAccount(final MailAccount account) {
@@ -69,17 +68,17 @@ public class DefaultMailService extends AbstractService implements MailService, 
         // GenericApplicationContext#registerBean(Foo.class);
         // GenericApplicationContext#registerBean(Bar.class, () -> new Bar(ctx.getBean(Foo.class));
 
-        String beanName = getAccountBeanName(account.getID());
+        final String beanName = getAccountBeanName(account.getID());
 
         if (getApplicationContext().containsBean(beanName)) {
             // Bean ist bereits registriert.
             return;
         }
 
-        MailApi mailAPI = new JavaMailApi(account);
+        final MailApi mailAPI = new JavaMailApi(account);
         mailAPI.setExecutor(getTaskExecutor());
 
-        ConfigurableListableBeanFactory bf = (ConfigurableListableBeanFactory) getBeanFactory();
+        final ConfigurableListableBeanFactory bf = (ConfigurableListableBeanFactory) getBeanFactory();
         bf.registerSingleton(beanName, mailAPI);
 
         mailAPI.connect();
@@ -88,7 +87,7 @@ public class DefaultMailService extends AbstractService implements MailService, 
     @Override
     @Transactional
     public int deleteAccount(final long accountID) {
-        List<MailFolder> folder = getMailDAO().getMailFolder(accountID);
+        final List<MailFolder> folder = getMailDAO().getMailFolder(accountID);
         int affectedRows = 0;
 
         for (MailFolder mf : folder) {
@@ -112,16 +111,16 @@ public class DefaultMailService extends AbstractService implements MailService, 
     public void disconnectAccounts(final long... accountIDs) {
         getLogger().info("Disconnect Accounts");
 
-        List<Long> ids = new ArrayList<>();
+        final List<Long> ids = new ArrayList<>();
 
         Arrays.stream(accountIDs).forEach(ids::add);
 
         if (ids.isEmpty()) {
             // Alle schliessen.
-            String[] mailAPINames = getApplicationContext().getBeanNamesForType(MailApi.class);
+            final String[] mailAPINames = getApplicationContext().getBeanNamesForType(MailApi.class);
 
             for (String mailAPIName : mailAPINames) {
-                long accountID = Long.parseLong(mailAPIName.split("-")[1]);
+                final long accountID = Long.parseLong(mailAPIName.split("-")[1]);
 
                 ids.add(accountID);
             }
@@ -159,14 +158,14 @@ public class DefaultMailService extends AbstractService implements MailService, 
     @Override
     @Transactional
     public List<MailFolder> loadFolder(final long accountID) {
-        MailApi mailAPI = getMailAPI(accountID);
+        final MailApi mailAPI = getMailAPI(accountID);
 
         List<MailFolder> folder = getMailDAO().getMailFolder(accountID);
 
         if ((folder == null) || folder.isEmpty()) {
             folder = mailAPI.getFolder();
 
-            long[] primaryKeys = insertFolder(accountID, folder);
+            final long[] primaryKeys = insertFolder(accountID, folder);
 
             for (int i = 0; i < primaryKeys.length; i++) {
                 folder.get(i).setID(primaryKeys[i]);
@@ -182,7 +181,7 @@ public class DefaultMailService extends AbstractService implements MailService, 
     public MailContent loadMailContent(final long accountID, final String folderFullName, final long mailUID, final IOMonitor monitor) {
         getLogger().debug("download mail: accountID={}, folderFullName={}, uid={}", accountID, folderFullName, mailUID);
 
-        MailApi mailAPI = getMailAPI(accountID);
+        final MailApi mailAPI = getMailAPI(accountID);
 
         return mailAPI.loadMail(folderFullName, mailUID, monitor);
     }
@@ -192,17 +191,17 @@ public class DefaultMailService extends AbstractService implements MailService, 
     public List<Mail> loadMails(final long accountID, final long folderID, final String folderFullName) {
         getLogger().info("Load Mails: account={}, folder={}", accountID, folderFullName);
 
-        MailApi mailAPI = getMailAPI(accountID);
+        final MailApi mailAPI = getMailAPI(accountID);
 
-        Map<Long, Mail> mailMap = getMailDAO().getMails(folderID).stream().collect(Collectors.toMap(Mail::getUID, Function.identity()));
+        final Map<Long, Mail> mailMap = getMailDAO().getMails(folderID).stream().collect(Collectors.toMap(Mail::getUID, Function.identity()));
 
         // Höchste UID finden.
         long uidFrom = mailMap.values().parallelStream().mapToLong(Mail::getUID).max().orElse(1);
 
         // Alle Mails lokal löschen, die zwischenzeitlich auch Remote gelöscht worden sind.
-        Set<Long> currentUIDs = mailAPI.loadMessageIDs(folderFullName);
+        final Set<Long> currentUIDs = mailAPI.loadMessageIDs(folderFullName);
 
-        Set<Long> remoteDeletedUIDs = new HashSet<>();
+        final Set<Long> remoteDeletedUIDs = new HashSet<>();
         remoteDeletedUIDs.addAll(mailMap.keySet());
         remoteDeletedUIDs.removeAll(currentUIDs);
 
@@ -218,7 +217,7 @@ public class DefaultMailService extends AbstractService implements MailService, 
             uidFrom += 1;
         }
 
-        List<Mail> newMails = mailAPI.loadMails(folderFullName, uidFrom);
+        final List<Mail> newMails = mailAPI.loadMails(folderFullName, uidFrom);
 
         if (newMails == null) {
             int affectedRows = getMailDAO().deleteMails(folderID);
@@ -231,12 +230,12 @@ public class DefaultMailService extends AbstractService implements MailService, 
         }
 
         if (!newMails.isEmpty()) {
-            int[] affectedRows = getMailDAO().insertMail(folderID, newMails);
+            final int[] affectedRows = getMailDAO().insertMail(folderID, newMails);
 
             getLogger().debug("new mails saved: affected rows={}", IntStream.of(affectedRows).sum());
         }
 
-        List<Mail> mails = new ArrayList<>();
+        final List<Mail> mails = new ArrayList<>();
         mails.addAll(mailMap.values());
         mails.addAll(newMails);
 
@@ -251,7 +250,7 @@ public class DefaultMailService extends AbstractService implements MailService, 
     }
 
     @Resource
-    public void setMailDAO(final MailDAO mailDAO) {
+    public void setMailDAO(final MailDao mailDAO) {
         this.mailDAO = mailDAO;
     }
 
@@ -259,7 +258,7 @@ public class DefaultMailService extends AbstractService implements MailService, 
     public List<MailFolder> test(final MailAccount account) {
         List<MailFolder> folder = null;
 
-        MailApi mailAPI = new JavaMailApi(account);
+        final MailApi mailAPI = new JavaMailApi(account);
 
         try {
             mailAPI.connect();
@@ -288,10 +287,10 @@ public class DefaultMailService extends AbstractService implements MailService, 
     @Override
     @Transactional
     public int[] updateFolder(final long accountID, final List<MailFolder> folders) {
-        int[] affectedRows = new int[folders.size()];
+        final int[] affectedRows = new int[folders.size()];
 
         for (int i = 0; i < folders.size(); i++) {
-            MailFolder mf = folders.get(i);
+            final MailFolder mf = folders.get(i);
 
             affectedRows[i] = getMailDAO().updateFolder(mf);
         }
@@ -300,10 +299,10 @@ public class DefaultMailService extends AbstractService implements MailService, 
     }
 
     protected void disconnectMailAPI(final long accountID) {
-        String beanName = getAccountBeanName(accountID);
+        final String beanName = getAccountBeanName(accountID);
 
-        DefaultListableBeanFactory bf = (DefaultListableBeanFactory) getBeanFactory();
-        MailApi mailAPI = bf.getBean(beanName, MailApi.class);
+        final DefaultListableBeanFactory bf = (DefaultListableBeanFactory) getBeanFactory();
+        final MailApi mailAPI = bf.getBean(beanName, MailApi.class);
 
         getLogger().info("Close {}", mailAPI.getAccount().getMail());
 
@@ -322,12 +321,12 @@ public class DefaultMailService extends AbstractService implements MailService, 
     }
 
     protected MailApi getMailAPI(final long accountID) {
-        String beanName = getAccountBeanName(accountID);
+        final String beanName = getAccountBeanName(accountID);
 
         return getApplicationContext().getBean(beanName, MailApi.class);
     }
 
-    protected MailDAO getMailDAO() {
+    protected MailDao getMailDAO() {
         return this.mailDAO;
     }
 

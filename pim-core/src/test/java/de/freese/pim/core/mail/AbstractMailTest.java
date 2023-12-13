@@ -26,7 +26,7 @@ public abstract class AbstractMailTest {
 
     @Parameters(name = "Account: {0}") // {index}
     public static Iterable<Object[]> accounts() throws Exception {
-        Path path = TMP_TEST_PATH.resolve("testMail.properties");
+        final Path path = TMP_TEST_PATH.resolve("testMail.properties");
 
         Files.createDirectories(path.getParent());
 
@@ -36,7 +36,7 @@ public abstract class AbstractMailTest {
             return Arrays.asList(new Object[][]{});
         }
 
-        Properties properties = new Properties();
+        final Properties properties = new Properties();
 
         try (InputStream is = Files.newInputStream(path)) {
             properties.load(is);

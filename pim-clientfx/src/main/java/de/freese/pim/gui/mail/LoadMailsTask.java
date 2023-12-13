@@ -42,7 +42,7 @@ public class LoadMailsTask extends Task<Void> implements Callable<Void> {
 
         setOnSucceeded(event -> treeView.refresh());
         setOnFailed(event -> {
-            Throwable th = getException();
+            final Throwable th = getException();
 
             LOGGER.error(th.getMessage(), th);
 
@@ -53,10 +53,9 @@ public class LoadMailsTask extends Task<Void> implements Callable<Void> {
     @Override
     public Void call() throws Exception {
         for (FxMailFolder mf : this.folders) {
-            List<FxMail> mails = this.mailService.loadMails(this.account, mf);
+            final List<FxMail> mails = this.mailService.loadMails(this.account, mf);
 
-            Runnable task = () -> {
-
+            final Runnable task = () -> {
                 if (mails != null) {
                     mf.getMails().addAll(mails);
                 }

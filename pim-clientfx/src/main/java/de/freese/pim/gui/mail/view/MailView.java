@@ -80,7 +80,7 @@ public class MailView implements View {
         this.progressIndicator.setVisible(false);
         this.progressIndicator.setMaxSize(250D, 250D);
 
-        SplitPane splitPane = new SplitPane();
+        final SplitPane splitPane = new SplitPane();
         splitPane.setOrientation(Orientation.VERTICAL);
         splitPane.getItems().add(this.tableViewMail);
 
@@ -91,7 +91,7 @@ public class MailView implements View {
         // this.editor = new HTMLEditor();
         // splitPane.getItems().add(this.editor);
 
-        StackPane stackPane = new StackPane();
+        final StackPane stackPane = new StackPane();
         stackPane.setPadding(new Insets(0));
         // StackPane.setMargin(this.tableView, new Insets(0));
         stackPane.getChildren().add(splitPane);
@@ -105,7 +105,7 @@ public class MailView implements View {
         this.treeViewMail.setEditable(false);
         this.treeViewMail.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
 
-        TitledPane titledPane = new TitledPane("%mails", this.treeViewMail);
+        final TitledPane titledPane = new TitledPane("%mails", this.treeViewMail);
         titledPane.setCollapsible(false);
         // titledPane.setPrefHeight(Double.MAX_VALUE);
         // titledPane.setContent(treeViewMail);
@@ -116,7 +116,7 @@ public class MailView implements View {
     }
 
     private ToolBar createToolbar() {
-        ToolBar tb = new ToolBar();
+        final ToolBar tb = new ToolBar();
 
         // Image image = new Image("images/mail.png", 16, 16, true, true);
         ImageView imageView = new ImageView();

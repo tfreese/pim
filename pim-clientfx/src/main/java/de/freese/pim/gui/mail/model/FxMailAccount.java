@@ -29,31 +29,19 @@ import de.freese.pim.core.mail.MailPort;
 public class FxMailAccount {
     @JsonIgnore
     private final FilteredList<FxMailFolder> abonnierteFolder;
-
     @JsonIgnore
     private final ObservableList<FxMailFolder> folder = FXCollections.observableArrayList();
-
     private final LongProperty idProperty = new SimpleLongProperty(this, "id", 0L);
-
     private final StringProperty imapHostProperty = new SimpleStringProperty(this, "imapHost", null);
-
     private final BooleanProperty imapLegitimationProperty = new SimpleBooleanProperty(this, "imapLegitimation", true);
-
     private final ObjectProperty<MailPort> imapPortProperty = new SimpleObjectProperty<>(this, "imapPort", MailPort.IMAPS);
-
     private final StringProperty mailProperty = new SimpleStringProperty(this, "mail", null);
-
     private final StringProperty passwordProperty = new SimpleStringProperty(this, "password", null);
-
     @JsonIgnore
     private final FilteredList<FxMailFolder> rootFolder;
-
     private final StringProperty smtpHostProperty = new SimpleStringProperty(this, "smtpHost", null);
-
     private final BooleanProperty smtpLegitimationProperty = new SimpleBooleanProperty(this, "smtpLegitimation", true);
-
     private final ObjectProperty<MailPort> smtpPortProperty = new SimpleObjectProperty<>(this, "smtpPort", MailPort.SMTPS);
-
     @JsonIgnore
     private final ObservableIntegerValue unreadMailsCount;
 
@@ -211,7 +199,7 @@ public class FxMailAccount {
 
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder();
+        final StringBuilder builder = new StringBuilder();
         builder.append("MailAccount [id=").append(getID());
         builder.append(", mail=").append(getMail());
         builder.append("]");

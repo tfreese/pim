@@ -70,7 +70,7 @@ public class ServerConfig extends WebMvcConfigurationSupport // implements WebMv
     // public MailService mailService(final DataSource dataSource, final ExecutorService executorService)
     // {
     // DefaultMailService bean = new DefaultMailService();
-    // bean.setMailDAO(new DefaultMailDAO().dataSource(dataSource));
+    // bean.setMailDAO(new DefaultMailDao().dataSource(dataSource));
     // bean.setExecutorService(executorService);
     // //
     // // return (IMailService) Proxy.newProxyInstance(PIMApplication.class.getClassLoader(), new Class<?>[]

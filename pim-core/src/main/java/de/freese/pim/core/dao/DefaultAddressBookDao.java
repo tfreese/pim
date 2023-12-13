@@ -23,22 +23,21 @@ import de.freese.pim.core.utils.Utils;
  */
 @Repository("addressBookDAO")
 @Profile("!ClientREST")
-public class DefaultAddressBookDAO extends AbstractDAO implements AddressBookDAO {
+public class DefaultAddressBookDao extends AbstractDao implements AddressBookDao {
     /**
      * Mapped die Kontakte mit Attributen.
      *
      * @author Thomas Freese
      */
     private static final class KontaktDetailsResultSetExtractor implements ResultSetExtractor<List<Kontakt>> {
-
         private final RowMapper<Kontakt> kontaktRowMapper = new KontaktRowMapper();
 
         @Override
         public List<Kontakt> extractData(final ResultSet rs) throws SQLException, DataAccessException {
-            List<Kontakt> kontakte = new ArrayList<>();
+            final List<Kontakt> kontakte = new ArrayList<>();
 
             while (rs.next()) {
-                long id = rs.getLong("ID");
+                final long id = rs.getLong("ID");
 
                 final Kontakt kontakt;
 
@@ -50,7 +49,7 @@ public class DefaultAddressBookDAO extends AbstractDAO implements AddressBookDAO
                     kontakt = kontakte.get(0);
                 }
 
-                String attribut = rs.getString("ATTRIBUT");
+                final String attribut = rs.getString("ATTRIBUT");
 
                 if ((attribut != null) && !attribut.isBlank()) {
                     kontakt.addAttribut(attribut, rs.getString("WERT"));
@@ -69,7 +68,7 @@ public class DefaultAddressBookDAO extends AbstractDAO implements AddressBookDAO
     private static final class KontaktRowMapper implements RowMapper<Kontakt> {
         @Override
         public Kontakt mapRow(final ResultSet rs, final int rowNum) throws SQLException {
-            Kontakt kontakt = new Kontakt();
+            final Kontakt kontakt = new Kontakt();
 
             kontakt.setID(rs.getLong("ID"));
             kontakt.setNachname(rs.getString("NACHNAME"));
@@ -95,7 +94,7 @@ public class DefaultAddressBookDAO extends AbstractDAO implements AddressBookDAO
             path += "/";
         }
 
-        String sql = "BACKUP DATABASE TO '" + path + "' BLOCKING"; // AS FILES
+        final String sql = "BACKUP DATABASE TO '" + path + "' BLOCKING"; // AS FILES
 
         getJdbcTemplate().execute(sql);
 
@@ -104,17 +103,17 @@ public class DefaultAddressBookDAO extends AbstractDAO implements AddressBookDAO
 
     @Override
     public int deleteAttribut(final long kontaktID, final String attribut) {
-        String sql = "delete from KONTAKT_ATTRIBUT where kontakt_id = ? and attribut = ?";
+        final String sql = "delete from KONTAKT_ATTRIBUT where kontakt_id = ? and attribut = ?";
 
         return getJdbcTemplate().update(sql, kontaktID, attribut.toUpperCase());
     }
 
     @Override
     public int deleteKontakt(final long id) {
-        String userID = getUserID();
+        final String userID = getUserID();
 
-        String sqlAttribut = "delete from KONTAKT_ATTRIBUT where kontakt_id = ?";
-        String sqlKontakt = "delete from KONTAKT where user_id = ? and id = ?";
+        final String sqlAttribut = "delete from KONTAKT_ATTRIBUT where kontakt_id = ?";
+        final String sqlKontakt = "delete from KONTAKT where user_id = ? and id = ?";
 
         getJdbcTemplate().update(sqlAttribut, id);
 
@@ -123,9 +122,9 @@ public class DefaultAddressBookDAO extends AbstractDAO implements AddressBookDAO
 
     @Override
     public List<Kontakt> getKontaktDetails(final long... ids) {
-        String userID = getUserID();
+        final String userID = getUserID();
 
-        StringBuilder whereClause = new StringBuilder();
+        final StringBuilder whereClause = new StringBuilder();
 
         if (ids.length == 1) {
             whereClause.append(" and id = ").append(ids[0]);
@@ -144,7 +143,7 @@ public class DefaultAddressBookDAO extends AbstractDAO implements AddressBookDAO
             whereClause.append(")");
         }
 
-        StringBuilder sql = new StringBuilder();
+        final StringBuilder sql = new StringBuilder();
         sql.append("select id, nachname, vorname, attribut, wert");
         sql.append(" from V_ADDRESSBOOK");
         sql.append(" where user_id = ?");
@@ -156,9 +155,9 @@ public class DefaultAddressBookDAO extends AbstractDAO implements AddressBookDAO
 
     @Override
     public List<Kontakt> getKontakte() {
-        String userID = getUserID();
+        final String userID = getUserID();
 
-        StringBuilder sql = new StringBuilder();
+        final StringBuilder sql = new StringBuilder();
         sql.append("select id, nachname, vorname from KONTAKT");
         sql.append(" where");
         sql.append(" user_id = ?");
@@ -169,17 +168,17 @@ public class DefaultAddressBookDAO extends AbstractDAO implements AddressBookDAO
 
     @Override
     public int insertAttribut(final long kontaktID, final String attribut, final String wert) {
-        String sql = "insert into KONTAKT_ATTRIBUT (kontakt_id, attribut, wert) values (?, ?, ?)";
+        final String sql = "insert into KONTAKT_ATTRIBUT (kontakt_id, attribut, wert) values (?, ?, ?)";
 
         return getJdbcTemplate().update(sql, kontaktID, attribut == null ? null : attribut.toUpperCase(), wert);
     }
 
     @Override
     public long insertKontakt(final String nachname, final String vorname) {
-        String userID = getUserID();
-        long id = getNextID("KONTAKT_SEQ");
+        final String userID = getUserID();
+        final long id = getNextID("KONTAKT_SEQ");
 
-        String sql = "insert into KONTAKT (id, user_id, nachname, vorname) values (?, ?, ?, ?)";
+        final String sql = "insert into KONTAKT (id, user_id, nachname, vorname) values (?, ?, ?, ?)";
 
         getJdbcTemplate().update(sql, id, userID, nachname, vorname);
 
@@ -188,9 +187,9 @@ public class DefaultAddressBookDAO extends AbstractDAO implements AddressBookDAO
 
     @Override
     public List<Kontakt> searchKontakte(final String name) {
-        String userID = getUserID();
+        final String userID = getUserID();
 
-        StringBuilder sql = new StringBuilder();
+        final StringBuilder sql = new StringBuilder();
         sql.append("select id, nachname, vorname, attribut, wert from V_ADDRESSBOOK");
         sql.append(" where");
         sql.append(" user_id = ?");
@@ -202,16 +201,16 @@ public class DefaultAddressBookDAO extends AbstractDAO implements AddressBookDAO
 
     @Override
     public int updateAttribut(final long kontaktID, final String attribut, final String wert) {
-        String sql = "update KONTAKT_ATTRIBUT set wert = ? where kontakt_id = ? and attribut = ?";
+        final String sql = "update KONTAKT_ATTRIBUT set wert = ? where kontakt_id = ? and attribut = ?";
 
         return getJdbcTemplate().update(sql, wert, kontaktID, attribut.toUpperCase());
     }
 
     @Override
     public int updateKontakt(final long id, final String nachname, final String vorname) {
-        String userID = getUserID();
+        final String userID = getUserID();
 
-        String sql = "update KONTAKT set nachname = ?, vorname = ? where user_id = ? and id = ?";
+        final String sql = "update KONTAKT set nachname = ?, vorname = ? where user_id = ? and id = ?";
 
         return getJdbcTemplate().update(sql, nachname, vorname, userID, id);
     }

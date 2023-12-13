@@ -34,34 +34,24 @@ import de.freese.pim.gui.view.View;
 public class ContactView implements View {
     @FXML
     private final Region mainNode;
-
     @FXML
     private final Region naviNode;
-
     @FXML
     private Button buttonAddContact;
-
     @FXML
     private Button buttonDeleteContact;
-
     @FXML
     private Button buttonEditContact;
-
     @FXML
     private Label labelFilter;
-
     @FXML
     private Label labelNachname;
-
     @FXML
     private Label labelVorname;
-
     @FXML
     private TableView<FxKontakt> tableViewKontakt;
-
     @FXML
     private TextField textFieldNachname;
-
     @FXML
     private TextField textFieldVorname;
 
@@ -73,7 +63,7 @@ public class ContactView implements View {
     }
 
     private Region createMainNode() {
-        GridPane gridPane = new GridPane();
+        final GridPane gridPane = new GridPane();
         gridPane.getStyleClass().add("gridpane");
 
         // Nachname
@@ -95,7 +85,7 @@ public class ContactView implements View {
         this.textFieldVorname.setEditable(false);
         gridPane.add(this.textFieldVorname, 1, 1);
 
-        TitledPane titledPane = new TitledPane("%details", gridPane);
+        final TitledPane titledPane = new TitledPane("%details", gridPane);
         titledPane.setCollapsible(false);
         titledPane.setPrefHeight(Double.MAX_VALUE);
         titledPane.setContent(gridPane);
@@ -104,11 +94,11 @@ public class ContactView implements View {
     }
 
     private Region createNaviNode() {
-        GridPane gridPane = new GridPane();
+        final GridPane gridPane = new GridPane();
         gridPane.getStyleClass().addAll("gridpane", "padding");
 
         // Toolbar
-        ToolBar toolBar = new ToolBar();
+        final ToolBar toolBar = new ToolBar();
         gridPane.add(toolBar, 0, 0, 2, 1);
 
         ImageView imageView = new ImageView();
@@ -143,7 +133,7 @@ public class ContactView implements View {
         gridPane.add(this.labelFilter, 0, 1);
 
         // FilterTextField
-        TextField textField = new TextField();
+        final TextField textField = new TextField();
         gridPane.add(textField, 1, 1);
         GridPane.setHgrow(textField, Priority.ALWAYS);
 
@@ -152,7 +142,7 @@ public class ContactView implements View {
         gridPane.add(this.tableViewKontakt, 0, 2, 2, 1);
         GridPane.setVgrow(this.tableViewKontakt, Priority.ALWAYS);
 
-        TitledPane titledPane = new TitledPane("%contacts", gridPane);
+        final TitledPane titledPane = new TitledPane("%contacts", gridPane);
         titledPane.setCollapsible(false);
         // titledPane.setPrefHeight(Double.MAX_VALUE);
         // titledPane.setContent(gridPane);
@@ -162,7 +152,7 @@ public class ContactView implements View {
     }
 
     private TableView<FxKontakt> createTableViewKontakt(final StringProperty propertyKontaktFilter) {
-        TableView<FxKontakt> tableView = new TableView<>();
+        final TableView<FxKontakt> tableView = new TableView<>();
         tableView.setEditable(false);
         tableView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
         tableView.setTableMenuButtonVisible(true);
@@ -175,9 +165,9 @@ public class ContactView implements View {
 
         // tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
-        TableColumn<FxKontakt, Number> columnID = new TableColumn<>("%id");
-        TableColumn<FxKontakt, String> columnNachname = new TableColumn<>("%nachname");
-        TableColumn<FxKontakt, String> columnVorname = new TableColumn<>("%vorname");
+        final TableColumn<FxKontakt, Number> columnID = new TableColumn<>("%id");
+        final TableColumn<FxKontakt, String> columnNachname = new TableColumn<>("%nachname");
+        final TableColumn<FxKontakt, String> columnVorname = new TableColumn<>("%vorname");
 
         columnID.prefWidthProperty().bind(tableView.widthProperty().multiply(0.1D)); // 10 % Breite
 
@@ -194,7 +184,7 @@ public class ContactView implements View {
         tableView.getColumns().add(columnVorname);
 
         // Für Filter
-        FilteredList<FxKontakt> filteredData = new FilteredList<>(FXCollections.observableArrayList());
+        final FilteredList<FxKontakt> filteredData = new FilteredList<>(FXCollections.observableArrayList());
 
         // Filter-Textfeld mit FilteredList verbinden.
         propertyKontaktFilter.addListener((observable, oldValue, newValue) -> filteredData.setPredicate(kontakt -> {
@@ -202,26 +192,27 @@ public class ContactView implements View {
                 return true;
             }
 
-            String text = kontakt.getNachname() + " " + kontakt.getVorname();
+            final String text = kontakt.getNachname() + " " + kontakt.getVorname();
 
             return text.equalsIgnoreCase(newValue);
         }));
 
         // Da die ObservableList der TableItems neu gesetzt wird, muss auch die Sortierung neu gemacht werden.
-        SortedList<FxKontakt> sortedData = new SortedList<>(filteredData);
+        final SortedList<FxKontakt> sortedData = new SortedList<>(filteredData);
         sortedData.comparatorProperty().bind(tableView.comparatorProperty());
 
         tableView.setItems(sortedData);
 
         // ContextMenu
-        ContextMenu contextMenu = new ContextMenu();
+        final ContextMenu contextMenu = new ContextMenu();
         tableView.setContextMenu(contextMenu);
 
         ImageView imageView = new ImageView();
         imageView.setFitHeight(16);
         imageView.setFitWidth(16);
         imageView.getStyleClass().add("imageview-add");
-        MenuItem menuItemAddContact = new MenuItem("%contact.add", imageView);
+
+        final MenuItem menuItemAddContact = new MenuItem("%contact.add", imageView);
         // menuItemAddContact.disableProperty().bind(tableView.getSelectionModel().selectedItemProperty().isNull());
         menuItemAddContact.setOnAction(event -> this.buttonAddContact.fire());
         contextMenu.getItems().add(menuItemAddContact);
@@ -230,7 +221,8 @@ public class ContactView implements View {
         imageView.setFitHeight(16);
         imageView.setFitWidth(16);
         imageView.getStyleClass().add("imageview-edit");
-        MenuItem menuItemEditContact = new MenuItem("%contact.edit", imageView);
+
+        final MenuItem menuItemEditContact = new MenuItem("%contact.edit", imageView);
         menuItemAddContact.disableProperty().bind(this.buttonAddContact.disableProperty());
         menuItemEditContact.setOnAction(event -> this.buttonEditContact.fire());
         contextMenu.getItems().add(menuItemEditContact);
@@ -239,7 +231,8 @@ public class ContactView implements View {
         imageView.setFitHeight(16);
         imageView.setFitWidth(16);
         imageView.getStyleClass().add("imageview-delete");
-        MenuItem menuItemDeleteContact = new MenuItem("%contact.delete", imageView);
+
+        final MenuItem menuItemDeleteContact = new MenuItem("%contact.delete", imageView);
         menuItemDeleteContact.disableProperty().bind(this.buttonDeleteContact.disableProperty());
         menuItemDeleteContact.setOnAction(event -> this.buttonDeleteContact.fire());
         contextMenu.getItems().add(menuItemDeleteContact);

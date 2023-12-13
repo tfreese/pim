@@ -42,9 +42,7 @@ public final class Utils {
      * ^(.+)@(.+)\\.\\w{2,3}$
      */
     public static final String MAIL_REGEX = "^(.+)@(.+)\\.[a-zA-Z]{2,3}$";
-
     public static final Predicate<Path> PREDICATE_IS_DIR = Files::isDirectory;
-
     public static final Predicate<Path> PREDICATE_IS_DIR_NOT = PREDICATE_IS_DIR.negate();
     /**
      * p -> p.getFileName().toString().startsWith(".");
@@ -59,15 +57,10 @@ public final class Utils {
     };
 
     public static final Predicate<Path> PREDICATE_IS_HIDDEN_NOT = PREDICATE_IS_HIDDEN.negate();
-
     public static final Predicate<Path> PREDICATE_MAIL_FOLDER = PREDICATE_IS_DIR_NOT.or(PREDICATE_IS_HIDDEN_NOT);
-
     public static final Predicate<Path> PREDICATE_MAIL_FOLDER_LEAF = p -> ".leaf".equals(p.getFileName().toString());
-
     public static final Predicate<Path> PREDICATE_MAIL_FOLDER_LEAF_NOT = PREDICATE_MAIL_FOLDER_LEAF.negate();
-
     private static final Logger LOGGER = LoggerFactory.getLogger(Utils.class);
-
     private static final String SYSTEM_USER_NAME = System.getProperty("user.name").toUpperCase();
 
     /**
@@ -80,13 +73,13 @@ public final class Utils {
             return;
         }
 
-        int columnCount = rows.get(0).length;
+        final int columnCount = rows.get(0).length;
 
         // Trenner zwischen Header und Daten.
-        // T[] row = (T[]) Array.newInstance(String.class, columnCount);
-        // T[] row = Arrays.copyOf(rows.get(0), columnCount);
-        // T[] row = rows.get(0).clone();
-        String[] row = new String[columnCount];
+        // final T[] row = (T[]) Array.newInstance(String.class, columnCount);
+        // final T[] row = Arrays.copyOf(rows.get(0), columnCount);
+        // final T[] row = rows.get(0).clone();
+        final String[] row = new String[columnCount];
 
         for (int column = 0; column < columnCount; column++) {
             row[column] = separator.repeat(rows.get(0)[column].length());
@@ -261,10 +254,10 @@ public final class Utils {
             return;
         }
 
-        int columnCount = rows.get(0).length;
+        final int columnCount = rows.get(0).length;
 
         // Breite pro Spalte herausfinden.
-        int[] columnWidth = new int[columnCount];
+        final int[] columnWidth = new int[columnCount];
 
         // @formatter:off
         IntStream.range(0, columnCount).forEach(column ->
@@ -280,7 +273,7 @@ public final class Utils {
         // Strings pro Spalte formatieren und schreiben.
         rows.stream().parallel().forEach(r -> {
             for (int column = 0; column < columnCount; column++) {
-                String value = String.format("%-" + columnWidth[column] + "s", r[column].toString()).replace(" ", padding);
+                final String value = String.format("%-" + columnWidth[column] + "s", r[column].toString()).replace(" ", padding);
 
                 r[column] = (T) value;
             }
@@ -290,7 +283,7 @@ public final class Utils {
     public static void shutdown(final ExecutorService executorService) {
         executorService.shutdown();
 
-        int timeOut = 10;
+        final int timeOut = 10;
 
         while (!executorService.isTerminated()) {
             try {
@@ -330,13 +323,13 @@ public final class Utils {
     public static List<String[]> toList(final ResultSet resultSet) throws SQLException {
         Objects.requireNonNull(resultSet, "resultSet required");
 
-        List<String[]> rows = new ArrayList<>();
+        final List<String[]> rows = new ArrayList<>();
 
-        ResultSetMetaData metaData = resultSet.getMetaData();
-        int columnCount = metaData.getColumnCount();
+        final ResultSetMetaData metaData = resultSet.getMetaData();
+        final int columnCount = metaData.getColumnCount();
 
         // Spaltennamen / Header
-        String[] header = new String[columnCount];
+        final String[] header = new String[columnCount];
         rows.add(header);
 
         for (int column = 1; column <= columnCount; column++) {
@@ -345,11 +338,11 @@ public final class Utils {
 
         // Daten
         while (resultSet.next()) {
-            String[] row = new String[columnCount];
+            final String[] row = new String[columnCount];
             rows.add(row);
 
             for (int column = 1; column <= columnCount; column++) {
-                Object obj = resultSet.getObject(column);
+                final Object obj = resultSet.getObject(column);
                 row[column - 1] = (obj == null) ? "" : obj.toString();
             }
         }
@@ -373,7 +366,7 @@ public final class Utils {
             return;
         }
 
-        int columnCount = rows.get(0).length;
+        final int columnCount = rows.get(0).length;
 
         // Strings pro Spalte schreiben, parallel() verfälscht die Reihenfolge.
         rows.forEach(r -> {
@@ -398,7 +391,8 @@ public final class Utils {
      * Wenn das ResultSet einen Typ != ResultSet.TYPE_FORWARD_ONLY besitzt, wird {@link ResultSet#first()} aufgerufen und kann weiter verwendet werden.
      */
     public static void write(final ResultSet resultSet, final PrintStream ps) throws SQLException {
-        List<String[]> rows = toList(resultSet);
+        final List<String[]> rows = toList(resultSet);
+
         padding(rows, " ");
         addHeaderSeparator(rows, "-");
 

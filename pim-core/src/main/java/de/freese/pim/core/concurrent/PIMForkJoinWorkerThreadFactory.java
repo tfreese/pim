@@ -22,7 +22,6 @@ public class PIMForkJoinWorkerThreadFactory implements ForkJoinWorkerThreadFacto
     }
 
     private final AtomicInteger counter = new AtomicInteger(1);
-
     private final String namePrefix;
 
     public PIMForkJoinWorkerThreadFactory() {
@@ -33,9 +32,9 @@ public class PIMForkJoinWorkerThreadFactory implements ForkJoinWorkerThreadFacto
 
     @Override
     public ForkJoinWorkerThread newThread(final ForkJoinPool pool) {
-        ForkJoinWorkerThread thread = new PIMForkJoinWorkerThread(pool);
+        final ForkJoinWorkerThread thread = new PIMForkJoinWorkerThread(pool);
 
-        String threadName = String.format("%s-%02d", this.namePrefix, this.counter.getAndIncrement());
+        final String threadName = String.format("%s-%02d", this.namePrefix, this.counter.getAndIncrement());
         thread.setName(threadName);
 
         return thread;

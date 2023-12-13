@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import de.freese.pim.core.dao.AddressBookDAO;
+import de.freese.pim.core.dao.AddressBookDao;
 import de.freese.pim.core.model.addressbook.Kontakt;
 
 /**
@@ -21,7 +21,7 @@ import de.freese.pim.core.model.addressbook.Kontakt;
 @Service("addressBookService")
 @Profile("!ClientREST")
 public class DefaultAddressBookService extends AbstractService implements AddressBookService {
-    private AddressBookDAO addressBookDAO;
+    private AddressBookDao addressBookDAO;
 
     @Override
     public boolean backup(final Path directory) {
@@ -71,7 +71,7 @@ public class DefaultAddressBookService extends AbstractService implements Addres
     }
 
     @Resource
-    public void setAddressBookDAO(final AddressBookDAO addressBookDAO) {
+    public void setAddressBookDAO(final AddressBookDao addressBookDAO) {
         this.addressBookDAO = addressBookDAO;
     }
 
@@ -87,7 +87,7 @@ public class DefaultAddressBookService extends AbstractService implements Addres
         return this.addressBookDAO.updateKontakt(id, nachname, vorname);
     }
 
-    protected AddressBookDAO getAddressBookDAO() {
+    protected AddressBookDao getAddressBookDAO() {
         return this.addressBookDAO;
     }
 }

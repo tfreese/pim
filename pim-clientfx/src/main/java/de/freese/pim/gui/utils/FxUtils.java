@@ -85,11 +85,11 @@ public final class FxUtils {
      * </ol>
      */
     public static void bind(final View view, final AbstractController controller, final ResourceBundle resources) {
-        Set<Field> viewSet = Utils.getAnnotatedFields(view, FXML.class);
-        Set<Field> controllerSet = Utils.getAnnotatedFields(controller, FXML.class);
+        final Set<Field> viewSet = Utils.getAnnotatedFields(view, FXML.class);
+        final Set<Field> controllerSet = Utils.getAnnotatedFields(controller, FXML.class);
 
-        Map<String, Field> viewMap = viewSet.stream().collect(Collectors.toMap(Field::getName, Function.identity()));
-        Map<String, Field> controllerMap = controllerSet.stream().collect(Collectors.toMap(Field::getName, Function.identity()));
+        final Map<String, Field> viewMap = viewSet.stream().collect(Collectors.toMap(Field::getName, Function.identity()));
+        final Map<String, Field> controllerMap = controllerSet.stream().collect(Collectors.toMap(Field::getName, Function.identity()));
 
         copyFields(view, viewMap, controller, controllerMap);
 
@@ -122,8 +122,8 @@ public final class FxUtils {
      */
     public static void copyFields(final View view, final Map<String, Field> viewMap, final AbstractController controller, final Map<String, Field> controllerMap) {
         for (Field viewField : new HashSet<>(viewMap.values())) {
-            String name = viewField.getName();
-            Field controllerField = controllerMap.get(name);
+            final String name = viewField.getName();
+            final Field controllerField = controllerMap.get(name);
 
             if (controllerField != null) {
                 try {
@@ -141,16 +141,16 @@ public final class FxUtils {
     }
 
     public static void copySelectionToClipboard(final TableView<?> table) {
-        StringBuilder clipboardString = new StringBuilder();
+        final StringBuilder clipboardString = new StringBuilder();
 
         for (Iterator<?> iteratorPosition = table.getSelectionModel().getSelectedCells().iterator(); iteratorPosition.hasNext(); ) {
-            TablePosition<?, ?> position = (TablePosition<?, ?>) iteratorPosition.next();
+            final TablePosition<?, ?> position = (TablePosition<?, ?>) iteratorPosition.next();
 
-            int row = position.getRow();
+            final int row = position.getRow();
 
             // Ganze Zeile kopieren.
             for (Iterator<?> iteratorCell = table.getColumns().iterator(); iteratorCell.hasNext(); ) {
-                TableColumn<?, ?> column = (TableColumn<?, ?>) iteratorCell.next();
+                final TableColumn<?, ?> column = (TableColumn<?, ?>) iteratorCell.next();
 
                 Object cell = column.getCellData(row);
 
@@ -158,7 +158,7 @@ public final class FxUtils {
                     cell = "";
                 }
 
-                String text = cell.toString();
+                final String text = cell.toString();
 
                 clipboardString.append(text);
 
@@ -217,23 +217,23 @@ public final class FxUtils {
         }
 
         if (progress == 1D) {
-            Color c = colors[colors.length - 1];
+            final Color c = colors[colors.length - 1];
 
             return new int[]{(int) (c.getRed() * 255), (int) (c.getGreen() * 255), (int) (c.getBlue() * 255)};
         }
 
-        int r;
-        int g;
-        int b;
+        final int r;
+        final int g;
+        final int b;
 
         final double segment = (colors.length - 1) * progress;
         final int step = (int) segment;
         final double stepProgress = segment - step;
 
-        Color c1 = colors[step];
-        Color c2 = colors[step + 1];
+        final Color c1 = colors[step];
+        final Color c2 = colors[step + 1];
 
-        Color color = c1.interpolate(c2, stepProgress);
+        final Color color = c1.interpolate(c2, stepProgress);
 
         r = (int) (color.getRed() * 255);
         g = (int) (color.getGreen() * 255);
@@ -279,20 +279,20 @@ public final class FxUtils {
         }
 
         // get the cell position to start with
-        TablePosition<?, ?> pasteCellPosition = table.getSelectionModel().getSelectedCells().get(0);
+        final TablePosition<?, ?> pasteCellPosition = table.getSelectionModel().getSelectedCells().get(0);
 
-        String pasteString = Clipboard.getSystemClipboard().getString();
+        final String pasteString = Clipboard.getSystemClipboard().getString();
 
         int rowClipboard = -1;
 
-        StringTokenizer rowTokenizer = new StringTokenizer(pasteString, "\n");
+        final StringTokenizer rowTokenizer = new StringTokenizer(pasteString, "\n");
 
         while (rowTokenizer.hasMoreTokens()) {
             rowClipboard++;
 
-            String rowString = rowTokenizer.nextToken();
+            final String rowString = rowTokenizer.nextToken();
 
-            StringTokenizer columnTokenizer = new StringTokenizer(rowString, "\t");
+            final StringTokenizer columnTokenizer = new StringTokenizer(rowString, "\t");
 
             int colClipboard = -1;
 
@@ -300,19 +300,19 @@ public final class FxUtils {
                 colClipboard++;
 
                 // calculate the position in the table cell
-                int rowTable = pasteCellPosition.getRow() + rowClipboard;
-                int colTable = pasteCellPosition.getColumn() + colClipboard;
+                final int rowTable = pasteCellPosition.getRow() + rowClipboard;
+                final int colTable = pasteCellPosition.getColumn() + colClipboard;
 
                 // skip if we reached the end of the table
                 if ((rowTable >= table.getItems().size()) || (colTable >= table.getColumns().size())) {
                     continue;
                 }
 
-                String clipboardCellContent = columnTokenizer.nextToken();
+                final String clipboardCellContent = columnTokenizer.nextToken();
 
                 // get cell
-                TableColumn<?, ?> tableColumn = table.getColumns().get(colTable);
-                ObservableValue<?> observableValue = tableColumn.getCellObservableValue(rowTable);
+                final TableColumn<?, ?> tableColumn = table.getColumns().get(colTable);
+                final ObservableValue<?> observableValue = tableColumn.getCellObservableValue(rowTable);
 
                 // TODO: handle double, etc
                 if (observableValue instanceof StringProperty sp) {
@@ -378,7 +378,7 @@ public final class FxUtils {
      * Ändern der Display-Zeiten im Tooltip, da diese Möglichkeit noch nicht besteht.
      */
     public static void tooltipBehaviorHack() {
-        Tooltip tooltip = new Tooltip();
+        final Tooltip tooltip = new Tooltip();
         Constructor<?> constructor = null;
 
         // Versuchen die Klasse TooltipBehavior zu finden.
@@ -388,14 +388,14 @@ public final class FxUtils {
                 constructor.setAccessible(true);
 
                 // @formatter:off
-                Object tooltipBehavior = constructor.newInstance(
+                final  Object tooltipBehavior = constructor.newInstance(
                         new Duration(10), // open
                         new Duration(5000), // visible
                         new Duration(200), // close
                         false);
                 // @formatter:on
 
-                Field fieldBehavior = tooltip.getClass().getDeclaredField("BEHAVIOR");
+                final Field fieldBehavior = tooltip.getClass().getDeclaredField("BEHAVIOR");
                 fieldBehavior.setAccessible(true);
                 fieldBehavior.set(tooltip, tooltipBehavior);
 
@@ -450,7 +450,7 @@ public final class FxUtils {
     // }
 
     public static void translate(final Control control, final ResourceBundle resources) {
-        Tooltip tooltip = control.getTooltip();
+        final Tooltip tooltip = control.getTooltip();
 
         if (tooltip == null) {
             return;
@@ -488,7 +488,7 @@ public final class FxUtils {
         // Set aus allen erreichbaren Nodes der Komponenten bauen, alles was Übersetzt werden kann.
 
         // @formatter:off
-        Set<Node> nodes = components.stream()
+        final Set<Node> nodes = components.stream()
                 .map(f -> Utils.getValue(f, view))
                 .filter(Node.class::isInstance)
                 .map(Node.class::cast)
@@ -497,25 +497,22 @@ public final class FxUtils {
         // @formatter:on
 
         // Labeled / Text
-        Predicate<Object> isLabeled = Labeled.class::isInstance;
-        Predicate<Object> isText = Text.class::isInstance;
+        final Predicate<Object> isLabeled = Labeled.class::isInstance;
+        final Predicate<Object> isText = Text.class::isInstance;
 
         // @formatter:off
         nodes.stream()
                 .filter(isLabeled.or(isText))
-                .forEach(node ->
-                {
-                    Method getMethod = Utils.getMethod(node, "getText");
-                    Method setMethod = Utils.getMethod(node, "setText", String.class);
+                .forEach(node -> {
+                    final Method getMethod = Utils.getMethod(node, "getText");
+                    final Method setMethod = Utils.getMethod(node, "setText", String.class);
 
-                    String text = (String) Utils.invokeMethod(getMethod, node);
+                    final String text = (String) Utils.invokeMethod(getMethod, node);
 
-                    if ((text != null) && text.startsWith("%"))
-                    {
-                        String translated = resources.getString(text.substring(1));
+                    if ((text != null) && text.startsWith("%")) {
+                        final String translated = resources.getString(text.substring(1));
 
-                        if ((translated != null) && !translated.isEmpty())
-                        {
+                        if ((translated != null) && !translated.isEmpty()) {
                             Utils.invokeMethod(setMethod, node, translated);
                         }
                     }
@@ -523,20 +520,18 @@ public final class FxUtils {
         // @formatter:on
 
         // Control
-        Predicate<Object> isControl = Control.class::isInstance;
+        final Predicate<Object> isControl = Control.class::isInstance;
 
         // Tooltip
         // @formatter:off
         nodes.stream()
                 .filter(isControl)
-                .forEach(node ->
-                {
-                    Method getMethod = Utils.getMethod(node, "getTooltip");
-                    Tooltip tooltip = (Tooltip) Utils.invokeMethod(getMethod, node);
+                .forEach(node -> {
+                    final Method getMethod = Utils.getMethod(node, "getTooltip");
+                    final Tooltip tooltip = (Tooltip) Utils.invokeMethod(getMethod, node);
 
-                    if ((tooltip != null) && tooltip.getText().startsWith("%"))
-                    {
-                        String translated = resources.getString(tooltip.getText().substring(1));
+                    if ((tooltip != null) && tooltip.getText().startsWith("%")) {
+                        final String translated = resources.getString(tooltip.getText().substring(1));
 
                         tooltip.setText(translated);
                     }
@@ -547,18 +542,14 @@ public final class FxUtils {
         // @formatter:off
         nodes.stream()
                 .filter(isControl)
-                .forEach(node ->
-                {
-                    Method getMethod = Utils.getMethod(node, "getContextMenu");
-                    ContextMenu contextMenu = (ContextMenu) Utils.invokeMethod(getMethod, node);
+                .forEach(node -> {
+                    final Method getMethod = Utils.getMethod(node, "getContextMenu");
+                    final ContextMenu contextMenu = (ContextMenu) Utils.invokeMethod(getMethod, node);
 
-                    if (contextMenu != null)
-                    {
-                        for (MenuItem menuItem : contextMenu.getItems())
-                        {
-                            if (menuItem.getText().startsWith("%"))
-                            {
-                                String translated = resources.getString(menuItem.getText().substring(1));
+                    if (contextMenu != null) {
+                        for (MenuItem menuItem : contextMenu.getItems()) {
+                            if (menuItem.getText().startsWith("%")) {
+                                final String translated = resources.getString(menuItem.getText().substring(1));
 
                                 menuItem.setText(translated);
                             }
@@ -568,7 +559,7 @@ public final class FxUtils {
         // @formatter:on
 
         // TableView
-        Predicate<Object> isTableView = TableView.class::isInstance;
+        final Predicate<Object> isTableView = TableView.class::isInstance;
 
         // @formatter:off
         nodes.stream()

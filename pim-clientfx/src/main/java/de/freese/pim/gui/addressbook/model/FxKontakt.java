@@ -23,15 +23,10 @@ import javafx.collections.ObservableList;
 public class FxKontakt implements Comparable<FxKontakt> {
     @JsonIgnore
     private final ObservableList<FxKontaktAttribut> attribute = FXCollections.observableArrayList();
-
     private final LongProperty idProperty = new SimpleLongProperty(this, "id", 0);
-
     private final StringProperty nachnameProperty = new SimpleStringProperty(this, "nachname", null);
-
     // private final transient PropertyChangeSupport pcs = new PropertyChangeSupport(this);
-
     private final StringExpression toStringExpression;
-
     private final StringProperty vornameProperty = new SimpleStringProperty(this, "vorname", null);
 
     public FxKontakt() {
@@ -48,7 +43,7 @@ public class FxKontakt implements Comparable<FxKontakt> {
     }
 
     public void addAttribut(final String attribut, final String wert) {
-        FxKontaktAttribut ka = new FxKontaktAttribut();
+        final FxKontaktAttribut ka = new FxKontaktAttribut();
         ka.setKontaktID(getID());
         ka.setAttribut(attribut);
         ka.setWert(wert);
@@ -146,7 +141,7 @@ public class FxKontakt implements Comparable<FxKontakt> {
 
     @Override
     public String toString() {
-        // StringBuilder builder = new StringBuilder();
+        // final StringBuilder builder = new StringBuilder();
         // builder.append("Kontakt [attribute=").append(getAttribute());
         // builder.append(", id=").append(getID());
         // builder.append(", nachname=").append(getNachname());

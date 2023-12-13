@@ -88,7 +88,7 @@ public class PimClientApplication extends Application {
         // "JavaFX-Launcher" umbenennen.
         Thread.currentThread().setName("JavaFX-Init.");
 
-        String[] args = getParameters().getRaw().toArray(new String[0]);
+        final String[] args = getParameters().getRaw().toArray(new String[0]);
         // List<String> parameters = getParameters().getRaw();
         // String[] profiles = null;
         //
@@ -109,7 +109,7 @@ public class PimClientApplication extends Application {
         // SpringApplication.run(Application.class, args);
         //
         // @formatter:off
-        SpringApplication application = new SpringApplicationBuilder(PimClientApplication.class)
+        final  SpringApplication application = new SpringApplicationBuilder(PimClientApplication.class)
                 .headless(false) // Default true, hier false wegen JavaFX
                 //.web(WebApplicationType.NONE) // Wird eigentlich automatisch ermittelt.
 //                .profiles(profiles)
@@ -149,8 +149,8 @@ public class PimClientApplication extends Application {
         notifyPreloader(new PimClientPreloaderNotification("Start P.I.M."));
         // Utils.sleep(1, TimeUnit.SECONDS);
 
-        String pimHome = SpringContext.getEnvironment().getProperty("pim.home");
-        Path homePath = Paths.get(pimHome);
+        final String pimHome = SpringContext.getEnvironment().getProperty("pim.home");
+        final Path homePath = Paths.get(pimHome);
 
         if (!Files.exists(homePath)) {
             Files.createDirectories(homePath);
@@ -172,11 +172,11 @@ public class PimClientApplication extends Application {
             // setUserAgentStylesheet(Application.STYLESHEET_CASPIAN);
             // setUserAgentStylesheet(Application.STYLESHEET_MODENA);
 
-            ResourceBundle resources = ResourceBundle.getBundle("bundles/pim");
+            final ResourceBundle resources = ResourceBundle.getBundle("bundles/pim");
 
-            MainController mainController = new MainController(resources);
+            final MainController mainController = new MainController(resources);
 
-            Scene scene = new Scene((Parent) mainController.getMainNode());
+            final Scene scene = new Scene((Parent) mainController.getMainNode());
             // Scene scene = new Scene((Parent) mainController.getMainNode(), 1400, 900);
             scene.getStylesheets().add("/styles/styles.css");
 
@@ -187,7 +187,7 @@ public class PimClientApplication extends Application {
             // primaryStage.setMaximized(true);
 
             // Default: GUI auf 2. Monitor, wenn vorhanden.
-            ObservableList<Screen> screens = Screen.getScreens();
+            final ObservableList<Screen> screens = Screen.getScreens();
 
             if (screens.size() > 1) {
                 screen = screens.get(1);
@@ -197,7 +197,7 @@ public class PimClientApplication extends Application {
             }
 
             // Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
-            Rectangle2D screenBounds = screen.getVisualBounds();
+            final Rectangle2D screenBounds = screen.getVisualBounds();
 
             primaryStage.setX(screenBounds.getMinX() + 100);
             primaryStage.setY(screenBounds.getMinY() + 100);

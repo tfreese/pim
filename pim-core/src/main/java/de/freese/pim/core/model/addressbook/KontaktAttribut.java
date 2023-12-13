@@ -54,7 +54,7 @@ public class KontaktAttribut implements Comparable<KontaktAttribut> {
 
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder();
+        final StringBuilder builder = new StringBuilder();
         builder.append("KontaktAttribut [kontaktID=").append(getKontaktID());
         builder.append(", attribut=").append(getAttribut());
         builder.append(", wert=").append(getWert());

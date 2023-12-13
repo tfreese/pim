@@ -12,7 +12,6 @@ import java.util.Objects;
  * @author Thomas Freese
  */
 public class MonitorOutputStream extends FilterOutputStream {
-
     private final IOMonitor monitor;
     /**
      * Anzahl Bytes (Größe) des gesamten Channels.

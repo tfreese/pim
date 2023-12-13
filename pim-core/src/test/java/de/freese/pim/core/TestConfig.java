@@ -17,10 +17,10 @@ import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-import de.freese.pim.core.dao.AddressBookDAO;
-import de.freese.pim.core.dao.DefaultAddressBookDAO;
-import de.freese.pim.core.dao.DefaultMailDAO;
-import de.freese.pim.core.dao.MailDAO;
+import de.freese.pim.core.dao.AddressBookDao;
+import de.freese.pim.core.dao.DefaultAddressBookDao;
+import de.freese.pim.core.dao.DefaultMailDao;
+import de.freese.pim.core.dao.MailDao;
 
 /**
  * @author Thomas Freese
@@ -31,8 +31,8 @@ import de.freese.pim.core.dao.MailDAO;
 public class TestConfig {
     @Bean
     // @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-    public AddressBookDAO addressBookDAO(final DataSource dataSource) {
-        DefaultAddressBookDAO dao = new DefaultAddressBookDAO();
+    public AddressBookDao addressBookDAO(final DataSource dataSource) {
+        final DefaultAddressBookDao dao = new DefaultAddressBookDao();
         dao.setDataSource(dataSource);
 
         return dao;
@@ -43,9 +43,9 @@ public class TestConfig {
     public DataSource dataSource() {
         // DataSource dataSource = new JndiDataSourceLookup().getDataSource("jdbc/spring/manualTX"); // Wird in AllTests definiert.
 
-        String id = UUID.randomUUID().toString();
+        final String id = UUID.randomUUID().toString();
 
-        HikariConfig hikariConfig = new HikariConfig();
+        final HikariConfig hikariConfig = new HikariConfig();
         hikariConfig.setDriverClassName("org.hsqldb.jdbc.JDBCDriver");
         hikariConfig.setJdbcUrl("jdbc:hsqldb:mem:" + id + ";shutdown=true");
         hikariConfig.setUsername("sa");
@@ -55,10 +55,10 @@ public class TestConfig {
         hikariConfig.setMaximumPoolSize(8);
         hikariConfig.setAutoCommit(false);
 
-        HikariDataSource dataSource = new HikariDataSource(hikariConfig);
+        final HikariDataSource dataSource = new HikariDataSource(hikariConfig);
 
         try {
-            ResourceDatabasePopulator populator = new ResourceDatabasePopulator();
+            final ResourceDatabasePopulator populator = new ResourceDatabasePopulator();
             populator.addScript(new ClassPathResource("db/hsqldb/V2__pim_addressbook_schema.sql"));
             populator.addScript(new ClassPathResource("db/hsqldb/V3__pim_mail_schema.sql"));
             populator.execute(dataSource);
@@ -75,8 +75,8 @@ public class TestConfig {
 
     @Bean
     // @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-    public MailDAO mailDAO(final DataSource dataSource) {
-        DefaultMailDAO dao = new DefaultMailDAO();
+    public MailDao mailDAO(final DataSource dataSource) {
+        final DefaultMailDao dao = new DefaultMailDao();
         dao.setDataSource(dataSource);
 
         return dao;

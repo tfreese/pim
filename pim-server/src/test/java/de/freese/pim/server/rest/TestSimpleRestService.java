@@ -72,7 +72,7 @@ class Config extends WebMvcConfigurationSupport {
 
     @Bean
     protected ThreadPoolExecutorFactoryBean executorService() {
-        ThreadPoolExecutorFactoryBean bean = new ThreadPoolExecutorFactoryBean();
+        final ThreadPoolExecutorFactoryBean bean = new ThreadPoolExecutorFactoryBean();
         bean.setCorePoolSize(8);
         bean.setMaxPoolSize(8);
         bean.setKeepAliveSeconds(0);
@@ -88,7 +88,7 @@ class Config extends WebMvcConfigurationSupport {
 
     @Bean
     protected ScheduledExecutorFactoryBean scheduledExecutorService() {
-        ScheduledExecutorFactoryBean bean = new ScheduledExecutorFactoryBean();
+        final ScheduledExecutorFactoryBean bean = new ScheduledExecutorFactoryBean();
         bean.setPoolSize(4);
         bean.setThreadPriority(5);
         bean.setThreadNamePrefix("testScheduler-");
@@ -151,11 +151,11 @@ class TestSimpleRestService {
     }
 
     private void testAsync(final String url) throws Exception {
-        List<MvcResult> results = new ArrayList<>();
+        final List<MvcResult> results = new ArrayList<>();
 
         for (int i = 0; i < 20; i++) {
             // @formatter:off
-            MvcResult mvcResult = this.mockMvc.perform(get(url))
+            final MvcResult mvcResult = this.mockMvc.perform(get(url))
                     .andExpect(MockMvcResultMatchers.request().asyncStarted())
                     .andReturn();
             // @formatter:on

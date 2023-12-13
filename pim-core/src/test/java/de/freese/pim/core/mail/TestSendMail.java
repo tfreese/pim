@@ -33,7 +33,7 @@ class TestSendMail extends AbstractMailTest {
         sender.setProtocol("smtp");
 
         // Legitimation für Versand.
-        Properties properties = new Properties();
+        final Properties properties = new Properties();
         properties.put("mail.debug", DEBUG.toString());
         properties.put("mail.smtp.auth", "true");
         properties.put("mail.smtp.starttls.enable", "true");
@@ -90,7 +90,7 @@ class TestSendMail extends AbstractMailTest {
 
     @Test
     void test200Html() throws Exception {
-        StringBuilder html = new StringBuilder();
+        final StringBuilder html = new StringBuilder();
         html.append("<!DOCTYPE html><html lang=\"de\"><head></head><body>");
         html.append("<h1>test200Html</h1><br>");
         html.append("<font color=\"red\">test200Html</font><br>");
@@ -111,7 +111,7 @@ class TestSendMail extends AbstractMailTest {
 
     @Test
     void test210HtmlWithAttachment() throws Exception {
-        StringBuilder html = new StringBuilder();
+        final StringBuilder html = new StringBuilder();
         html.append("<!DOCTYPE html><html lang=\"de\"><head></head><body>");
         html.append("<h1>test210HtmlWithAttachment</h1><br>");
         html.append("<font color=\"red\">test210HtmlWithAttachment</font><br>");
@@ -133,7 +133,7 @@ class TestSendMail extends AbstractMailTest {
 
     @Test
     void test220HtmlWithInline() throws Exception {
-        StringBuilder html = new StringBuilder();
+        final StringBuilder html = new StringBuilder();
         html.append("<!DOCTYPE html><html lang=\"de\"><head></head><body>");
         html.append("<h1>test220HtmlWithInline</h1><br>");
         html.append("<img src=\"cid:image1\"><br>");

@@ -33,7 +33,7 @@ public class PimServerApplication {
         // CommandLine line = null;
 
         try {
-            CommandLineParser parser = new DefaultParser();
+            final CommandLineParser parser = new DefaultParser();
             parser.parse(getCommandOptions(), args);
             // line = parser.parse(getCommandOptions(), args);
         }
@@ -46,7 +46,7 @@ public class PimServerApplication {
         // SpringApplication.run(Application.class, args);
         //
         // @formatter:off
-        SpringApplication application = new SpringApplicationBuilder(PimServerApplication.class)
+        final SpringApplication application = new SpringApplicationBuilder(PimServerApplication.class)
 //                .properties("spring.config.name:application-Server")
                 .headless(true) // Default true
                 .registerShutdownHook(true) // Default true
@@ -65,7 +65,7 @@ public class PimServerApplication {
      * Dies sind die JRE Programm Argumente.
      */
     private static Options getCommandOptions() {
-        Options options = new Options();
+        final Options options = new Options();
 
         // --spring.profiles.active=Server,HsqldbEmbeddedServer --server.port=61222
         // --spring.profiles.active=Server,SqliteLocalFile --server.port=61222
@@ -76,12 +76,12 @@ public class PimServerApplication {
     }
 
     private static void usage() {
-        HelpFormatter formatter = new HelpFormatter();
+        final HelpFormatter formatter = new HelpFormatter();
         formatter.setOptionComparator(null);
         // formatter.setWidth(120);
         // formatter.printHelp("P.I.M.\n", getCommandOptions(), true);
 
-        StringBuilder footer = new StringBuilder();
+        final StringBuilder footer = new StringBuilder();
         // footer.append("\nNamen / Werte mit Leerzeichen sind mit \"'... ...'\" anzugeben.");
         footer.append("\n@Thomas Freese");
 

@@ -15,9 +15,7 @@ import javafx.beans.property.StringProperty;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class FxKontaktAttribut implements Comparable<FxKontaktAttribut> {
     private final StringProperty attributProperty = new SimpleStringProperty(this, "attribut", null);
-
     private final LongProperty kontaktIDProperty = new SimpleLongProperty(this, "kontaktID", 0);
-
     private final StringProperty wertProperty = new SimpleStringProperty(this, "wert", null);
 
     public StringProperty attributProperty() {
@@ -69,7 +67,7 @@ public class FxKontaktAttribut implements Comparable<FxKontaktAttribut> {
 
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder();
+        final StringBuilder builder = new StringBuilder();
         builder.append("KontaktAttribut [kontaktID=").append(getKontaktID());
         builder.append(", attribut=").append(getAttribut());
         builder.append(", wert=").append(getWert());

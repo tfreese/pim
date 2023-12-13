@@ -44,7 +44,7 @@ public enum MailPort {
     UNKNOWN(-1);
 
     public static MailPort findByPort(final int port) {
-        Optional<MailPort> result = Stream.of(values()).filter(mp -> mp.getPort() == port).findFirst();
+        final Optional<MailPort> result = Stream.of(values()).filter(mp -> mp.getPort() == port).findFirst();
 
         return result.orElseThrow(() -> new IllegalArgumentException("port not found: " + port));
     }

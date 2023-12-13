@@ -33,9 +33,7 @@ import org.springframework.util.Assert;
 @Component
 public final class SpringContext implements ApplicationContextAware, ResourceLoaderAware, EnvironmentAware, InitializingBean {
     private static ApplicationContext applicationContext;
-
     private static Environment environment;
-
     private static ResourceLoader resourceLoader;
 
     public static ApplicationContext getApplicationContext() {
@@ -59,7 +57,7 @@ public final class SpringContext implements ApplicationContextAware, ResourceLoa
     }
 
     public static <T> Optional<T> getBeanByTypeAndAnnotation(final Class<T> clazz, final Class<? extends Annotation> annotationType) {
-        Collection<T> beans = getBeansByTypeAndAnnotation(clazz, annotationType);
+        final Collection<T> beans = getBeansByTypeAndAnnotation(clazz, annotationType);
 
         return beans.stream().findFirst();
     }
@@ -69,18 +67,18 @@ public final class SpringContext implements ApplicationContextAware, ResourceLoa
      * Die Bean muss die Spring-Annotation {@link Qualifier} mit einem Value verwenden.
      */
     public static <T> Optional<T> getBeanByTypeAndQualifier(final Class<T> clazz, final String qualifier) {
-        Collection<T> beans = getBeansByTypeAndAnnotation(clazz, Qualifier.class);
+        final Collection<T> beans = getBeansByTypeAndAnnotation(clazz, Qualifier.class);
 
         return beans.stream().filter(bean -> {
-            Qualifier q = bean.getClass().getAnnotation(Qualifier.class);
+            final Qualifier q = bean.getClass().getAnnotation(Qualifier.class);
 
             return qualifier.equals(q.value());
         }).findFirst();
     }
 
     public static <T> Collection<T> getBeansByTypeAndAnnotation(final Class<T> clazz, final Class<? extends Annotation> annotationType) {
-        Map<String, T> typedBeans = getApplicationContext().getBeansOfType(clazz);
-        Map<String, Object> annotatedBeans = getApplicationContext().getBeansWithAnnotation(annotationType);
+        final Map<String, T> typedBeans = getApplicationContext().getBeansOfType(clazz);
+        final Map<String, Object> annotatedBeans = getApplicationContext().getBeansWithAnnotation(annotationType);
 
         // Schnittmenge ermitteln.
         typedBeans.keySet().retainAll(annotatedBeans.keySet());

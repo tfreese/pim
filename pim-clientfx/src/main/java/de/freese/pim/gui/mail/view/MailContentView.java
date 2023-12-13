@@ -46,17 +46,11 @@ public class MailContentView extends GridPane {
     }
 
     private final Label an;
-
     private final HBox attachments;
-
     private final Label bcc;
-
     private final ResourceBundle bundle;
-
     private final Label cc;
-
     private final Label von;
-
     private final WebView webView;
 
     public MailContentView() {
@@ -107,11 +101,11 @@ public class MailContentView extends GridPane {
 
         this.webView.getEngine().locationProperty().addListener((observable, oldValue, newValue) -> {
             try {
-                URI address = new URI(newValue);
+                final URI address = new URI(newValue);
                 // getLogger().info(address.toString());
 
                 // Desktop.getDesktop().browse(address);
-                Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
+                final Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
 
                 if ((desktop != null) && desktop.isSupported(Desktop.Action.BROWSE)) {
                     desktop.browse(address);
@@ -162,7 +156,7 @@ public class MailContentView extends GridPane {
             // getLogger().error(msg);
             // new ErrorDialog().headerText(msg).showAndWait();
 
-            String msg = String.format("<b>Error: no content found for</b><br>folder=%s<br>subject=%s<br>", mail.getFolderFullName(), mail.getSubject());
+            final String msg = String.format("<b>Error: no content found for</b><br>folder=%s<br>subject=%s<br>", mail.getFolderFullName(), mail.getSubject());
             this.webView.getEngine().loadContent("<h2><font color=\"red\">" + msg + "</font></h2>");
 
             return;
@@ -171,7 +165,7 @@ public class MailContentView extends GridPane {
         InlineUrlStreamHandler.setMailContent(mailContent);
 
         for (DataSource dataSource : mailContent.getAttachments().values()) {
-            Hyperlink hyperlink = new Hyperlink(dataSource.getName());
+            final Hyperlink hyperlink = new Hyperlink(dataSource.getName());
             hyperlink.setStyle("-fx-font-size: 75%");
             hyperlink.setOnAction(event -> saveDataSource(dataSource));
             // hyperlink.setOnAction(event -> Platform.runLater(() -> saveDataSource(dataSource)));
@@ -189,14 +183,14 @@ public class MailContentView extends GridPane {
         }
 
         // File initDirectory = new File(System.getProperty("user.home"));
-        File initDirectory = new File(System.getProperty("java.io.tmpdir"));
+        final File initDirectory = new File(System.getProperty("java.io.tmpdir"));
 
         // DirectoryChooser directoryChooser = new DirectoryChooser();
         // directoryChooser.setTitle("Verzeichnis für DataSource");
         // directoryChooser.setInitialDirectory(initDirectory));
         // File attachmentDir = directoryChooser.showDialog(PIMApplication.getMainWindow());
 
-        FileChooser fileChooser = new FileChooser();
+        final FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle(this.bundle.getString("attachment.save"));
         fileChooser.setInitialDirectory(initDirectory);
         fileChooser.setInitialFileName(dataSource.getName());
@@ -208,9 +202,9 @@ public class MailContentView extends GridPane {
             return;
         }
 
-        Path target = file.toPath();
+        final Path target = file.toPath();
 
-        Runnable task = () -> {
+        final Runnable task = () -> {
             try (InputStream inputStream = dataSource.getInputStream()) {
                 Files.copy(inputStream, target, StandardCopyOption.REPLACE_EXISTING);
 

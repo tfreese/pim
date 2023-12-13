@@ -26,10 +26,10 @@ public class PimClientRestConfig extends AbstractPimClientConfig {
 
     @Bean
     public RestTemplateBuilder restTemplateBuilder(@Value("${server.host}") final String serverHost, @Value("${server.port}") final int serverPort) {
-        // RestTemplateBuilder bean = new RestTemplateBuilder().rootUri(rootUri).basicAuthorization(username, password);
-        String url = String.format("http://%s:%d/pim", serverHost, serverPort);
+        // final RestTemplateBuilder bean = new RestTemplateBuilder().rootUri(rootUri).basicAuthorization(username, password);
+        final String url = String.format("http://%s:%d/pim", serverHost, serverPort);
 
-        // RestTemplate rt = new RestTemplate();
+        // final RestTemplate rt = new RestTemplate();
         // rt.getMessageConverters().add(new MappingJacksonHttpMessageConverter());
         // rt.getMessageConverters().add(new StringHttpMessageConverter());
 

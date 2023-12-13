@@ -22,8 +22,8 @@ import de.freese.pim.gui.PimClientApplication;
  */
 public class ErrorDialog {
     public static String toString(final Throwable throwable) {
-        StringWriter stringWriter = new StringWriter();
-        PrintWriter printWriter = new PrintWriter(stringWriter);
+        final StringWriter stringWriter = new StringWriter();
+        final PrintWriter printWriter = new PrintWriter(stringWriter);
 
         throwable.printStackTrace(printWriter);
 
@@ -64,11 +64,11 @@ public class ErrorDialog {
 
         headerText(th.getMessage());
 
-        String stackTrace = toString(th);
+        final String stackTrace = toString(th);
 
-        Label label = new Label("The exception stacktrace was:");
+        final Label label = new Label("The exception stacktrace was:");
 
-        TextArea textArea = new TextArea(stackTrace);
+        final TextArea textArea = new TextArea(stackTrace);
         textArea.setEditable(false);
         textArea.setWrapText(false);
 
@@ -77,7 +77,7 @@ public class ErrorDialog {
         GridPane.setVgrow(textArea, Priority.ALWAYS);
         GridPane.setHgrow(textArea, Priority.ALWAYS);
 
-        GridPane gridPane = new GridPane();
+        final GridPane gridPane = new GridPane();
         gridPane.setMaxWidth(Double.MAX_VALUE);
         gridPane.add(label, 0, 0);
         gridPane.add(textArea, 0, 1);

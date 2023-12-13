@@ -17,10 +17,10 @@ import org.springframework.core.io.Resource;
  */
 public final class Shutdown {
     public static void main(final String[] args) throws Exception {
-        DefaultResourceLoader resourceLoader = new DefaultResourceLoader();
-        Resource resource = resourceLoader.getResource("classpath:application-Server.properties");
+        final DefaultResourceLoader resourceLoader = new DefaultResourceLoader();
+        final Resource resource = resourceLoader.getResource("classpath:application-Server.properties");
 
-        Properties props = new Properties();
+        final Properties props = new Properties();
 
         if (resource.isReadable()) {
             try (InputStream inputStream = resource.getInputStream()) {
@@ -28,16 +28,16 @@ public final class Shutdown {
             }
         }
 
-        int port = Integer.parseInt(Optional.ofNullable(props.getProperty("server.port")).orElse("61222"));
-        Optional<String> contextPath = Optional.ofNullable(props.getProperty("server.servlet.context-path"));
+        final int port = Integer.parseInt(Optional.ofNullable(props.getProperty("server.port")).orElse("61222"));
+        final Optional<String> contextPath = Optional.ofNullable(props.getProperty("server.servlet.context-path"));
 
-        URI uri = URI.create("http://localhost:" + port + contextPath.orElse("") + "/actuator/shutdown");
+        final URI uri = URI.create("http://localhost:" + port + contextPath.orElse("") + "/actuator/shutdown");
 
         // RestTemplate restTemplate = new RestTemplate();
         // restTemplate.exchange(repository, HttpMethod.POST, null, Void.class);
         // restTemplate.postForLocation(repository, null);
 
-        HttpURLConnection connection = (HttpURLConnection) uri.toURL().openConnection();
+        final HttpURLConnection connection = (HttpURLConnection) uri.toURL().openConnection();
         connection.setRequestMethod("POST");
         connection.getResponseCode();
         connection.disconnect();

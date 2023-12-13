@@ -21,7 +21,7 @@ import org.springframework.context.annotation.PropertySource;
 public class HsqldbEmbeddedServerConfig extends AbstractHsqldbConfig {
     @Bean(initMethod = "start", destroyMethod = "shutdown")
     public Server hsqldbServer(@Value("${pim.home}") final String pimHome, @Value("${pim.db-name}") final String pimDbName, @Value("${hsqldbPort}") final int port) {
-        Server server = new Server() {
+        final Server server = new Server() {
             @Override
             public void shutdown() {
                 // "SHUTDOWN COMPACT"

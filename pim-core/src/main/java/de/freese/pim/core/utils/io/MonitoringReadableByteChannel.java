@@ -13,7 +13,6 @@ import java.util.Objects;
  */
 public class MonitoringReadableByteChannel implements ReadableByteChannel {
     private final ReadableByteChannel delegate;
-
     private final IOMonitor monitor;
     /**
      * Anzahl Bytes (Größe) des gesamten Channels.
@@ -47,7 +46,7 @@ public class MonitoringReadableByteChannel implements ReadableByteChannel {
 
     @Override
     public int read(final ByteBuffer dst) throws IOException {
-        int readCount = this.delegate.read(dst);
+        final int readCount = this.delegate.read(dst);
 
         if (readCount > 0) {
             this.sizeRead += readCount;

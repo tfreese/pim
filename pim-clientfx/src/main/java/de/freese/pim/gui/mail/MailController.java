@@ -64,32 +64,22 @@ public class MailController extends AbstractController {
 
     @FXML
     private Button buttonAddAccount;
-
     @FXML
     private Button buttonEditAccount;
-
     @FXML
     private MailContentView mailContentView;
-
     @FXML
     private Node mainNode;
-
     @FXML
     private Node naviNode;
-
     @FXML
     private ProgressIndicator progressIndicator;
-
     private List<TableColumn<FxMail, ?>> tableColumnsReceived;
-
     private List<TableColumn<FxMail, ?>> tableColumnsSend;
-
     @FXML
     private TableView<FxMail> tableViewMail;
-
     @FXML
     private ToolBar toolBar;
-
     @FXML
     private TreeView<Object> treeViewMail;
 
@@ -108,7 +98,7 @@ public class MailController extends AbstractController {
         setActivated(true);
 
         // Daten laden.
-        TreeItem<Object> root = new TreeItem<>("Mail-Accounts");
+        final TreeItem<Object> root = new TreeItem<>("Mail-Accounts");
         this.treeViewMail.setRoot(root);
 
         loadMailAccounts(root);
@@ -133,8 +123,8 @@ public class MailController extends AbstractController {
     public void initialize(final URL location, final ResourceBundle resources) {
         // Buttons
         this.buttonAddAccount.setOnAction(event -> {
-            EditMailAccountDialog dialog = new EditMailAccountDialog();
-            Optional<FxMailAccount> result = dialog.addAccount(getMailService(), resources);
+            final EditMailAccountDialog dialog = new EditMailAccountDialog();
+            final Optional<FxMailAccount> result = dialog.addAccount(getMailService(), resources);
             result.ifPresent(account -> {
                 try {
                     getMailService().insertAccount(account);
@@ -152,10 +142,10 @@ public class MailController extends AbstractController {
 
         this.buttonEditAccount.disableProperty().bind(this.selectedTreeItem.isNull());
         this.buttonEditAccount.setOnAction(event -> {
-            FxMailAccount ma = getAccount(this.selectedTreeItem.get());
+            final FxMailAccount ma = getAccount(this.selectedTreeItem.get());
 
-            EditMailAccountDialog dialog = new EditMailAccountDialog();
-            Optional<FxMailAccount> result = dialog.editAccount(getMailService(), resources, ma);
+            final EditMailAccountDialog dialog = new EditMailAccountDialog();
+            final Optional<FxMailAccount> result = dialog.editAccount(getMailService(), resources, ma);
             result.ifPresent(account -> {
                 try {
                     getMailService().updateAccount(account);
@@ -247,9 +237,9 @@ public class MailController extends AbstractController {
             // Wenn Tomcat der EmbeddedServer ist, war die Default URLStreamHandlerFactory hier schon gesetzt.
             // TomcatURLStreamHandlerFactory.getInstance().addUserFactory(new MailUrlStreamHandlerFactory());
             try {
-                Class<?> tomcatClazz = Class.forName("org.apache.catalina.webresources.TomcatURLStreamHandlerFactory");
+                final Class<?> tomcatClazz = Class.forName("org.apache.catalina.webresources.TomcatURLStreamHandlerFactory");
                 Method method = tomcatClazz.getMethod("getInstance");
-                Object ref = method.invoke(null);
+                final Object ref = method.invoke(null);
 
                 method = tomcatClazz.getMethod("addUserFactory", URLStreamHandlerFactory.class);
                 method.invoke(ref, new MailUrlStreamHandlerFactory());
@@ -260,14 +250,14 @@ public class MailController extends AbstractController {
         }
 
         getProgressIndicator().styleProperty().bind(Bindings.createStringBinding(() -> {
-            double percent = getProgressIndicator().getProgress();
+            final double percent = getProgressIndicator().getProgress();
 
             if (percent < 0) {
                 // indeterminate
                 return null;
             }
 
-            int[] rgb = FxUtils.getProgressRGB(percent, Color.RED, Color.ORANGE, Color.YELLOW, Color.GREEN);
+            final int[] rgb = FxUtils.getProgressRGB(percent, Color.RED, Color.ORANGE, Color.YELLOW, Color.GREEN);
 
             return String.format("-fx-progress-color: rgb(%d,%d,%d)", rgb[0], rgb[1], rgb[2]);
         }, getProgressIndicator().progressProperty()));
@@ -281,11 +271,11 @@ public class MailController extends AbstractController {
         // mailAPI.setMailService(this.mailService);
         // mailAPI.setExecutorService(getExecutorService());
 
-        TreeItem<Object> parent = new TreeItem<>(account);
+        final TreeItem<Object> parent = new TreeItem<>(account);
         root.getChildren().add(parent);
         parent.setExpanded(true);
 
-        InitMailAPITask service = new InitMailAPITask(this.treeViewMail, parent, getMailService(), account);
+        final InitMailApiTask service = new InitMailApiTask(this.treeViewMail, parent, getMailService(), account);
         getTaskExecutor().execute(service);
     }
 
@@ -315,7 +305,7 @@ public class MailController extends AbstractController {
         // .then(addMenu)
         // .otherwise((ContextMenu)null));
         try {
-            List<FxMailAccount> accountList = getMailService().getMailAccounts();
+            final List<FxMailAccount> accountList = getMailService().getMailAccounts();
             // Collections.reverse(accountList);
 
             for (FxMailAccount account : accountList) {
@@ -339,9 +329,9 @@ public class MailController extends AbstractController {
         }
 
         PimClientApplication.blockGUI();
-        FxMailAccount account = getAccount(this.selectedTreeItem.get());
+        final FxMailAccount account = getAccount(this.selectedTreeItem.get());
 
-        Task<MailContent> loadMailContentTask = new Task<>() {
+        final Task<MailContent> loadMailContentTask = new Task<>() {
             @Override
             protected MailContent call() throws Exception {
                 return getMailService().loadMailContent(account, mail, this::updateProgress);
@@ -349,13 +339,13 @@ public class MailController extends AbstractController {
         };
         loadMailContentTask.setOnSucceeded(event -> {
             PimClientApplication.unblockGUI();
-            MailContent mailContent = loadMailContentTask.getValue();
+            final MailContent mailContent = loadMailContentTask.getValue();
 
             this.mailContentView.newMailContent(mail, mailContent);
         });
         loadMailContentTask.setOnFailed(event -> {
             PimClientApplication.unblockGUI();
-            Throwable th = loadMailContentTask.getException();
+            final Throwable th = loadMailContentTask.getException();
 
             getLogger().error(th.getMessage(), th);
 
@@ -366,7 +356,7 @@ public class MailController extends AbstractController {
         // Sichtbarkeit des ProgressIndikators und Cursors mit dem Laufstatus des Service/Task verknüpfen.
         getProgressIndicator().progressProperty().bind(loadMailContentTask.progressProperty());
 
-        ReadOnlyBooleanProperty runningProperty = loadMailContentTask.runningProperty();
+        final ReadOnlyBooleanProperty runningProperty = loadMailContentTask.runningProperty();
         getProgressIndicator().visibleProperty().bind(runningProperty);
         PimClientApplication.getMainWindow().getScene().cursorProperty().bind(Bindings.when(runningProperty).then(Cursor.WAIT).otherwise(Cursor.DEFAULT));
 
@@ -387,7 +377,7 @@ public class MailController extends AbstractController {
             setReceivedTableColumns(resources);
         }
 
-        SortedList<FxMail> mailsSorted = folder.getMailsSorted();
+        final SortedList<FxMail> mailsSorted = folder.getMailsSorted();
 
         // Damit ColumnsSortierung funktioniert, da ich schon eine SortedList verwende.
         // mailsSorted.comparatorProperty().unbind();
@@ -398,10 +388,10 @@ public class MailController extends AbstractController {
             return;
         }
 
-        LoadMailsTask loadMailsTask = new LoadMailsTask(this.treeViewMail, Collections.singletonList(folder), getMailService(), getAccount(treeItem));
+        final LoadMailsTask loadMailsTask = new LoadMailsTask(this.treeViewMail, Collections.singletonList(folder), getMailService(), getAccount(treeItem));
 
         // Sichtbarkeit des ProgressIndikators und Cursors mit dem Laufstatus des Service/Task verknüpfen.
-        ReadOnlyBooleanProperty runningProperty = loadMailsTask.runningProperty();
+        final ReadOnlyBooleanProperty runningProperty = loadMailsTask.runningProperty();
 
         getProgressIndicator().visibleProperty().bind(runningProperty);
         PimClientApplication.getMainWindow().getScene().cursorProperty().bind(Bindings.when(runningProperty).then(Cursor.WAIT).otherwise(Cursor.DEFAULT));
@@ -413,9 +403,9 @@ public class MailController extends AbstractController {
         if (this.tableColumnsReceived == null) {
             this.tableColumnsReceived = new ArrayList<>();
 
-            TableColumn<FxMail, InternetAddress> columnFrom = new TableColumn<>(resources.getString("mail.from"));
-            TableColumn<FxMail, String> columnSubject = new TableColumn<>(resources.getString("mail.subject"));
-            TableColumn<FxMail, String> columnReceived = new TableColumn<>(resources.getString("mail.received"));
+            final TableColumn<FxMail, InternetAddress> columnFrom = new TableColumn<>(resources.getString("mail.from"));
+            final TableColumn<FxMail, String> columnSubject = new TableColumn<>(resources.getString("mail.subject"));
+            final TableColumn<FxMail, String> columnReceived = new TableColumn<>(resources.getString("mail.received"));
 
             // columnFrom.prefWidthProperty().bind(this.tableViewMail.widthProperty().multiply(0.30D)); // 30% Breite
             columnFrom.setPrefWidth(300);
@@ -473,9 +463,9 @@ public class MailController extends AbstractController {
         if (this.tableColumnsSend == null) {
             this.tableColumnsSend = new ArrayList<>();
 
-            TableColumn<FxMail, InternetAddress[]> columnTo = new TableColumn<>(resources.getString("mail.to"));
-            TableColumn<FxMail, String> columnSubject = new TableColumn<>(resources.getString("mail.subject"));
-            TableColumn<FxMail, String> columnSend = new TableColumn<>(resources.getString("mail.send"));
+            final TableColumn<FxMail, InternetAddress[]> columnTo = new TableColumn<>(resources.getString("mail.to"));
+            final TableColumn<FxMail, String> columnSubject = new TableColumn<>(resources.getString("mail.subject"));
+            final TableColumn<FxMail, String> columnSend = new TableColumn<>(resources.getString("mail.send"));
 
             columnTo.setPrefWidth(300);
             columnSend.setPrefWidth(180);

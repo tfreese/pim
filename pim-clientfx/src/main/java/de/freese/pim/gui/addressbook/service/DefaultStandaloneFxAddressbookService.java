@@ -38,7 +38,7 @@ public class DefaultStandaloneFxAddressbookService extends AbstractFxAddressbook
     @Override
     public List<FxKontakt> getKontaktDetails(final long... ids) {
         try {
-            List<Kontakt> contacts = getAddressBookService().getKontaktDetails(ids);
+            final List<Kontakt> contacts = getAddressBookService().getKontaktDetails(ids);
 
             return toFXContacts(contacts);
         }
@@ -50,7 +50,7 @@ public class DefaultStandaloneFxAddressbookService extends AbstractFxAddressbook
     @Override
     public void insertKontakt(final FxKontakt kontakt) {
         try {
-            long id = getAddressBookService().insertKontakt(kontakt.getNachname(), kontakt.getVorname());
+            final long id = getAddressBookService().insertKontakt(kontakt.getNachname(), kontakt.getVorname());
 
             kontakt.setID(id);
         }
@@ -79,9 +79,9 @@ public class DefaultStandaloneFxAddressbookService extends AbstractFxAddressbook
     }
 
     private List<FxKontakt> toFXContacts(final List<Kontakt> contacts) throws Exception {
-        JavaType type = getJsonMapper().getTypeFactory().constructCollectionType(ArrayList.class, FxKontakt.class);
+        final JavaType type = getJsonMapper().getTypeFactory().constructCollectionType(ArrayList.class, FxKontakt.class);
 
-        byte[] jsonBytes = getJsonMapper().writer().writeValueAsBytes(contacts);
+        final byte[] jsonBytes = getJsonMapper().writer().writeValueAsBytes(contacts);
 
         return getJsonMapper().readValue(jsonBytes, type);
     }

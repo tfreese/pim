@@ -62,14 +62,14 @@ public class JavaMailContent extends DefaultMailContent {
         Objects.requireNonNull(message, "message required");
 
         // DataSource für die Text-Nachricht.
-        DataSource messageDataSource = MailUtils.getTextDataSource(message);
+        final DataSource messageDataSource = MailUtils.getTextDataSource(message);
         setMessage(new MessageDataSource(messageDataSource, monitor));
 
         String encoding = null;
         // encoding = message.getEncoding(); // Kann QUOTED-PRINTABLE liefern -> Kein Encoding !
 
         // "text/plain; charset=UTF-8", "text/html; charset=UTF-8"
-        ContentType ct = new ContentType(messageDataSource.getContentType());
+        final ContentType ct = new ContentType(messageDataSource.getContentType());
         setMessageContentType(ct.getBaseType().toLowerCase());
 
         if ((encoding == null) || encoding.isBlank()) {
@@ -83,7 +83,7 @@ public class JavaMailContent extends DefaultMailContent {
         setEncoding(encoding);
 
         // Inline-DataSources
-        Map<String, InlineDataSource> mapInlines = new TreeMap<>();
+        final Map<String, InlineDataSource> mapInlines = new TreeMap<>();
 
         for (Entry<String, MimePart> entry : MailUtils.getInlineMap(message).entrySet()) {
             mapInlines.put(entry.getKey(), new InlineDataSource(entry.getValue().getDataHandler().getDataSource(), monitor));
@@ -92,7 +92,7 @@ public class JavaMailContent extends DefaultMailContent {
         setInlines(mapInlines);
 
         // Attachment-DataSources
-        Map<String, AttachmentDataSource> mapAttachments = new TreeMap<>();
+        final Map<String, AttachmentDataSource> mapAttachments = new TreeMap<>();
 
         for (Entry<String, MimePart> entry : MailUtils.getAttachmentMap(message).entrySet()) {
             mapAttachments.put(entry.getKey(), new AttachmentDataSource(entry.getValue().getDataHandler().getDataSource(), monitor));

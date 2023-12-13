@@ -36,7 +36,7 @@ public class DefaultStandaloneFxMailService extends AbstractFxMailService {
     @Override
     public void connectAccount(final FxMailAccount account) {
         try {
-            MailAccount pojo = toPojoMailAccount(account);
+            final MailAccount pojo = toPojoMailAccount(account);
 
             getMailService().connectAccount(pojo);
         }
@@ -68,7 +68,7 @@ public class DefaultStandaloneFxMailService extends AbstractFxMailService {
     @Override
     public List<FxMailAccount> getMailAccounts() {
         try {
-            List<MailAccount> accounts = getMailService().getMailAccounts();
+            final List<MailAccount> accounts = getMailService().getMailAccounts();
 
             return toFXMailAccounts(accounts);
         }
@@ -80,9 +80,9 @@ public class DefaultStandaloneFxMailService extends AbstractFxMailService {
     @Override
     public void insertAccount(final FxMailAccount account) {
         try {
-            MailAccount pojo = toPojoMailAccount(account);
+            final MailAccount pojo = toPojoMailAccount(account);
 
-            long id = getMailService().insertAccount(pojo);
+            final long id = getMailService().insertAccount(pojo);
             account.setID(id);
         }
         catch (Exception ex) {
@@ -96,18 +96,18 @@ public class DefaultStandaloneFxMailService extends AbstractFxMailService {
             int affectedRows = 0;
 
             // ID != 0 -> update
-            List<MailFolder> toUpdate = toPojoMailFolders(folders.stream().filter(mf -> mf.getID() > 0).toList());
+            final List<MailFolder> toUpdate = toPojoMailFolders(folders.stream().filter(mf -> mf.getID() > 0).toList());
 
             if (!toUpdate.isEmpty()) {
-                int[] result = getMailService().updateFolder(accountID, toUpdate);
+                final int[] result = getMailService().updateFolder(accountID, toUpdate);
                 affectedRows += IntStream.of(result).sum();
             }
 
             // ID = 0 -> insert
-            List<MailFolder> toInsert = toPojoMailFolders(folders.stream().filter(mf -> mf.getID() == 0).toList());
+            final List<MailFolder> toInsert = toPojoMailFolders(folders.stream().filter(mf -> mf.getID() == 0).toList());
 
             if (!toInsert.isEmpty()) {
-                long[] primaryKeys = getMailService().insertFolder(accountID, toInsert);
+                final long[] primaryKeys = getMailService().insertFolder(accountID, toInsert);
                 affectedRows += primaryKeys.length;
 
                 for (int i = 0; i < primaryKeys.length; i++) {
@@ -126,9 +126,9 @@ public class DefaultStandaloneFxMailService extends AbstractFxMailService {
     @Override
     public List<FxMailFolder> loadFolder(final long accountID) {
         try {
-            List<MailFolder> folders = getMailService().loadFolder(accountID);
+            final List<MailFolder> folders = getMailService().loadFolder(accountID);
 
-            List<FxMailFolder> fxBeans = toFXMailFolders(folders);
+            final List<FxMailFolder> fxBeans = toFXMailFolders(folders);
 
             buildHierarchie(fxBeans);
 
@@ -144,9 +144,9 @@ public class DefaultStandaloneFxMailService extends AbstractFxMailService {
         getLogger().info("Load Mails: account={}, folder={}", account.getMail(), folder.getFullName());
 
         try {
-            List<Mail> mails = getMailService().loadMails(account.getID(), folder.getID(), folder.getFullName());
+            final List<Mail> mails = getMailService().loadMails(account.getID(), folder.getID(), folder.getFullName());
 
-            List<FxMail> fxBeans = toFXMails(mails);
+            final List<FxMail> fxBeans = toFXMails(mails);
 
             getLogger().info("Load Mails finished: account={}, folder={}", account.getMail(), folder.getFullName());
 
@@ -168,7 +168,7 @@ public class DefaultStandaloneFxMailService extends AbstractFxMailService {
             // MailAccount pojo = toPOJO(account);
             //
             // List<FxMailFolder> fxBeans = getMailService().test(pojo).stream().map(this::toFXBean).collect(Collectors.toList());
-            MailAccount pojo = toPojoMailAccount(account);
+            final MailAccount pojo = toPojoMailAccount(account);
 
             return toFXMailFolders(getMailService().test(pojo));
         }
@@ -190,7 +190,7 @@ public class DefaultStandaloneFxMailService extends AbstractFxMailService {
     @Override
     public int updateAccount(final FxMailAccount account) {
         try {
-            MailAccount pojo = toPojoMailAccount(account);
+            final MailAccount pojo = toPojoMailAccount(account);
 
             return getMailService().updateAccount(pojo);
         }
@@ -205,7 +205,7 @@ public class DefaultStandaloneFxMailService extends AbstractFxMailService {
 
     @Override
     protected MailContent loadMailContent(final Path mailPath, final FxMailAccount account, final FxMail mail, final IOMonitor monitor) throws Exception {
-        MailContent mailContent = getMailService().loadMailContent(account.getID(), mail.getFolderFullName(), mail.getUID(), monitor);
+        final MailContent mailContent = getMailService().loadMailContent(account.getID(), mail.getFolderFullName(), mail.getUID(), monitor);
 
         saveMailContent(mailPath, mailContent);
 
@@ -224,9 +224,9 @@ public class DefaultStandaloneFxMailService extends AbstractFxMailService {
         // ma.setSmtpLegitimation(pojo.isSmtpLegitimation());
         // ma.setSmtpPort(pojo.getSmtpPort());
 
-        JavaType type = getJsonMapper().getTypeFactory().constructCollectionType(ArrayList.class, FxMailAccount.class);
+        final JavaType type = getJsonMapper().getTypeFactory().constructCollectionType(ArrayList.class, FxMailAccount.class);
 
-        byte[] jsonBytes = getJsonMapper().writer().writeValueAsBytes(accounts);
+        final byte[] jsonBytes = getJsonMapper().writer().writeValueAsBytes(accounts);
 
         return getJsonMapper().readValue(jsonBytes, type);
     }
@@ -239,9 +239,9 @@ public class DefaultStandaloneFxMailService extends AbstractFxMailService {
         // mf.setID(folder.getID());
         // mf.setName(folder.getName());
 
-        JavaType type = getJsonMapper().getTypeFactory().constructCollectionType(ArrayList.class, FxMailFolder.class);
+        final JavaType type = getJsonMapper().getTypeFactory().constructCollectionType(ArrayList.class, FxMailFolder.class);
 
-        byte[] jsonBytes = getJsonMapper().writer().writeValueAsBytes(folders);
+        final byte[] jsonBytes = getJsonMapper().writer().writeValueAsBytes(folders);
 
         return getJsonMapper().readValue(jsonBytes, type);
     }
@@ -264,10 +264,10 @@ public class DefaultStandaloneFxMailService extends AbstractFxMailService {
 
         // List<FxMail> fxBeans = pojos.stream().map(this::toFXBean).collect(Collectors.toList());
 
-        JavaType type = getJsonMapper().getTypeFactory().constructCollectionType(ArrayList.class, FxMail.class);
+        final JavaType type = getJsonMapper().getTypeFactory().constructCollectionType(ArrayList.class, FxMail.class);
 
         // byte[] jsonBytes = getJsonMapper().writer().writeValueAsBytes(mails);
-        String json = getJsonMapper().writer().writeValueAsString(mails);
+        final String json = getJsonMapper().writer().writeValueAsString(mails);
 
         return getJsonMapper().readValue(json, type);
     }
@@ -284,15 +284,15 @@ public class DefaultStandaloneFxMailService extends AbstractFxMailService {
         // ma.setSmtpLegitimation(account.isSmtpLegitimation());
         // ma.setSmtpPort(account.getSmtpPort());
 
-        byte[] jsonBytes = getJsonMapper().writer().writeValueAsBytes(account);
+        final byte[] jsonBytes = getJsonMapper().writer().writeValueAsBytes(account);
 
         return getJsonMapper().readValue(jsonBytes, MailAccount.class);
     }
 
     private List<MailFolder> toPojoMailFolders(final List<FxMailFolder> folders) throws Exception {
-        JavaType type = getJsonMapper().getTypeFactory().constructCollectionType(ArrayList.class, MailFolder.class);
+        final JavaType type = getJsonMapper().getTypeFactory().constructCollectionType(ArrayList.class, MailFolder.class);
 
-        byte[] jsonBytes = getJsonMapper().writer().writeValueAsBytes(folders);
+        final byte[] jsonBytes = getJsonMapper().writer().writeValueAsBytes(folders);
 
         return getJsonMapper().readValue(jsonBytes, type);
     }

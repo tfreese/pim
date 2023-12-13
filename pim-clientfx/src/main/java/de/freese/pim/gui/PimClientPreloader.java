@@ -28,8 +28,8 @@ public class PimClientPreloader extends Preloader {
     @Override
     public void handleApplicationNotification(final PreloaderNotification info) {
         if (info instanceof PimClientPreloaderNotification noti) {
-            double progress = noti.getProgress();
-            String status = noti.getStatus();
+            final double progress = noti.getProgress();
+            final String status = noti.getStatus();
 
             this.labelStatus.setText(status);
             this.progressIndicator.setProgress(progress);
@@ -121,7 +121,7 @@ public class PimClientPreloader extends Preloader {
 
         this.progressIndicator.setPrefWidth(200);
 
-        GridPane pane = new GridPane();
+        final GridPane pane = new GridPane();
         pane.setPadding(new Insets(50));
         pane.getStyleClass().add("gridpane");
 
@@ -131,7 +131,7 @@ public class PimClientPreloader extends Preloader {
         pane.add(this.progressIndicator, 0, 1);
 
         // Scene scene = new Scene(pane, 300, 100);
-        Scene scene = new Scene(pane);
+        final Scene scene = new Scene(pane);
         scene.getStylesheets().add("/styles/styles.css");
 
         return scene;

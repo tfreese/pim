@@ -35,29 +35,29 @@ class TestMisc {
      */
     @Test
     void test010CompletableFuture() throws Exception {
-        List<String> results = new ArrayList<>();
+        final List<String> results = new ArrayList<>();
 
         // @formatter:off
         CompletableFuture.supplyAsync(() ->
         {
-            String threadName = Thread.currentThread().getName();
+            final String threadName = Thread.currentThread().getName();
             System.out.println("supplyAsync: "+ threadName);
             return threadName;
         })
         .thenApplyAsync(result ->
         {
-            String threadName = Thread.currentThread().getName();
+            final  String threadName = Thread.currentThread().getName();
             System.out.println("thenApplyAsync: "+ threadName);
             return result + "-2";
         })
         .thenApply(result ->
         {
-            String threadName = Thread.currentThread().getName();
+            final String threadName = Thread.currentThread().getName();
             System.out.println("thenApply: "+ threadName);
             return result + "-3";
         })
         .exceptionally(ex -> {
-            String threadName = Thread.currentThread().getName();
+            final String threadName = Thread.currentThread().getName();
             System.out.println("exceptionally: "+ threadName);
             ex.printStackTrace();
             return null;

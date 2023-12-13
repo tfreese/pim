@@ -26,7 +26,7 @@ public class CommonConfig {
      */
     @Bean
     public ObjectMapper jsonMapper() {
-        ObjectMapper jsonMapper = new ObjectMapper();
+        final ObjectMapper jsonMapper = new ObjectMapper();
         jsonMapper.enable(SerializationFeature.INDENT_OUTPUT);
         jsonMapper.enable(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT);
         // jsonMapper.setVisibility(PropertyAccessor.FIELD, Visibility.NONE);
@@ -35,7 +35,7 @@ public class CommonConfig {
 
         jsonMapper.setLocale(Locale.GERMANY);
 
-        TimeZone timeZone = TimeZone.getTimeZone("Europe/Berlin");
+        final TimeZone timeZone = TimeZone.getTimeZone("Europe/Berlin");
         jsonMapper.setTimeZone(timeZone);
 
         // SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

@@ -47,31 +47,18 @@ public final class JavaMailBuilder {
     }
 
     private final List<MimeBodyPart> attachments = new ArrayList<>();
-
     private final String charset;
-
     private final FileTypeMap fileTypeMap;
-
     private final List<MimeBodyPart> inlines = new ArrayList<>();
-
     private final List<InternetAddress> recipientsBcc = new ArrayList<>();
-
     private final List<InternetAddress> recipientsCc = new ArrayList<>();
-
     private final List<InternetAddress> recipientsTo = new ArrayList<>();
-
     private final Session session;
-
     private final boolean validateAddresses;
-
     private InternetAddress from;
-
     private boolean isHTML;
-
     private String messageID;
-
     private String subject;
-
     private String text;
 
     /**
@@ -91,7 +78,7 @@ public final class JavaMailBuilder {
         Objects.requireNonNull(dataSource, "DataSource must not be null");
 
         try {
-            MimeBodyPart mimeBodyPart = new MimeBodyPart();
+            final MimeBodyPart mimeBodyPart = new MimeBodyPart();
             mimeBodyPart.setDisposition(Part.ATTACHMENT);
             mimeBodyPart.setFileName(MimeUtility.encodeText(attachmentFilename));
             mimeBodyPart.setDataHandler(new DataHandler(dataSource));
@@ -109,7 +96,7 @@ public final class JavaMailBuilder {
         Objects.requireNonNull(attachmentFilename, "Attachment filename must not be null");
         Objects.requireNonNull(file, "File must not be null");
 
-        FileDataSource dataSource = new FileDataSource(file);
+        final FileDataSource dataSource = new FileDataSource(file);
         dataSource.setFileTypeMap(getFileTypeMap());
         attachment(attachmentFilename, dataSource);
 
@@ -120,8 +107,8 @@ public final class JavaMailBuilder {
         Objects.requireNonNull(attachmentFilename, "Attachment filename must not be null");
         Objects.requireNonNull(inputStream, "InputStream must not be null");
 
-        String contentType = getFileTypeMap().getContentType(attachmentFilename);
-        DataSource dataSource = createDataSource(inputStream, contentType, attachmentFilename);
+        final String contentType = getFileTypeMap().getContentType(attachmentFilename);
+        final DataSource dataSource = createDataSource(inputStream, contentType, attachmentFilename);
         attachment(attachmentFilename, dataSource);
 
         return this;
@@ -207,18 +194,18 @@ public final class JavaMailBuilder {
         }
 
         // mixed, für Attachments und Inlines
-        MimeMultipart rootMultipart = new MimeMultipart(MailUtils.MULTIPART_SUBTYPE_MIXED);
+        final MimeMultipart rootMultipart = new MimeMultipart(MailUtils.MULTIPART_SUBTYPE_MIXED);
         mail.setContent(rootMultipart);
 
         // related, für Text und Inlines
-        MimeMultipart relatedMultipart = new MimeMultipart(MailUtils.MULTIPART_SUBTYPE_RELATED);
-        MimeBodyPart relatedBodyPart = new MimeBodyPart();
+        final MimeMultipart relatedMultipart = new MimeMultipart(MailUtils.MULTIPART_SUBTYPE_RELATED);
+        final MimeBodyPart relatedBodyPart = new MimeBodyPart();
         relatedBodyPart.setContent(relatedMultipart);
         rootMultipart.addBodyPart(relatedBodyPart);
 
         // Text
         if ((this.text != null) && (this.text.strip().length() > 0)) {
-            MimeBodyPart textBodyPart = new MimeBodyPart();
+            final MimeBodyPart textBodyPart = new MimeBodyPart();
             relatedMultipart.addBodyPart(textBodyPart);
 
             String contentType = MailUtils.CONTENT_TYPE_PLAIN;
@@ -266,7 +253,7 @@ public final class JavaMailBuilder {
     public void buildAndSend(final JavaMailSender mailSender, final InputStream contentStream) throws Exception {
         Objects.requireNonNull(mailSender, "sender required");
 
-        MimeMessage mail = build(contentStream);
+        final MimeMessage mail = build(contentStream);
 
         mailSender.send(mail);
     }
@@ -339,7 +326,7 @@ public final class JavaMailBuilder {
         Objects.requireNonNull(contentID, "Content ID must not be null");
         Objects.requireNonNull(dataSource, "DataSource must not be null");
 
-        MimeBodyPart mimeBodyPart = new MimeBodyPart();
+        final MimeBodyPart mimeBodyPart = new MimeBodyPart();
         mimeBodyPart.setDisposition(Part.INLINE);
         // We're using setHeader here to remain compatible with JavaMail 1.2,
         // rather than JavaMail 1.3's setContentID.
@@ -355,7 +342,7 @@ public final class JavaMailBuilder {
         Objects.requireNonNull(contentID, "Content ID must not be null");
         Objects.requireNonNull(file, "File must not be null");
 
-        FileDataSource dataSource = new FileDataSource(file);
+        final FileDataSource dataSource = new FileDataSource(file);
         dataSource.setFileTypeMap(getFileTypeMap());
         inline(contentID, dataSource);
 
@@ -367,7 +354,7 @@ public final class JavaMailBuilder {
         Objects.requireNonNull(inputStream, "InputStreamSource must not be null");
 
         // String contentType = getFileTypeMap().getContentType(attachmentFilename);
-        DataSource dataSource = createDataSource(inputStream, mimeType, "inline");
+        final DataSource dataSource = createDataSource(inputStream, mimeType, "inline");
         inline(contentID, dataSource);
 
         return this;
@@ -467,13 +454,13 @@ public final class JavaMailBuilder {
     }
 
     private InternetAddress parseAddress(final String address) throws MessagingException {
-        InternetAddress[] parsed = InternetAddress.parse(address);
+        final InternetAddress[] parsed = InternetAddress.parse(address);
 
         if (parsed.length != 1) {
             throw new AddressException("Illegal address", address);
         }
 
-        InternetAddress raw = parsed[0];
+        final InternetAddress raw = parsed[0];
 
         try {
             return (getCharset() != null ? new InternetAddress(raw.getAddress(), raw.getPersonal(), getCharset()) : raw);

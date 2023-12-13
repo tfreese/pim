@@ -21,9 +21,9 @@ import org.junit.jupiter.api.TestMethodOrder;
 class TestCrypt {
     @Test
     void testCryptStream() throws Exception {
-        String clearText = "testABC123,.öäü#+";
+        final String clearText = "testABC123,.öäü#+";
 
-        Crypt crypt = Crypt.getUTF8Instance();
+        final Crypt crypt = Crypt.getUTF8Instance();
 
         // try (InputStream isEncrypted = crypt.encrypt(IOUtils.toInputStream(clearText, StandardCharsets.UTF_8));
         // InputStream decryptedStream = crypt.decrypt(isEncrypted))
@@ -32,10 +32,13 @@ class TestCrypt {
         // Assert.assertEquals(clearText, decrypted);
         // }
 
-        try (InputStream isClear = new ByteArrayInputStream(clearText.getBytes(StandardCharsets.UTF_8)); InputStream isEncrypted = crypt.encrypt(isClear); // Verschlüsseln
-             InputStream decryptedStream = crypt.decrypt(isEncrypted); // Entschlüsseln
+        try (InputStream isClear = new ByteArrayInputStream(clearText.getBytes(StandardCharsets.UTF_8));
+             InputStream isEncrypted = crypt.encrypt(isClear);
+             // Verschlüsseln
+             InputStream decryptedStream = crypt.decrypt(isEncrypted);
+             // Entschlüsseln
              BufferedReader buffer = new BufferedReader(new InputStreamReader(decryptedStream, StandardCharsets.UTF_8))) {
-            String decrypted = buffer.lines().collect(Collectors.joining("\n"));
+            final String decrypted = buffer.lines().collect(Collectors.joining("\n"));
             Assertions.assertEquals(clearText, decrypted);
         }
 
@@ -45,12 +48,12 @@ class TestCrypt {
 
     @Test
     void testCryptString() throws Exception {
-        String clearText = "testABC123,.öäü#+";
+        final String clearText = "testABC123,.öäü#+";
 
-        Crypt crypt = Crypt.getUTF8Instance();
+        final Crypt crypt = Crypt.getUTF8Instance();
 
-        String encrypted = crypt.encrypt(clearText);
-        String decrypted = crypt.decrypt(encrypted);
+        final String encrypted = crypt.encrypt(clearText);
+        final String decrypted = crypt.decrypt(encrypted);
 
         Assertions.assertEquals(clearText, decrypted);
     }

@@ -40,25 +40,15 @@ import de.freese.pim.gui.utils.FxUtils;
  */
 public class EditMailAccountDialog {
     private final ListView<FxMailFolder> aboView = new ListView<>();
-
     private final Button buttonTest = new Button("Test");
-
     private final TextField imapHost = new TextField();
-
     private final ComboBox<MailPort> imapPort = new ComboBox<>();
-
     private final Label labelTestResult = new Label();
-
     private final TextField mail = new TextField();
-
     private final PasswordField password1 = new PasswordField();
-
     private final PasswordField password2 = new PasswordField();
-
     private final ComboBox<MailProvider> provider = new ComboBox<>();
-
     private final TextField smtpHost = new TextField();
-
     private final ComboBox<MailPort> smtpPort = new ComboBox<>();
 
     public Optional<FxMailAccount> addAccount(final FxMailService mailService, final ResourceBundle bundle) {
@@ -70,14 +60,14 @@ public class EditMailAccountDialog {
     }
 
     private void checkValidConfig(final ActionEvent event, final ResourceBundle bundle) {
-        StringBuilder message = new StringBuilder();
+        final StringBuilder message = new StringBuilder();
 
         if (!this.mail.getText().matches(Utils.MAIL_REGEX)) {
             message.append(bundle.getString("mail.format.invalid")).append("\n");
         }
 
-        String pw1 = this.password1.getText();
-        String pw2 = this.password2.getText();
+        final String pw1 = this.password1.getText();
+        final String pw2 = this.password2.getText();
 
         if ((pw1 == null) || pw1.isBlank()) {
             message.append(bundle.getString("passwoerter.nicht_ausgefuellt")).append("\n");
@@ -90,8 +80,8 @@ public class EditMailAccountDialog {
             message.append(bundle.getString("mail.folder.abonniert.nicht")).append("\n");
         }
 
-        if (message.length() > 0) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
+        if (!message.isEmpty()) {
+            final Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setHeaderText(message.toString());
             alert.showAndWait();
 
@@ -103,14 +93,14 @@ public class EditMailAccountDialog {
 
     private Optional<FxMailAccount> openDialog(final FxMailService mailService, final ResourceBundle bundle, final FxMailAccount account, final String titleKey, final String imageStyleClass) {
         // DialogObject
-        FxMailAccount bean = new FxMailAccount();
+        final FxMailAccount bean = new FxMailAccount();
 
         // Attribute kopieren.
         if (account != null) {
             bean.copyFrom(account);
         }
 
-        Dialog<ButtonType> dialog = new Dialog<>();
+        final Dialog<ButtonType> dialog = new Dialog<>();
         dialog.initOwner(PimClientApplication.getMainWindow());
         dialog.initModality(Modality.APPLICATION_MODAL);
         dialog.setTitle(bundle.getString(titleKey));
@@ -118,7 +108,7 @@ public class EditMailAccountDialog {
         // dialog.setResizable(true);
         // dialog.getDialogPane().setPrefSize(500, 500);
 
-        ImageView imageView = new ImageView();
+        final ImageView imageView = new ImageView();
         imageView.setFitHeight(32);
         imageView.setFitWidth(32);
         imageView.getStyleClass().add(imageStyleClass);
@@ -127,7 +117,7 @@ public class EditMailAccountDialog {
         // Laden des Images triggern für ImageView#getImage.
         imageView.applyCss();
 
-        Stage stage = (Stage) dialog.getDialogPane().getScene().getWindow();
+        final Stage stage = (Stage) dialog.getDialogPane().getScene().getWindow();
         stage.getIcons().clear(); // Icons des Owners entfernen.
         stage.getIcons().add(imageView.getImage());
 
@@ -176,7 +166,7 @@ public class EditMailAccountDialog {
         this.password1.textProperty().bindBidirectional(bean.passwordProperty());
         this.password2.setText(bean.getPassword());
 
-        Node okButton = dialog.getDialogPane().lookupButton(ButtonType.OK);
+        final Node okButton = dialog.getDialogPane().lookupButton(ButtonType.OK);
 
         // Mail-Format und Passwörter vergleichen.
         okButton.addEventFilter(ActionEvent.ACTION, event -> checkValidConfig(event, bundle));
@@ -210,7 +200,7 @@ public class EditMailAccountDialog {
         this.aboView.setItems(bean.getFolder());
 
         // Layout
-        GridPane gridPane = new GridPane();
+        final GridPane gridPane = new GridPane();
         gridPane.getStyleClass().addAll("gridpane", "padding");
 
         int row = -1;
@@ -254,7 +244,7 @@ public class EditMailAccountDialog {
         gridPane.add(this.buttonTest, 0, ++row);
         gridPane.add(this.labelTestResult, 1, row);
 
-        Label label = new Label(bundle.getString("mail.folder.abonniert"));
+        final Label label = new Label(bundle.getString("mail.folder.abonniert"));
         gridPane.add(label, 0, ++row);
         GridPane.setValignment(label, VPos.TOP);
         gridPane.add(this.aboView, 1, row);
@@ -264,7 +254,7 @@ public class EditMailAccountDialog {
 
         Platform.runLater(this.mail::requestFocus);
 
-        Optional<ButtonType> result = dialog.showAndWait();
+        final Optional<ButtonType> result = dialog.showAndWait();
 
         if (result.filter(response -> response != ButtonType.OK).isPresent()) {
             return Optional.empty();

@@ -57,9 +57,7 @@ public class JavaMailApi extends AbstractMailApi {
      * Für RoundRobin-Pool.
      */
     private final IMAPStore[] stores = new IMAPStore[Math.max(1, 3)];
-
     private Session session;
-
     private int storeIndex;
 
     public JavaMailApi(final MailAccount account) {
@@ -89,7 +87,7 @@ public class JavaMailApi extends AbstractMailApi {
         // disconnect(this.store);
         // disconnect(transport);
         for (int i = 0; i < this.stores.length; i++) {
-            Store store = this.stores[i];
+            final Store store = this.stores[i];
 
             try {
                 disconnect(store);
@@ -109,13 +107,13 @@ public class JavaMailApi extends AbstractMailApi {
     @Override
     public List<MailFolder> getFolder() {
         return Utils.executeSafely(() -> {
-            Folder root = getStore().getDefaultFolder();
+            final Folder root = getStore().getDefaultFolder();
 
             // @formatter:off
             return Stream.of(root.list("*"))
                     .map(f ->
                     {
-                        MailFolder mf = new MailFolder();
+                        final MailFolder mf = new MailFolder();
                         mf.setFullName(f.getFullName());
                         mf.setName(f.getName());
                         mf.setAbonniert(true);
@@ -131,7 +129,7 @@ public class JavaMailApi extends AbstractMailApi {
     @Override
     public <T> T loadMail(final String folderFullName, final long uid, final ExceptionalFunction<Object, T, Exception> function) {
         return executeInFolder(folderFullName, folder -> {
-            MimeMessage message = (MimeMessage) folder.getMessageByUID(uid);
+            final MimeMessage message = (MimeMessage) folder.getMessageByUID(uid);
             preFetch(folder, message);
 
             return function.apply(message);
@@ -141,7 +139,7 @@ public class JavaMailApi extends AbstractMailApi {
     @Override
     public MailContent loadMail(final String folderFullName, final long uid, final IOMonitor monitor) {
         return executeInFolder(folderFullName, folder -> {
-            MimeMessage mimeMessage = (MimeMessage) folder.getMessageByUID(uid);
+            final MimeMessage mimeMessage = (MimeMessage) folder.getMessageByUID(uid);
             preFetch(folder, mimeMessage);
 
             MailContent mailContent = null;
@@ -150,11 +148,11 @@ public class JavaMailApi extends AbstractMailApi {
                 mailContent = new JavaMailContent(mimeMessage);
             }
             else {
-                int sizeMessage = mimeMessage.getSize();
-                long sizeAllParts = MailUtils.getSizeOfAllParts(mimeMessage);
-                long size = Math.max(sizeMessage, sizeAllParts);
+                final int sizeMessage = mimeMessage.getSize();
+                final long sizeAllParts = MailUtils.getSizeOfAllParts(mimeMessage);
+                final long size = Math.max(sizeMessage, sizeAllParts);
 
-                NestedIOMonitor nestendIOMonitor = new NestedIOMonitor(monitor, size);
+                final NestedIOMonitor nestendIOMonitor = new NestedIOMonitor(monitor, size);
 
                 mailContent = new JavaMailContent(mimeMessage, nestendIOMonitor);
 
@@ -186,8 +184,8 @@ public class JavaMailApi extends AbstractMailApi {
 
     @Override
     public List<Mail> loadMails(final String folderFullName, final long uidFrom) {
-        List<Mail> mails = executeInFolder(folderFullName, folder -> {
-            long uidTo = folder.getUIDNext();
+        final List<Mail> mails = executeInFolder(folderFullName, folder -> {
+            final long uidTo = folder.getUIDNext();
             // SearchTerm searchTerm = new SearchTerm()
             // {
             // @Override
@@ -203,13 +201,13 @@ public class JavaMailApi extends AbstractMailApi {
             // };
 
             // Message[] msgs = folder.search(searchTerm);
-            Message[] msgs = folder.getMessagesByUID(uidFrom, uidTo);
+            final Message[] msgs = folder.getMessagesByUID(uidFrom, uidTo);
             preFetch(folder, msgs);
 
-            List<Mail> newMails = new ArrayList<>();
+            final List<Mail> newMails = new ArrayList<>();
 
             for (Message message : msgs) {
-                Mail mail = new Mail();
+                final Mail mail = new Mail();
                 populate(mail, message);
 
                 newMails.add(mail);
@@ -223,14 +221,14 @@ public class JavaMailApi extends AbstractMailApi {
 
     @Override
     public Set<Long> loadMessageIDs(final String folderFullName) {
-        Set<Long> ids = executeInFolder(folderFullName, folder -> {
-            Message[] msgs = folder.getMessages();
+        final Set<Long> ids = executeInFolder(folderFullName, folder -> {
+            final Message[] msgs = folder.getMessages();
 
-            FetchProfile fp = new FetchProfile();
+            final FetchProfile fp = new FetchProfile();
             fp.add(UIDFolder.FetchProfileItem.UID);
             folder.fetch(msgs, fp);
 
-            Set<Long> uids = new HashSet<>();
+            final Set<Long> uids = new HashSet<>();
 
             for (Message msg : msgs) {
                 uids.add(folder.getUID(msg));
@@ -296,19 +294,19 @@ public class JavaMailApi extends AbstractMailApi {
     }
 
     protected void connect(final Service service) throws MessagingException {
-        String host = service instanceof Store ? getAccount().getImapHost() : getAccount().getSmtpHost();
-        int port = service instanceof Store ? getAccount().getImapPort().getPort() : getAccount().getSmtpPort().getPort();
+        final String host = service instanceof Store ? getAccount().getImapHost() : getAccount().getSmtpHost();
+        final int port = service instanceof Store ? getAccount().getImapPort().getPort() : getAccount().getSmtpPort().getPort();
 
-        String mail = getAccount().getMail();
-        String password = getAccount().getPassword();
+        final String mail = getAccount().getMail();
+        final String password = getAccount().getPassword();
 
         service.connect(host, port, mail, password);
     }
 
     protected Session createSession() throws MessagingException {
-        Authenticator authenticator = null;
+        final Authenticator authenticator = null;
 
-        Properties properties = new Properties();
+        final Properties properties = new Properties();
 
         // if (getLogger().isDebugEnabled())
         if (LoggerFactory.getLogger("jakarta.mail").isDebugEnabled()) {
@@ -360,7 +358,7 @@ public class JavaMailApi extends AbstractMailApi {
 
     protected <T> T executeInFolder(final String folderFullName, final FolderCallback<T> action) {
         return Utils.executeSafely(() -> {
-            IMAPFolder folder = (IMAPFolder) getStore().getFolder(folderFullName);
+            final IMAPFolder folder = (IMAPFolder) getStore().getFolder(folderFullName);
 
             if (folder == null) {
                 getLogger().warn("Folder {} not exist", folderFullName);
@@ -410,20 +408,20 @@ public class JavaMailApi extends AbstractMailApi {
     }
 
     protected void populate(final Mail mail, final Message message) throws MessagingException {
-        InternetAddress from = Optional.ofNullable(message.getFrom()).map(f -> (InternetAddress) f[0]).orElse(null);
-        InternetAddress[] to = (InternetAddress[]) message.getRecipients(RecipientType.TO);
-        InternetAddress[] cc = (InternetAddress[]) message.getRecipients(RecipientType.CC);
-        InternetAddress[] bcc = (InternetAddress[]) message.getRecipients(RecipientType.BCC);
+        final InternetAddress from = Optional.ofNullable(message.getFrom()).map(f -> (InternetAddress) f[0]).orElse(null);
+        final InternetAddress[] to = (InternetAddress[]) message.getRecipients(RecipientType.TO);
+        final InternetAddress[] cc = (InternetAddress[]) message.getRecipients(RecipientType.CC);
+        final InternetAddress[] bcc = (InternetAddress[]) message.getRecipients(RecipientType.BCC);
 
-        String subject = message.getSubject();
-        Date receivedDate = message.getReceivedDate();
-        Date sendDate = message.getSentDate();
-        boolean isSeen = message.isSet(Flag.SEEN);
-        int msgNum = message.getMessageNumber();
-        int size = message.getSize();
+        final String subject = message.getSubject();
+        final Date receivedDate = message.getReceivedDate();
+        final Date sendDate = message.getSentDate();
+        final boolean isSeen = message.isSet(Flag.SEEN);
+        final int msgNum = message.getMessageNumber();
+        final int size = message.getSize();
 
-        IMAPFolder f = (IMAPFolder) message.getFolder();
-        long uid = f.getUID(message);
+        final IMAPFolder f = (IMAPFolder) message.getFolder();
+        final long uid = f.getUID(message);
 
         // if ((uid == 3066) || (uid == 576) || (uid == 60))
         // {
@@ -457,7 +455,7 @@ public class JavaMailApi extends AbstractMailApi {
     }
 
     private void preFetch(final Folder folder, final Message... messages) throws MessagingException {
-        FetchProfile fp = new FetchProfile();
+        final FetchProfile fp = new FetchProfile();
         fp.add(IMAPFolder.FetchProfileItem.HEADERS);
         fp.add(UIDFolder.FetchProfileItem.UID);
         fp.add(FetchProfile.Item.ENVELOPE);

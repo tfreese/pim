@@ -50,14 +50,14 @@ public class DefaultRestFxMailService extends AbstractFxMailService {
 
     @Override
     public List<FxMailAccount> getMailAccounts() {
-        FxMailAccount[] accounts = getRestTemplate().getForObject("/mail/accounts", FxMailAccount[].class);
+        final FxMailAccount[] accounts = getRestTemplate().getForObject("/mail/accounts", FxMailAccount[].class);
 
         return Arrays.asList(accounts);
     }
 
     @Override
     public void insertAccount(final FxMailAccount account) {
-        long primaryKey = getRestTemplate().postForObject("/mail/account/insert", account, Long.class);
+        final long primaryKey = getRestTemplate().postForObject("/mail/account/insert", account, Long.class);
 
         account.setID(primaryKey);
     }
@@ -67,18 +67,18 @@ public class DefaultRestFxMailService extends AbstractFxMailService {
         int affectedRows = 0;
 
         // ID != 0 -> update
-        List<FxMailFolder> toUpdate = folders.stream().filter(mf -> mf.getID() > 0).toList();
+        final List<FxMailFolder> toUpdate = folders.stream().filter(mf -> mf.getID() > 0).toList();
 
         if (!toUpdate.isEmpty()) {
-            int[] result = getRestTemplate().postForObject("/mail/folder/update/{accountID}", toUpdate, int[].class, accountID);
+            final int[] result = getRestTemplate().postForObject("/mail/folder/update/{accountID}", toUpdate, int[].class, accountID);
             affectedRows += IntStream.of(result).sum();
         }
 
         // ID = 0 -> insert
-        List<FxMailFolder> toInsert = folders.stream().filter(mf -> mf.getID() == 0).toList();
+        final List<FxMailFolder> toInsert = folders.stream().filter(mf -> mf.getID() == 0).toList();
 
         if (!toInsert.isEmpty()) {
-            long[] primaryKeys = getRestTemplate().postForObject("/mail/folder/insert/{accountID}", toInsert, long[].class, accountID);
+            final long[] primaryKeys = getRestTemplate().postForObject("/mail/folder/insert/{accountID}", toInsert, long[].class, accountID);
             affectedRows += primaryKeys.length;
 
             for (int i = 0; i < primaryKeys.length; i++) {
@@ -92,7 +92,7 @@ public class DefaultRestFxMailService extends AbstractFxMailService {
 
     @Override
     public List<FxMailFolder> loadFolder(final long accountID) {
-        FxMailFolder[] folders = getRestTemplate().getForObject("/mail/folder/{accountID}", FxMailFolder[].class, accountID);
+        final FxMailFolder[] folders = getRestTemplate().getForObject("/mail/folder/{accountID}", FxMailFolder[].class, accountID);
 
         return Arrays.asList(folders);
     }
@@ -102,23 +102,23 @@ public class DefaultRestFxMailService extends AbstractFxMailService {
         getLogger().info("Load Mails: account={}, folder={}", account.getMail(), folder.getFullName());
 
         try {
-            String folderName = urlEncode(urlEncode(folder.getFullName()));
+            final String folderName = urlEncode(urlEncode(folder.getFullName()));
             FxMail[] mails = null;
-            boolean async = false;
+            final boolean async = false;
 
             if (!async) {
-                String restURL = "/mail/mails/{accountID}/{folderID}/{folderFullName}";
+                final String restURL = "/mail/mails/{accountID}/{folderID}/{folderFullName}";
                 mails = getRestTemplate().getForObject(restURL, FxMail[].class, account.getID(), folder.getID(), folderName);
             }
             else {
                 // String restURL = "/mail/mailsAsyncDeferredResult/{accountID}/{folderID}/{folderFullName}";
-                String restURL = "/mail/mailsAsyncCallable/{accountID}/{folderID}/{folderFullName}";
+                final String restURL = "/mail/mailsAsyncCallable/{accountID}/{folderID}/{folderFullName}";
                 // ListenableFuture<ResponseEntity<String>> responseJSON =
                 // getAsyncRestTemplate().getForEntity(restURL, String.class, account.getID(), folder.getID(), folderName);
                 // String jsonContent = responseJSON.get().getBody();
                 // mails = getJsonMapper().readValue(jsonContent, FxMail[].class);
 
-                ResponseEntity<FxMail[]> response = getRestTemplate().getForEntity(restURL, FxMail[].class, account.getID(), folder.getID(), folderName);
+                final ResponseEntity<FxMail[]> response = getRestTemplate().getForEntity(restURL, FxMail[].class, account.getID(), folder.getID(), folderName);
                 // mails = mails.get(10, TimeUnit.SECONDS).getBody();
                 mails = response.getBody();
             }
@@ -139,7 +139,7 @@ public class DefaultRestFxMailService extends AbstractFxMailService {
 
     @Override
     public List<FxMailFolder> test(final FxMailAccount account) {
-        FxMailFolder[] folders = getRestTemplate().postForObject("/mail/test", account, FxMailFolder[].class);
+        final FxMailFolder[] folders = getRestTemplate().postForObject("/mail/test", account, FxMailFolder[].class);
 
         return Arrays.asList(folders);
     }
@@ -155,7 +155,7 @@ public class DefaultRestFxMailService extends AbstractFxMailService {
 
     @Override
     protected MailContent loadMailContent(final Path mailPath, final FxMailAccount account, final FxMail mail, final IOMonitor monitor) throws Exception {
-        ResponseEntity<String> jsonContent = getRestTemplate().getForEntity("/mail/content/{accountID}/{folderFullName}/{mailUID}", String.class, account.getID(), urlEncode(urlEncode(mail.getFolderFullName())), mail.getUID());
+        final ResponseEntity<String> jsonContent = getRestTemplate().getForEntity("/mail/content/{accountID}/{folderFullName}/{mailUID}", String.class, account.getID(), urlEncode(urlEncode(mail.getFolderFullName())), mail.getUID());
 
         saveMailContent(mailPath, jsonContent.getBody());
 

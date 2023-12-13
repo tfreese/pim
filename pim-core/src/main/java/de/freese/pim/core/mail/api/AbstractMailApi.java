@@ -37,7 +37,7 @@ public abstract class AbstractMailApi implements MailApi {
 
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder();
+        final StringBuilder builder = new StringBuilder();
         builder.append("JavaMailApi [").append(getAccount()).append("]");
 
         return builder.toString();

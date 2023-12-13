@@ -19,8 +19,8 @@ import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
 
 import de.freese.pim.core.TestConfig;
-import de.freese.pim.core.dao.AddressBookDAO;
-import de.freese.pim.core.dao.DefaultAddressBookDAO;
+import de.freese.pim.core.dao.AddressBookDao;
+import de.freese.pim.core.dao.DefaultAddressBookDao;
 
 /**
  * TestCase für die manuelle TX-Steuerung mit Spring.
@@ -28,8 +28,8 @@ import de.freese.pim.core.dao.DefaultAddressBookDAO;
  * @author Thomas Freese
  */
 @TestMethodOrder(MethodOrderer.MethodName.class)
-class TestSpringManualTxAddressbookDAO extends AbstractDAOTestCase {
-    private static AddressBookDAO addressBookDAO;
+class TestSpringManualTxAddressbookDAO extends AbstractDaoTestCase {
+    private static AddressBookDao addressBookDAO;
 
     private static DataSource dataSource;
 
@@ -42,21 +42,21 @@ class TestSpringManualTxAddressbookDAO extends AbstractDAOTestCase {
 
     @BeforeAll
     static void beforeAll() throws Exception {
-        TestConfig config = new TestConfig();
+        final TestConfig config = new TestConfig();
 
         // dataSource = new JndiDataSourceLookup().getDataSource("jdbc/spring/manualTX"); // Wird in AllTests definiert.
         dataSource = config.dataSource();
         transactionManager = config.transactionManager(dataSource);
         addressBookDAO = config.addressBookDAO(dataSource);
-        ((DefaultAddressBookDAO) addressBookDAO).setSequenceQuery(config.sequenceQuery());
-        ((DefaultAddressBookDAO) addressBookDAO).afterPropertiesSet();
+        ((DefaultAddressBookDao) addressBookDAO).setSequenceQuery(config.sequenceQuery());
+        ((DefaultAddressBookDao) addressBookDAO).afterPropertiesSet();
     }
 
     @Override
     @Test
     void test0100InsertKontakts() throws Throwable {
-        TransactionDefinition transactionDefinition = new DefaultTransactionDefinition();
-        TransactionStatus transactionStatus = transactionManager.getTransaction(transactionDefinition);
+        final TransactionDefinition transactionDefinition = new DefaultTransactionDefinition();
+        final TransactionStatus transactionStatus = transactionManager.getTransaction(transactionDefinition);
 
         try {
             doTest0100InsertKontakts(addressBookDAO);
@@ -74,8 +74,8 @@ class TestSpringManualTxAddressbookDAO extends AbstractDAOTestCase {
     @Override
     @Test
     void test0110InsertKontaktWithNullVorname() throws Throwable {
-        TransactionDefinition transactionDefinition = new DefaultTransactionDefinition();
-        TransactionStatus transactionStatus = transactionManager.getTransaction(transactionDefinition);
+        final TransactionDefinition transactionDefinition = new DefaultTransactionDefinition();
+        final TransactionStatus transactionStatus = transactionManager.getTransaction(transactionDefinition);
 
         try {
             doTest0110InsertKontaktWithNullVorname(addressBookDAO);
@@ -93,8 +93,8 @@ class TestSpringManualTxAddressbookDAO extends AbstractDAOTestCase {
     @Override
     @Test
     void test0120InsertKontaktWithBlankVorname() throws Throwable {
-        TransactionDefinition transactionDefinition = new DefaultTransactionDefinition();
-        TransactionStatus transactionStatus = transactionManager.getTransaction(transactionDefinition);
+        final TransactionDefinition transactionDefinition = new DefaultTransactionDefinition();
+        final TransactionStatus transactionStatus = transactionManager.getTransaction(transactionDefinition);
 
         Assertions.assertThrows(SQLIntegrityConstraintViolationException.class, () -> {
             try {
@@ -112,8 +112,8 @@ class TestSpringManualTxAddressbookDAO extends AbstractDAOTestCase {
     @Override
     @Test
     void test0130InsertKontaktExisting() throws Throwable {
-        TransactionDefinition transactionDefinition = new DefaultTransactionDefinition();
-        TransactionStatus transactionStatus = transactionManager.getTransaction(transactionDefinition);
+        final TransactionDefinition transactionDefinition = new DefaultTransactionDefinition();
+        final TransactionStatus transactionStatus = transactionManager.getTransaction(transactionDefinition);
 
         Assertions.assertThrows(SQLIntegrityConstraintViolationException.class, () -> {
             try {
@@ -131,8 +131,8 @@ class TestSpringManualTxAddressbookDAO extends AbstractDAOTestCase {
     @Override
     @Test
     void test0200UpdateKontakt() throws Throwable {
-        TransactionDefinition transactionDefinition = new DefaultTransactionDefinition();
-        TransactionStatus transactionStatus = transactionManager.getTransaction(transactionDefinition);
+        final TransactionDefinition transactionDefinition = new DefaultTransactionDefinition();
+        final TransactionStatus transactionStatus = transactionManager.getTransaction(transactionDefinition);
 
         try {
             doTest0200UpdateKontakt(addressBookDAO);
@@ -150,8 +150,8 @@ class TestSpringManualTxAddressbookDAO extends AbstractDAOTestCase {
     @Override
     @Test
     void test0300InsertAttribut() throws Throwable {
-        TransactionDefinition transactionDefinition = new DefaultTransactionDefinition();
-        TransactionStatus transactionStatus = transactionManager.getTransaction(transactionDefinition);
+        final TransactionDefinition transactionDefinition = new DefaultTransactionDefinition();
+        final TransactionStatus transactionStatus = transactionManager.getTransaction(transactionDefinition);
 
         try {
             doTest0300InsertAttribut(addressBookDAO);
@@ -169,8 +169,8 @@ class TestSpringManualTxAddressbookDAO extends AbstractDAOTestCase {
     @Override
     @Test
     void test0310InsertInsertAttributWithNullValue() throws Throwable {
-        TransactionDefinition transactionDefinition = new DefaultTransactionDefinition();
-        TransactionStatus transactionStatus = transactionManager.getTransaction(transactionDefinition);
+        final TransactionDefinition transactionDefinition = new DefaultTransactionDefinition();
+        final TransactionStatus transactionStatus = transactionManager.getTransaction(transactionDefinition);
 
         Assertions.assertThrows(SQLIntegrityConstraintViolationException.class, () -> {
             try {
@@ -188,8 +188,8 @@ class TestSpringManualTxAddressbookDAO extends AbstractDAOTestCase {
     @Override
     @Test
     void test0320InsertInsertAttributWithBlankValue() throws Throwable {
-        TransactionDefinition transactionDefinition = new DefaultTransactionDefinition();
-        TransactionStatus transactionStatus = transactionManager.getTransaction(transactionDefinition);
+        final TransactionDefinition transactionDefinition = new DefaultTransactionDefinition();
+        final TransactionStatus transactionStatus = transactionManager.getTransaction(transactionDefinition);
 
         Assertions.assertThrows(SQLIntegrityConstraintViolationException.class, () -> {
             try {
@@ -207,8 +207,8 @@ class TestSpringManualTxAddressbookDAO extends AbstractDAOTestCase {
     @Override
     @Test
     void test0330InsertInsertAttributWithNull() throws Throwable {
-        TransactionDefinition transactionDefinition = new DefaultTransactionDefinition();
-        TransactionStatus transactionStatus = transactionManager.getTransaction(transactionDefinition);
+        final TransactionDefinition transactionDefinition = new DefaultTransactionDefinition();
+        final TransactionStatus transactionStatus = transactionManager.getTransaction(transactionDefinition);
 
         Assertions.assertThrows(SQLIntegrityConstraintViolationException.class, () -> {
             try {
@@ -226,8 +226,8 @@ class TestSpringManualTxAddressbookDAO extends AbstractDAOTestCase {
     @Override
     @Test
     void test0340InsertInsertAttributWithBlank() throws Throwable {
-        TransactionDefinition transactionDefinition = new DefaultTransactionDefinition();
-        TransactionStatus transactionStatus = transactionManager.getTransaction(transactionDefinition);
+        final TransactionDefinition transactionDefinition = new DefaultTransactionDefinition();
+        final TransactionStatus transactionStatus = transactionManager.getTransaction(transactionDefinition);
 
         Assertions.assertThrows(SQLIntegrityConstraintViolationException.class, () -> {
             try {
@@ -245,8 +245,8 @@ class TestSpringManualTxAddressbookDAO extends AbstractDAOTestCase {
     @Override
     @Test
     void test0350InsertAttributExisting() throws Throwable {
-        TransactionDefinition transactionDefinition = new DefaultTransactionDefinition();
-        TransactionStatus transactionStatus = transactionManager.getTransaction(transactionDefinition);
+        final TransactionDefinition transactionDefinition = new DefaultTransactionDefinition();
+        final TransactionStatus transactionStatus = transactionManager.getTransaction(transactionDefinition);
 
         Assertions.assertThrows(SQLIntegrityConstraintViolationException.class, () -> {
             try {
@@ -264,8 +264,8 @@ class TestSpringManualTxAddressbookDAO extends AbstractDAOTestCase {
     @Override
     @Test
     void test0400UpdateAttribut() throws Throwable {
-        TransactionDefinition transactionDefinition = new DefaultTransactionDefinition();
-        TransactionStatus transactionStatus = transactionManager.getTransaction(transactionDefinition);
+        final TransactionDefinition transactionDefinition = new DefaultTransactionDefinition();
+        final TransactionStatus transactionStatus = transactionManager.getTransaction(transactionDefinition);
 
         try {
             doTest0400UpdateAttribut(addressBookDAO);
@@ -283,9 +283,9 @@ class TestSpringManualTxAddressbookDAO extends AbstractDAOTestCase {
     @Override
     @Test
     void test0500GetKontaktDetailsAll() throws Throwable {
-        DefaultTransactionDefinition transactionDefinition = new DefaultTransactionDefinition();
+        final DefaultTransactionDefinition transactionDefinition = new DefaultTransactionDefinition();
         transactionDefinition.setReadOnly(true);
-        TransactionStatus transactionStatus = transactionManager.getTransaction(transactionDefinition);
+        final TransactionStatus transactionStatus = transactionManager.getTransaction(transactionDefinition);
         transactionStatus.setRollbackOnly();
 
         try {
@@ -304,9 +304,9 @@ class TestSpringManualTxAddressbookDAO extends AbstractDAOTestCase {
     @Override
     @Test
     void test0510GetKontaktDetailsWithID() throws Throwable {
-        DefaultTransactionDefinition transactionDefinition = new DefaultTransactionDefinition();
+        final DefaultTransactionDefinition transactionDefinition = new DefaultTransactionDefinition();
         transactionDefinition.setReadOnly(true);
-        TransactionStatus transactionStatus = transactionManager.getTransaction(transactionDefinition);
+        final TransactionStatus transactionStatus = transactionManager.getTransaction(transactionDefinition);
         transactionStatus.setRollbackOnly();
 
         try {
@@ -325,9 +325,9 @@ class TestSpringManualTxAddressbookDAO extends AbstractDAOTestCase {
     @Override
     @Test
     void test0520GetKontaktDetailsWithIDs() throws Throwable {
-        DefaultTransactionDefinition transactionDefinition = new DefaultTransactionDefinition();
+        final DefaultTransactionDefinition transactionDefinition = new DefaultTransactionDefinition();
         transactionDefinition.setReadOnly(true);
-        TransactionStatus transactionStatus = transactionManager.getTransaction(transactionDefinition);
+        final TransactionStatus transactionStatus = transactionManager.getTransaction(transactionDefinition);
         transactionStatus.setRollbackOnly();
 
         try {
@@ -346,9 +346,9 @@ class TestSpringManualTxAddressbookDAO extends AbstractDAOTestCase {
     @Override
     @Test
     void test0600GetKontakte() throws Throwable {
-        DefaultTransactionDefinition transactionDefinition = new DefaultTransactionDefinition();
+        final DefaultTransactionDefinition transactionDefinition = new DefaultTransactionDefinition();
         transactionDefinition.setReadOnly(true);
-        TransactionStatus transactionStatus = transactionManager.getTransaction(transactionDefinition);
+        final TransactionStatus transactionStatus = transactionManager.getTransaction(transactionDefinition);
         transactionStatus.setRollbackOnly();
 
         try {
@@ -367,9 +367,9 @@ class TestSpringManualTxAddressbookDAO extends AbstractDAOTestCase {
     @Override
     @Test
     void test0700SearchKontakts() throws Throwable {
-        DefaultTransactionDefinition transactionDefinition = new DefaultTransactionDefinition();
+        final DefaultTransactionDefinition transactionDefinition = new DefaultTransactionDefinition();
         transactionDefinition.setReadOnly(true);
-        TransactionStatus transactionStatus = transactionManager.getTransaction(transactionDefinition);
+        final TransactionStatus transactionStatus = transactionManager.getTransaction(transactionDefinition);
         transactionStatus.setRollbackOnly();
 
         try {
@@ -388,8 +388,8 @@ class TestSpringManualTxAddressbookDAO extends AbstractDAOTestCase {
     @Override
     @Test
     void test0900DeleteAttribut() throws Throwable {
-        TransactionDefinition transactionDefinition = new DefaultTransactionDefinition();
-        TransactionStatus transactionStatus = transactionManager.getTransaction(transactionDefinition);
+        final TransactionDefinition transactionDefinition = new DefaultTransactionDefinition();
+        final TransactionStatus transactionStatus = transactionManager.getTransaction(transactionDefinition);
 
         try {
             doTest0900DeleteAttribut(addressBookDAO);
@@ -407,8 +407,8 @@ class TestSpringManualTxAddressbookDAO extends AbstractDAOTestCase {
     @Override
     @Test
     void test1000DeleteKontakt() throws Throwable {
-        TransactionDefinition transactionDefinition = new DefaultTransactionDefinition();
-        TransactionStatus transactionStatus = transactionManager.getTransaction(transactionDefinition);
+        final TransactionDefinition transactionDefinition = new DefaultTransactionDefinition();
+        final TransactionStatus transactionStatus = transactionManager.getTransaction(transactionDefinition);
 
         try {
             doTest1000DeleteKontakt(addressBookDAO);

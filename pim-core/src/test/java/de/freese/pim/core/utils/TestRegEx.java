@@ -36,7 +36,7 @@ class TestRegEx {
         Assertions.assertEquals("1", splits[2]);
 
         // Pattern pattern = Pattern.compile("([a-z]+)|(\\d{1,})");
-        Pattern pattern = Pattern.compile("[a-zA-Z]+"); // Liefert nur Buchstaben
+        final Pattern pattern = Pattern.compile("[a-zA-Z]+"); // Liefert nur Buchstaben
 
         Matcher matcher = pattern.matcher("a-1");
         matcher.find();

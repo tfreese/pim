@@ -27,11 +27,11 @@ public class ProgressIndicatorDemo extends Application {
 
     @Override
     public void start(final Stage primaryStage) throws Exception {
-        ProgressIndicator progressIndicator = new ProgressIndicator();
+        final ProgressIndicator progressIndicator = new ProgressIndicator();
         progressIndicator.setVisible(false);
         // progressIndicator.setMaxSize(250D, 250D);
 
-        Task<Void> task = new Task<>() {
+        final Task<Void> task = new Task<>() {
             @Override
             protected Void call() throws Exception {
                 int progress = 0;
@@ -62,20 +62,20 @@ public class ProgressIndicatorDemo extends Application {
             // int[] rgb = getRGB_1(percent);
             // int[] rgb = getRGB_2(percent);
             // int[] rgb = getRGB_3(percent);
-            int[] rgb = FxUtils.getProgressRGB(percent, Color.RED, Color.ORANGE, Color.GREEN);
+            final int[] rgb = FxUtils.getProgressRGB(percent, Color.RED, Color.ORANGE, Color.GREEN);
 
             return String.format("-fx-progress-color: rgb(%d,%d,%d)", rgb[0], rgb[1], rgb[2]);
         }, progressIndicator.progressProperty()));
 
-        Button button = new Button("Start");
+        final Button button = new Button("Start");
         button.setOnAction(event -> ForkJoinPool.commonPool().execute(task));
 
-        StackPane stackPane = new StackPane();
+        final StackPane stackPane = new StackPane();
         stackPane.setPadding(new Insets(0));
         stackPane.getChildren().add(button);
         stackPane.getChildren().add(progressIndicator);
 
-        Scene scene = new Scene(stackPane, 500, 500);
+        final Scene scene = new Scene(stackPane, 500, 500);
         primaryStage.setScene(scene);
         primaryStage.centerOnScreen();
         primaryStage.show();
@@ -149,9 +149,9 @@ public class ProgressIndicatorDemo extends Application {
      * @return int[], RGB
      */
     int[] getRGB2(final double progress) {
-        int r;
-        int g;
-        int b = 0;
+        final int r;
+        final int g;
+        final int b = 0;
 
         g = (int) (progress * 255);
         r = 255 - g;
@@ -167,11 +167,11 @@ public class ProgressIndicatorDemo extends Application {
      * @return int[], RGB
      */
     int[] getRGB3(final double progress) {
-        int r;
-        int g;
-        int b;
+        final int r;
+        final int g;
+        final int b;
 
-        Color color = Color.RED.interpolate(Color.GREEN, progress);
+        final Color color = Color.RED.interpolate(Color.GREEN, progress);
         r = (int) (color.getRed() * 255);
         g = (int) (color.getGreen() * 255);
         b = (int) (color.getBlue() * 255);

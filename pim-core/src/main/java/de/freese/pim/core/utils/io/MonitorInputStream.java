@@ -10,14 +10,11 @@ import java.util.Objects;
  * @author Thomas Freese
  */
 public class MonitorInputStream extends FilterInputStream {
-
     private final IOMonitor monitor;
-
     /**
      * Anzahl Bytes (Größe) des gesamten Channels.
      */
     private final long size;
-
     /**
      * Anzahl gelesener Bytes.
      */
@@ -35,7 +32,7 @@ public class MonitorInputStream extends FilterInputStream {
 
     @Override
     public int read() throws IOException {
-        int read = super.read();
+        final int read = super.read();
 
         this.sizeRead++;
 
@@ -46,7 +43,7 @@ public class MonitorInputStream extends FilterInputStream {
 
     @Override
     public int read(final byte[] b, final int off, final int len) throws IOException {
-        int readCount = super.read(b, off, len);
+        final int readCount = super.read(b, off, len);
 
         if (readCount > 0) {
             this.sizeRead += readCount;
@@ -68,7 +65,7 @@ public class MonitorInputStream extends FilterInputStream {
 
     @Override
     public long skip(final long n) throws IOException {
-        long readCount = super.skip(n);
+        final long readCount = super.skip(n);
 
         if (readCount > 0) {
             this.sizeRead += readCount;

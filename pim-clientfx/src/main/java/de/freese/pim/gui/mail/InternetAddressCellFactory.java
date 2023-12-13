@@ -29,7 +29,7 @@ public class InternetAddressCellFactory<S> implements Callback<TableColumn<S, In
                     return;
                 }
 
-                String value = InternetAddress.toString(item);
+                final String value = InternetAddress.toString(item);
                 setText(value);
 
                 // String personal = item.getPersonal();

@@ -30,10 +30,10 @@ public class MailUrlStreamHandlerFactory implements URLStreamHandlerFactory {
         }
 
         // Kopie von java.net.URL.DefaultFactory
-        String name = "sun.net.www.protocol." + protocol + ".Handler";
+        final String name = "sun.net.www.protocol." + protocol + ".Handler";
 
         try {
-            Class<?> clazz = Class.forName(name);
+            final Class<?> clazz = Class.forName(name);
 
             return (URLStreamHandler) clazz.getDeclaredConstructor().newInstance();
         }

@@ -19,7 +19,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
  *
  * @author Thomas Freese
  */
-public abstract class AbstractDAO implements InitializingBean {
+public abstract class AbstractDao implements InitializingBean {
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     private JdbcTemplate jdbcTemplate;
@@ -63,7 +63,7 @@ public abstract class AbstractDAO implements InitializingBean {
     }
 
     protected long getNextID(final String sequence) {
-        String sql = this.sequenceQuery.apply(sequence);
+        final String sql = this.sequenceQuery.apply(sequence);
 
         return getJdbcTemplate().query(sql, rs -> {
             rs.next();

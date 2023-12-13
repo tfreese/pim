@@ -25,33 +25,22 @@ import de.freese.pim.core.mail.InternetAddress;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class FxMail {
     private final ObjectProperty<InternetAddress[]> bccProperty = new SimpleObjectProperty<>(this, "to", null);
-
     private final ObjectProperty<InternetAddress[]> ccProperty = new SimpleObjectProperty<>(this, "to", null);
-
     private final StringProperty folderFullNameProperty = new SimpleStringProperty(this, "folderFullName", null);
-
     private final LongProperty folderIDProperty = new SimpleLongProperty(this, "folderID", 0L);
-
     private final ObjectProperty<InternetAddress> fromProperty = new SimpleObjectProperty<>(this, "from", null);
     /**
      * Ist immer größer als 0.
      */
     private final IntegerProperty msgNumProperty = new SimpleIntegerProperty(this, "msgNum", 0);
-
     // @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private final ObjectProperty<Date> receivedDateProperty = new SimpleObjectProperty<>(this, "receivedDate", null);
-
     private final BooleanProperty seenProperty = new SimpleBooleanProperty(this, "seen", false);
-
     // @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private final ObjectProperty<Date> sendDateProperty = new SimpleObjectProperty<>(this, "sendDate", null);
-
     private final IntegerProperty sizeProperty = new SimpleIntegerProperty(this, "size", 0);
-
     private final StringProperty subjectProperty = new SimpleStringProperty(this, "subject", null);
-
     private final ObjectProperty<InternetAddress[]> toProperty = new SimpleObjectProperty<>(this, "to", null);
-
     private final LongProperty uidProperty = new SimpleLongProperty(this, "uid", 0L);
 
     public ObjectProperty<InternetAddress[]> bccProperty() {

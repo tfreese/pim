@@ -81,7 +81,7 @@ public class MailRestController extends AbstractRemoteService implements MailSer
     @Override
     @GetMapping("/content/{accountID}/{folderFullName}/{mailUID}")
     public MailContent loadMailContent(@PathVariable("accountID") final long accountID, @PathVariable("folderFullName") final String folderFullName, @PathVariable("mailUID") final long mailUID, final @RequestBody(required = false) IOMonitor monitor) {
-        String folderName = urlDecode(urlDecode(folderFullName));
+        final String folderName = urlDecode(urlDecode(folderFullName));
 
         return getMailService().loadMailContent(accountID, folderName, mailUID, monitor);
     }
@@ -89,7 +89,7 @@ public class MailRestController extends AbstractRemoteService implements MailSer
     @Override
     @GetMapping("/mails/{accountID}/{folderID}/{folderFullName}")
     public List<Mail> loadMails(@PathVariable("accountID") final long accountID, @PathVariable("folderID") final long folderID, @PathVariable("folderFullName") final String folderFullName) {
-        String folderName = urlDecode(urlDecode(folderFullName));
+        final String folderName = urlDecode(urlDecode(folderFullName));
 
         return getMailService().loadMails(accountID, folderID, folderName);
 
@@ -117,7 +117,7 @@ public class MailRestController extends AbstractRemoteService implements MailSer
      */
     @GetMapping("/mailsAsyncDeferredResult/{accountID}/{folderID}/{folderFullName}")
     public DeferredResult<List<Mail>> loadMailsAsyncDeferredResult(@PathVariable("accountID") final long accountID, @PathVariable("folderID") final long folderID, @PathVariable("folderFullName") final String folderFullName) {
-        DeferredResult<List<Mail>> deferredResult = new DeferredResult<>();
+        final DeferredResult<List<Mail>> deferredResult = new DeferredResult<>();
 
         // @formatter:off
         CompletableFuture
