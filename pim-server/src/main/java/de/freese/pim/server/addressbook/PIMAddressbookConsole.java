@@ -43,8 +43,10 @@ public final class PIMAddressbookConsole {
 
     public static final PrintStream PRINT_STREAM = System.out;
 
-    public static void main(String[] args) throws Exception {
-        if (args.length == 0) {
+    public static void main(final String[] args) throws Exception {
+        String[] arguments = args;
+
+        if (arguments.length == 0) {
             usage();
         }
 
@@ -52,7 +54,7 @@ public final class PIMAddressbookConsole {
 
         try {
             CommandLineParser parser = new DefaultParser();
-            line = parser.parse(getCommandOptions(), args);
+            line = parser.parse(getCommandOptions(), arguments);
         }
         catch (Exception ex) {
             LOGGER.error(ex.getMessage());
@@ -86,34 +88,34 @@ public final class PIMAddressbookConsole {
             addressbook.setPrintStream(PRINT_STREAM);
 
             if (line.hasOption("ik")) {
-                args = line.getOptionValues("insert-kontakt");
-                addressbook.insertKontakt(args[0], args[1]);
+                arguments = line.getOptionValues("insert-kontakt");
+                addressbook.insertKontakt(arguments[0], arguments[1]);
             }
             else if (line.hasOption("uk")) {
-                args = line.getOptionValues("update-kontakt");
-                long id = Long.parseLong(args[0]);
-                addressbook.updateKontakt(id, args[1], args[2]);
+                arguments = line.getOptionValues("update-kontakt");
+                long id = Long.parseLong(arguments[0]);
+                addressbook.updateKontakt(id, arguments[1], arguments[2]);
             }
             else if (line.hasOption("dk")) {
                 long id = Long.parseLong(line.getOptionValue("delete-kontakt"));
                 addressbook.deleteKontakt(id);
             }
             else if (line.hasOption("ia")) {
-                args = line.getOptionValues("insert-attribut");
-                long id = Long.parseLong(args[0]);
-                addressbook.insertAttribut(id, args[1], args[2]);
+                arguments = line.getOptionValues("insert-attribut");
+                long id = Long.parseLong(arguments[0]);
+                addressbook.insertAttribut(id, arguments[1], arguments[2]);
             }
             else if (line.hasOption("ua")) {
-                args = line.getOptionValues("update-attribut");
-                long id = Long.parseLong(args[0]);
-                addressbook.updateAttribut(id, args[1], args[2]);
+                arguments = line.getOptionValues("update-attribut");
+                long id = Long.parseLong(arguments[0]);
+                addressbook.updateAttribut(id, arguments[1], arguments[2]);
                 // long id = Long.parseLong(args[1]);
                 // addressbook.updateAttribut(id, args[2], StringUtils.join(args, ' ', 3, args.length));
             }
             else if (line.hasOption("da")) {
-                args = line.getOptionValues("delete-attribut");
-                long id = Long.parseLong(args[0]);
-                addressbook.deleteAttribut(id, args[1]);
+                arguments = line.getOptionValues("delete-attribut");
+                long id = Long.parseLong(arguments[0]);
+                addressbook.deleteAttribut(id, arguments[1]);
             }
             else if (line.hasOption("lk")) {
                 addressbook.getKontakte();
@@ -123,8 +125,8 @@ public final class PIMAddressbookConsole {
                 addressbook.getKontaktDetails(id);
             }
             else if (line.hasOption("s")) {
-                args = line.getOptionValues("search");
-                addressbook.search(args[0]);
+                arguments = line.getOptionValues("search");
+                addressbook.search(arguments[0]);
             }
         }
         finally {

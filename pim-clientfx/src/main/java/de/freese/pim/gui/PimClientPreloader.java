@@ -21,7 +21,7 @@ public class PimClientPreloader extends Preloader {
 
     private boolean noLoadingProgress = true;
 
-    private ProgressIndicator progress;
+    private ProgressIndicator progressIndicator;
 
     private Stage stage;
 
@@ -32,7 +32,7 @@ public class PimClientPreloader extends Preloader {
             String status = noti.getStatus();
 
             this.labelStatus.setText(status);
-            this.progress.setProgress(progress);
+            this.progressIndicator.setProgress(progress);
 
             // // expect application to send us progress notifications
             // // with progress ranging from 0 to 1.0
@@ -115,11 +115,11 @@ public class PimClientPreloader extends Preloader {
 
     private Scene createPreloaderScene() {
         this.labelStatus = new Label();
-        this.progress = new ProgressBar();
+        this.progressIndicator = new ProgressBar();
         // this.progress = new ProgressIndicator();
         // this.progress.setProgress(-1.0D);
 
-        this.progress.setPrefWidth(200);
+        this.progressIndicator.setPrefWidth(200);
 
         GridPane pane = new GridPane();
         pane.setPadding(new Insets(50));
@@ -127,8 +127,8 @@ public class PimClientPreloader extends Preloader {
 
         pane.add(this.labelStatus, 0, 0);
 
-        GridPane.setHgrow(this.progress, Priority.ALWAYS);
-        pane.add(this.progress, 0, 1);
+        GridPane.setHgrow(this.progressIndicator, Priority.ALWAYS);
+        pane.add(this.progressIndicator, 0, 1);
 
         // Scene scene = new Scene(pane, 300, 100);
         Scene scene = new Scene(pane);

@@ -484,10 +484,8 @@ public final class JavaMailBuilder {
     }
 
     /**
-     * Validate the given mail address. Called by all of MimeMessageHelper's address setters and adders.
-     * <p>
-     * Default implementation invokes {@code InternetAddress.validate()}, provided that address validation is activated for the helper instance.
-     * <p>
+     * Validate the given mail address. Called by all of MimeMessageHelper's address setters and adders.<br>
+     * Default implementation invokes {@code InternetAddress.validate()}, provided that address validation is activated for the helper instance.<br>
      * Note that this method will just work on JavaMail >= 1.3. You can override it for validation on older JavaMail versions or for custom validation.
      */
     private void validateAddress(final InternetAddress address) throws AddressException {

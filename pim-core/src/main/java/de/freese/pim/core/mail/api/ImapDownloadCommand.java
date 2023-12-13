@@ -3,11 +3,10 @@ package de.freese.pim.core.mail.api;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Properties;
 
-import jakarta.mail.MessagingException;
 import jakarta.mail.Session;
-import jakarta.mail.internet.MimeMessage;
 
 import org.eclipse.angus.mail.iap.Argument;
 import org.eclipse.angus.mail.iap.ProtocolException;
@@ -73,14 +72,18 @@ public class ImapDownloadCommand implements IMAPFolder.ProtocolCommand {
 
                     try {
                         try (InputStream is = body.getByteArrayInputStream()) {
-
-                            @SuppressWarnings("unused") MimeMessage mm = new MimeMessage(this.session, is);
+                            // Consume InputStream
+                            is.transferTo(OutputStream.nullOutputStream());
+                            //                            MimeMessage mm = new MimeMessage(this.session, is);
 
                             // TODO Save Mail
                             // Contents.getContents(mm, i);
                         }
                     }
-                    catch (MessagingException | IOException ex) {
+                    //                    catch (MessagingException ex) {
+                    //                        ex.printStackTrace();
+                    //                    }
+                    catch (IOException ex) {
                         ex.printStackTrace();
                     }
                 }

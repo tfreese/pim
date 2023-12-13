@@ -78,10 +78,10 @@ public final class FxUtils {
     /**
      * Bildet die Funktionalität des {@link FXMLLoader} nach.<br>
      * <ol>
-     * <li>Kopieren der mit {@link FXML} annotierten Attribute der View in den Controller
-     * <li>Übersetzen der Komponenten mit SceneBuilder-Prefix (%)
-     * <li>Aufruf der {@link Initializable#initialize(java.net.URL, ResourceBundle)} Methode des Controllers, falls vorhanden
-     * <li>Ausgabe der nicht passenden/kopierten Attribute von View und Controller
+     * <li>Kopieren der mit {@link FXML} annotierten Attribute der View in den Controller</li>
+     * <li>Übersetzen der Komponenten mit SceneBuilder-Prefix (%)</li>
+     * <li>Aufruf der {@link Initializable#initialize(java.net.URL, ResourceBundle)} Methode des Controllers, falls vorhanden</li>
+     * <li>Ausgabe der nicht passenden/kopierten Attribute von View und Controller</li>
      * </ol>
      */
     public static void bind(final View view, final AbstractController controller, final ResourceBundle resources) {

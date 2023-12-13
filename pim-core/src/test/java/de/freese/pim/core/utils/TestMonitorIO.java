@@ -27,7 +27,9 @@ class TestMonitorIO {
     private static final byte[] BYTES = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
 
     /**
+     * <pre>{@code
      * BiConsumer<Long, Long> monitor = (size, current) -> System.out.printf("\r%d / %d%n", current, size);
+     * }</pre>
      *
      * @author Thomas Freese
      */
