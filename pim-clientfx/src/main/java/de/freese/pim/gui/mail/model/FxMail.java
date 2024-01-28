@@ -3,7 +3,6 @@ package de.freese.pim.gui.mail.model;
 
 import java.util.Date;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.LongProperty;
@@ -14,6 +13,8 @@ import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import de.freese.pim.core.mail.InternetAddress;
 

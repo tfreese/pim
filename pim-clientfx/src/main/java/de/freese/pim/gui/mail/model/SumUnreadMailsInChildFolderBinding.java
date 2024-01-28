@@ -43,7 +43,7 @@ public class SumUnreadMailsInChildFolderBinding extends IntegerBinding {
     @Override
     public void dispose() {
         this.boundList.removeListener(this.boundListChangeListener);
-        
+
         unbind(this.observedProperties);
     }
 

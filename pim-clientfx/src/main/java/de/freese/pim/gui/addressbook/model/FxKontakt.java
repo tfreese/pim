@@ -3,8 +3,6 @@ package de.freese.pim.gui.addressbook.model;
 
 import java.util.Objects;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringExpression;
 import javafx.beans.property.LongProperty;
@@ -13,6 +11,9 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /**
  * FX-Bean für einen Kontakt.
@@ -81,7 +82,8 @@ public class FxKontakt implements Comparable<FxKontakt> {
             return false;
         }
 
-        return Objects.equals(getAttribute(), other.getAttribute()) && Objects.equals(getID(), other.getID()) && Objects.equals(getNachname(), other.getNachname()) && Objects.equals(getVorname(), other.getVorname());
+        return Objects.equals(getAttribute(), other.getAttribute()) && Objects.equals(getID(), other.getID()) && Objects.equals(getNachname(),
+                other.getNachname()) && Objects.equals(getVorname(), other.getVorname());
     }
 
     public ObservableList<FxKontaktAttribut> getAttribute() {

@@ -11,8 +11,6 @@ import java.nio.file.StandardCopyOption;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
-import jakarta.activation.DataSource;
-
 import javafx.application.Platform;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
@@ -22,6 +20,9 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.web.WebView;
 import javafx.stage.FileChooser;
+
+import jakarta.activation.DataSource;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

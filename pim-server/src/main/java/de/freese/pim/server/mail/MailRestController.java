@@ -80,7 +80,8 @@ public class MailRestController extends AbstractRemoteService implements MailSer
 
     @Override
     @GetMapping("/content/{accountID}/{folderFullName}/{mailUID}")
-    public MailContent loadMailContent(@PathVariable("accountID") final long accountID, @PathVariable("folderFullName") final String folderFullName, @PathVariable("mailUID") final long mailUID, final @RequestBody(required = false) IOMonitor monitor) {
+    public MailContent loadMailContent(@PathVariable("accountID") final long accountID, @PathVariable("folderFullName") final String folderFullName,
+                                       @PathVariable("mailUID") final long mailUID, final @RequestBody(required = false) IOMonitor monitor) {
         final String folderName = urlDecode(urlDecode(folderFullName));
 
         return getMailService().loadMailContent(accountID, folderName, mailUID, monitor);
@@ -88,7 +89,8 @@ public class MailRestController extends AbstractRemoteService implements MailSer
 
     @Override
     @GetMapping("/mails/{accountID}/{folderID}/{folderFullName}")
-    public List<Mail> loadMails(@PathVariable("accountID") final long accountID, @PathVariable("folderID") final long folderID, @PathVariable("folderFullName") final String folderFullName) {
+    public List<Mail> loadMails(@PathVariable("accountID") final long accountID, @PathVariable("folderID") final long folderID,
+                                @PathVariable("folderFullName") final String folderFullName) {
         final String folderName = urlDecode(urlDecode(folderFullName));
 
         return getMailService().loadMails(accountID, folderID, folderName);
@@ -107,7 +109,8 @@ public class MailRestController extends AbstractRemoteService implements MailSer
      * ihn den ThreadPool des {@link RequestMappingHandlerAdapter}.
      */
     @GetMapping("/mailsAsyncCallable/{accountID}/{folderID}/{folderFullName}")
-    public Callable<List<Mail>> loadMailsAsyncCallable(@PathVariable("accountID") final long accountID, @PathVariable("folderID") final long folderID, @PathVariable("folderFullName") final String folderFullName) {
+    public Callable<List<Mail>> loadMailsAsyncCallable(@PathVariable("accountID") final long accountID, @PathVariable("folderID") final long folderID,
+                                                       @PathVariable("folderFullName") final String folderFullName) {
         return () -> getMailService().loadMails(accountID, folderID, folderFullName);
     }
 
@@ -116,7 +119,8 @@ public class MailRestController extends AbstractRemoteService implements MailSer
      * Das {@link DeferredResult} entkoppelt den Server Thread von der Ausführung.
      */
     @GetMapping("/mailsAsyncDeferredResult/{accountID}/{folderID}/{folderFullName}")
-    public DeferredResult<List<Mail>> loadMailsAsyncDeferredResult(@PathVariable("accountID") final long accountID, @PathVariable("folderID") final long folderID, @PathVariable("folderFullName") final String folderFullName) {
+    public DeferredResult<List<Mail>> loadMailsAsyncDeferredResult(@PathVariable("accountID") final long accountID, @PathVariable("folderID") final long folderID,
+                                                                   @PathVariable("folderFullName") final String folderFullName) {
         final DeferredResult<List<Mail>> deferredResult = new DeferredResult<>();
 
         // @formatter:off

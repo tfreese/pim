@@ -69,7 +69,8 @@ public class PimServerApplication {
 
         // --spring.profiles.active=Server,HsqldbEmbeddedServer --server.port=61222
         // --spring.profiles.active=Server,SqliteLocalFile --server.port=61222
-        options.addOption(Option.builder().longOpt("spring.profiles.active").required().hasArg().argName("Profile1,Profile2").valueSeparator('=').desc("Profiles: [Server,HsqldbEmbeddedServer]").build());
+        options.addOption(Option.builder().longOpt("spring.profiles.active").required().hasArg().argName("Profile1,Profile2").valueSeparator('=')
+                .desc("Profiles: [Server,HsqldbEmbeddedServer]").build());
         options.addOption(Option.builder().longOpt("server.port").required().hasArg().argName("port").valueSeparator('=').desc("Server Port").build());
 
         return options;

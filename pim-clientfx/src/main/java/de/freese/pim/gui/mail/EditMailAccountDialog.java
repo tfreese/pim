@@ -91,7 +91,8 @@ public class EditMailAccountDialog {
         }
     }
 
-    private Optional<FxMailAccount> openDialog(final FxMailService mailService, final ResourceBundle bundle, final FxMailAccount account, final String titleKey, final String imageStyleClass) {
+    private Optional<FxMailAccount> openDialog(final FxMailService mailService, final ResourceBundle bundle, final FxMailAccount account, final String titleKey,
+                                               final String imageStyleClass) {
         // DialogObject
         final FxMailAccount bean = new FxMailAccount();
 

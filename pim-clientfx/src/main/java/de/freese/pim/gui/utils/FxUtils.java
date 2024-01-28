@@ -53,6 +53,7 @@ import javafx.scene.text.Text;
 import javafx.stage.Window;
 import javafx.util.Duration;
 import javafx.util.StringConverter;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

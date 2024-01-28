@@ -194,7 +194,8 @@ public class ContactController extends AbstractController {
     /**
      * <a href="http://code.makery.ch/blog/javafx-dialogs-official/">Dialog Tutorial</a>
      */
-    private Dialog<Pair<String, String>> createAddEditKontaktDialog(final String titleKey, final String textKey, final String imageStyleClass, final FxKontakt kontakt, final ResourceBundle resources) {
+    private Dialog<Pair<String, String>> createAddEditKontaktDialog(final String titleKey, final String textKey, final String imageStyleClass, final FxKontakt kontakt,
+                                                                    final ResourceBundle resources) {
         final Dialog<Pair<String, String>> dialog = new Dialog<>();
         dialog.initOwner(getMainWindow());
         dialog.initModality(Modality.APPLICATION_MODAL);

@@ -58,7 +58,8 @@ class TestSpringContextAddressbookDAO extends AbstractDaoTestCase {
     @Test
     @Rollback
     void test0120InsertKontaktWithBlankVorname() throws Throwable {
-        final SQLIntegrityConstraintViolationException exception = assertThrows(SQLIntegrityConstraintViolationException.class, () -> doTest0120InsertKontaktWithBlankVorname(this.addressBookDAO));
+        final SQLIntegrityConstraintViolationException exception = assertThrows(SQLIntegrityConstraintViolationException.class,
+                () -> doTest0120InsertKontaktWithBlankVorname(this.addressBookDAO));
 
         assertNotNull(exception);
     }
@@ -67,7 +68,8 @@ class TestSpringContextAddressbookDAO extends AbstractDaoTestCase {
     @Test
     @Rollback
     void test0130InsertKontaktExisting() throws Throwable {
-        final SQLIntegrityConstraintViolationException exception = assertThrows(SQLIntegrityConstraintViolationException.class, () -> doTest0130InsertKontaktExisting(this.addressBookDAO));
+        final SQLIntegrityConstraintViolationException exception = assertThrows(SQLIntegrityConstraintViolationException.class,
+                () -> doTest0130InsertKontaktExisting(this.addressBookDAO));
 
         assertNotNull(exception);
     }
@@ -94,7 +96,8 @@ class TestSpringContextAddressbookDAO extends AbstractDaoTestCase {
     @Test
     @Rollback
     void test0310InsertInsertAttributWithNullValue() throws Throwable {
-        final SQLIntegrityConstraintViolationException exception = assertThrows(SQLIntegrityConstraintViolationException.class, () -> doTest0310InsertInsertAttributWithNullValue(this.addressBookDAO));
+        final SQLIntegrityConstraintViolationException exception = assertThrows(SQLIntegrityConstraintViolationException.class,
+                () -> doTest0310InsertInsertAttributWithNullValue(this.addressBookDAO));
 
         assertNotNull(exception);
     }
@@ -103,7 +106,8 @@ class TestSpringContextAddressbookDAO extends AbstractDaoTestCase {
     @Test
     @Rollback
     void test0320InsertInsertAttributWithBlankValue() throws Throwable {
-        final SQLIntegrityConstraintViolationException exception = assertThrows(SQLIntegrityConstraintViolationException.class, () -> doTest0320InsertInsertAttributWithBlankValue(this.addressBookDAO));
+        final SQLIntegrityConstraintViolationException exception = assertThrows(SQLIntegrityConstraintViolationException.class,
+                () -> doTest0320InsertInsertAttributWithBlankValue(this.addressBookDAO));
 
         assertNotNull(exception);
     }
@@ -112,7 +116,8 @@ class TestSpringContextAddressbookDAO extends AbstractDaoTestCase {
     @Test
     @Rollback
     void test0330InsertInsertAttributWithNull() throws Throwable {
-        final SQLIntegrityConstraintViolationException exception = assertThrows(SQLIntegrityConstraintViolationException.class, () -> doTest0330InsertInsertAttributWithNull(this.addressBookDAO));
+        final SQLIntegrityConstraintViolationException exception = assertThrows(SQLIntegrityConstraintViolationException.class,
+                () -> doTest0330InsertInsertAttributWithNull(this.addressBookDAO));
 
         assertNotNull(exception);
     }
@@ -121,7 +126,8 @@ class TestSpringContextAddressbookDAO extends AbstractDaoTestCase {
     @Test
     @Rollback
     void test0340InsertInsertAttributWithBlank() throws Throwable {
-        final SQLIntegrityConstraintViolationException exception = assertThrows(SQLIntegrityConstraintViolationException.class, () -> doTest0340InsertInsertAttributWithBlank(this.addressBookDAO));
+        final SQLIntegrityConstraintViolationException exception = assertThrows(SQLIntegrityConstraintViolationException.class,
+                () -> doTest0340InsertInsertAttributWithBlank(this.addressBookDAO));
 
         assertNotNull(exception);
     }
@@ -130,7 +136,8 @@ class TestSpringContextAddressbookDAO extends AbstractDaoTestCase {
     @Test
     @Rollback
     void test0350InsertAttributExisting() throws Throwable {
-        final SQLIntegrityConstraintViolationException exception = assertThrows(SQLIntegrityConstraintViolationException.class, () -> doTest0350InsertAttributExisting(this.addressBookDAO));
+        final SQLIntegrityConstraintViolationException exception = assertThrows(SQLIntegrityConstraintViolationException.class,
+                () -> doTest0350InsertAttributExisting(this.addressBookDAO));
 
         assertNotNull(exception);
     }

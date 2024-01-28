@@ -70,7 +70,8 @@ public class Kontakt implements Comparable<Kontakt> {
             return false;
         }
 
-        return Objects.equals(this.attribute, other.attribute) && (this.id == other.id) && Objects.equals(this.nachname, other.nachname) && Objects.equals(this.vorname, other.vorname);
+        return Objects.equals(this.attribute, other.attribute) && (this.id == other.id) && Objects.equals(this.nachname, other.nachname) && Objects.equals(this.vorname,
+                other.vorname);
     }
 
     public List<KontaktAttribut> getAttribute() {

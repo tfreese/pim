@@ -1,11 +1,12 @@
 // Created: 30.05.2016
 package de.freese.pim.gui.addressbook.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import javafx.beans.property.LongProperty;
 import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /**
  * FX-Bean für einen Kontakt.

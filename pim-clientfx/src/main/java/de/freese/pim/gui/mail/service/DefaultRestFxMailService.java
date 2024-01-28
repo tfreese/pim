@@ -155,7 +155,8 @@ public class DefaultRestFxMailService extends AbstractFxMailService {
 
     @Override
     protected MailContent loadMailContent(final Path mailPath, final FxMailAccount account, final FxMail mail, final IOMonitor monitor) throws Exception {
-        final ResponseEntity<String> jsonContent = getRestTemplate().getForEntity("/mail/content/{accountID}/{folderFullName}/{mailUID}", String.class, account.getID(), urlEncode(urlEncode(mail.getFolderFullName())), mail.getUID());
+        final ResponseEntity<String> jsonContent = getRestTemplate().getForEntity("/mail/content/{accountID}/{folderFullName}/{mailUID}", String.class, account.getID(),
+                urlEncode(urlEncode(mail.getFolderFullName())), mail.getUID());
 
         saveMailContent(mailPath, jsonContent.getBody());
 
