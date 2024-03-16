@@ -20,7 +20,9 @@ import org.springframework.context.annotation.PropertySource;
 @PropertySource("classpath:application-common.properties")
 public class CommonConfig {
     /**
-     * <a href="https://docs.spring.io/spring-boot/docs/current-SNAPSHOT/reference/htmlsingle/#howto-customize-the-jackson-objectmapper">howto-customize-the-jackson-objectmapper</a>
+     * <a href="https://docs.spring.io/spring-boot/docs/current-SNAPSHOT/reference/htmlsingle/#howto-customize-the-jackson-objectmapper">
+     * howto-customize-the-jackson-objectmapper
+     * </a>
      *
      * @return {@link ObjectMapper}
      */

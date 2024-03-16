@@ -20,7 +20,9 @@ import org.eclipse.angus.mail.imap.protocol.IMAPResponse;
 /**
  * Eigener IMAP-Befehl für Performance-Optimierung beim Download einer Mail.<br>
  * Usage: inbox.doCommand(new CustomProtocolCommand(start, end));
- * <a href="http://stackoverflow.com/questions/8322836/javamail-imap-over-ssl-quite-slow-bulk-fetching-multiple-messages">javamail-imap-over-ssl-quite-slow-bulk-fetching-multiple-messages</a><br>
+ * <a href="http://stackoverflow.com/questions/8322836/javamail-imap-over-ssl-quite-slow-bulk-fetching-multiple-messages">
+ * javamail-imap-over-ssl-quite-slow-bulk-fetching-multiple-messages
+ * </a><br>
  * <a href="http://stackoverflow.com/questions/28166182/prefetch-preview-text-from-javamail-message">prefetch-preview-text-from-javamail-message</a>
  *
  * @author Thomas Freese

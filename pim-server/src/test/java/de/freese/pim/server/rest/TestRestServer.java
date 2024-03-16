@@ -33,7 +33,8 @@ import de.freese.pim.server.PimServerApplication;
  * @author Thomas Freese
  */
 // @ExtendWith(SpringExtension.class) // Ist bereits in SpringBootTest enthalten
-@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT, classes = {PimServerApplication.class}, properties = {"spring.main.banner-mode=OFF", "logging.config=classpath:logback-server.xml" // , "spring.config.name=application-Server"
+@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT, classes = {PimServerApplication.class}
+        , properties = {"spring.main.banner-mode=OFF", "logging.config=classpath:logback-server.xml" // , "spring.config.name=application-Server"
 })
 @TestMethodOrder(MethodOrderer.MethodName.class)
 @ActiveProfiles({"Server", "HsqldbMemory"})
