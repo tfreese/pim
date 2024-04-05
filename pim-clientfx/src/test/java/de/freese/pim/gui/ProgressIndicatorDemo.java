@@ -95,7 +95,7 @@ public class ProgressIndicatorDemo extends Application {
 
         // http://en.wikibooks.org/wiki/Color_Theory/Color_gradient#Linear_RGB_gradient_with_6_segments
         // http://dgrieve.blogspot.de/2014/05/styling-progress-color-of-indeterminate.html
-        final double m = (6d * progress); // segment
+        final double m = 6D * progress; // segment
         final int n = (int) m; // integer of m
         final double f = m - n; // fraction of m
         final int t = (int) (255 * f);

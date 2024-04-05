@@ -69,14 +69,14 @@ public class EditMailAccountDialog {
         final String pw1 = this.password1.getText();
         final String pw2 = this.password2.getText();
 
-        if ((pw1 == null) || pw1.isBlank()) {
+        if (pw1 == null || pw1.isBlank()) {
             message.append(bundle.getString("passwoerter.nicht_ausgefuellt")).append("\n");
         }
         else if (!pw1.equals(pw2)) {
             message.append(bundle.getString("passwoerter.nicht_identisch")).append("\n");
         }
 
-        if ((this.aboView.getItems() != null) && (this.aboView.getItems().stream().noneMatch(FxMailFolder::isAbonniert))) {
+        if (this.aboView.getItems() != null && this.aboView.getItems().stream().noneMatch(FxMailFolder::isAbonniert)) {
             message.append(bundle.getString("mail.folder.abonniert.nicht")).append("\n");
         }
 

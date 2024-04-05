@@ -162,7 +162,7 @@ public class DefaultMailService extends AbstractService implements MailService, 
 
         List<MailFolder> folder = getMailDAO().getMailFolder(accountID);
 
-        if ((folder == null) || folder.isEmpty()) {
+        if (folder == null || folder.isEmpty()) {
             folder = mailAPI.getFolder();
 
             final long[] primaryKeys = insertFolder(accountID, folder);

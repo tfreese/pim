@@ -36,6 +36,7 @@ public class ContactView implements View {
     private final Region mainNode;
     @FXML
     private final Region naviNode;
+
     @FXML
     private Button buttonAddContact;
     @FXML
@@ -188,7 +189,7 @@ public class ContactView implements View {
 
         // Filter-Textfeld mit FilteredList verbinden.
         propertyKontaktFilter.addListener((observable, oldValue, newValue) -> filteredData.setPredicate(kontakt -> {
-            if ((newValue == null) || newValue.isBlank()) {
+            if (newValue == null || newValue.isBlank()) {
                 return true;
             }
 

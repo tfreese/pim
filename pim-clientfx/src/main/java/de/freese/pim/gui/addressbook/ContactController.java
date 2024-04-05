@@ -43,6 +43,7 @@ import de.freese.pim.gui.view.ErrorDialog;
 public class ContactController extends AbstractController {
     private final FxAddressbookService addressbookService;
     private final ObjectProperty<FxKontakt> selectedKontakt = new SimpleObjectProperty<>();
+
     @FXML
     private Button buttonAddContact;
     @FXML
@@ -230,7 +231,7 @@ public class ContactController extends AbstractController {
 
         final Node okButton = dialog.getDialogPane().lookupButton(ButtonType.OK);
 
-        if ((nachname.getText() == null) || nachname.getText().isBlank()) {
+        if (nachname.getText() == null || nachname.getText().isBlank()) {
             okButton.setDisable(true);
         }
 

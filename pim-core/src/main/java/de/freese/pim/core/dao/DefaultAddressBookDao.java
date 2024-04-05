@@ -41,17 +41,17 @@ public class DefaultAddressBookDao extends AbstractDao implements AddressBookDao
 
                 final Kontakt kontakt;
 
-                if ((kontakte.isEmpty()) || (id != kontakte.get(kontakte.size() - 1).getID())) {
+                if (kontakte.isEmpty() || id != kontakte.getLast().getID()) {
                     kontakt = this.kontaktRowMapper.mapRow(rs, 0);
                     kontakte.add(kontakt);
                 }
                 else {
-                    kontakt = kontakte.get(0);
+                    kontakt = kontakte.getFirst();
                 }
 
                 final String attribut = rs.getString("ATTRIBUT");
 
-                if ((attribut != null) && !attribut.isBlank()) {
+                if (attribut != null && !attribut.isBlank()) {
                     kontakt.addAttribut(attribut, rs.getString("WERT"));
                 }
             }

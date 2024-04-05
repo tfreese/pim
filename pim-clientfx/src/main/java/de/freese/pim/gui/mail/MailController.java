@@ -172,7 +172,7 @@ public class MailController extends AbstractController {
             public void updateItem(final FxMail item, final boolean empty) {
                 super.updateItem(item, empty);
 
-                if ((item == null) || empty) {
+                if (item == null || empty) {
                     setStyle(null);
                     return;
                 }
@@ -203,7 +203,7 @@ public class MailController extends AbstractController {
 
                 setStyle(null);
 
-                if ((item == null) || empty) {
+                if (item == null || empty) {
                     setText(null);
 
                     return;
@@ -366,7 +366,7 @@ public class MailController extends AbstractController {
     private void selectedTreeItem(final TreeItem<Object> treeItem, final ResourceBundle resources) {
         this.tableViewMail.setItems(null);
 
-        if ((treeItem == null) || !(treeItem.getValue() instanceof FxMailFolder folder)) {
+        if (treeItem == null || !(treeItem.getValue() instanceof FxMailFolder folder)) {
             return;
         }
 

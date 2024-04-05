@@ -204,7 +204,7 @@ public final class JavaMailBuilder {
         rootMultipart.addBodyPart(relatedBodyPart);
 
         // Text
-        if ((this.text != null) && (this.text.strip().length() > 0)) {
+        if (this.text != null && !this.text.isBlank()) {
             final MimeBodyPart textBodyPart = new MimeBodyPart();
             relatedMultipart.addBodyPart(textBodyPart);
 
@@ -463,7 +463,7 @@ public final class JavaMailBuilder {
         final InternetAddress raw = parsed[0];
 
         try {
-            return (getCharset() != null ? new InternetAddress(raw.getAddress(), raw.getPersonal(), getCharset()) : raw);
+            return getCharset() != null ? new InternetAddress(raw.getAddress(), raw.getPersonal(), getCharset()) : raw;
         }
         catch (UnsupportedEncodingException ex) {
             throw new MessagingException("Failed to parse embedded personal name to correct encoding", ex);

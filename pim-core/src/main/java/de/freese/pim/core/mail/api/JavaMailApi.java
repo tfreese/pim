@@ -278,7 +278,7 @@ public class JavaMailApi extends AbstractMailApi {
     }
 
     protected void checkWrite(final Folder folder) throws MessagingException {
-        if (!folder.isOpen() || (folder.getMode() == Folder.READ_ONLY)) {
+        if (!folder.isOpen() || folder.getMode() == Folder.READ_ONLY) {
             folder.open(Folder.READ_WRITE);
         }
     }
@@ -351,7 +351,7 @@ public class JavaMailApi extends AbstractMailApi {
     }
 
     protected void disconnect(final Service service) throws MessagingException {
-        if ((service != null) && service.isConnected()) {
+        if (service != null && service.isConnected()) {
             service.close();
         }
     }
@@ -390,7 +390,7 @@ public class JavaMailApi extends AbstractMailApi {
     protected synchronized IMAPStore getStore() throws MessagingException {
         IMAPStore store = this.stores[this.storeIndex++];
 
-        if ((store != null) && !store.isConnected()) {
+        if (store != null && !store.isConnected()) {
             connect(store);
         }
 
@@ -423,21 +423,17 @@ public class JavaMailApi extends AbstractMailApi {
         final IMAPFolder f = (IMAPFolder) message.getFolder();
         final long uid = f.getUID(message);
 
-        // if ((uid == 3066) || (uid == 576) || (uid == 60))
-        // {
+        // if (uid == 3066 || uid == 576 || uid == 60) {
         // // Debug Problemfälle.
         // System.out.println();
         // }
-        // if (message.getFolder() instanceof IMAPFolder)
-        // {
+        // if (message.getFolder() instanceof IMAPFolder) {
         // uid = ((IMAPFolder) message.getFolder()).getUID(message);
         // }
-        // else
-        // {
+        // else {
         // throw new MessagingException("IMAPFolder required");
         // }
-        // if (uid == null)
-        // {
+        // if (uid == null) {
         // uid = Optional.ofNullable(message.getHeader("Message-ID")).map(h -> h[0]).orElse(null);
         // // uid = message.getHeader("Message-ID")[0];
         // }

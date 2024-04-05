@@ -54,15 +54,13 @@ class TestSendMail extends AbstractMailTest {
 
     @Test
     void test100PlainText() throws Exception {
-        // @formatter:off
         JavaMailBuilder.create(session)
                 .from(getFrom())
                 .to(getTo())
                 .subject("test100PlainText")
                 .text("test100PlainText", false)
                 .buildAndSend(sender)
-                ;
-        // @formatter:on
+        ;
 
         assertTrue(true);
     }
@@ -74,16 +72,14 @@ class TestSendMail extends AbstractMailTest {
 
         // byte[] bytes = Files.readAllBytes(resource.getFile().toPath());
         // InputStream inputStream = new ByteArrayInputStream(bytes);
-        // @formatter:off
-        JavaMailBuilder.create( session)
+        JavaMailBuilder.create(session)
                 .from(getFrom())
                 .to(getTo())
                 .subject("test100PlainTextWithAttachment")
                 .text("test100PlainTextWithAttachment", false)
                 .attachment("text.txt", new ClassPathResource("mail/text.txt").getFile())
                 .buildAndSend(sender)
-                ;
-        // @formatter:on
+        ;
 
         assertTrue(true);
     }
@@ -96,15 +92,13 @@ class TestSendMail extends AbstractMailTest {
         html.append("<font color=\"red\">test200Html</font><br>");
         html.append("</body></html>");
 
-        // @formatter:off
-        JavaMailBuilder.create( session)
+        JavaMailBuilder.create(session)
                 .from(getFrom())
                 .to(getTo())
                 .subject("test200Html")
                 .text(html.toString(), true)
                 .buildAndSend(sender)
-                ;
-        // @formatter:on
+        ;
 
         assertTrue(true);
     }
@@ -117,7 +111,6 @@ class TestSendMail extends AbstractMailTest {
         html.append("<font color=\"red\">test210HtmlWithAttachment</font><br>");
         html.append("</body></html>");
 
-        // @formatter:off
         JavaMailBuilder.create(session)
                 .from(getFrom())
                 .to(getTo())
@@ -125,8 +118,7 @@ class TestSendMail extends AbstractMailTest {
                 .text(html.toString(), true)
                 .attachment("text.txt", new ClassPathResource("mail/text.txt").getFile())
                 .buildAndSend(sender)
-                ;
-        // @formatter:on
+        ;
 
         assertTrue(true);
     }
@@ -141,7 +133,6 @@ class TestSendMail extends AbstractMailTest {
         html.append("<img src=\"cid:image1\"><br>");
         html.append("</body></html>");
 
-        // @formatter:off
         JavaMailBuilder.create(session)
                 .from(getFrom())
                 .to(getTo())
@@ -149,7 +140,6 @@ class TestSendMail extends AbstractMailTest {
                 .text(html.toString(), true)
                 .inline("image1", new ClassPathResource("mail/pim.png").getFile())
                 .buildAndSend(sender);
-        // @formatter:on
 
         assertTrue(true);
     }

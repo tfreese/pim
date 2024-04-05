@@ -29,13 +29,11 @@ public class TreeFolderListChangeListener implements ListChangeListener<FxMailFo
         while (change.next()) {
             if (change.wasAdded()) {
                 for (FxMailFolder mf : change.getAddedSubList()) {
-                    // @formatter:off
                     final Optional<TreeItem<Object>> parentItem = getFlattenedStream(getParent())
                             //.peek(System.out::println)
                             .filter(ti -> ti.getValue() instanceof FxMailFolder)
-                            .filter(ti -> mf.getFullName().startsWith(((FxMailFolder)ti.getValue()).getFullName()))
+                            .filter(ti -> mf.getFullName().startsWith(((FxMailFolder) ti.getValue()).getFullName()))
                             .findFirst();
-                    // @formatter:on
 
                     if (parentItem.isPresent()) {
                         addChild(parentItem.get(), mf);
@@ -48,12 +46,10 @@ public class TreeFolderListChangeListener implements ListChangeListener<FxMailFo
             else if (change.wasRemoved()) {
                 for (FxMailFolder mf : change.getRemoved()) {
                     // Knoten suchen.
-                    // @formatter:off
                     final Optional<TreeItem<Object>> treeItem = getFlattenedStream(getParent())
-                        .filter(ti -> ti.getValue() instanceof FxMailFolder)
-                        .filter(ti -> ((FxMailFolder)ti.getValue()).getFullName().equals(mf.getFullName()))
-                        .findFirst();
-                    // @formatter:on
+                            .filter(ti -> ti.getValue() instanceof FxMailFolder)
+                            .filter(ti -> ((FxMailFolder) ti.getValue()).getFullName().equals(mf.getFullName()))
+                            .findFirst();
 
                     treeItem.ifPresent(ti -> removeChild(ti.getParent(), ti));
                 }

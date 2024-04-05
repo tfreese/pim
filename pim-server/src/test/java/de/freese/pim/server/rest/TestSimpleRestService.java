@@ -32,10 +32,13 @@ import org.springframework.web.servlet.config.annotation.AsyncSupportConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
 
 /**
+ * <pre>{@code
+ * @Profile("SimpleRestService")
+ * }</pre>
+ *
  * @author Thomas Freese
  */
 @Configuration
-        // @Profile("SimpleRestService")
 class Config extends WebMvcConfigurationSupport {
     // static{
     // System.setProperty("spring.main.banner-mode", "OFF");
@@ -115,24 +118,20 @@ class TestSimpleRestService {
     void test010NoParamGreetingShouldReturnDefaultMessage() throws Exception {
         // .andDo(print()).andExpect(jsonPath("$.content").value("Hello, Spring Community!"));
 
-        // @formatter:off
         this.mockMvc.perform(get("/test/greeting"))
-            .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
-            .andExpect(content().json("{\"hello\":\"World\"}"));
-        // @formatter:on
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(content().json("{\"hello\":\"World\"}"));
     }
 
     @Test
     void test020ParamGreetingShouldReturnTailoredMessage() throws Exception {
         // .andDo(print()).andExpect(jsonPath("$.content").value("Hello, Spring Community!"));
 
-        // @formatter:off
         this.mockMvc.perform(get("/test/greeting").param("name", "Spring Community"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(content().json("{\"hello\":\"Spring Community\"}"));
-        // @formatter:on
     }
 
     @Test
@@ -154,20 +153,16 @@ class TestSimpleRestService {
         final List<MvcResult> results = new ArrayList<>();
 
         for (int i = 0; i < 20; i++) {
-            // @formatter:off
             final MvcResult mvcResult = this.mockMvc.perform(get(url))
                     .andExpect(MockMvcResultMatchers.request().asyncStarted())
                     .andReturn();
-            // @formatter:on
 
             results.add(mvcResult);
         }
 
         for (MvcResult mvcResult : results) {
-            // @formatter:off
             this.mockMvc.perform(MockMvcRequestBuilders.asyncDispatch(mvcResult))
-                .andExpect(status().is2xxSuccessful());
-            // @formatter:on
+                    .andExpect(status().is2xxSuccessful());
 
             Assertions.assertTrue(mvcResult.getAsyncResult().toString().startsWith("20"));
         }

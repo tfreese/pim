@@ -24,7 +24,7 @@ public class InternetAddressCellFactory<S> implements Callback<TableColumn<S, In
             protected void updateItem(final InternetAddress[] item, final boolean empty) {
                 super.updateItem(item, empty);
 
-                if ((item == null) || empty) {
+                if (item == null || empty) {
                     setText(null);
                     return;
                 }
@@ -35,12 +35,10 @@ public class InternetAddressCellFactory<S> implements Callback<TableColumn<S, In
                 // String personal = item.getPersonal();
                 // String address = item.getAddress();
                 //
-                // if (personal == null)
-                // {
+                // if (personal == null) {
                 // setText(address);
                 // }
-                // else
-                // {
+                // else {
                 // String p = personal.replaceAll("\"", "");
                 //
                 // setText(p + " <" + address + ">");

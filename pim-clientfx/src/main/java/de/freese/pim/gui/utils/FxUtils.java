@@ -144,13 +144,13 @@ public final class FxUtils {
     public static void copySelectionToClipboard(final TableView<?> table) {
         final StringBuilder clipboardString = new StringBuilder();
 
-        for (Iterator<?> iteratorPosition = table.getSelectionModel().getSelectedCells().iterator(); iteratorPosition.hasNext(); ) {
+        for (final Iterator<?> iteratorPosition = table.getSelectionModel().getSelectedCells().iterator(); iteratorPosition.hasNext(); ) {
             final TablePosition<?, ?> position = (TablePosition<?, ?>) iteratorPosition.next();
 
             final int row = position.getRow();
 
             // Ganze Zeile kopieren.
-            for (Iterator<?> iteratorCell = table.getColumns().iterator(); iteratorCell.hasNext(); ) {
+            for (final Iterator<?> iteratorCell = table.getColumns().iterator(); iteratorCell.hasNext(); ) {
                 final TableColumn<?, ?> column = (TableColumn<?, ?>) iteratorCell.next();
 
                 Object cell = column.getCellData(row);
@@ -213,11 +213,11 @@ public final class FxUtils {
      * @return int[], RGB
      */
     public static int[] getProgressRGB(final double progress, final Color... colors) {
-        if ((progress < 0D) || (progress > 1D) || (colors.length < 2)) {
+        if (progress < 0D || progress > 1D || colors.length < 2) {
             return new int[]{0, 0, 0};
         }
 
-        if (progress == 1D) {
+        if (Double.compare(progress, 1D) == 0) {
             final Color c = colors[colors.length - 1];
 
             return new int[]{(int) (c.getRed() * 255), (int) (c.getGreen() * 255), (int) (c.getBlue() * 255)};
@@ -305,7 +305,7 @@ public final class FxUtils {
                 final int colTable = pasteCellPosition.getColumn() + colClipboard;
 
                 // skip if we reached the end of the table
-                if ((rowTable >= table.getItems().size()) || (colTable >= table.getColumns().size())) {
+                if (rowTable >= table.getItems().size() || colTable >= table.getColumns().size()) {
                     continue;
                 }
 
@@ -388,13 +388,11 @@ public final class FxUtils {
                 constructor = behaviorClass.getDeclaredConstructor(Duration.class, Duration.class, Duration.class, boolean.class);
                 constructor.setAccessible(true);
 
-                // @formatter:off
-                final  Object tooltipBehavior = constructor.newInstance(
+                final Object tooltipBehavior = constructor.newInstance(
                         new Duration(10), // open
                         new Duration(5000), // visible
                         new Duration(200), // close
                         false);
-                // @formatter:on
 
                 final Field fieldBehavior = tooltip.getClass().getDeclaredField("BEHAVIOR");
                 fieldBehavior.setAccessible(true);
@@ -411,32 +409,27 @@ public final class FxUtils {
     // /**
     // * Formatiert das Objekt als String.
     // */
-    // public static <T> ObservableValue<String> toStringObservable(final ObservableValue<T> ov, final Function<T, String> formatter)
-    // {
+    // public static <T> ObservableValue<String> toStringObservable(final ObservableValue<T> ov, final Function<T, String> formatter) {
     // Objects.requireNonNull(ov, "observableValue required");
     // Objects.requireNonNull(formatter, "formatter required");
     //
-    // final StringFormatter stringFormatter = new StringFormatter()
-    // {
+    // final StringFormatter stringFormatter = new StringFormatter() {
     // {
     // super.bind(ov);
     // }
     //
     // @Override
-    // protected String computeValue()
-    // {
+    // protected String computeValue() {
     // return formatter.apply(ov.getValue());
     // }
     //
     // @Override
-    // public void dispose()
-    // {
+    // public void dispose() {
     // super.unbind(ov);
     // }
     //
     // @Override
-    // public ObservableList<ObservableValue<?>> getDependencies()
-    // {
+    // public ObservableList<ObservableValue<?>> getDependencies() {
     // ObservableList<ObservableValue<?>> ol = FXCollections.observableArrayList();
     // ol.add(ov);
     //
@@ -488,20 +481,17 @@ public final class FxUtils {
     public static void translate(final View view, final Collection<Field> components, final ResourceBundle resources) {
         // Set aus allen erreichbaren Nodes der Komponenten bauen, alles was Übersetzt werden kann.
 
-        // @formatter:off
         final Set<Node> nodes = components.stream()
                 .map(f -> Utils.getValue(f, view))
                 .filter(Node.class::isInstance)
                 .map(Node.class::cast)
                 .flatMap(node -> node.lookupAll("*").stream())
                 .collect(Collectors.toSet());
-        // @formatter:on
 
         // Labeled / Text
         final Predicate<Object> isLabeled = Labeled.class::isInstance;
         final Predicate<Object> isText = Text.class::isInstance;
 
-        // @formatter:off
         nodes.stream()
                 .filter(isLabeled.or(isText))
                 .forEach(node -> {
@@ -510,37 +500,33 @@ public final class FxUtils {
 
                     final String text = (String) Utils.invokeMethod(getMethod, node);
 
-                    if ((text != null) && text.startsWith("%")) {
+                    if (text != null && text.startsWith("%")) {
                         final String translated = resources.getString(text.substring(1));
 
-                        if ((translated != null) && !translated.isEmpty()) {
+                        if (translated != null && !translated.isEmpty()) {
                             Utils.invokeMethod(setMethod, node, translated);
                         }
                     }
                 });
-        // @formatter:on
 
         // Control
         final Predicate<Object> isControl = Control.class::isInstance;
 
         // Tooltip
-        // @formatter:off
         nodes.stream()
                 .filter(isControl)
                 .forEach(node -> {
                     final Method getMethod = Utils.getMethod(node, "getTooltip");
                     final Tooltip tooltip = (Tooltip) Utils.invokeMethod(getMethod, node);
 
-                    if ((tooltip != null) && tooltip.getText().startsWith("%")) {
+                    if (tooltip != null && tooltip.getText().startsWith("%")) {
                         final String translated = resources.getString(tooltip.getText().substring(1));
 
                         tooltip.setText(translated);
                     }
                 });
-        // @formatter:on
 
         // ContextMenu
-        // @formatter:off
         nodes.stream()
                 .filter(isControl)
                 .forEach(node -> {
@@ -557,18 +543,15 @@ public final class FxUtils {
                         }
                     }
                 });
-        // @formatter:on
 
         // TableView
         final Predicate<Object> isTableView = TableView.class::isInstance;
 
-        // @formatter:off
         nodes.stream()
                 .filter(isTableView)
                 .map(n -> (TableView<?>) n)
                 .flatMap(tv -> tv.getColumns().stream())
                 .forEach(column -> translate(column, resources));
-        // @formatter:on
     }
 
     public static void unblockGUI(final Window window) {

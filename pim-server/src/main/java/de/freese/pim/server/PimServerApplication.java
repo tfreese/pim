@@ -45,17 +45,15 @@ public class PimServerApplication {
 
         // SpringApplication.run(Application.class, args);
         //
-        // @formatter:off
         final SpringApplication application = new SpringApplicationBuilder(PimServerApplication.class)
-//                .properties("spring.config.name:application-Server")
+                // .properties("spring.config.name:application-Server")
                 .headless(true) // Default true
                 .registerShutdownHook(true) // Default true
-//                .profiles(PIMProfile.Server.toString(), PIMProfile.HsqldbEmbeddedServer.toString())
+                // .profiles(PIMProfile.Server.toString(), PIMProfile.HsqldbEmbeddedServer.toString())
                 //.banner(new MyBanner())
                 //.listeners(new ApplicationPidFileWriter("pim-server.pid"))
                 //.run(args)
                 .build();
-        // @formatter:on
 
         application.run(args);
     }

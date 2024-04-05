@@ -69,7 +69,7 @@ public final class Utils {
      */
     @SuppressWarnings("unchecked")
     public static <T extends CharSequence> void addHeaderSeparator(final List<T[]> rows, final String separator) {
-        if ((rows == null) || rows.isEmpty() || (separator == null) || separator.isEmpty()) {
+        if (rows == null || rows.isEmpty() || separator == null || separator.isEmpty()) {
             return;
         }
 
@@ -145,12 +145,10 @@ public final class Utils {
      * Liefert alle Attribute einer Klasse, die annotiert sind.
      */
     public static Set<Field> getAnnotatedFields(final Object object, final Class<? extends Annotation> annotation) {
-        // @formatter:off
         return Stream.of(object.getClass().getDeclaredFields())
                 .filter(f -> f.isAnnotationPresent(annotation))
                 .peek(f -> f.setAccessible(true))
                 .collect(Collectors.toSet());
-        // @formatter:on
     }
 
     /**
@@ -250,7 +248,7 @@ public final class Utils {
      */
     @SuppressWarnings("unchecked")
     public static <T extends CharSequence> void padding(final List<T[]> rows, final String padding) {
-        if ((rows == null) || rows.isEmpty() || (padding == null) || padding.isEmpty()) {
+        if (rows == null || rows.isEmpty() || padding == null || padding.isEmpty()) {
             return;
         }
 
@@ -259,16 +257,14 @@ public final class Utils {
         // Breite pro Spalte herausfinden.
         final int[] columnWidth = new int[columnCount];
 
-        // @formatter:off
         IntStream.range(0, columnCount).forEach(column ->
-                    columnWidth[column] = rows.stream()
-                            .parallel()
-                            .map(r -> r[column])
-                            .mapToInt(CharSequence::length)
-                            .max()
-                            .orElse(0)
+                columnWidth[column] = rows.stream()
+                        .parallel()
+                        .map(r -> r[column])
+                        .mapToInt(CharSequence::length)
+                        .max()
+                        .orElse(0)
         );
-        // @formatter:on
 
         // Strings pro Spalte formatieren und schreiben.
         rows.stream().parallel().forEach(r -> {
@@ -373,7 +369,7 @@ public final class Utils {
             for (int column = 0; column < columnCount; column++) {
                 ps.print(r[column]);
 
-                if ((column < (columnCount - 1)) && (delimiter != null) && !delimiter.isBlank()) {
+                if (column < (columnCount - 1) && delimiter != null && !delimiter.isBlank()) {
                     ps.print(delimiter);
                 }
             }

@@ -44,19 +44,17 @@ public class InternetAddress {
         return this.personal;
     }
 
-    // public void setAddress(final String address)
-    // {
+    // public void setAddress(final String address) {
     // this.address = address;
     // }
 
-    // public void setPersonal(final String personal)
-    // {
+    // public void setPersonal(final String personal) {
     // this.personal = personal;
     // }
 
     @Override
     public String toString() {
-        if ((this.personal == null) || (this.personal.length() == 0)) {
+        if (this.personal == null || this.personal.isEmpty()) {
             return getAddress();
         }
 

@@ -144,7 +144,7 @@ public class JavaMailSender {
         try {
             for (int i = 0; i < mimeMessages.length; i++) {
                 // Check transport connection first...
-                if ((transport == null) || !transport.isConnected()) {
+                if (transport == null || !transport.isConnected()) {
                     if (transport != null) {
                         try {
                             transport.close();
@@ -165,7 +165,7 @@ public class JavaMailSender {
                     catch (Exception ex) {
                         // Effectively, all remaining messages failed...
                         for (int j = i; j < mimeMessages.length; j++) {
-                            final Object original = (originalMessages != null ? originalMessages[j] : mimeMessages[j]);
+                            final Object original = originalMessages != null ? originalMessages[j] : mimeMessages[j];
                             failedMessages.put(original, ex);
                         }
 
@@ -192,7 +192,7 @@ public class JavaMailSender {
                     transport.sendMessage(mimeMessage, mimeMessage.getAllRecipients());
                 }
                 catch (Exception ex) {
-                    final Object original = (originalMessages != null ? originalMessages[i] : mimeMessage);
+                    final Object original = originalMessages != null ? originalMessages[i] : mimeMessage;
                     failedMessages.put(original, ex);
                 }
             }

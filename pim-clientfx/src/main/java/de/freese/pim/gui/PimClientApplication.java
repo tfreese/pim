@@ -93,15 +93,12 @@ public class PimClientApplication extends Application {
         // List<String> parameters = getParameters().getRaw();
         // String[] profiles = null;
         //
-        // if (CollectionUtils.isEmpty(parameters))
-        // {
-        // profiles = new String[]
-        // {
+        // if (CollectionUtils.isEmpty(parameters)) {
+        // profiles = new String[] {
         // PIMProfile.ClientStandalone.toString(), PIMProfile.HsqldbEmbeddedServer.toString()
         // };
         // }
-        // else
-        // {
+        // else {
         // profiles = parameters.toArray(new String[0]);
         // }
 
@@ -109,38 +106,36 @@ public class PimClientApplication extends Application {
 
         // SpringApplication.run(Application.class, args);
         //
-        // @formatter:off
-        final  SpringApplication application = new SpringApplicationBuilder(PimClientApplication.class)
+        final SpringApplication application = new SpringApplicationBuilder(PimClientApplication.class)
                 .headless(false) // Default true, hier false wegen JavaFX
                 //.web(WebApplicationType.NONE) // Wird eigentlich automatisch ermittelt.
-//                .profiles(profiles)
+                //                .profiles(profiles)
                 .registerShutdownHook(true) // Default true
                 //.banner(new MyBanner())
                 //.listeners(new ApplicationPidFileWriter("pim-client.pid"))
                 //.run(args)
                 .build();
-//        SpringApplicationBuilder()
-//        .parent(RootContext.class)
-//        .child(ChildContext1.class)
-//        .sibling(ChildContext2.class);
-//        SpringApplicationBuilder()
-//        .bannerMode(Banner.Mode.OFF)
-//        .sources(Parent.class)
-//        .child(Application.class)
-//        .run(args);
-//        SpringApplication application = new SpringApplicationBuilder(PIMCommonConfig.class)
-//                .headless(false) // Default true, hier false wegen Swing
-//                .web(false) // Wird eigentlich automatisch ermittelt.
-//                .profiles(profile)
-//                .registerShutdownHook(true) // Default true
-//                //.banner(new MyBanner())
-//                //.listeners(new ApplicationPidFileWriter("eps-monitor.pid"))
-//                //.run(args)
-////                .parent(PIMCommonConfig.class)
-//                .child(PIMClientConfig.class)
-//                .child(PIMServerApplication.class)
-//                .build();
-        // @formatter:on
+        //        SpringApplicationBuilder()
+        //        .parent(RootContext.class)
+        //        .child(ChildContext1.class)
+        //        .sibling(ChildContext2.class);
+        //        SpringApplicationBuilder()
+        //        .bannerMode(Banner.Mode.OFF)
+        //        .sources(Parent.class)
+        //        .child(Application.class)
+        //        .run(args);
+        //        SpringApplication application = new SpringApplicationBuilder(PIMCommonConfig.class)
+        //                .headless(false) // Default true, hier false wegen Swing
+        //                .web(false) // Wird eigentlich automatisch ermittelt.
+        //                .profiles(profile)
+        //                .registerShutdownHook(true) // Default true
+        //                //.banner(new MyBanner())
+        //                //.listeners(new ApplicationPidFileWriter("eps-monitor.pid"))
+        //                //.run(args)
+        // //                .parent(PIMCommonConfig.class)
+        //                .child(PIMClientConfig.class)
+        //                .child(PIMServerApplication.class)
+        //                .build();
 
         application.run(args);
 

@@ -108,7 +108,7 @@ public class MailContentView extends GridPane {
                 // Desktop.getDesktop().browse(address);
                 final Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
 
-                if ((desktop != null) && desktop.isSupported(Desktop.Action.BROWSE)) {
+                if (desktop != null && desktop.isSupported(Desktop.Action.BROWSE)) {
                     desktop.browse(address);
 
                     Platform.runLater(() -> this.webView.getEngine().load(oldValue));

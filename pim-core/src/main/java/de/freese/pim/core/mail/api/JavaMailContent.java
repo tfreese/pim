@@ -28,8 +28,7 @@ import de.freese.pim.core.utils.io.IOMonitor;
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class JavaMailContent extends DefaultMailContent {
-    // public JavaMailContent(final DataSource dataSource, final URL url) throws IOException
-    // {
+    // public JavaMailContent(final DataSource dataSource, final URL url) throws IOException {
     // super();
     //
     // Objects.requireNonNull(dataSource, "dataSource required");
@@ -41,14 +40,12 @@ public class JavaMailContent extends DefaultMailContent {
     // this.messageDataSource = null;
     // this.messageContent = null;
     //
-    // try (InputStreamReader isr = new InputStreamReader(getInputStream()))
-    // {
+    // try (InputStreamReader isr = new InputStreamReader(getInputStream())) {
     // this.encoding = isr.getEncoding();
     // }
     // }
 
-    // public JavaMailContent(final Path path) throws IOException
-    // {
+    // public JavaMailContent(final Path path) throws IOException {
     // this(new FileDataSource(path.toFile()), path.toUri().toURL());
     // }
 
@@ -72,11 +69,11 @@ public class JavaMailContent extends DefaultMailContent {
         final ContentType ct = new ContentType(messageDataSource.getContentType());
         setMessageContentType(ct.getBaseType().toLowerCase());
 
-        if ((encoding == null) || encoding.isBlank()) {
+        if (encoding == null || encoding.isBlank()) {
             encoding = MimeUtility.javaCharset(ct.getParameter("charset"));
         }
 
-        if ((encoding == null) || encoding.isBlank()) {
+        if (encoding == null || encoding.isBlank()) {
             encoding = "UTF-8";
         }
 

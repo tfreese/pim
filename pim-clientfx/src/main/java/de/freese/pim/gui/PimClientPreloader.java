@@ -38,8 +38,7 @@ public class PimClientPreloader extends Preloader {
             // // with progress ranging from 0 to 1.0
             // double progress = ((PIMPreloaderNotification) info).getProgress();
             //
-            // if (!this.noLoadingProgress)
-            // {
+            // if (!this.noLoadingProgress) {
             // // // if we were receiving loading progress notifications
             // // // then progress is already at 50%.
             // // // Rescale application progress to start from 50%
@@ -73,7 +72,7 @@ public class PimClientPreloader extends Preloader {
         // application loading progress is rescaled to be first 50%
         // Even if there is nothing to load 0% and 100% events can be
         // delivered
-        if ((info.getProgress() != 1.0D) || !this.noLoadingProgress) {
+        if (Double.compare(info.getProgress(), 1.0D) != 0 || !this.noLoadingProgress) {
             // this.progress.setProgress(info.getProgress() / 2);
 
             if (info.getProgress() > 0D) {
@@ -84,11 +83,10 @@ public class PimClientPreloader extends Preloader {
 
     @Override
     public void handleStateChangeNotification(final StateChangeNotification info) {
-        // ignore, hide after application signals it is ready
+        // Ignore, hide after application signals it is ready.
         // System.out.println(info);
 
-        // if (info.getType() == StateChangeNotification.Type.BEFORE_START)
-        // {
+        // if (info.getType() == StateChangeNotification.Type.BEFORE_START) {
         // this.stage.hide();
         // }
     }

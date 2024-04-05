@@ -81,8 +81,7 @@ class TestReceiveMail extends AbstractMailTest {
     }
 
     // @After
-    // public void afterMethod() throws Exception
-    // {
+    // public void afterMethod() throws Exception {
     // store.close();
     // }
 
@@ -102,7 +101,7 @@ class TestReceiveMail extends AbstractMailTest {
             Stream.of(defaultFolder.list("*")).map(Folder::getFullName).forEach(System.out::println);
         }
         finally {
-            if ((defaultFolder != null) && defaultFolder.isOpen()) {
+            if (defaultFolder != null && defaultFolder.isOpen()) {
                 defaultFolder.close(false);
             }
         }
@@ -168,7 +167,7 @@ class TestReceiveMail extends AbstractMailTest {
             }
         }
         finally {
-            if ((inboxFolder != null) && inboxFolder.isOpen()) {
+            if (inboxFolder != null && inboxFolder.isOpen()) {
                 inboxFolder.close(false);
             }
         }
@@ -232,7 +231,6 @@ class TestReceiveMail extends AbstractMailTest {
                     final String linkRegEx = "^((http[s]?|ftp|file):.*)|(^(www.).*)";
                     final String mailRegEx = "^(.+)@(.+).(.+)$"; // ^[A-Za-z0-9+_.-]+@(.+)$
 
-                    // @formatter:off
                     final List<String> values = Stream.of(mailContent.getMessageContent())
                             .map(t -> Jsoup.parse(t).text())
                             //.parallel()
@@ -245,45 +243,41 @@ class TestReceiveMail extends AbstractMailTest {
                             //.peek(t -> System.out.println(Thread.currentThread().getName()))
                             .distinct()
                             .collect(Collectors.toList());
-                    // @formatter:on
 
                     Assertions.assertNotNull(values);
                     System.out.println(values);
 
-                    // @formatter:off
-//                    List<String> values= textParts.parallelStream()
-//                        .map(AbstractTextPart::getText)
-//                        .map(t -> Jsoup.parse(t).text())
-//                        .map(t -> t.split(" "))
-//                        .flatMap(Arrays::stream)
-//                        .map(StringUtils::lowerCase)
-//                        .filter(t -> !t.matches(linkRegEx)) // URLs entfernen
-//                        .filter(t -> !t.matches(mailRegEx)) // Mails entfernen
-//                        //.filter(t -> !StringUtils.startsWith(t, "http:"))
-//                        //.filter(t -> !StringUtils.startsWith(t, "https:"))
-//                        //.filter(t -> !StringUtils.startsWith(t, "ftp:"))
-//                        //.filter(t -> !StringUtils.startsWith(t, "file:"))
-//                        //.filter(t -> StringUtils.containsNone(t, "@"))
-//                        .map(FunctionStripNotLetter.INSTANCE)
-//                        .map(FunctionStripSameChar.INSTANCE)
-//                        .filter(t -> t.length() > 2) // Nur Texte mit mehr als 2 Zeichen
-//                        .distinct()
-//                        .collect(Collectors.toList());
-                    // @formatter:on
+                    // final List<String> values = textParts.parallelStream()
+                    //         .map(AbstractTextPart::getText)
+                    //         .map(t -> Jsoup.parse(t).text())
+                    //         .map(t -> t.split(" "))
+                    //         .flatMap(Arrays::stream)
+                    //         .map(StringUtils::lowerCase)
+                    //         .filter(t -> !t.matches(linkRegEx)) // URLs entfernen
+                    //         .filter(t -> !t.matches(mailRegEx)) // Mails entfernen
+                    //         //.filter(t -> !StringUtils.startsWith(t, "http:"))
+                    //         //.filter(t -> !StringUtils.startsWith(t, "https:"))
+                    //         //.filter(t -> !StringUtils.startsWith(t, "ftp:"))
+                    //         //.filter(t -> !StringUtils.startsWith(t, "file:"))
+                    //         //.filter(t -> StringUtils.containsNone(t, "@"))
+                    //         .map(FunctionStripNotLetter.INSTANCE)
+                    //         .map(FunctionStripSameChar.INSTANCE)
+                    //         .filter(t -> t.length() > 2) // Nur Texte mit mehr als 2 Zeichen
+                    //         .distinct()
+                    //         .collect(Collectors.toList());
+                    //
                     // Locale locale = FunctionStripStopWords.guessLocale(values);
                     // Function<String, String> functionStemmer = FunctionStemmer.get(locale);
                     //
-                    //                        // @formatter:off
-//                        // parallelStream wegen Stemmer nicht möglich.
-//                        values.stream()
-//                            .map(t -> Locale.GERMAN.equals(locale) ? FunctionNormalizeGerman.INSTANCE.apply(t) : t)
-//                            .map(FunctionStripStopWords.INSTANCE)
-//                            .map(functionStemmer)
-//                            .filter(t -> t.length() > 2)
-//                            .distinct()
-//                            .sorted()
-//                            .forEach(System.out::println);
-//                        // @formatter:on
+                    // // parallelStream wegen Stemmer nicht möglich.
+                    // values.stream()
+                    //         .map(t -> Locale.GERMAN.equals(locale) ? FunctionNormalizeGerman.INSTANCE.apply(t) : t)
+                    //         .map(FunctionStripStopWords.INSTANCE)
+                    //         .map(functionStemmer)
+                    //         .filter(t -> t.length() > 2)
+                    //         .distinct()
+                    //         .sorted()
+                    //         .forEach(System.out::println);
                 }
             }
         }

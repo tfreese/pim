@@ -44,7 +44,6 @@ import de.freese.pim.core.model.mail.MailFolder;
 @Transactional(transactionManager = "transactionManager")
 @ActiveProfiles("test")
 @DirtiesContext
-        //@Disabled
 class TestMailDAO {
     @Resource
     private MailDao mailDAO;
@@ -86,7 +85,7 @@ class TestMailDAO {
         Assertions.assertNotNull(accounts);
         assertEquals(1, accounts.size());
 
-        final MailAccount account = accounts.get(0);
+        final MailAccount account = accounts.getFirst();
         assertEquals(2, account.getID());
         assertEquals("a@b.de", account.getMail());
         assertEquals("gehaim", account.getPassword());
@@ -106,7 +105,7 @@ class TestMailDAO {
         Assertions.assertNotNull(accounts);
         assertEquals(1, accounts.size());
 
-        final MailAccount account = accounts.get(0);
+        final MailAccount account = accounts.getFirst();
 
         account.setMail("c@d.com");
         account.setPassword("gehaim2");
@@ -129,7 +128,7 @@ class TestMailDAO {
         Assertions.assertNotNull(accounts);
         assertEquals(1, accounts.size());
 
-        final MailAccount account = accounts.get(0);
+        final MailAccount account = accounts.getFirst();
         assertEquals(2, account.getID());
         assertEquals("c@d.com", account.getMail());
         assertEquals("gehaim2", account.getPassword());
@@ -173,7 +172,7 @@ class TestMailDAO {
         Assertions.assertNotNull(folders);
         assertEquals(1, folders.size());
 
-        final MailFolder folder = folders.get(0);
+        final MailFolder folder = folders.getFirst();
         assertEquals(4, folder.getID());
         assertEquals("a/b", folder.getFullName());
         assertEquals("b", folder.getName());
@@ -188,7 +187,7 @@ class TestMailDAO {
         Assertions.assertNotNull(folders);
         assertEquals(1, folders.size());
 
-        final MailFolder folder = folders.get(0);
+        final MailFolder folder = folders.getFirst();
 
         folder.setFullName("b/c");
         folder.setName("c");
@@ -206,7 +205,7 @@ class TestMailDAO {
         Assertions.assertNotNull(folders);
         assertEquals(1, folders.size());
 
-        final MailFolder folder = folders.get(0);
+        final MailFolder folder = folders.getFirst();
         assertEquals(4, folder.getID());
         assertEquals("b/c", folder.getFullName());
         assertEquals("c", folder.getName());
@@ -254,7 +253,7 @@ class TestMailDAO {
         final Date dateExpectedReceived = Timestamp.from(LocalDateTime.of(2017, 2, 3, 15, 0).atZone(ZoneId.systemDefault()).toInstant());
         final Date dateExpectedSend = Timestamp.from(LocalDateTime.of(2017, 2, 3, 15, 1).atZone(ZoneId.systemDefault()).toInstant());
 
-        final Mail mail = mails.get(0);
+        final Mail mail = mails.getFirst();
         assertEquals("a@a.aa", mail.getFrom().getAddress());
         assertEquals(1, mail.getMsgNum());
         assertEquals(dateExpectedReceived, mail.getReceivedDate());
@@ -276,7 +275,7 @@ class TestMailDAO {
         Assertions.assertNotNull(mails);
         assertEquals(1, mails.size());
 
-        final Mail mail = mails.get(0);
+        final Mail mail = mails.getFirst();
         mail.setSeen(true);
         mail.setMsgNum(99);
 
@@ -293,7 +292,7 @@ class TestMailDAO {
         Assertions.assertNotNull(mails);
         assertEquals(1, mails.size());
 
-        final Mail mail = mails.get(0);
+        final Mail mail = mails.getFirst();
         assertEquals("a@a.aa", mail.getFrom().getAddress());
         assertEquals(1, mail.getMsgNum());
         assertEquals(java.util.Date.from(LocalDateTime.of(2017, 2, 3, 15, 0).atZone(ZoneId.systemDefault()).toInstant()), mail.getReceivedDate());

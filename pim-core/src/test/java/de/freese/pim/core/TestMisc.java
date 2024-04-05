@@ -37,51 +37,45 @@ class TestMisc {
     void test010CompletableFuture() throws Exception {
         final List<String> results = new ArrayList<>();
 
-        // @formatter:off
-        CompletableFuture.supplyAsync(() ->
-        {
-            final String threadName = Thread.currentThread().getName();
-            System.out.println("supplyAsync: "+ threadName);
-            return threadName;
-        })
-        .thenApplyAsync(result ->
-        {
-            final  String threadName = Thread.currentThread().getName();
-            System.out.println("thenApplyAsync: "+ threadName);
-            return result + "-2";
-        })
-        .thenApply(result ->
-        {
-            final String threadName = Thread.currentThread().getName();
-            System.out.println("thenApply: "+ threadName);
-            return result + "-3";
-        })
-        .exceptionally(ex -> {
-            final String threadName = Thread.currentThread().getName();
-            System.out.println("exceptionally: "+ threadName);
-            ex.printStackTrace();
-            return null;
-        })
-        .thenAccept(results::add)
+        CompletableFuture.supplyAsync(() -> {
+                    final String threadName = Thread.currentThread().getName();
+                    System.out.println("supplyAsync: " + threadName);
+                    return threadName;
+                })
+                .thenApplyAsync(result -> {
+                    final String threadName = Thread.currentThread().getName();
+                    System.out.println("thenApplyAsync: " + threadName);
+                    return result + "-2";
+                })
+                .thenApply(result -> {
+                    final String threadName = Thread.currentThread().getName();
+                    System.out.println("thenApply: " + threadName);
+                    return result + "-3";
+                })
+                .exceptionally(ex -> {
+                    final String threadName = Thread.currentThread().getName();
+                    System.out.println("exceptionally: " + threadName);
+                    ex.printStackTrace();
+                    return null;
+                })
+                .thenAccept(results::add)
         ;
-//        .whenCompleteAsync((result, ex) ->
-//        {
-//            // Wird nur ohne thenAccept ausgeführt.
-//            String threadName = Thread.currentThread().getName();
-//            System.out.println("whenCompleteAsync: "+ threadName);
-//            results.add(result);
-//
-//            // ExceptionHandling
-//            if(ex != null)
-//            {
-//                ex.printStackTrace();
-//            }
-//        });
-        // @formatter:on
+        // .whenCompleteAsync((result, ex) -> {
+        //     // Wird nur ohne thenAccept ausgeführt.
+        //     String threadName = Thread.currentThread().getName();
+        //     System.out.println("whenCompleteAsync: "+ threadName);
+        //     results.add(result);
+        //
+        //     // ExceptionHandling
+        //     if(ex != null)
+        //     {
+        //         ex.printStackTrace();
+        //     }
+        // });
 
         TimeUnit.MILLISECONDS.sleep(100);
 
         Assertions.assertEquals(1, results.size());
-        Assertions.assertEquals("fork-join-01-2-3", results.get(0));
+        Assertions.assertEquals("fork-join-01-2-3", results.getFirst());
     }
 }

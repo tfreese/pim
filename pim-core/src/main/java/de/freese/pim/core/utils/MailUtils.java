@@ -84,8 +84,6 @@ public final class MailUtils {
      * Key = Filename<br>
      * Value = {@link MimePart}<br>
      *
-     * @param part {@link Part}
-     *
      * @return {@link Map}; ist niemals null
      */
     public static Map<String, MimePart> getAttachmentMap(final Part part) throws Exception {
@@ -106,8 +104,6 @@ public final class MailUtils {
     /**
      * Liefert alle vorhandenen Attachments-MimeParts einer {@link Message}.
      *
-     * @param part {@link Part}
-     *
      * @return {@link List}; ist niemals null
      */
     public static List<MimePart> getAttachments(final Part part) throws Exception {
@@ -124,7 +120,7 @@ public final class MailUtils {
 
                 final List<MimePart> list = getAttachments(bp);
 
-                if ((list != null) && !list.isEmpty()) {
+                if (list != null && !list.isEmpty()) {
                     bodyParts.addAll(list);
                 }
             }
@@ -137,8 +133,6 @@ public final class MailUtils {
      * Liefert alle vorhandenen Inline-MimeParts einer {@link Message}.<br>
      * Key = ContentID<br>
      * Value = {@link MimePart}<br>
-     *
-     * @param part {@link Part}
      *
      * @return {@link Map}; ist niemals null
      */
@@ -167,8 +161,6 @@ public final class MailUtils {
     /**
      * Liefert alle vorhandenen Inline-MimeParts einer {@link Message}.
      *
-     * @param part {@link Part}
-     *
      * @return {@link List}; ist niemals null
      */
     public static List<MimePart> getInlines(final Part part) throws Exception {
@@ -185,7 +177,7 @@ public final class MailUtils {
 
                 final List<MimePart> list = getInlines(bp);
 
-                if ((list != null) && !list.isEmpty()) {
+                if (list != null && !list.isEmpty()) {
                     bodyParts.addAll(list);
                 }
             }
@@ -196,8 +188,6 @@ public final class MailUtils {
 
     /**
      * Liefert die Gesamtgröße aller einzelnen Parts.
-     *
-     * @param part {@link Part}
      */
     public static long getSizeOfAllParts(final Part part) throws Exception {
         long size = part.getSize();
@@ -220,8 +210,6 @@ public final class MailUtils {
     /**
      * Liefert die {@link DataSource} für den Text (text/plain, text/html) einer {@link Message}.<br>
      * Dabei wird zuerst nach HTML gesucht, dann nach Plain-Text.
-     *
-     * @param part {@link Part}
      *
      * @return {@link List}; ist niemals null
      */
@@ -259,7 +247,7 @@ public final class MailUtils {
 
                 final List<DataSource> ds = getTextDataSources(bp);
 
-                if ((ds != null) && !ds.isEmpty()) {
+                if (ds != null && !ds.isEmpty()) {
                     dataSources.addAll(ds);
                 }
             }
@@ -271,9 +259,7 @@ public final class MailUtils {
     /**
      * Liefert alle vorhandenen Text-Parts (text/plain, text/html) einer {@link Message}.
      *
-     * @param part {@link Part}
-     *
-     * @return {@link List}; ist niemals null
+     * @return {@link List}; never null
      */
     public static List<AbstractTextPart> getTextParts(final Part part) throws Exception {
         final List<AbstractTextPart> textParts = new ArrayList<>();
@@ -298,7 +284,7 @@ public final class MailUtils {
 
                 final List<AbstractTextPart> tp = getTextParts(bp);
 
-                if ((tp != null) && !tp.isEmpty()) {
+                if (tp != null && !tp.isEmpty()) {
                     textParts.addAll(tp);
                 }
             }
@@ -325,8 +311,7 @@ public final class MailUtils {
 
         // InternetAddress[] ia = new InternetAddress[addresses.length];
         //
-        // for (int i = 0; i < addresses.length; i++)
-        // {
+        // for (int i = 0; i < addresses.length; i++) {
         // ia[i] = new InternetAddress(addresses[i].getAddress(), addresses[i].getPersonal());
         // }
         //

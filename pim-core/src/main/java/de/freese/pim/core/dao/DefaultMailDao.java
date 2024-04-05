@@ -147,24 +147,20 @@ public class DefaultMailDao extends AbstractDao implements MailDao {
             // StringBuilder sb = new StringBuilder();
             //
             // try (Reader reader = clob.getCharacterStream();
-            // BufferedReader br = new BufferedReader(reader))
-            // {
+            // BufferedReader br = new BufferedReader(reader)) {
             // int b = 0;
             //
-            // while (-1 != (b = br.read()))
-            // {
+            // while (-1 != (b = br.read())) {
             // sb.append((char) b);
             // }
             // }
 
             // try (InputStream in = clob.getAsciiStream();
             // Reader read = new InputStreamReader(in);
-            // StringWriter sw = new StringWriter())
-            // {
+            // StringWriter sw = new StringWriter()) {
             // int c = -1;
             //
-            // while ((c = read.read()) != -1)
-            // {
+            // while ((c = read.read()) != -1) {
             // sw.write(c);
             // }
             // }
@@ -173,7 +169,7 @@ public class DefaultMailDao extends AbstractDao implements MailDao {
         }
 
         private InternetAddress[] parseInternetAddress(final String value) throws AddressException {
-            if ((value == null) || value.isBlank()) {
+            if (value == null || value.isBlank()) {
                 return null;
             }
 
@@ -232,8 +228,7 @@ public class DefaultMailDao extends AbstractDao implements MailDao {
         return getJdbcTemplate().query(sql.toString(), new MailAccountRowMapper(), userID);
     }
 
-    // protected List<MailAccount> getMailAccountsJSON()
-    // {
+    // protected List<MailAccount> getMailAccountsJSON() {
     // ObjectMapper jsonMapper = new ObjectMapper();
     // jsonMapper.enable(SerializationFeature.INDENT_OUTPUT);
     // jsonMapper.enable(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT);
@@ -241,8 +236,7 @@ public class DefaultMailDao extends AbstractDao implements MailDao {
     // Path path = SettingService.getInstance().getHome().resolve(".mailaccounts");
     // List<MailAccount> accountList = new ArrayList<>();
     //
-    // if (Files.exists(path))
-    // {
+    // if (Files.exists(path)) {
     // try (InputStream is = Files.newInputStream(path))
     // {
     // // MailAccount mailAccount = jsonMapper.readValue(is, MailAccount.class);
@@ -252,23 +246,20 @@ public class DefaultMailDao extends AbstractDao implements MailDao {
     // accountList.addAll(jsonMapper.readValue(is, type));
     // }
     // }
-    // else
-    // {
+    // else {
     // MailAccount account = new MailAccount();
     // account.setMail("commercial@freese-home.de");
     // account.setImapHost(MailProvider.EinsUndEins.getImapHost());
     // account.setSmtpHost(MailProvider.EinsUndEins.getSmtpHost());
     // accountList.add(account);
     //
-    // try (OutputStream os = Files.newOutputStream(path))
-    // {
+    // try (OutputStream os = Files.newOutputStream(path)) {
     // jsonMapper.writer().writeValue(os, Arrays.asList(account));
     // }
     // }
     //
     // // IDs hart setzen
-    // for (int i = 0; i < accountList.size(); i++)
-    // {
+    // for (int i = 0; i < accountList.size(); i++) {
     // accountList.get(i).setID(i + 1);
     // }
     //
@@ -429,8 +420,7 @@ public class DefaultMailDao extends AbstractDao implements MailDao {
         return Stream.of(affectedRows).flatMapToInt(IntStream::of).toArray();
 
         // }
-        // catch (Exception ex)
-        // {
+        // catch (Exception ex) {
         // getLogger().debug("{}: folder={}, from={}, subject={}, receiveDate={}", ex.getMessage(), mail.getFolder().getFullName(),
         // mail.getFrom(),
         // mail.getSubject(), mail.getReceivedDate());

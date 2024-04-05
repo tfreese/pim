@@ -15,7 +15,6 @@ public class Kontakt implements Comparable<Kontakt> {
 
     private long id;
     private String nachname;
-
     private String vorname;
 
     public Kontakt() {
@@ -40,8 +39,7 @@ public class Kontakt implements Comparable<Kontakt> {
         addAttribut(ka);
     }
 
-    // public void addPropertyChangeListener(final PropertyChangeListener listener)
-    // {
+    // public void addPropertyChangeListener(final PropertyChangeListener listener) {
     // this.pcs.addPropertyChangeListener(listener);
     // }
 
@@ -70,7 +68,7 @@ public class Kontakt implements Comparable<Kontakt> {
             return false;
         }
 
-        return Objects.equals(this.attribute, other.attribute) && (this.id == other.id) && Objects.equals(this.nachname, other.nachname) && Objects.equals(this.vorname,
+        return Objects.equals(this.attribute, other.attribute) && this.id == other.id && Objects.equals(this.nachname, other.nachname) && Objects.equals(this.vorname,
                 other.vorname);
     }
 
@@ -101,8 +99,7 @@ public class Kontakt implements Comparable<Kontakt> {
         // this.pcs.firePropertyChange("id", old, getID());
     }
 
-    // public void removePropertyChangeListener(final PropertyChangeListener listener)
-    // {
+    // public void removePropertyChangeListener(final PropertyChangeListener listener) {
     // this.pcs.removePropertyChangeListener(listener);
     // }
 

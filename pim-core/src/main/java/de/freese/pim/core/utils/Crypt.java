@@ -95,7 +95,7 @@ public class Crypt {
     }
 
     public String decrypt(final String input) {
-        if ((input == null) || input.isBlank()) {
+        if (input == null || input.isBlank()) {
             return null;
         }
 
@@ -153,7 +153,7 @@ public class Crypt {
     }
 
     public String encrypt(final String input) {
-        if ((input == null) || input.isBlank()) {
+        if (input == null || input.isBlank()) {
             return null;
         }
 

@@ -85,28 +85,25 @@ public class InitMailApiTask extends Task<List<FxMailFolder>> {
         CompletableFuture<Void> master = CompletableFuture.completedFuture(null);
 
         for (FxMailFolder mf : folders) {
-            // @formatter:off
             final CompletableFuture<Void> cf = CompletableFuture.supplyAsync(() ->
-                this.mailService.loadMails(this.account, mf)
-            , taskExecutor)
-            .exceptionally(ex ->
-            {
-                LOGGER.error(ex.getMessage(), ex);
-                new ErrorDialog().forThrowable(ex).showAndWait();
-                return null;
-            })
-            .thenAccept(mails ->
-            {
-                final Runnable task = () -> {
-                    if (mails != null) {
-                        mf.getMails().addAll(mails);
-                    }
-                };
+                            this.mailService.loadMails(this.account, mf), taskExecutor)
+                    .exceptionally(ex ->
+                    {
+                        LOGGER.error(ex.getMessage(), ex);
+                        new ErrorDialog().forThrowable(ex).showAndWait();
+                        return null;
+                    })
+                    .thenAccept(mails ->
+                    {
+                        final Runnable task = () -> {
+                            if (mails != null) {
+                                mf.getMails().addAll(mails);
+                            }
+                        };
 
-//                task.run();
-                Platform.runLater(task);
-            });
-            // @formatter:on
+                        // task.run();
+                        Platform.runLater(task);
+                    });
 
             // Merge
             master = CompletableFuture.allOf(master, cf);
@@ -116,23 +113,20 @@ public class InitMailApiTask extends Task<List<FxMailFolder>> {
     }
 
     protected void loadMailsByParallelStream(final List<FxMailFolder> folders, final TreeView<Object> treeView) {
-        // @formatter:off
-        try(Stream<FxMailFolder> stream = folders.parallelStream()) {
+        try (Stream<FxMailFolder> stream = folders.parallelStream()) {
             stream.onClose(() -> Platform.runLater(treeView::refresh))
-            .forEach(mf -> {
-                final List<FxMail> mails = this.mailService.loadMails(this.account, mf);
+                    .forEach(mf -> {
+                        final List<FxMail> mails = this.mailService.loadMails(this.account, mf);
 
-                final Runnable task = () -> {
-                    if (mails != null)
-                    {
-                        mf.getMails().addAll(mails);
-                    }
-                };
+                        final Runnable task = () -> {
+                            if (mails != null) {
+                                mf.getMails().addAll(mails);
+                            }
+                        };
 
-                Platform.runLater(task);
-            });
+                        Platform.runLater(task);
+                    });
         }
-        // @formatter:on
     }
 
     protected void loadMailsByPartitions(final List<FxMailFolder> folders, final TreeView<Object> treeView) {
