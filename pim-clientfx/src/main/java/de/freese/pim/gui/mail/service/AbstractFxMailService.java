@@ -92,12 +92,10 @@ public abstract class AbstractFxMailService extends AbstractFxService implements
     protected void buildHierarchie(final List<FxMailFolder> mailFolders) {
         // Hierarchie aufbauen basierend auf Namen.
         for (FxMailFolder folder : mailFolders) {
-            // @formatter:off
             final Optional<FxMailFolder> parent = mailFolders.stream()
-                .filter(mf -> !Objects.equals(mf, folder))
-                .filter(mf -> folder.getFullName().startsWith(mf.getFullName()))
-                .findFirst();
-            // @formatter:on
+                    .filter(mf -> !Objects.equals(mf, folder))
+                    .filter(mf -> folder.getFullName().startsWith(mf.getFullName()))
+                    .findFirst();
 
             parent.ifPresent(p -> p.addChild(folder));
         }

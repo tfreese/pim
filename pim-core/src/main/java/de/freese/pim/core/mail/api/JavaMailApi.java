@@ -109,10 +109,8 @@ public class JavaMailApi extends AbstractMailApi {
         return Utils.executeSafely(() -> {
             final Folder root = getStore().getDefaultFolder();
 
-            // @formatter:off
             return Stream.of(root.list("*"))
-                    .map(f ->
-                    {
+                    .map(f -> {
                         final MailFolder mf = new MailFolder();
                         mf.setFullName(f.getFullName());
                         mf.setName(f.getName());
@@ -120,7 +118,6 @@ public class JavaMailApi extends AbstractMailApi {
                         return mf;
                     })
                     .toList();
-            // @formatter:on
 
             // closeFolder(root);
         });

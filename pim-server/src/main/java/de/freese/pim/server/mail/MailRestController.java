@@ -123,20 +123,16 @@ public class MailRestController extends AbstractRemoteService implements MailSer
                                                                    @PathVariable("folderFullName") final String folderFullName) {
         final DeferredResult<List<Mail>> deferredResult = new DeferredResult<>();
 
-        // @formatter:off
         CompletableFuture
-            .supplyAsync(() -> getMailService().loadMails(accountID, folderID, folderFullName), getTaskExecutor())
-            .whenCompleteAsync((result, throwable) -> {
-                if (throwable != null)
-                {
-                    deferredResult.setErrorResult(throwable);
-                }
-                else
-                {
-                    deferredResult.setResult(result);
-                }
-            }, getTaskExecutor());
-        // @formatter:on
+                .supplyAsync(() -> getMailService().loadMails(accountID, folderID, folderFullName), getTaskExecutor())
+                .whenCompleteAsync((result, throwable) -> {
+                    if (throwable != null) {
+                        deferredResult.setErrorResult(throwable);
+                    }
+                    else {
+                        deferredResult.setResult(result);
+                    }
+                }, getTaskExecutor());
 
         return deferredResult;
     }
