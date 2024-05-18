@@ -55,7 +55,7 @@ public interface MailApi {
      * Lädt die Mails des Folders vom Provider ab der definierten UID.<br>
      * Die Liste ist null, wenn der Folder nicht mehr existent.
      *
-     * @param uidFrom long; Startindex der zu Ladenen Mails
+     * @param uidFrom long; Startindex der zu ladenen Mails
      */
     List<Mail> loadMails(String folderFullName, long uidFrom);
 

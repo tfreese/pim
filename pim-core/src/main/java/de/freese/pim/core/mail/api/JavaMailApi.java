@@ -49,7 +49,7 @@ import de.freese.pim.core.utils.io.NestedIOMonitor;
  */
 public class JavaMailApi extends AbstractMailApi {
     @FunctionalInterface
-    private interface FolderCallback<T> {
+    protected interface FolderCallback<T> {
         T doInFolder(IMAPFolder folder) throws Exception;
     }
 
@@ -72,15 +72,12 @@ public class JavaMailApi extends AbstractMailApi {
     @Override
     public void disconnect() {
         // Folder schliessen.
-        // if (this.topLevelFolder != null)
-        // {
-        // for (IMailFolder folder : this.topLevelFolder)
-        // {
+        // if (this.topLevelFolder != null) {
+        // for (IMailFolder folder : this.topLevelFolder) {
         // folder.close();
         // }
         // }
-        // if (getFolder().isOpen())
-        // {
+        // if (getFolder().isOpen()) {
         // getFolder().close(true);
         // }
 
@@ -153,11 +150,9 @@ public class JavaMailApi extends AbstractMailApi {
 
                 mailContent = new JavaMailContent(mimeMessage, nestendIOMonitor);
 
-                // try (FastByteArrayOutputStream baos = new FastByteArrayOutputStream(1024))
-                // {
+                // try (FastByteArrayOutputStream baos = new FastByteArrayOutputStream(1024)) {
                 // // OutputStream gos = new GZIPOutputStream(baos);
-                // try (OutputStream mos = new MonitorOutputStream(baos, size, monitor))
-                // {
+                // try (OutputStream mos = new MonitorOutputStream(baos, size, monitor)) {
                 // mimeMessage.writeTo(mos);
                 // }
                 //
@@ -167,8 +162,7 @@ public class JavaMailApi extends AbstractMailApi {
                 //
                 // // try (InputStream is = new ByteArrayInputStream(data);
                 // // InputStream gis = new GZIPInputStream(is)
-                // try (InputStream is = baos.getInputStream();)
-                // {
+                // try (InputStream is = baos.getInputStream();) {
                 // message = new MimeMessage(null, is);
                 // mailContent = new JavaMailContent(mimeMessage);
                 // }
@@ -183,13 +177,10 @@ public class JavaMailApi extends AbstractMailApi {
     public List<Mail> loadMails(final String folderFullName, final long uidFrom) {
         final List<Mail> mails = executeInFolder(folderFullName, folder -> {
             final long uidTo = folder.getUIDNext();
-            // SearchTerm searchTerm = new SearchTerm()
-            // {
+            // SearchTerm searchTerm = new SearchTerm() {
             // @Override
-            // public boolean match(final Message msg)
-            // {
-            // if (msg.getMessageNumber() > maxMsgNum)
-            // {
+            // public boolean match(final Message msg) {
+            // if (msg.getMessageNumber() > maxMsgNum) {
             // return true;
             // }
             //
@@ -364,7 +355,7 @@ public class JavaMailApi extends AbstractMailApi {
             }
 
             if ((folder.getType() & Folder.HOLDS_MESSAGES) == 0) {
-                getLogger().warn("Folder {} can not contain messges", folderFullName);
+                getLogger().warn("Folder {} can not contain messages", folderFullName);
 
                 return null;
             }

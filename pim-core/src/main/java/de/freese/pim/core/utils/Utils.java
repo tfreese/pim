@@ -73,7 +73,7 @@ public final class Utils {
             return;
         }
 
-        final int columnCount = rows.get(0).length;
+        final int columnCount = rows.getFirst().length;
 
         // Trenner zwischen Header und Daten.
         // final T[] row = (T[]) Array.newInstance(String.class, columnCount);
@@ -82,7 +82,7 @@ public final class Utils {
         final String[] row = new String[columnCount];
 
         for (int column = 0; column < columnCount; column++) {
-            row[column] = separator.repeat(rows.get(0)[column].length());
+            row[column] = separator.repeat(rows.getFirst()[column].length());
         }
 
         rows.add(1, (T[]) row);
@@ -252,7 +252,7 @@ public final class Utils {
             return;
         }
 
-        final int columnCount = rows.get(0).length;
+        final int columnCount = rows.getFirst().length;
 
         // Breite pro Spalte herausfinden.
         final int[] columnWidth = new int[columnCount];
@@ -362,7 +362,7 @@ public final class Utils {
             return;
         }
 
-        final int columnCount = rows.get(0).length;
+        final int columnCount = rows.getFirst().length;
 
         // Strings pro Spalte schreiben, parallel() verfälscht die Reihenfolge.
         rows.forEach(r -> {
