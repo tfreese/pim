@@ -345,15 +345,13 @@ public final class FxUtils {
      * </code>
      */
     public static void preloadImage(final ImageView imageView) {
-        Dialog<?> dialog = new Dialog<>();
+        final Dialog<?> dialog = new Dialog<>();
         dialog.initOwner(PimClientApplication.getMainWindow());
         dialog.setGraphic(imageView);
 
         imageView.applyCss();
         // imageView.impl_reapplyCSS();
         // imageView.imageProperty().get();
-
-        dialog = null;
     }
 
     /**

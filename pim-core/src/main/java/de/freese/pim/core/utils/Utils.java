@@ -307,6 +307,10 @@ public final class Utils {
         try {
             timeUnit.sleep(duration);
         }
+        catch (InterruptedException ex) {
+            // Restore interrupted state.
+            Thread.currentThread().interrupt();
+        }
         catch (Exception ex) {
             // Ignore
         }

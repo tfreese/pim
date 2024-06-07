@@ -10,29 +10,29 @@ public enum PIMProfile {
     /**
      * Client für REST-Server.
      */
-    ClientREST,
+    CLIENT_REST,
     /**
      * Client als Standalone
      */
-    ClientStandalone,
+    CLIENT_STANDALONE,
     /**
      * HSQLDB als Embedded Server
      */
-    HsqldbEmbeddedServer,
+    HSQLDB_EMBEDDED_SERVER,
     /**
      * HSQLDB als Local-File DB
      */
-    HsqldbLocalFile,
+    HSQLDB_LOCALFILE,
     /**
      * HSQLDB als Memory-DB
      */
-    HsqldbMemory,
+    HSQLDB_MEMORY,
     /**
      * Dedizierter Server
      */
-    Server,
+    SERVER,
     /**
      * SQLITE als Local-File DB
      */
-    SqliteLocalFile
+    SQLITE_LOCALFILE
 }

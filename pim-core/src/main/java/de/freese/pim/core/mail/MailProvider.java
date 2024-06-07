@@ -7,13 +7,13 @@ package de.freese.pim.core.mail;
  * @author Thomas Freese
  */
 public enum MailProvider {
-    EinsUndEins("1&1", "imap.1und1.de", MailPort.IMAPS, "smtp.1und1.de", MailPort.SMTPS),
+    EINS_UND_EINS("1&1", "imap.1und1.de", MailPort.IMAPS, "smtp.1und1.de", MailPort.SMTPS),
 
     GMX("GMX", "imap.gmx.net", MailPort.IMAPS, "mail.gmx.net", MailPort.SMTPS),
 
-    Google("Google", "imap.gmail.com", MailPort.IMAPS, "smtp.gmail.com", MailPort.SMTPS),
+    GOOGLE("Google", "imap.gmail.com", MailPort.IMAPS, "smtp.gmail.com", MailPort.SMTPS),
 
-    WebDe("web.de", "imap.web.de", MailPort.IMAPS, "smtp.web.de", MailPort.SMTPS);
+    WEB_DE("web.de", "imap.web.de", MailPort.IMAPS, "smtp.web.de", MailPort.SMTPS);
 
     private final String displayName;
 

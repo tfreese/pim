@@ -46,7 +46,7 @@ public abstract class AbstractMailTest {
     }
 
     private static MailProvider getMailProvider() {
-        return MailProvider.EinsUndEins;
+        return MailProvider.EINS_UND_EINS;
     }
 
     @Parameter(value = 0)

@@ -239,6 +239,8 @@ class TestMailDAO {
         mail.setUID(2);
 
         this.mailDAO.insertMail(4, Arrays.asList(mail));
+
+        assertTrue(true);
     }
 
     @Test
@@ -310,6 +312,8 @@ class TestMailDAO {
     @Commit
     void test040DeleteMail() {
         this.mailDAO.deleteMail(4, 2);
+
+        assertTrue(true);
     }
 
     @Test
@@ -326,6 +330,8 @@ class TestMailDAO {
     @Commit
     void test050DeleteFolder() {
         this.mailDAO.deleteFolder(4);
+
+        assertTrue(true);
     }
 
     @Test

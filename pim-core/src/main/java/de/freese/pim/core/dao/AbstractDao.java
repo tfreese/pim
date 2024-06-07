@@ -72,14 +72,12 @@ public abstract class AbstractDao implements InitializingBean {
 
         // try (Connection connection = getJdbcTemplate().getDataSource().getConnection();
         // Statement stmt = connection.createStatement();
-        // ResultSet rs = stmt.executeQuery(sql))
-        // {
+        // ResultSet rs = stmt.executeQuery(sql)) {
         // rs.next();
         //
         // return rs.getLong(1);
         // }
-        // catch (SQLException sex)
-        // {
+        // catch (SQLException sex) {
         // throw new DataRetrievalFailureException("", sex);
         // }
     }
