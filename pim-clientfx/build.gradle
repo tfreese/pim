@@ -1,0 +1,48 @@
+plugins {
+    id "java-library"
+    id "org.springframework.boot"
+    id "org.openjfx.javafxplugin"
+}
+
+description = "GUI for PIM"
+
+dependencies {
+    implementation(project(":pim-core"))
+    implementation(project(":pim-server"))
+
+    javafx {
+        version = "$version_javafx"
+        modules = ["javafx.controls", "javafx.fxml", "javafx.web"]
+    }
+}
+
+test {
+    enabled = false
+}
+
+// Start: gradle bootRun --args="--spring.profiles.active=dev"
+// The archive name. If the name has not been explicitly set, the pattern for the name is:
+// [archiveBaseName]-[archiveAppendix]-[archiveVersion]-[archiveClassifier].[archiveExtension]
+// archiveFileName = "test2-boot.jar"
+springBoot {
+    mainClass = "de.freese.pim.gui.PimClientLauncher"
+}
+
+// gradle bootRun --args="--spring.profiles.active=ClientStandalone"
+bootRun {
+    args = [
+            "--spring.profiles.active=ClientRest"
+    ]
+}
+
+// For Placeholder in application.properties/application.yml
+ext.artifactId = project.name
+
+processResources {
+    filesMatching("application-ClientEmbeddedServer.properties") {
+        filteringCharset = "UTF-8"
+
+        /// During Problems escape Placeholder: \${...}
+        expand(project.properties)
+    }
+}

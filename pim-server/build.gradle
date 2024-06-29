@@ -1,0 +1,44 @@
+plugins {
+    id "java-library"
+    id "org.springframework.boot"
+}
+
+description = "Server for PIM"
+
+dependencies {
+    implementation(project(":pim-core"))
+
+    api("org.springframework.boot:spring-boot-starter-web")
+
+    runtimeOnly("org.springframework.boot:spring-boot-starter-actuator")
+
+    testImplementation("org.springframework.boot:spring-boot-starter-test")
+}
+
+// Start: gradle bootRun --args="--spring.profiles.active=dev"
+// The archive name. If the name has not been explicitly set, the pattern for the name is:
+// [archiveBaseName]-[archiveAppendix]-[archiveVersion]-[archiveClassifier].[archiveExtension]
+// archiveFileName = "my-boot.jar"
+springBoot {
+    mainClass = "de.freese.pim.server.PimServerApplication"
+}
+
+// gradle bootRun --args="--spring.profiles.active=Server,HsqldbEmbeddedServer --server.port=65111"
+bootRun {
+    args = [
+            "--spring.profiles.active=Server,HsqldbEmbeddedServer"
+            , "--server.port=65111"
+    ]
+}
+
+// For Placeholder in application.properties/application.yml
+ext.artifactId = project.name
+
+processResources {
+    filesMatching("application-Server.properties") {
+        filteringCharset = "UTF-8"
+
+        // During Problems escape Placeholder: \${...}
+        expand(project.properties)
+    }
+}
