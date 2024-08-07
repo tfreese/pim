@@ -12,7 +12,10 @@ dependencies {
 
     javafx {
         version = "$version_javafx"
+        // sdk = "/path/to/javafx-sdk"
         modules = ["javafx.controls", "javafx.fxml", "javafx.web"]
+        configuration = "implementation"
+        platform = "linux"
     }
 }
 
