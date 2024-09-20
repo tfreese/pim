@@ -6,6 +6,9 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ThreadPoolExecutor;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.aop.interceptor.AsyncUncaughtExceptionHandler;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -27,7 +30,9 @@ import de.freese.pim.core.concurrent.PIMForkJoinWorkerThreadFactory;
  * @author Thomas Freese
  */
 @Configuration
-public class ExecutorConfig {
+public class ExecutorConfig implements AsyncConfigurer {
+    private static final Logger LOGGER = LoggerFactory.getLogger(ExecutorConfig.class);
+
     public ExecutorConfig() {
         super();
 
@@ -56,6 +61,17 @@ public class ExecutorConfig {
         bean.setExposeUnconfigurableExecutor(true);
 
         return bean;
+    }
+
+    @Override
+    public Executor getAsyncExecutor() {
+        // return new DelegatingSecurityContextExecutorService(executorService().getObject());
+        return executorService().getObject();
+    }
+
+    @Override
+    public AsyncUncaughtExceptionHandler getAsyncUncaughtExceptionHandler() {
+        return (ex, method, params) -> LOGGER.error(ex.getMessage());
     }
 
     @Bean

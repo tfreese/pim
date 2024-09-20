@@ -15,6 +15,8 @@ import org.springframework.scheduling.annotation.EnableAsync;
 
 /**
  * Startklasse des PIM-Servers.<br>
+ * --spring.profiles.active=Server,HsqldbMemory --server.port=8888<br>
+ * http://localhost:8888/pim/actuator<br>
  *
  * @author Thomas Freese
  */

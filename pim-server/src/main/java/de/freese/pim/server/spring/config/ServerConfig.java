@@ -13,7 +13,7 @@ import org.springframework.core.task.AsyncTaskExecutor;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.servlet.config.annotation.AsyncSupportConfigurer;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 /**
  * Server Spring-Konfiguration von PIM.
@@ -23,95 +23,86 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupp
 @Configuration
 @Profile("Server")
 @ComponentScan(basePackages = {"de.freese.pim.server", "de.freese.pim.core"})
-public class ServerConfig extends WebMvcConfigurationSupport // implements WebMvcConfigurer
+public class ServerConfig implements WebMvcConfigurer // extends WebMvcConfigurationSupport
 {
     @Resource
-    private ObjectMapper jsonMapper;
+    private ObjectMapper objectMapper;
 
     @Resource
     private AsyncTaskExecutor taskExecutor;
 
     @Override
-    public void extendMessageConverters(final List<HttpMessageConverter<?>> converters) {
-        // Make sure dates are serialised in ISO-8601 format instead as timestamps
-        for (HttpMessageConverter<?> converter : converters) {
-            if (converter instanceof MappingJackson2HttpMessageConverter jsonMessageConverter) {
-                jsonMessageConverter.setObjectMapper(this.jsonMapper);
-                // ObjectMapper objectMapper = jsonMessageConverter.getObjectMapper();
-                // objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
-                // objectMapper.enable(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT);
-                // // objectMapper.setVisibility(PropertyAccessor.FIELD, Visibility.NONE);
-                // // objectMapper.setVisibility(PropertyAccessor.SETTER, Visibility.PUBLIC_ONLY);
-                // // objectMapper.setVisibility(PropertyAccessor.GETTER, Visibility.PUBLIC_ONLY);
-                //
-                // objectMapper.setLocale(Locale.GERMANY);
-                //
-                // TimeZone timeZone = TimeZone.getTimeZone("Europe/Berlin");
-                // objectMapper.setTimeZone(timeZone);
-                //
-                // SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                // df.setTimeZone(timeZone);
-                // objectMapper.setDateFormat(df);
-
-                break;
-            }
-        }
-    }
-
-    @Override
-    protected void configureAsyncSupport(final AsyncSupportConfigurer configurer) {
+    public void configureAsyncSupport(final AsyncSupportConfigurer configurer) {
         // Executer für die Verarbeitung der HTTP-Requests.
         // Verlagert die asynchrone Ausführung von Server-Requests (Callable, WebAsyncTask) in diesen ThreadPool.
         // Ansonsten würde für jeden Request immer ein neuer Thread erzeugt, siehe TaskExecutor des RequestMappingHandlerAdapter.
         configurer.setTaskExecutor(this.taskExecutor);
     }
 
+    /**
+     * Note that use of this method turns off default converter registration.
+     */
+    @Override
+    public void configureMessageConverters(final List<HttpMessageConverter<?>> converters) {
+        converters.clear();
+        converters.add(new MappingJackson2HttpMessageConverter(objectMapper));
+    }
+
+    @Override
+    public void extendMessageConverters(final List<HttpMessageConverter<?>> converters) {
+        // Make sure dates are serialised in ISO-8601 format instead as timestamps.
+        for (HttpMessageConverter<?> converter : converters) {
+            if (converter instanceof MappingJackson2HttpMessageConverter jsonMessageConverter) {
+                // Only required with default converter registration.
+                // See: configureMessageConverters
+                if (!jsonMessageConverter.getObjectMapper().equals(objectMapper)) {
+                    jsonMessageConverter.setObjectMapper(objectMapper);
+                }
+
+                break;
+            }
+        }
+    }
+
     // @Bean(destroyMethod = "disconnectAccounts")
-    // public MailService mailService(final DataSource dataSource, final ExecutorService executorService)
-    // {
-    // DefaultMailService bean = new DefaultMailService();
-    // bean.setMailDAO(new DefaultMailDao().dataSource(dataSource));
-    // bean.setExecutorService(executorService);
-    // //
-    // // return (IMailService) Proxy.newProxyInstance(PIMApplication.class.getClassLoader(), new Class<?>[]
-    // // {
-    // // IMailService.class
-    // // }, new TransactionalInvocationHandler(PIMApplication.getDataSource(), defaultMailService));
+    // public MailService mailService(final DataSource dataSource, final ExecutorService executorService) {
+    //     final DefaultMailService bean = new DefaultMailService();
+    //     bean.setMailDAO(new DefaultMailDao().dataSource(dataSource));
+    //     bean.setExecutorService(executorService);
+    //     //
+    //     // return (IMailService) Proxy.newProxyInstance(PIMApplication.class.getClassLoader(), new Class<?>[] {
+    //     // IMailService.class
+    //     // }, new TransactionalInvocationHandler(PIMApplication.getDataSource(), defaultMailService));
     // }
 
     // @Bean(initMethod = "migrate")
     // // @DependsOn("dataSource")
-    // public Flyway flyway(final DataSource dataSource)
-    // {
-    // Flyway flyway = new Flyway();
-    // flyway.setEncoding("UTF-8");
-    // flyway.setBaselineOnMigrate(true);
-    // flyway.setDataSource(dataSource);
-    // // flyway.setLocations("filesystem:/path/to/migrations/");
-    // flyway.setLocations("classpath:db/hsqldb");
+    // public Flyway flyway(final DataSource dataSource) {
+    //     final Flyway flyway = new Flyway();
+    //     flyway.setEncoding("UTF-8");
+    //     flyway.setBaselineOnMigrate(true);
+    //     flyway.setDataSource(dataSource);
+    //     // flyway.setLocations("filesystem:/path/to/migrations/");
+    //     flyway.setLocations("classpath:db/hsqldb");
     //
-    // return flyway;
+    //     return flyway;
     // }
 
     // @Bean
-    // public EmbeddedServletContainerCustomizer tomcatCustomizer()
-    // {
-    // return container -> {
-    // if (container instanceof TomcatEmbeddedServletContainerFactory)
-    // {
-    // ((TomcatEmbeddedServletContainerFactory) container).addConnectorCustomizers(gracefulShutdown());
-    // }
-    // };
+    // public EmbeddedServletContainerCustomizer tomcatCustomizer() {
+    //     return container -> {
+    //         if (container instanceof TomcatEmbeddedServletContainerFactory) {
+    //             ((TomcatEmbeddedServletContainerFactory) container).addConnectorCustomizers(gracefulShutdown());
+    //         }
+    //     };
     // }
 
     // @Bean
-    // public EmbeddedServletContainerCustomizer jettyCustomizer()
-    // {
-    // return container -> {
-    // if (container instanceof JettyEmbeddedServletContainerFactory)
-    // {
-    // ((JettyEmbeddedServletContainerFactory) container).setThreadPool(threadPool);
-    // }
-    // };
+    // public EmbeddedServletContainerCustomizer jettyCustomizer() {
+    //     return container -> {
+    //         if (container instanceof JettyEmbeddedServletContainerFactory) {
+    //             ((JettyEmbeddedServletContainerFactory) container).setThreadPool(threadPool);
+    //         }
+    //     };
     // }
 }

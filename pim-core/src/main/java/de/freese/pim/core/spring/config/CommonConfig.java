@@ -4,11 +4,14 @@ package de.freese.pim.core.spring.config;
 import java.util.Locale;
 import java.util.TimeZone;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.PropertySource;
 
 /**
@@ -20,20 +23,23 @@ import org.springframework.context.annotation.PropertySource;
 @PropertySource("classpath:application-common.properties")
 public class CommonConfig {
     /**
-     * <a href="https://docs.spring.io/spring-boot/docs/current-SNAPSHOT/reference/htmlsingle/#howto-customize-the-jackson-objectmapper">
-     * howto-customize-the-jackson-objectmapper
-     * </a>
-     *
-     * @return {@link ObjectMapper}
+     * <a href="https://www.baeldung.com/spring-boot-customize-jackson-objectmapper">spring-boot-customize-jackson-objectmapper</a>
      */
     @Bean
-    public ObjectMapper jsonMapper() {
-        final ObjectMapper jsonMapper = new ObjectMapper();
-        jsonMapper.enable(SerializationFeature.INDENT_OUTPUT);
-        jsonMapper.enable(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT);
-        // jsonMapper.setVisibility(PropertyAccessor.FIELD, Visibility.NONE);
-        // jsonMapper.setVisibility(PropertyAccessor.SETTER, Visibility.PUBLIC_ONLY);
-        // jsonMapper.setVisibility(PropertyAccessor.GETTER, Visibility.PUBLIC_ONLY);
+    @Primary
+    public ObjectMapper objectMapper() {
+        final JavaTimeModule javaTimeModule = new JavaTimeModule();
+        // module.addSerializer(LOCAL_DATETIME_SERIALIZER);
+
+        final ObjectMapper jsonMapper = new ObjectMapper()
+                .enable(SerializationFeature.INDENT_OUTPUT)
+                .enable(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT)
+                .setSerializationInclusion(JsonInclude.Include.NON_NULL)
+                .registerModule(javaTimeModule)
+                // .setVisibility(PropertyAccessor.FIELD, Visibility.NONE)
+                // .setVisibility(PropertyAccessor.SETTER, Visibility.PUBLIC_ONLY)
+                // .setVisibility(PropertyAccessor.GETTER, Visibility.PUBLIC_ONLY)
+                ;
 
         jsonMapper.setLocale(Locale.GERMANY);
 

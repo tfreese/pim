@@ -1,0 +1,16 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="PimServerApplication" type="Application" factoryName="Application" nameIsGenerated="true">
+    <option name="MAIN_CLASS_NAME" value="de.freese.pim.server.PimServerApplication" />
+    <module name="pim.pim-server.main" />
+    <option name="PROGRAM_PARAMETERS" value="--spring.profiles.active=Server,HsqldbMemory --server.port=8888" />
+    <extension name="coverage">
+      <pattern>
+        <option name="PATTERN" value="de.freese.pim.server.*" />
+        <option name="ENABLED" value="true" />
+      </pattern>
+    </extension>
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>
