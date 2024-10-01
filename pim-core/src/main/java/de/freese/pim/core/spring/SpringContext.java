@@ -16,13 +16,14 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.EnvironmentAware;
 import org.springframework.context.ResourceLoaderAware;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.core.task.AsyncTaskExecutor;
 import org.springframework.scheduling.TaskScheduler;
-import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
 /**
@@ -30,14 +31,25 @@ import org.springframework.util.Assert;
  *
  * @author Thomas Freese
  */
-@Component
 public final class SpringContext implements ApplicationContextAware, ResourceLoaderAware, EnvironmentAware, InitializingBean {
-    private static ApplicationContext applicationContext;
-    private static Environment environment;
-    private static ResourceLoader resourceLoader;
+    private static SpringContext instance;
+
+    @Configuration
+    public static class Config {
+        private static void setContext(final SpringContext instance) {
+            SpringContext.instance = instance;
+        }
+
+        @Bean
+        public SpringContext springContext() {
+            setContext(new SpringContext());
+
+            return SpringContext.instance;
+        }
+    }
 
     public static ApplicationContext getApplicationContext() {
-        return applicationContext;
+        return instance.applicationContext;
     }
 
     /**
@@ -87,7 +99,7 @@ public final class SpringContext implements ApplicationContextAware, ResourceLoa
     }
 
     public static Environment getEnvironment() {
-        return environment;
+        return instance.environment;
     }
 
     public static ExecutorService getExecutorService() {
@@ -99,7 +111,7 @@ public final class SpringContext implements ApplicationContextAware, ResourceLoa
     }
 
     public static ResourceLoader getResourceLoader() {
-        return resourceLoader;
+        return instance.resourceLoader;
     }
 
     public static ScheduledExecutorService getScheduledExecutorService() {
@@ -113,7 +125,11 @@ public final class SpringContext implements ApplicationContextAware, ResourceLoa
         return getApplicationContext().getBean(TaskScheduler.class);
     }
 
-    public SpringContext() {
+    private ApplicationContext applicationContext;
+    private Environment environment;
+    private ResourceLoader resourceLoader;
+
+    private SpringContext() {
         super();
     }
 
@@ -126,53 +142,20 @@ public final class SpringContext implements ApplicationContextAware, ResourceLoa
 
     @Override
     public void setApplicationContext(final ApplicationContext applicationContext) throws BeansException {
-        if (SpringContext.applicationContext != null) {
-            throw new IllegalStateException("ApplicationContext already set !");
-        }
+        this.applicationContext = Objects.requireNonNull(applicationContext, "applicationContext required");
 
-        SpringContext.applicationContext = Objects.requireNonNull(applicationContext, "applicationContext required");
-
-        if (SpringContext.applicationContext instanceof AbstractApplicationContext ac) {
+        if (applicationContext instanceof AbstractApplicationContext ac) {
             ac.registerShutdownHook();
         }
     }
 
     @Override
     public void setEnvironment(final Environment environment) {
-        if (SpringContext.environment != null) {
-            throw new IllegalStateException("Environment already set !");
-        }
-
-        SpringContext.environment = Objects.requireNonNull(environment, "environment required");
+        this.environment = Objects.requireNonNull(environment, "environment required");
     }
 
     @Override
     public void setResourceLoader(final ResourceLoader resourceLoader) {
-        if (SpringContext.resourceLoader != null) {
-            throw new IllegalStateException("ResourceLoader already set !");
-        }
-
-        SpringContext.resourceLoader = Objects.requireNonNull(resourceLoader, "resourceLoader required");
+        this.resourceLoader = Objects.requireNonNull(resourceLoader, "resourceLoader required");
     }
-
-    // /**
-    // * Destroy-Lifecycle ist nicht für Prototypes verfügbar !
-    // *
-    // * @param url String
-    // * @return {@link DataSource}
-    // */
-    // @Bean(destroyMethod = "destroy")
-    // @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-    // @Lazy(true)
-    // public DataSource dataSource(final String url)
-    // {
-    // SingleConnectionDataSource dataSource = new SingleConnectionDataSource();
-    // dataSource.setDriverClassName("oracle.jdbc.OracleDriver");
-    // dataSource.setUrl(url);
-    // // dataSource.setUsername(user);
-    // // dataSource.setPassword(password);
-    // dataSource.setSuppressClose(true);
-    //
-    // return dataSource;
-    // }
 }
