@@ -72,7 +72,7 @@ public class InitMailApiTask extends Task<List<FxMailFolder>> {
     }
 
     @Override
-    protected List<FxMailFolder> call() throws Exception {
+    protected List<FxMailFolder> call() {
         LOGGER.info("Init MailAccount {}", this.account.getMail());
 
         this.mailService.connectAccount(this.account);

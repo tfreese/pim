@@ -41,7 +41,7 @@ class TestSpringManualTxAddressbookDAO extends AbstractDaoTestCase {
     }
 
     @BeforeAll
-    static void beforeAll() throws Exception {
+    static void beforeAll() {
         final TestConfig config = new TestConfig();
 
         // dataSource = new JndiDataSourceLookup().getDataSource("jdbc/spring/manualTX"); // Wird in AllTests definiert.
@@ -54,7 +54,7 @@ class TestSpringManualTxAddressbookDAO extends AbstractDaoTestCase {
 
     @Override
     @Test
-    void test0100InsertKontakts() throws Throwable {
+    void test0100InsertKontakts() {
         final TransactionDefinition transactionDefinition = new DefaultTransactionDefinition();
         final TransactionStatus transactionStatus = transactionManager.getTransaction(transactionDefinition);
 
@@ -73,7 +73,7 @@ class TestSpringManualTxAddressbookDAO extends AbstractDaoTestCase {
 
     @Override
     @Test
-    void test0110InsertKontaktWithNullVorname() throws Throwable {
+    void test0110InsertKontaktWithNullVorname() {
         final TransactionDefinition transactionDefinition = new DefaultTransactionDefinition();
         final TransactionStatus transactionStatus = transactionManager.getTransaction(transactionDefinition);
 
@@ -92,7 +92,7 @@ class TestSpringManualTxAddressbookDAO extends AbstractDaoTestCase {
 
     @Override
     @Test
-    void test0120InsertKontaktWithBlankVorname() throws Throwable {
+    void test0120InsertKontaktWithBlankVorname() {
         final TransactionDefinition transactionDefinition = new DefaultTransactionDefinition();
         final TransactionStatus transactionStatus = transactionManager.getTransaction(transactionDefinition);
 
@@ -111,7 +111,7 @@ class TestSpringManualTxAddressbookDAO extends AbstractDaoTestCase {
 
     @Override
     @Test
-    void test0130InsertKontaktExisting() throws Throwable {
+    void test0130InsertKontaktExisting() {
         final TransactionDefinition transactionDefinition = new DefaultTransactionDefinition();
         final TransactionStatus transactionStatus = transactionManager.getTransaction(transactionDefinition);
 
@@ -130,7 +130,7 @@ class TestSpringManualTxAddressbookDAO extends AbstractDaoTestCase {
 
     @Override
     @Test
-    void test0200UpdateKontakt() throws Throwable {
+    void test0200UpdateKontakt() {
         final TransactionDefinition transactionDefinition = new DefaultTransactionDefinition();
         final TransactionStatus transactionStatus = transactionManager.getTransaction(transactionDefinition);
 
@@ -149,7 +149,7 @@ class TestSpringManualTxAddressbookDAO extends AbstractDaoTestCase {
 
     @Override
     @Test
-    void test0300InsertAttribut() throws Throwable {
+    void test0300InsertAttribut() {
         final TransactionDefinition transactionDefinition = new DefaultTransactionDefinition();
         final TransactionStatus transactionStatus = transactionManager.getTransaction(transactionDefinition);
 
@@ -168,7 +168,7 @@ class TestSpringManualTxAddressbookDAO extends AbstractDaoTestCase {
 
     @Override
     @Test
-    void test0310InsertInsertAttributWithNullValue() throws Throwable {
+    void test0310InsertInsertAttributWithNullValue() {
         final TransactionDefinition transactionDefinition = new DefaultTransactionDefinition();
         final TransactionStatus transactionStatus = transactionManager.getTransaction(transactionDefinition);
 
@@ -187,7 +187,7 @@ class TestSpringManualTxAddressbookDAO extends AbstractDaoTestCase {
 
     @Override
     @Test
-    void test0320InsertInsertAttributWithBlankValue() throws Throwable {
+    void test0320InsertInsertAttributWithBlankValue() {
         final TransactionDefinition transactionDefinition = new DefaultTransactionDefinition();
         final TransactionStatus transactionStatus = transactionManager.getTransaction(transactionDefinition);
 
@@ -206,7 +206,7 @@ class TestSpringManualTxAddressbookDAO extends AbstractDaoTestCase {
 
     @Override
     @Test
-    void test0330InsertInsertAttributWithNull() throws Throwable {
+    void test0330InsertInsertAttributWithNull() {
         final TransactionDefinition transactionDefinition = new DefaultTransactionDefinition();
         final TransactionStatus transactionStatus = transactionManager.getTransaction(transactionDefinition);
 
@@ -225,7 +225,7 @@ class TestSpringManualTxAddressbookDAO extends AbstractDaoTestCase {
 
     @Override
     @Test
-    void test0340InsertInsertAttributWithBlank() throws Throwable {
+    void test0340InsertInsertAttributWithBlank() {
         final TransactionDefinition transactionDefinition = new DefaultTransactionDefinition();
         final TransactionStatus transactionStatus = transactionManager.getTransaction(transactionDefinition);
 
@@ -244,7 +244,7 @@ class TestSpringManualTxAddressbookDAO extends AbstractDaoTestCase {
 
     @Override
     @Test
-    void test0350InsertAttributExisting() throws Throwable {
+    void test0350InsertAttributExisting() {
         final TransactionDefinition transactionDefinition = new DefaultTransactionDefinition();
         final TransactionStatus transactionStatus = transactionManager.getTransaction(transactionDefinition);
 
@@ -263,7 +263,7 @@ class TestSpringManualTxAddressbookDAO extends AbstractDaoTestCase {
 
     @Override
     @Test
-    void test0400UpdateAttribut() throws Throwable {
+    void test0400UpdateAttribut() {
         final TransactionDefinition transactionDefinition = new DefaultTransactionDefinition();
         final TransactionStatus transactionStatus = transactionManager.getTransaction(transactionDefinition);
 
@@ -282,7 +282,7 @@ class TestSpringManualTxAddressbookDAO extends AbstractDaoTestCase {
 
     @Override
     @Test
-    void test0500GetKontaktDetailsAll() throws Throwable {
+    void test0500GetKontaktDetailsAll() {
         final DefaultTransactionDefinition transactionDefinition = new DefaultTransactionDefinition();
         transactionDefinition.setReadOnly(true);
         final TransactionStatus transactionStatus = transactionManager.getTransaction(transactionDefinition);
@@ -303,7 +303,7 @@ class TestSpringManualTxAddressbookDAO extends AbstractDaoTestCase {
 
     @Override
     @Test
-    void test0510GetKontaktDetailsWithID() throws Throwable {
+    void test0510GetKontaktDetailsWithID() {
         final DefaultTransactionDefinition transactionDefinition = new DefaultTransactionDefinition();
         transactionDefinition.setReadOnly(true);
         final TransactionStatus transactionStatus = transactionManager.getTransaction(transactionDefinition);
@@ -324,7 +324,7 @@ class TestSpringManualTxAddressbookDAO extends AbstractDaoTestCase {
 
     @Override
     @Test
-    void test0520GetKontaktDetailsWithIDs() throws Throwable {
+    void test0520GetKontaktDetailsWithIDs() {
         final DefaultTransactionDefinition transactionDefinition = new DefaultTransactionDefinition();
         transactionDefinition.setReadOnly(true);
         final TransactionStatus transactionStatus = transactionManager.getTransaction(transactionDefinition);
@@ -345,7 +345,7 @@ class TestSpringManualTxAddressbookDAO extends AbstractDaoTestCase {
 
     @Override
     @Test
-    void test0600GetKontakte() throws Throwable {
+    void test0600GetKontakte() {
         final DefaultTransactionDefinition transactionDefinition = new DefaultTransactionDefinition();
         transactionDefinition.setReadOnly(true);
         final TransactionStatus transactionStatus = transactionManager.getTransaction(transactionDefinition);
@@ -366,7 +366,7 @@ class TestSpringManualTxAddressbookDAO extends AbstractDaoTestCase {
 
     @Override
     @Test
-    void test0700SearchKontakts() throws Throwable {
+    void test0700SearchKontakts() {
         final DefaultTransactionDefinition transactionDefinition = new DefaultTransactionDefinition();
         transactionDefinition.setReadOnly(true);
         final TransactionStatus transactionStatus = transactionManager.getTransaction(transactionDefinition);
@@ -387,7 +387,7 @@ class TestSpringManualTxAddressbookDAO extends AbstractDaoTestCase {
 
     @Override
     @Test
-    void test0900DeleteAttribut() throws Throwable {
+    void test0900DeleteAttribut() {
         final TransactionDefinition transactionDefinition = new DefaultTransactionDefinition();
         final TransactionStatus transactionStatus = transactionManager.getTransaction(transactionDefinition);
 
@@ -406,7 +406,7 @@ class TestSpringManualTxAddressbookDAO extends AbstractDaoTestCase {
 
     @Override
     @Test
-    void test1000DeleteKontakt() throws Throwable {
+    void test1000DeleteKontakt() {
         final TransactionDefinition transactionDefinition = new DefaultTransactionDefinition();
         final TransactionStatus transactionStatus = transactionManager.getTransaction(transactionDefinition);
 

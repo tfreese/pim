@@ -16,6 +16,8 @@ import org.eclipse.angus.mail.imap.protocol.BODY;
 import org.eclipse.angus.mail.imap.protocol.FetchResponse;
 import org.eclipse.angus.mail.imap.protocol.IMAPProtocol;
 import org.eclipse.angus.mail.imap.protocol.IMAPResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Eigener IMAP-Befehl für Performance-Optimierung beim Download einer Mail.<br>
@@ -28,6 +30,8 @@ import org.eclipse.angus.mail.imap.protocol.IMAPResponse;
  * @author Thomas Freese
  */
 public class ImapDownloadCommand implements IMAPFolder.ProtocolCommand {
+    private static final Logger LOGGER = LoggerFactory.getLogger(ImapDownloadCommand.class);
+
     private final Session session;
     private final long uid;
 
@@ -85,7 +89,7 @@ public class ImapDownloadCommand implements IMAPFolder.ProtocolCommand {
                     //                        ex.printStackTrace();
                     //                    }
                     catch (IOException ex) {
-                        ex.printStackTrace();
+                        LOGGER.error(ex.getMessage(), ex);
                     }
                 }
             }

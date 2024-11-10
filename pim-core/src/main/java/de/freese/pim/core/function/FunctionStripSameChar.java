@@ -16,7 +16,7 @@ public class FunctionStripSameChar implements UnaryOperator<String> {
     public String apply(final String text) {
         String str = "";
 
-        if (text.length() == 0) {
+        if (text.isEmpty()) {
             return str;
         }
 

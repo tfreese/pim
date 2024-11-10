@@ -2,7 +2,6 @@
 package de.freese.pim.core.mail;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
@@ -425,7 +424,7 @@ public final class JavaMailBuilder {
             }
 
             @Override
-            public InputStream getInputStream() throws IOException {
+            public InputStream getInputStream() {
                 return inputStream;
             }
 

@@ -10,6 +10,7 @@ import java.util.Properties;
 
 import org.junit.runners.Parameterized.Parameter;
 import org.junit.runners.Parameterized.Parameters;
+import org.slf4j.LoggerFactory;
 
 /**
  * <a href="https://javamail.java.net/nonav/docs/api/com/sun/mail/imap/package-summary.html">javamail.java.net</a>
@@ -31,7 +32,7 @@ public abstract class AbstractMailTest {
         Files.createDirectories(path.getParent());
 
         if (Files.notExists(path)) {
-            System.err.println("need property file with from, to and password: " + path);
+            LoggerFactory.getLogger(AbstractMailTest.class).error("need property file with from, to and password: {}", path);
 
             return Arrays.asList(new Object[][]{});
         }
@@ -49,7 +50,7 @@ public abstract class AbstractMailTest {
         return MailProvider.EINS_UND_EINS;
     }
 
-    @Parameter(value = 0)
+    @Parameter
     private String from;
 
     @Parameter(value = 2)

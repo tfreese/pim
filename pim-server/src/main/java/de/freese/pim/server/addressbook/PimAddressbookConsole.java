@@ -361,8 +361,8 @@ public final class PimAddressbookConsole {
             final List<KontaktAttribut> kontaktAttribute = kontakt.getAttribute();
 
             if (!kontaktAttribute.isEmpty()) {
-                rows.get(rows.size() - 1)[3] = kontaktAttribute.get(0).getAttribut();
-                rows.get(rows.size() - 1)[4] = kontaktAttribute.get(0).getWert();
+                rows.getLast()[3] = kontaktAttribute.getFirst().getAttribut();
+                rows.getLast()[4] = kontaktAttribute.getFirst().getWert();
             }
 
             if (kontaktAttribute.size() > 1) {

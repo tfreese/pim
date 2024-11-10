@@ -38,7 +38,7 @@ public abstract class AbstractFxMailService extends AbstractFxService implements
     private Path basePath;
 
     @PreDestroy
-    public void disconnectAccounts() throws Exception {
+    public void disconnectAccounts() {
         disconnectAccounts(new long[0]);
     }
 
@@ -107,7 +107,7 @@ public abstract class AbstractFxMailService extends AbstractFxService implements
 
     protected abstract MailContent loadMailContent(Path mailPath, FxMailAccount account, FxMail mail, IOMonitor monitor) throws Exception;
 
-    protected void saveMailContent(final Path mailPath, final MailContent mailContent) throws Exception {
+    protected void saveMailContent(final Path mailPath, final MailContent mailContent) {
         final Callable<Void> task = () -> {
             getLogger().info("Save Mail: {}", mailPath);
 
@@ -130,7 +130,7 @@ public abstract class AbstractFxMailService extends AbstractFxService implements
         getTaskExecutor().submit(task);
     }
 
-    protected void saveMailContent(final Path mailPath, final String jsonContent) throws Exception {
+    protected void saveMailContent(final Path mailPath, final String jsonContent) {
         final Callable<Void> task = () -> {
             getLogger().info("Save Mail: {}", mailPath);
 

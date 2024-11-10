@@ -72,7 +72,7 @@ public class JavaMailSender {
 
     public synchronized Session getSession() {
         if (this.session == null) {
-            this.session = Session.getInstance(getJavaMailProperties(), getAuthenticator());
+            this.session = Session.getInstance(getJavaMailProperties(), authenticator);
         }
 
         return this.session;
@@ -220,12 +220,8 @@ public class JavaMailSender {
         }
     }
 
-    protected MailAuthenticator getAuthenticator() {
-        return this.authenticator;
-    }
-
     protected String getPassword() {
-        return getAuthenticator().getPasswordAuthentication().getPassword();
+        return authenticator.getPasswordAuthentication().getPassword();
     }
 
     /**
@@ -246,6 +242,6 @@ public class JavaMailSender {
     }
 
     protected String getUsername() {
-        return getAuthenticator().getPasswordAuthentication().getUserName();
+        return authenticator.getPasswordAuthentication().getUserName();
     }
 }

@@ -201,8 +201,7 @@ public class DefaultMailService extends AbstractService implements MailService, 
         // Alle Mails lokal löschen, die zwischenzeitlich auch Remote gelöscht worden sind.
         final Set<Long> currentUIDs = mailAPI.loadMessageIDs(folderFullName);
 
-        final Set<Long> remoteDeletedUIDs = new HashSet<>();
-        remoteDeletedUIDs.addAll(mailMap.keySet());
+        final Set<Long> remoteDeletedUIDs = new HashSet<>(mailMap.keySet());
         remoteDeletedUIDs.removeAll(currentUIDs);
 
         for (Long uid : remoteDeletedUIDs) {

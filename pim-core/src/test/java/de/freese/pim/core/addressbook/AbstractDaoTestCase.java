@@ -30,45 +30,45 @@ public abstract class AbstractDaoTestCase {
         }
     }
 
-    abstract void test0100InsertKontakts() throws Throwable;
+    abstract void test0100InsertKontakts();
 
-    abstract void test0110InsertKontaktWithNullVorname() throws Throwable;
+    abstract void test0110InsertKontaktWithNullVorname();
 
-    abstract void test0120InsertKontaktWithBlankVorname() throws Throwable;
+    abstract void test0120InsertKontaktWithBlankVorname();
 
-    abstract void test0130InsertKontaktExisting() throws Throwable;
+    abstract void test0130InsertKontaktExisting();
 
-    abstract void test0200UpdateKontakt() throws Throwable;
+    abstract void test0200UpdateKontakt();
 
-    abstract void test0300InsertAttribut() throws Throwable;
+    abstract void test0300InsertAttribut();
 
-    abstract void test0310InsertInsertAttributWithNullValue() throws Throwable;
+    abstract void test0310InsertInsertAttributWithNullValue();
 
-    abstract void test0320InsertInsertAttributWithBlankValue() throws Throwable;
+    abstract void test0320InsertInsertAttributWithBlankValue();
 
-    abstract void test0330InsertInsertAttributWithNull() throws Throwable;
+    abstract void test0330InsertInsertAttributWithNull();
 
-    abstract void test0340InsertInsertAttributWithBlank() throws Throwable;
+    abstract void test0340InsertInsertAttributWithBlank();
 
-    abstract void test0350InsertAttributExisting() throws Throwable;
+    abstract void test0350InsertAttributExisting();
 
-    abstract void test0400UpdateAttribut() throws Throwable;
+    abstract void test0400UpdateAttribut();
 
-    abstract void test0500GetKontaktDetailsAll() throws Throwable;
+    abstract void test0500GetKontaktDetailsAll();
 
-    abstract void test0510GetKontaktDetailsWithID() throws Throwable;
+    abstract void test0510GetKontaktDetailsWithID();
 
-    abstract void test0520GetKontaktDetailsWithIDs() throws Throwable;
+    abstract void test0520GetKontaktDetailsWithIDs();
 
-    abstract void test0600GetKontakte() throws Throwable;
+    abstract void test0600GetKontakte();
 
-    abstract void test0700SearchKontakts() throws Throwable;
+    abstract void test0700SearchKontakts();
 
-    abstract void test0900DeleteAttribut() throws Throwable;
+    abstract void test0900DeleteAttribut();
 
-    abstract void test1000DeleteKontakt() throws Throwable;
+    abstract void test1000DeleteKontakt();
 
-    protected void doTest0100InsertKontakts(final AddressBookDao addressBookDAO) throws Throwable {
+    protected void doTest0100InsertKontakts(final AddressBookDao addressBookDAO) {
         long id = addressBookDAO.insertKontakt("BNachname", "BVorname");
         assertEquals(1, id);
 
@@ -76,7 +76,7 @@ public abstract class AbstractDaoTestCase {
         assertEquals(2, id);
     }
 
-    protected void doTest0110InsertKontaktWithNullVorname(final AddressBookDao addressBookDAO) throws Throwable {
+    protected void doTest0110InsertKontaktWithNullVorname(final AddressBookDao addressBookDAO) {
         final long id = addressBookDAO.insertKontakt("CNachname", null);
         assertEquals(3, id);
     }
@@ -105,13 +105,13 @@ public abstract class AbstractDaoTestCase {
         fail();
     }
 
-    protected void doTest0200UpdateKontakt(final AddressBookDao addressBookDAO) throws Throwable {
+    protected void doTest0200UpdateKontakt(final AddressBookDao addressBookDAO) {
         final int affectedRows = addressBookDAO.updateKontakt(2, "ANachname", "A-Vorname");
 
         assertEquals(1, affectedRows);
     }
 
-    protected void doTest0300InsertAttribut(final AddressBookDao addressBookDAO) throws Throwable {
+    protected void doTest0300InsertAttribut(final AddressBookDao addressBookDAO) {
         final int affectedRows = addressBookDAO.insertAttribut(2, "STREET", "Street 1");
 
         assertEquals(1, affectedRows);
@@ -177,22 +177,22 @@ public abstract class AbstractDaoTestCase {
         }
     }
 
-    protected void doTest0400UpdateAttribut(final AddressBookDao addressBookDAO) throws Throwable {
+    protected void doTest0400UpdateAttribut(final AddressBookDao addressBookDAO) {
         final int affectedRows = addressBookDAO.updateAttribut(2, "STREET", "Street 2");
 
         assertEquals(1, affectedRows);
     }
 
-    protected void doTest0500GetKontaktDetailsAll(final AddressBookDao addressBookDAO) throws Throwable {
+    protected void doTest0500GetKontaktDetailsAll(final AddressBookDao addressBookDAO) {
         final List<Kontakt> kontakts = addressBookDAO.getKontaktDetails();
 
         Assertions.assertNotNull(kontakts);
         assertEquals(3, kontakts.size());
 
-        assertEquals(1, kontakts.get(0).getID());
-        assertEquals("BNachname", kontakts.get(0).getNachname());
-        assertEquals("BVorname", kontakts.get(0).getVorname());
-        List<KontaktAttribut> attribute = kontakts.get(0).getAttribute();
+        assertEquals(1, kontakts.getFirst().getID());
+        assertEquals("BNachname", kontakts.getFirst().getNachname());
+        assertEquals("BVorname", kontakts.getFirst().getVorname());
+        List<KontaktAttribut> attribute = kontakts.getFirst().getAttribute();
         assertEquals(0, attribute.size());
 
         assertEquals(3, kontakts.get(1).getID());
@@ -206,37 +206,37 @@ public abstract class AbstractDaoTestCase {
         assertEquals("A-Vorname", kontakts.get(2).getVorname());
         attribute = kontakts.get(2).getAttribute();
         assertEquals(1, attribute.size());
-        assertEquals(2, attribute.get(0).getKontaktID());
-        assertEquals("STREET", attribute.get(0).getAttribut());
-        assertEquals("Street 2", attribute.get(0).getWert());
+        assertEquals(2, attribute.getFirst().getKontaktID());
+        assertEquals("STREET", attribute.getFirst().getAttribut());
+        assertEquals("Street 2", attribute.getFirst().getWert());
 
     }
 
-    protected void doTest0510GetKontaktDetailsWithID(final AddressBookDao addressBookDAO) throws Throwable {
+    protected void doTest0510GetKontaktDetailsWithID(final AddressBookDao addressBookDAO) {
         final List<Kontakt> kontakts = addressBookDAO.getKontaktDetails(2);
 
         Assertions.assertNotNull(kontakts);
         assertEquals(1, kontakts.size());
-        assertEquals(2, kontakts.get(0).getID());
-        assertEquals("ANachname", kontakts.get(0).getNachname());
-        assertEquals("A-Vorname", kontakts.get(0).getVorname());
+        assertEquals(2, kontakts.getFirst().getID());
+        assertEquals("ANachname", kontakts.getFirst().getNachname());
+        assertEquals("A-Vorname", kontakts.getFirst().getVorname());
 
-        final List<KontaktAttribut> attribute = kontakts.get(0).getAttribute();
+        final List<KontaktAttribut> attribute = kontakts.getFirst().getAttribute();
         assertEquals(1, attribute.size());
-        assertEquals(2, attribute.get(0).getKontaktID());
-        assertEquals("STREET", attribute.get(0).getAttribut());
-        assertEquals("Street 2", attribute.get(0).getWert());
+        assertEquals(2, attribute.getFirst().getKontaktID());
+        assertEquals("STREET", attribute.getFirst().getAttribut());
+        assertEquals("Street 2", attribute.getFirst().getWert());
     }
 
-    protected void doTest0520GetKontaktDetailsWithIDs(final AddressBookDao addressBookDAO) throws Throwable {
+    protected void doTest0520GetKontaktDetailsWithIDs(final AddressBookDao addressBookDAO) {
         final List<Kontakt> kontakts = addressBookDAO.getKontaktDetails(2, 3);
 
         Assertions.assertNotNull(kontakts);
         assertEquals(2, kontakts.size());
 
-        assertEquals(3, kontakts.get(0).getID());
-        assertEquals("CNachname", kontakts.get(0).getNachname());
-        assertNull(kontakts.get(0).getVorname());
+        assertEquals(3, kontakts.getFirst().getID());
+        assertEquals("CNachname", kontakts.getFirst().getNachname());
+        assertNull(kontakts.getFirst().getVorname());
         List<KontaktAttribut> attribute = kontakts.get(0).getAttribute();
         assertEquals(0, attribute.size());
 
@@ -245,20 +245,20 @@ public abstract class AbstractDaoTestCase {
         assertEquals("A-Vorname", kontakts.get(1).getVorname());
         attribute = kontakts.get(1).getAttribute();
         assertEquals(1, attribute.size());
-        assertEquals(2, attribute.get(0).getKontaktID());
-        assertEquals("STREET", attribute.get(0).getAttribut());
-        assertEquals("Street 2", attribute.get(0).getWert());
+        assertEquals(2, attribute.getFirst().getKontaktID());
+        assertEquals("STREET", attribute.getFirst().getAttribut());
+        assertEquals("Street 2", attribute.getFirst().getWert());
     }
 
-    protected void doTest0600GetKontakte(final AddressBookDao addressBookDAO) throws Throwable {
+    protected void doTest0600GetKontakte(final AddressBookDao addressBookDAO) {
         final List<Kontakt> kontakte = addressBookDAO.getKontakte();
 
         Assertions.assertNotNull(kontakte);
         assertEquals(3, kontakte.size());
 
-        assertEquals(2, kontakte.get(0).getID());
-        assertEquals("ANachname", kontakte.get(0).getNachname());
-        assertEquals("A-Vorname", kontakte.get(0).getVorname());
+        assertEquals(2, kontakte.getFirst().getID());
+        assertEquals("ANachname", kontakte.getFirst().getNachname());
+        assertEquals("A-Vorname", kontakte.getFirst().getVorname());
 
         assertEquals(1, kontakte.get(1).getID());
         assertEquals("BNachname", kontakte.get(1).getNachname());
@@ -269,21 +269,21 @@ public abstract class AbstractDaoTestCase {
         assertNull(kontakte.get(2).getVorname());
     }
 
-    protected void doTest0700SearchKontakts(final AddressBookDao addressBookDAO) throws Throwable {
+    protected void doTest0700SearchKontakts(final AddressBookDao addressBookDAO) {
         final List<Kontakt> kontakte = addressBookDAO.searchKontakte("vor");
 
         Assertions.assertNotNull(kontakte);
         assertEquals(2, kontakte.size());
 
-        assertEquals(2, kontakte.get(0).getID());
-        assertEquals("ANachname", kontakte.get(0).getNachname());
-        assertEquals("A-Vorname", kontakte.get(0).getVorname());
+        assertEquals(2, kontakte.getFirst().getID());
+        assertEquals("ANachname", kontakte.getFirst().getNachname());
+        assertEquals("A-Vorname", kontakte.getFirst().getVorname());
 
-        final List<KontaktAttribut> attribute = kontakte.get(0).getAttribute();
+        final List<KontaktAttribut> attribute = kontakte.getFirst().getAttribute();
         assertEquals(1, attribute.size());
-        assertEquals(2, attribute.get(0).getKontaktID());
-        assertEquals("STREET", attribute.get(0).getAttribut());
-        assertEquals("Street 2", attribute.get(0).getWert());
+        assertEquals(2, attribute.getFirst().getKontaktID());
+        assertEquals("STREET", attribute.getFirst().getAttribut());
+        assertEquals("Street 2", attribute.getFirst().getWert());
 
         assertEquals(1, kontakte.get(1).getID());
         assertEquals("BNachname", kontakte.get(1).getNachname());
@@ -291,13 +291,13 @@ public abstract class AbstractDaoTestCase {
         assertEquals(0, kontakte.get(1).getAttribute().size());
     }
 
-    protected void doTest0900DeleteAttribut(final AddressBookDao addressBookDAO) throws Throwable {
+    protected void doTest0900DeleteAttribut(final AddressBookDao addressBookDAO) {
         final int affectedRows = addressBookDAO.deleteAttribut(2, "STREET");
 
         assertEquals(1, affectedRows);
     }
 
-    protected void doTest1000DeleteKontakt(final AddressBookDao addressBookDAO) throws Throwable {
+    protected void doTest1000DeleteKontakt(final AddressBookDao addressBookDAO) {
         final int affectedRows = addressBookDAO.deleteKontakt(3);
 
         assertEquals(1, affectedRows);

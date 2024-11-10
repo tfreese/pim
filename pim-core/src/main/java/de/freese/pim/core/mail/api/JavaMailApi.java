@@ -291,7 +291,7 @@ public class JavaMailApi extends AbstractMailApi {
         service.connect(host, port, mail, password);
     }
 
-    protected Session createSession() throws MessagingException {
+    protected Session createSession() {
         final Authenticator authenticator = null;
 
         final Properties properties = new Properties();

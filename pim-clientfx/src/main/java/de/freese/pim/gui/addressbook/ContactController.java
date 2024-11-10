@@ -281,7 +281,7 @@ public class ContactController extends AbstractController {
 
         final Task<List<FxKontakt>> task = new Task<>() {
             @Override
-            protected List<FxKontakt> call() throws Exception {
+            protected List<FxKontakt> call() {
                 return getAddressbookService().getKontaktDetails();
             }
         };

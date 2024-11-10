@@ -29,12 +29,11 @@ public abstract class AbstractDao implements InitializingBean {
     private Function<String, String> sequenceQuery;
 
     @Override
-    public void afterPropertiesSet() throws Exception {
+    public void afterPropertiesSet() {
         Objects.requireNonNull(this.jdbcTemplate, "jdbcTemplate required");
         Objects.requireNonNull(this.sequenceQuery, "sequenceQuery required");
 
-        // try (Connection connection = this.jdbcTemplate.getDataSource().getConnection())
-        // {
+        // try (Connection connection = this.jdbcTemplate.getDataSource().getConnection()) {
         // SequenceQuery sequenceQuery = SequenceQuery.determineQuery(connection);
         // this.sequenceQueryExecutor = new SequenceQueryExecutor(sequenceQuery);
         // }

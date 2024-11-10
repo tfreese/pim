@@ -76,7 +76,7 @@ public class PimClientApplication extends Application {
     }
 
     /**
-     * Hebt die GUI Blockade wieder auf..
+     * Hebt die GUI Blockade wieder auf.
      */
     public static void unblockGUI() {
         FxUtils.unblockGUI(getMainWindow());
@@ -157,7 +157,7 @@ public class PimClientApplication extends Application {
     }
 
     @Override
-    public void start(final Stage primaryStage) throws Exception {
+    public void start(final Stage primaryStage) {
         try {
             // "JavaFX Application Thread" umbenennen.
             Thread.currentThread().setName("JavaFX-Appl.");
@@ -189,7 +189,7 @@ public class PimClientApplication extends Application {
                 screen = screens.get(1);
             }
             else {
-                screen = screens.get(0);
+                screen = screens.getFirst();
             }
 
             // Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
@@ -233,7 +233,7 @@ public class PimClientApplication extends Application {
     }
 
     @Override
-    public void stop() throws Exception {
+    public void stop() {
         LOGGER.info("Stop P.I.M.");
 
         // Platform.exit();

@@ -1,7 +1,6 @@
 // Created: 03.02.2017
 package de.freese.pim.gui.utils;
 
-import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Objects;
 
@@ -84,7 +83,7 @@ public class TextAreaOutputStream extends OutputStream {
     }
 
     @Override
-    public void write(final int b) throws IOException {
+    public void write(final int b) {
         getTextArea().appendText(String.valueOf((char) b));
     }
 }

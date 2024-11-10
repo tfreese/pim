@@ -333,7 +333,7 @@ public class MailController extends AbstractController {
 
         final Task<MailContent> loadMailContentTask = new Task<>() {
             @Override
-            protected MailContent call() throws Exception {
+            protected MailContent call() {
                 return getMailService().loadMailContent(account, mail, this::updateProgress);
             }
         };

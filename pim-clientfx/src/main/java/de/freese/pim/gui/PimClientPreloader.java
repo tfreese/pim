@@ -92,12 +92,12 @@ public class PimClientPreloader extends Preloader {
     }
 
     @Override
-    public void init() throws Exception {
+    public void init() {
         // Empty
     }
 
     @Override
-    public void start(final Stage stage) throws Exception {
+    public void start(final Stage stage) {
         this.stage = stage;
         stage.setTitle("Start P.I.M.");
         stage.getIcons().add(new Image("images/pim.png"));
@@ -107,7 +107,7 @@ public class PimClientPreloader extends Preloader {
     }
 
     @Override
-    public void stop() throws Exception {
+    public void stop() {
         // Empty
     }
 

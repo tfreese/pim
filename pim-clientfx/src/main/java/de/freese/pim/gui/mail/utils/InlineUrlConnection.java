@@ -20,7 +20,7 @@ public class InlineUrlConnection extends URLConnection {
 
     private final MailContent mailContent;
 
-    public InlineUrlConnection(final MailContent mailContent, final URL url) throws IOException {
+    public InlineUrlConnection(final MailContent mailContent, final URL url) {
         super(url);
 
         this.mailContent = mailContent;
@@ -28,7 +28,7 @@ public class InlineUrlConnection extends URLConnection {
     }
 
     @Override
-    public void connect() throws IOException {
+    public void connect() {
         this.connected = true;
     }
 

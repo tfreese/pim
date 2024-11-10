@@ -43,6 +43,8 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import de.freese.pim.core.function.FunctionStripNotLetter;
@@ -55,6 +57,8 @@ import de.freese.pim.core.mail.api.JavaMailContent;
 @TestMethodOrder(MethodOrderer.MethodName.class)
 @Disabled
 class TestReceiveMail extends AbstractMailTest {
+    private static final Logger LOGGER = LoggerFactory.getLogger(TestReceiveMail.class);
+
     private static Session session;
 
     private static Store store;
@@ -99,7 +103,7 @@ class TestReceiveMail extends AbstractMailTest {
         try {
             defaultFolder = store.getDefaultFolder();
 
-            Stream.of(defaultFolder.list("*")).map(Folder::getFullName).forEach(System.out::println);
+            Stream.of(defaultFolder.list("*")).map(Folder::getFullName).forEach(LOGGER::info);
         }
         finally {
             if (defaultFolder != null && defaultFolder.isOpen()) {
@@ -137,23 +141,23 @@ class TestReceiveMail extends AbstractMailTest {
 
             for (Message message : messages) {
                 final int messageNumber = message.getMessageNumber();
-                final String id;
+                final String messageID;
 
                 if (inboxFolder instanceof IMAPFolder imapFolder) {
-                    id = Long.toString(imapFolder.getUID(message));
+                    messageID = Long.toString(imapFolder.getUID(message));
                 }
                 else {
-                    id = message.getHeader("Message-ID")[0];
+                    messageID = message.getHeader("Message-ID")[0];
                 }
 
                 final Date receivedDate = message.getReceivedDate();
                 final String subject = message.getSubject();
                 final String from = Optional.ofNullable(message.getFrom()).map(f -> ((InternetAddress) f[0]).getAddress()).orElse(null);
 
-                System.out.printf("From: %s; Size: %d%n", Arrays.toString(message.getFrom()), message.getSize());
-                System.out.printf("%02d | %s | %tc | %s | %s%n", messageNumber, id, receivedDate, subject, from);
+                LOGGER.info("From: {}; Size: {}", Arrays.toString(message.getFrom()), message.getSize());
+                LOGGER.info("{}", "%02d | %s | %tc | %s | %s%n".formatted(messageNumber, messageID, receivedDate, subject, from));
 
-                try (OutputStream os = Files.newOutputStream(TMP_TEST_PATH.resolve(id + ".eml"))) {
+                try (OutputStream os = Files.newOutputStream(TMP_TEST_PATH.resolve(messageID + ".eml"))) {
                     // ReceivedDate merken, da nicht im HEADER vorkommt und IMAPMessage read-only ist.
                     final byte[] bytes = ASCIIUtility.getBytes("RECEIVED-DATE: " + receivedDate.toInstant().toString() + "\r\n");
                     os.write(bytes);
@@ -163,7 +167,7 @@ class TestReceiveMail extends AbstractMailTest {
 
                 // Nur den Content speichern.
                 try (InputStream is = message.getInputStream()) {
-                    Files.copy(is, TMP_TEST_PATH.resolve(id + ".content"), StandardCopyOption.REPLACE_EXISTING);
+                    Files.copy(is, TMP_TEST_PATH.resolve(messageID + ".content"), StandardCopyOption.REPLACE_EXISTING);
                 }
             }
         }
@@ -191,7 +195,7 @@ class TestReceiveMail extends AbstractMailTest {
                     final String subject = message.getSubject();
                     final String from = Optional.ofNullable(message.getFrom()).map(f -> ((InternetAddress) f[0]).getAddress()).orElse(null);
 
-                    System.out.printf("%02d | %s | %tc | %s | %s%n", messageNumber, messageID, receivedDate, subject, from);
+                    LOGGER.info("{}", "%02d | %s | %tc | %s | %s%n".formatted(messageNumber, messageID, receivedDate, subject, from));
                 }
             }
         }
@@ -250,7 +254,7 @@ class TestReceiveMail extends AbstractMailTest {
                             .toList();
 
                     Assertions.assertNotNull(values);
-                    System.out.println(values);
+                    LOGGER.info(values.toString());
 
                     // final List<String> values = textParts.parallelStream()
                     //         .map(AbstractTextPart::getText)
@@ -282,7 +286,7 @@ class TestReceiveMail extends AbstractMailTest {
                     //         .filter(t -> t.length() > 2)
                     //         .distinct()
                     //         .sorted()
-                    //         .forEach(System.out::println);
+                    //         .forEach(LOGGER::info);
                 }
             }
         }

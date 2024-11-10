@@ -11,6 +11,8 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.freese.pim.core.concurrent.PIMForkJoinWorkerThreadFactory;
 
@@ -22,6 +24,8 @@ import de.freese.pim.core.concurrent.PIMForkJoinWorkerThreadFactory;
 @TestMethodOrder(MethodOrderer.MethodName.class)
 @Disabled("Funktioniert nur in der IDE")
 class TestMisc {
+    private static final Logger LOGGER = LoggerFactory.getLogger(TestMisc.class);
+
     @BeforeAll
     static void beforeAll() {
         System.setProperty("java.util.concurrent.ForkJoinPool.common.parallelism", Integer.toString(Runtime.getRuntime().availableProcessors() * 2));
@@ -39,23 +43,23 @@ class TestMisc {
 
         CompletableFuture.supplyAsync(() -> {
                     final String threadName = Thread.currentThread().getName();
-                    System.out.println("supplyAsync: " + threadName);
+                    LOGGER.info("supplyAsync: {}", threadName);
                     return threadName;
                 })
                 .thenApplyAsync(result -> {
                     final String threadName = Thread.currentThread().getName();
-                    System.out.println("thenApplyAsync: " + threadName);
+                    LOGGER.info("thenApplyAsync: {}", threadName);
                     return result + "-2";
                 })
                 .thenApply(result -> {
                     final String threadName = Thread.currentThread().getName();
-                    System.out.println("thenApply: " + threadName);
+                    LOGGER.info("thenApply: {}", threadName);
                     return result + "-3";
                 })
                 .exceptionally(ex -> {
                     final String threadName = Thread.currentThread().getName();
-                    System.out.println("exceptionally: " + threadName);
-                    ex.printStackTrace();
+                    LOGGER.info("exceptionally: {}", threadName);
+                    LOGGER.error(ex.getMessage(), ex);
                     return null;
                 })
                 .thenAccept(results::add)
@@ -67,9 +71,8 @@ class TestMisc {
         //     results.add(result);
         //
         //     // ExceptionHandling
-        //     if(ex != null)
-        //     {
-        //         ex.printStackTrace();
+        //     if(ex != null) {
+        //         LOGGER.error(ex.getMessage(), ex);
         //     }
         // });
 

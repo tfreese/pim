@@ -26,7 +26,7 @@ public class ProgressIndicatorDemo extends Application {
     }
 
     @Override
-    public void start(final Stage primaryStage) throws Exception {
+    public void start(final Stage primaryStage) {
         final ProgressIndicator progressIndicator = new ProgressIndicator();
         progressIndicator.setVisible(false);
         // progressIndicator.setMaxSize(250D, 250D);

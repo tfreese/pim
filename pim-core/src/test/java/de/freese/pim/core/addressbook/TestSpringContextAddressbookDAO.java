@@ -39,7 +39,7 @@ class TestSpringContextAddressbookDAO extends AbstractDaoTestCase {
     @Override
     @Test
     @Commit
-    void test0100InsertKontakts() throws Throwable {
+    void test0100InsertKontakts() {
         doTest0100InsertKontakts(this.addressBookDAO);
 
         assertTrue(true);
@@ -48,7 +48,7 @@ class TestSpringContextAddressbookDAO extends AbstractDaoTestCase {
     @Override
     @Test
     @Commit
-    void test0110InsertKontaktWithNullVorname() throws Throwable {
+    void test0110InsertKontaktWithNullVorname() {
         doTest0110InsertKontaktWithNullVorname(this.addressBookDAO);
 
         assertTrue(true);
@@ -57,7 +57,7 @@ class TestSpringContextAddressbookDAO extends AbstractDaoTestCase {
     @Override
     @Test
     @Rollback
-    void test0120InsertKontaktWithBlankVorname() throws Throwable {
+    void test0120InsertKontaktWithBlankVorname() {
         final SQLIntegrityConstraintViolationException exception = assertThrows(SQLIntegrityConstraintViolationException.class,
                 () -> doTest0120InsertKontaktWithBlankVorname(this.addressBookDAO));
 
@@ -67,7 +67,7 @@ class TestSpringContextAddressbookDAO extends AbstractDaoTestCase {
     @Override
     @Test
     @Rollback
-    void test0130InsertKontaktExisting() throws Throwable {
+    void test0130InsertKontaktExisting() {
         final SQLIntegrityConstraintViolationException exception = assertThrows(SQLIntegrityConstraintViolationException.class,
                 () -> doTest0130InsertKontaktExisting(this.addressBookDAO));
 
@@ -77,7 +77,7 @@ class TestSpringContextAddressbookDAO extends AbstractDaoTestCase {
     @Override
     @Test
     @Commit
-    void test0200UpdateKontakt() throws Throwable {
+    void test0200UpdateKontakt() {
         doTest0200UpdateKontakt(this.addressBookDAO);
 
         assertTrue(true);
@@ -86,7 +86,7 @@ class TestSpringContextAddressbookDAO extends AbstractDaoTestCase {
     @Override
     @Test
     @Commit
-    void test0300InsertAttribut() throws Throwable {
+    void test0300InsertAttribut() {
         doTest0300InsertAttribut(this.addressBookDAO);
 
         assertTrue(true);
@@ -95,7 +95,7 @@ class TestSpringContextAddressbookDAO extends AbstractDaoTestCase {
     @Override
     @Test
     @Rollback
-    void test0310InsertInsertAttributWithNullValue() throws Throwable {
+    void test0310InsertInsertAttributWithNullValue() {
         final SQLIntegrityConstraintViolationException exception = assertThrows(SQLIntegrityConstraintViolationException.class,
                 () -> doTest0310InsertInsertAttributWithNullValue(this.addressBookDAO));
 
@@ -105,7 +105,7 @@ class TestSpringContextAddressbookDAO extends AbstractDaoTestCase {
     @Override
     @Test
     @Rollback
-    void test0320InsertInsertAttributWithBlankValue() throws Throwable {
+    void test0320InsertInsertAttributWithBlankValue() {
         final SQLIntegrityConstraintViolationException exception = assertThrows(SQLIntegrityConstraintViolationException.class,
                 () -> doTest0320InsertInsertAttributWithBlankValue(this.addressBookDAO));
 
@@ -115,7 +115,7 @@ class TestSpringContextAddressbookDAO extends AbstractDaoTestCase {
     @Override
     @Test
     @Rollback
-    void test0330InsertInsertAttributWithNull() throws Throwable {
+    void test0330InsertInsertAttributWithNull() {
         final SQLIntegrityConstraintViolationException exception = assertThrows(SQLIntegrityConstraintViolationException.class,
                 () -> doTest0330InsertInsertAttributWithNull(this.addressBookDAO));
 
@@ -125,7 +125,7 @@ class TestSpringContextAddressbookDAO extends AbstractDaoTestCase {
     @Override
     @Test
     @Rollback
-    void test0340InsertInsertAttributWithBlank() throws Throwable {
+    void test0340InsertInsertAttributWithBlank() {
         final SQLIntegrityConstraintViolationException exception = assertThrows(SQLIntegrityConstraintViolationException.class,
                 () -> doTest0340InsertInsertAttributWithBlank(this.addressBookDAO));
 
@@ -135,7 +135,7 @@ class TestSpringContextAddressbookDAO extends AbstractDaoTestCase {
     @Override
     @Test
     @Rollback
-    void test0350InsertAttributExisting() throws Throwable {
+    void test0350InsertAttributExisting() {
         final SQLIntegrityConstraintViolationException exception = assertThrows(SQLIntegrityConstraintViolationException.class,
                 () -> doTest0350InsertAttributExisting(this.addressBookDAO));
 
@@ -145,7 +145,7 @@ class TestSpringContextAddressbookDAO extends AbstractDaoTestCase {
     @Override
     @Test
     @Commit
-    void test0400UpdateAttribut() throws Throwable {
+    void test0400UpdateAttribut() {
         doTest0400UpdateAttribut(this.addressBookDAO);
 
         assertTrue(true);
@@ -154,7 +154,7 @@ class TestSpringContextAddressbookDAO extends AbstractDaoTestCase {
     @Override
     @Test
     @Transactional(readOnly = true)
-    void test0500GetKontaktDetailsAll() throws Throwable {
+    void test0500GetKontaktDetailsAll() {
         doTest0500GetKontaktDetailsAll(this.addressBookDAO);
 
         assertTrue(true);
@@ -163,7 +163,7 @@ class TestSpringContextAddressbookDAO extends AbstractDaoTestCase {
     @Override
     @Test
     @Transactional(readOnly = true)
-    void test0510GetKontaktDetailsWithID() throws Throwable {
+    void test0510GetKontaktDetailsWithID() {
         doTest0510GetKontaktDetailsWithID(this.addressBookDAO);
 
         assertTrue(true);
@@ -172,7 +172,7 @@ class TestSpringContextAddressbookDAO extends AbstractDaoTestCase {
     @Override
     @Test
     @Transactional(readOnly = true)
-    void test0520GetKontaktDetailsWithIDs() throws Throwable {
+    void test0520GetKontaktDetailsWithIDs() {
         doTest0520GetKontaktDetailsWithIDs(this.addressBookDAO);
 
         assertTrue(true);
@@ -181,7 +181,7 @@ class TestSpringContextAddressbookDAO extends AbstractDaoTestCase {
     @Override
     @Test
     @Transactional(readOnly = true)
-    void test0600GetKontakte() throws Throwable {
+    void test0600GetKontakte() {
         doTest0600GetKontakte(this.addressBookDAO);
 
         assertTrue(true);
@@ -190,7 +190,7 @@ class TestSpringContextAddressbookDAO extends AbstractDaoTestCase {
     @Override
     @Test
     @Transactional(readOnly = true)
-    void test0700SearchKontakts() throws Throwable {
+    void test0700SearchKontakts() {
         doTest0700SearchKontakts(this.addressBookDAO);
 
         assertTrue(true);
@@ -199,7 +199,7 @@ class TestSpringContextAddressbookDAO extends AbstractDaoTestCase {
     @Override
     @Test
     @Commit
-    void test0900DeleteAttribut() throws Throwable {
+    void test0900DeleteAttribut() {
         doTest0900DeleteAttribut(this.addressBookDAO);
 
         assertTrue(true);
@@ -208,7 +208,7 @@ class TestSpringContextAddressbookDAO extends AbstractDaoTestCase {
     @Override
     @Test
     @Commit
-    void test1000DeleteKontakt() throws Throwable {
+    void test1000DeleteKontakt() {
         doTest1000DeleteKontakt(this.addressBookDAO);
 
         assertTrue(true);

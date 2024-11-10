@@ -1,7 +1,6 @@
 // Created: 06.02.2017
 package de.freese.pim.gui.mail.utils;
 
-import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLStreamHandler;
@@ -25,7 +24,7 @@ public class InlineUrlStreamHandler extends URLStreamHandler {
     }
 
     @Override
-    protected URLConnection openConnection(final URL url) throws IOException {
+    protected URLConnection openConnection(final URL url) {
         return new InlineUrlConnection(InlineUrlStreamHandler.mailContent, url);
     }
 }

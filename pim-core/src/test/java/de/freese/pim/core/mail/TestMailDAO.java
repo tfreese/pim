@@ -50,7 +50,7 @@ class TestMailDAO {
 
     @Test
     @Rollback
-    void test010InsertAccountFail() throws Throwable {
+    void test010InsertAccountFail() {
         final MailAccount account = new MailAccount();
 
         final DataIntegrityViolationException exception = assertThrows(DataIntegrityViolationException.class, () -> this.mailDAO.insertAccount(account));
@@ -142,7 +142,7 @@ class TestMailDAO {
 
     @Test
     @Rollback
-    void test020InsertFolderFail() throws Throwable {
+    void test020InsertFolderFail() {
         final MailFolder folder = new MailFolder();
 
         final DataIntegrityViolationException exception = assertThrows(DataIntegrityViolationException.class, () -> this.mailDAO.insertFolder(2, Arrays.asList(folder)));
@@ -214,7 +214,7 @@ class TestMailDAO {
 
     @Test
     @Rollback
-    void test030InsertMailFail() throws Throwable {
+    void test030InsertMailFail() {
         final Mail mail = new Mail();
 
         final DataIntegrityViolationException exception = assertThrows(DataIntegrityViolationException.class, () -> this.mailDAO.insertMail(4, Arrays.asList(mail)));

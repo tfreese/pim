@@ -47,7 +47,7 @@ class TestCrypt {
     }
 
     @Test
-    void testCryptString() throws Exception {
+    void testCryptString() {
         final String clearText = "testABC123,.öäü#+";
 
         final Crypt crypt = Crypt.getUTF8Instance();

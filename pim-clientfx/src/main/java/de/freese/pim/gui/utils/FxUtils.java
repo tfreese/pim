@@ -280,7 +280,7 @@ public final class FxUtils {
         }
 
         // get the cell position to start with
-        final TablePosition<?, ?> pasteCellPosition = table.getSelectionModel().getSelectedCells().get(0);
+        final TablePosition<?, ?> pasteCellPosition = table.getSelectionModel().getSelectedCells().getFirst();
 
         final String pasteString = Clipboard.getSystemClipboard().getString();
 

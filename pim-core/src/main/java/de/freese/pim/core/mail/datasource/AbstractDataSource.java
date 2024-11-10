@@ -87,7 +87,7 @@ public abstract class AbstractDataSource implements DataSource {
 
     @Override
     @JsonIgnore
-    public OutputStream getOutputStream() throws IOException {
+    public OutputStream getOutputStream() {
         throw new UnsupportedOperationException("not implemented");
     }
 }

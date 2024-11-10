@@ -204,7 +204,7 @@ public class DefaultStandaloneFxMailService extends AbstractFxMailService {
     }
 
     @Override
-    protected MailContent loadMailContent(final Path mailPath, final FxMailAccount account, final FxMail mail, final IOMonitor monitor) throws Exception {
+    protected MailContent loadMailContent(final Path mailPath, final FxMailAccount account, final FxMail mail, final IOMonitor monitor) {
         final MailContent mailContent = getMailService().loadMailContent(account.getID(), mail.getFolderFullName(), mail.getUID(), monitor);
 
         saveMailContent(mailPath, mailContent);

@@ -103,7 +103,7 @@ public class TestService {
     }
 
     /**
-     * http://localhost:61222/greeter/test/?name=World
+     * <a href="http://localhost:61222/greeter/test/?name=World">localhost</a>
      */
     @GetMapping("/greeting")
     // @RequestMapping(path = "/greeting/{name}", method = RequestMethod.GET);
