@@ -134,7 +134,6 @@ public final class FxUtils {
                     controllerMap.remove(name);
                 }
                 catch (IllegalAccessException ex) {
-                    LOGGER.error(ex.getMessage());
                     throw new RuntimeException(ex);
                 }
             }

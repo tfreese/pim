@@ -28,7 +28,7 @@ public class DefaultMailContent implements MailContent {
     private MessageDataSource message;
 
     @JsonIgnore
-    private transient String messageContent;
+    private String messageContent;
 
     private String messageContentType;
 

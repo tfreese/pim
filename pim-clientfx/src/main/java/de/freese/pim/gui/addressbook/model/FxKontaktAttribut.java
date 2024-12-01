@@ -1,6 +1,8 @@
 // Created: 30.05.2016
 package de.freese.pim.gui.addressbook.model;
 
+import java.util.Objects;
+
 import javafx.beans.property.LongProperty;
 import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -38,6 +40,16 @@ public class FxKontaktAttribut implements Comparable<FxKontaktAttribut> {
         return comp;
     }
 
+    @Override
+    public boolean equals(final Object o) {
+        if (!(o instanceof final FxKontaktAttribut that)) {
+            return false;
+        }
+        
+        return Objects.equals(attributProperty, that.attributProperty) && Objects.equals(kontaktIDProperty, that.kontaktIDProperty) &&
+                Objects.equals(wertProperty, that.wertProperty);
+    }
+
     public String getAttribut() {
         return attributProperty().get();
     }
@@ -48,6 +60,11 @@ public class FxKontaktAttribut implements Comparable<FxKontaktAttribut> {
 
     public String getWert() {
         return wertProperty().get();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(attributProperty, kontaktIDProperty, wertProperty);
     }
 
     public LongProperty kontaktIDProperty() {

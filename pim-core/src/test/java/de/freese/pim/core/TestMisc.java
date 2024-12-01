@@ -1,5 +1,7 @@
 package de.freese.pim.core;
 
+import static org.awaitility.Awaitility.await;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -38,7 +40,7 @@ class TestMisc {
      * <a href="http://www.nurkiewicz.com/2013/05/java-8-definitive-guide-to.html">java-8-definitive-guide-to</a>
      */
     @Test
-    void test010CompletableFuture() throws Exception {
+    void test010CompletableFuture() {
         final List<String> results = new ArrayList<>();
 
         CompletableFuture.supplyAsync(() -> {
@@ -76,7 +78,8 @@ class TestMisc {
         //     }
         // });
 
-        TimeUnit.MILLISECONDS.sleep(100);
+        // TimeUnit.MILLISECONDS.sleep(100L);
+        await().pollDelay(100L, TimeUnit.MILLISECONDS).until(() -> true);
 
         Assertions.assertEquals(1, results.size());
         Assertions.assertEquals("fork-join-01-2-3", results.getFirst());

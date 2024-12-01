@@ -1,6 +1,8 @@
 // Created: 14.02.2017
 package de.freese.pim.server.rest;
 
+import static org.awaitility.Awaitility.await;
+
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
@@ -49,7 +51,8 @@ public class TestService {
     public Callable<String> asyncDateCallable() {
         return () -> {
             getLogger().info("asyncDateCallable: thread={}", Thread.currentThread().getName());
-            TimeUnit.SECONDS.sleep(1);
+            // TimeUnit.SECONDS.sleep(1L);
+            await().pollDelay(1000L, TimeUnit.MILLISECONDS).until(() -> true);
 
             return LocalDateTime.now().toString();
         };
@@ -65,7 +68,8 @@ public class TestService {
         CompletableFuture.supplyAsync(() -> {
             try {
                 getLogger().info("supplyAsync: thread={}", Thread.currentThread().getName());
-                TimeUnit.SECONDS.sleep(1);
+                // TimeUnit.SECONDS.sleep(1L);
+                await().pollDelay(1000L, TimeUnit.MILLISECONDS).until(() -> true);
 
                 return LocalDateTime.now().toString();
             }
@@ -93,7 +97,8 @@ public class TestService {
     public WebAsyncTask<String> asyncDateWebAsyncTask() {
         final Callable<String> callable = () -> {
             getLogger().info("asyncDateWebAsyncTask: thread={}", Thread.currentThread().getName());
-            TimeUnit.SECONDS.sleep(1);
+            // TimeUnit.SECONDS.sleep(1L);
+            await().pollDelay(1000L, TimeUnit.MILLISECONDS).until(() -> true);
 
             return LocalDateTime.now().toString();
         };

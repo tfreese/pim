@@ -38,8 +38,8 @@ allprojects {
 subprojects {
     apply plugin: "de.freese.gradle.java.conventions"
     apply plugin: "io.spring.dependency-management"
-    // apply plugin: "name.remal.sonarlint"
-    // apply plugin: "de.freese.gradle.sonarlint-conventions"
+    apply plugin: "name.remal.sonarlint"
+    apply plugin: "de.freese.gradle.sonarlint-conventions"
 
     dependencyManagement {
         imports {
@@ -55,7 +55,8 @@ subprojects {
     pluginManager.withPlugin("java") {
         dependencies {
             runtimeOnly("org.springframework.boot:spring-boot-properties-migrator")
-            
+
+            testImplementation("org.awaitility:awaitility")
             testImplementation("org.junit.jupiter:junit-jupiter")
 
             testRuntimeOnly("org.junit.platform:junit-platform-launcher")

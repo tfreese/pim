@@ -203,7 +203,6 @@ public final class Utils {
             return bean.getClass().getMethod(name, parameterTypes);
         }
         catch (NoSuchMethodException | SecurityException ex) {
-            LOGGER.error(ex.getMessage());
             throw new RuntimeException(ex);
         }
     }
@@ -223,7 +222,6 @@ public final class Utils {
             return field.get(bean);
         }
         catch (IllegalArgumentException | IllegalAccessException ex) {
-            LOGGER.error(ex.getMessage());
             throw new RuntimeException(ex);
         }
     }
@@ -236,7 +234,6 @@ public final class Utils {
             return method.invoke(bean, args);
         }
         catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
-            LOGGER.error(ex.getMessage());
             throw new RuntimeException(ex);
         }
     }
@@ -269,7 +266,7 @@ public final class Utils {
         // Strings pro Spalte formatieren und schreiben.
         rows.stream().parallel().forEach(r -> {
             for (int column = 0; column < columnCount; column++) {
-                final String value = String.format("%-" + columnWidth[column] + "s", r[column].toString()).replace(" ", padding);
+                final String value = padding.repeat(columnWidth[column]) + r[column].toString();
 
                 r[column] = (T) value;
             }

@@ -1,7 +1,7 @@
 // Created: 27.12.2016
 package de.freese.pim.core.mail;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.io.BufferedInputStream;
 import java.io.InputStream;
@@ -37,7 +37,6 @@ import org.eclipse.angus.mail.imap.IMAPFolder;
 import org.eclipse.angus.mail.util.ASCIIUtility;
 import org.jsoup.Jsoup;
 import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.MethodOrderer;
@@ -91,9 +90,10 @@ class TestReceiveMail extends AbstractMailTest {
     @Test
     void test000Connect() throws Exception {
         store = session.getStore("imaps");
-        store.connect(MAIL_IMAP_HOST, MAIL_IMAP_PORT.getPort(), this.getFrom(), this.getPassword());
 
-        assertTrue(true);
+        assertNotNull(store);
+
+        store.connect(MAIL_IMAP_HOST, MAIL_IMAP_PORT.getPort(), this.getFrom(), this.getPassword());
     }
 
     @Test
@@ -103,6 +103,8 @@ class TestReceiveMail extends AbstractMailTest {
         try {
             defaultFolder = store.getDefaultFolder();
 
+            assertNotNull(defaultFolder);
+
             Stream.of(defaultFolder.list("*")).map(Folder::getFullName).forEach(LOGGER::info);
         }
         finally {
@@ -110,8 +112,6 @@ class TestReceiveMail extends AbstractMailTest {
                 defaultFolder.close(false);
             }
         }
-
-        assertTrue(true);
     }
 
     @Test
@@ -137,7 +137,7 @@ class TestReceiveMail extends AbstractMailTest {
             // fp.add(FetchProfile.Item.CONTENT_INFO);
             inboxFolder.fetch(messages, fp);
 
-            Assertions.assertNotNull(messages);
+            assertNotNull(messages);
 
             for (Message message : messages) {
                 final int messageNumber = message.getMessageNumber();
@@ -149,6 +149,8 @@ class TestReceiveMail extends AbstractMailTest {
                 else {
                     messageID = message.getHeader("Message-ID")[0];
                 }
+
+                assertNotNull(message);
 
                 final Date receivedDate = message.getReceivedDate();
                 final String subject = message.getSubject();
@@ -176,8 +178,6 @@ class TestReceiveMail extends AbstractMailTest {
                 inboxFolder.close(false);
             }
         }
-
-        assertTrue(true);
     }
 
     @Test
@@ -189,6 +189,8 @@ class TestReceiveMail extends AbstractMailTest {
                 try (InputStream is = new BufferedInputStream(Files.newInputStream(mail))) {
                     final MimeMessage message = new MimeMessage(null, is);
 
+                    assertNotNull(message);
+
                     final int messageNumber = message.getMessageNumber();
                     final String messageID = message.getHeader("Message-ID")[0];
                     final Date receivedDate = Optional.ofNullable(message.getReceivedDate()).orElse(Date.from(Instant.parse(message.getHeader("RECEIVED-DATE")[0])));
@@ -199,8 +201,6 @@ class TestReceiveMail extends AbstractMailTest {
                 }
             }
         }
-
-        assertTrue(true);
     }
 
     @Test
@@ -216,6 +216,8 @@ class TestReceiveMail extends AbstractMailTest {
 
                             if (Part.ATTACHMENT.equalsIgnoreCase(part.getDisposition())) {
                                 final Path attachment = mailPath.getParent().resolve(mailPath.getFileName().toString() + "_attachment");
+
+                                assertNotNull(attachment);
 
                                 try (InputStream attIS = part.getInputStream()) {
                                     Files.copy(attIS, attachment, StandardCopyOption.REPLACE_EXISTING);
@@ -253,7 +255,7 @@ class TestReceiveMail extends AbstractMailTest {
                             .distinct()
                             .toList();
 
-                    Assertions.assertNotNull(values);
+                    assertNotNull(values);
                     LOGGER.info(values.toString());
 
                     // final List<String> values = textParts.parallelStream()

@@ -1,6 +1,8 @@
 // Created: 28.01.2017
 package de.freese.pim.gui;
 
+import static org.awaitility.Awaitility.await;
+
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.TimeUnit;
 
@@ -39,7 +41,9 @@ public class ProgressIndicatorDemo extends Application {
                 while (progress <= 100) {
                     updateProgress(++progress, 100);
 
-                    TimeUnit.MILLISECONDS.sleep(40); // 25 Frames/Sekunde
+                    // 25 Frames/Sekunde
+                    // TimeUnit.MILLISECONDS.sleep(40L);
+                    await().pollDelay(40L, TimeUnit.MILLISECONDS).until(() -> true);
 
                     if (progress == 100) {
                         progress = 0;

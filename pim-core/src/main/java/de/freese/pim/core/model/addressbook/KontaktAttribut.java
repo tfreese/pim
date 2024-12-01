@@ -1,6 +1,8 @@
 // Created: 30.05.2016
 package de.freese.pim.core.model.addressbook;
 
+import java.util.Objects;
+
 /**
  * Entity für einen Kontakt.
  *
@@ -28,6 +30,15 @@ public class KontaktAttribut implements Comparable<KontaktAttribut> {
         return comp;
     }
 
+    @Override
+    public boolean equals(final Object o) {
+        if (!(o instanceof final KontaktAttribut that)) {
+            return false;
+        }
+        
+        return kontaktID == that.kontaktID && Objects.equals(attribut, that.attribut) && Objects.equals(wert, that.wert);
+    }
+
     public String getAttribut() {
         return this.attribut;
     }
@@ -38,6 +49,11 @@ public class KontaktAttribut implements Comparable<KontaktAttribut> {
 
     public String getWert() {
         return this.wert;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(attribut, kontaktID, wert);
     }
 
     public void setAttribut(final String attribut) {
