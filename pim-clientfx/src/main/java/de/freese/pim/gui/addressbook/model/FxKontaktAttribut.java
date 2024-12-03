@@ -45,9 +45,9 @@ public class FxKontaktAttribut implements Comparable<FxKontaktAttribut> {
         if (!(o instanceof final FxKontaktAttribut that)) {
             return false;
         }
-        
-        return Objects.equals(attributProperty, that.attributProperty) && Objects.equals(kontaktIDProperty, that.kontaktIDProperty) &&
-                Objects.equals(wertProperty, that.wertProperty);
+
+        return Objects.equals(attributProperty, that.attributProperty) && Objects.equals(kontaktIDProperty, that.kontaktIDProperty)
+                && Objects.equals(wertProperty, that.wertProperty);
     }
 
     public String getAttribut() {
