@@ -30,10 +30,6 @@ public class MainController extends AbstractController {
     @FXML
     private Button buttonMailView;
 
-    private ContactController contactController;
-
-    private MailController mailController;
-
     public MainController(final ResourceBundle resources) {
         super();
 
@@ -63,32 +59,32 @@ public class MainController extends AbstractController {
 
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
-        this.mailController = new MailController();
-        FxUtils.bind(new MailView(), this.mailController, resources);
+        final MailController mailController = new MailController();
+        FxUtils.bind(new MailView(), mailController, resources);
 
-        this.contactController = new ContactController();
-        FxUtils.bind(new ContactView(), this.contactController, resources);
+        final ContactController contactController = new ContactController();
+        FxUtils.bind(new ContactView(), contactController, resources);
 
-        FxUtils.translate(this.buttonMailView, resources);
-        FxUtils.translate(this.buttonContactView, resources);
+        FxUtils.translate(buttonMailView, resources);
+        FxUtils.translate(buttonContactView, resources);
 
-        this.buttonMailView.setOnAction(event -> {
-            this.mainView.setToolbar(this.mailController.getToolBar());
-            this.mainView.setNavNode(this.mailController.getNaviNode());
-            this.mainView.setMainNode(this.mailController.getMainNode());
-            this.mailController.activate();
+        buttonMailView.setOnAction(event -> {
+            mainView.setToolbar(mailController.getToolBar());
+            mainView.setNavNode(mailController.getNaviNode());
+            mainView.setMainNode(mailController.getMainNode());
+            mailController.activate();
         });
 
         this.buttonContactView.setOnAction(event -> {
-            this.mainView.setToolbar(this.contactController.getToolBar());
-            this.mainView.setNavNode(this.contactController.getNaviNode());
-            this.mainView.setMainNode(this.contactController.getMainNode());
-            this.contactController.activate();
+            mainView.setToolbar(contactController.getToolBar());
+            mainView.setNavNode(contactController.getNaviNode());
+            mainView.setMainNode(contactController.getMainNode());
+            contactController.activate();
         });
     }
 
     public void selectDefaultView() {
-        this.buttonMailView.fire();
-        // this.buttonContactView.fire();
+        buttonMailView.fire();
+        // buttonContactView.fire();
     }
 }

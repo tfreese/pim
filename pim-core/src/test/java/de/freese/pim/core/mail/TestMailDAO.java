@@ -1,6 +1,7 @@
 // Created: 24.05.2016
 package de.freese.pim.core.mail;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -53,7 +54,9 @@ class TestMailDAO {
     void test010InsertAccountFail() {
         final MailAccount account = new MailAccount();
 
-        final DataIntegrityViolationException exception = assertThrows(DataIntegrityViolationException.class, () -> mailDAO.insertAccount(account));
+        final DataIntegrityViolationException exception = assertThrows(DataIntegrityViolationException.class,
+                () -> mailDAO.insertAccount(account)
+        );
 
         assertNotNull(exception);
     }
@@ -82,7 +85,7 @@ class TestMailDAO {
     void test012SelectAccount() {
         final List<MailAccount> accounts = mailDAO.getMailAccounts();
 
-        Assertions.assertNotNull(accounts);
+        assertNotNull(accounts);
         assertEquals(1, accounts.size());
 
         final MailAccount account = accounts.getFirst();
@@ -102,7 +105,7 @@ class TestMailDAO {
     void test013UpdateAccount() {
         final List<MailAccount> accounts = mailDAO.getMailAccounts();
 
-        Assertions.assertNotNull(accounts);
+        assertNotNull(accounts);
         assertEquals(1, accounts.size());
 
         final MailAccount account = accounts.getFirst();
@@ -116,7 +119,7 @@ class TestMailDAO {
         account.setSmtpPort(MailPort.SMTPS);
         account.setSmtpLegitimation(true);
 
-        mailDAO.updateAccount(account);
+        assertDoesNotThrow(() -> mailDAO.updateAccount(account));
     }
 
     @Test
@@ -125,7 +128,7 @@ class TestMailDAO {
     void test014UpdateAccountCheck() {
         final List<MailAccount> accounts = mailDAO.getMailAccounts();
 
-        Assertions.assertNotNull(accounts);
+        assertNotNull(accounts);
         assertEquals(1, accounts.size());
 
         final MailAccount account = accounts.getFirst();
@@ -143,9 +146,11 @@ class TestMailDAO {
     @Test
     @Rollback
     void test020InsertFolderFail() {
-        final MailFolder folder = new MailFolder();
+        final List<MailFolder> folder = List.of(new MailFolder());
 
-        final DataIntegrityViolationException exception = assertThrows(DataIntegrityViolationException.class, () -> mailDAO.insertFolder(2, Arrays.asList(folder)));
+        final DataIntegrityViolationException exception = assertThrows(DataIntegrityViolationException.class,
+                () -> mailDAO.insertFolder(2, folder)
+        );
 
         assertNotNull(exception);
     }
@@ -169,14 +174,14 @@ class TestMailDAO {
     void test022SelectFolder() {
         final List<MailFolder> folders = mailDAO.getMailFolder(2);
 
-        Assertions.assertNotNull(folders);
+        assertNotNull(folders);
         assertEquals(1, folders.size());
 
         final MailFolder folder = folders.getFirst();
         assertEquals(4, folder.getID());
         assertEquals("a/b", folder.getFullName());
         assertEquals("b", folder.getName());
-        Assertions.assertFalse(folder.isAbonniert());
+        assertFalse(folder.isAbonniert());
     }
 
     @Test
@@ -184,7 +189,7 @@ class TestMailDAO {
     void test023UpdateFolder() {
         final List<MailFolder> folders = mailDAO.getMailFolder(2);
 
-        Assertions.assertNotNull(folders);
+        assertNotNull(folders);
         assertEquals(1, folders.size());
 
         final MailFolder folder = folders.getFirst();
@@ -209,15 +214,17 @@ class TestMailDAO {
         assertEquals(4, folder.getID());
         assertEquals("b/c", folder.getFullName());
         assertEquals("c", folder.getName());
-        Assertions.assertTrue(folder.isAbonniert());
+        assertTrue(folder.isAbonniert());
     }
 
     @Test
     @Rollback
     void test030InsertMailFail() {
-        final Mail mail = new Mail();
+        final List<Mail> mails = List.of(new Mail());
 
-        final DataIntegrityViolationException exception = assertThrows(DataIntegrityViolationException.class, () -> mailDAO.insertMail(4, Arrays.asList(mail)));
+        final DataIntegrityViolationException exception = assertThrows(DataIntegrityViolationException.class,
+                () -> mailDAO.insertMail(4, mails)
+        );
 
         assertNotNull(exception);
     }
@@ -238,9 +245,7 @@ class TestMailDAO {
         mail.setBcc(new InternetAddress[]{new InternetAddress("d@d.dd")});
         mail.setUID(2);
 
-        mailDAO.insertMail(4, Arrays.asList(mail));
-
-        assertTrue(true);
+        assertDoesNotThrow(() -> mailDAO.insertMail(4, Arrays.asList(mail)));
     }
 
     @Test
@@ -249,7 +254,7 @@ class TestMailDAO {
     void test032SelectMail() {
         final List<Mail> mails = mailDAO.getMails(4);
 
-        Assertions.assertNotNull(mails);
+        assertNotNull(mails);
         assertEquals(1, mails.size());
 
         final Date dateExpectedReceived = Timestamp.from(LocalDateTime.of(2017, 2, 3, 15, 0).atZone(ZoneId.systemDefault()).toInstant());
@@ -259,7 +264,7 @@ class TestMailDAO {
         assertEquals("a@a.aa", mail.getFrom().getAddress());
         assertEquals(1, mail.getMsgNum());
         assertEquals(dateExpectedReceived, mail.getReceivedDate());
-        Assertions.assertFalse(mail.isSeen());
+        assertFalse(mail.isSeen());
         assertEquals(dateExpectedSend, mail.getSendDate());
         assertEquals(13, mail.getSize());
         assertEquals("-TEST-", mail.getSubject());
@@ -274,7 +279,7 @@ class TestMailDAO {
     void test033UpdateMail() {
         final List<Mail> mails = mailDAO.getMails(4);
 
-        Assertions.assertNotNull(mails);
+        assertNotNull(mails);
         assertEquals(1, mails.size());
 
         final Mail mail = mails.getFirst();
@@ -282,7 +287,7 @@ class TestMailDAO {
         mail.setMsgNum(99);
 
         // Nur SEEN-Flag sollte aktualisiert werden.
-        mailDAO.updateMail(4, mail);
+        assertDoesNotThrow(() -> mailDAO.updateMail(4, mail));
     }
 
     @Test
@@ -311,9 +316,7 @@ class TestMailDAO {
     @Test
     @Commit
     void test040DeleteMail() {
-        mailDAO.deleteMail(4, 2);
-
-        assertTrue(true);
+        assertDoesNotThrow(() -> mailDAO.deleteMail(4, 2));
     }
 
     @Test
@@ -322,16 +325,14 @@ class TestMailDAO {
     void test041DeleteMailCheck() {
         final List<Mail> mails = mailDAO.getMails(4);
 
-        Assertions.assertNotNull(mails);
+        assertNotNull(mails);
         assertEquals(0, mails.size());
     }
 
     @Test
     @Commit
     void test050DeleteFolder() {
-        mailDAO.deleteFolder(4);
-
-        assertTrue(true);
+        assertDoesNotThrow(() -> mailDAO.deleteFolder(4));
     }
 
     @Test
@@ -340,7 +341,7 @@ class TestMailDAO {
     void test051DeleteFolderCheck() {
         final List<MailFolder> folders = mailDAO.getMailFolder(2);
 
-        Assertions.assertNotNull(folders);
+        assertNotNull(folders);
         assertEquals(0, folders.size());
     }
 
@@ -358,7 +359,7 @@ class TestMailDAO {
     void test061DeleteAccountCheck() {
         final List<MailFolder> folders = mailDAO.getMailFolder(2);
 
-        Assertions.assertNotNull(folders);
+        assertNotNull(folders);
         assertEquals(0, folders.size());
     }
 }

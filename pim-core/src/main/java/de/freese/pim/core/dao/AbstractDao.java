@@ -54,20 +54,26 @@ public abstract class AbstractDao implements InitializingBean {
     }
 
     protected JdbcTemplate getJdbcTemplate() {
-        return this.jdbcTemplate;
+        return jdbcTemplate;
     }
 
     protected Logger getLogger() {
-        return this.logger;
+        return logger;
     }
 
     protected long getNextID(final String sequence) {
-        final String sql = this.sequenceQuery.apply(sequence);
+        final String sql = sequenceQuery.apply(sequence);
 
-        return getJdbcTemplate().query(sql, rs -> {
+        final Long id = getJdbcTemplate().query(sql, rs -> {
             rs.next();
             return rs.getLong(1);
         });
+
+        if (id == null) {
+            throw new IllegalStateException("id is null");
+        }
+
+        return id;
 
         // try (Connection connection = getJdbcTemplate().getDataSource().getConnection();
         // Statement stmt = connection.createStatement();

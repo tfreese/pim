@@ -3,7 +3,9 @@ package de.freese.pim.gui.mail.service;
 
 import java.nio.file.Path;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.IntStream;
 
 import jakarta.annotation.Resource;
@@ -40,7 +42,9 @@ public class DefaultRestFxMailService extends AbstractFxMailService {
 
     @Override
     public int deleteAccount(final long accountID) {
-        return getRestTemplate().postForObject("/mail/account/delete/{id}", accountID, Integer.class);
+        final Integer affectedRows = getRestTemplate().postForObject("/mail/account/delete/{id}", accountID, Integer.class);
+
+        return Optional.ofNullable(affectedRows).orElse(0);
     }
 
     @Override
@@ -52,12 +56,20 @@ public class DefaultRestFxMailService extends AbstractFxMailService {
     public List<FxMailAccount> getMailAccounts() {
         final FxMailAccount[] accounts = getRestTemplate().getForObject("/mail/accounts", FxMailAccount[].class);
 
+        if (accounts == null) {
+            return Collections.emptyList();
+        }
+
         return Arrays.asList(accounts);
     }
 
     @Override
     public void insertAccount(final FxMailAccount account) {
-        final long primaryKey = getRestTemplate().postForObject("/mail/account/insert", account, Long.class);
+        final Long primaryKey = getRestTemplate().postForObject("/mail/account/insert", account, Long.class);
+
+        if (primaryKey == null) {
+            throw new IllegalArgumentException("primaryKey");
+        }
 
         account.setID(primaryKey);
     }
@@ -71,6 +83,11 @@ public class DefaultRestFxMailService extends AbstractFxMailService {
 
         if (!toUpdate.isEmpty()) {
             final int[] result = getRestTemplate().postForObject("/mail/folder/update/{accountID}", toUpdate, int[].class, accountID);
+
+            if (result == null) {
+                throw new IllegalArgumentException("result");
+            }
+
             affectedRows += IntStream.of(result).sum();
         }
 
@@ -79,6 +96,11 @@ public class DefaultRestFxMailService extends AbstractFxMailService {
 
         if (!toInsert.isEmpty()) {
             final long[] primaryKeys = getRestTemplate().postForObject("/mail/folder/insert/{accountID}", toInsert, long[].class, accountID);
+
+            if (primaryKeys == null) {
+                throw new IllegalArgumentException("primaryKeys");
+            }
+
             affectedRows += primaryKeys.length;
 
             for (int i = 0; i < primaryKeys.length; i++) {
@@ -93,6 +115,10 @@ public class DefaultRestFxMailService extends AbstractFxMailService {
     @Override
     public List<FxMailFolder> loadFolder(final long accountID) {
         final FxMailFolder[] folders = getRestTemplate().getForObject("/mail/folder/{accountID}", FxMailFolder[].class, accountID);
+
+        if (folders == null) {
+            return Collections.emptyList();
+        }
 
         return Arrays.asList(folders);
     }
@@ -125,6 +151,10 @@ public class DefaultRestFxMailService extends AbstractFxMailService {
 
             getLogger().info("Load Mails finished: account={}, folder={}", account.getMail(), folder.getFullName());
 
+            if (mails == null) {
+                return Collections.emptyList();
+            }
+
             return Arrays.asList(mails);
         }
         catch (Exception ex) {
@@ -141,12 +171,18 @@ public class DefaultRestFxMailService extends AbstractFxMailService {
     public List<FxMailFolder> test(final FxMailAccount account) {
         final FxMailFolder[] folders = getRestTemplate().postForObject("/mail/test", account, FxMailFolder[].class);
 
+        if (folders == null) {
+            return Collections.emptyList();
+        }
+
         return Arrays.asList(folders);
     }
 
     @Override
     public int updateAccount(final FxMailAccount account) {
-        return getRestTemplate().postForObject("/mail/account/update", account, int.class);
+        final Integer affectedRows = getRestTemplate().postForObject("/mail/account/update", account, int.class);
+
+        return Optional.ofNullable(affectedRows).orElse(0);
     }
 
     protected RestTemplate getRestTemplate() {

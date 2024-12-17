@@ -7,17 +7,15 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import jakarta.annotation.PreDestroy;
-import jakarta.annotation.Resource;
 
-import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
-import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.context.annotation.Profile;
@@ -40,9 +38,16 @@ import de.freese.pim.core.utils.io.IOMonitor;
  */
 @Service("mailService")
 @Profile("!ClientREST")
-public class DefaultMailService extends AbstractService implements MailService, BeanFactoryAware {
-    private BeanFactory beanFactory;
-    private MailDao mailDAO;
+public class DefaultMailService extends AbstractService implements MailService {
+    private final BeanFactory beanFactory;
+    private final MailDao mailDAO;
+
+    public DefaultMailService(final BeanFactory beanFactory, final MailDao mailDAO) {
+        super();
+
+        this.beanFactory = Objects.requireNonNull(beanFactory, "beanFactory required");
+        this.mailDAO = Objects.requireNonNull(mailDAO, "mailDAO required");
+    }
 
     @Override
     public void connectAccount(final MailAccount account) {
@@ -241,16 +246,6 @@ public class DefaultMailService extends AbstractService implements MailService, 
         mails.forEach(m -> m.setFolderFullName(folderFullName));
 
         return mails;
-    }
-
-    @Override
-    public void setBeanFactory(final BeanFactory beanFactory) throws BeansException {
-        this.beanFactory = beanFactory;
-    }
-
-    @Resource
-    public void setMailDAO(final MailDao mailDAO) {
-        this.mailDAO = mailDAO;
     }
 
     @Override

@@ -42,7 +42,7 @@ public class DefaultAddressBookDao extends AbstractDao implements AddressBookDao
                 final Kontakt kontakt;
 
                 if (kontakte.isEmpty() || id != kontakte.getLast().getID()) {
-                    kontakt = this.kontaktRowMapper.mapRow(rs, 0);
+                    kontakt = kontaktRowMapper.mapRow(rs, 0);
                     kontakte.add(kontakt);
                 }
                 else {
@@ -51,7 +51,7 @@ public class DefaultAddressBookDao extends AbstractDao implements AddressBookDao
 
                 final String attribut = rs.getString("ATTRIBUT");
 
-                if (attribut != null && !attribut.isBlank()) {
+                if (kontakt != null && attribut != null && !attribut.isBlank()) {
                     kontakt.addAttribut(attribut, rs.getString("WERT"));
                 }
             }
@@ -94,7 +94,7 @@ public class DefaultAddressBookDao extends AbstractDao implements AddressBookDao
             path += "/";
         }
 
-        final String sql = "BACKUP DATABASE TO '" + path + "' BLOCKING"; // AS FILES
+        final String sql = "BACKUP DATABASE TO '%s' BLOCKING".formatted(path); // AS FILES
 
         getJdbcTemplate().execute(sql);
 

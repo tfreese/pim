@@ -3,6 +3,7 @@ package de.freese.pim.gui;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 import javafx.application.Application;
@@ -52,6 +53,7 @@ public class PimClientApplication extends Application {
     public static final Logger LOGGER = LoggerFactory.getLogger(PimClientApplication.class);
 
     private static Window mainWindow;
+
     /**
      * Bildschirm auf dem PIM läuft.
      */
@@ -80,6 +82,14 @@ public class PimClientApplication extends Application {
      */
     public static void unblockGUI() {
         FxUtils.unblockGUI(getMainWindow());
+    }
+
+    private static void setMainWindow(final Window mainWindow) {
+        PimClientApplication.mainWindow = mainWindow;
+    }
+
+    private static void setScreen(final Screen screen) {
+        PimClientApplication.screen = screen;
     }
 
     private final BooleanProperty ready = new SimpleBooleanProperty(false);
@@ -145,7 +155,7 @@ public class PimClientApplication extends Application {
         notifyPreloader(new PimClientPreloaderNotification("Start P.I.M."));
         // Utils.sleep(1, TimeUnit.SECONDS);
 
-        final String pimHome = SpringContext.getEnvironment().getProperty("pim.home");
+        final String pimHome = Optional.ofNullable(SpringContext.getEnvironment().getProperty("pim.home")).orElse(System.getProperty("user.home"));
         final Path homePath = Paths.get(pimHome);
 
         if (!Files.exists(homePath)) {
@@ -162,7 +172,7 @@ public class PimClientApplication extends Application {
             // "JavaFX Application Thread" umbenennen.
             Thread.currentThread().setName("JavaFX-Appl.");
 
-            PimClientApplication.mainWindow = primaryStage;
+            setMainWindow(primaryStage);
 
             notifyPreloader(new PimClientPreloaderNotification("Init GUI"));
             // setUserAgentStylesheet(Application.STYLESHEET_CASPIAN);
@@ -186,10 +196,10 @@ public class PimClientApplication extends Application {
             final ObservableList<Screen> screens = Screen.getScreens();
 
             if (screens.size() > 1) {
-                screen = screens.get(1);
+                setScreen(screens.get(1));
             }
             else {
-                screen = screens.getFirst();
+                setScreen(screens.getFirst());
             }
 
             // Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
@@ -201,7 +211,7 @@ public class PimClientApplication extends Application {
             primaryStage.setHeight(screenBounds.getHeight() - 200);
 
             // After the app is ready, show the stage
-            this.ready.addListener((observable, oldValue, newValue) -> {
+            ready.addListener((observable, oldValue, newValue) -> {
                 if (Boolean.TRUE.equals(newValue)) {
                     Platform.runLater(() -> {
                         primaryStage.show();
@@ -216,7 +226,7 @@ public class PimClientApplication extends Application {
             // After init is ready, the app is ready to be shown.
             // Do this before hiding the PreLoader stage to prevent the app from exiting prematurely.
             // notifyPreloader(new ProgressNotification(1.0D));
-            this.ready.setValue(Boolean.TRUE);
+            ready.setValue(Boolean.TRUE);
             notifyPreloader(new StateChangeNotification(StateChangeNotification.Type.BEFORE_START));
 
             // // After init is ready, the app is ready to be shown.

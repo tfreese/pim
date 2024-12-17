@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import jakarta.annotation.Resource;
 
@@ -27,19 +28,29 @@ public class DefaultRestFxAddressbookService extends AbstractFxAddressbookServic
 
     @Override
     public int deleteKontakt(final long id) {
-        return getRestTemplate().postForObject("/addressBook/contact/delete/{contactID}", id, Integer.class);
+        final Integer affectedRows = getRestTemplate().postForObject("/addressBook/contact/delete/{contactID}", id, Integer.class);
+
+        return Optional.ofNullable(affectedRows).orElse(0);
     }
 
     @Override
     public List<FxKontakt> getKontaktDetails(final long... ids) {
         final FxKontakt[] details = getRestTemplate().postForObject("/addressBook/details", ids, FxKontakt[].class);
 
+        if (details == null) {
+            throw new IllegalArgumentException("details");
+        }
+
         return Arrays.asList(details);
     }
 
     @Override
     public void insertKontakt(final FxKontakt kontakt) {
-        final long primaryKey = getRestTemplate().postForObject("/addressBook/contact/insert", kontakt, Long.class);
+        final Long primaryKey = getRestTemplate().postForObject("/addressBook/contact/insert", kontakt, Long.class);
+
+        if (primaryKey == null) {
+            throw new IllegalArgumentException("primaryKey");
+        }
 
         kontakt.setID(primaryKey);
     }
@@ -55,7 +66,9 @@ public class DefaultRestFxAddressbookService extends AbstractFxAddressbookServic
         variables.put("surname", nachname);
         variables.put("forename", vorname);
 
-        return getRestTemplate().postForObject("/addressBook/contact/update/{contactID}", id, Integer.class, variables);
+        final Integer affectedRows = getRestTemplate().postForObject("/addressBook/contact/update/{contactID}", id, Integer.class, variables);
+
+        return Optional.ofNullable(affectedRows).orElse(0);
     }
 
     protected RestTemplate getRestTemplate() {

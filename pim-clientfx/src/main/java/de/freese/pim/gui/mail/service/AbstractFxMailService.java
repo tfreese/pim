@@ -58,14 +58,7 @@ public abstract class AbstractFxMailService extends AbstractFxService implements
                 // Mail-Download.
                 Files.createDirectories(mailPath.getParent());
 
-                try {
-                    mailContent = loadMailContent(mailPath, account, mail, monitor);
-                }
-                catch (Exception ex) {
-                    Files.deleteIfExists(mailPath);
-                    Files.deleteIfExists(mailPath.getParent());
-                    throw ex;
-                }
+                mailContent = doLoadMailContent(mailPath, account, mail, monitor);
             }
             else {
                 // Lokal gespeicherte Mail laden.
@@ -152,5 +145,16 @@ public abstract class AbstractFxMailService extends AbstractFxService implements
         };
 
         getTaskExecutor().submit(task);
+    }
+
+    private MailContent doLoadMailContent(final Path mailPath, final FxMailAccount account, final FxMail mail, final IOMonitor monitor) throws Exception {
+        try {
+            return loadMailContent(mailPath, account, mail, monitor);
+        }
+        catch (Exception ex) {
+            Files.deleteIfExists(mailPath);
+            Files.deleteIfExists(mailPath.getParent());
+            throw ex;
+        }
     }
 }
