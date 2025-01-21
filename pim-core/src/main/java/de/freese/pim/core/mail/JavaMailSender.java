@@ -3,6 +3,7 @@ package de.freese.pim.core.mail;
 
 import java.util.Date;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
@@ -78,8 +79,12 @@ public class JavaMailSender {
         return this.session;
     }
 
-    public void send(final MimeMessage... mimeMessages) throws Exception {
-        doSend(mimeMessages, null);
+    public void send(final MimeMessage mimeMessage) throws Exception {
+        doSend(new MimeMessage[]{mimeMessage}, null);
+    }
+
+    public void send(final List<MimeMessage> mimeMessages) throws Exception {
+        doSend(mimeMessages.toArray(new MimeMessage[0]), null);
     }
 
     public void setAuthentication(final String userName, final String password) {

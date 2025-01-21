@@ -39,6 +39,10 @@ import de.freese.pim.core.utils.io.IOMonitor;
 @Service("mailService")
 @Profile("!ClientREST")
 public class DefaultMailService extends AbstractService implements MailService {
+    private static String getAccountBeanName(final long accountID) {
+        return "mailAPI-" + accountID;
+    }
+
     private final BeanFactory beanFactory;
     private final MailDao mailDAO;
 
@@ -322,9 +326,5 @@ public class DefaultMailService extends AbstractService implements MailService {
 
     protected MailDao getMailDAO() {
         return this.mailDAO;
-    }
-
-    private String getAccountBeanName(final long accountID) {
-        return "mailAPI-" + accountID;
     }
 }

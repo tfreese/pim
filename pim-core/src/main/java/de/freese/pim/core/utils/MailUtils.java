@@ -2,6 +2,7 @@
 package de.freese.pim.core.utils;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -266,7 +267,7 @@ public final class MailUtils {
 
         if (part.isMimeType("text/*") || part.isMimeType("TEXT/*")) {
             if (!(part.getContent() instanceof String text)) {
-                return null;
+                return Collections.emptyList();
             }
 
             if (part.isMimeType("text/plain") || part.isMimeType("TEXT/plain")) {
@@ -284,7 +285,7 @@ public final class MailUtils {
 
                 final List<AbstractTextPart> tp = getTextParts(bp);
 
-                if (tp != null && !tp.isEmpty()) {
+                if (!tp.isEmpty()) {
                     textParts.addAll(tp);
                 }
             }

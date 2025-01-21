@@ -147,7 +147,10 @@ public final class Utils {
     public static Set<Field> getAnnotatedFields(final Object object, final Class<? extends Annotation> annotation) {
         return Stream.of(object.getClass().getDeclaredFields())
                 .filter(f -> f.isAnnotationPresent(annotation))
-                .peek(f -> f.setAccessible(true))
+                .map(f -> {
+                    f.setAccessible(true);
+                    return f;
+                })
                 .collect(Collectors.toSet());
     }
 
