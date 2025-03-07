@@ -37,12 +37,13 @@ ext.artifactId = project.name
 processResources {
     def map = [
             "project_description": project.description,
-            "project_artifactId" : project.artifactId,
+            "project_artifactId" : project.name,
             "project_version"    : project.version
     ]
 
     filesMatching("application-Server.properties") {
-        filteringCharset = "UTF-8"
+        // filteringCharset = "UTF-8"
+        
         // During Problems escape Placeholder: \${...}
         // expand(project.properties)
         expand(map)
