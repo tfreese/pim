@@ -44,9 +44,9 @@ public class ExecutorConfig implements AsyncConfigurer {
     @Bean
     @ConditionalOnMissingBean({Executor.class, ExecutorService.class})
     public ThreadPoolExecutorFactoryBean executorService() {
-        final int coreSize = Math.max(8, Runtime.getRuntime().availableProcessors());
+        final int coreSize = Math.max(2, Runtime.getRuntime().availableProcessors() / 4);
         final int maxSize = coreSize * 2;
-        final int queueSize = maxSize * 2;
+        final int queueSize = maxSize * 4;
         final int keepAliveSeconds = 60;
 
         final ThreadPoolExecutorFactoryBean bean = new ThreadPoolExecutorFactoryBean();
