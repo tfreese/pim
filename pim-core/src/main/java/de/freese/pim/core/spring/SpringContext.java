@@ -83,8 +83,9 @@ public final class SpringContext implements ApplicationContextAware, ResourceLoa
 
         return beans.stream().filter(bean -> {
             final Qualifier q = bean.getClass().getAnnotation(Qualifier.class);
+            final String value = q != null ? q.value() : null;
 
-            return qualifier.equals(q.value());
+            return qualifier.equals(value);
         }).findFirst();
     }
 

@@ -90,7 +90,7 @@ public class ExecutorConfig implements AsyncConfigurer {
     }
 
     /**
-     * Wird für {@link EnableAsync} benötigt.<br>
+     * Required for {@link EnableAsync}.
      *
      * @see AsyncConfigurer
      */
@@ -101,7 +101,7 @@ public class ExecutorConfig implements AsyncConfigurer {
     }
 
     /**
-     * Wird für {@link EnableScheduling} benötigt.<br>
+     * Required for  {@link EnableScheduling}.
      *
      * @see SchedulingConfigurer
      */
