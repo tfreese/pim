@@ -18,12 +18,12 @@
         </else>
     </if-->
 
-    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender"
+              immediateFlush="true">
         <target>System.out</target>
         <encoder>
             <pattern>${pattern}</pattern>
             <outputPatternAsHeader>false</outputPatternAsHeader>
-            <immediateFlush>true</immediateFlush>
         </encoder>
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
             <level>ERROR</level>
@@ -32,21 +32,21 @@
         </filter>
     </appender>
 
-    <appender name="STDERR" class="ch.qos.logback.core.ConsoleAppender">
+    <appender name="STDERR" class="ch.qos.logback.core.ConsoleAppender"
+              immediateFlush="true">
         <target>System.err</target>
         <encoder>
             <pattern>${pattern}</pattern>
             <outputPatternAsHeader>false</outputPatternAsHeader>
-            <immediateFlush>true</immediateFlush>
         </encoder>
         <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
             <level>ERROR</level>
         </filter>
     </appender>
 
-    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender"
+              immediateFlush="true">
         <file>${log.dir}/pim-client.log</file>
-        <immediateFlush>true</immediateFlush>
         <append>true</append>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <fileNamePattern>${log.dir}/%d{yyyy-MM,aux}/pim-client.%d{yyyy-MM-dd}.log.gz</fileNamePattern>

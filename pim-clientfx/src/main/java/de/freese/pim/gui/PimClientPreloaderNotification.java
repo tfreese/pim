@@ -26,10 +26,10 @@ public class PimClientPreloaderNotification implements PreloaderNotification {
     }
 
     public double getProgress() {
-        return this.progress;
+        return progress;
     }
 
     public String getStatus() {
-        return this.status;
+        return status;
     }
 }

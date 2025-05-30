@@ -36,8 +36,7 @@ public final class PimClientLauncher {
         // LogManager.getLogManager().reset();
         // for (String name : Arrays.asList(java.util.logging.Logger.GLOBAL_LOGGER_NAME, "com.sun.webkit.perf.Locks",
         // "com.sun.webkit.perf.WCGraphicsPerfLogger",
-        // "com.sun.webkit.perf.WCFontPerfLogger"))
-        // {
+        // "com.sun.webkit.perf.WCFontPerfLogger")) {
         // java.util.logging.Logger javaLogger = java.util.logging.Logger.getLogger(name);
         // javaLogger.setLevel(java.util.logging.Level.OFF);
         // }

@@ -51,10 +51,17 @@ bootRun {
 ext.artifactId = project.name
 
 processResources {
-    filesMatching("application-ClientEmbeddedServer.properties") {
-        filteringCharset = "UTF-8"
+    def map = [
+            "project_description": project.description,
+            "project_artifactId" : project.name,
+            "project_version"    : project.version
+    ]
 
-        /// During Problems escape Placeholder: \${...}
-        expand(project.properties)
+    filesMatching(["application.properties"]) {
+        // filteringCharset = "UTF-8"
+
+        // During Problems escape Placeholder: \${...}
+        // expand(project.properties)
+        expand(map)
     }
 }

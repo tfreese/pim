@@ -119,7 +119,7 @@ public class PimClientApplication extends Application {
         final SpringApplication application = new SpringApplicationBuilder(PimClientApplication.class)
                 .headless(false) // Default true, hier false wegen JavaFX
                 //.web(WebApplicationType.NONE) // Wird eigentlich automatisch ermittelt.
-                //                .profiles(profiles)
+                // .profiles(profiles)
                 .registerShutdownHook(true) // Default true
                 //.banner(new MyBanner())
                 //.listeners(new ApplicationPidFileWriter("pim-client.pid"))

@@ -112,21 +112,21 @@ public class PimClientPreloader extends Preloader {
     }
 
     private Scene createPreloaderScene() {
-        this.labelStatus = new Label();
-        this.progressIndicator = new ProgressBar();
-        // this.progress = new ProgressIndicator();
-        // this.progress.setProgress(-1.0D);
+        labelStatus = new Label();
+        progressIndicator = new ProgressBar();
+        // progress = new ProgressIndicator();
+        // progress.setProgress(-1.0D);
 
-        this.progressIndicator.setPrefWidth(200);
+        progressIndicator.setPrefWidth(200);
 
         final GridPane pane = new GridPane();
         pane.setPadding(new Insets(50));
         pane.getStyleClass().add("gridpane");
 
-        pane.add(this.labelStatus, 0, 0);
+        pane.add(labelStatus, 0, 0);
 
-        GridPane.setHgrow(this.progressIndicator, Priority.ALWAYS);
-        pane.add(this.progressIndicator, 0, 1);
+        GridPane.setHgrow(progressIndicator, Priority.ALWAYS);
+        pane.add(progressIndicator, 0, 1);
 
         // Scene scene = new Scene(pane, 300, 100);
         final Scene scene = new Scene(pane);

@@ -41,7 +41,8 @@ processResources {
             "project_version"    : project.version
     ]
 
-    filesMatching("application-Server.properties") {
+    // , "pim-server_banner.txt"
+    filesMatching(["application-Server.properties"]) {
         // filteringCharset = "UTF-8"
 
         // During Problems escape Placeholder: \${...}
