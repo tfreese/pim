@@ -34,12 +34,12 @@ public abstract class AbstractDataSource implements DataSource {
     protected AbstractDataSource(final DataSource source, final IOMonitor monitor) throws IOException {
         super();
 
-        this.name = source.getName();
-        this.contentType = source.getContentType();
+        name = source.getName();
+        contentType = source.getContentType();
 
         try (InputStream inputStream = source.getInputStream()) {
             if (monitor == null) {
-                this.data = StreamUtils.copyToByteArray(inputStream);
+                data = StreamUtils.copyToByteArray(inputStream);
             }
             else {
                 try (FastByteArrayOutputStream baos = new FastByteArrayOutputStream(1024);
@@ -47,7 +47,7 @@ public abstract class AbstractDataSource implements DataSource {
                      OutputStream mos = new MonitorOutputStream(baos, monitor, 0)) {
                     StreamUtils.copy(inputStream, mos);
                     mos.flush();
-                    this.data = baos.toByteArray();
+                    data = baos.toByteArray();
                 }
             }
         }
@@ -63,26 +63,26 @@ public abstract class AbstractDataSource implements DataSource {
 
     @Override
     public String getContentType() {
-        return this.contentType;
+        return contentType;
     }
 
     public byte[] getData() {
-        return this.data;
+        return data;
     }
 
     @Override
     @JsonIgnore
     public InputStream getInputStream() throws IOException {
-        if (this.data == null) {
+        if (data == null) {
             throw new IOException("no data");
         }
 
-        return new ByteArrayInputStream(this.data);
+        return new ByteArrayInputStream(data);
     }
 
     @Override
     public String getName() {
-        return this.name;
+        return name;
     }
 
     @Override

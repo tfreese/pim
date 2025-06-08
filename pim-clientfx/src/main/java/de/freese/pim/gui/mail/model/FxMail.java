@@ -45,23 +45,23 @@ public class FxMail {
     private final LongProperty uidProperty = new SimpleLongProperty(this, "uid", 0L);
 
     public ObjectProperty<InternetAddress[]> bccProperty() {
-        return this.bccProperty;
+        return bccProperty;
     }
 
     public ObjectProperty<InternetAddress[]> ccProperty() {
-        return this.ccProperty;
+        return ccProperty;
     }
 
     public StringProperty folderFullNameProperty() {
-        return this.folderFullNameProperty;
+        return folderFullNameProperty;
     }
 
     public LongProperty folderIDProperty() {
-        return this.folderIDProperty;
+        return folderIDProperty;
     }
 
     public ObjectProperty<InternetAddress> fromProperty() {
-        return this.fromProperty;
+        return fromProperty;
     }
 
     public InternetAddress[] getBcc() {
@@ -96,7 +96,7 @@ public class FxMail {
     }
 
     public Date getSendDate() {
-        return this.sendDateProperty.get();
+        return sendDateProperty.get();
     }
 
     public int getSize() {
@@ -123,19 +123,19 @@ public class FxMail {
     }
 
     public IntegerProperty msgNumProperty() {
-        return this.msgNumProperty;
+        return msgNumProperty;
     }
 
     public ObjectProperty<Date> receivedDateProperty() {
-        return this.receivedDateProperty;
+        return receivedDateProperty;
     }
 
     public BooleanProperty seenProperty() {
-        return this.seenProperty;
+        return seenProperty;
     }
 
     public ObjectProperty<Date> sendDateProperty() {
-        return this.sendDateProperty;
+        return sendDateProperty;
     }
 
     public void setBcc(final InternetAddress[] bcc) {
@@ -197,18 +197,18 @@ public class FxMail {
     }
 
     public IntegerProperty sizeProperty() {
-        return this.sizeProperty;
+        return sizeProperty;
     }
 
     public StringProperty subjectProperty() {
-        return this.subjectProperty;
+        return subjectProperty;
     }
 
     public ObjectProperty<InternetAddress[]> toProperty() {
-        return this.toProperty;
+        return toProperty;
     }
 
     public LongProperty uidProperty() {
-        return this.uidProperty;
+        return uidProperty;
     }
 }

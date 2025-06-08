@@ -59,8 +59,8 @@ public class ContactView implements View {
     public ContactView() {
         super();
 
-        this.mainNode = createMainNode();
-        this.naviNode = createNaviNode();
+        mainNode = createMainNode();
+        naviNode = createNaviNode();
     }
 
     private Region createMainNode() {
@@ -68,23 +68,23 @@ public class ContactView implements View {
         gridPane.getStyleClass().add("gridpane");
 
         // Nachname
-        this.labelNachname = new Label("%nachname");
-        gridPane.add(this.labelNachname, 0, 0);
-        GridPane.setHalignment(this.labelNachname, HPos.RIGHT);
+        labelNachname = new Label("%nachname");
+        gridPane.add(labelNachname, 0, 0);
+        GridPane.setHalignment(labelNachname, HPos.RIGHT);
 
-        this.textFieldNachname = new TextField();
-        this.textFieldNachname.setEditable(false);
-        GridPane.setHgrow(this.textFieldNachname, Priority.ALWAYS);
-        gridPane.add(this.textFieldNachname, 1, 0);
+        textFieldNachname = new TextField();
+        textFieldNachname.setEditable(false);
+        GridPane.setHgrow(textFieldNachname, Priority.ALWAYS);
+        gridPane.add(textFieldNachname, 1, 0);
 
         // Vorname
-        this.labelVorname = new Label("%vorname");
-        gridPane.add(this.labelVorname, 0, 1);
-        GridPane.setHalignment(this.labelVorname, HPos.RIGHT);
+        labelVorname = new Label("%vorname");
+        gridPane.add(labelVorname, 0, 1);
+        GridPane.setHalignment(labelVorname, HPos.RIGHT);
 
-        this.textFieldVorname = new TextField();
-        this.textFieldVorname.setEditable(false);
-        gridPane.add(this.textFieldVorname, 1, 1);
+        textFieldVorname = new TextField();
+        textFieldVorname.setEditable(false);
+        gridPane.add(textFieldVorname, 1, 1);
 
         final TitledPane titledPane = new TitledPane("%details", gridPane);
         titledPane.setCollapsible(false);
@@ -106,32 +106,32 @@ public class ContactView implements View {
         imageView.setFitHeight(32);
         imageView.setFitWidth(32);
         imageView.getStyleClass().add("imageview-add");
-        this.buttonAddContact = new Button();
-        this.buttonAddContact.setGraphic(imageView);
-        this.buttonAddContact.setTooltip(new Tooltip("%contact.add"));
-        toolBar.getItems().add(this.buttonAddContact);
+        buttonAddContact = new Button();
+        buttonAddContact.setGraphic(imageView);
+        buttonAddContact.setTooltip(new Tooltip("%contact.add"));
+        toolBar.getItems().add(buttonAddContact);
 
         imageView = new ImageView();
         imageView.setFitHeight(32);
         imageView.setFitWidth(32);
         imageView.getStyleClass().add("imageview-edit");
-        this.buttonEditContact = new Button();
-        this.buttonEditContact.setGraphic(imageView);
-        this.buttonEditContact.setTooltip(new Tooltip("%contact.edit"));
-        toolBar.getItems().add(this.buttonEditContact);
+        buttonEditContact = new Button();
+        buttonEditContact.setGraphic(imageView);
+        buttonEditContact.setTooltip(new Tooltip("%contact.edit"));
+        toolBar.getItems().add(buttonEditContact);
 
         imageView = new ImageView();
         imageView.setFitHeight(32);
         imageView.setFitWidth(32);
         imageView.getStyleClass().add("imageview-delete");
-        this.buttonDeleteContact = new Button();
-        this.buttonDeleteContact.setGraphic(imageView);
-        this.buttonDeleteContact.setTooltip(new Tooltip("%contact.delete"));
-        toolBar.getItems().add(this.buttonDeleteContact);
+        buttonDeleteContact = new Button();
+        buttonDeleteContact.setGraphic(imageView);
+        buttonDeleteContact.setTooltip(new Tooltip("%contact.delete"));
+        toolBar.getItems().add(buttonDeleteContact);
 
         // FilterLabel
-        this.labelFilter = new Label("%filter");
-        gridPane.add(this.labelFilter, 0, 1);
+        labelFilter = new Label("%filter");
+        gridPane.add(labelFilter, 0, 1);
 
         // FilterTextField
         final TextField textField = new TextField();
@@ -139,9 +139,9 @@ public class ContactView implements View {
         GridPane.setHgrow(textField, Priority.ALWAYS);
 
         // Tabelle
-        this.tableViewKontakt = createTableViewKontakt(textField.textProperty());
-        gridPane.add(this.tableViewKontakt, 0, 2, 2, 1);
-        GridPane.setVgrow(this.tableViewKontakt, Priority.ALWAYS);
+        tableViewKontakt = createTableViewKontakt(textField.textProperty());
+        gridPane.add(tableViewKontakt, 0, 2, 2, 1);
+        GridPane.setVgrow(tableViewKontakt, Priority.ALWAYS);
 
         final TitledPane titledPane = new TitledPane("%contacts", gridPane);
         titledPane.setCollapsible(false);
@@ -161,8 +161,8 @@ public class ContactView implements View {
         tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN);
         // tableView.setColumnResizePolicy(TableView.UNCONSTRAINED_RESIZE_POLICY);
 
-        this.buttonEditContact.disableProperty().bind(tableView.getSelectionModel().selectedItemProperty().isNull());
-        this.buttonDeleteContact.disableProperty().bind(tableView.getSelectionModel().selectedItemProperty().isNull());
+        buttonEditContact.disableProperty().bind(tableView.getSelectionModel().selectedItemProperty().isNull());
+        buttonDeleteContact.disableProperty().bind(tableView.getSelectionModel().selectedItemProperty().isNull());
 
         // tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
@@ -215,7 +215,7 @@ public class ContactView implements View {
 
         final MenuItem menuItemAddContact = new MenuItem("%contact.add", imageView);
         // menuItemAddContact.disableProperty().bind(tableView.getSelectionModel().selectedItemProperty().isNull());
-        menuItemAddContact.setOnAction(event -> this.buttonAddContact.fire());
+        menuItemAddContact.setOnAction(event -> buttonAddContact.fire());
         contextMenu.getItems().add(menuItemAddContact);
 
         imageView = new ImageView();
@@ -224,8 +224,8 @@ public class ContactView implements View {
         imageView.getStyleClass().add("imageview-edit");
 
         final MenuItem menuItemEditContact = new MenuItem("%contact.edit", imageView);
-        menuItemAddContact.disableProperty().bind(this.buttonAddContact.disableProperty());
-        menuItemEditContact.setOnAction(event -> this.buttonEditContact.fire());
+        menuItemAddContact.disableProperty().bind(buttonAddContact.disableProperty());
+        menuItemEditContact.setOnAction(event -> buttonEditContact.fire());
         contextMenu.getItems().add(menuItemEditContact);
 
         imageView = new ImageView();
@@ -234,12 +234,12 @@ public class ContactView implements View {
         imageView.getStyleClass().add("imageview-delete");
 
         final MenuItem menuItemDeleteContact = new MenuItem("%contact.delete", imageView);
-        menuItemDeleteContact.disableProperty().bind(this.buttonDeleteContact.disableProperty());
-        menuItemDeleteContact.setOnAction(event -> this.buttonDeleteContact.fire());
+        menuItemDeleteContact.disableProperty().bind(buttonDeleteContact.disableProperty());
+        menuItemDeleteContact.setOnAction(event -> buttonDeleteContact.fire());
         contextMenu.getItems().add(menuItemDeleteContact);
 
         // menuItemExcelExport.setOnAction(event -> excelExport());
-        // menuItemExcelExport.disableProperty().bind(Bindings.when(Bindings.isEmpty(this.tableView.getItems())).then(true).otherwise(false));
+        // menuItemExcelExport.disableProperty().bind(Bindings.when(Bindings.isEmpty(tableView.getItems())).then(true).otherwise(false));
         // contextMenu.getItems().add(menuItemExcelExport);
 
         return tableView;

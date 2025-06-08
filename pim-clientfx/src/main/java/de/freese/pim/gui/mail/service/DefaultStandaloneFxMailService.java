@@ -200,7 +200,7 @@ public class DefaultStandaloneFxMailService extends AbstractFxMailService {
     }
 
     protected MailService getMailService() {
-        return this.mailService;
+        return mailService;
     }
 
     @Override

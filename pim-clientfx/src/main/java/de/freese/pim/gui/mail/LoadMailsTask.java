@@ -53,8 +53,8 @@ public class LoadMailsTask extends Task<Void> implements Callable<Void> {
 
     @Override
     public Void call() {
-        for (FxMailFolder mf : this.folders) {
-            final List<FxMail> mails = this.mailService.loadMails(this.account, mf);
+        for (FxMailFolder mf : folders) {
+            final List<FxMail> mails = mailService.loadMails(account, mf);
 
             final Runnable task = () -> {
                 if (mails != null) {

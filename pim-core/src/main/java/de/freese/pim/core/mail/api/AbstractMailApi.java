@@ -17,7 +17,7 @@ import de.freese.pim.core.model.mail.MailAccount;
 public abstract class AbstractMailApi implements MailApi {
     private final MailAccount account;
     private final Logger logger = LoggerFactory.getLogger(getClass());
-    
+
     private Executor executor;
 
     protected AbstractMailApi(final MailAccount account) {
@@ -28,7 +28,7 @@ public abstract class AbstractMailApi implements MailApi {
 
     @Override
     public MailAccount getAccount() {
-        return this.account;
+        return account;
     }
 
     @Override
@@ -48,10 +48,10 @@ public abstract class AbstractMailApi implements MailApi {
      * Optionaler {@link Executor} für die Mail-API.
      */
     protected Executor getExecutor() {
-        return this.executor;
+        return executor;
     }
 
     protected Logger getLogger() {
-        return this.logger;
+        return logger;
     }
 }

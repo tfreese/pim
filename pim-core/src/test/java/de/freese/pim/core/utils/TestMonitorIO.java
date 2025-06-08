@@ -37,7 +37,7 @@ class TestMonitorIO {
         private long current;
 
         public long getCurrent() {
-            return this.current;
+            return current;
         }
 
         @Override

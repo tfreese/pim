@@ -164,7 +164,7 @@ public class DefaultRestFxMailService extends AbstractFxMailService {
 
     @Resource
     public void setRestTemplateBuilder(final RestTemplateBuilder restTemplateBuilder) {
-        this.restTemplate = restTemplateBuilder.build();
+        restTemplate = restTemplateBuilder.build();
     }
 
     @Override
@@ -186,7 +186,7 @@ public class DefaultRestFxMailService extends AbstractFxMailService {
     }
 
     protected RestTemplate getRestTemplate() {
-        return this.restTemplate;
+        return restTemplate;
     }
 
     @Override

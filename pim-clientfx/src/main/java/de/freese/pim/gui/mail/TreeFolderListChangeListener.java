@@ -69,7 +69,7 @@ public class TreeFolderListChangeListener implements ListChangeListener<FxMailFo
     }
 
     private TreeItem<Object> getParent() {
-        return this.parent;
+        return parent;
     }
 
     private void removeChild(final TreeItem<Object> parent, final TreeItem<Object> child) {

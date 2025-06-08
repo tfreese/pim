@@ -24,34 +24,35 @@ public class InlineUrlConnection extends URLConnection {
         super(url);
 
         this.mailContent = mailContent;
-        this.dataSource = mailContent.getInlines().get(url.getPath());
+        
+        dataSource = mailContent.getInlines().get(url.getPath());
     }
 
     @Override
     public void connect() {
-        this.connected = true;
+        connected = true;
     }
 
     @Override
     public String getContentEncoding() {
-        return this.mailContent.getEncoding();
+        return mailContent.getEncoding();
     }
 
     @Override
     public String getContentType() {
-        if (this.dataSource == null) {
+        if (dataSource == null) {
             return "";
         }
 
-        return this.dataSource.getContentType();
+        return dataSource.getContentType();
     }
 
     @Override
     public InputStream getInputStream() throws IOException {
-        if (this.dataSource == null) {
+        if (dataSource == null) {
             return InputStream.nullInputStream();
         }
 
-        return this.dataSource.getInputStream();
+        return dataSource.getInputStream();
     }
 }

@@ -49,11 +49,11 @@ public final class MailUtils {
         }
 
         public String getContent() {
-            return this.content;
+            return content;
         }
 
         public String getMimeType() {
-            return this.mimeType;
+            return mimeType;
         }
 
         @Override

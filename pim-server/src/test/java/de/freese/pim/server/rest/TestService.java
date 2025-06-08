@@ -121,10 +121,10 @@ public class TestService {
     }
 
     protected Logger getLogger() {
-        return this.logger;
+        return logger;
     }
 
     protected AsyncTaskExecutor getTaskExecutor() {
-        return this.taskExecutor;
+        return taskExecutor;
     }
 }

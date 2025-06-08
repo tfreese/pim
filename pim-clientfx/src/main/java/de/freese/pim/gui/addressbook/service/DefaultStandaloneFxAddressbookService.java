@@ -75,7 +75,7 @@ public class DefaultStandaloneFxAddressbookService extends AbstractFxAddressbook
     }
 
     protected AddressBookService getAddressBookService() {
-        return this.addressBookService;
+        return addressBookService;
     }
 
     private List<FxKontakt> toFXContacts(final List<Kontakt> contacts) throws Exception {

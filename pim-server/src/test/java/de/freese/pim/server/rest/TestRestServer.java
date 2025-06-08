@@ -50,7 +50,7 @@ class TestRestServer {
     void test010NoParamGreetingShouldReturnDefaultMessage() throws Exception {
         // .andDo(print()).andExpect(jsonPath("$.content").value("Hello, Spring Community!"));
 
-        this.mockMvc.perform(get("/test/greeting"))
+        mockMvc.perform(get("/test/greeting"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(content().json("{\"hello\":\"World\"}"));
@@ -60,7 +60,7 @@ class TestRestServer {
     void test020ParamGreetingShouldReturnTailoredMessage() throws Exception {
         // .andDo(print()).andExpect(jsonPath("$.content").value("Hello, Spring Community!"));
 
-        this.mockMvc.perform(get("/test/greeting").param("name", "Spring Community"))
+        mockMvc.perform(get("/test/greeting").param("name", "Spring Community"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(content().json("{\"hello\":\"Spring Community\"}"));
@@ -85,7 +85,7 @@ class TestRestServer {
         final List<MvcResult> results = new ArrayList<>();
 
         for (int i = 0; i < 20; i++) {
-            final MvcResult mvcResult = this.mockMvc.perform(get(url))
+            final MvcResult mvcResult = mockMvc.perform(get(url))
                     .andExpect(MockMvcResultMatchers.request().asyncStarted())
                     .andReturn();
 
@@ -93,7 +93,7 @@ class TestRestServer {
         }
 
         for (MvcResult mvcResult : results) {
-            this.mockMvc.perform(MockMvcRequestBuilders.asyncDispatch(mvcResult))
+            mockMvc.perform(MockMvcRequestBuilders.asyncDispatch(mvcResult))
                     .andExpect(status().is2xxSuccessful());
 
             Assertions.assertTrue(mvcResult.getAsyncResult().toString().startsWith("20"));

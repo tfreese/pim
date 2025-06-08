@@ -31,25 +31,25 @@ public class PimClientPreloader extends Preloader {
             final double progress = noti.getProgress();
             final String status = noti.getStatus();
 
-            this.labelStatus.setText(status);
-            this.progressIndicator.setProgress(progress);
+            labelStatus.setText(status);
+            progressIndicator.setProgress(progress);
 
             // // expect application to send us progress notifications
             // // with progress ranging from 0 to 1.0
             // double progress = ((PIMPreloaderNotification) info).getProgress();
             //
-            // if (!this.noLoadingProgress) {
+            // if (!noLoadingProgress) {
             // // // if we were receiving loading progress notifications
             // // // then progress is already at 50%.
             // // // Rescale application progress to start from 50%
             // progress = 0.5D + (progress / 2);
             // }
             //
-            // // this.progress.setProgress(v);
+            // // progress.setProgress(v);
         }
         else if (info instanceof StateChangeNotification) {
             // hide after get any state update from application
-            this.stage.hide();
+            stage.hide();
         }
     }
 
@@ -67,16 +67,16 @@ public class PimClientPreloader extends Preloader {
 
     @Override
     public void handleProgressNotification(final ProgressNotification info) {
-        // this.bar.setProgress(pn.getProgress());
+        // bar.setProgress(pn.getProgress());
 
         // application loading progress is rescaled to be first 50%
         // Even if there is nothing to load 0% and 100% events can be
         // delivered
-        if (Double.compare(info.getProgress(), 1.0D) != 0 || !this.noLoadingProgress) {
-            // this.progress.setProgress(info.getProgress() / 2);
+        if (Double.compare(info.getProgress(), 1.0D) != 0 || !noLoadingProgress) {
+            // progress.setProgress(info.getProgress() / 2);
 
             if (info.getProgress() > 0D) {
-                this.noLoadingProgress = false;
+                noLoadingProgress = false;
             }
         }
     }
@@ -87,7 +87,7 @@ public class PimClientPreloader extends Preloader {
         // System.out.println(info);
 
         // if (info.getType() == StateChangeNotification.Type.BEFORE_START) {
-        // this.stage.hide();
+        // stage.hide();
         // }
     }
 

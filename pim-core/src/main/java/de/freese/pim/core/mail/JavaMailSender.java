@@ -39,12 +39,12 @@ public class JavaMailSender {
             Objects.requireNonNull(userName, "userName required");
             Objects.requireNonNull(password, "password required");
 
-            this.authentication = new PasswordAuthentication(userName, password);
+            authentication = new PasswordAuthentication(userName, password);
         }
 
         @Override
         public PasswordAuthentication getPasswordAuthentication() {
-            return this.authentication;
+            return authentication;
         }
     }
 
@@ -56,27 +56,27 @@ public class JavaMailSender {
     private Session session;
 
     public String getHost() {
-        return this.host;
+        return host;
     }
 
     public Properties getJavaMailProperties() {
-        return this.javaMailProperties;
+        return javaMailProperties;
     }
 
     public int getPort() {
-        return this.port;
+        return port;
     }
 
     public String getProtocol() {
-        return this.protocol;
+        return protocol;
     }
 
     public synchronized Session getSession() {
-        if (this.session == null) {
-            this.session = Session.getInstance(getJavaMailProperties(), authenticator);
+        if (session == null) {
+            session = Session.getInstance(getJavaMailProperties(), authenticator);
         }
 
-        return this.session;
+        return session;
     }
 
     public void send(final MimeMessage mimeMessage) throws Exception {
@@ -88,7 +88,7 @@ public class JavaMailSender {
     }
 
     public void setAuthentication(final String userName, final String password) {
-        this.authenticator = new MailAuthenticator(userName, password);
+        authenticator = new MailAuthenticator(userName, password);
     }
 
     public void setHost(final String host) {

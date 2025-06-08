@@ -22,7 +22,7 @@ public class FxKontaktAttribut implements Comparable<FxKontaktAttribut> {
     private final StringProperty wertProperty = new SimpleStringProperty(this, "wert", null);
 
     public StringProperty attributProperty() {
-        return this.attributProperty;
+        return attributProperty;
     }
 
     @Override
@@ -68,7 +68,7 @@ public class FxKontaktAttribut implements Comparable<FxKontaktAttribut> {
     }
 
     public LongProperty kontaktIDProperty() {
-        return this.kontaktIDProperty;
+        return kontaktIDProperty;
     }
 
     public void setAttribut(final String attribut) {
@@ -95,6 +95,6 @@ public class FxKontaktAttribut implements Comparable<FxKontaktAttribut> {
     }
 
     public StringProperty wertProperty() {
-        return this.wertProperty;
+        return wertProperty;
     }
 }

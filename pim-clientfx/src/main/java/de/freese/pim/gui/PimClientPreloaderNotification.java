@@ -21,8 +21,9 @@ public class PimClientPreloaderNotification implements PreloaderNotification {
     public PimClientPreloaderNotification(final String status) {
         super();
 
-        this.progress = -1;
         this.status = status;
+        
+        progress = -1;
     }
 
     public double getProgress() {

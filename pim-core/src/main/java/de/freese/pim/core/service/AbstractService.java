@@ -23,7 +23,7 @@ public abstract class AbstractService implements ApplicationContextAware {
     private AsyncTaskExecutor taskExecutor;
 
     public ApplicationContext getApplicationContext() {
-        return this.applicationContext;
+        return applicationContext;
     }
 
     @Override
@@ -37,10 +37,10 @@ public abstract class AbstractService implements ApplicationContextAware {
     }
 
     protected Logger getLogger() {
-        return this.logger;
+        return logger;
     }
 
     protected AsyncTaskExecutor getTaskExecutor() {
-        return this.taskExecutor;
+        return taskExecutor;
     }
 }

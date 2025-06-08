@@ -21,6 +21,6 @@ public abstract class AbstractFxService extends AbstractRemoteService {
     }
 
     protected ObjectMapper getJsonMapper() {
-        return this.jsonMapper;
+        return jsonMapper;
     }
 }

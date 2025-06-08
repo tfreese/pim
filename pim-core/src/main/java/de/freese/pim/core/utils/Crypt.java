@@ -177,7 +177,7 @@ public class Crypt {
     }
 
     public Charset getCharset() {
-        return this.charset;
+        return charset;
     }
 
     public OutputStream getCipherOutputStream(final OutputStream output) {

@@ -22,9 +22,9 @@ public class NestedIOMonitor implements IOMonitor {
 
     @Override
     public void monitor(final long current, final long size) {
-        this.currentAccepted += current;
-        // System.out.printf("%d / %d%n", current, this.size);
+        currentAccepted += current;
+        // System.out.printf("%d / %d%n", current, size);
 
-        this.delegate.monitor(this.currentAccepted, this.size);
+        delegate.monitor(currentAccepted, size);
     }
 }

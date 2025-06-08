@@ -36,16 +36,16 @@ public class MainView extends BorderPane implements View {
     public MainView() {
         super();
 
-        this.splitPane = new SplitPane();
-        this.splitPane.setOrientation(Orientation.HORIZONTAL);
-        this.splitPane.setDividerPositions(0.2D);
-        setCenter(this.splitPane);
+        splitPane = new SplitPane();
+        splitPane.setOrientation(Orientation.HORIZONTAL);
+        splitPane.setDividerPositions(0.2D);
+        setCenter(splitPane);
 
-        this.vBox = new VBox();
-        this.vBox.getStyleClass().add("vbox");
+        vBox = new VBox();
+        vBox.getStyleClass().add("vbox");
 
         // Platzhalter für Navigation.
-        this.vBox.getChildren().add(new Pane());
+        vBox.getChildren().add(new Pane());
         setNavNode(new ListView<>());
 
         // Image image = new Image("images/mail.png", 16, 16, true, true);
@@ -54,30 +54,30 @@ public class MainView extends BorderPane implements View {
         imageViewMail.setFitWidth(32);
         imageViewMail.getStyleClass().add("imageview-mail");
 
-        this.buttonMailView = new Button("%mails");
-        // this.buttonMailView.setPadding(new Insets(0));
-        // this.buttonMailView.setPrefSize(imageViewMail.getFitWidth(), imageViewMail.getFitHeight());
-        this.buttonMailView.setGraphic(imageViewMail);
-        this.buttonMailView.setTooltip(new Tooltip("%mails"));
+        buttonMailView = new Button("%mails");
+        // buttonMailView.setPadding(new Insets(0));
+        // buttonMailView.setPrefSize(imageViewMail.getFitWidth(), imageViewMail.getFitHeight());
+        buttonMailView.setGraphic(imageViewMail);
+        buttonMailView.setTooltip(new Tooltip("%mails"));
 
         final ImageView imageViewContact = new ImageView();
         imageViewContact.setFitHeight(32);
         imageViewContact.setFitWidth(32);
         imageViewContact.getStyleClass().add("imageview-contact");
 
-        this.buttonContactView = new Button("%contacts");
-        // this.buttonContactView.setPrefSize(imageViewContact.getFitWidth(), imageViewContact.getFitHeight());
-        this.buttonContactView.setGraphic(imageViewContact);
-        this.buttonContactView.setTooltip(new Tooltip("%contacts"));
+        buttonContactView = new Button("%contacts");
+        // buttonContactView.setPrefSize(imageViewContact.getFitWidth(), imageViewContact.getFitHeight());
+        buttonContactView.setGraphic(imageViewContact);
+        buttonContactView.setTooltip(new Tooltip("%contacts"));
 
         final HBox hBox = new HBox();
         hBox.getStyleClass().add("hbox");
-        hBox.getChildren().addAll(this.buttonMailView, this.buttonContactView);
+        hBox.getChildren().addAll(buttonMailView, buttonContactView);
 
         VBox.setVgrow(hBox, Priority.NEVER);
-        this.vBox.getChildren().add(hBox);
+        vBox.getChildren().add(hBox);
 
-        this.splitPane.getItems().addAll(this.vBox, new Pane());
+        splitPane.getItems().addAll(vBox, new Pane());
 
         // Logs
         // TitledPane titledPane = new TitledPane();
@@ -108,8 +108,8 @@ public class MainView extends BorderPane implements View {
     }
 
     public void setMainNode(final Node node) {
-        this.splitPane.getItems().set(1, node);
-        // this.splitPane.layout();
+        splitPane.getItems().set(1, node);
+        // splitPane.layout();
 
         // requestLayout();
         // layout();
@@ -117,8 +117,8 @@ public class MainView extends BorderPane implements View {
 
     public void setNavNode(final Node node) {
         // VBox.setVgrow(node, Priority.ALWAYS);
-        this.vBox.getChildren().set(0, node);
-        // this.vBox.layout();
+        vBox.getChildren().set(0, node);
+        // vBox.layout();
 
         // requestLayout();
         // layout();

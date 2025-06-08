@@ -161,6 +161,6 @@ public class MailRestController extends AbstractRemoteService implements MailSer
     }
 
     protected MailService getMailService() {
-        return this.mailService;
+        return mailService;
     }
 }

@@ -37,11 +37,11 @@ public class InternetAddress {
     }
 
     public String getAddress() {
-        return this.address;
+        return address;
     }
 
     public String getPersonal() {
-        return this.personal;
+        return personal;
     }
 
     // public void setAddress(final String address) {
@@ -54,7 +54,7 @@ public class InternetAddress {
 
     @Override
     public String toString() {
-        if (this.personal == null || this.personal.isEmpty()) {
+        if (personal == null || personal.isEmpty()) {
             return getAddress();
         }
 

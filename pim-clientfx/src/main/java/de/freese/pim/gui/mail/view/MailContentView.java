@@ -57,50 +57,50 @@ public class MailContentView extends GridPane {
     public MailContentView() {
         super();
 
-        this.bundle = ResourceBundle.getBundle("bundles/pim");
+        bundle = ResourceBundle.getBundle("bundles/pim");
 
         // Von
-        Label label = new Label(this.bundle.getString("mail.from"));
+        Label label = new Label(bundle.getString("mail.from"));
         label.setPrefWidth(50);
         add(label, 0, 0);
 
-        this.von = new Label();
-        GridPane.setHgrow(this.von, Priority.ALWAYS);
-        add(this.von, 1, 0);
+        von = new Label();
+        GridPane.setHgrow(von, Priority.ALWAYS);
+        add(von, 1, 0);
 
         // An
-        label = new Label(this.bundle.getString("mail.to"));
+        label = new Label(bundle.getString("mail.to"));
         add(label, 0, 1);
 
-        this.an = new Label();
-        add(this.an, 1, 1);
+        an = new Label();
+        add(an, 1, 1);
 
         // CC
-        label = new Label(this.bundle.getString("mail.cc"));
+        label = new Label(bundle.getString("mail.cc"));
         add(label, 0, 2);
 
-        this.cc = new Label();
-        add(this.cc, 1, 2);
+        cc = new Label();
+        add(cc, 1, 2);
 
         // BCC
-        label = new Label(this.bundle.getString("mail.bcc"));
+        label = new Label(bundle.getString("mail.bcc"));
         add(label, 0, 3);
 
-        this.bcc = new Label();
-        add(this.bcc, 1, 3);
+        bcc = new Label();
+        add(bcc, 1, 3);
 
         // Attachments
-        add(new Label(this.bundle.getString("attachments")), 0, 4);
+        add(new Label(bundle.getString("attachments")), 0, 4);
 
-        this.attachments = new HBox();
-        add(this.attachments, 1, 4);
+        attachments = new HBox();
+        add(attachments, 1, 4);
 
         add(new Separator(), 0, 5, 10, 1);
 
-        this.webView = new WebView();
-        add(this.webView, 0, 6, 10, 1);
+        webView = new WebView();
+        add(webView, 0, 6, 10, 1);
 
-        this.webView.getEngine().locationProperty().addListener((observable, oldValue, newValue) -> {
+        webView.getEngine().locationProperty().addListener((observable, oldValue, newValue) -> {
             try {
                 final URI address = new URI(newValue);
                 // getLogger().info(address.toString());
@@ -111,7 +111,7 @@ public class MailContentView extends GridPane {
                 if (desktop != null && desktop.isSupported(Desktop.Action.BROWSE)) {
                     desktop.browse(address);
 
-                    Platform.runLater(() -> this.webView.getEngine().load(oldValue));
+                    Platform.runLater(() -> webView.getEngine().load(oldValue));
                 }
 
                 // Ansonsten wird der Link in der WebEngine geladen.
@@ -126,31 +126,31 @@ public class MailContentView extends GridPane {
     }
 
     public void displayThrowable(final Throwable throwable) {
-        this.webView.getEngine().loadContent(ErrorDialog.toString(throwable), "text/plain");
+        webView.getEngine().loadContent(ErrorDialog.toString(throwable), "text/plain");
     }
 
     public void newMailContent(final FxMail mail, final MailContent mailContent) {
-        // Delete cache for navigate back.
-        this.webView.getEngine().load("about:blank");
-        // this.webView.getEngine().loadContent("");
+        // Delete cache for navigating back.
+        webView.getEngine().load("about:blank");
+        // webView.getEngine().loadContent("");
 
         // Delete cookies.
         java.net.CookieHandler.setDefault(new java.net.CookieManager());
 
-        this.von.setText(null);
-        this.an.setText(null);
-        this.cc.setText(null);
-        this.bcc.setText(null);
-        this.attachments.getChildren().clear();
+        von.setText(null);
+        an.setText(null);
+        cc.setText(null);
+        bcc.setText(null);
+        attachments.getChildren().clear();
 
         if (mail == null) {
             return;
         }
 
-        this.von.setText(Optional.ofNullable(mail.getFrom()).map(InternetAddress::toString).orElse(null));
-        this.an.setText(Optional.ofNullable(mail.getTo()).map(InternetAddress::toString).orElse(null));
-        this.cc.setText(Optional.ofNullable(mail.getCc()).map(InternetAddress::toString).orElse(null));
-        this.bcc.setText(Optional.ofNullable(mail.getBcc()).map(InternetAddress::toString).orElse(null));
+        von.setText(Optional.ofNullable(mail.getFrom()).map(InternetAddress::toString).orElse(null));
+        an.setText(Optional.ofNullable(mail.getTo()).map(InternetAddress::toString).orElse(null));
+        cc.setText(Optional.ofNullable(mail.getCc()).map(InternetAddress::toString).orElse(null));
+        bcc.setText(Optional.ofNullable(mail.getBcc()).map(InternetAddress::toString).orElse(null));
 
         if (mailContent == null) {
             // String msg = String.format("no content: %s/%s%n", mail.getFolder().getFullName(), mail.getSubject());
@@ -158,7 +158,7 @@ public class MailContentView extends GridPane {
             // new ErrorDialog().headerText(msg).showAndWait();
 
             final String msg = String.format("<b>Error: no content found for</b><br>folder=%s<br>subject=%s<br>", mail.getFolderFullName(), mail.getSubject());
-            this.webView.getEngine().loadContent("<h2><font color=\"red\">" + msg + "</font></h2>");
+            webView.getEngine().loadContent("<h2><font color=\"red\">" + msg + "</font></h2>");
 
             return;
         }
@@ -171,11 +171,11 @@ public class MailContentView extends GridPane {
             hyperlink.setOnAction(event -> saveDataSource(dataSource));
             // hyperlink.setOnAction(event -> Platform.runLater(() -> saveDataSource(dataSource)));
 
-            this.attachments.getChildren().add(hyperlink);
+            attachments.getChildren().add(hyperlink);
         }
 
-        // this.webView.getEngine().load(mailContent.getUrl().toExternalForm());
-        this.webView.getEngine().loadContent(mailContent.getMessageContent(), mailContent.getMessageContentType());
+        // webView.getEngine().load(mailContent.getUrl().toExternalForm());
+        webView.getEngine().loadContent(mailContent.getMessageContent(), mailContent.getMessageContentType());
     }
 
     private void saveDataSource(final DataSource dataSource) {
@@ -192,7 +192,7 @@ public class MailContentView extends GridPane {
         // File attachmentDir = directoryChooser.showDialog(PIMApplication.getMainWindow());
 
         final FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle(this.bundle.getString("attachment.save"));
+        fileChooser.setTitle(bundle.getString("attachment.save"));
         fileChooser.setInitialDirectory(initDirectory);
         fileChooser.setInitialFileName(dataSource.getName());
         // fileChooser.setSelectedExtensionFilter(new ExtensionFilter("Excel", "*.xls", "*.xlsx"));
@@ -211,8 +211,7 @@ public class MailContentView extends GridPane {
 
                 // Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
                 //
-                // if ((desktop != null) && desktop.isSupported(Desktop.Action.OPEN))
-                // {
+                // if ((desktop != null) && desktop.isSupported(Desktop.Action.OPEN)) {
                 // desktop.open(file);
                 // }
             }

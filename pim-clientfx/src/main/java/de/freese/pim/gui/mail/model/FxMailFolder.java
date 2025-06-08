@@ -36,7 +36,7 @@ public class FxMailFolder {
     @JsonIgnore
     private final ObservableList<FxMail> mails = FXCollections.observableArrayList();
     @JsonIgnore
-    private final SortedList<FxMail> mailsSorted = new SortedList<>(this.mails);
+    private final SortedList<FxMail> mailsSorted = new SortedList<>(mails);
     private final StringProperty nameProperty = new SimpleStringProperty(this, "name", null);
     @JsonIgnore
     private final IntegerBinding unreadMailsCount;
@@ -48,22 +48,22 @@ public class FxMailFolder {
     public FxMailFolder() {
         super();
 
-        this.unreadMailsCount = new SumUnreadMailsBinding(this.mails);
-        final IntegerBinding unreadMailsCountChildFolder = new SumUnreadMailsInChildFolderBinding(this.children);
+        unreadMailsCount = new SumUnreadMailsBinding(mails);
+        final IntegerBinding unreadMailsCountChildFolder = new SumUnreadMailsInChildFolderBinding(children);
 
-        this.unreadMailsCountTotal = (IntegerBinding) this.unreadMailsCount.add(unreadMailsCountChildFolder);
-        // this.unreadMailsCountTotal = (ObservableIntegerValue) Bindings.add(this.unreadMailsCount, unreadMailsCountChildFolder);
-        // ((IntegerBinding) this.unreadMailsCountTotal).invalidate();
+        unreadMailsCountTotal = (IntegerBinding) unreadMailsCount.add(unreadMailsCountChildFolder);
+        // unreadMailsCountTotal = (ObservableIntegerValue) Bindings.add(unreadMailsCount, unreadMailsCountChildFolder);
+        // ((IntegerBinding) unreadMailsCountTotal).invalidate();
 
-        // this.mails.addListener((final ListChangeListener.Change<? extends Mail> change) -> this.unreadMailsCountTmp = 0);
+        // mails.addListener((final ListChangeListener.Change<? extends Mail> change) -> unreadMailsCountTmp = 0);
     }
 
     public BooleanProperty abonniertProperty() {
-        return this.abonniertProperty;
+        return abonniertProperty;
     }
 
     public LongProperty accountIDProperty() {
-        return this.accountIDProperty;
+        return accountIDProperty;
     }
 
     public void addChild(final FxMailFolder child) {
@@ -72,7 +72,7 @@ public class FxMailFolder {
     }
 
     public StringProperty fullNameProperty() {
-        return this.fullNameProperty;
+        return fullNameProperty;
     }
 
     public long getAccountID() {
@@ -88,11 +88,11 @@ public class FxMailFolder {
     }
 
     public ObservableList<FxMail> getMails() {
-        return this.mails;
+        return mails;
     }
 
     public SortedList<FxMail> getMailsSorted() {
-        return this.mailsSorted;
+        return mailsSorted;
     }
 
     public String getName() {
@@ -100,7 +100,7 @@ public class FxMailFolder {
     }
 
     public int getUnreadMailsCount() {
-        return this.unreadMailsCount.get();
+        return unreadMailsCount.get();
     }
 
     public int getUnreadMailsCountTotal() {
@@ -108,7 +108,7 @@ public class FxMailFolder {
     }
 
     public LongProperty idProperty() {
-        return this.idProperty;
+        return idProperty;
     }
 
     public boolean isAbonniert() {
@@ -124,11 +124,11 @@ public class FxMailFolder {
     }
 
     public BooleanProperty isSendFolderProperty() {
-        return this.isSendFolderProperty;
+        return isSendFolderProperty;
     }
 
     public StringProperty nameProperty() {
-        return this.nameProperty;
+        return nameProperty;
     }
 
     public void removeChild(final FxMailFolder child) {
@@ -162,10 +162,10 @@ public class FxMailFolder {
         isSendFolderProperty().set(predicate.test(name.toLowerCase()));
 
         if (isSendFolder()) {
-            this.mailsSorted.setComparator(Comparator.comparing(FxMail::getSendDate).reversed());
+            mailsSorted.setComparator(Comparator.comparing(FxMail::getSendDate).reversed());
         }
         else {
-            this.mailsSorted.setComparator(Comparator.comparing(FxMail::getReceivedDate).reversed());
+            mailsSorted.setComparator(Comparator.comparing(FxMail::getReceivedDate).reversed());
         }
     }
 
@@ -180,11 +180,11 @@ public class FxMailFolder {
     }
 
     ObservableList<FxMailFolder> getChildren() {
-        return this.children;
+        return children;
     }
 
     FxMailFolder getParent() {
-        return this.parent;
+        return parent;
     }
 
     void setParent(final FxMailFolder parent) {
@@ -192,6 +192,6 @@ public class FxMailFolder {
     }
 
     ObservableIntegerValue unreadMailsCountTotalBinding() {
-        return this.unreadMailsCountTotal;
+        return unreadMailsCountTotal;
     }
 }

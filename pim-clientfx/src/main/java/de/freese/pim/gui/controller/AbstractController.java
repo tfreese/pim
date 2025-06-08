@@ -29,8 +29,8 @@ public abstract class AbstractController implements Initializable {
     protected AbstractController() {
         super();
 
-        this.taskExecutor = SpringContext.getAsyncTaskExecutor();
-        this.taskScheduler = SpringContext.getTaskScheduler();
+        taskExecutor = SpringContext.getAsyncTaskExecutor();
+        taskScheduler = SpringContext.getTaskScheduler();
     }
 
     /**
@@ -39,7 +39,7 @@ public abstract class AbstractController implements Initializable {
     public abstract void activate();
 
     public Logger getLogger() {
-        return this.logger;
+        return logger;
     }
 
     /**
@@ -61,11 +61,11 @@ public abstract class AbstractController implements Initializable {
     }
 
     public AsyncTaskExecutor getTaskExecutor() {
-        return this.taskExecutor;
+        return taskExecutor;
     }
 
     public TaskScheduler getTaskScheduler() {
-        return this.taskScheduler;
+        return taskScheduler;
     }
 
     /**
@@ -79,7 +79,7 @@ public abstract class AbstractController implements Initializable {
      * Liefert true, wenn der Controller bereits aktiviert wurde.
      */
     protected boolean isActivated() {
-        return this.activated;
+        return activated;
     }
 
     /**

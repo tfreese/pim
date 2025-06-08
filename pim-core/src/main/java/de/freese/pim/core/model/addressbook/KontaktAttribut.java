@@ -35,20 +35,20 @@ public class KontaktAttribut implements Comparable<KontaktAttribut> {
         if (!(o instanceof final KontaktAttribut that)) {
             return false;
         }
-        
+
         return kontaktID == that.kontaktID && Objects.equals(attribut, that.attribut) && Objects.equals(wert, that.wert);
     }
 
     public String getAttribut() {
-        return this.attribut;
+        return attribut;
     }
 
     public long getKontaktID() {
-        return this.kontaktID;
+        return kontaktID;
     }
 
     public String getWert() {
-        return this.wert;
+        return wert;
     }
 
     @Override

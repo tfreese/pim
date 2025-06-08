@@ -213,24 +213,24 @@ public final class PimAddressbookConsole {
 
     private void deleteAttribut(final long kontaktId, final String attribut) {
         final TransactionDefinition transactionDefinition = new DefaultTransactionDefinition();
-        final TransactionStatus transactionStatus = this.transactionManager.getTransaction(transactionDefinition);
+        final TransactionStatus transactionStatus = transactionManager.getTransaction(transactionDefinition);
 
         try {
-            final int affectedRows = this.addressBookDAO.deleteAttribut(kontaktId, attribut);
+            final int affectedRows = addressBookDAO.deleteAttribut(kontaktId, attribut);
 
             if (affectedRows > 0) {
-                this.printStream.printf("%nAttribut gelöscht%n");
+                printStream.printf("%nAttribut gelöscht%n");
             }
             else {
-                this.printStream.printf("%nKein Attribut gefunden%n");
+                printStream.printf("%nKein Attribut gefunden%n");
             }
 
             getKontaktDetails(kontaktId);
 
-            this.transactionManager.commit(transactionStatus);
+            transactionManager.commit(transactionStatus);
         }
         catch (Exception ex) {
-            this.transactionManager.rollback(transactionStatus);
+            transactionManager.rollback(transactionStatus);
             final Exception cause = Utils.getCause(ex);
             LOGGER.error(cause.getMessage(), cause);
         }
@@ -238,22 +238,22 @@ public final class PimAddressbookConsole {
 
     private void deleteKontakt(final long id) {
         final TransactionDefinition transactionDefinition = new DefaultTransactionDefinition();
-        final TransactionStatus transactionStatus = this.transactionManager.getTransaction(transactionDefinition);
+        final TransactionStatus transactionStatus = transactionManager.getTransaction(transactionDefinition);
 
         try {
-            final int affectedRows = this.addressBookDAO.deleteKontakt(id);
+            final int affectedRows = addressBookDAO.deleteKontakt(id);
 
             if (affectedRows > 0) {
-                this.printStream.printf("%nKontakt gelöscht%n");
+                printStream.printf("%nKontakt gelöscht%n");
             }
             else {
-                this.printStream.printf("%nKein Kontakt gefunden%n");
+                printStream.printf("%nKein Kontakt gefunden%n");
             }
 
-            this.transactionManager.commit(transactionStatus);
+            transactionManager.commit(transactionStatus);
         }
         catch (Exception ex) {
-            this.transactionManager.rollback(transactionStatus);
+            transactionManager.rollback(transactionStatus);
             final Exception cause = Utils.getCause(ex);
             LOGGER.error(cause.getMessage(), cause);
         }
@@ -261,7 +261,7 @@ public final class PimAddressbookConsole {
 
     private void getKontaktDetails(final long id) {
         try {
-            final List<Kontakt> kontakts = this.addressBookDAO.getKontaktDetails(id);
+            final List<Kontakt> kontakts = addressBookDAO.getKontaktDetails(id);
 
             printDetails(kontakts);
         }
@@ -273,7 +273,7 @@ public final class PimAddressbookConsole {
 
     private void getKontakte() {
         try {
-            final List<Kontakt> kontakte = this.addressBookDAO.getKontakte();
+            final List<Kontakt> kontakte = addressBookDAO.getKontakte();
 
             final List<String[]> rows = new ArrayList<>();
             rows.add(new String[]{"ID", "VORNAME", "NACHNAME"});
@@ -287,7 +287,7 @@ public final class PimAddressbookConsole {
                 row[2] = k.getVorname();
             });
 
-            print(rows, this.printStream);
+            print(rows, printStream);
         }
         catch (Exception ex) {
             final Exception cause = Utils.getCause(ex);
@@ -297,22 +297,22 @@ public final class PimAddressbookConsole {
 
     private void insertAttribut(final long kontaktId, final String attribut, final String wert) {
         final TransactionDefinition transactionDefinition = new DefaultTransactionDefinition();
-        final TransactionStatus transactionStatus = this.transactionManager.getTransaction(transactionDefinition);
+        final TransactionStatus transactionStatus = transactionManager.getTransaction(transactionDefinition);
 
         try {
             // boolean success =
-            this.addressBookDAO.insertAttribut(kontaktId, attribut, wert);
+            addressBookDAO.insertAttribut(kontaktId, attribut, wert);
 
             getKontaktDetails(kontaktId);
 
-            this.transactionManager.commit(transactionStatus);
+            transactionManager.commit(transactionStatus);
         }
         catch (Exception ex) {
-            this.transactionManager.rollback(transactionStatus);
+            transactionManager.rollback(transactionStatus);
             final Exception cause = Utils.getCause(ex);
 
             if (cause instanceof SQLIntegrityConstraintViolationException) {
-                this.printStream.printf("%nKontaktattribut existiert bereits%n");
+                printStream.printf("%nKontaktattribut existiert bereits%n");
             }
             else {
                 LOGGER.error(cause.getMessage(), cause);
@@ -322,22 +322,22 @@ public final class PimAddressbookConsole {
 
     private void insertKontakt(final String nachname, final String vorname) {
         final TransactionDefinition transactionDefinition = new DefaultTransactionDefinition();
-        final TransactionStatus transactionStatus = this.transactionManager.getTransaction(transactionDefinition);
+        final TransactionStatus transactionStatus = transactionManager.getTransaction(transactionDefinition);
         long id = 0;
 
         try {
-            id = this.addressBookDAO.insertKontakt(nachname, vorname);
+            id = addressBookDAO.insertKontakt(nachname, vorname);
 
             getKontaktDetails(id);
 
-            this.transactionManager.commit(transactionStatus);
+            transactionManager.commit(transactionStatus);
         }
         catch (Exception ex) {
-            this.transactionManager.rollback(transactionStatus);
+            transactionManager.rollback(transactionStatus);
             final Exception cause = Utils.getCause(ex);
 
             if (cause instanceof SQLIntegrityConstraintViolationException) {
-                this.printStream.printf("%nKontaktattribut existiert bereits%n");
+                printStream.printf("%nKontaktattribut existiert bereits%n");
             }
             else {
                 LOGGER.error(cause.getMessage(), cause);
@@ -379,12 +379,12 @@ public final class PimAddressbookConsole {
             }
         });
 
-        print(rows, this.printStream);
+        print(rows, printStream);
     }
 
     private void search(final String name) {
         try {
-            final List<Kontakt> kontakte = this.addressBookDAO.searchKontakte(name);
+            final List<Kontakt> kontakte = addressBookDAO.searchKontakte(name);
 
             printDetails(kontakte);
         }
@@ -408,24 +408,24 @@ public final class PimAddressbookConsole {
 
     private void updateAttribut(final long kontaktId, final String attribut, final String wert) {
         final TransactionDefinition transactionDefinition = new DefaultTransactionDefinition();
-        final TransactionStatus transactionStatus = this.transactionManager.getTransaction(transactionDefinition);
+        final TransactionStatus transactionStatus = transactionManager.getTransaction(transactionDefinition);
 
         try {
-            final int affectedRows = this.addressBookDAO.updateAttribut(kontaktId, attribut, wert);
+            final int affectedRows = addressBookDAO.updateAttribut(kontaktId, attribut, wert);
 
             if (affectedRows > 0) {
-                this.printStream.printf("%nAttribut aktualisiert%n");
+                printStream.printf("%nAttribut aktualisiert%n");
             }
             else {
-                this.printStream.printf("%nKein Attribut gefunden%n");
+                printStream.printf("%nKein Attribut gefunden%n");
             }
 
             getKontaktDetails(kontaktId);
 
-            this.transactionManager.commit(transactionStatus);
+            transactionManager.commit(transactionStatus);
         }
         catch (Exception ex) {
-            this.transactionManager.rollback(transactionStatus);
+            transactionManager.rollback(transactionStatus);
             final Exception cause = Utils.getCause(ex);
             LOGGER.error(cause.getMessage(), cause);
         }
@@ -433,24 +433,24 @@ public final class PimAddressbookConsole {
 
     private void updateKontakt(final long id, final String nachname, final String vorname) {
         final TransactionDefinition transactionDefinition = new DefaultTransactionDefinition();
-        final TransactionStatus transactionStatus = this.transactionManager.getTransaction(transactionDefinition);
+        final TransactionStatus transactionStatus = transactionManager.getTransaction(transactionDefinition);
 
         try {
-            final int affectedRows = this.addressBookDAO.updateKontakt(id, nachname, vorname);
+            final int affectedRows = addressBookDAO.updateKontakt(id, nachname, vorname);
 
             if (affectedRows > 0) {
-                this.printStream.printf("%nKontakt aktualisiert%n");
+                printStream.printf("%nKontakt aktualisiert%n");
             }
             else {
-                this.printStream.printf("%nKein Kontakt gefunden%n");
+                printStream.printf("%nKein Kontakt gefunden%n");
             }
 
             getKontaktDetails(id);
 
-            this.transactionManager.commit(transactionStatus);
+            transactionManager.commit(transactionStatus);
         }
         catch (Exception ex) {
-            this.transactionManager.rollback(transactionStatus);
+            transactionManager.rollback(transactionStatus);
             final Exception cause = Utils.getCause(ex);
             LOGGER.error(cause.getMessage(), cause);
         }

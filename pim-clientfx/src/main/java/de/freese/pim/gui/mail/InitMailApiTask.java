@@ -73,11 +73,11 @@ public class InitMailApiTask extends Task<List<FxMailFolder>> {
 
     @Override
     protected List<FxMailFolder> call() {
-        LOGGER.info("Init MailAccount {}", this.account.getMail());
+        LOGGER.info("Init MailAccount {}", account.getMail());
 
-        this.mailService.connectAccount(this.account);
+        mailService.connectAccount(account);
 
-        return this.mailService.loadFolder(this.account.getID());
+        return mailService.loadFolder(account.getID());
     }
 
     protected void loadMailsByCompletableFuture(final List<FxMailFolder> folders, final TreeView<Object> treeView) {
@@ -86,7 +86,7 @@ public class InitMailApiTask extends Task<List<FxMailFolder>> {
 
         for (FxMailFolder mf : folders) {
             final CompletableFuture<Void> cf = CompletableFuture.supplyAsync(() ->
-                            this.mailService.loadMails(this.account, mf), taskExecutor)
+                            mailService.loadMails(account, mf), taskExecutor)
                     .exceptionally(ex ->
                     {
                         LOGGER.error(ex.getMessage(), ex);
@@ -116,7 +116,7 @@ public class InitMailApiTask extends Task<List<FxMailFolder>> {
         try (Stream<FxMailFolder> stream = folders.parallelStream()) {
             stream.onClose(() -> Platform.runLater(treeView::refresh))
                     .forEach(mf -> {
-                        final List<FxMail> mails = this.mailService.loadMails(this.account, mf);
+                        final List<FxMail> mails = mailService.loadMails(account, mf);
 
                         final Runnable task = () -> {
                             if (mails != null) {
@@ -152,7 +152,7 @@ public class InitMailApiTask extends Task<List<FxMailFolder>> {
             // Utils.executeSafely(() -> TimeUnit.MILLISECONDS.sleep(1000));
 
             // Laden der Mails.
-            taskExecutor.execute(new LoadMailsTask(treeView, partition, this.mailService, this.account));
+            taskExecutor.execute(new LoadMailsTask(treeView, partition, mailService, account));
         }
     }
 }

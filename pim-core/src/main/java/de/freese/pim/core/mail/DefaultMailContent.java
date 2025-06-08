@@ -34,22 +34,22 @@ public class DefaultMailContent implements MailContent {
 
     @Override
     public Map<String, AttachmentDataSource> getAttachments() {
-        return this.attachmentMap;
+        return attachmentMap;
     }
 
     @Override
     public String getEncoding() {
-        return this.encoding;
+        return encoding;
     }
 
     @Override
     public Map<String, InlineDataSource> getInlines() {
-        return this.inlineMap;
+        return inlineMap;
     }
 
     @Override
     public MessageDataSource getMessage() {
-        return this.message;
+        return message;
     }
 
     /**
@@ -57,10 +57,10 @@ public class DefaultMailContent implements MailContent {
      */
     @Override
     public String getMessageContent() {
-        if (this.messageContent == null) {
+        if (messageContent == null) {
             try {
                 try (BufferedReader buffer = new BufferedReader(new InputStreamReader(getMessage().getInputStream(), getEncoding()))) {
-                    this.messageContent = buffer.lines().collect(Collectors.joining("\n"));
+                    messageContent = buffer.lines().collect(Collectors.joining("\n"));
                 }
             }
             catch (Exception ex) {
@@ -69,7 +69,7 @@ public class DefaultMailContent implements MailContent {
 
         }
 
-        return this.messageContent;
+        return messageContent;
     }
 
     /**
@@ -77,7 +77,7 @@ public class DefaultMailContent implements MailContent {
      */
     @Override
     public String getMessageContentType() {
-        return this.messageContentType;
+        return messageContentType;
     }
 
     public void setAttachments(final Map<String, AttachmentDataSource> attachments) {

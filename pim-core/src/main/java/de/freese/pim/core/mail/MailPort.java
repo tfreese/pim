@@ -56,7 +56,7 @@ public enum MailPort {
     }
 
     public int getPort() {
-        return this.port;
+        return port;
     }
 
     @Override

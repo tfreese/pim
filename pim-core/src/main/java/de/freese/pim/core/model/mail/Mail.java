@@ -38,47 +38,47 @@ public class Mail {
     private long uid;
 
     public InternetAddress[] getBcc() {
-        return this.bcc;
+        return bcc;
     }
 
     public InternetAddress[] getCc() {
-        return this.cc;
+        return cc;
     }
 
     public String getFolderFullName() {
-        return this.folderFullName;
+        return folderFullName;
     }
 
     public long getFolderID() {
-        return this.folderID;
+        return folderID;
     }
 
     public InternetAddress getFrom() {
-        return this.from;
+        return from;
     }
 
     public int getMsgNum() {
-        return this.msgNum;
+        return msgNum;
     }
 
     public Date getReceivedDate() {
-        return this.receivedDate;
+        return receivedDate;
     }
 
     public Date getSendDate() {
-        return this.sendDate;
+        return sendDate;
     }
 
     public int getSize() {
-        return this.size;
+        return size;
     }
 
     public String getSubject() {
-        return this.subject;
+        return subject;
     }
 
     public InternetAddress[] getTo() {
-        return this.to;
+        return to;
     }
 
     /**
@@ -88,11 +88,11 @@ public class Mail {
      * @return long
      */
     public long getUID() {
-        return this.uid;
+        return uid;
     }
 
     public boolean isSeen() {
-        return this.seen;
+        return seen;
     }
 
     public void setBcc(final InternetAddress[] bcc) {

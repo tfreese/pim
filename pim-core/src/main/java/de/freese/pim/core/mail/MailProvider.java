@@ -34,23 +34,23 @@ public enum MailProvider {
     }
 
     public String getDisplayName() {
-        return this.displayName;
+        return displayName;
     }
 
     public String getImapHost() {
-        return this.imapHost;
+        return imapHost;
     }
 
     public MailPort getImapPort() {
-        return this.imapPort;
+        return imapPort;
     }
 
     public String getSmtpHost() {
-        return this.smtpHost;
+        return smtpHost;
     }
 
     public MailPort getSmtpPort() {
-        return this.smtpPort;
+        return smtpPort;
     }
 
     @Override

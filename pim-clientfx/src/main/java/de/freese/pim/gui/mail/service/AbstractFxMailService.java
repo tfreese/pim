@@ -95,7 +95,7 @@ public abstract class AbstractFxMailService extends AbstractFxService implements
     }
 
     protected Path getBasePath() {
-        return this.basePath;
+        return basePath;
     }
 
     protected abstract MailContent loadMailContent(Path mailPath, FxMailAccount account, FxMail mail, IOMonitor monitor) throws Exception;

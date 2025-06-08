@@ -82,7 +82,7 @@ public final class JavaMailBuilder {
             mimeBodyPart.setFileName(MimeUtility.encodeText(attachmentFilename));
             mimeBodyPart.setDataHandler(new DataHandler(dataSource));
 
-            this.attachments.add(mimeBodyPart);
+            attachments.add(mimeBodyPart);
         }
         catch (UnsupportedEncodingException ex) {
             throw new MessagingException("Failed to encode attachment filename", ex);
@@ -118,7 +118,7 @@ public final class JavaMailBuilder {
 
         validateAddress(bcc);
 
-        this.recipientsBcc.add(bcc);
+        recipientsBcc.add(bcc);
 
         return this;
     }
@@ -129,7 +129,7 @@ public final class JavaMailBuilder {
 
             validateAddress(internetAddress);
 
-            this.recipientsBcc.add(internetAddress);
+            recipientsBcc.add(internetAddress);
         }
 
         return this;
@@ -165,31 +165,31 @@ public final class JavaMailBuilder {
             mail = new MimeMessage(getSession(), contentStream);
         }
 
-        mail.setFrom(this.from);
+        mail.setFrom(from);
 
-        if (!this.recipientsTo.isEmpty()) {
-            mail.setRecipients(Message.RecipientType.TO, this.recipientsTo.toArray(new InternetAddress[0]));
+        if (!recipientsTo.isEmpty()) {
+            mail.setRecipients(Message.RecipientType.TO, recipientsTo.toArray(new InternetAddress[0]));
         }
 
-        if (!this.recipientsCc.isEmpty()) {
-            mail.setRecipients(Message.RecipientType.CC, this.recipientsCc.toArray(new InternetAddress[0]));
+        if (!recipientsCc.isEmpty()) {
+            mail.setRecipients(Message.RecipientType.CC, recipientsCc.toArray(new InternetAddress[0]));
         }
 
-        if (!this.recipientsBcc.isEmpty()) {
-            mail.setRecipients(Message.RecipientType.BCC, this.recipientsBcc.toArray(new InternetAddress[0]));
+        if (!recipientsBcc.isEmpty()) {
+            mail.setRecipients(Message.RecipientType.BCC, recipientsBcc.toArray(new InternetAddress[0]));
         }
 
         if (getCharset() != null) {
-            mail.setSubject(this.subject, getCharset());
+            mail.setSubject(subject, getCharset());
         }
         else {
-            mail.setSubject(this.subject);
+            mail.setSubject(subject);
         }
 
         mail.setSentDate(new Date());
 
-        if (this.messageID != null) {
-            mail.setHeader(MailUtils.HEADER_MESSAGE_ID, this.messageID);
+        if (messageID != null) {
+            mail.setHeader(MailUtils.HEADER_MESSAGE_ID, messageID);
         }
 
         // mixed, für Attachments und Inlines
@@ -203,42 +203,40 @@ public final class JavaMailBuilder {
         rootMultipart.addBodyPart(relatedBodyPart);
 
         // Text
-        if (this.text != null && !this.text.isBlank()) {
+        if (text != null && !text.isBlank()) {
             final MimeBodyPart textBodyPart = new MimeBodyPart();
             relatedMultipart.addBodyPart(textBodyPart);
 
             String contentType = MailUtils.CONTENT_TYPE_PLAIN;
 
-            if (this.isHTML) {
+            if (isHTML) {
                 contentType = MailUtils.CONTENT_TYPE_HTML;
             }
 
             if (getCharset() != null) {
-                textBodyPart.setContent(this.text, contentType + MailUtils.CONTENT_TYPE_CHARSET_SUFFIX + getCharset());
+                textBodyPart.setContent(text, contentType + MailUtils.CONTENT_TYPE_CHARSET_SUFFIX + getCharset());
             }
             else {
-                textBodyPart.setContent(this.text, contentType);
+                textBodyPart.setContent(text, contentType);
             }
 
-            // if (getEncoding() != null)
-            // {
-            // textBodyPart.setText(this.text, getEncoding());
-            // // textBodyPart.setContent(this.text, CONTENT_TYPE_PLAIN + CONTENT_TYPE_CHARSET_SUFFIX + getEncoding());
+            // if (getEncoding() != null) {
+            // textBodyPart.setText(text, getEncoding());
+            // // textBodyPart.setContent(text, CONTENT_TYPE_PLAIN + CONTENT_TYPE_CHARSET_SUFFIX + getEncoding());
             // }
-            // else
-            // {
-            // textBodyPart.setText(this.text);
-            // // textBodyPart.setContent(this.text, CONTENT_TYPE_PLAIN);
+            // else {
+            // textBodyPart.setText(text);
+            // // textBodyPart.setContent(text, CONTENT_TYPE_PLAIN);
             // }
         }
 
         // Inlines
-        for (MimeBodyPart inline : this.inlines) {
+        for (MimeBodyPart inline : inlines) {
             relatedMultipart.addBodyPart(inline);
         }
 
         // Attachments
-        for (MimeBodyPart attachment : this.attachments) {
+        for (MimeBodyPart attachment : attachments) {
             rootMultipart.addBodyPart(attachment);
         }
 
@@ -262,7 +260,7 @@ public final class JavaMailBuilder {
 
         validateAddress(cc);
 
-        this.recipientsCc.add(cc);
+        recipientsCc.add(cc);
 
         return this;
     }
@@ -273,7 +271,7 @@ public final class JavaMailBuilder {
 
             validateAddress(internetAddress);
 
-            this.recipientsCc.add(internetAddress);
+            recipientsCc.add(internetAddress);
         }
 
         return this;
@@ -332,7 +330,7 @@ public final class JavaMailBuilder {
         mimeBodyPart.setHeader(MailUtils.HEADER_CONTENT_ID, "<" + contentID + ">");
         mimeBodyPart.setDataHandler(new DataHandler(dataSource));
 
-        this.inlines.add(mimeBodyPart);
+        inlines.add(mimeBodyPart);
 
         return this;
     }
@@ -383,7 +381,7 @@ public final class JavaMailBuilder {
 
         validateAddress(to);
 
-        this.recipientsTo.add(to);
+        recipientsTo.add(to);
 
         return this;
     }
@@ -394,7 +392,7 @@ public final class JavaMailBuilder {
 
             validateAddress(internetAddress);
 
-            this.recipientsTo.add(internetAddress);
+            recipientsTo.add(internetAddress);
         }
 
         return this;
@@ -441,15 +439,15 @@ public final class JavaMailBuilder {
     }
 
     private String getCharset() {
-        return this.charset;
+        return charset;
     }
 
     private FileTypeMap getFileTypeMap() {
-        return this.fileTypeMap;
+        return fileTypeMap;
     }
 
     private Session getSession() {
-        return this.session;
+        return session;
     }
 
     private InternetAddress parseAddress(final String address) throws MessagingException {
@@ -475,7 +473,7 @@ public final class JavaMailBuilder {
      * Note that this method will just work on JavaMail >= 1.3. You can override it for validation on older JavaMail versions or for custom validation.
      */
     private void validateAddress(final InternetAddress address) throws AddressException {
-        if (this.validateAddresses) {
+        if (validateAddresses) {
             address.validate();
         }
     }

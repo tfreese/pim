@@ -35,7 +35,7 @@ public class TextAreaOutputStream extends OutputStream {
 
             final String[] splits = getText().split("\n", -1);
 
-            while (splits.length > this.keepLastNLines) {
+            while (splits.length > keepLastNLines) {
                 final int index = getText().indexOf('\n');
 
                 super.replaceText(0, index + 1, "");
@@ -75,11 +75,11 @@ public class TextAreaOutputStream extends OutputStream {
         super();
 
         this.textArea = Objects.requireNonNull(textArea, "textArea required");
-        // this.textArea.setTextFormatter(createTextFormatter());
+        // textArea.setTextFormatter(createTextFormatter());
     }
 
     public TextArea getTextArea() {
-        return this.textArea;
+        return textArea;
     }
 
     @Override

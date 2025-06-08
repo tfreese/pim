@@ -57,7 +57,7 @@ public class DefaultRestFxAddressbookService extends AbstractFxAddressbookServic
 
     @Resource
     public void setRestTemplateBuilder(final RestTemplateBuilder restTemplateBuilder) {
-        this.restTemplate = restTemplateBuilder.build();
+        restTemplate = restTemplateBuilder.build();
     }
 
     @Override
@@ -72,6 +72,6 @@ public class DefaultRestFxAddressbookService extends AbstractFxAddressbookServic
     }
 
     protected RestTemplate getRestTemplate() {
-        return this.restTemplate;
+        return restTemplate;
     }
 }

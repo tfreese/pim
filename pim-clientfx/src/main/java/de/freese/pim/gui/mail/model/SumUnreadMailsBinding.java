@@ -35,24 +35,24 @@ public class SumUnreadMailsBinding extends IntegerBinding {
         super();
 
         this.boundList = Objects.requireNonNull(boundList, "boundList required");
-        this.boundList.addListener(this.boundListChangeListener);
+        this.boundList.addListener(boundListChangeListener);
 
         refreshBinding();
     }
 
     @Override
     public void dispose() {
-        this.boundList.removeListener(this.boundListChangeListener);
+        boundList.removeListener(boundListChangeListener);
 
-        unbind(this.observedProperties);
+        unbind(observedProperties);
     }
 
     @Override
     protected int computeValue() {
         int sum = 0;
 
-        if (this.observedProperties != null) {
-            sum = Stream.of(this.observedProperties).parallel().mapToInt(op -> op.get() ? 0 : 1).sum();
+        if (observedProperties != null) {
+            sum = Stream.of(observedProperties).parallel().mapToInt(op -> op.get() ? 0 : 1).sum();
         }
 
         return sum;
@@ -60,17 +60,17 @@ public class SumUnreadMailsBinding extends IntegerBinding {
 
     private void refreshBinding() {
         // Clean old properties from IntegerBinding's inner listener
-        unbind(this.observedProperties);
+        unbind(observedProperties);
 
         // Load new properties
-        this.observedProperties = null;
+        observedProperties = null;
 
-        if (!this.boundList.isEmpty()) {
-            this.observedProperties = this.boundList.parallelStream().map(FxMail::seenProperty).toArray(BooleanProperty[]::new);
+        if (!boundList.isEmpty()) {
+            observedProperties = boundList.parallelStream().map(FxMail::seenProperty).toArray(BooleanProperty[]::new);
         }
 
         // Bind IntegerBinding's inner listener to all new properties
-        bind(this.observedProperties);
+        bind(observedProperties);
 
         // Invalidate binding to generate events
         // Eager/Lazy recalc depends on type of listeners attached to this instance

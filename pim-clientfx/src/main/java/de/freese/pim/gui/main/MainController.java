@@ -33,8 +33,8 @@ public class MainController extends AbstractController {
     public MainController(final ResourceBundle resources) {
         super();
 
-        this.mainView = new MainView();
-        FxUtils.bind(this.mainView, this, resources);
+        mainView = new MainView();
+        FxUtils.bind(mainView, this, resources);
     }
 
     @Override
@@ -44,7 +44,7 @@ public class MainController extends AbstractController {
 
     @Override
     public Node getMainNode() {
-        return this.mainView;
+        return mainView;
     }
 
     @Override
@@ -75,7 +75,7 @@ public class MainController extends AbstractController {
             mailController.activate();
         });
 
-        this.buttonContactView.setOnAction(event -> {
+        buttonContactView.setOnAction(event -> {
             mainView.setToolbar(contactController.getToolBar());
             mainView.setNavNode(contactController.getNaviNode());
             mainView.setMainNode(contactController.getMainNode());

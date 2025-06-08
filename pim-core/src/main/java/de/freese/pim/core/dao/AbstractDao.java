@@ -30,22 +30,22 @@ public abstract class AbstractDao implements InitializingBean {
 
     @Override
     public void afterPropertiesSet() {
-        Objects.requireNonNull(this.jdbcTemplate, "jdbcTemplate required");
-        Objects.requireNonNull(this.sequenceQuery, "sequenceQuery required");
+        Objects.requireNonNull(jdbcTemplate, "jdbcTemplate required");
+        Objects.requireNonNull(sequenceQuery, "sequenceQuery required");
 
-        // try (Connection connection = this.jdbcTemplate.getDataSource().getConnection()) {
+        // try (Connection connection = jdbcTemplate.getDataSource().getConnection()) {
         // SequenceQuery sequenceQuery = SequenceQuery.determineQuery(connection);
-        // this.sequenceQueryExecutor = new SequenceQueryExecutor(sequenceQuery);
+        // sequenceQueryExecutor = new SequenceQueryExecutor(sequenceQuery);
         // }
         //
-        // Objects.requireNonNull(this.sequenceQueryExecutor, "sequenceQueryExecutor required");
+        // Objects.requireNonNull(sequenceQueryExecutor, "sequenceQueryExecutor required");
     }
 
     @Resource
     public void setDataSource(final DataSource dataSource) {
         Objects.requireNonNull(dataSource, "dataSource required");
 
-        this.jdbcTemplate = new JdbcTemplate(dataSource);
+        jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
     @Resource

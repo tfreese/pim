@@ -50,9 +50,9 @@ public class MailView implements View {
     public MailView() {
         super();
 
-        this.toolBar = createToolbar();
-        this.mainNode = createMainNode();
-        this.naviNode = createNaviNode();
+        toolBar = createToolbar();
+        mainNode = createMainNode();
+        naviNode = createNaviNode();
     }
 
     private Region createMainNode() {
@@ -60,52 +60,52 @@ public class MailView implements View {
         // borderPane.setCenter(new Label("Mails"));
         //
         // return borderPane;
-        this.tableViewMail = new TableView<>();
-        this.tableViewMail.setEditable(false);
-        this.tableViewMail.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-        // this.tableViewMail.setColumnResizePolicy(TableView.UNCONSTRAINED_RESIZE_POLICY);
-        // this.tableViewMail.setManaged(false);
+        tableViewMail = new TableView<>();
+        tableViewMail.setEditable(false);
+        tableViewMail.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        // tableViewMail.setColumnResizePolicy(TableView.UNCONSTRAINED_RESIZE_POLICY);
+        // tableViewMail.setManaged(false);
 
         // ScrollPane scrollPane = new ScrollPane();
         // // scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
         // scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
-        // // scrollPane.prefWidthProperty().bind(this.tableViewMail.widthProperty());
-        // // scrollPane.prefHeightProperty().bind(this.tableViewMail.heightProperty());
+        // // scrollPane.prefWidthProperty().bind(tableViewMail.widthProperty());
+        // // scrollPane.prefHeightProperty().bind(tableViewMail.heightProperty());
         // scrollPane.setFitToHeight(true);
         // scrollPane.setFitToWidth(true);
-        // scrollPane.setContent(this.tableViewMail);
+        // scrollPane.setContent(tableViewMail);
 
-        this.progressIndicator = new ProgressIndicator();
-        this.progressIndicator.setId("progressIndicator"); // Für lookupAll("#progressIndicator")
-        this.progressIndicator.setVisible(false);
-        this.progressIndicator.setMaxSize(250D, 250D);
+        progressIndicator = new ProgressIndicator();
+        progressIndicator.setId("progressIndicator"); // Für lookupAll("#progressIndicator")
+        progressIndicator.setVisible(false);
+        progressIndicator.setMaxSize(250D, 250D);
 
         final SplitPane splitPane = new SplitPane();
         splitPane.setOrientation(Orientation.VERTICAL);
-        splitPane.getItems().add(this.tableViewMail);
+        splitPane.getItems().add(tableViewMail);
 
-        this.mailContentView = new MailContentView();
-        // this.mailContentView.setMaxWidth(Double.MAX_VALUE);
-        splitPane.getItems().add(this.mailContentView);
+        mailContentView = new MailContentView();
+        // mailContentView.setMaxWidth(Double.MAX_VALUE);
+        splitPane.getItems().add(mailContentView);
 
-        // this.editor = new HTMLEditor();
-        // splitPane.getItems().add(this.editor);
+        // editor = new HTMLEditor();
+        // splitPane.getItems().add(editor);
 
         final StackPane stackPane = new StackPane();
         stackPane.setPadding(new Insets(0));
-        // StackPane.setMargin(this.tableView, new Insets(0));
+        // StackPane.setMargin(tableView, new Insets(0));
         stackPane.getChildren().add(splitPane);
-        stackPane.getChildren().add(this.progressIndicator);
+        stackPane.getChildren().add(progressIndicator);
 
         return stackPane;
     }
 
     private Region createNaviNode() {
-        this.treeViewMail = new TreeView<>();
-        this.treeViewMail.setEditable(false);
-        this.treeViewMail.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+        treeViewMail = new TreeView<>();
+        treeViewMail.setEditable(false);
+        treeViewMail.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
 
-        final TitledPane titledPane = new TitledPane("%mails", this.treeViewMail);
+        final TitledPane titledPane = new TitledPane("%mails", treeViewMail);
         titledPane.setCollapsible(false);
         // titledPane.setPrefHeight(Double.MAX_VALUE);
         // titledPane.setContent(treeViewMail);
@@ -123,22 +123,22 @@ public class MailView implements View {
         imageView.setFitHeight(32);
         imageView.setFitWidth(32);
         imageView.getStyleClass().add("imageview-add");
-        this.buttonAddAccount = new Button();
-        // this.buttonAddAccount.setPadding(new Insets(0));
-        // this.buttonAddAccount.setPrefSize(imageViewMail.getFitWidth(), imageViewMail.getFitHeight());
-        this.buttonAddAccount.setGraphic(imageView);
-        this.buttonAddAccount.setTooltip(new Tooltip("%mailaccount.add"));
+        buttonAddAccount = new Button();
+        // buttonAddAccount.setPadding(new Insets(0));
+        // buttonAddAccount.setPrefSize(imageViewMail.getFitWidth(), imageViewMail.getFitHeight());
+        buttonAddAccount.setGraphic(imageView);
+        buttonAddAccount.setTooltip(new Tooltip("%mailaccount.add"));
 
         imageView = new ImageView();
         imageView.setFitHeight(32);
         imageView.setFitWidth(32);
         imageView.getStyleClass().add("imageview-edit");
-        this.buttonEditAccount = new Button();
-        this.buttonEditAccount.setGraphic(imageView);
-        this.buttonEditAccount.setTooltip(new Tooltip("%mailaccount.edit"));
+        buttonEditAccount = new Button();
+        buttonEditAccount.setGraphic(imageView);
+        buttonEditAccount.setTooltip(new Tooltip("%mailaccount.edit"));
 
-        tb.getItems().add(this.buttonAddAccount);
-        tb.getItems().add(this.buttonEditAccount);
+        tb.getItems().add(buttonAddAccount);
+        tb.getItems().add(buttonEditAccount);
 
         return tb;
     }

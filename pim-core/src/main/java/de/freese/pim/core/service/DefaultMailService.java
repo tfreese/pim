@@ -315,7 +315,7 @@ public class DefaultMailService extends AbstractService implements MailService {
     }
 
     protected BeanFactory getBeanFactory() {
-        return this.beanFactory;
+        return beanFactory;
     }
 
     protected MailApi getMailAPI(final long accountID) {
@@ -325,6 +325,6 @@ public class DefaultMailService extends AbstractService implements MailService {
     }
 
     protected MailDao getMailDAO() {
-        return this.mailDAO;
+        return mailDAO;
     }
 }

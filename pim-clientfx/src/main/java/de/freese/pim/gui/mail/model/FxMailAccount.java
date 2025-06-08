@@ -49,11 +49,11 @@ public class FxMailAccount {
     public FxMailAccount() {
         super();
 
-        this.abonnierteFolder = new FilteredList<>(getFolder(), FxMailFolder::isAbonniert);
-        this.rootFolder = new FilteredList<>(this.abonnierteFolder, FxMailFolder::isParent);
+        abonnierteFolder = new FilteredList<>(getFolder(), FxMailFolder::isAbonniert);
+        rootFolder = new FilteredList<>(abonnierteFolder, FxMailFolder::isParent);
 
         // Zähler mit der Folder-List verbinden.
-        this.unreadMailsCount = new SumUnreadMailsInChildFolderBinding(this.rootFolder);
+        unreadMailsCount = new SumUnreadMailsInChildFolderBinding(rootFolder);
     }
 
     public FxMailAccount(final FxMailAccount src) {
@@ -78,12 +78,12 @@ public class FxMailAccount {
     }
 
     public ObservableList<FxMailFolder> getFolder() {
-        return this.folder;
+        return folder;
     }
 
     @JsonIgnore
     public FilteredList<FxMailFolder> getFolderSubscribed() {
-        return this.abonnierteFolder;
+        return abonnierteFolder;
     }
 
     public long getID() {
@@ -115,23 +115,23 @@ public class FxMailAccount {
     }
 
     public int getUnreadMailsCount() {
-        return this.unreadMailsCount.intValue();
+        return unreadMailsCount.intValue();
     }
 
     public LongProperty idProperty() {
-        return this.idProperty;
+        return idProperty;
     }
 
     public StringProperty imapHostProperty() {
-        return this.imapHostProperty;
+        return imapHostProperty;
     }
 
     public BooleanProperty imapLegitimationProperty() {
-        return this.imapLegitimationProperty;
+        return imapLegitimationProperty;
     }
 
     public ObjectProperty<MailPort> imapPortProperty() {
-        return this.imapPortProperty;
+        return imapPortProperty;
     }
 
     public boolean isImapLegitimation() {
@@ -143,11 +143,11 @@ public class FxMailAccount {
     }
 
     public StringProperty mailProperty() {
-        return this.mailProperty;
+        return mailProperty;
     }
 
     public StringProperty passwordProperty() {
-        return this.passwordProperty;
+        return passwordProperty;
     }
 
     public void setID(final long id) {
@@ -187,15 +187,15 @@ public class FxMailAccount {
     }
 
     public StringProperty smtpHostProperty() {
-        return this.smtpHostProperty;
+        return smtpHostProperty;
     }
 
     public BooleanProperty smtpLegitimationProperty() {
-        return this.smtpLegitimationProperty;
+        return smtpLegitimationProperty;
     }
 
     public ObjectProperty<MailPort> smtpPortProperty() {
-        return this.smtpPortProperty;
+        return smtpPortProperty;
     }
 
     @Override

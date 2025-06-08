@@ -37,10 +37,10 @@ public class FxKontakt implements Comparable<FxKontakt> {
     public FxKontakt(final String nachname, final String vorname) {
         super();
 
-        this.nachnameProperty.set(nachname);
-        this.vornameProperty.set(vorname);
+        nachnameProperty.set(nachname);
+        vornameProperty.set(vorname);
 
-        this.toStringExpression = Bindings.format("Kontakt [nachname=%s, vorname=%s]", nachnameProperty(), vornameProperty());
+        toStringExpression = Bindings.format("Kontakt [nachname=%s, vorname=%s]", nachnameProperty(), vornameProperty());
     }
 
     public void addAttribut(final String attribut, final String wert) {
@@ -54,7 +54,7 @@ public class FxKontakt implements Comparable<FxKontakt> {
 
     // public void addPropertyChangeListener(final PropertyChangeListener listener)
     // {
-    // this.pcs.addPropertyChangeListener(listener);
+    // pcs.addPropertyChangeListener(listener);
     // }
 
     @Override
@@ -87,7 +87,7 @@ public class FxKontakt implements Comparable<FxKontakt> {
     }
 
     public ObservableList<FxKontaktAttribut> getAttribute() {
-        return this.attribute;
+        return attribute;
     }
 
     public long getID() {
@@ -108,37 +108,33 @@ public class FxKontakt implements Comparable<FxKontakt> {
     }
 
     public LongProperty idProperty() {
-        return this.idProperty;
+        return idProperty;
     }
 
     public StringProperty nachnameProperty() {
-        return this.nachnameProperty;
+        return nachnameProperty;
     }
 
-    // /**
-    // * @param listener {@link PropertyChangeListener}
-    // */
-    // public void removePropertyChangeListener(final PropertyChangeListener listener)
-    // {
-    // this.pcs.removePropertyChangeListener(listener);
+    // public void removePropertyChangeListener(final PropertyChangeListener listener) {
+    // pcs.removePropertyChangeListener(listener);
     // }
 
     public void setID(final long id) {
         // Object old = getID();
         idProperty().set(id);
-        // this.pcs.firePropertyChange("id", old, getID());
+        // pcs.firePropertyChange("id", old, getID());
     }
 
     public void setNachname(final String nachname) {
         // Object old = getNachname();
         nachnameProperty().set(nachname);
-        // this.pcs.firePropertyChange("nachname", old, getNachname());
+        // pcs.firePropertyChange("nachname", old, getNachname());
     }
 
     public void setVorname(final String vorname) {
         // Object old = getVorname();
         vornameProperty().set(vorname);
-        // this.pcs.firePropertyChange("vorname", old, getVorname());
+        // pcs.firePropertyChange("vorname", old, getVorname());
     }
 
     @Override
@@ -151,11 +147,11 @@ public class FxKontakt implements Comparable<FxKontakt> {
         // builder.append("]");
         //
         // return builder.toString();
-        return this.toStringExpression.get();
+        return toStringExpression.get();
     }
 
     public StringProperty vornameProperty() {
-        return this.vornameProperty;
+        return vornameProperty;
     }
 
     private void addAttribut(final FxKontaktAttribut attribut) {

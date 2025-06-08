@@ -34,9 +34,9 @@ public class MonitorInputStream extends FilterInputStream {
     public int read() throws IOException {
         final int read = super.read();
 
-        this.sizeRead++;
+        sizeRead++;
 
-        this.monitor.monitor(this.sizeRead, this.size);
+        monitor.monitor(sizeRead, size);
 
         return read;
     }
@@ -46,9 +46,9 @@ public class MonitorInputStream extends FilterInputStream {
         final int readCount = super.read(b, off, len);
 
         if (readCount > 0) {
-            this.sizeRead += readCount;
+            sizeRead += readCount;
 
-            this.monitor.monitor(this.sizeRead, this.size);
+            monitor.monitor(sizeRead, size);
         }
 
         return readCount;
@@ -58,9 +58,9 @@ public class MonitorInputStream extends FilterInputStream {
     public synchronized void reset() throws IOException {
         super.reset();
 
-        this.sizeRead = this.size - super.available();
+        sizeRead = size - super.available();
 
-        this.monitor.monitor(this.sizeRead, this.size);
+        monitor.monitor(sizeRead, size);
     }
 
     @Override
@@ -68,9 +68,9 @@ public class MonitorInputStream extends FilterInputStream {
         final long readCount = super.skip(n);
 
         if (readCount > 0) {
-            this.sizeRead += readCount;
+            sizeRead += readCount;
 
-            this.monitor.monitor(this.sizeRead, this.size);
+            monitor.monitor(sizeRead, size);
         }
 
         return readCount;

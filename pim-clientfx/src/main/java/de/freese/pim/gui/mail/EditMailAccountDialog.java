@@ -62,12 +62,12 @@ public class EditMailAccountDialog {
     private void checkValidConfig(final ActionEvent event, final ResourceBundle bundle) {
         final StringBuilder message = new StringBuilder();
 
-        if (!this.mail.getText().matches(Utils.MAIL_REGEX)) {
+        if (!mail.getText().matches(Utils.MAIL_REGEX)) {
             message.append(bundle.getString("mail.format.invalid")).append("\n");
         }
 
-        final String pw1 = this.password1.getText();
-        final String pw2 = this.password2.getText();
+        final String pw1 = password1.getText();
+        final String pw2 = password2.getText();
 
         if (pw1 == null || pw1.isBlank()) {
             message.append(bundle.getString("passwoerter.nicht_ausgefuellt")).append("\n");
@@ -76,7 +76,7 @@ public class EditMailAccountDialog {
             message.append(bundle.getString("passwoerter.nicht_identisch")).append("\n");
         }
 
-        if (this.aboView.getItems() != null && this.aboView.getItems().stream().noneMatch(FxMailFolder::isAbonniert)) {
+        if (aboView.getItems() != null && aboView.getItems().stream().noneMatch(FxMailFolder::isAbonniert)) {
             message.append(bundle.getString("mail.folder.abonniert.nicht")).append("\n");
         }
 
@@ -126,12 +126,12 @@ public class EditMailAccountDialog {
         dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
 
         // Provider
-        this.provider.setPrefWidth(200);
-        this.provider.getItems().addAll(MailProvider.values());
+        provider.setPrefWidth(200);
+        provider.getItems().addAll(MailProvider.values());
 
         // Mail
-        this.mail.setPromptText(bundle.getString("mail"));
-        this.mail.setPrefColumnCount(30);
+        mail.setPromptText(bundle.getString("mail"));
+        mail.setPrefColumnCount(30);
         // mail.setTextFormatter(new TextFormatter<>( change -> {
         // String mailRegEx = MailUtils.MAIL_REGEX;
         //
@@ -141,31 +141,31 @@ public class EditMailAccountDialog {
         // }));
 
         // IMAP
-        this.imapHost.setPromptText("IMAP-Host");
-        this.imapPort.setPromptText("IMAP-Port");
-        this.imapPort.setPrefWidth(200);
-        this.imapPort.getItems().addAll(MailPort.IMAP, MailPort.IMAPS);
-        this.imapPort.getSelectionModel().select(MailPort.IMAPS);
+        imapHost.setPromptText("IMAP-Host");
+        imapPort.setPromptText("IMAP-Port");
+        imapPort.setPrefWidth(200);
+        imapPort.getItems().addAll(MailPort.IMAP, MailPort.IMAPS);
+        imapPort.getSelectionModel().select(MailPort.IMAPS);
 
         // SMTP
-        this.imapHost.setPromptText("SMTP-Host");
-        this.smtpPort.setPromptText("SMTP-Port");
-        this.smtpPort.setPrefWidth(200);
-        this.smtpPort.getItems().addAll(MailPort.SMTP, MailPort.SMTP_SSL, MailPort.SMTPS);
-        this.smtpPort.getSelectionModel().select(MailPort.SMTPS);
+        imapHost.setPromptText("SMTP-Host");
+        smtpPort.setPromptText("SMTP-Port");
+        smtpPort.setPrefWidth(200);
+        smtpPort.getItems().addAll(MailPort.SMTP, MailPort.SMTP_SSL, MailPort.SMTPS);
+        smtpPort.getSelectionModel().select(MailPort.SMTPS);
 
         // Passwort
-        this.password1.setPromptText(bundle.getString("passwort"));
-        this.password2.setPromptText(bundle.getString("passwort") + " (" + bundle.getString("wiederholung") + ")");
+        password1.setPromptText(bundle.getString("passwort"));
+        password2.setPromptText(bundle.getString("passwort") + " (" + bundle.getString("wiederholung") + ")");
 
         // Object-Attribute an GUI binden.
-        this.mail.textProperty().bindBidirectional(bean.mailProperty());
-        this.imapHost.textProperty().bindBidirectional(bean.imapHostProperty());
-        this.imapPort.valueProperty().bindBidirectional(bean.imapPortProperty());
-        this.smtpHost.textProperty().bindBidirectional(bean.smtpHostProperty());
-        this.smtpPort.valueProperty().bindBidirectional(bean.smtpPortProperty());
-        this.password1.textProperty().bindBidirectional(bean.passwordProperty());
-        this.password2.setText(bean.getPassword());
+        mail.textProperty().bindBidirectional(bean.mailProperty());
+        imapHost.textProperty().bindBidirectional(bean.imapHostProperty());
+        imapPort.valueProperty().bindBidirectional(bean.imapPortProperty());
+        smtpHost.textProperty().bindBidirectional(bean.smtpHostProperty());
+        smtpPort.valueProperty().bindBidirectional(bean.smtpPortProperty());
+        password1.textProperty().bindBidirectional(bean.passwordProperty());
+        password2.setText(bean.getPassword());
 
         final Node okButton = dialog.getDialogPane().lookupButton(ButtonType.OK);
 
@@ -173,32 +173,32 @@ public class EditMailAccountDialog {
         okButton.addEventFilter(ActionEvent.ACTION, event -> checkValidConfig(event, bundle));
 
         // OK-Button disablen, wenn eines dieser Felder leer ist.
-        this.mail.textProperty().addListener((observable, oldValue, newValue) -> {
+        mail.textProperty().addListener((observable, oldValue, newValue) -> {
             okButton.setDisable(newValue.isEmpty());
 
-            this.labelTestResult.setText(null);
-            this.labelTestResult.setStyle(null);
+            labelTestResult.setText(null);
+            labelTestResult.setStyle(null);
         });
-        this.imapHost.textProperty().addListener((observable, oldValue, newValue) -> {
-            this.labelTestResult.setText(null);
-            this.labelTestResult.setStyle(null);
+        imapHost.textProperty().addListener((observable, oldValue, newValue) -> {
+            labelTestResult.setText(null);
+            labelTestResult.setStyle(null);
         });
-        this.smtpHost.textProperty().addListener((observable, oldValue, newValue) -> {
-            this.labelTestResult.setText(null);
-            this.labelTestResult.setStyle(null);
+        smtpHost.textProperty().addListener((observable, oldValue, newValue) -> {
+            labelTestResult.setText(null);
+            labelTestResult.setStyle(null);
         });
-        this.password1.textProperty().addListener((observable, oldValue, newValue) -> {
-            this.labelTestResult.setText(null);
-            this.labelTestResult.setStyle(null);
-            this.password2.clear();
+        password1.textProperty().addListener((observable, oldValue, newValue) -> {
+            labelTestResult.setText(null);
+            labelTestResult.setStyle(null);
+            password2.clear();
         });
-        this.password2.textProperty().addListener((observable, oldValue, newValue) -> {
-            this.labelTestResult.setText(null);
-            this.labelTestResult.setStyle(null);
+        password2.textProperty().addListener((observable, oldValue, newValue) -> {
+            labelTestResult.setText(null);
+            labelTestResult.setStyle(null);
         });
 
-        this.aboView.setCellFactory(CheckBoxListCell.forListView(FxMailFolder::abonniertProperty, FxUtils.toStringConverter(FxMailFolder::getFullName)));
-        this.aboView.setItems(bean.getFolder());
+        aboView.setCellFactory(CheckBoxListCell.forListView(FxMailFolder::abonniertProperty, FxUtils.toStringConverter(FxMailFolder::getFullName)));
+        aboView.setItems(bean.getFolder());
 
         // Layout
         final GridPane gridPane = new GridPane();
@@ -209,51 +209,51 @@ public class EditMailAccountDialog {
         if (account == null) {
             okButton.setDisable(true);
 
-            this.provider.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            provider.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
                 if (newValue == null) {
                     return;
                 }
 
-                this.imapHost.setText(newValue.getImapHost());
-                this.imapPort.getSelectionModel().select(newValue.getImapPort());
-                this.smtpHost.setText(newValue.getSmtpHost());
-                this.smtpPort.getSelectionModel().select(newValue.getSmtpPort());
+                imapHost.setText(newValue.getImapHost());
+                imapPort.getSelectionModel().select(newValue.getImapPort());
+                smtpHost.setText(newValue.getSmtpHost());
+                smtpPort.getSelectionModel().select(newValue.getSmtpPort());
             });
 
             gridPane.add(new Label(bundle.getString("provider")), 0, ++row);
-            gridPane.add(this.provider, 1, row);
+            gridPane.add(provider, 1, row);
         }
 
         gridPane.add(new Label(bundle.getString("mail")), 0, ++row);
-        gridPane.add(this.mail, 1, row);
+        gridPane.add(mail, 1, row);
         gridPane.add(new Label("IMAP-Host"), 0, ++row);
-        gridPane.add(this.imapHost, 1, row);
+        gridPane.add(imapHost, 1, row);
         gridPane.add(new Label("IMAP-Port"), 0, ++row);
-        gridPane.add(this.imapPort, 1, row);
+        gridPane.add(imapPort, 1, row);
         gridPane.add(new Label("SMTP-Host"), 0, ++row);
-        gridPane.add(this.smtpHost, 1, row);
+        gridPane.add(smtpHost, 1, row);
         gridPane.add(new Label("SMTP-Port"), 0, ++row);
-        gridPane.add(this.smtpPort, 1, row);
+        gridPane.add(smtpPort, 1, row);
         gridPane.add(new Label(bundle.getString("passwort")), 0, ++row);
-        gridPane.add(this.password1, 1, row);
+        gridPane.add(password1, 1, row);
         gridPane.add(new Label(bundle.getString("passwort") + " (" + bundle.getString("wiederholung") + ")"), 0, ++row);
-        gridPane.add(this.password2, 1, row);
+        gridPane.add(password2, 1, row);
 
         // Test
-        this.buttonTest.setPrefWidth(150);
-        this.buttonTest.setOnAction(event -> test(mailService, bean, bundle));
-        gridPane.add(this.buttonTest, 0, ++row);
-        gridPane.add(this.labelTestResult, 1, row);
+        buttonTest.setPrefWidth(150);
+        buttonTest.setOnAction(event -> test(mailService, bean, bundle));
+        gridPane.add(buttonTest, 0, ++row);
+        gridPane.add(labelTestResult, 1, row);
 
         final Label label = new Label(bundle.getString("mail.folder.abonniert"));
         gridPane.add(label, 0, ++row);
         GridPane.setValignment(label, VPos.TOP);
-        gridPane.add(this.aboView, 1, row);
+        gridPane.add(aboView, 1, row);
 
         // Rest
         dialog.getDialogPane().setContent(gridPane);
 
-        Platform.runLater(this.mail::requestFocus);
+        Platform.runLater(mail::requestFocus);
 
         final Optional<ButtonType> result = dialog.showAndWait();
 
@@ -274,9 +274,9 @@ public class EditMailAccountDialog {
     private void test(final FxMailService mailService, final FxMailAccount bean, final ResourceBundle bundle) {
         PimClientApplication.getMainWindow().getScene().setCursor(Cursor.WAIT);
 
-        this.labelTestResult.setText(null);
-        this.labelTestResult.setStyle(null);
-        this.aboView.setItems(null);
+        labelTestResult.setText(null);
+        labelTestResult.setStyle(null);
+        aboView.setItems(null);
 
         try {
             checkValidConfig(null, bundle);
@@ -284,14 +284,14 @@ public class EditMailAccountDialog {
             bean.getFolder().clear();
             bean.getFolder().addAll(mailService.test(bean));
 
-            this.labelTestResult.setText("OK");
-            this.labelTestResult.setStyle("-fx-text-fill: darkgreen;"); // fx-text-inner-color
+            labelTestResult.setText("OK");
+            labelTestResult.setStyle("-fx-text-fill: darkgreen;"); // fx-text-inner-color
 
-            this.aboView.setItems(bean.getFolder());
+            aboView.setItems(bean.getFolder());
         }
         catch (Exception ex) {
-            this.labelTestResult.setText(ex.getMessage());
-            this.labelTestResult.setStyle("-fx-text-fill: red;"); // fx-text-inner-color
+            labelTestResult.setText(ex.getMessage());
+            labelTestResult.setStyle("-fx-text-fill: red;"); // fx-text-inner-color
         }
         finally {
             PimClientApplication.getMainWindow().getScene().setCursor(Cursor.DEFAULT);

@@ -25,30 +25,30 @@ public class MailFolder {
     private boolean sendFolder;
 
     public long getAccountID() {
-        return this.accountID;
+        return accountID;
     }
 
     /**
      * Liefert den vollen Hierarchie-Namen, z.B. PARENT_NAME/FOLDER_NAME.
      */
     public String getFullName() {
-        return this.fullName;
+        return fullName;
     }
 
     public long getID() {
-        return this.id;
+        return id;
     }
 
     public String getName() {
-        return this.name;
+        return name;
     }
 
     public boolean isAbonniert() {
-        return this.abonniert;
+        return abonniert;
     }
 
     public boolean isSendFolder() {
-        return this.sendFolder;
+        return sendFolder;
     }
 
     public void setAbonniert(final boolean abo) {
@@ -77,7 +77,7 @@ public class MailFolder {
         predicate = predicate.or("sent"::equals);
         predicate = predicate.or(n -> n.startsWith("gesendet"));
 
-        this.sendFolder = predicate.test(name.toLowerCase());
+        sendFolder = predicate.test(name.toLowerCase());
     }
 
     @Override

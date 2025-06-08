@@ -51,13 +51,13 @@ public class ImapDownloadCommand implements IMAPFolder.ProtocolCommand {
         // UID fetch 234789 bodystructure followed by b uid fetch 234789 (body.peek[1.1] body.peek[2])
 
         final Argument args = new Argument();
-        args.writeNumber(this.uid).writeString("BODY[]");
+        args.writeNumber(uid).writeString("BODY[]");
 
         final Response[] r = protocol.command("UID FETCH", args);
         final Response response = r[r.length - 1];
 
         if (response.isOK()) {
-            Session s = this.session;
+            Session s = session;
 
             if (s == null) {
                 final Properties props = new Properties();
@@ -79,15 +79,15 @@ public class ImapDownloadCommand implements IMAPFolder.ProtocolCommand {
                         try (InputStream is = body.getByteArrayInputStream()) {
                             // Consume InputStream
                             is.transferTo(OutputStream.nullOutputStream());
-                            //                            MimeMessage mm = new MimeMessage(this.session, is);
+                            // MimeMessage mm = new MimeMessage(session, is);
 
                             // TODO Save Mail
                             // Contents.getContents(mm, i);
                         }
                     }
-                    //                    catch (MessagingException ex) {
-                    //                        ex.printStackTrace();
-                    //                    }
+                    // catch (MessagingException ex) {
+                    //   ex.printStackTrace();
+                    // }
                     catch (IOException ex) {
                         LOGGER.error(ex.getMessage(), ex);
                     }

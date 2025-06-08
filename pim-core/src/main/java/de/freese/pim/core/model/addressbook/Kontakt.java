@@ -40,7 +40,7 @@ public class Kontakt implements Comparable<Kontakt> {
     }
 
     // public void addPropertyChangeListener(final PropertyChangeListener listener) {
-    // this.pcs.addPropertyChangeListener(listener);
+    // pcs.addPropertyChangeListener(listener);
     // }
 
     @Override
@@ -68,51 +68,51 @@ public class Kontakt implements Comparable<Kontakt> {
             return false;
         }
 
-        return Objects.equals(this.attribute, other.attribute) && this.id == other.id && Objects.equals(this.nachname, other.nachname) && Objects.equals(this.vorname,
+        return Objects.equals(attribute, other.attribute) && id == other.id && Objects.equals(nachname, other.nachname) && Objects.equals(vorname,
                 other.vorname);
     }
 
     public List<KontaktAttribut> getAttribute() {
-        return this.attribute;
+        return attribute;
     }
 
     public long getID() {
-        return this.id;
+        return id;
     }
 
     public String getNachname() {
-        return this.nachname;
+        return nachname;
     }
 
     public String getVorname() {
-        return this.vorname;
+        return vorname;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(this.attribute, this.id, this.nachname, this.vorname);
+        return Objects.hash(attribute, id, nachname, vorname);
     }
 
     public void setID(final long id) {
         // Object old = getID();
         this.id = id;
-        // this.pcs.firePropertyChange("id", old, getID());
+        // pcs.firePropertyChange("id", old, getID());
     }
 
     // public void removePropertyChangeListener(final PropertyChangeListener listener) {
-    // this.pcs.removePropertyChangeListener(listener);
+    // pcs.removePropertyChangeListener(listener);
     // }
 
     public void setNachname(final String nachname) {
         // Object old = getNachname();
         this.nachname = nachname;
-        // this.pcs.firePropertyChange("nachname", old, getNachname());
+        // pcs.firePropertyChange("nachname", old, getNachname());
     }
 
     public void setVorname(final String vorname) {
         // Object old = getVorname();
         this.vorname = vorname;
-        // this.pcs.firePropertyChange("vorname", old, getVorname());
+        // pcs.firePropertyChange("vorname", old, getVorname());
     }
 
     @Override

@@ -35,17 +35,17 @@ public class ErrorDialog {
     public ErrorDialog() {
         super();
 
-        this.alert = new Alert(AlertType.ERROR);
-        this.alert.initModality(Modality.APPLICATION_MODAL);
-        // this.alert.initOwner(PIMApplication.getMainWindow());
+        alert = new Alert(AlertType.ERROR);
+        alert.initModality(Modality.APPLICATION_MODAL);
+        // alert.initOwner(PIMApplication.getMainWindow());
 
-        this.alert.getDialogPane().setMinSize(640, 480);
+        alert.getDialogPane().setMinSize(640, 480);
 
         title("Error");
     }
 
     public ErrorDialog contentText(final String text) {
-        this.alert.setContentText(text);
+        alert.setContentText(text);
 
         return this;
     }
@@ -83,25 +83,25 @@ public class ErrorDialog {
         gridPane.add(textArea, 0, 1);
 
         // Set expandable Exception into the dialog pane.
-        this.alert.getDialogPane().setExpandableContent(gridPane);
-        this.alert.getDialogPane().setExpanded(true);
+        alert.getDialogPane().setExpandableContent(gridPane);
+        alert.getDialogPane().setExpanded(true);
 
         return this;
     }
 
     public ErrorDialog headerText(final String text) {
-        this.alert.setHeaderText(text);
+        alert.setHeaderText(text);
 
         return this;
     }
 
     public void showAndWait() {
         PimClientApplication.unblockGUI();
-        this.alert.showAndWait();
+        alert.showAndWait();
     }
 
     public ErrorDialog title(final String title) {
-        this.alert.setTitle(title);
+        alert.setTitle(title);
 
         return this;
     }

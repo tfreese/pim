@@ -22,18 +22,18 @@ public class PreserveOrderOptionGroup extends OptionGroup {
 
     @Override
     public OptionGroup addOption(final Option option) {
-        this.optionMap.put(option.getOpt() == null ? option.getLongOpt() : option.getOpt(), option);
+        optionMap.put(option.getOpt() == null ? option.getLongOpt() : option.getOpt(), option);
 
         return this;
     }
 
     @Override
     public Collection<String> getNames() {
-        return this.optionMap.keySet();
+        return optionMap.keySet();
     }
 
     @Override
     public Collection<Option> getOptions() {
-        return this.optionMap.values();
+        return optionMap.values();
     }
 }

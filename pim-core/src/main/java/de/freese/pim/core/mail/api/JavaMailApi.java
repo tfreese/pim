@@ -66,14 +66,14 @@ public class JavaMailApi extends AbstractMailApi {
 
     @Override
     public void connect() {
-        this.session = Utils.executeSafely(this::createSession);
+        session = Utils.executeSafely(this::createSession);
     }
 
     @Override
     public void disconnect() {
         // Folder schliessen.
-        // if (this.topLevelFolder != null) {
-        // for (IMailFolder folder : this.topLevelFolder) {
+        // if (topLevelFolder != null) {
+        // for (IMailFolder folder : topLevelFolder) {
         // folder.close();
         // }
         // }
@@ -81,10 +81,10 @@ public class JavaMailApi extends AbstractMailApi {
         // getFolder().close(true);
         // }
 
-        // disconnect(this.store);
+        // disconnect(store);
         // disconnect(transport);
-        for (int i = 0; i < this.stores.length; i++) {
-            final Store store = this.stores[i];
+        for (int i = 0; i < stores.length; i++) {
+            final Store store = stores[i];
 
             try {
                 disconnect(store);
@@ -93,12 +93,12 @@ public class JavaMailApi extends AbstractMailApi {
                 getLogger().error(ex.getMessage(), ex);
             }
 
-            this.stores[i] = null;
+            stores[i] = null;
         }
 
-        // this.store = null;
+        // store = null;
         // transport = null;
-        this.session = null;
+        session = null;
     }
 
     @Override
@@ -246,13 +246,13 @@ public class JavaMailApi extends AbstractMailApi {
     public void testConnection() {
         Utils.executeSafely(() -> {
             // Test Connection Empfang.
-            Store s = createStore(this.session);
+            Store s = createStore(session);
             connect(s);
             disconnect(s);
             s = null;
 
             // Test Connection Versand.
-            Transport t = createTransport(this.session);
+            Transport t = createTransport(session);
             connect(t);
             disconnect(t);
             t = null;
@@ -331,11 +331,11 @@ public class JavaMailApi extends AbstractMailApi {
     }
 
     protected IMAPStore createStore(final Session session) throws NoSuchProviderException {
-        return (IMAPStore) this.session.getStore("imaps");
+        return (IMAPStore) session.getStore("imaps");
     }
 
     protected Transport createTransport(final Session session) throws NoSuchProviderException {
-        return this.session.getTransport("smtp");
+        return session.getTransport("smtp");
     }
 
     protected void disconnect(final Service service) throws MessagingException {
@@ -372,11 +372,11 @@ public class JavaMailApi extends AbstractMailApi {
     }
 
     protected Session getSession() {
-        return this.session;
+        return session;
     }
 
     protected synchronized IMAPStore getStore() throws MessagingException {
-        IMAPStore store = this.stores[this.storeIndex++];
+        IMAPStore store = stores[storeIndex++];
 
         if (store != null && !store.isConnected()) {
             connect(store);
@@ -385,11 +385,11 @@ public class JavaMailApi extends AbstractMailApi {
         if (store == null) {
             store = createStore(getSession());
             connect(store);
-            this.stores[this.storeIndex - 1] = store;
+            stores[storeIndex - 1] = store;
         }
 
-        if (this.storeIndex == this.stores.length) {
-            this.storeIndex = 0;
+        if (storeIndex == stores.length) {
+            storeIndex = 0;
         }
 
         return store;

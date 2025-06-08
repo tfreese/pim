@@ -94,6 +94,6 @@ public class AddressBookRestController extends AbstractRemoteService implements 
     }
 
     protected AddressBookService getAddressBookService() {
-        return this.addressBookService;
+        return addressBookService;
     }
 }

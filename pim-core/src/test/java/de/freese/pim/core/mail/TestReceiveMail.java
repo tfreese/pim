@@ -93,7 +93,7 @@ class TestReceiveMail extends AbstractMailTest {
 
         assertNotNull(store);
 
-        store.connect(MAIL_IMAP_HOST, MAIL_IMAP_PORT.getPort(), this.getFrom(), this.getPassword());
+        store.connect(MAIL_IMAP_HOST, MAIL_IMAP_PORT.getPort(), getFrom(), getPassword());
     }
 
     @Test

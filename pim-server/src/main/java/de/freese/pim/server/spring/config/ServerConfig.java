@@ -36,7 +36,7 @@ public class ServerConfig implements WebMvcConfigurer // extends WebMvcConfigura
         // Executer für die Verarbeitung der HTTP-Requests.
         // Verlagert die asynchrone Ausführung von Server-Requests (Callable, WebAsyncTask) in diesen ThreadPool.
         // Ansonsten würde für jeden Request immer ein neuer Thread erzeugt, siehe TaskExecutor des RequestMappingHandlerAdapter.
-        configurer.setTaskExecutor(this.taskExecutor);
+        configurer.setTaskExecutor(taskExecutor);
     }
 
     /**

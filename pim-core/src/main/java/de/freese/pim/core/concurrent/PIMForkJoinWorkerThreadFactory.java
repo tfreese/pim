@@ -27,14 +27,14 @@ public class PIMForkJoinWorkerThreadFactory implements ForkJoinWorkerThreadFacto
     public PIMForkJoinWorkerThreadFactory() {
         super();
 
-        this.namePrefix = "fork-join";
+        namePrefix = "fork-join";
     }
 
     @Override
     public ForkJoinWorkerThread newThread(final ForkJoinPool pool) {
         final ForkJoinWorkerThread thread = new PIMForkJoinWorkerThread(pool);
 
-        final String threadName = String.format("%s-%02d", this.namePrefix, this.counter.getAndIncrement());
+        final String threadName = String.format("%s-%02d", namePrefix, counter.getAndIncrement());
         thread.setName(threadName);
 
         return thread;

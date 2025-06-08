@@ -53,39 +53,39 @@ public class MailAccount {
     }
 
     public long getID() {
-        return this.id;
+        return id;
     }
 
     public String getImapHost() {
-        return this.imapHost;
+        return imapHost;
     }
 
     public MailPort getImapPort() {
-        return this.imapPort;
+        return imapPort;
     }
 
     public String getMail() {
-        return this.mail;
+        return mail;
     }
 
     public String getPassword() {
-        return this.password;
+        return password;
     }
 
     public String getSmtpHost() {
-        return this.smtpHost;
+        return smtpHost;
     }
 
     public MailPort getSmtpPort() {
-        return this.smtpPort;
+        return smtpPort;
     }
 
     public boolean isImapLegitimation() {
-        return this.imapLegitimation;
+        return imapLegitimation;
     }
 
     public boolean isSmtpLegitimation() {
-        return this.smtpLegitimation;
+        return smtpLegitimation;
     }
 
     public void setID(final long id) {
