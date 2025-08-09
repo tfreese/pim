@@ -1,12 +1,15 @@
 // Created: 04.03.2021
 package de.freese.pim.gui;
 
+import java.io.IOException;
+import java.io.UncheckedIOException;
+
 import com.sun.javafx.application.LauncherImpl;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
-import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
+import org.apache.commons.cli.help.HelpFormatter;
 
 import de.freese.pim.gui.view.ErrorDialog;
 
@@ -14,7 +17,7 @@ import de.freese.pim.gui.view.ErrorDialog;
  * @author Thomas Freese
  */
 public final class PimClientLauncher {
-    public static void main(final String[] args) {
+    static void main(final String[] args) {
         if (args.length == 0) {
             usage();
         }
@@ -70,24 +73,28 @@ public final class PimClientLauncher {
         // options.addOptionGroup(group);
 
         options.addOption(Option.builder().longOpt("spring.profiles.active").required().hasArg().argName("Profile1,Profile2").valueSeparator('=')
-                .desc("Profiles: [ClientStandalone,HsqldbEmbeddedServer], [ClientEmbeddedServer,HsqldbEmbeddedServer], [ClientRest]").build());
-        options.addOption(Option.builder().longOpt("server.host").hasArg().argName("=host").valueSeparator('=').desc("Server Name").build());
-        options.addOption(Option.builder().longOpt("server.port").hasArg().argName("=port").valueSeparator('=').desc("Server Port").build());
+                .desc("Profiles: [ClientStandalone,HsqldbEmbeddedServer], [ClientEmbeddedServer,HsqldbEmbeddedServer], [ClientRest]").get());
+        options.addOption(Option.builder().longOpt("server.host").hasArg().argName("=host").valueSeparator('=').desc("Server Name").get());
+        options.addOption(Option.builder().longOpt("server.port").hasArg().argName("=port").valueSeparator('=').desc("Server Port").get());
 
         return options;
     }
 
     private static void usage() {
-        final HelpFormatter formatter = new HelpFormatter();
-        formatter.setOptionComparator(null);
-        // formatter.setWidth(120);
-        // formatter.printHelp("P.I.M.\n", getCommandOptions(), true);
+        final HelpFormatter formatter = HelpFormatter.builder()
+                .setShowSince(false)
+                .get();
 
         final StringBuilder footer = new StringBuilder();
         // footer.append("\nNamen / Werte mit Leerzeichen sind mit \"'... ...'\" anzugeben.");
         footer.append("\n@Thomas Freese");
 
-        formatter.printHelp(120, "P.I.M. Client\n", "\nParameter:", getCommandOptions(), footer.toString(), true);
+        try {
+            formatter.printHelp("P.I.M. Client\n", "\nParameter:", getCommandOptions(), footer.toString(), true);
+        }
+        catch (IOException ex) {
+            throw new UncheckedIOException(ex);
+        }
 
         System.exit(-1);
     }

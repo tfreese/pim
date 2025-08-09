@@ -1,7 +1,9 @@
 // Created on 24.05.2016
 package de.freese.pim.server.addressbook;
 
+import java.io.IOException;
 import java.io.PrintStream;
+import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -12,10 +14,10 @@ import java.util.List;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
-import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.OptionGroup;
 import org.apache.commons.cli.Options;
+import org.apache.commons.cli.help.HelpFormatter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
@@ -43,7 +45,7 @@ public final class PimAddressbookConsole {
 
     public static final PrintStream PRINT_STREAM = System.out;
 
-    public static void main(final String[] args) throws Exception {
+    static void main(final String[] args) throws Exception {
         String[] arguments = args;
 
         if (arguments.length == 0) {
@@ -141,48 +143,86 @@ public final class PimAddressbookConsole {
     private static Options getCommandOptions() {
         final OptionGroup group = new PreserveOrderOptionGroup();
 
-        Option option = new Option("ik", "insert-kontakt", true, "Hinzufügen eines Kontakts");
-        option.setArgs(2);
-        option.setArgName("NACHNAME VORNAME");
-        group.addOption(option);
+        group.addOption(Option.builder()
+                .option("ik")
+                .longOpt("insert-kontakt")
+                .hasArgs()
+                .numberOfArgs(2)
+                .argName("NACHNAME VORNAME")
+                .desc("Hinzufügen eines Kontakts")
+                .get());
 
-        option = new Option("uk", "update-kontakt", true, "Aktualisieren eines Kontakts");
-        option.setArgs(3);
-        option.setArgName("ID NACHNAME VORNAME");
-        group.addOption(option);
+        group.addOption(Option.builder()
+                .option("uk")
+                .longOpt("update-kontakt")
+                .hasArgs()
+                .numberOfArgs(3)
+                .argName("ID NACHNAME VORNAME")
+                .desc("Aktualisieren eines Kontakts")
+                .get());
 
-        option = new Option("dk", "delete-kontakt", true, "Löscht einen Kontakt");
-        option.setArgs(1);
-        option.setArgName("ID");
-        group.addOption(option);
+        group.addOption(Option.builder()
+                .option("dk")
+                .longOpt("delete-kontakt")
+                .hasArgs()
+                .numberOfArgs(1)
+                .argName("ID")
+                .type(Long.class)
+                .desc("Löscht einen Kontakt")
+                .get());
 
-        option = new Option("ia", "insert-attribut", true, "Hinzufügen eines Kontaktattributs");
-        option.setArgs(3);
-        option.setArgName("ID ATTRIBUT WERT");
-        group.addOption(option);
+        group.addOption(Option.builder()
+                .option("ia")
+                .longOpt("insert-attribut")
+                .hasArgs()
+                .numberOfArgs(3)
+                .argName("ID ATTRIBUT WERT")
+                .desc("Hinzufügen eines Kontaktattributs")
+                .get());
 
-        option = new Option("ua", "update-attribut", true, "Aktualisieren eines Kontaktattributs");
-        option.setArgs(3);
-        option.setArgName("ID ATTRIBUT WERT");
-        group.addOption(option);
+        group.addOption(Option.builder()
+                .option("ua")
+                .longOpt("update-attribut")
+                .hasArgs()
+                .numberOfArgs(3)
+                .argName("ID ATTRIBUT WERT")
+                .desc("Aktualisieren eines Kontaktattributs")
+                .get());
 
-        option = new Option("da", "delete-attribut", true, "Löschen eines Kontaktattributs");
-        option.setArgs(2);
-        option.setArgName("ID ATTRIBUT");
-        group.addOption(option);
+        group.addOption(Option.builder()
+                .option("da")
+                .longOpt("delete-attribut")
+                .hasArgs()
+                .numberOfArgs(2)
+                .argName("ID ATTRIBUT")
+                .desc("Löschen eines Kontaktattributs")
+                .get());
 
-        option = new Option("lk", "list-kontakte", false, "Auflisten aller Kontakte");
-        group.addOption(option);
+        group.addOption(Option.builder()
+                .option("lk")
+                .longOpt("list-kontakte")
+                .desc("Auflisten aller Kontakte")
+                .get());
 
-        option = new Option("vk", "view-kontakt", true, "Liefert Details eines Kontakts");
-        option.setArgs(1);
-        option.setArgName("ID");
-        group.addOption(option);
+        group.addOption(Option.builder()
+                .option("vk")
+                .longOpt("view-kontakt")
+                .hasArgs()
+                .numberOfArgs(1)
+                .argName("ID")
+                .type(Long.class)
+                .desc("Liefert Details eines Kontakts")
+                .get());
 
-        option = new Option("s", "search", true, "Suchen nach Kontakten");
-        option.setArgs(1);
-        option.setArgName("Pattern");
-        group.addOption(option);
+        group.addOption(Option.builder()
+                .option("s")
+                .longOpt("search")
+                .hasArgs()
+                .numberOfArgs(1)
+                .argName("Pattern")
+                .type(String.class)
+                .desc("Suchen nach Kontakten")
+                .get());
 
         final Options options = new Options();
         options.addOptionGroup(group);
@@ -191,16 +231,20 @@ public final class PimAddressbookConsole {
     }
 
     private static void usage() {
-        final HelpFormatter formatter = new HelpFormatter();
-        formatter.setOptionComparator(null);
-        // formatter.setWidth(120);
-        // formatter.printHelp("Addressbook\n", getCommandOptions(), true);
+        final HelpFormatter formatter = HelpFormatter.builder()
+                .setShowSince(false)
+                .get();
 
         final StringBuilder footer = new StringBuilder();
         footer.append("\nNamen / Werte mit Leerzeichen sind mit \"'... ...'\" anzugeben.");
         footer.append("\n@Thomas Freese");
 
-        formatter.printHelp(120, "Addressbook\n", "\nParameter:", getCommandOptions(), footer.toString(), true);
+        try {
+            formatter.printHelp("Addressbook", "", getCommandOptions(), footer.toString(), true);
+        }
+        catch (IOException ex) {
+            throw new UncheckedIOException(ex);
+        }
 
         System.exit(-1);
     }
