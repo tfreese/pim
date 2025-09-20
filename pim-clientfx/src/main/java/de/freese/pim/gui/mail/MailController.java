@@ -233,7 +233,7 @@ public class MailController extends AbstractController {
         try {
             URL.setURLStreamHandlerFactory(new MailUrlStreamHandlerFactory());
         }
-        catch (Error er) {
+        catch (Error _) {
             // Wenn Tomcat der EmbeddedServer ist, war die Default URLStreamHandlerFactory hier schon gesetzt.
             // TomcatURLStreamHandlerFactory.getInstance().addUserFactory(new MailUrlStreamHandlerFactory());
             try {
@@ -257,7 +257,7 @@ public class MailController extends AbstractController {
                 return null;
             }
 
-            final int[] rgb = FxUtils.getProgressRGB(percent, Color.RED, Color.ORANGE, Color.YELLOW, Color.GREEN);
+            final int[] rgb = FxUtils.getProgressRGB(percent, List.of(Color.RED, Color.ORANGE, Color.YELLOW, Color.GREEN));
 
             return String.format("-fx-progress-color: rgb(%d,%d,%d)", rgb[0], rgb[1], rgb[2]);
         }, getProgressIndicator().progressProperty()));

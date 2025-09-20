@@ -9,7 +9,6 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Properties;
 
-import jakarta.mail.AuthenticationFailedException;
 import jakarta.mail.Authenticator;
 import jakarta.mail.MessagingException;
 import jakarta.mail.NoSuchProviderException;
@@ -154,7 +153,7 @@ public class JavaMailSender {
                         try {
                             transport.close();
                         }
-                        catch (Exception ex) {
+                        catch (Exception _) {
                             // Ignore
                         }
 
@@ -163,9 +162,6 @@ public class JavaMailSender {
 
                     try {
                         transport = connectTransport();
-                    }
-                    catch (AuthenticationFailedException ex) {
-                        throw ex;
                     }
                     catch (Exception ex) {
                         // Effectively, all remaining messages failed.

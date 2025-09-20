@@ -9,6 +9,7 @@ import java.text.ParseException;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.ResourceBundle;
@@ -211,13 +212,13 @@ public final class FxUtils {
      *
      * @return int[], RGB
      */
-    public static int[] getProgressRGB(final double progress, final Color... colors) {
-        if (progress < 0D || progress > 1D || colors.length < 2) {
+    public static int[] getProgressRGB(final double progress, final List<Color> colors) {
+        if (progress < 0D || progress > 1D || colors.size() < 2) {
             return new int[]{0, 0, 0};
         }
 
         if (Double.compare(progress, 1D) == 0) {
-            final Color c = colors[colors.length - 1];
+            final Color c = colors.get(colors.size() - 1);
 
             return new int[]{(int) (c.getRed() * 255), (int) (c.getGreen() * 255), (int) (c.getBlue() * 255)};
         }
@@ -226,12 +227,12 @@ public final class FxUtils {
         final int g;
         final int b;
 
-        final double segment = (colors.length - 1) * progress;
+        final double segment = (colors.size() - 1) * progress;
         final int step = (int) segment;
         final double stepProgress = segment - step;
 
-        final Color c1 = colors[step];
-        final Color c2 = colors[step + 1];
+        final Color c1 = colors.get(step);
+        final Color c2 = colors.get(step + 1);
 
         final Color color = c1.interpolate(c2, stepProgress);
 
@@ -397,8 +398,8 @@ public final class FxUtils {
 
                 break;
             }
-            catch (Exception ex) {
-                // Falsche interne Klasse des Tooltips
+            catch (Exception _) {
+                // Falsche interne Klasse des Tooltips.
             }
         }
     }

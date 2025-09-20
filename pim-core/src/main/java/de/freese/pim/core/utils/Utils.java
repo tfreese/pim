@@ -51,7 +51,7 @@ public final class Utils {
         try {
             return Files.isHidden(p);
         }
-        catch (Exception ex) {
+        catch (Exception _) {
             return false;
         }
     };
@@ -173,7 +173,7 @@ public final class Utils {
         try {
             cl = Thread.currentThread().getContextClassLoader();
         }
-        catch (Throwable ex) {
+        catch (Throwable _) {
             // NO-OP
         }
 
@@ -181,7 +181,7 @@ public final class Utils {
             try {
                 cl = Utils.class.getClassLoader();
             }
-            catch (Throwable ex) {
+            catch (Throwable _) {
                 // NO-OP
             }
         }
@@ -190,7 +190,7 @@ public final class Utils {
             try {
                 cl = ClassLoader.getSystemClassLoader();
             }
-            catch (Throwable ex) {
+            catch (Throwable _) {
                 // NO-OP
             }
         }
@@ -293,7 +293,7 @@ public final class Utils {
                     }
                 }
             }
-            catch (InterruptedException ie) {
+            catch (InterruptedException _) {
                 // Abbruch, wenn laufender Thread interrupted ist.
                 executorService.shutdownNow();
 
@@ -307,11 +307,11 @@ public final class Utils {
         try {
             timeUnit.sleep(duration);
         }
-        catch (InterruptedException ex) {
+        catch (InterruptedException _) {
             // Restore interrupted state.
             Thread.currentThread().interrupt();
         }
-        catch (Exception ex) {
+        catch (Exception _) {
             // Ignore
         }
     }

@@ -3,6 +3,7 @@ package de.freese.pim.gui;
 
 import static org.awaitility.Awaitility.await;
 
+import java.util.List;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.TimeUnit;
 
@@ -23,7 +24,7 @@ import de.freese.pim.gui.utils.FxUtils;
  * @author Thomas Freese
  */
 public class ProgressIndicatorDemo extends Application {
-    public static void main(final String[] args) {
+    static void main(final String[] args) {
         launch(args);
     }
 
@@ -66,7 +67,7 @@ public class ProgressIndicatorDemo extends Application {
             // int[] rgb = getRGB_1(percent);
             // int[] rgb = getRGB_2(percent);
             // int[] rgb = getRGB_3(percent);
-            final int[] rgb = FxUtils.getProgressRGB(percent, Color.RED, Color.ORANGE, Color.GREEN);
+            final int[] rgb = FxUtils.getProgressRGB(percent, List.of(Color.RED, Color.ORANGE, Color.GREEN));
 
             return String.format("-fx-progress-color: rgb(%d,%d,%d)", rgb[0], rgb[1], rgb[2]);
         }, progressIndicator.progressProperty()));

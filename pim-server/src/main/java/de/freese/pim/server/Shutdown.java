@@ -16,7 +16,7 @@ import org.springframework.core.io.Resource;
  * @author Thomas Freese
  */
 public final class Shutdown {
-    public static void main(final String[] args) throws Exception {
+    static void main() throws Exception {
         final DefaultResourceLoader resourceLoader = new DefaultResourceLoader();
         final Resource resource = resourceLoader.getResource("classpath:application-Server.properties");
 
