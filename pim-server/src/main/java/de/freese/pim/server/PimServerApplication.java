@@ -26,8 +26,8 @@ import org.springframework.scheduling.annotation.EnableAsync;
 @SpringBootApplication
 @EnableAsync
 // @EnableTransactionManagement // Wird durch Spring-Boot automatisch konfiguriert, wenn DataSource-Bean vorhanden.
-@SuppressWarnings("checkstyle:HideUtilityClassConstructor")
-public class PimServerApplication {
+// @SuppressWarnings("checkstyle:HideUtilityClassConstructor")
+public final class PimServerApplication {
     public static final Logger LOGGER = LoggerFactory.getLogger(PimServerApplication.class);
 
     static void main(final String[] args) {
@@ -99,5 +99,9 @@ public class PimServerApplication {
         }
 
         System.exit(-1);
+    }
+
+    private PimServerApplication() {
+        super();
     }
 }
