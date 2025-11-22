@@ -6,9 +6,9 @@ import java.util.List;
 
 import jakarta.annotation.Resource;
 
-import com.fasterxml.jackson.databind.JavaType;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
+import tools.jackson.databind.JavaType;
 
 import de.freese.pim.core.PIMException;
 import de.freese.pim.core.model.addressbook.Kontakt;

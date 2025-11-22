@@ -9,7 +9,6 @@ import java.util.Optional;
 
 import jakarta.annotation.Resource;
 
-import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -56,7 +55,7 @@ public class DefaultRestFxAddressbookService extends AbstractFxAddressbookServic
     }
 
     @Resource
-    public void setRestTemplateBuilder(final RestTemplateBuilder restTemplateBuilder) {
+    public void setRestTemplateBuilder(final org.springframework.boot.restclient.RestTemplateBuilder restTemplateBuilder) {
         restTemplate = restTemplateBuilder.build();
     }
 

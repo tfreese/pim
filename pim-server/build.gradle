@@ -8,11 +8,12 @@ description = "Server for PIM"
 dependencies {
     implementation(project(":pim-core"))
 
-    api("org.springframework.boot:spring-boot-starter-web")
+    api("org.springframework.boot:spring-boot-starter-webmvc")
 
     runtimeOnly("org.springframework.boot:spring-boot-starter-actuator")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
+    testImplementation("org.springframework.boot:spring-boot-starter-webmvc-test")
 }
 
 // Start: gradle bootRun --args="--spring.profiles.active=dev"

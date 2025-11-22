@@ -26,6 +26,7 @@ javafx {
 dependencies {
     implementation(project(":pim-core"))
     implementation(project(":pim-server"))
+    implementation("org.springframework.boot:spring-boot-starter-restclient")
 }
 
 test {

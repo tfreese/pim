@@ -49,7 +49,7 @@ class TestSendMail extends AbstractMailTest {
 
     @Test
     void test000Connect() throws Exception {
-        sender.testConnection();
+        assertTrue(sender.testConnection());
     }
 
     @Test

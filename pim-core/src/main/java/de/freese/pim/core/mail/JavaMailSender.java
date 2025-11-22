@@ -1,6 +1,8 @@
 // Created: 09.12.2016
 package de.freese.pim.core.mail;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -111,11 +113,12 @@ public class JavaMailSender {
     }
 
     /**
-     * Validate that this instance can connect to the server that it is configured for. Throws a {@link MessagingException} if the connection attempt failed.
+     * Validate that this instance can connect to the server that it is configured for.<br>
+     * Throws a {@link MessagingException} if the connection attempt failed.
      */
-    public void testConnection() throws MessagingException {
+    public boolean testConnection() throws MessagingException {
         try (Transport transport = connectTransport()) {
-            transport.isConnected();
+            return transport.isConnected();
         }
     }
 
@@ -179,7 +182,7 @@ public class JavaMailSender {
 
                 try {
                     if (mimeMessage.getSentDate() == null) {
-                        mimeMessage.setSentDate(new Date());
+                        mimeMessage.setSentDate(Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant()));
                     }
 
                     final String messageID = mimeMessage.getMessageID();

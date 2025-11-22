@@ -6,6 +6,7 @@ description = "Core Components for PIM"
 
 dependencies {
     api("commons-cli:commons-cli")
+    api("org.eclipse.angus:angus-mail")
     api("org.hsqldb:hsqldb")
     api("org.springframework.boot:spring-boot-starter-jdbc")
     api("org.springframework.boot:spring-boot-starter-json")
@@ -13,6 +14,5 @@ dependencies {
     api("org.xerial:sqlite-jdbc")
 
     testImplementation("org.jsoup:jsoup")
-    testImplementation("org.junit.platform:junit-platform-runner")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 }

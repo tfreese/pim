@@ -1,19 +1,17 @@
 // Created: 17.02.2017
 package de.freese.pim.server.spring.config;
 
-import java.util.List;
-
 import jakarta.annotation.Resource;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.task.AsyncTaskExecutor;
-import org.springframework.http.converter.HttpMessageConverter;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.http.converter.HttpMessageConverters;
+import org.springframework.http.converter.json.JacksonJsonHttpMessageConverter;
 import org.springframework.web.servlet.config.annotation.AsyncSupportConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import tools.jackson.databind.json.JsonMapper;
 
 /**
  * Server Spring-Konfiguration von PIM.
@@ -26,7 +24,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class ServerConfig implements WebMvcConfigurer // extends WebMvcConfigurationSupport
 {
     @Resource
-    private ObjectMapper objectMapper;
+    private JsonMapper jsonMapper;
 
     @Resource
     private AsyncTaskExecutor taskExecutor;
@@ -43,25 +41,10 @@ public class ServerConfig implements WebMvcConfigurer // extends WebMvcConfigura
      * Note that use of this method turns off default converter registration.
      */
     @Override
-    public void configureMessageConverters(final List<HttpMessageConverter<?>> converters) {
-        converters.clear();
-        converters.add(new MappingJackson2HttpMessageConverter(objectMapper));
-    }
-
-    @Override
-    public void extendMessageConverters(final List<HttpMessageConverter<?>> converters) {
-        // Make sure dates are serialised in ISO-8601 format instead as timestamps.
-        for (HttpMessageConverter<?> converter : converters) {
-            if (converter instanceof MappingJackson2HttpMessageConverter jsonMessageConverter) {
-                // Only required with default converter registration.
-                // See: configureMessageConverters
-                if (!jsonMessageConverter.getObjectMapper().equals(objectMapper)) {
-                    jsonMessageConverter.setObjectMapper(objectMapper);
-                }
-
-                break;
-            }
-        }
+    public void configureMessageConverters(final HttpMessageConverters.ServerBuilder builder) {
+        builder.addCustomConverter(new JacksonJsonHttpMessageConverter(jsonMapper));
+        // converters.clear();
+        // converters.add(new MappingJackson2HttpMessageConverter(objectMapper));
     }
 
     // @Bean(destroyMethod = "disconnectAccounts")
