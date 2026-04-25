@@ -10,6 +10,6 @@ pluginManagement {
 // Without rootProject.name the Name of the Projekt-Directory is used.
 //rootProject.name = "pim"
 
-include "pim-core"
-include "pim-server"
-include "pim-clientfx"
+include("pim-core")
+include("pim-server")
+include("pim-clientfx")
