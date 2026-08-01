@@ -1,22 +1,12 @@
 // Created: 24.05.2016
 package de.freese.pim.core.mail;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-
+import de.freese.pim.core.TestConfig;
+import de.freese.pim.core.dao.MailDao;
+import de.freese.pim.core.model.mail.Mail;
+import de.freese.pim.core.model.mail.MailAccount;
+import de.freese.pim.core.model.mail.MailFolder;
 import jakarta.annotation.Resource;
-
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
@@ -29,11 +19,20 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
-import de.freese.pim.core.TestConfig;
-import de.freese.pim.core.dao.MailDao;
-import de.freese.pim.core.model.mail.Mail;
-import de.freese.pim.core.model.mail.MailAccount;
-import de.freese.pim.core.model.mail.MailFolder;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.time.Month;
+import java.time.ZoneId;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * TestCase für das {@link MailDao}.
@@ -235,9 +234,9 @@ class TestMailDAO {
         final Mail mail = new Mail();
         mail.setFrom(new InternetAddress("a@a.aa"));
         mail.setMsgNum(1);
-        mail.setReceivedDate(java.util.Date.from(LocalDateTime.of(2017, 2, 3, 15, 0).atZone(ZoneId.systemDefault()).toInstant()));
+        mail.setReceivedDate(java.util.Date.from(LocalDateTime.of(2017, Month.FEBRUARY, 3, 15, 0).atZone(ZoneId.systemDefault()).toInstant()));
         mail.setSeen(false);
-        mail.setSendDate(java.util.Date.from(LocalDateTime.of(2017, 2, 3, 15, 1).atZone(ZoneId.systemDefault()).toInstant()));
+        mail.setSendDate(java.util.Date.from(LocalDateTime.of(2017, Month.FEBRUARY, 3, 15, 1).atZone(ZoneId.systemDefault()).toInstant()));
         mail.setSize(13);
         mail.setSubject("-TEST-");
         mail.setTo(new InternetAddress[]{new InternetAddress("b@b.bb")});
@@ -257,8 +256,8 @@ class TestMailDAO {
         assertNotNull(mails);
         assertEquals(1, mails.size());
 
-        final Date dateExpectedReceived = Timestamp.from(LocalDateTime.of(2017, 2, 3, 15, 0).atZone(ZoneId.systemDefault()).toInstant());
-        final Date dateExpectedSend = Timestamp.from(LocalDateTime.of(2017, 2, 3, 15, 1).atZone(ZoneId.systemDefault()).toInstant());
+        final Date dateExpectedReceived = Timestamp.from(LocalDateTime.of(2017, Month.FEBRUARY, 3, 15, 0).atZone(ZoneId.systemDefault()).toInstant());
+        final Date dateExpectedSend = Timestamp.from(LocalDateTime.of(2017, Month.FEBRUARY, 3, 15, 1).atZone(ZoneId.systemDefault()).toInstant());
 
         final Mail mail = mails.getFirst();
         assertEquals("a@a.aa", mail.getFrom().getAddress());
@@ -302,9 +301,9 @@ class TestMailDAO {
         final Mail mail = mails.getFirst();
         assertEquals("a@a.aa", mail.getFrom().getAddress());
         assertEquals(1, mail.getMsgNum());
-        assertEquals(java.util.Date.from(LocalDateTime.of(2017, 2, 3, 15, 0).atZone(ZoneId.systemDefault()).toInstant()), mail.getReceivedDate());
+        assertEquals(java.util.Date.from(LocalDateTime.of(2017, Month.FEBRUARY, 3, 15, 0).atZone(ZoneId.systemDefault()).toInstant()), mail.getReceivedDate());
         Assertions.assertTrue(mail.isSeen());
-        assertEquals(java.util.Date.from(LocalDateTime.of(2017, 2, 3, 15, 1).atZone(ZoneId.systemDefault()).toInstant()), mail.getSendDate());
+        assertEquals(java.util.Date.from(LocalDateTime.of(2017, Month.FEBRUARY, 3, 15, 1).atZone(ZoneId.systemDefault()).toInstant()), mail.getSendDate());
         assertEquals(13, mail.getSize());
         assertEquals("-TEST-", mail.getSubject());
         assertEquals("b@b.bb", mail.getTo()[0].getAddress());

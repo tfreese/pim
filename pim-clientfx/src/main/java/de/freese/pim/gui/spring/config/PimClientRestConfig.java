@@ -33,6 +33,6 @@ public class PimClientRestConfig extends AbstractPimClientConfig {
         // rt.getMessageConverters().add(new MappingJacksonHttpMessageConverter());
         // rt.getMessageConverters().add(new StringHttpMessageConverter());
 
-        return new RestTemplateBuilder().rootUri(url);
+        return new RestTemplateBuilder().baseUri(url);
     }
 }

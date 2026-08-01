@@ -7,46 +7,28 @@ plugins {
 }
 
 allprojects {
-    apply(plugin: "base")
+    plugins.apply("base")
 
-    clean {
-        Directory projectDir = layout.projectDirectory
-
-        doFirst {
-            def dirs = ["bin", "logs", "out", "target"]
-
-            dirs.each(dir -> {
-                Directory directory = projectDir.dir(dir)
-
-                if (directory.getAsFile().exists()) {
-                    // println("delete: " + directory)
-                    logger.lifecycle("delete: {}", directory)
-                    // delete(fileTree(directory).include("**/*"))
-                    delete(directory)
-                }
-            })
-        }
+    tasks.named("clean", Delete) {
+        delete(layout.projectDirectory.dir("bin"))
+        delete("logs")
+        delete("out")
+        delete("target")
     }
-
-    ant.lifecycleLogLevel = "INFO"
-
-    // repositories {
-    //
-    // }
 }
 
 subprojects {
-    apply(plugin: "de.freese.gradle.conventions")
-    apply(plugin: "io.spring.dependency-management")
+    plugins.apply("de.freese.gradle.conventions")
+    plugins.apply("io.spring.dependency-management")
 
     dependencyManagement {
         imports {
-            mavenBom("org.springframework.boot:spring-boot-dependencies:$version_springBoot")
+            mavenBom("org.springframework.boot:spring-boot-dependencies:" + property("version_springBoot"))
         }
 
         dependencies {
-            dependency("commons-cli:commons-cli:$version_commonsCli")
-            dependency("org.jsoup:jsoup:$version_jsoup")
+            dependency("commons-cli:commons-cli:" + property("version_commonsCli"))
+            dependency("org.jsoup:jsoup:" + property("version_jsoup"))
         }
     }
 
@@ -60,12 +42,4 @@ subprojects {
             testRuntimeOnly("org.junit.platform:junit-platform-launcher")
         }
     }
-}
-
-// For Composite Build.
-tasks.register("cleanAll", GradleBuild) {
-    tasks = ["clean"]
-}
-tasks.register("buildAll", GradleBuild) {
-    tasks = ["build"]
 }

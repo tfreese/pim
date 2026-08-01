@@ -25,29 +25,31 @@ springBoot {
 }
 
 // gradle bootRun --args="--spring.profiles.active=Server,HsqldbEmbeddedServer --server.port=65111"
-bootRun {
-    args = [
-            "--spring.profiles.active=Server,HsqldbEmbeddedServer"
-            , "--server.port=65111"
-    ]
+tasks.named<org.springframework.boot.gradle.tasks.run.BootRun>("bootRun") {
+    args = listOf(
+        "--spring.profiles.active=Server,HsqldbEmbeddedServer", "--server.port=65111"
+    )
 }
 
 // For Placeholder in application.properties/application.yml
-ext.artifactId = project.name
+val artifactId = project.name
 
-processResources {
-    def map = [
-            "project_description": project.description,
-            "project_artifactId" : project.name,
-            "project_version"    : project.version
-    ]
+tasks.named<ProcessResources>("processResources") {
+    val map = mapOf(
+        "project_description" to project.description,
+        "project_artifactId" to project.name,
+        "project_version" to project.version
+    )
 
     // , "pim-server_banner.txt"
-    filesMatching(["application-Server.properties"]) {
-        // filteringCharset = "UTF-8"
-
+    filesMatching("application-Server.properties") {
         // During Problems escape Placeholder: \${...}
         // expand(project.properties)
-        expand(map)
+        // expand(map)
+
+        filter(
+            mapOf("tokens" to map),
+            org.apache.tools.ant.filters.ReplaceTokens::class.java
+        )
     }
 }
