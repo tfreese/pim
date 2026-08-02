@@ -54,6 +54,10 @@ tasks.named<org.springframework.boot.gradle.tasks.run.BootRun>("bootRun") {
     )
 }
 
+tasks.named<org.springframework.boot.gradle.tasks.bundling.BootJar>("bootJar") {
+    dependsOn(project(":pim-server").tasks.named("build"))
+}
+
 // For Placeholder in application.properties/application.yml
 val artifactId = project.name
 
