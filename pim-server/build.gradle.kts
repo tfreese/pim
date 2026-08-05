@@ -21,7 +21,7 @@ dependencies {
 // [archiveBaseName]-[archiveAppendix]-[archiveVersion]-[archiveClassifier].[archiveExtension]
 // archiveFileName = "my-boot.jar"
 springBoot {
-    mainClass = "de.freese.pim.server.PimServerApplication"
+    mainClass.set("de.freese.pim.server.PimServerApplication")
 }
 
 // gradle bootRun --args="--spring.profiles.active=Server,HsqldbEmbeddedServer --server.port=65111"
@@ -32,7 +32,7 @@ tasks.named<org.springframework.boot.gradle.tasks.run.BootRun>("bootRun") {
 }
 
 // For Placeholder in application.properties/application.yml
-val artifactId = project.name
+//val artifactId = project.name
 
 tasks.named<ProcessResources>("processResources") {
     val map = mapOf(
