@@ -1,8 +1,8 @@
 // Created: 30.05.2016
 package de.freese.pim.gui.addressbook.model;
 
-import java.util.Objects;
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringExpression;
 import javafx.beans.property.LongProperty;
@@ -12,8 +12,7 @@ import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import java.util.Objects;
 
 /**
  * FX-Bean für einen Kontakt.
@@ -24,7 +23,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 public class FxKontakt implements Comparable<FxKontakt> {
     @JsonIgnore
     private final ObservableList<FxKontaktAttribut> attribute = FXCollections.observableArrayList();
-    private final LongProperty idProperty = new SimpleLongProperty(this, "id", 0);
+    private final LongProperty idProperty = new SimpleLongProperty(this, "id", 0L);
     private final StringProperty nachnameProperty = new SimpleStringProperty(this, "nachname", null);
     // private final transient PropertyChangeSupport pcs = new PropertyChangeSupport(this);
     private final StringExpression toStringExpression;
@@ -94,13 +93,35 @@ public class FxKontakt implements Comparable<FxKontakt> {
         return idProperty().get();
     }
 
+    public void setID(final long id) {
+        // Object old = getID();
+        idProperty().set(id);
+        // pcs.firePropertyChange("id", old, getID());
+    }
+
     public String getNachname() {
         return nachnameProperty().get();
+    }
+
+    public void setNachname(final String nachname) {
+        // Object old = getNachname();
+        nachnameProperty().set(nachname);
+        // pcs.firePropertyChange("nachname", old, getNachname());
     }
 
     public String getVorname() {
         return vornameProperty().get();
     }
+
+    public void setVorname(final String vorname) {
+        // Object old = getVorname();
+        vornameProperty().set(vorname);
+        // pcs.firePropertyChange("vorname", old, getVorname());
+    }
+
+    // public void removePropertyChangeListener(final PropertyChangeListener listener) {
+    // pcs.removePropertyChangeListener(listener);
+    // }
 
     @Override
     public int hashCode() {
@@ -113,28 +134,6 @@ public class FxKontakt implements Comparable<FxKontakt> {
 
     public StringProperty nachnameProperty() {
         return nachnameProperty;
-    }
-
-    // public void removePropertyChangeListener(final PropertyChangeListener listener) {
-    // pcs.removePropertyChangeListener(listener);
-    // }
-
-    public void setID(final long id) {
-        // Object old = getID();
-        idProperty().set(id);
-        // pcs.firePropertyChange("id", old, getID());
-    }
-
-    public void setNachname(final String nachname) {
-        // Object old = getNachname();
-        nachnameProperty().set(nachname);
-        // pcs.firePropertyChange("nachname", old, getNachname());
-    }
-
-    public void setVorname(final String vorname) {
-        // Object old = getVorname();
-        vornameProperty().set(vorname);
-        // pcs.firePropertyChange("vorname", old, getVorname());
     }
 
     @Override

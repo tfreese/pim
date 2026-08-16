@@ -1,12 +1,6 @@
-// Created: 28.01.2017
 package de.freese.pim.gui;
 
-import static org.awaitility.Awaitility.await;
-
-import java.util.List;
-import java.util.concurrent.ForkJoinPool;
-import java.util.concurrent.TimeUnit;
-
+import de.freese.pim.gui.utils.FxUtils;
 import javafx.application.Application;
 import javafx.beans.binding.Bindings;
 import javafx.concurrent.Task;
@@ -18,14 +12,25 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
-import de.freese.pim.gui.utils.FxUtils;
+import java.util.List;
+import java.util.concurrent.ForkJoinPool;
+import java.util.concurrent.TimeUnit;
+
+import static org.awaitility.Awaitility.await;
 
 /**
  * @author Thomas Freese
+ * @since 28.01.2017
  */
 public class ProgressIndicatorDemo extends Application {
-    static void main(final String[] args) {
-        launch(args);
+    @Override
+    public void init() throws Exception {
+        super.init();
+    }
+
+    @Override
+    public void stop() throws Exception {
+        super.stop();
     }
 
     @Override
@@ -80,9 +85,11 @@ public class ProgressIndicatorDemo extends Application {
         stackPane.getChildren().add(button);
         stackPane.getChildren().add(progressIndicator);
 
-        final Scene scene = new Scene(stackPane, 500, 500);
+        final Scene scene = new Scene(stackPane);
         primaryStage.setScene(scene);
-        primaryStage.centerOnScreen();
+//        primaryStage.centerOnScreen();
+        primaryStage.setWidth(200);
+        primaryStage.setHeight(200);
         primaryStage.show();
     }
 
@@ -90,13 +97,12 @@ public class ProgressIndicatorDemo extends Application {
      * Verschiedene Farben.
      *
      * @param progress 0-1
-     *
      * @return int[], RGB
      */
     int[] getRGB1(final double progress) {
-        int r = 0;
-        int g = 0;
-        int b = 0;
+        final int r;
+        final int g;
+        final int b;
 
         // http://en.wikibooks.org/wiki/Color_Theory/Color_gradient#Linear_RGB_gradient_with_6_segments
         // http://dgrieve.blogspot.de/2014/05/styling-progress-color-of-indeterminate.html
@@ -150,7 +156,6 @@ public class ProgressIndicatorDemo extends Application {
      * Von Rot nach Grün
      *
      * @param progress 0-1
-     *
      * @return int[], RGB
      */
     int[] getRGB2(final double progress) {
@@ -168,7 +173,6 @@ public class ProgressIndicatorDemo extends Application {
      * Von Rot nach Grün
      *
      * @param progress 0-1
-     *
      * @return int[], RGB
      */
     int[] getRGB3(final double progress) {

@@ -1,30 +1,23 @@
 // Created: 25.01.2017
 package de.freese.pim.gui.mail;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.concurrent.CompletableFuture;
-import java.util.stream.Stream;
-
-import javafx.application.Platform;
-import javafx.concurrent.Task;
-import javafx.scene.control.TreeItem;
-import javafx.scene.control.TreeView;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.core.task.AsyncTaskExecutor;
-
 import de.freese.pim.core.spring.SpringContext;
 import de.freese.pim.gui.mail.model.FxMail;
 import de.freese.pim.gui.mail.model.FxMailAccount;
 import de.freese.pim.gui.mail.model.FxMailFolder;
 import de.freese.pim.gui.mail.service.FxMailService;
 import de.freese.pim.gui.view.ErrorDialog;
+import javafx.application.Platform;
+import javafx.concurrent.Task;
+import javafx.scene.control.TreeItem;
+import javafx.scene.control.TreeView;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.core.task.AsyncTaskExecutor;
+
+import java.util.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.stream.Stream;
 
 /**
  * Initialisierung der MailApi pro MailAccount.
@@ -87,14 +80,12 @@ public class InitMailApiTask extends Task<List<FxMailFolder>> {
         for (FxMailFolder mf : folders) {
             final CompletableFuture<Void> cf = CompletableFuture.supplyAsync(() ->
                             mailService.loadMails(account, mf), taskExecutor)
-                    .exceptionally(ex ->
-                    {
+                    .exceptionally(ex -> {
                         LOGGER.error(ex.getMessage(), ex);
                         new ErrorDialog().forThrowable(ex).showAndWait();
                         return null;
                     })
-                    .thenAccept(mails ->
-                    {
+                    .thenAccept(mails -> {
                         final Runnable task = () -> {
                             if (mails != null) {
                                 mf.getMails().addAll(mails);

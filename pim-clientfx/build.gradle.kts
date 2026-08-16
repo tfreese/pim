@@ -58,9 +58,6 @@ tasks.named<org.springframework.boot.gradle.tasks.bundling.BootJar>("bootJar") {
     dependsOn(project(":pim-server").tasks.named("build"))
 }
 
-// For Placeholder in application.properties/application.yml
-val artifactId = project.name
-
 tasks.named<ProcessResources>("processResources") {
     val map = mapOf(
         "project_description" to project.description,
@@ -69,9 +66,6 @@ tasks.named<ProcessResources>("processResources") {
     )
 
     filesMatching("application.properties") {
-        // During Problems escape Placeholder: \${...}
-        // expand(project.properties)
-        // expand(map)
         filter(
             mapOf("tokens" to map),
             org.apache.tools.ant.filters.ReplaceTokens::class.java

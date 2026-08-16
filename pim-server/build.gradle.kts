@@ -31,9 +31,6 @@ tasks.named<org.springframework.boot.gradle.tasks.run.BootRun>("bootRun") {
     )
 }
 
-// For Placeholder in application.properties/application.yml
-//val artifactId = project.name
-
 tasks.named<ProcessResources>("processResources") {
     val map = mapOf(
         "project_description" to project.description,
@@ -41,12 +38,7 @@ tasks.named<ProcessResources>("processResources") {
         "project_version" to project.version
     )
 
-    // , "pim-server_banner.txt"
     filesMatching("application-Server.properties") {
-        // During Problems escape Placeholder: \${...}
-        // expand(project.properties)
-        // expand(map)
-
         filter(
             mapOf("tokens" to map),
             org.apache.tools.ant.filters.ReplaceTokens::class.java

@@ -1,14 +1,13 @@
 // Created: 30.05.2016
 package de.freese.pim.gui.addressbook.model;
 
-import java.util.Objects;
-
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import javafx.beans.property.LongProperty;
 import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import java.util.Objects;
 
 /**
  * FX-Bean für einen Kontakt.
@@ -18,7 +17,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class FxKontaktAttribut implements Comparable<FxKontaktAttribut> {
     private final StringProperty attributProperty = new SimpleStringProperty(this, "attribut", null);
-    private final LongProperty kontaktIDProperty = new SimpleLongProperty(this, "kontaktID", 0);
+    private final LongProperty kontaktIDProperty = new SimpleLongProperty(this, "kontaktID", 0L);
     private final StringProperty wertProperty = new SimpleStringProperty(this, "wert", null);
 
     public StringProperty attributProperty() {
@@ -54,12 +53,24 @@ public class FxKontaktAttribut implements Comparable<FxKontaktAttribut> {
         return attributProperty().get();
     }
 
+    public void setAttribut(final String attribut) {
+        attributProperty().set(attribut);
+    }
+
     public long getKontaktID() {
         return kontaktIDProperty().get();
     }
 
+    public void setKontaktID(final long kontaktID) {
+        kontaktIDProperty().set(kontaktID);
+    }
+
     public String getWert() {
         return wertProperty().get();
+    }
+
+    public void setWert(final String wert) {
+        wertProperty().set(wert);
     }
 
     @Override
@@ -69,18 +80,6 @@ public class FxKontaktAttribut implements Comparable<FxKontaktAttribut> {
 
     public LongProperty kontaktIDProperty() {
         return kontaktIDProperty;
-    }
-
-    public void setAttribut(final String attribut) {
-        attributProperty().set(attribut);
-    }
-
-    public void setKontaktID(final long kontaktID) {
-        kontaktIDProperty().set(kontaktID);
-    }
-
-    public void setWert(final String wert) {
-        wertProperty().set(wert);
     }
 
     @Override

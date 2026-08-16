@@ -1,14 +1,13 @@
 // Created: 25.01.2017
 package de.freese.pim.gui.mail;
 
-import java.util.Objects;
-import java.util.Optional;
-import java.util.stream.Stream;
-
+import de.freese.pim.gui.mail.model.FxMailFolder;
 import javafx.collections.ListChangeListener;
 import javafx.scene.control.TreeItem;
 
-import de.freese.pim.gui.mail.model.FxMailFolder;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.Stream;
 
 /**
  * {@link ListChangeListener} für eine Liste aus MailFolder zum Aufbau des Trees.
@@ -30,20 +29,17 @@ public class TreeFolderListChangeListener implements ListChangeListener<FxMailFo
             if (change.wasAdded()) {
                 for (FxMailFolder mf : change.getAddedSubList()) {
                     final Optional<TreeItem<Object>> parentItem = getFlattenedStream(getParent())
-                            //.peek(System.out::println)
                             .filter(ti -> ti.getValue() instanceof FxMailFolder)
                             .filter(ti -> mf.getFullName().startsWith(((FxMailFolder) ti.getValue()).getFullName()))
                             .findFirst();
 
                     if (parentItem.isPresent()) {
                         addChild(parentItem.get(), mf);
-                    }
-                    else {
+                    } else {
                         addChild(getParent(), mf);
                     }
                 }
-            }
-            else if (change.wasRemoved()) {
+            } else if (change.wasRemoved()) {
                 for (FxMailFolder mf : change.getRemoved()) {
                     // Knoten suchen.
                     final Optional<TreeItem<Object>> treeItem = getFlattenedStream(getParent())
