@@ -51,8 +51,7 @@ public class FxKontakt implements Comparable<FxKontakt> {
         addAttribut(ka);
     }
 
-    // public void addPropertyChangeListener(final PropertyChangeListener listener)
-    // {
+    // public void addPropertyChangeListener(final PropertyChangeListener listener) {
     // pcs.addPropertyChangeListener(listener);
     // }
 
@@ -155,7 +154,7 @@ public class FxKontakt implements Comparable<FxKontakt> {
 
     private void addAttribut(final FxKontaktAttribut attribut) {
         if (getAttribute().contains(attribut)) {
-            throw new RuntimeException("Attribut bereits vorhanden");
+            throw new IllegalStateException("Attribut bereits vorhanden");
         }
 
         getAttribute().add(attribut);

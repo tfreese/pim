@@ -250,9 +250,7 @@ public final class PimAddressbookConsole {
     }
 
     private AddressBookDao addressBookDAO;
-
     private PrintStream printStream = System.out;
-
     private PlatformTransactionManager transactionManager;
 
     private void deleteAttribut(final long kontaktId, final String attribut) {
