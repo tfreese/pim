@@ -17,6 +17,7 @@ import javafx.beans.property.StringProperty;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import de.freese.pim.core.mail.InternetAddress;
+import de.freese.pim.core.model.mail.Mail;
 
 /**
  * FX-Bean für eine Mail.
@@ -25,6 +26,25 @@ import de.freese.pim.core.mail.InternetAddress;
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class FxMail {
+    public static FxMail from(final Mail mail) {
+        final FxMail fxMail = new FxMail();
+        fxMail.setBcc(mail.getBcc());
+        fxMail.setCc(mail.getCc());
+        fxMail.setFolderFullName(mail.getFolderFullName());
+        fxMail.setFolderID(mail.getFolderID());
+        fxMail.setFrom(mail.getFrom());
+        fxMail.setMsgNum(mail.getMsgNum());
+        fxMail.setReceivedDate(mail.getReceivedDate());
+        fxMail.setSeen(mail.isSeen());
+        fxMail.setSendDate(mail.getSendDate());
+        fxMail.setSize(mail.getSize());
+        fxMail.setSubject(mail.getSubject());
+        fxMail.setTo(mail.getTo());
+        fxMail.setUID(mail.getUID());
+
+        return fxMail;
+    }
+
     private final ObjectProperty<InternetAddress[]> bccProperty = new SimpleObjectProperty<>(this, "to", null);
     private final ObjectProperty<InternetAddress[]> ccProperty = new SimpleObjectProperty<>(this, "to", null);
     private final StringProperty folderFullNameProperty = new SimpleStringProperty(this, "folderFullName", null);

@@ -18,6 +18,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import de.freese.pim.core.mail.MailPort;
+import de.freese.pim.core.model.mail.MailAccount;
 
 /**
  * FX-Bean für einen Mail-Account.
@@ -28,6 +29,20 @@ import de.freese.pim.core.mail.MailPort;
 // @JsonRootName("mailAccount")
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class FxMailAccount {
+    public static FxMailAccount from(final MailAccount mailAccount) {
+        final FxMailAccount fxMailAccount = new FxMailAccount();
+        fxMailAccount.setID(mailAccount.getID());
+        fxMailAccount.setImapHost(mailAccount.getImapHost());
+        fxMailAccount.setImapLegitimation(mailAccount.isImapLegitimation());
+        fxMailAccount.setImapPort(mailAccount.getImapPort());
+        fxMailAccount.setMail(mailAccount.getMail());
+        fxMailAccount.setPassword(mailAccount.getPassword());
+        fxMailAccount.setSmtpHost(mailAccount.getSmtpHost());
+        fxMailAccount.setSmtpLegitimation(mailAccount.isSmtpLegitimation());
+        fxMailAccount.setSmtpPort(mailAccount.getSmtpPort());
+
+        return fxMailAccount;
+    }
     @JsonIgnore
     private final FilteredList<FxMailFolder> abonnierteFolder;
     @JsonIgnore
@@ -45,7 +60,6 @@ public class FxMailAccount {
     private final ObjectProperty<MailPort> smtpPortProperty = new SimpleObjectProperty<>(this, "smtpPort", MailPort.SMTPS);
     @JsonIgnore
     private final ObservableIntegerValue unreadMailsCount;
-
     public FxMailAccount() {
         super();
 
@@ -196,6 +210,21 @@ public class FxMailAccount {
 
     public ObjectProperty<MailPort> smtpPortProperty() {
         return smtpPortProperty;
+    }
+
+    public MailAccount toPojo() {
+        final MailAccount mailAccount = new MailAccount();
+        mailAccount.setID(getID());
+        mailAccount.setImapHost(getImapHost());
+        mailAccount.setImapLegitimation(isImapLegitimation());
+        mailAccount.setImapPort(getImapPort());
+        mailAccount.setMail(getMail());
+        mailAccount.setPassword(getPassword());
+        mailAccount.setSmtpHost(getSmtpHost());
+        mailAccount.setSmtpLegitimation(isSmtpLegitimation());
+        mailAccount.setSmtpPort(getSmtpPort());
+
+        return mailAccount;
     }
 
     @Override

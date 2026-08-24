@@ -1,4 +1,3 @@
-// Created: 16.02.2017
 package de.freese.pim.core.spring.config;
 
 import java.util.Locale;
@@ -17,6 +16,7 @@ import tools.jackson.databind.json.JsonMapper;
  * Common Spring-Konfiguration von PIM.
  *
  * @author Thomas Freese
+ * @since 16.02.2017
  */
 @Configuration
 @PropertySource("classpath:application-common.properties")

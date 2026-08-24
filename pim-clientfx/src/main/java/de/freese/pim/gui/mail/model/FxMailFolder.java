@@ -19,6 +19,8 @@ import javafx.collections.transformation.SortedList;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import de.freese.pim.core.model.mail.MailFolder;
+
 /**
  * FX-Bean für einen Mail-Folder.
  *
@@ -26,6 +28,17 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class FxMailFolder {
+    public static FxMailFolder from(final MailFolder mailFolder) {
+        final FxMailFolder fxMailFolder = new FxMailFolder();
+        fxMailFolder.setID(mailFolder.getID());
+        fxMailFolder.setAbonniert(mailFolder.isAbonniert());
+        fxMailFolder.setAccountID(mailFolder.getAccountID());
+        fxMailFolder.setFullName(mailFolder.getFullName());
+        fxMailFolder.setName(mailFolder.getName());
+
+        return fxMailFolder;
+    }
+
     private final BooleanProperty abonniertProperty = new SimpleBooleanProperty(this, "abonniert", true);
     private final LongProperty accountIDProperty = new SimpleLongProperty(this, "accountID", 0L);
     @JsonIgnore
@@ -167,6 +180,17 @@ public class FxMailFolder {
         else {
             mailsSorted.setComparator(Comparator.comparing(FxMail::getReceivedDate).reversed());
         }
+    }
+
+    public MailFolder toPojo() {
+        final MailFolder mailFolder = new MailFolder();
+        mailFolder.setID(getID());
+        mailFolder.setAbonniert(isAbonniert());
+        mailFolder.setAccountID(getAccountID());
+        mailFolder.setFullName(getFullName());
+        mailFolder.setName(getName());
+
+        return mailFolder;
     }
 
     @Override

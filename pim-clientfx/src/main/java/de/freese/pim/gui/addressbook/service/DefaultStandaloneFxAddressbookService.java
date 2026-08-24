@@ -1,14 +1,12 @@
 // Created: 15.02.2017
 package de.freese.pim.gui.addressbook.service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.annotation.Resource;
 
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
-import tools.jackson.databind.JavaType;
 
 import de.freese.pim.core.PIMException;
 import de.freese.pim.core.model.addressbook.Kontakt;
@@ -40,7 +38,7 @@ public class DefaultStandaloneFxAddressbookService extends AbstractFxAddressbook
         try {
             final List<Kontakt> contacts = getAddressBookService().getKontaktDetails(ids);
 
-            return toFXContacts(contacts);
+            return contacts.stream().map(FxKontakt::from).toList();
         }
         catch (Exception ex) {
             throw new PIMException(ex);
@@ -78,11 +76,11 @@ public class DefaultStandaloneFxAddressbookService extends AbstractFxAddressbook
         return addressBookService;
     }
 
-    private List<FxKontakt> toFXContacts(final List<Kontakt> contacts) throws Exception {
-        final JavaType type = getJsonMapper().getTypeFactory().constructCollectionType(ArrayList.class, FxKontakt.class);
-
-        final byte[] jsonBytes = getJsonMapper().writer().writeValueAsBytes(contacts);
-
-        return getJsonMapper().readValue(jsonBytes, type);
-    }
+    // private List<FxKontakt> toFXContacts(final List<Kontakt> contacts) throws Exception {
+    //     final JavaType type = getJsonMapper().getTypeFactory().constructCollectionType(ArrayList.class, FxKontakt.class);
+    //
+    //     final byte[] jsonBytes = getJsonMapper().writer().writeValueAsBytes(contacts);
+    //
+    //     return getJsonMapper().readValue(jsonBytes, type);
+    // }
 }

@@ -1,5 +1,4 @@
-// Created: 10.02.2017
-package de.freese.pim.server.spring.config;
+package de.freese.pim.core.spring.config;
 
 import java.util.function.UnaryOperator;
 
@@ -18,6 +17,7 @@ import org.sqlite.javax.SQLiteConnectionPoolDataSource;
  * Spring-Konfiguration der Datenbank.
  *
  * @author Thomas Freese
+ * @since 10.02.2017
  */
 @Configuration()
 @Profile("SqliteLocalFile")

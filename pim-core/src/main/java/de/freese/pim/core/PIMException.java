@@ -1,4 +1,3 @@
-// Created: 21.02.2017
 package de.freese.pim.core;
 
 import java.io.Serial;
@@ -7,6 +6,7 @@ import java.io.Serial;
  * {@link RuntimeException} für die PIM-Anwendung.
  *
  * @author Thomas Freese
+ * @since 21.02.2017
  */
 public class PIMException extends RuntimeException {
     @Serial

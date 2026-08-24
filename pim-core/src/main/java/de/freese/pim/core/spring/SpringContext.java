@@ -1,4 +1,3 @@
-// Created: 06.03.2017
 package de.freese.pim.core.spring;
 
 import java.lang.annotation.Annotation;
@@ -30,6 +29,7 @@ import org.springframework.util.Assert;
  * Statischer Zugang zum {@link ApplicationContext}.
  *
  * @author Thomas Freese
+ * @since 06.03.2017
  */
 public final class SpringContext implements ApplicationContextAware, ResourceLoaderAware, EnvironmentAware, InitializingBean {
     private static SpringContext instance;

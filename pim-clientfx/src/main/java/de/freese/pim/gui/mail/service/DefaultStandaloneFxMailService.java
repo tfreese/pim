@@ -2,7 +2,6 @@
 package de.freese.pim.gui.mail.service;
 
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.IntStream;
 
@@ -10,7 +9,6 @@ import jakarta.annotation.Resource;
 
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
-import tools.jackson.databind.JavaType;
 
 import de.freese.pim.core.PIMException;
 import de.freese.pim.core.mail.MailContent;
@@ -36,7 +34,7 @@ public class DefaultStandaloneFxMailService extends AbstractFxMailService {
     @Override
     public void connectAccount(final FxMailAccount account) {
         try {
-            final MailAccount pojo = toPojoMailAccount(account);
+            final MailAccount pojo = account.toPojo();
 
             getMailService().connectAccount(pojo);
         }
@@ -70,7 +68,7 @@ public class DefaultStandaloneFxMailService extends AbstractFxMailService {
         try {
             final List<MailAccount> accounts = getMailService().getMailAccounts();
 
-            return toFXMailAccounts(accounts);
+            return accounts.stream().map(FxMailAccount::from).toList();
         }
         catch (Exception ex) {
             throw new PIMException(ex);
@@ -80,7 +78,7 @@ public class DefaultStandaloneFxMailService extends AbstractFxMailService {
     @Override
     public void insertAccount(final FxMailAccount account) {
         try {
-            final MailAccount pojo = toPojoMailAccount(account);
+            final MailAccount pojo = account.toPojo();
 
             final long id = getMailService().insertAccount(pojo);
             account.setID(id);
@@ -96,7 +94,7 @@ public class DefaultStandaloneFxMailService extends AbstractFxMailService {
             int affectedRows = 0;
 
             // ID != 0 -> update
-            final List<MailFolder> toUpdate = toPojoMailFolders(folders.stream().filter(mf -> mf.getID() > 0).toList());
+            final List<MailFolder> toUpdate = folders.stream().filter(mf -> mf.getID() > 0).map(FxMailFolder::toPojo).toList();
 
             if (!toUpdate.isEmpty()) {
                 final int[] result = getMailService().updateFolder(accountID, toUpdate);
@@ -104,7 +102,7 @@ public class DefaultStandaloneFxMailService extends AbstractFxMailService {
             }
 
             // ID = 0 -> insert
-            final List<MailFolder> toInsert = toPojoMailFolders(folders.stream().filter(mf -> mf.getID() == 0).toList());
+            final List<MailFolder> toInsert = folders.stream().filter(mf -> mf.getID() == 0).map(FxMailFolder::toPojo).toList();
 
             if (!toInsert.isEmpty()) {
                 final long[] primaryKeys = getMailService().insertFolder(accountID, toInsert);
@@ -128,7 +126,7 @@ public class DefaultStandaloneFxMailService extends AbstractFxMailService {
         try {
             final List<MailFolder> folders = getMailService().loadFolder(accountID);
 
-            final List<FxMailFolder> fxBeans = toFXMailFolders(folders);
+            final List<FxMailFolder> fxBeans = folders.stream().map(FxMailFolder::from).toList();
 
             buildHierarchie(fxBeans);
 
@@ -146,7 +144,7 @@ public class DefaultStandaloneFxMailService extends AbstractFxMailService {
         try {
             final List<Mail> mails = getMailService().loadMails(account.getID(), folder.getID(), folder.getFullName());
 
-            final List<FxMail> fxBeans = toFXMails(mails);
+            final List<FxMail> fxBeans = mails.stream().map(FxMail::from).toList();
 
             getLogger().info("Load Mails finished: account={}, folder={}", account.getMail(), folder.getFullName());
 
@@ -165,12 +163,9 @@ public class DefaultStandaloneFxMailService extends AbstractFxMailService {
     @Override
     public List<FxMailFolder> test(final FxMailAccount account) {
         try {
-            // MailAccount pojo = toPOJO(account);
-            //
-            // List<FxMailFolder> fxBeans = getMailService().test(pojo).stream().map(this::toFXBean).collect(Collectors.toList());
-            final MailAccount pojo = toPojoMailAccount(account);
+            final MailAccount pojo = account.toPojo();
 
-            return toFXMailFolders(getMailService().test(pojo));
+            return getMailService().test(pojo).stream().map(FxMailFolder::from).toList();
         }
         catch (Exception ex) {
             throw new PIMException(ex);
@@ -178,11 +173,10 @@ public class DefaultStandaloneFxMailService extends AbstractFxMailService {
     }
 
     // @Override
-    // public Future<List<FxMail>> loadMails2(final long accountID, final long folderID, final String folderFullName) throws Exception
-    // {
+    // public Future<List<FxMail>> loadMails2(final long accountID, final long folderID, final String folderFullName) throws Exception {
     // Future<List<Mail>> pojoFuture = getMailService().loadMails2(accountID, folderID, folderFullName);
     //
-    // List<FxMail> fxBeans = toFXMails(pojoFuture.get().stream().collect(Collectors.toList()));
+    // List<FxMail> fxBeans = pojoFuture.get().stream().map(FxMailFolder::from).toList();
     //
     // return new AsyncResult<>(fxBeans);
     // }
@@ -190,7 +184,7 @@ public class DefaultStandaloneFxMailService extends AbstractFxMailService {
     @Override
     public int updateAccount(final FxMailAccount account) {
         try {
-            final MailAccount pojo = toPojoMailAccount(account);
+            final MailAccount pojo = account.toPojo();
 
             return getMailService().updateAccount(pojo);
         }
@@ -212,88 +206,51 @@ public class DefaultStandaloneFxMailService extends AbstractFxMailService {
         return mailContent;
     }
 
-    private List<FxMailAccount> toFXMailAccounts(final List<MailAccount> accounts) throws Exception {
-        // FxMailAccount ma = new FxMailAccount();
-        // ma.setID(pojo.getID());
-        // ma.setImapHost(pojo.getImapHost());
-        // ma.setImapLegitimation(pojo.isImapLegitimation());
-        // ma.setImapPort(pojo.getImapPort());
-        // ma.setMail(pojo.getMail());
-        // ma.setPassword(pojo.getPassword());
-        // ma.setSmtpHost(pojo.getSmtpHost());
-        // ma.setSmtpLegitimation(pojo.isSmtpLegitimation());
-        // ma.setSmtpPort(pojo.getSmtpPort());
+    // private List<FxMailAccount> toFXMailAccounts(final List<MailAccount> accounts) throws Exception {
+    //     final JavaType type = getJsonMapper().getTypeFactory().constructCollectionType(ArrayList.class, FxMailAccount.class);
+    //
+    //     final byte[] jsonBytes = getJsonMapper().writer().writeValueAsBytes(accounts);
+    //
+    //     return getJsonMapper().readValue(jsonBytes, type);
+    // }
 
-        final JavaType type = getJsonMapper().getTypeFactory().constructCollectionType(ArrayList.class, FxMailAccount.class);
+    // private List<FxMailFolder> toFXMailFolders(final List<MailFolder> folders) throws Exception {
+    //     // FxMailFolder mf = new FxMailFolder();
+    //     // mf.setAbonniert(folder.isAbonniert());
+    //     // mf.setAccountID(folder.getAccountID());
+    //     // mf.setFullName(folder.getFullName());
+    //     // mf.setID(folder.getID());
+    //     // mf.setName(folder.getName());
+    //
+    //     final JavaType type = getJsonMapper().getTypeFactory().constructCollectionType(ArrayList.class, FxMailFolder.class);
+    //
+    //     final byte[] jsonBytes = getJsonMapper().writer().writeValueAsBytes(folders);
+    //
+    //     return getJsonMapper().readValue(jsonBytes, type);
+    // }
 
-        final byte[] jsonBytes = getJsonMapper().writer().writeValueAsBytes(accounts);
+    // private List<FxMail> toFXMails(final List<Mail> mails) throws Exception {
+    //     // List<FxMail> fxBeans = pojos.stream().map(this::toFXBean).collect(Collectors.toList());
+    //
+    //     final JavaType type = getJsonMapper().getTypeFactory().constructCollectionType(ArrayList.class, FxMail.class);
+    //
+    //     // byte[] jsonBytes = getJsonMapper().writer().writeValueAsBytes(mails);
+    //     final String json = getJsonMapper().writer().writeValueAsString(mails);
+    //
+    //     return getJsonMapper().readValue(json, type);
+    // }
 
-        return getJsonMapper().readValue(jsonBytes, type);
-    }
+    // private MailAccount toPojoMailAccount(final FxMailAccount account) throws Exception {
+    //     final byte[] jsonBytes = getJsonMapper().writer().writeValueAsBytes(account);
+    //
+    //     return getJsonMapper().readValue(jsonBytes, MailAccount.class);
+    // }
 
-    private List<FxMailFolder> toFXMailFolders(final List<MailFolder> folders) throws Exception {
-        // FxMailFolder mf = new FxMailFolder();
-        // mf.setAbonniert(folder.isAbonniert());
-        // mf.setAccountID(folder.getAccountID());
-        // mf.setFullName(folder.getFullName());
-        // mf.setID(folder.getID());
-        // mf.setName(folder.getName());
-
-        final JavaType type = getJsonMapper().getTypeFactory().constructCollectionType(ArrayList.class, FxMailFolder.class);
-
-        final byte[] jsonBytes = getJsonMapper().writer().writeValueAsBytes(folders);
-
-        return getJsonMapper().readValue(jsonBytes, type);
-    }
-
-    private List<FxMail> toFXMails(final List<Mail> mails) throws Exception {
-        // Mail m = new Mail();
-        // m.setBcc(mail.getBcc());
-        // m.setCc(mail.getCc());
-        // m.setFolderFullName(mail.getFolderFullName());
-        // m.setFolderID(mail.getFolderID());
-        // m.setFrom(mail.getFrom());
-        // m.setMsgNum(mail.getMsgNum());
-        // m.setReceivedDate(mail.getReceivedDate());
-        // m.setSeen(mail.isSeen());
-        // m.setSendDate(mail.getSendDate());
-        // m.setSize(mail.getSize());
-        // m.setSubject(mail.getSubject());
-        // m.setTo(mail.getTo());
-        // m.setUID(mail.getUID());
-
-        // List<FxMail> fxBeans = pojos.stream().map(this::toFXBean).collect(Collectors.toList());
-
-        final JavaType type = getJsonMapper().getTypeFactory().constructCollectionType(ArrayList.class, FxMail.class);
-
-        // byte[] jsonBytes = getJsonMapper().writer().writeValueAsBytes(mails);
-        final String json = getJsonMapper().writer().writeValueAsString(mails);
-
-        return getJsonMapper().readValue(json, type);
-    }
-
-    private MailAccount toPojoMailAccount(final FxMailAccount account) throws Exception {
-        // MailAccount ma = new MailAccount();
-        // ma.setID(account.getID());
-        // ma.setImapHost(account.getImapHost());
-        // ma.setImapLegitimation(account.isImapLegitimation());
-        // ma.setImapPort(account.getImapPort());
-        // ma.setMail(account.getMail());
-        // ma.setPassword(account.getPassword());
-        // ma.setSmtpHost(account.getSmtpHost());
-        // ma.setSmtpLegitimation(account.isSmtpLegitimation());
-        // ma.setSmtpPort(account.getSmtpPort());
-
-        final byte[] jsonBytes = getJsonMapper().writer().writeValueAsBytes(account);
-
-        return getJsonMapper().readValue(jsonBytes, MailAccount.class);
-    }
-
-    private List<MailFolder> toPojoMailFolders(final List<FxMailFolder> folders) throws Exception {
-        final JavaType type = getJsonMapper().getTypeFactory().constructCollectionType(ArrayList.class, MailFolder.class);
-
-        final byte[] jsonBytes = getJsonMapper().writer().writeValueAsBytes(folders);
-
-        return getJsonMapper().readValue(jsonBytes, type);
-    }
+    // private List<MailFolder> toPojoMailFolders(final List<FxMailFolder> folders) throws Exception {
+    //     final JavaType type = getJsonMapper().getTypeFactory().constructCollectionType(ArrayList.class, MailFolder.class);
+    //
+    //     final byte[] jsonBytes = getJsonMapper().writer().writeValueAsBytes(folders);
+    //
+    //     return getJsonMapper().readValue(jsonBytes, type);
+    // }
 }

@@ -15,6 +15,8 @@ import javafx.collections.ObservableList;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import de.freese.pim.core.model.addressbook.Kontakt;
+
 /**
  * FX-Bean für einen Kontakt.
  *
@@ -22,11 +24,21 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class FxKontakt implements Comparable<FxKontakt> {
+    public static FxKontakt from(final Kontakt kontakt) {
+        final FxKontakt fxKontakt = new FxKontakt();
+        fxKontakt.setID(kontakt.getID());
+        fxKontakt.setNachname(kontakt.getNachname());
+        fxKontakt.setVorname(kontakt.getVorname());
+
+        return fxKontakt;
+    }
+
     @JsonIgnore
     private final ObservableList<FxKontaktAttribut> attribute = FXCollections.observableArrayList();
     private final LongProperty idProperty = new SimpleLongProperty(this, "id", 0L);
     private final StringProperty nachnameProperty = new SimpleStringProperty(this, "nachname", null);
     // private final transient PropertyChangeSupport pcs = new PropertyChangeSupport(this);
+
     private final StringExpression toStringExpression;
     private final StringProperty vornameProperty = new SimpleStringProperty(this, "vorname", null);
 

@@ -31,7 +31,7 @@ javafx {
 
 dependencies {
     implementation(project(":pim-core"))
-    implementation(project(":pim-server"))
+    // implementation(project(":pim-server"))
     implementation("org.springframework.boot:spring-boot-starter-restclient")
 }
 
@@ -54,9 +54,9 @@ tasks.named<org.springframework.boot.gradle.tasks.run.BootRun>("bootRun") {
     )
 }
 
-tasks.named<org.springframework.boot.gradle.tasks.bundling.BootJar>("bootJar") {
-    dependsOn(project(":pim-server").tasks.named("build"))
-}
+// tasks.named<org.springframework.boot.gradle.tasks.bundling.BootJar>("bootJar") {
+//     dependsOn(project(":pim-server").tasks.named("build"))
+// }
 
 tasks.named<ProcessResources>("processResources") {
     val map = mapOf(

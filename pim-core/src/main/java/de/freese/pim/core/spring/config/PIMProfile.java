@@ -1,10 +1,10 @@
-// Created: 22.02.2017
 package de.freese.pim.core.spring.config;
 
 /**
  * Mögliche Spring-Profile für PIM.
  *
  * @author Thomas Freese
+ * @since 22.02.2017
  */
 public enum PIMProfile {
     /**

@@ -1,4 +1,3 @@
-// Created: 22.10.2021
 package de.freese.pim.core.spring.config;
 
 import java.util.concurrent.Executor;
@@ -28,6 +27,7 @@ import de.freese.pim.core.concurrent.PIMForkJoinWorkerThreadFactory;
 
 /**
  * @author Thomas Freese
+ * @since 22.10.2021
  */
 @Configuration
 public class ExecutorConfig implements AsyncConfigurer {

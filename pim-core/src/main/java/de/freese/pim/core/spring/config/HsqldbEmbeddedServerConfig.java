@@ -1,5 +1,4 @@
-// Created: 10.02.2017
-package de.freese.pim.server.spring.config;
+package de.freese.pim.core.spring.config;
 
 import org.hsqldb.Database;
 import org.hsqldb.server.Server;
@@ -13,6 +12,7 @@ import org.springframework.context.annotation.PropertySource;
  * Spring-Konfiguration der Datenbank.<br>
  *
  * @author Thomas Freese
+ * @since 10.02.2017
  */
 @Configuration
 @Profile("HsqldbEmbeddedServer")
