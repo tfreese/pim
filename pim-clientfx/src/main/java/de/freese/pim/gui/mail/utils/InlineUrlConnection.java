@@ -24,7 +24,7 @@ public class InlineUrlConnection extends URLConnection {
         super(url);
 
         this.mailContent = mailContent;
-        
+
         dataSource = mailContent.getInlines().get(url.getPath());
     }
 

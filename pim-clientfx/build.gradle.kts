@@ -7,7 +7,7 @@ plugins {
 description = "GUI for PIM"
 
 // For JavaFx native-Library Downloads.
-//configurations.matching { it.isCanBeResolved }.configureEach {
+// configurations.matching { it.isCanBeResolved }.configureEach {
 //    attributes {
 //        attribute(Usage.USAGE_ATTRIBUTE, objects.named<Usage>(Usage.JAVA_RUNTIME))
 //        attribute(
@@ -60,15 +60,12 @@ tasks.named<org.springframework.boot.gradle.tasks.bundling.BootJar>("bootJar") {
 
 tasks.named<ProcessResources>("processResources") {
     val map = mapOf(
-        "project_description" to project.description,
-        "project_artifactId" to project.name,
-        "project_version" to project.version
+        "project_description" to project.description, "project_artifactId" to project.name, "project_version" to project.version
     )
 
     filesMatching("application.properties") {
         filter(
-            mapOf("tokens" to map),
-            org.apache.tools.ant.filters.ReplaceTokens::class.java
+            mapOf("tokens" to map), org.apache.tools.ant.filters.ReplaceTokens::class.java
         )
     }
 }

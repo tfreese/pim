@@ -1,6 +1,5 @@
 package de.freese.pim.gui;
 
-import de.freese.pim.gui.view.ErrorDialog;
 import javafx.application.Preloader;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -11,6 +10,8 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import javafx.stage.Stage;
+
+import de.freese.pim.gui.view.ErrorDialog;
 
 /**
  * @author Thomas Freese
@@ -42,7 +43,8 @@ public class PimClientPreloader extends Preloader {
             // }
             //
             // // progress.setProgress(v);
-        } else if (info instanceof StateChangeNotification) {
+        }
+        else if (info instanceof StateChangeNotification) {
             // hide after get any state update from application
             stage.hide();
         }

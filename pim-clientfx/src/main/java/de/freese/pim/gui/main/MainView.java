@@ -1,13 +1,23 @@
 // Created: 29.11.2016
 package de.freese.pim.gui.main;
 
-import de.freese.pim.gui.view.View;
 import javafx.fxml.FXML;
 import javafx.geometry.Orientation;
 import javafx.scene.Node;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.ListView;
+import javafx.scene.control.SplitPane;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.ToolBar;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.*;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.VBox;
+
+import de.freese.pim.gui.view.View;
 
 /**
  * Main View.

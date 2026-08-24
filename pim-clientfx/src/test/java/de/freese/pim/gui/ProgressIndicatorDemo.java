@@ -1,6 +1,11 @@
 package de.freese.pim.gui;
 
-import de.freese.pim.gui.utils.FxUtils;
+import static org.awaitility.Awaitility.await;
+
+import java.util.List;
+import java.util.concurrent.ForkJoinPool;
+import java.util.concurrent.TimeUnit;
+
 import javafx.application.Application;
 import javafx.beans.binding.Bindings;
 import javafx.concurrent.Task;
@@ -12,11 +17,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
-import java.util.List;
-import java.util.concurrent.ForkJoinPool;
-import java.util.concurrent.TimeUnit;
-
-import static org.awaitility.Awaitility.await;
+import de.freese.pim.gui.utils.FxUtils;
 
 /**
  * @author Thomas Freese
@@ -26,11 +27,6 @@ public class ProgressIndicatorDemo extends Application {
     @Override
     public void init() throws Exception {
         super.init();
-    }
-
-    @Override
-    public void stop() throws Exception {
-        super.stop();
     }
 
     @Override
@@ -87,16 +83,22 @@ public class ProgressIndicatorDemo extends Application {
 
         final Scene scene = new Scene(stackPane);
         primaryStage.setScene(scene);
-//        primaryStage.centerOnScreen();
+        //        primaryStage.centerOnScreen();
         primaryStage.setWidth(200);
         primaryStage.setHeight(200);
         primaryStage.show();
+    }
+
+    @Override
+    public void stop() throws Exception {
+        super.stop();
     }
 
     /**
      * Verschiedene Farben.
      *
      * @param progress 0-1
+     *
      * @return int[], RGB
      */
     int[] getRGB1(final double progress) {
@@ -156,6 +158,7 @@ public class ProgressIndicatorDemo extends Application {
      * Von Rot nach Grün
      *
      * @param progress 0-1
+     *
      * @return int[], RGB
      */
     int[] getRGB2(final double progress) {
@@ -173,6 +176,7 @@ public class ProgressIndicatorDemo extends Application {
      * Von Rot nach Grün
      *
      * @param progress 0-1
+     *
      * @return int[], RGB
      */
     int[] getRGB3(final double progress) {

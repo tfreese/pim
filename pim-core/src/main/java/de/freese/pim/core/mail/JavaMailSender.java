@@ -1,12 +1,23 @@
 // Created: 09.12.2016
 package de.freese.pim.core.mail;
 
-import jakarta.mail.*;
-import jakarta.mail.internet.MimeMessage;
-
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.*;
+import java.util.Date;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Properties;
+
+import jakarta.mail.Authenticator;
+import jakarta.mail.MessagingException;
+import jakarta.mail.NoSuchProviderException;
+import jakarta.mail.PasswordAuthentication;
+import jakarta.mail.Session;
+import jakarta.mail.Transport;
+import jakarta.mail.internet.MimeMessage;
 
 /**
  * Siehe org.springframework.mail.javamail.JavaMailSenderImpl
@@ -16,6 +27,27 @@ import java.util.*;
 public class JavaMailSender {
     public static final String DEFAULT_PROTOCOL = "smtp";
     private static final String HEADER_MESSAGE_ID = "Message-ID";
+
+    /**
+     * @author Thomas Freese
+     */
+    private static class MailAuthenticator extends Authenticator {
+        private final PasswordAuthentication authentication;
+
+        MailAuthenticator(final String userName, final String password) {
+            super();
+
+            Objects.requireNonNull(userName, "userName required");
+            Objects.requireNonNull(password, "password required");
+
+            authentication = new PasswordAuthentication(userName, password);
+        }
+
+        @Override
+        public PasswordAuthentication getPasswordAuthentication() {
+            return authentication;
+        }
+    }
     private MailAuthenticator authenticator;
     private String host;
     private Properties javaMailProperties = new Properties();
@@ -27,32 +59,16 @@ public class JavaMailSender {
         return host;
     }
 
-    public void setHost(final String host) {
-        this.host = Objects.requireNonNull(host, "host required");
-    }
-
     public Properties getJavaMailProperties() {
         return javaMailProperties;
-    }
-
-    public void setJavaMailProperties(final Properties javaMailProperties) {
-        this.javaMailProperties = Objects.requireNonNull(javaMailProperties, "javaMailProperties required");
     }
 
     public int getPort() {
         return port;
     }
 
-    public void setPort(final int port) {
-        this.port = port;
-    }
-
     public String getProtocol() {
         return protocol;
-    }
-
-    public void setProtocol(final String protocol) {
-        this.protocol = Objects.requireNonNull(protocol, "protocol required");
     }
 
     public synchronized Session getSession() {
@@ -61,10 +77,6 @@ public class JavaMailSender {
         }
 
         return session;
-    }
-
-    public synchronized void setSession(final Session session) {
-        this.session = Objects.requireNonNull(session, "Session must not be null");
     }
 
     public void send(final MimeMessage mimeMessage) throws Exception {
@@ -77,6 +89,26 @@ public class JavaMailSender {
 
     public void setAuthentication(final String userName, final String password) {
         authenticator = new MailAuthenticator(userName, password);
+    }
+
+    public void setHost(final String host) {
+        this.host = Objects.requireNonNull(host, "host required");
+    }
+
+    public void setJavaMailProperties(final Properties javaMailProperties) {
+        this.javaMailProperties = Objects.requireNonNull(javaMailProperties, "javaMailProperties required");
+    }
+
+    public void setPort(final int port) {
+        this.port = port;
+    }
+
+    public void setProtocol(final String protocol) {
+        this.protocol = Objects.requireNonNull(protocol, "protocol required");
+    }
+
+    public synchronized void setSession(final Session session) {
+        this.session = Objects.requireNonNull(session, "Session must not be null");
     }
 
     /**
@@ -107,9 +139,9 @@ public class JavaMailSender {
     /**
      * Actually send the given array of MimeMessages via JavaMail.
      *
-     * @param mimeMessages     MimeMessage objects to send
+     * @param mimeMessages MimeMessage objects to send
      * @param originalMessages corresponding original message objects that the MimeMessages have been created from (with same array length and indices as the
-     *                         "mimeMessages" array), if any
+     * "mimeMessages" array), if any
      */
     protected void doSend(final MimeMessage[] mimeMessages, final Object[] originalMessages) throws Exception {
         final Map<Object, Exception> failedMessages = new LinkedHashMap<>();
@@ -122,7 +154,8 @@ public class JavaMailSender {
                     if (transport != null) {
                         try {
                             transport.close();
-                        } catch (Exception _) {
+                        }
+                        catch (Exception _) {
                             // Ignore
                         }
 
@@ -131,7 +164,8 @@ public class JavaMailSender {
 
                     try {
                         transport = connectTransport();
-                    } catch (Exception ex) {
+                    }
+                    catch (Exception ex) {
                         // Effectively, all remaining messages failed.
                         for (int j = i; j < mimeMessages.length; j++) {
                             final Object original = originalMessages != null ? originalMessages[j] : mimeMessages[j];
@@ -159,17 +193,20 @@ public class JavaMailSender {
                     }
 
                     transport.sendMessage(mimeMessage, mimeMessage.getAllRecipients());
-                } catch (Exception ex) {
+                }
+                catch (Exception ex) {
                     final Object original = originalMessages != null ? originalMessages[i] : mimeMessage;
                     failedMessages.put(original, ex);
                 }
             }
-        } finally {
+        }
+        finally {
             try {
                 if (transport != null) {
                     transport.close();
                 }
-            } catch (Exception ex) {
+            }
+            catch (Exception ex) {
                 if (!failedMessages.isEmpty()) {
                     // throw new MailSendException("Failed to close server connection after message failures", ex, failedMessages);
                     throw new MessagingException("Failed to close server connection after message failures", ex);
@@ -209,26 +246,5 @@ public class JavaMailSender {
 
     protected String getUsername() {
         return authenticator.getPasswordAuthentication().getUserName();
-    }
-
-    /**
-     * @author Thomas Freese
-     */
-    private static class MailAuthenticator extends Authenticator {
-        private final PasswordAuthentication authentication;
-
-        MailAuthenticator(final String userName, final String password) {
-            super();
-
-            Objects.requireNonNull(userName, "userName required");
-            Objects.requireNonNull(password, "password required");
-            
-            authentication = new PasswordAuthentication(userName, password);
-        }
-
-        @Override
-        public PasswordAuthentication getPasswordAuthentication() {
-            return authentication;
-        }
     }
 }

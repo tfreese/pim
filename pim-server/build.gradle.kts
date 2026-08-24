@@ -33,15 +33,12 @@ tasks.named<org.springframework.boot.gradle.tasks.run.BootRun>("bootRun") {
 
 tasks.named<ProcessResources>("processResources") {
     val map = mapOf(
-        "project_description" to project.description,
-        "project_artifactId" to project.name,
-        "project_version" to project.version
+        "project_description" to project.description, "project_artifactId" to project.name, "project_version" to project.version
     )
 
     filesMatching("application-Server.properties") {
         filter(
-            mapOf("tokens" to map),
-            org.apache.tools.ant.filters.ReplaceTokens::class.java
+            mapOf("tokens" to map), org.apache.tools.ant.filters.ReplaceTokens::class.java
         )
     }
 }

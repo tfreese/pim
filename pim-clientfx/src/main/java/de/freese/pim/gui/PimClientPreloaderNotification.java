@@ -22,7 +22,7 @@ public class PimClientPreloaderNotification implements PreloaderNotification {
         super();
 
         this.status = status;
-        
+
         progress = -1;
     }
 

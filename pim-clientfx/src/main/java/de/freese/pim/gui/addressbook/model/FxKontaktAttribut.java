@@ -1,13 +1,14 @@
 // Created: 30.05.2016
 package de.freese.pim.gui.addressbook.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import java.util.Objects;
+
 import javafx.beans.property.LongProperty;
 import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
-import java.util.Objects;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /**
  * FX-Bean für einen Kontakt.
@@ -53,24 +54,12 @@ public class FxKontaktAttribut implements Comparable<FxKontaktAttribut> {
         return attributProperty().get();
     }
 
-    public void setAttribut(final String attribut) {
-        attributProperty().set(attribut);
-    }
-
     public long getKontaktID() {
         return kontaktIDProperty().get();
     }
 
-    public void setKontaktID(final long kontaktID) {
-        kontaktIDProperty().set(kontaktID);
-    }
-
     public String getWert() {
         return wertProperty().get();
-    }
-
-    public void setWert(final String wert) {
-        wertProperty().set(wert);
     }
 
     @Override
@@ -80,6 +69,18 @@ public class FxKontaktAttribut implements Comparable<FxKontaktAttribut> {
 
     public LongProperty kontaktIDProperty() {
         return kontaktIDProperty;
+    }
+
+    public void setAttribut(final String attribut) {
+        attributProperty().set(attribut);
+    }
+
+    public void setKontaktID(final long kontaktID) {
+        kontaktIDProperty().set(kontaktID);
+    }
+
+    public void setWert(final String wert) {
+        wertProperty().set(wert);
     }
 
     @Override

@@ -1,8 +1,11 @@
 package de.freese.pim.gui;
 
-import de.freese.pim.core.spring.SpringContext;
-import de.freese.pim.gui.main.MainController;
-import de.freese.pim.gui.utils.FxUtils;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Optional;
+import java.util.ResourceBundle;
+
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.application.Preloader.StateChangeNotification;
@@ -16,17 +19,16 @@ import javafx.scene.image.Image;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.Window;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Optional;
-import java.util.ResourceBundle;
+import de.freese.pim.core.spring.SpringContext;
+import de.freese.pim.gui.main.MainController;
+import de.freese.pim.gui.utils.FxUtils;
 
 /**
  * Startklasse der Personal Information Management Anwendung.<br>
@@ -56,7 +58,6 @@ public class PimClientApplication extends Application {
      * Bildschirm auf dem PIM läuft.
      */
     private static Screen screen;
-    private final BooleanProperty ready = new SimpleBooleanProperty(false);
 
     /**
      * Blockiert die GUI.
@@ -69,19 +70,11 @@ public class PimClientApplication extends Application {
         return mainWindow;
     }
 
-    private static void setMainWindow(final Window mainWindow) {
-        PimClientApplication.mainWindow = mainWindow;
-    }
-
     /**
      * Liefert den Bildschirm, auf dem PIM läuft.
      */
     public static Screen getScreen() {
         return screen;
-    }
-
-    private static void setScreen(final Screen screen) {
-        PimClientApplication.screen = screen;
     }
 
     /**
@@ -90,6 +83,16 @@ public class PimClientApplication extends Application {
     public static void unblockGUI() {
         FxUtils.unblockGUI(getMainWindow());
     }
+
+    private static void setMainWindow(final Window mainWindow) {
+        PimClientApplication.mainWindow = mainWindow;
+    }
+
+    private static void setScreen(final Screen screen) {
+        PimClientApplication.screen = screen;
+    }
+
+    private final BooleanProperty ready = new SimpleBooleanProperty(false);
 
     @Override
     public void init() throws Exception {
@@ -194,14 +197,15 @@ public class PimClientApplication extends Application {
 
             if (screens.size() > 1) {
                 setScreen(screens.get(1));
-            } else {
+            }
+            else {
                 setScreen(screens.getFirst());
             }
 
             // Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
             final Rectangle2D screenBounds = screen.getVisualBounds();
 
-//            primaryStage.centerOnScreen();
+            //            primaryStage.centerOnScreen();
             primaryStage.setX(screenBounds.getMinX() + 100);
             primaryStage.setY(screenBounds.getMinY() + 100);
             primaryStage.setWidth(screenBounds.getWidth() - 200);
@@ -232,7 +236,8 @@ public class PimClientApplication extends Application {
             // notifyPreloader(new StateChangeNotification(StateChangeNotification.Type.BEFORE_START));
             // }).start();
             // getScheduledExecutorService().scheduleWithFixedDelay(() -> LOGGER.info(""), 1L, 3L, TimeUnit.SECONDS);
-        } catch (Throwable th) {
+        }
+        catch (Throwable th) {
             LOGGER.error(th.getMessage(), th);
             throw th;
         }

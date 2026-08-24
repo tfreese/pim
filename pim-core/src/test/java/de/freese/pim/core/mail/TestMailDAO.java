@@ -1,12 +1,23 @@
 // Created: 24.05.2016
 package de.freese.pim.core.mail;
 
-import de.freese.pim.core.TestConfig;
-import de.freese.pim.core.dao.MailDao;
-import de.freese.pim.core.model.mail.Mail;
-import de.freese.pim.core.model.mail.MailAccount;
-import de.freese.pim.core.model.mail.MailFolder;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.time.Month;
+import java.time.ZoneId;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+
 import jakarta.annotation.Resource;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
@@ -19,20 +30,11 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
-import java.time.Month;
-import java.time.ZoneId;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import de.freese.pim.core.TestConfig;
+import de.freese.pim.core.dao.MailDao;
+import de.freese.pim.core.model.mail.Mail;
+import de.freese.pim.core.model.mail.MailAccount;
+import de.freese.pim.core.model.mail.MailFolder;
 
 /**
  * TestCase für das {@link MailDao}.
