@@ -1,4 +1,3 @@
-// Created: 16.02.2017
 package de.freese.pim.gui.service;
 
 import jakarta.annotation.Resource;
@@ -11,6 +10,7 @@ import de.freese.pim.core.service.AbstractRemoteService;
  * Basis-Service für JavaFX.
  *
  * @author Thomas Freese
+ * @since 16.02.2017
  */
 public abstract class AbstractFxService extends AbstractRemoteService {
     private JsonMapper jsonMapper;

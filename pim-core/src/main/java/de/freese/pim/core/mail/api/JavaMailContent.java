@@ -1,4 +1,3 @@
-// Created: 26.01.2017
 package de.freese.pim.core.mail.api;
 
 import java.util.Map;
@@ -25,6 +24,7 @@ import de.freese.pim.core.utils.io.IOMonitor;
  * JavaMail-Container für den Inhalt einer Mail.
  *
  * @author Thomas Freese
+ * @since 26.01.2017
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class JavaMailContent extends DefaultMailContent {

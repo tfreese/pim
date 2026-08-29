@@ -1,4 +1,3 @@
-// Created: 11.01.2017
 package de.freese.pim.core.service;
 
 import java.nio.file.Path;
@@ -11,6 +10,7 @@ import de.freese.pim.core.model.addressbook.KontaktAttribut;
  * Interface für den Service des AddressBooks<br>
  *
  * @author Thomas Freese
+ * @since 11.01.2017
  */
 public interface AddressBookService {
     /**

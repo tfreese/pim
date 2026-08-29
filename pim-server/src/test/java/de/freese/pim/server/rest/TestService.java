@@ -1,4 +1,3 @@
-// Created: 14.02.2017
 package de.freese.pim.server.rest;
 
 import static org.awaitility.Awaitility.await;
@@ -34,6 +33,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupp
  * *
  *
  * @author Thomas Freese
+ * @since 14.02.2017
  */
 @RestController
 @RequestMapping(path = "/test", produces = {MediaType.APPLICATION_JSON_VALUE}, headers = "Accept=application/json")

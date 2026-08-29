@@ -1,4 +1,3 @@
-// Created: 16.02.2017
 package de.freese.pim.core.mail.datasource;
 
 import java.io.IOException;
@@ -14,6 +13,7 @@ import de.freese.pim.core.utils.io.IOMonitor;
  * {@link DataSource} für ein Mail-Attachment.
  *
  * @author Thomas Freese
+ * @since 16.02.2017
  */
 public class AttachmentDataSource extends AbstractDataSource {
     public AttachmentDataSource(final DataSource source) throws IOException {

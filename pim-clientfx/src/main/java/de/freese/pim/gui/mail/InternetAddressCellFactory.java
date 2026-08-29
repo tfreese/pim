@@ -1,4 +1,3 @@
-// Created: 25.01.2017
 package de.freese.pim.gui.mail;
 
 import javafx.scene.control.TableCell;
@@ -8,9 +7,8 @@ import javafx.util.Callback;
 import de.freese.pim.core.mail.InternetAddress;
 
 /**
- * @param <S> Konkreter Typ des Row-Objektes
- *
  * @author Thomas Freese
+ * @since 25.01.2017
  */
 public class InternetAddressCellFactory<S> implements Callback<TableColumn<S, InternetAddress[]>, TableCell<S, InternetAddress[]>> {
     @Override

@@ -1,4 +1,3 @@
-// Created: 31.10.2006
 package de.freese.pim.core.utils;
 
 import java.io.Serial;
@@ -9,6 +8,7 @@ import javax.crypto.spec.SecretKeySpec;
  * DefaultKey für Verschlüsselungen.
  *
  * @author Thomas Freese
+ * @since 31.10.2006
  */
 class PimSecretKey extends SecretKeySpec {
     /**

@@ -1,4 +1,3 @@
-// Created: 24.05.2016
 package de.freese.pim.core.addressbook;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -26,6 +25,7 @@ import de.freese.pim.core.dao.DefaultAddressBookDao;
  * TestCase für die manuelle TX-Steuerung mit Spring.
  *
  * @author Thomas Freese
+ * @since 24.05.2016
  */
 @TestMethodOrder(MethodOrderer.MethodName.class)
 class TestSpringManualTxAddressbookDAO extends AbstractDaoTestCase {

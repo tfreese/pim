@@ -1,4 +1,3 @@
-// Created: 29.11.2016
 package de.freese.pim.core.utils;
 
 import java.io.IOException;
@@ -33,9 +32,8 @@ import de.freese.pim.core.function.ExceptionalRunnable;
 import de.freese.pim.core.function.ExceptionalSupplier;
 
 /**
- * Utils.
- *
  * @author Thomas Freese
+ * @since 29.11.2016
  */
 public final class Utils {
     /**

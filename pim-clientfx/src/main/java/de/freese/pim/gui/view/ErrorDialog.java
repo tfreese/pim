@@ -1,4 +1,3 @@
-// Created: 06.01.2017
 package de.freese.pim.gui.view;
 
 import java.io.PrintWriter;
@@ -19,6 +18,7 @@ import de.freese.pim.gui.PimClientApplication;
  * Allgemeiner Fehler-Dialog.
  *
  * @author Thomas Freese
+ * @since 06.01.2017
  */
 public class ErrorDialog {
     public static String toString(final Throwable throwable) {

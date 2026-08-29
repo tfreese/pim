@@ -1,4 +1,3 @@
-// Created: 13.12.2016
 package de.freese.pim.gui.addressbook;
 
 import java.net.URL;
@@ -39,6 +38,7 @@ import de.freese.pim.gui.view.ErrorDialog;
 
 /**
  * @author Thomas Freese
+ * @since 13.12.2016
  */
 public class ContactController extends AbstractController {
     private final FxAddressbookService addressbookService;

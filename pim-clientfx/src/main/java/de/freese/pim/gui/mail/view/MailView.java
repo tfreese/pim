@@ -1,4 +1,3 @@
-// Created: 13.12.2016
 package de.freese.pim.gui.mail.view;
 
 import javafx.fxml.FXML;
@@ -24,6 +23,7 @@ import de.freese.pim.gui.view.View;
  * View des Mail-Clients.
  *
  * @author Thomas Freese
+ * @since 13.12.2016
  */
 public class MailView implements View {
     @FXML

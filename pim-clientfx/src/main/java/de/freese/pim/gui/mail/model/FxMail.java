@@ -1,4 +1,3 @@
-// Created: 09.01.2017
 package de.freese.pim.gui.mail.model;
 
 import java.util.Date;
@@ -23,6 +22,7 @@ import de.freese.pim.core.model.mail.Mail;
  * FX-Bean für eine Mail.
  *
  * @author Thomas Freese
+ * @since 09.01.2017
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class FxMail {

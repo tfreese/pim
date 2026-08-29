@@ -1,4 +1,3 @@
-// Created: 30.05.2016
 package de.freese.pim.gui.addressbook.model;
 
 import java.util.Objects;
@@ -21,6 +20,7 @@ import de.freese.pim.core.model.addressbook.Kontakt;
  * FX-Bean für einen Kontakt.
  *
  * @author Thomas Freese
+ * @since 30.05.2016
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class FxKontakt implements Comparable<FxKontakt> {

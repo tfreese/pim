@@ -1,4 +1,3 @@
-// Created: 14.01.2017
 package de.freese.pim.core.dao;
 
 import java.io.BufferedReader;
@@ -38,6 +37,7 @@ import de.freese.pim.core.utils.Utils;
  * Das Connection- und Transaction-Handling muss ausserhalb erfolgen und ist hier nicht implementiert.
  *
  * @author Thomas Freese
+ * @since 14.01.2017
  */
 @Repository("mailDAO")
 @Profile("!ClientREST")

@@ -1,4 +1,3 @@
-// Created: 10.07.2016
 package de.freese.pim.core.addressbook;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -19,6 +18,7 @@ import de.freese.pim.core.model.addressbook.KontaktAttribut;
 
 /**
  * @author Thomas Freese
+ * @since 10.07.2016
  */
 public abstract class AbstractDaoTestCase {
     protected static void closeDataSource(final DataSource dataSource) throws Exception {

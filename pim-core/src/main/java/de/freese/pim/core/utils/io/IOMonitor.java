@@ -1,4 +1,3 @@
-// Created: 16.02.2017
 package de.freese.pim.core.utils.io;
 
 import java.util.function.BiConsumer;
@@ -9,6 +8,7 @@ import java.util.function.BiConsumer;
  * Er implementiert ebenfalls BiConsumer(Long, Long).
  *
  * @author Thomas Freese
+ * @since 16.02.2017
  */
 public interface IOMonitor extends BiConsumer<Long, Long> {
     @Override

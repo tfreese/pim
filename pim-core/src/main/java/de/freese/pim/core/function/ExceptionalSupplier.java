@@ -1,4 +1,3 @@
-// Created: 16.02.2017
 package de.freese.pim.core.function;
 
 import java.util.function.Supplier;
@@ -10,6 +9,7 @@ import java.util.function.Supplier;
  * @param <E> Konkreter Exception-Typ
  *
  * @author Thomas Freese
+ * @since 16.02.2017
  */
 @FunctionalInterface
 public interface ExceptionalSupplier<R, E extends Exception> {

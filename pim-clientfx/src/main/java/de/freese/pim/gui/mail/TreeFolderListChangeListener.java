@@ -1,4 +1,3 @@
-// Created: 25.01.2017
 package de.freese.pim.gui.mail;
 
 import java.util.Objects;
@@ -14,6 +13,7 @@ import de.freese.pim.gui.mail.model.FxMailFolder;
  * {@link ListChangeListener} für eine Liste aus MailFolder zum Aufbau des Trees.
  *
  * @author Thomas Freese
+ * @since 25.01.2017
  */
 public class TreeFolderListChangeListener implements ListChangeListener<FxMailFolder> {
     private final TreeItem<Object> parent;

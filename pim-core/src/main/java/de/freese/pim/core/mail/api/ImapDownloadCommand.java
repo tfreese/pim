@@ -1,4 +1,3 @@
-// Created: 31.01.2017
 package de.freese.pim.core.mail.api;
 
 import java.io.IOException;
@@ -28,6 +27,7 @@ import org.slf4j.LoggerFactory;
  * <a href="http://stackoverflow.com/questions/28166182/prefetch-preview-text-from-javamail-message">prefetch-preview-text-from-javamail-message</a>
  *
  * @author Thomas Freese
+ * @since 31.01.2017
  */
 public class ImapDownloadCommand implements IMAPFolder.ProtocolCommand {
     private static final Logger LOGGER = LoggerFactory.getLogger(ImapDownloadCommand.class);

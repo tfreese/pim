@@ -1,4 +1,3 @@
-// Created: 30.05.2016
 package de.freese.pim.core.dao;
 
 import java.nio.file.Path;
@@ -9,6 +8,7 @@ import de.freese.pim.core.model.addressbook.KontaktAttribut;
 
 /**
  * @author Thomas Freese
+ * @since 30.05.2016
  */
 public interface AddressBookDao {
     /**

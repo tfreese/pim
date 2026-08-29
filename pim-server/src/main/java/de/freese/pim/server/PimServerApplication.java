@@ -1,4 +1,3 @@
-// Created: 14.02.2017
 package de.freese.pim.server;
 
 import java.io.IOException;
@@ -22,6 +21,7 @@ import org.springframework.scheduling.annotation.EnableAsync;
  * <a href="http://localhost:8888/pim/actuator">localhost</a><br>
  *
  * @author Thomas Freese
+ * @since 14.02.2017
  */
 @SpringBootApplication
 @EnableAsync

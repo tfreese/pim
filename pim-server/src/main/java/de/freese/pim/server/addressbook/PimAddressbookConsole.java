@@ -1,4 +1,3 @@
-// Created on 24.05.2016
 package de.freese.pim.server.addressbook;
 
 import java.io.IOException;
@@ -39,6 +38,7 @@ import de.freese.pim.core.utils.Utils;
  * Als Default wird die lokale HSQLDB (Utils#HSQLDB_URL) verwendet.
  *
  * @author Thomas Freese
+ * @since 24.05.2016
  */
 public final class PimAddressbookConsole {
     public static final Logger LOGGER = LoggerFactory.getLogger(PimAddressbookConsole.class);

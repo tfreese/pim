@@ -1,4 +1,3 @@
-// Created: 29.11.2016
 package de.freese.pim.gui.main;
 
 import javafx.fxml.FXML;
@@ -20,9 +19,8 @@ import javafx.scene.layout.VBox;
 import de.freese.pim.gui.view.View;
 
 /**
- * Main View.
- *
  * @author Thomas Freese
+ * @since 29.11.2016
  */
 public class MainView extends BorderPane implements View {
     public static final TextArea LOG_TEXT_AREA = new TextArea();

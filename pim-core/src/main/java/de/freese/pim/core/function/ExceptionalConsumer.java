@@ -1,4 +1,3 @@
-// Created: 16.02.2017
 package de.freese.pim.core.function;
 
 import java.util.Objects;
@@ -11,17 +10,16 @@ import java.util.function.Consumer;
  * @param <E> Konkreter Exception-Typ
  *
  * @author Thomas Freese
+ * @since 16.02.2017
  */
 @FunctionalInterface
 public interface ExceptionalConsumer<T, E extends Exception> {
     void accept(T t) throws E;
 
-    // public default ExceptionalConsumer<T, E> andThen(final Consumer<T> after)
-    // {
+    // public default ExceptionalConsumer<T, E> andThen(final Consumer<T> after) {
     // Objects.requireNonNull(after);
     //
-    // return t ->
-    // {
+    // return t -> {
     // accept(t);
     // after.accept(t);
     // };

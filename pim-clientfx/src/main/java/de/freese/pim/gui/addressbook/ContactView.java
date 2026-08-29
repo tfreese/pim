@@ -1,4 +1,3 @@
-// Created: 13.12.2016
 package de.freese.pim.gui.addressbook;
 
 import javafx.beans.property.StringProperty;
@@ -30,6 +29,7 @@ import de.freese.pim.gui.view.View;
  * View des Adressbuchs.
  *
  * @author Thomas Freese
+ * @since 13.12.2016
  */
 public class ContactView implements View {
     @FXML

@@ -1,4 +1,3 @@
-// Created: 07.02.2017
 package de.freese.pim.core.service;
 
 import jakarta.annotation.Resource;
@@ -14,6 +13,7 @@ import org.springframework.core.task.AsyncTaskExecutor;
  * Basis-Implementierung eines Service.
  *
  * @author Thomas Freese
+ * @since 07.02.2017
  */
 public abstract class AbstractService implements ApplicationContextAware {
     private final Logger logger = LoggerFactory.getLogger(getClass());

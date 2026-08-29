@@ -1,4 +1,3 @@
-// Created: 22.09.2016
 package de.freese.pim.core.function;
 
 import java.util.function.Function;
@@ -9,6 +8,7 @@ import java.util.function.UnaryOperator;
  * Die entfernten Zeichen werden durch '' ersetzt, der String also gekürzt.<br>
  *
  * @author Thomas Freese
+ * @since 22.09.2016
  */
 public class FunctionStripNotLetter implements UnaryOperator<String> {
     public static final Function<String, String> INSTANCE = new FunctionStripNotLetter();

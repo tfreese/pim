@@ -1,4 +1,3 @@
-// Created: 11.01.2017
 package de.freese.pim.core.utils.io;
 
 import java.io.FilterInputStream;
@@ -8,6 +7,7 @@ import java.util.Objects;
 
 /**
  * @author Thomas Freese
+ * @since 11.01.2017
  */
 public class MonitorInputStream extends FilterInputStream {
     private final IOMonitor monitor;

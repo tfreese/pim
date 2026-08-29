@@ -1,4 +1,3 @@
-// Created: 15.02.2017
 package de.freese.pim.gui.addressbook.service;
 
 import java.util.Arrays;
@@ -19,6 +18,7 @@ import de.freese.pim.gui.addressbook.model.FxKontakt;
  * Addressbook-Service für JavaFX, wenn es keinen Server gibt.
  *
  * @author Thomas Freese
+ * @since 15.02.2017
  */
 @Service("clientAddressBookService")
 @Profile({"ClientREST", "ClientEmbeddedServer"})

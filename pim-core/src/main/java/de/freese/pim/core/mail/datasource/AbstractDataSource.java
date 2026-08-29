@@ -1,4 +1,3 @@
-// Created: 16.02.2017
 package de.freese.pim.core.mail.datasource;
 
 import java.io.ByteArrayInputStream;
@@ -19,6 +18,7 @@ import de.freese.pim.core.utils.io.MonitorOutputStream;
  * Basis-Implementierung einer {@link DataSource}.
  *
  * @author Thomas Freese
+ * @since 16.02.2017
  */
 public abstract class AbstractDataSource implements DataSource {
     private final String contentType;

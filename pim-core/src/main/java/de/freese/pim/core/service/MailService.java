@@ -1,4 +1,3 @@
-// Created: 20.01.2017
 package de.freese.pim.core.service;
 
 import java.util.List;
@@ -14,6 +13,7 @@ import de.freese.pim.core.utils.io.IOMonitor;
  * Interface für den Service der Mails.<br>
  *
  * @author Thomas Freese
+ * @since 20.01.2017
  */
 public interface MailService {
     /**

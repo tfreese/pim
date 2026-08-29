@@ -1,4 +1,3 @@
-// Created: 30.05.2016
 package de.freese.pim.gui.addressbook.model;
 
 import java.util.Objects;
@@ -14,6 +13,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
  * FX-Bean für einen Kontakt.
  *
  * @author Thomas Freese
+ * @since 30.05.2016
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class FxKontaktAttribut implements Comparable<FxKontaktAttribut> {

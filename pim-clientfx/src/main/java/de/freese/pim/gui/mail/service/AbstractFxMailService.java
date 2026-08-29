@@ -1,4 +1,3 @@
-// Created: 15.02.2017
 package de.freese.pim.gui.mail.service;
 
 import java.io.BufferedInputStream;
@@ -33,6 +32,7 @@ import de.freese.pim.gui.service.AbstractFxService;
  * Basisimplementierung eines JavaFX-MailService.
  *
  * @author Thomas Freese
+ * @since 15.02.2017
  */
 public abstract class AbstractFxMailService extends AbstractFxService implements FxMailService {
     private Path basePath;

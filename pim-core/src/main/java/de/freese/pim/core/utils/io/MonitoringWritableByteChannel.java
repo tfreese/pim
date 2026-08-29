@@ -1,4 +1,3 @@
-// Created: 26.10.2016
 package de.freese.pim.core.utils.io;
 
 import java.io.IOException;
@@ -10,6 +9,7 @@ import java.util.Objects;
  * {@link WritableByteChannel} mit der Möglichkeit zur Überwachung durch einen Monitor.<br>
  *
  * @author Thomas Freese
+ * @since 26.10.2016
  */
 public class MonitoringWritableByteChannel implements WritableByteChannel {
     private final WritableByteChannel delegate;

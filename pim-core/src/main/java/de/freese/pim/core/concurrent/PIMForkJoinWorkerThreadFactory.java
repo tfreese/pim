@@ -1,4 +1,3 @@
-// Created: 21.02.2017
 package de.freese.pim.core.concurrent;
 
 import java.util.concurrent.ForkJoinPool;
@@ -10,6 +9,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * Dient nur dazu die Threads des {@link ForkJoinPool#commonPool()} umzubenennen.
  *
  * @author Thomas Freese
+ * @since 21.02.2017
  */
 public class PIMForkJoinWorkerThreadFactory implements ForkJoinWorkerThreadFactory {
     /**

@@ -1,4 +1,3 @@
-// Created: 29.11.2016
 package de.freese.pim.gui.controller;
 
 import javafx.fxml.Initializable;
@@ -19,6 +18,7 @@ import de.freese.pim.gui.main.MainController;
  * Abstract Implementierung eines Controllers.
  *
  * @author Thomas Freese
+ * @since 29.11.2016
  */
 public abstract class AbstractController implements Initializable {
     private final Logger logger = LoggerFactory.getLogger(getClass());

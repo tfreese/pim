@@ -1,4 +1,3 @@
-// Created: 04.01.2017
 package de.freese.pim.core.mail;
 
 import java.util.Optional;
@@ -8,6 +7,7 @@ import java.util.stream.Stream;
  * Enums für die verschiedenen Mail-Ports.
  *
  * @author Thomas Freese
+ * @since 04.01.2017
  */
 public enum MailPort {
     /**

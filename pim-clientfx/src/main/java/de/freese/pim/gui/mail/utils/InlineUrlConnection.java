@@ -1,4 +1,3 @@
-// Created: 06.02.2017
 package de.freese.pim.gui.mail.utils;
 
 import java.io.IOException;
@@ -14,6 +13,7 @@ import de.freese.pim.core.mail.MailContent;
  * {@link URLConnection} für ein Inline einer HTML-Mail.
  *
  * @author Thomas Freese
+ * @since 06.02.2017
  */
 public class InlineUrlConnection extends URLConnection {
     private final DataSource dataSource;

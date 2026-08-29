@@ -1,4 +1,3 @@
-// Created: 23.01.2017
 package de.freese.pim.core.mail.api;
 
 import java.util.ArrayList;
@@ -46,6 +45,7 @@ import de.freese.pim.core.utils.io.NestedIOMonitor;
  * JavaMail-Implementierung des {@link MailApi}.
  *
  * @author Thomas Freese
+ * @since 23.01.2017
  */
 public class JavaMailApi extends AbstractMailApi {
     @FunctionalInterface

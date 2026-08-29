@@ -1,4 +1,3 @@
-// Created: 20.01.2017
 package de.freese.pim.server.mail;
 
 import java.util.List;
@@ -30,6 +29,7 @@ import de.freese.pim.core.utils.io.IOMonitor;
  * Service für die Mail-API.
  *
  * @author Thomas Freese
+ * @since 20.01.2017
  */
 @RestController()
 @RequestMapping(path = "/mail", produces = MediaType.APPLICATION_JSON_VALUE)

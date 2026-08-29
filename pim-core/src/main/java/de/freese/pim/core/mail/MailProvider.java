@@ -1,10 +1,10 @@
-// Created: 04.01.2017
 package de.freese.pim.core.mail;
 
 /**
  * Enums für die verschiedenen Konfigurationen der MailProvider.
  *
  * @author Thomas Freese
+ * @since 04.01.2017
  */
 public enum MailProvider {
     EINS_UND_EINS("1&1", "imap.1und1.de", MailPort.IMAPS, "smtp.1und1.de", MailPort.SMTPS),

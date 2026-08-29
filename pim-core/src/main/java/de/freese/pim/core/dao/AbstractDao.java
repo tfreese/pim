@@ -1,4 +1,3 @@
-// Created: 20.01.2017
 package de.freese.pim.core.dao;
 
 import java.util.Objects;
@@ -18,6 +17,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
  * Basis-Implementierung eines DAOs.
  *
  * @author Thomas Freese
+ * @since 20.01.2017
  */
 public abstract class AbstractDao implements InitializingBean {
     private final Logger logger = LoggerFactory.getLogger(getClass());
@@ -64,16 +64,10 @@ public abstract class AbstractDao implements InitializingBean {
     protected long getNextID(final String sequence) {
         final String sql = sequenceQuery.apply(sequence);
 
-        final Long id = getJdbcTemplate().query(sql, rs -> {
+        return getJdbcTemplate().query(sql, rs -> {
             rs.next();
             return rs.getLong(1);
         });
-
-        if (id == null) {
-            throw new IllegalStateException("id is null");
-        }
-
-        return id;
 
         // try (Connection connection = getJdbcTemplate().getDataSource().getConnection();
         // Statement stmt = connection.createStatement();

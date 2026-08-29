@@ -13,8 +13,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 
 /**
- * Testklasse für {@link Crypt}
- *
  * @author Thomas Freese
  */
 @TestMethodOrder(MethodOrderer.MethodName.class)

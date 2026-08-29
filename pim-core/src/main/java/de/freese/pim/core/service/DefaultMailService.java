@@ -1,4 +1,3 @@
-// Created: 20.01.2017
 package de.freese.pim.core.service;
 
 import java.util.ArrayList;
@@ -35,6 +34,7 @@ import de.freese.pim.core.utils.io.IOMonitor;
  * Service für die Mail-API.
  *
  * @author Thomas Freese
+ * @since 20.01.2017
  */
 @Service("mailService")
 @Profile("!ClientREST")
@@ -174,7 +174,7 @@ public class DefaultMailService extends AbstractService implements MailService {
         if (folder == null || folder.isEmpty()) {
             folder = mailAPI.getFolder();
 
-            final long[] primaryKeys = insertFolder(accountID, folder);
+            final long[] primaryKeys = this.insertFolder(accountID, folder);
 
             for (int i = 0; i < primaryKeys.length; i++) {
                 folder.get(i).setID(primaryKeys[i]);
@@ -220,9 +220,9 @@ public class DefaultMailService extends AbstractService implements MailService {
             mailMap.remove(uid);
         }
 
-        if (uidFrom > 1) {
+        if (uidFrom > 1L) {
             // Neue Mails holen, ausser der aktuellsten geladenen.
-            uidFrom += 1;
+            uidFrom += 1L;
         }
 
         final List<Mail> newMails = mailAPI.loadMails(folderFullName, uidFrom);

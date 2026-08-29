@@ -1,4 +1,3 @@
-// Created: 14.01.2017
 package de.freese.pim.core.dao;
 
 import java.util.Collection;
@@ -10,6 +9,7 @@ import de.freese.pim.core.model.mail.MailFolder;
 
 /**
  * @author Thomas Freese
+ * @since 14.01.2017
  */
 public interface MailDao {
     /**

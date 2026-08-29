@@ -1,4 +1,3 @@
-// Created: 06.02.2017
 package de.freese.pim.gui.mail.utils;
 
 import java.net.URL;
@@ -11,6 +10,7 @@ import de.freese.pim.core.mail.MailContent;
  * {@link URLStreamHandler} für ein Inline einer HTML-Mail.
  *
  * @author Thomas Freese
+ * @since 06.02.2017
  */
 public class InlineUrlStreamHandler extends URLStreamHandler {
     private static MailContent mailContent;

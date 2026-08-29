@@ -1,4 +1,3 @@
-// Created: 04.03.2021
 package de.freese.pim.gui;
 
 import java.io.IOException;
@@ -15,6 +14,7 @@ import de.freese.pim.gui.view.ErrorDialog;
 
 /**
  * @author Thomas Freese
+ * @since 04.03.2021
  */
 public final class PimClientLauncher {
     static void main(final String[] args) {

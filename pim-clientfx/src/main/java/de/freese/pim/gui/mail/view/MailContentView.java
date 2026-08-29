@@ -1,4 +1,3 @@
-// Created: 15.03.2017
 package de.freese.pim.gui.mail.view;
 
 import java.awt.Desktop;
@@ -38,6 +37,7 @@ import de.freese.pim.gui.view.ErrorDialog;
  * View für den Inhalt einer Mail.
  *
  * @author Thomas Freese
+ * @since 15.03.2017
  */
 public class MailContentView extends GridPane {
     public static final Logger LOGGER = LoggerFactory.getLogger(MailContentView.class);

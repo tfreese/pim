@@ -1,4 +1,3 @@
-// Created: 09.01.2017
 package de.freese.pim.core.model.mail;
 
 import java.util.function.Predicate;
@@ -7,6 +6,7 @@ import java.util.function.Predicate;
  * Entity für einen Mail-Folder.
  *
  * @author Thomas Freese
+ * @since 09.01.2017
  */
 public class MailFolder {
     // @NotNull

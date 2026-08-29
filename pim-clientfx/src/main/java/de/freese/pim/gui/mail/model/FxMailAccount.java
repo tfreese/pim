@@ -1,4 +1,3 @@
-// Created: 26.12.2016
 package de.freese.pim.gui.mail.model;
 
 import javafx.beans.property.BooleanProperty;
@@ -24,6 +23,7 @@ import de.freese.pim.core.model.mail.MailAccount;
  * FX-Bean für einen Mail-Account.
  *
  * @author Thomas Freese
+ * @since 26.12.2016
  */
 // @SuppressWarnings("restriction")
 // @JsonRootName("mailAccount")
@@ -43,6 +43,7 @@ public class FxMailAccount {
 
         return fxMailAccount;
     }
+
     @JsonIgnore
     private final FilteredList<FxMailFolder> abonnierteFolder;
     @JsonIgnore
@@ -60,6 +61,7 @@ public class FxMailAccount {
     private final ObjectProperty<MailPort> smtpPortProperty = new SimpleObjectProperty<>(this, "smtpPort", MailPort.SMTPS);
     @JsonIgnore
     private final ObservableIntegerValue unreadMailsCount;
+
     public FxMailAccount() {
         super();
 

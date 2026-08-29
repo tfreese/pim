@@ -1,4 +1,3 @@
-// Created: 16.02.2017
 package de.freese.pim.core.function;
 
 /**
@@ -7,6 +6,7 @@ package de.freese.pim.core.function;
  * @param <E> Konkreter Exception-Typ
  *
  * @author Thomas Freese
+ * @since 16.02.2017
  */
 @FunctionalInterface
 public interface ExceptionalRunnable<E extends Exception> {

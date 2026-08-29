@@ -1,4 +1,3 @@
-// Created: 14.02.2017
 package de.freese.pim.gui.mail.service;
 
 import java.nio.file.Path;
@@ -25,6 +24,7 @@ import de.freese.pim.gui.mail.model.FxMailFolder;
  * Standalone-MailService für JavaFX, wenn es keinen Server gibt.
  *
  * @author Thomas Freese
+ * @since 14.02.2017
  */
 @Service("clientMailService")
 @Profile("ClientStandalone")

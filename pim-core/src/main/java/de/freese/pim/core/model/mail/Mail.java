@@ -1,4 +1,3 @@
-// Created: 09.01.2017
 package de.freese.pim.core.model.mail;
 
 import java.util.Date;
@@ -9,6 +8,7 @@ import de.freese.pim.core.mail.InternetAddress;
  * Entity für eine Mail.
  *
  * @author Thomas Freese
+ * @since 09.01.2017
  */
 public class Mail {
     private InternetAddress[] bcc;

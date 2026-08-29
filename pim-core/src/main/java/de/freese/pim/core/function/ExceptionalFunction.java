@@ -1,4 +1,3 @@
-// Created: 16.02.2017
 package de.freese.pim.core.function;
 
 import java.util.Objects;
@@ -12,6 +11,7 @@ import java.util.function.Function;
  * @param <E> Konkreter Exception-Typ
  *
  * @author Thomas Freese
+ * @since 16.02.2017
  */
 @FunctionalInterface
 public interface ExceptionalFunction<T, R, E extends Exception> {
@@ -25,8 +25,7 @@ public interface ExceptionalFunction<T, R, E extends Exception> {
         return t -> after.apply(apply(t));
     }
 
-    // public default <V> ExceptionalFunction<T, V, E> andThen(final Function<R, V> after)
-    // {
+    // public default <V> ExceptionalFunction<T, V, E> andThen(final Function<R, V> after) {
     // Objects.requireNonNull(after);
     //
     // return t -> after.apply(apply(t));
@@ -40,8 +39,7 @@ public interface ExceptionalFunction<T, R, E extends Exception> {
         return v -> apply(before.apply(v));
     }
 
-    // public default <V> ExceptionalFunction<V, R, E> compose(final Function<V, T> before)
-    // {
+    // public default <V> ExceptionalFunction<V, R, E> compose(final Function<V, T> before) {
     // Objects.requireNonNull(before);
     //
     // return v -> apply(before.apply(v));

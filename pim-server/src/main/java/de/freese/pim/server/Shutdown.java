@@ -1,4 +1,3 @@
-// Created: 11.08.2016
 package de.freese.pim.server;
 
 import java.io.InputStream;
@@ -14,6 +13,7 @@ import org.springframework.core.io.Resource;
  * Sendet das shutdown-Signal.
  *
  * @author Thomas Freese
+ * @since 11.08.2016
  */
 public final class Shutdown {
     static void main() throws Exception {

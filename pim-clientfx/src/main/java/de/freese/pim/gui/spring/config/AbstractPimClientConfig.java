@@ -1,4 +1,3 @@
-// Created: 10.02.2017
 package de.freese.pim.gui.spring.config;
 
 import java.nio.file.Path;
@@ -12,6 +11,7 @@ import org.springframework.context.annotation.Primary;
  * Client Spring-Konfiguration von PIM.
  *
  * @author Thomas Freese
+ * @since 10.02.2017
  */
 public abstract class AbstractPimClientConfig {
     @Bean

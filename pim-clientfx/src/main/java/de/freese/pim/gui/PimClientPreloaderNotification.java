@@ -1,10 +1,10 @@
-// Created: 01.12.2016
 package de.freese.pim.gui;
 
 import javafx.application.Preloader.PreloaderNotification;
 
 /**
  * @author Thomas Freese
+ * @since 01.12.2016
  */
 public class PimClientPreloaderNotification implements PreloaderNotification {
     private final double progress;

@@ -1,4 +1,3 @@
-// Created: 11.01.2017
 package de.freese.pim.server.addressbook;
 
 import java.nio.file.Path;
@@ -22,6 +21,7 @@ import de.freese.pim.core.service.AddressBookService;
  * Service für das AddressBook.
  *
  * @author Thomas Freese
+ * @since 11.01.2017
  */
 @RestController
 @RequestMapping(path = "/addressBook", produces = MediaType.APPLICATION_JSON_VALUE)

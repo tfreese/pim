@@ -1,4 +1,3 @@
-// Created: 09.12.2016
 package de.freese.pim.core.mail;
 
 import java.io.File;
@@ -32,6 +31,7 @@ import de.freese.pim.core.utils.MailUtils;
  * Builder für eine {@link MimeMessage}.
  *
  * @author Thomas Freese
+ * @since 09.12.2016
  */
 public final class JavaMailBuilder {
     public static JavaMailBuilder create(final Session session) {

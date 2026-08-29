@@ -1,4 +1,3 @@
-// Created: 26.05.2016
 package de.freese.pim.core.utils;
 
 import java.io.Serial;
@@ -13,6 +12,7 @@ import org.apache.commons.cli.OptionGroup;
  * Diese {@link OptionGroup} behält die Reihenfolge der {@link Option} bei.
  *
  * @author Thomas Freese
+ * @since 26.05.2016
  */
 public class PreserveOrderOptionGroup extends OptionGroup {
     @Serial

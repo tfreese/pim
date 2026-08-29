@@ -1,4 +1,3 @@
-// Created: 11.01.2017
 package de.freese.pim.core.utils.io;
 
 import java.io.IOException;
@@ -10,6 +9,7 @@ import java.util.Objects;
  * {@link ReadableByteChannel} mit der Möglichkeit zur Überwachung durch einen Monitor.<br>
  *
  * @author Thomas Freese
+ * @since 11.01.2017
  */
 public class MonitoringReadableByteChannel implements ReadableByteChannel {
     private final ReadableByteChannel delegate;

@@ -1,4 +1,3 @@
-// Created: 07.02.2017
 package de.freese.pim.core.service;
 
 import java.net.URLDecoder;
@@ -9,6 +8,7 @@ import java.nio.charset.StandardCharsets;
  * Basis-Implementierung eines Remote-Service.
  *
  * @author Thomas Freese
+ * @since 07.02.2017
  */
 public abstract class AbstractRemoteService extends AbstractService {
     protected String urlDecode(final String value) {

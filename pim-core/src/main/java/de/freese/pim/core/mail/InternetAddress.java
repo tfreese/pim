@@ -1,4 +1,3 @@
-// Created: 15.02.2017
 package de.freese.pim.core.mail;
 
 import java.util.stream.Collectors;
@@ -13,6 +12,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * Siehe javax.mail.internet.InternetAddress
  *
  * @author Thomas Freese
+ * @since 15.02.2017
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class InternetAddress {

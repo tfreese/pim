@@ -1,4 +1,3 @@
-// Created: 30.05.2016
 package de.freese.pim.core.dao;
 
 import java.nio.file.Files;
@@ -20,6 +19,7 @@ import de.freese.pim.core.utils.Utils;
 
 /**
  * @author Thomas Freese
+ * @since 30.05.2016
  */
 @Repository("addressBookDAO")
 @Profile("!ClientREST")

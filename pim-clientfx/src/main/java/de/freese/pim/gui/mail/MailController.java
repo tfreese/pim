@@ -1,4 +1,3 @@
-// Created: 13.12.2016
 package de.freese.pim.gui.mail;
 
 import java.lang.reflect.Method;
@@ -48,6 +47,7 @@ import de.freese.pim.gui.view.ErrorDialog;
  * Controller des Mail-Clients.
  *
  * @author Thomas Freese
+ * @since 13.12.2016
  */
 public class MailController extends AbstractController {
     private static final String FORMAT_DATE = "%1$ta %1$td.%1$tm.%1$ty %1$tH:%1$tM:%1$tS";
@@ -428,19 +428,16 @@ public class MailController extends AbstractController {
             columnReceived.setStyle("-fx-alignment: center-left;");
             columnReceived.setCellValueFactory(cell -> cell.getValue().receivedDateProperty().asString(FORMAT_DATE));
             // columnReceived.setCellFactory(column -> {
-            // return new TableCell<Mail, Date>()
-            // {
+            // return new TableCell<Mail, Date>() {
             // /**
             // * @param item Date
             // * @param empty boolean
             // */
             // @Override
-            // protected void updateItem(final Date item, final boolean empty)
-            // {
+            // protected void updateItem(final Date item, final boolean empty) {
             // super.updateItem(item, empty);
             //
-            // if ((item == null) || empty)
-            // {
+            // if ((item == null) || empty) {
             // setText(null);
             // return;
             // }

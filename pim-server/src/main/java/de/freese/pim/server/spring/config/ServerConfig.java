@@ -1,4 +1,3 @@
-// Created: 17.02.2017
 package de.freese.pim.server.spring.config;
 
 import jakarta.annotation.Resource;
@@ -17,6 +16,7 @@ import tools.jackson.databind.json.JsonMapper;
  * Server Spring-Konfiguration von PIM.
  *
  * @author Thomas Freese
+ * @since 17.02.2017
  */
 @Configuration
 @Profile("Server")

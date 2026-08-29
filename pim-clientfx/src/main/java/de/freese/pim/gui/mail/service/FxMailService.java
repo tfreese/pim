@@ -1,4 +1,3 @@
-// Created: 14.02.2017
 package de.freese.pim.gui.mail.service;
 
 import java.util.List;
@@ -13,6 +12,7 @@ import de.freese.pim.gui.mail.model.FxMailFolder;
  * Interface für einen JavaFX-MailService.
  *
  * @author Thomas Freese
+ * @since 14.02.2017
  */
 public interface FxMailService {
     /**

@@ -1,4 +1,3 @@
-// Created: 27.12.2016
 package de.freese.pim.core.mail;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -51,6 +50,7 @@ import de.freese.pim.core.mail.api.JavaMailContent;
 
 /**
  * @author Thomas Freese
+ * @since 27.12.2016
  */
 @SpringBootTest
 @TestMethodOrder(MethodOrderer.MethodName.class)

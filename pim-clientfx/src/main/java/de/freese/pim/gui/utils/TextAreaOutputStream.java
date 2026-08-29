@@ -1,4 +1,3 @@
-// Created: 03.02.2017
 package de.freese.pim.gui.utils;
 
 import java.io.OutputStream;
@@ -13,6 +12,7 @@ import javafx.scene.control.TextFormatter;
  * {@link OutputStream} der die Ausgaben in eine {@link TextArea} umleitet.
  *
  * @author Thomas Freese
+ * @since 03.02.2017
  */
 public class TextAreaOutputStream extends OutputStream {
     /**

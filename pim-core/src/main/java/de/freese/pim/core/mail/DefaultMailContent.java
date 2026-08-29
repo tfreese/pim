@@ -1,4 +1,3 @@
-// Created: 16.02.2017
 package de.freese.pim.core.mail;
 
 import java.io.BufferedReader;
@@ -17,6 +16,7 @@ import de.freese.pim.core.mail.datasource.MessageDataSource;
  * Container für den Inhalt einer Mail.
  *
  * @author Thomas Freese
+ * @since 16.02.2017
  */
 public class DefaultMailContent implements MailContent {
     private Map<String, AttachmentDataSource> attachmentMap;

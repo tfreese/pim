@@ -1,4 +1,3 @@
-// Created: 24.05.2016
 package de.freese.pim.core.addressbook;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -26,6 +25,7 @@ import de.freese.pim.core.dao.AddressBookDao;
  * TestCase für die TX-Steuerung mit Spring.
  *
  * @author Thomas Freese
+ * @since 24.05.2016
  */
 @SpringBootTest(classes = {TestConfig.class})
 @TestMethodOrder(MethodOrderer.MethodName.class)

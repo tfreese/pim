@@ -1,4 +1,3 @@
-// Created: 09.01.2017
 package de.freese.pim.gui.mail.model;
 
 import java.util.Comparator;
@@ -25,6 +24,7 @@ import de.freese.pim.core.model.mail.MailFolder;
  * FX-Bean für einen Mail-Folder.
  *
  * @author Thomas Freese
+ * @since 09.01.2017
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class FxMailFolder {

@@ -1,4 +1,3 @@
-// Created: 13.01.2017
 package de.freese.pim.core.mail.api;
 
 import java.util.List;
@@ -17,6 +16,7 @@ import de.freese.pim.core.utils.io.IOMonitor;
  * Interface für die Mail-API.<br>
  *
  * @author Thomas Freese
+ * @since 13.01.2017
  */
 public interface MailApi {
     /**

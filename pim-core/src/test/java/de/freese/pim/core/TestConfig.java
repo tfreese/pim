@@ -1,4 +1,3 @@
-// Created: 10.07.2016
 package de.freese.pim.core;
 
 import java.util.UUID;
@@ -24,6 +23,7 @@ import de.freese.pim.core.dao.MailDao;
 
 /**
  * @author Thomas Freese
+ * @since 10.07.2016
  */
 @Configuration
 @EnableTransactionManagement

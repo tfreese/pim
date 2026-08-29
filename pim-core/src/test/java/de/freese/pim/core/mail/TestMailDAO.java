@@ -1,4 +1,3 @@
-// Created: 24.05.2016
 package de.freese.pim.core.mail;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
@@ -40,6 +39,7 @@ import de.freese.pim.core.model.mail.MailFolder;
  * TestCase für das {@link MailDao}.
  *
  * @author Thomas Freese
+ * @since 24.05.2016
  */
 @SpringBootTest(classes = {TestConfig.class})
 @TestMethodOrder(MethodOrderer.MethodName.class)

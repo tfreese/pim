@@ -1,4 +1,3 @@
-// Created: 14.02.2017
 package de.freese.pim.server.rest;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -31,6 +30,7 @@ import de.freese.pim.server.PimServerApplication;
  * Vollständiger Test der gesamten Server-Anwendung.
  *
  * @author Thomas Freese
+ * @since 14.02.2017
  */
 // @ExtendWith(SpringExtension.class) // Ist bereits in SpringBootTest enthalten
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT, classes = {PimServerApplication.class},

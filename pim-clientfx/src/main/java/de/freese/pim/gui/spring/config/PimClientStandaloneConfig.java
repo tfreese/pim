@@ -1,4 +1,3 @@
-// Created: 10.02.2017
 package de.freese.pim.gui.spring.config;
 
 import org.springframework.context.annotation.ComponentScan;
@@ -9,6 +8,7 @@ import org.springframework.context.annotation.Profile;
  * Client Spring-Konfiguration von PIM.
  *
  * @author Thomas Freese
+ * @since 10.02.2017
  */
 @Configuration
 @Profile("ClientStandalone")

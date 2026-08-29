@@ -1,4 +1,3 @@
-// Created: 30.01.2017
 package de.freese.pim.gui.mail.model;
 
 import java.util.Objects;
@@ -13,6 +12,7 @@ import javafx.collections.ObservableList;
  * Bildet ein {@link IntegerBinding}, welches die Summe der ungelesenen Mails der Folder liefert.
  *
  * @author Thomas Freese
+ * @since 30.01.2017
  */
 public class SumUnreadMailsInChildFolderBinding extends IntegerBinding {
     /**

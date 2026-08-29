@@ -1,4 +1,3 @@
-// Created: 16.01.2017
 package de.freese.pim.gui.mail;
 
 import java.util.Optional;
@@ -37,6 +36,7 @@ import de.freese.pim.gui.utils.FxUtils;
  * Dialog zum Anlegen eines neuen {@link FxMailAccount}.
  *
  * @author Thomas Freese
+ * @since 16.01.2017
  */
 public class EditMailAccountDialog {
     private final ListView<FxMailFolder> aboView = new ListView<>();
@@ -172,7 +172,7 @@ public class EditMailAccountDialog {
         // Mail-Format und Passwörter vergleichen.
         okButton.addEventFilter(ActionEvent.ACTION, event -> checkValidConfig(event, bundle));
 
-        // OK-Button disablen, wenn eines dieser Felder leer ist.
+        // OK-Button deaktivieren, wenn eines dieser Felder leer ist.
         mail.textProperty().addListener((observable, oldValue, newValue) -> {
             okButton.setDisable(newValue.isEmpty());
 

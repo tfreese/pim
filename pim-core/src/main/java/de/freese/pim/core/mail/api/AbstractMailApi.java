@@ -1,4 +1,3 @@
-// Created: 23.01.2017
 package de.freese.pim.core.mail.api;
 
 import java.util.Objects;
@@ -13,6 +12,7 @@ import de.freese.pim.core.model.mail.MailAccount;
  * Basis-Implementierung der {@link MailApi}.
  *
  * @author Thomas Freese
+ * @since 23.01.2017
  */
 public abstract class AbstractMailApi implements MailApi {
     private final MailAccount account;

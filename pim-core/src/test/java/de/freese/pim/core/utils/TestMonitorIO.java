@@ -1,4 +1,3 @@
-// Created: 11.01.2017
 package de.freese.pim.core.utils;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -21,6 +20,7 @@ import de.freese.pim.core.utils.io.MonitoringWritableByteChannel;
 
 /**
  * @author Thomas Freese
+ * @since 11.01.2017
  */
 @TestMethodOrder(MethodOrderer.MethodName.class)
 class TestMonitorIO {
@@ -56,7 +56,7 @@ class TestMonitorIO {
 
         try (MonitorInputStream mis = new MonitorInputStream(is, monitor, is.available())) {
             for (int i = 0; i < BYTES.length; i++) {
-                mis.read();
+                assertEquals(BYTES[i], mis.read());
 
                 assertEquals(i + 1, monitor.getCurrent());
             }
@@ -67,13 +67,13 @@ class TestMonitorIO {
         is = new ByteArrayInputStream(BYTES);
 
         try (MonitorInputStream mis = new MonitorInputStream(is, monitor, is.available())) {
-            mis.read(new byte[2]);
+            assertEquals(2, mis.read(new byte[2]));
             assertEquals(2, monitor.getCurrent());
 
-            mis.read(new byte[3]);
+            assertEquals(3, mis.read(new byte[3]));
             assertEquals(5, monitor.getCurrent());
 
-            mis.read(new byte[4]);
+            assertEquals(4, mis.read(new byte[4]));
             assertEquals(9, monitor.getCurrent());
         }
 
@@ -82,7 +82,7 @@ class TestMonitorIO {
         is = new ByteArrayInputStream(BYTES);
 
         try (MonitorInputStream mis = new MonitorInputStream(is, monitor, is.available())) {
-            mis.read(new byte[10], 2, 8);
+            assertEquals(8, mis.read(new byte[10], 2, 8));
             assertEquals(8, monitor.getCurrent());
         }
     }

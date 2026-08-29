@@ -1,4 +1,3 @@
-// Created: 01.12.2016
 package de.freese.pim.gui.utils;
 
 import java.lang.reflect.Constructor;
@@ -64,9 +63,8 @@ import de.freese.pim.gui.controller.AbstractController;
 import de.freese.pim.gui.view.View;
 
 /**
- * JavaFX-Utils.
- *
  * @author Thomas Freese
+ * @since 01.12.2016
  */
 public final class FxUtils {
     private static final EventHandler<InputEvent> EVENT_HANDLER_CONSUME_ALL = Event::consume;
@@ -412,7 +410,6 @@ public final class FxUtils {
     // Objects.requireNonNull(formatter, "formatter required");
     //
     // final StringFormatter stringFormatter = new StringFormatter() {
-    // {
     // super.bind(ov);
     // }
     //

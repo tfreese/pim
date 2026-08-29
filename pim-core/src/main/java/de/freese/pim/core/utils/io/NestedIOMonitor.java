@@ -1,4 +1,3 @@
-// Created: 16.02.2017
 package de.freese.pim.core.utils.io;
 
 import java.util.Objects;
@@ -7,6 +6,7 @@ import java.util.Objects;
  * IO-Monitor für verschiedene Streams, der die gesamt gelesene/geschriebene Anzahl von Bytes aufsummiert und an den Delegate weiterleitet.<br>
  *
  * @author Thomas Freese
+ * @since 16.02.2017
  */
 public class NestedIOMonitor implements IOMonitor {
     private final IOMonitor delegate;

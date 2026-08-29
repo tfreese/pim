@@ -1,4 +1,3 @@
-// Created: 07.02.2017
 package de.freese.pim.core.mail;
 
 import java.util.Map;
@@ -13,6 +12,7 @@ import de.freese.pim.core.mail.datasource.MessageDataSource;
  * Interface für den Inhalt einer Mail.
  *
  * @author Thomas Freese
+ * @since 07.02.2017
  */
 public interface MailContent {
     /**

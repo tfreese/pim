@@ -1,4 +1,3 @@
-// Created: 28.12.2016
 package de.freese.pim.core.utils;
 
 import java.util.ArrayList;
@@ -20,9 +19,8 @@ import jakarta.mail.internet.MimeUtility;
 import de.freese.pim.core.mail.InternetAddress;
 
 /**
- * Mail-Utils.
- *
  * @author Thomas Freese
+ * @since 28.12.2016
  */
 public final class MailUtils {
     public static final String CONTENT_TYPE_CHARSET_SUFFIX = ";charset=";

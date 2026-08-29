@@ -1,4 +1,3 @@
-// Created: 22.09.2016
 package de.freese.pim.core.function;
 
 import java.util.function.Function;
@@ -8,6 +7,7 @@ import java.util.function.UnaryOperator;
  * Diese {@link Function} liefert einen leeren String, wenn dieser nur aus demselben Zeichen besteht.<br>
  *
  * @author Thomas Freese
+ * @since 22.09.2016
  */
 public class FunctionStripSameChar implements UnaryOperator<String> {
     public static final UnaryOperator<String> INSTANCE = new FunctionStripSameChar();

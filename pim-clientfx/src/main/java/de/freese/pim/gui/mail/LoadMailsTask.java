@@ -1,4 +1,3 @@
-// Created: 25.01.2017
 package de.freese.pim.gui.mail;
 
 import java.util.List;
@@ -22,6 +21,7 @@ import de.freese.pim.gui.view.ErrorDialog;
  * Laden der Mails pro MailFolder.
  *
  * @author Thomas Freese
+ * @since 25.01.2017
  */
 public class LoadMailsTask extends Task<Void> implements Callable<Void> {
     public static final Logger LOGGER = LoggerFactory.getLogger(LoadMailsTask.class);
@@ -33,9 +33,9 @@ public class LoadMailsTask extends Task<Void> implements Callable<Void> {
     private final FxMailService mailService;
 
     public LoadMailsTask(final TreeView<Object> treeView, final List<FxMailFolder> folders, final FxMailService mailService, final FxMailAccount account) {
-        super();
-
         Objects.requireNonNull(treeView, "treeView required");
+
+        super();
 
         this.folders = Objects.requireNonNull(folders, "mailFolder required");
         this.mailService = Objects.requireNonNull(mailService, "mailService required");

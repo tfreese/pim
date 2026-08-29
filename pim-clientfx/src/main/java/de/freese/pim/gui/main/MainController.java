@@ -1,4 +1,3 @@
-// Created: 29.11.2016
 package de.freese.pim.gui.main;
 
 import java.net.URL;
@@ -20,6 +19,7 @@ import de.freese.pim.gui.utils.FxUtils;
  * Main-Controller.
  *
  * @author Thomas Freese
+ * @since 29.11.2016
  */
 public class MainController extends AbstractController {
     private final MainView mainView;

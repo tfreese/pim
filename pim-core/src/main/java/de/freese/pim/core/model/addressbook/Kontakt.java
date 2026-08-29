@@ -1,4 +1,3 @@
-// Created: 30.05.2016
 package de.freese.pim.core.model.addressbook;
 
 import java.util.ArrayList;
@@ -9,6 +8,7 @@ import java.util.Objects;
  * Entity für einen Kontakt.
  *
  * @author Thomas Freese
+ * @since 30.05.2016
  */
 public class Kontakt implements Comparable<Kontakt> {
     private final List<KontaktAttribut> attribute = new ArrayList<>();

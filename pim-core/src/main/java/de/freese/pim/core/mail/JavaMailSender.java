@@ -1,4 +1,3 @@
-// Created: 09.12.2016
 package de.freese.pim.core.mail;
 
 import java.time.LocalDateTime;
@@ -23,6 +22,7 @@ import jakarta.mail.internet.MimeMessage;
  * Siehe org.springframework.mail.javamail.JavaMailSenderImpl
  *
  * @author Thomas Freese
+ * @since 09.12.2016
  */
 public class JavaMailSender {
     public static final String DEFAULT_PROTOCOL = "smtp";
@@ -35,10 +35,10 @@ public class JavaMailSender {
         private final PasswordAuthentication authentication;
 
         MailAuthenticator(final String userName, final String password) {
-            super();
-
             Objects.requireNonNull(userName, "userName required");
             Objects.requireNonNull(password, "password required");
+
+            super();
 
             authentication = new PasswordAuthentication(userName, password);
         }
@@ -48,6 +48,7 @@ public class JavaMailSender {
             return authentication;
         }
     }
+
     private MailAuthenticator authenticator;
     private String host;
     private Properties javaMailProperties = new Properties();
@@ -181,7 +182,7 @@ public class JavaMailSender {
 
                 try {
                     if (mimeMessage.getSentDate() == null) {
-                        mimeMessage.setSentDate(Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant()));
+                        mimeMessage.setSentDate(Date.from(LocalDateTime.now(ZoneId.systemDefault()).atZone(ZoneId.systemDefault()).toInstant()));
                     }
 
                     final String messageID = mimeMessage.getMessageID();

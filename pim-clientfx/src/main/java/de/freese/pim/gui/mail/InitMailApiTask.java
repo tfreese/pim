@@ -1,4 +1,3 @@
-// Created: 25.01.2017
 package de.freese.pim.gui.mail;
 
 import java.util.ArrayList;
@@ -30,6 +29,7 @@ import de.freese.pim.gui.view.ErrorDialog;
  * Initialisierung der MailApi pro MailAccount.
  *
  * @author Thomas Freese
+ * @since 25.01.2017
  */
 public class InitMailApiTask extends Task<List<FxMailFolder>> {
     public static final Logger LOGGER = LoggerFactory.getLogger(InitMailApiTask.class);
@@ -39,10 +39,10 @@ public class InitMailApiTask extends Task<List<FxMailFolder>> {
     private final FxMailService mailService;
 
     public InitMailApiTask(final TreeView<Object> treeView, final TreeItem<Object> parent, final FxMailService mailService, final FxMailAccount account) {
-        super();
-
         Objects.requireNonNull(treeView, "treeView required");
         Objects.requireNonNull(parent, "parent required");
+
+        super();
 
         this.mailService = Objects.requireNonNull(mailService, "mailService required");
         this.account = Objects.requireNonNull(account, "account required");

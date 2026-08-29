@@ -1,4 +1,3 @@
-// Created: 14.02.2017
 package de.freese.pim.server.rest;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -37,6 +36,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupp
  * }</pre>
  *
  * @author Thomas Freese
+ * @since 14.02.2017
  */
 @Configuration
 class Config extends WebMvcConfigurationSupport {
@@ -51,8 +51,7 @@ class Config extends WebMvcConfigurationSupport {
     }
 
     // @Bean
-    // public AsyncTaskExecutor taskExecutor()
-    // {
+    // public AsyncTaskExecutor taskExecutor() {
     // ThreadPoolTaskExecutor bean = new ThreadPoolTaskExecutor();
     // bean.setCorePoolSize(8);
     // bean.setMaxPoolSize(8);

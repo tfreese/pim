@@ -1,4 +1,3 @@
-// Created: 30.12.2016
 package de.freese.pim.core.mail;
 
 import java.nio.file.Path;
@@ -8,6 +7,7 @@ import java.nio.file.Paths;
  * <a href="https://javamail.java.net/nonav/docs/api/com/sun/mail/imap/package-summary.html">javamail.java.net</a>
  *
  * @author Thomas Freese
+ * @since 30.12.2016
  */
 public abstract class AbstractMailTest {
     public static final String MAIL_IMAP_HOST = getMailProvider().getImapHost();

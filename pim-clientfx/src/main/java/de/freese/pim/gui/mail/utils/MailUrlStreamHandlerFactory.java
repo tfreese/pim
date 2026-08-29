@@ -1,4 +1,3 @@
-// Created: 06.02.2017
 package de.freese.pim.gui.mail.utils;
 
 import java.net.URLStreamHandler;
@@ -18,6 +17,7 @@ import org.slf4j.LoggerFactory;
  * </pre>
  *
  * @author Thomas Freese
+ * @since 06.02.2017
  */
 public class MailUrlStreamHandlerFactory implements URLStreamHandlerFactory {
     private static final Logger LOGGER = LoggerFactory.getLogger(MailUrlStreamHandlerFactory.class);

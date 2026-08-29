@@ -1,4 +1,3 @@
-// Created: 26.12.2016
 package de.freese.pim.core.model.mail;
 
 import de.freese.pim.core.mail.MailPort;
@@ -7,6 +6,7 @@ import de.freese.pim.core.mail.MailPort;
  * Entity für einen Mail-Account.
  *
  * @author Thomas Freese
+ * @since 26.12.2016
  */
 public class MailAccount {
     private long id;
