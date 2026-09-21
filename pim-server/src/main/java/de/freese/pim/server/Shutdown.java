@@ -33,10 +33,6 @@ public final class Shutdown {
 
         final URI uri = URI.create("http://localhost:" + port + contextPath.orElse("") + "/actuator/shutdown");
 
-        // RestTemplate restTemplate = new RestTemplate();
-        // restTemplate.exchange(repository, HttpMethod.POST, null, Void.class);
-        // restTemplate.postForLocation(repository, null);
-
         final HttpURLConnection connection = (HttpURLConnection) uri.toURL().openConnection();
         connection.setRequestMethod("POST");
         connection.getResponseCode();

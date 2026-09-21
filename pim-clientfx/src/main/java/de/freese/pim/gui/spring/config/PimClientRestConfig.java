@@ -1,7 +1,7 @@
 package de.freese.pim.gui.spring.config;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.restclient.RestTemplateBuilder;
+import org.springframework.boot.restclient.RestClientCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -25,14 +25,9 @@ public class PimClientRestConfig extends AbstractPimClientConfig {
     }
 
     @Bean
-    public RestTemplateBuilder restTemplateBuilder(@Value("${server.host}") final String serverHost, @Value("${server.port}") final int serverPort) {
-        // final RestTemplateBuilder bean = new RestTemplateBuilder().rootUri(rootUri).basicAuthorization(username, password);
+    public RestClientCustomizer restClientCustomizer(@Value("${server.host}") final String serverHost, @Value("${server.port}") final int serverPort) {
         final String url = String.format("http://%s:%d/pim", serverHost, serverPort);
 
-        // final RestTemplate rt = new RestTemplate();
-        // rt.getMessageConverters().add(new MappingJacksonHttpMessageConverter());
-        // rt.getMessageConverters().add(new StringHttpMessageConverter());
-
-        return new RestTemplateBuilder().baseUri(url);
+        return builder -> builder.baseUrl(url);
     }
 }
